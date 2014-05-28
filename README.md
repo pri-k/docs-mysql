@@ -1,4 +1,4 @@
 docs-mysql
 ==========
 
-Docs for Pivotal MySQL Dev
+Docs for MySQL for Pivotal CF
