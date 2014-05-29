@@ -49,7 +49,7 @@ Version 1.2 of this product is based on MySQL version 5.6.13.
 
 ### Known Limitations
 
-The MySQL server runs on a single VM. The server is not replicated or redundant. Data durability depends on the infrastructure persistance layer.
+The MySQL server runs on a single VM. The server is not replicated or redundant. Data durability depends on the infrastructure persistence layer.
 
 ### Further Reading
 
