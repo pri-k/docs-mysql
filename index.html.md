@@ -37,11 +37,11 @@ To help you get started with MySQL for Pivotal CF, we have provided an example a
 
 [example-app]:mysql-example-app.tgz
 
-### Available Plans
+### Service Plans
 
 A single service plan is supported. Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. These databases should not be used for production workloads. Binding applications to the instance creates unique credentials for each bound application to access the database.
 
-The plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these quotas, as well as the maximum number of databases permitted by the server. In calculating storage utilization, indexes are included along with raw tabular data.
+The plan enforces default quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these quotas, as well as the maximum number of databases permitted by the server. In calculating storage utilization, indexes are included along with raw tabular data. Changes to quotas will apply to all existing database instances as well as new instances. Operators should be aware of the relationship between persistent disk, database storage quota, and max databases per server. Storage quota multiplied by max databases must be less than persistent disk, or a server could run out of disk and crash.  
 
 The plan name is **100mb-dev** by default and is automatically updated if the storage quota is modified in Operations Manager (eg. a storage quota of 1000 would result in a plan name of 1000mb-dev).
 
