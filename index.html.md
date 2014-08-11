@@ -23,7 +23,15 @@ This product requires Pivotal CF version 1.2 or greater.
 
 ### Configuring Lifecycle Errands
 
-Two lifecycle errands are run be default, the broker registrar and smoke tests.  The broker registrar errand registers the broker with Cloud Controller and makes the configured plan public.  The smoke test errand runs basic tests to validate Elastic Runtime apps can successfully create, bind, use, and unbind MySQL service instances.  Both can be turned on or off in the "Lifecycle Errand" tab on the left.
+Two lifecycle errands are run be default: the **broker registrar** and the
+**smoke test**.
+The broker registrar errand registers the broker with the Cloud Controller and
+makes the configured plan public.
+The smoke test errand runs basic tests to validate that Elastic Runtime
+applications can successfully create, bind, use, and unbind MySQL service
+instances.
+Both errands can be turned on or off in the **Lifecycle Errand** tab on the
+left.
 
 ### Provisioning and Binding via Cloud Foundry
 
@@ -45,13 +53,13 @@ To help you get started with MySQL for Pivotal CF, we have provided an example a
 
 A single service plan is supported. Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. These databases should not be used for production workloads. Binding applications to the instance creates unique credentials for each bound application to access the database.
 
-The plan enforces default quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these quotas, as well as the maximum number of databases permitted by the server. In calculating storage utilization, indexes are included along with raw tabular data. Changes to quotas will apply to all existing database instances as well as new instances. Operators should be aware of the relationship between persistent disk, database storage quota, and max databases per server. Storage quota multiplied by max databases must be less than persistent disk, or a server could run out of disk and crash.  
+The plan enforces default quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these quotas, as well as the maximum number of databases permitted by the server. In calculating storage utilization, indexes are included along with raw tabular data. Changes to quotas will apply to all existing database instances as well as new instances. Operators should be aware of the relationship between persistent disk, database storage quota, and max databases per server. Storage quota multiplied by max databases must be less than persistent disk, or a server could run out of disk and crash.
 
 The plan name is **100mb-dev** by default and is automatically updated if the storage quota is modified in Operations Manager (eg. a storage quota of 1000 would result in a plan name of 1000mb-dev).
 
 ### Service Dashboard
 
-Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a "Manage" link next to the instance. Clicking this link will log users into the service dashboard via SSO. 
+Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a "Manage" link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
 ### Version
 
