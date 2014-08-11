@@ -35,7 +35,7 @@ left.
 
 ### Provisioning and Binding via Cloud Foundry
 
-Deploying the service automatically registers it with your Elastic Runtime. Once the service is deployed, it is available to your application developers from the Services Marketplace, either in the web-based Developer Console or via CLI (`cf marketplace`). Developers can create instances and bind them to their applications like any other CF service:
+Deploying the service automatically registers it with your Elastic Runtime. Once the service is deployed, it is available to your application developers from the Services Marketplace, either in the web-based Developer Console or via the `cf marketplace` CLI command. Developers can create instances and bind them to their applications like any other CF service:
 
 ```
 $ cf create-service p-mysql 100mb-dev mydb
@@ -55,11 +55,11 @@ A single service plan is supported. Provisioning a service instance from this pl
 
 The plan enforces default quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these quotas, as well as the maximum number of databases permitted by the server. In calculating storage utilization, indexes are included along with raw tabular data. Changes to quotas will apply to all existing database instances as well as new instances. Operators should be aware of the relationship between persistent disk, database storage quota, and max databases per server. Storage quota multiplied by max databases must be less than persistent disk, or a server could run out of disk and crash.
 
-The plan name is **100mb-dev** by default and is automatically updated if the storage quota is modified in Operations Manager (eg. a storage quota of 1000 would result in a plan name of 1000mb-dev).
+The plan name is **100mb-dev** by default and is automatically updated if the storage quota is modified in Operations Manager. For example, a storage quota of 1000 would result in a plan name of **1000mb-dev**.
 
 ### Service Dashboard
 
-Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a "Manage" link next to the instance. Clicking this link will log users into the service dashboard via SSO.
+Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
 ### Version
 
