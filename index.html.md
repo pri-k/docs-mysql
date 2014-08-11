@@ -21,6 +21,10 @@ To deploy MySQL for Pivotal CF, follow the procedure for deploying Pivotal Ops M
 
 This product requires Pivotal CF version 1.2 or greater.
 
+### Configuring Lifecycle Errands
+
+Two lifecycle errands are run be default, the broker registrar and smoke tests.  The broker registrar errand registers the broker with Cloud Controller and makes the configured plan public.  The smoke test errand runs basic tests to validate Elastic Runtime apps can successfully create, bind, use, and unbind MySQL service instances.  Both can be turned on or off in the "Lifecycle Errand" tab on the left.
+
 ### Provisioning and Binding via Cloud Foundry
 
 Deploying the service automatically registers it with your Elastic Runtime. Once the service is deployed, it is available to your application developers from the Services Marketplace, either in the web-based Developer Console or via CLI (`cf marketplace`). Developers can create instances and bind them to their applications like any other CF service:
