@@ -21,12 +21,11 @@ This product requires Pivotal CF version 1.2 or greater.
 
 ### Configuring Lifecycle Errands
 
-Two lifecycle errands are run by default: the **broker registrar** and the
-**smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the configured plan public. The smoke test errand runs basic tests to validate that Elastic Runtime applications can successfully create, bind, use, and unbind MySQL service instances. Both errands can be turned on or off under **Lifecycle Errands** on the **Settings** tab.
+Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the configured plan public. The smoke test errand runs basic tests to validate that Elastic Runtime applications can successfully create, bind, use, and unbind MySQL service instances. Both errands can be turned on or off under **Lifecycle Errands** on the **Settings** tab.
 
 ### Provisioning and Binding via Cloud Foundry
 
-Once you have installed the product, it automatically registers itself with your Elastic Runtime. At this point, the product is available to your application developers, either in the Marketplace in the web based console, or via `cf marketplace`. They can add, provision, and bind the service to their applications like any other CF service:
+Once you have installed the product it automatically registers itself with your Elastic Runtime. At this point the product is available to your application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. They can add, provision, and bind the service to their applications like any other CF service:
 
 <pre class="terminal">
 $ cf create-service p-mysql 100mb-dev mydb
