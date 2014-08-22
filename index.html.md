@@ -4,18 +4,25 @@ title: MySQL for Pivotal CF
 
 This is documentation for the MySQL service for Pivotal CF.
 
-### Install via Pivotal Operations Manager
+### Release Notes
 
-To install MySQL for Pivotal CF, follow the procedure for installing Pivotal Ops Manager tiles:
+Find release notes at [Pivotal CF Release Notes](/pivotalcf/pcf-release-notes/).
+
+### Deploy via Pivotal Operations Manager
 
 1. Download the product file from [Pivotal Network](https://network.gopivotal.com/products/p-mysql).
 1. Upload the product file to your Ops Manager installation.
 1. Click **Add** next to the uploaded product description in the Available Products view
    to add this product to your staging area.
 1. Click the newly added tile to review any configurable options.
-1. Click **Apply Changes** to install the service.
+1. Click **Apply Changes** to deploy the service.
 
 This product requires Pivotal CF version 1.2 or greater.
+
+### Configuring Lifecycle Errands
+
+Two lifecycle errands are run by default: the **broker registrar** and the
+**smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the configured plan public. The smoke test errand runs basic tests to validate that Elastic Runtime applications can successfully create, bind, use, and unbind MySQL service instances. Both errands can be turned on or off under **Lifecycle Errands** on the **Settings** tab.
 
 ### Provisioning and Binding via Cloud Foundry
 
@@ -37,7 +44,9 @@ To help your application developers get started with MySQL for Pivotal CF, we ha
 
 #### Service Plans
 
-A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these plan quotas. The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified.
+A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
+
+The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified.
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
@@ -47,7 +56,7 @@ An operator can configure how many database instances can be provisioned (instan
 
 ### Service Dashboard
 
-Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a "Manage" link next to the instance. Clicking this link will log users into the service dashboard via SSO.
+Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
 ### Version
 
