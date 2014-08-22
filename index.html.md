@@ -12,7 +12,7 @@ Find release notes at [MySQL for Pivotal CF](/pivotalcf/pcf-release-notes/p1-v1.
 
 To deploy MySQL for Pivotal CF, follow the procedure for deploying Pivotal Ops Manager tiles:
 
-1. Download the product file from [Pivotal Network](https://network.gopivotal.com/).
+1. Download the product file from [Pivotal Network](https://network.pivotal.io/).
 1. Upload the product file to your Ops Manager installation.
 1. Click **Add** next to the uploaded product description in the Available Products view
    to add this product to your staging area.

@@ -3,7 +3,7 @@ title: Back Up MySQL for Pivotal CF
 ---
 Complete the following steps to back up Pivotal MySQL Dev.
 
-**Note**: For information about backing up your Pivotal CF installation, refer to the [Backing Up Pivotal CF](http://docs.gopivotal.com/pivotalcf/customizing/backup-settings.html) topic.
+**Note**: For information about backing up your Pivotal CF installation, refer to the [Backing Up Pivotal CF](http://docs.pivotal.io/pivotalcf/customizing/backup-settings.html) topic.
 
 1. Locate the name of the current BOSH deployment for Pivotal MySQL Dev:
 
