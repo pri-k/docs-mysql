@@ -6,13 +6,11 @@ This is documentation for the MySQL service for Pivotal CF.
 
 ### Release Notes
 
-Find release notes at [MySQL for Pivotal CF](/pivotalcf/pcf-release-notes/p1-v1.2/mysqldev_rn.html).
+Find release notes at [Pivotal CF Release Notes](/pivotalcf/pcf-release-notes/).
 
 ### Deploy via Pivotal Operations Manager
 
-To deploy MySQL for Pivotal CF, follow the procedure for deploying Pivotal Ops Manager tiles:
-
-1. Download the product file from [Pivotal Network](https://network.pivotal.io/).
+1. Download the product file from [Pivotal Network](https://network.gopivotal.com/products/p-mysql).
 1. Upload the product file to your Ops Manager installation.
 1. Click **Add** next to the uploaded product description in the Available Products view
    to add this product to your staging area.
@@ -23,39 +21,37 @@ This product requires Pivotal CF version 1.2 or greater.
 
 ### Configuring Lifecycle Errands
 
-Two lifecycle errands are run be default: the **broker registrar** and the
-**smoke test**.
-The broker registrar errand registers the broker with the Cloud Controller and
-makes the configured plan public.
-The smoke test errand runs basic tests to validate that Elastic Runtime
-applications can successfully create, bind, use, and unbind MySQL service
-instances.
-Both errands can be turned on or off in the **Lifecycle Errand** tab on the
-left.
+Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the configured plan public. The smoke test errand runs basic tests to validate that Elastic Runtime applications can successfully create, bind, use, and unbind MySQL service instances. Both errands can be turned on or off under **Lifecycle Errands** on the **Settings** tab.
 
 ### Provisioning and Binding via Cloud Foundry
 
-Deploying the service automatically registers it with your Elastic Runtime. Once the service is deployed, it is available to your application developers from the Services Marketplace, either in the web-based Developer Console or via the `cf marketplace` CLI command. Developers can create instances and bind them to their applications like any other CF service:
+Once you have installed the product it automatically registers itself with your Elastic Runtime. At this point the product is available to your application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. They can add, provision, and bind the service to their applications like any other CF service:
 
-```
+<pre class="terminal">
 $ cf create-service p-mysql 100mb-dev mydb
 $ cf bind-service myapp mydb
 $ cf restart myapp
-```
+</pre>
 
 ### Example Application
 
-To help you get started with MySQL for Pivotal CF, we have provided an example application, which can be [downloaded here][example-app]. You'll find instructions for using the app in the included README.
+To help your application developers get started with MySQL for Pivotal CF, we have provided an example application, which can be [downloaded here][example-app].
 
 [example-app]:mysql-example-app.tgz
 
-### Service Plans
+### Product Configuration
 
-A single service plan is supported. Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. These databases should not be used for production workloads. Binding applications to the instance creates unique credentials for each bound application to access the database.
+#### Service Plans
 
-The plan enforces default quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these quotas, as well as the maximum number of databases permitted by the server. In calculating storage utilization, indexes are included along with raw tabular data. Changes to quotas will apply to all existing database instances as well as new instances. Operators should be aware of the relationship between persistent disk, database storage quota, and max databases per server. Storage quota multiplied by max databases must be less than persistent disk, or a server could run out of disk and crash.
+A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
-The plan name is **100mb-dev** by default and is automatically updated if the storage quota is modified in Operations Manager. For example, a storage quota of 1000 would result in a plan name of **1000mb-dev**.
+The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified.
+
+Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
+
+#### Instance Capacity
+
+An operator can configure how many database instances can be provisioned (instance capacity) by the increasing the amount of persistent disk allocated to the MySQL server nodes. This is done by modifying the Persistent Disk field on the Resource Sizes page for the product in Operations Manager. Not all persistent disk will be available for instance capacity; about 2-3 GB is reserved for service operation.
 
 ### Service Dashboard
 
@@ -63,14 +59,14 @@ Cloud Foundry users can access a service dashboard for each database from Develo
 
 ### Version
 
-Version 1.2 of this product is based on MySQL version 5.6.13.
+Version 1.3 of this product is based on [MariaDB](https://mariadb.org/en/) 10.0.12.
+
+### Back Ups
+
+See [Back Up MySQL for Pivotal CF](backup.html).
+
+**Note**: For information about backing up your Pivotal CF installation, refer to the [Backing Up Pivotal CF](http://docs.gopivotal.com/pivotalcf/customizing/backup-settings.html) topic.
 
 ### Known Limitations
 
 The MySQL server runs on a single VM. The server is not replicated or redundant. Data durability depends on the infrastructure persistence layer.
-
-### Further Reading
-
-* [Back Up MySQL for Pivotal CF](backup.html)
-* [Official MySQL Documentation](http://dev.mysql.com/doc/refman/5.6/en/)
-
