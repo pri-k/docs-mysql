@@ -6,7 +6,7 @@ This is documentation for the MySQL service for Pivotal CF.
 
 ### Release Notes
 
-Find release notes at [Pivotal CF Release Notes](/pivotalcf/pcf-release-notes/).
+Consult the [Release Notes](mysql_rn_1_3.html) and the [Known Issues](mysql_ki_1_3.html) for important tips and information about changes for this release.
 
 ### Deploy via Pivotal Operations Manager
 
