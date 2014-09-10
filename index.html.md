@@ -4,9 +4,11 @@ title: MySQL for Pivotal CF
 
 This is documentation for the MySQL service for Pivotal CF.
 
-### Release Notes
+### Release Notes & Known Issues
 
 Consult the [Release Notes](release-notes.html) for important tips and information about changes for this product.
+
+**Note**: The MySQL server runs on a single VM. The server is not replicated or redundant. Data durability depends on the infrastructure persistence layer. This product is recommended for test and development workloads only; not recommended for production use.
 
 ### Deploy via Pivotal Operations Manager
 
@@ -66,7 +68,3 @@ Version 1.3 of this product is based on [MariaDB](https://mariadb.org/en/) 10.0.
 See [Back Up MySQL for Pivotal CF](backup.html).
 
 **Note**: For information about backing up your Pivotal CF installation, refer to the [Backing Up Pivotal CF](http://docs.gopivotal.com/pivotalcf/customizing/backup-settings.html) topic.
-
-### Known Limitations
-
-The MySQL server runs on a single VM. The server is not replicated or redundant. Data durability depends on the infrastructure persistence layer.
