@@ -10,6 +10,8 @@ Consult the [Release Notes](release-notes.html) for important tips and informati
 
 ## Known Issues
 
+- The service dashboard is incompatible from v1.2 is incompatible with Elastic Runtime v1.3. If you have upgraded Elastic Runtime to v1.3, please install MySQL for Pivotal CF v1.3 to restore dashboard functionality.
+
 **Note**: The MySQL server runs on a single VM. The server is not replicated or redundant. Data durability depends on the infrastructure persistence layer. This product is recommended for test and development workloads only; not recommended for production use.
 
 ## Deploy via Pivotal Operations Manager
