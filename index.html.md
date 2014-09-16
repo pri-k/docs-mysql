@@ -4,13 +4,15 @@ title: MySQL for Pivotal CF
 
 This is documentation for the MySQL service for Pivotal CF.
 
-### Release Notes & Known Issues
+## Release Notes
 
 Consult the [Release Notes](release-notes.html) for important tips and information about changes for this product.
 
+## Known Issues
+
 **Note**: The MySQL server runs on a single VM. The server is not replicated or redundant. Data durability depends on the infrastructure persistence layer. This product is recommended for test and development workloads only; not recommended for production use.
 
-### Deploy via Pivotal Operations Manager
+## Deploy via Pivotal Operations Manager
 
 1. Download the product file from [Pivotal Network](https://network.gopivotal.com/products/p-mysql).
 1. Upload the product file to your Ops Manager installation.
@@ -21,11 +23,11 @@ Consult the [Release Notes](release-notes.html) for important tips and informati
 
 This product requires Pivotal CF version 1.2 or greater.
 
-### Configuring Lifecycle Errands
+## Configuring Lifecycle Errands
 
 Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the configured plan public. The smoke test errand runs basic tests to validate that Elastic Runtime applications can successfully create, bind, use, and unbind MySQL service instances. Both errands can be turned on or off under **Lifecycle Errands** on the **Settings** tab.
 
-### Provisioning and Binding via Cloud Foundry
+## Provisioning and Binding via Cloud Foundry
 
 Once you have installed the product it automatically registers itself with your Elastic Runtime. At this point the product is available to your application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. They can add, provision, and bind the service to their applications like any other CF service:
 
@@ -35,15 +37,15 @@ $ cf bind-service myapp mydb
 $ cf restart myapp
 </pre>
 
-### Example Application
+## Example Application
 
 To help your application developers get started with MySQL for Pivotal CF, we have provided an example application, which can be [downloaded here][example-app].
 
 [example-app]:mysql-example-app.tgz
 
-### Product Configuration
+## Product Configuration
 
-#### Service Plans
+### Service Plans
 
 A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
@@ -51,19 +53,19 @@ The name of the plan is **100mb-dev** by default and is automatically updated if
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
-#### Instance Capacity
+### Instance Capacity
 
 An operator can configure how many database instances can be provisioned (instance capacity) by the increasing the amount of persistent disk allocated to the MySQL server nodes. This is done by modifying the Persistent Disk field on the Resource Sizes page for the product in Operations Manager. Not all persistent disk will be available for instance capacity; about 2-3 GB is reserved for service operation.
 
-### Service Dashboard
+## Service Dashboard
 
 Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
-### Version
+## Version
 
 Version 1.3 of this product is based on [MariaDB](https://mariadb.org/en/) 10.0.12.
 
-### Back Ups
+## Back Ups
 
 See [Back Up MySQL for Pivotal CF](backup.html).
 
