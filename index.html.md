@@ -67,6 +67,8 @@ The service provides a dashboard where administrators can observe metrics for ea
 
 This statistics dashboard for each proxy instance can be found at: `http://haproxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0; if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://haproxy-0.p-mysql.example.com` and `http://haproxy-1.p-mysql.example.com`.
 
+Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
+
 ## Version
 
 Version 1.3 of this product is based on [MariaDB](https://mariadb.org/en/) 10.0.12.
