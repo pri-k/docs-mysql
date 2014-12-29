@@ -2,6 +2,19 @@
 title: Release Notes
 ---
 
+## 1.4.0
+
+- **High Availability**: database server is now clustered and synchronously replicated using MariaDB Galera Cluster. A copy of each database resides on all cluster nodes, and writes to any database are replicated to all copies. All client connections are routed to a primary cluster node, and in the event of a node failure the proxy tier manages failover, routing client connections to a healthy cluster node. MySQL server, proxy, and broker jobs can all be scaled out horizontally for increased availability, eliminating single points of failure.
+- **Improved logging and monitoring**: route-registration on the broker is now an independent process
+- **Bug fix**: calculation of storage utilization for the purposes of quota enforcement when multiple apps are bound
+- **Bug fix**: format of jdbcUrl connection string (found in VCAP_SERVICES on bind)
+
+    ### Notes on High Availability ###
+
+- When upgrading from an older version, applications must be rebound to take advantage of high availability features. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](/pivotalcf/devguide/services/managing-services.html).
+- Elimination of the proxy as a single point of failure requires configuration of an external load balancer to route connections to proxy instances. For details, see [Proxy Settings](/p-mysql/index.html#proxy).
+- See [Known Issues](/p-mysql/#known-issues).
+
 ## 1.3.2
 
 - **Updated stemcell addresses bash-shellshock vulnerabilities**: resolves CVEs discussed [here](http://www.pivotal.io/security/CVE-2014-6271) and [here](http://www.pivotal.io/security/CVE-2014-7186).
