@@ -10,7 +10,6 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 ## <a id="limitations"></a>Limitations ##
 
-- **This product is recommended for test and development workloads only; it is not recommended for production use.**
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
 - [MariaDB Galera Cluster - Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/).
