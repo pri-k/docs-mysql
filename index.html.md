@@ -12,6 +12,7 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
+- Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this nodes will become partitioned and the cluster could become unusable.
 - [MariaDB Galera Cluster - Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/).
 
 ## <a id="known-issues"></a>Known Issues ##
@@ -61,7 +62,7 @@ In order to configure a load balancer with the IPs of the proxy tier before v1.4
 
 Configure your load balancer to route connections for a hostname or IP to the proxy IPs. As proxy instances are not synchronized, we recommend configuring your load balancer to send all traffic to one proxy instance at a time until it fails, then failover to another proxy instance. For details, see [Known Issues](#known-issues).
 
-**Important**: To configure your load balancer with a healthcheck or monitor, use TCP against port **1936**. Unauthenticated healthchecks against port 3306 will cause the service to become unavailable, and will require manual intervention to fix. 
+**Important**: To configure your load balancer with a healthcheck or monitor, use TCP against port **1936**. Unauthenticated healthchecks against port 3306 will cause the service to become unavailable, and will require manual intervention to fix.
 
 #### Adding a load balancer after an initial deploy
 
