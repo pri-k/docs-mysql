@@ -12,7 +12,7 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
-- Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this nodes will become partitioned and the cluster could become unusable.
+- Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this nodes will become partitioned. If more than half of cluster nodes are partitioned the cluster will lose quorum and become unusable until manually bootstrapped.
 - [MariaDB Galera Cluster - Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/).
 
 ## <a id="known-issues"></a>Known Issues ##
