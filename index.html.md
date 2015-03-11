@@ -105,11 +105,11 @@ To help application developers get started with MySQL for Pivotal CF, we have pr
 
 Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
-## <a id="haproxy-stats"></a>HAProxy Statistics Dashboard ##
+## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
-The service provides a dashboard where administrators can observe metrics for each instance in the proxy tier. Metrics include the number of clients currently connected and the number of connections made to each of the backend database nodes.
+The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of clients currently connected and the number of connections made to each of the backend database nodes.
 
-This statistics dashboard for each proxy instance can be found at: `http://haproxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0; if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://haproxy-0.p-mysql.example.com` and `http://haproxy-1.p-mysql.example.com`.
+This dashboard for each proxy instance can be found at: `http://proxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0; if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0.p-mysql.example.com` and `http://proxy-1.p-mysql.example.com`.
 
 Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
 
