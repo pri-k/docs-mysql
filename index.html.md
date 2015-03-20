@@ -42,6 +42,8 @@ The name of the plan is **100mb-dev** by default and is automatically updated if
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
+Note: The service plan quota enforcer will remove your applications permissions if you go over your limit.  This can be remedied by updating to a larger plan or lowering your instance storage usage.
+
 ### <a id="proxy"></a>Proxy ###
 
 The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
