@@ -1,8 +1,8 @@
 ---
-title: MySQL for Pivotal CF
+title: MySQL for PCF
 ---
 
-This is documentation for the MySQL service for Pivotal CF.
+This is documentation for the MySQL service for [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF).
 
 ## <a id="release-notes"></a>Release Notes ##
 
@@ -17,13 +17,13 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 ## <a id="known-issues"></a>Known Issues ##
 
-- If a cluster node becomes a member of a partitioned minority of cluster nodes, proxy instances will route new connections to a healthy cluster node. Existing client connections will see writes rejected but connections will not be severed, and may have to wait for a timeout before they can reconnect.  
+- If a cluster node becomes a member of a partitioned minority of cluster nodes, proxy instances will route new connections to a healthy cluster node. Existing client connections will see writes rejected but connections will not be severed, and may have to wait for a timeout before they can reconnect.
 - All proxy instances use the same method to determine cluster health but during brief node failures proxy instances may come to different conclusions. Determination of which cluster node should be considered primary is not synchronized across proxy instances. If proxy instances diverge in their view of which node is primary, connections through multiple proxy instances may reach different cluster nodes. This is only an issue for tables that receive highly concurrent writes. In this scenario, multiple clients writing to the same table can obtain locks on the same row, resulting in a deadlock; one commit will succeed, all others will fail and must be retried. This can be prevented by configuring your load balancer to route connections to only one proxy instance at a time.
 - Once the product is deployed with operator-configured proxy IPs, the number of proxy instances can not be reduced, nor can the configured IPs be removed from the **Proxy IPs** field. If instead the product is initially deployed without proxy IPs, IPs added to the **Proxy IPs** field will only be used when adding additional proxy instances, scaling down is unpredictably permitted, and the first proxy instance can never be assigned an operator-configured IP.
 
 ## <a id="installation"></a>Installation ##
 
-This product requires Pivotal CF version 1.3.4 or greater.
+This product requires Pivotal Cloud Foundry version 1.3.4 or greater.
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/p-mysql).
 1. Upload the product file to your Ops Manager installation.
@@ -87,7 +87,7 @@ In determining how much persistent disk to make available for databases, operato
 
 ## <a id="provision-and-bind"></a>Provisioning and Binding via Cloud Foundry ##
 
-As part of installation the product is automatically registered with Elastic Runtime (see [Lifecycle Errands](#lifecycle-errands)). On successful installation, the MySQL service is available to application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. Developers can then provision instances of the service and bind them to their applications:
+As part of installation the product is automatically registered with [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) Elastic Runtime (see [Lifecycle Errands](#lifecycle-errands)). On successful installation, the MySQL service is available to application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. Developers can then provision instances of the service and bind them to their applications:
 
 <pre class="terminal">
 $ cf create-service p-mysql 100mb-dev mydb
@@ -99,7 +99,7 @@ For more information on use of services, see the [Services Overview](/pivotalcf/
 
 ## <a id="example-app"></a>Example Application ##
 
-To help application developers get started with MySQL for Pivotal CF, we have provided an example application, which can be [downloaded here][example-app]. Instructions can be found in the included README.
+To help application developers get started with MySQL for PCF, we have provided an example application, which can be [downloaded here][example-app]. Instructions can be found in the included README.
 
 [example-app]:mysql-example-app.tgz
 
@@ -117,9 +117,9 @@ Basic auth credentials are required to access the dashboard. These can be found 
 
 ## <a id="backup"></a>Back Ups ##
 
-See [Back Up MySQL for Pivotal CF](backup.html).
+See [Back Up MySQL for PCF](backup.html).
 
-**Note**: For information about backing up your Pivotal CF installation, refer to the [Backing Up Pivotal CF](/pivotalcf/customizing/backup-settings.html) topic.
+**Note**: For information about backing up your PCF installation, refer to the [Backing Up Pivotal Cloud Foundry](/pivotalcf/customizing/backup-settings.html) topic.
 
 ## <a id="version"></a>Version ##
 
