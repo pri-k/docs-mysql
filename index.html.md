@@ -118,7 +118,3 @@ Basic auth credentials are required to access the dashboard. These can be found 
 See [Back Up MySQL for Pivotal CF](backup.html).
 
 **Note**: For information about backing up your Pivotal CF installation, refer to the [Backing Up Pivotal CF](/pivotalcf/customizing/backup-settings.html) topic.
-
-## <a id="version"></a>Version ##
-
-Version 1.5.0 of this product is based on [MariaDB Galera Cluster](https://mariadb.com/kb/en/mariadb/documentation/replication/galera/what-is-mariadb-galera-cluster/) 10.0.16.
