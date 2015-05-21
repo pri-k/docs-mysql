@@ -109,7 +109,7 @@ Cloud Foundry users can access a service dashboard for each database from Develo
 
 The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of clients currently connected and the number of connections made to each of the backend database nodes.
 
-This dashboard for each proxy instance can be found at: `http://proxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0; if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0.p-mysql.example.com` and `http://proxy-1.p-mysql.example.com`.
+This dashboard for each proxy instance can be found at: `https://proxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0; if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `https://proxy-0.p-mysql.example.com` and `https://proxy-1.p-mysql.example.com`.
 
 Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
 
