@@ -17,8 +17,8 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 ## <a id="known-issues"></a>Known Issues ##
 
-- If a cluster node becomes a member of a partitioned minority of cluster nodes, proxy instances will route new connections to a healthy cluster node. Existing client connections will see writes rejected but connections will not be severed, and may have to wait for a timeout before they can reconnect.
-- All proxy instances use the same method to determine cluster health but during brief node failures proxy instances may come to different conclusions. Determination of which cluster node should be considered primary is not synchronized across proxy instances. If proxy instances diverge in their view of which node is primary, connections through multiple proxy instances may reach different cluster nodes. This is only an issue for tables that receive highly concurrent writes. In this scenario, multiple clients writing to the same table can obtain locks on the same row, resulting in a deadlock; one commit will succeed, all others will fail and must be retried. This can be prevented by configuring your load balancer to route connections to only one proxy instance at a time.
+- All proxy instances use the same method to determine cluster health. However, certain conditions may cause the proxy instances to route to different nodes, for example after brief cluster node failures.
+  - This could be an issue for tables that receive highly concurrent writes. Multiple clients writing to the same table could obtain locks on the same row, resulting in a deadlock. One commit will succeed and all others will fail and must be retried. This can be prevented by configuring your load balancer to route connections to only one proxy instance at a time.
 - Once the product is deployed with operator-configured proxy IPs, the number of proxy instances can not be reduced, nor can the configured IPs be removed from the **Proxy IPs** field. If instead the product is initially deployed without proxy IPs, IPs added to the **Proxy IPs** field will only be used when adding additional proxy instances, scaling down is unpredictably permitted, and the first proxy instance can never be assigned an operator-configured IP.
 
 ## <a id="installation"></a>Installation ##
@@ -42,8 +42,6 @@ The name of the plan is **100mb-dev** by default and is automatically updated if
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
-Note: The service plan quota enforcer will remove your applications permissions if you go over your limit.  This can be remedied by updating to a larger plan or lowering your instance storage usage.
-
 ### <a id="proxy"></a>Proxy ###
 
 The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
@@ -54,9 +52,9 @@ Applications are provided with a hostname or IP address to reach a database mana
 
 #### Configuring a load balancer
 
-In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.4, existing applications will continue to function but in order to take advantage of high availability features they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
+In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function but in order to take advantage of high availability features they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
 
-In order to configure a load balancer with the IPs of the proxy tier before v1.4.0 is deployed and prevent applications from obtaining the IP of the first proxy instance, the product enables an operator to configure the IPs that will be assigned to proxy instances. The following instructions applies to the **Proxy** settings page for the MySQL product in Operation Manager.
+In order to configure a load balancer with the IPs of the proxy tier before v1.5.0 is deployed and prevent applications from obtaining the IP of the first proxy instance, the product enables an operator to configure the IPs that will be assigned to proxy instances. The following instructions applies to the **Proxy** settings page for the MySQL product in Operation Manager.
 
 - In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances. These IPs must be in the CIDR range configured in the Director tile and not be currently allocated to another VM. Look at the **Status** pages of other tiles to see what IPs are in use.
 
@@ -68,9 +66,9 @@ Configure your load balancer to route connections for a hostname or IP to the pr
 
 #### Adding a load balancer after an initial deploy
 
-If v1.4.0 is initially deployed without a load balancer and without proxy IPs configured, a load balancer can be setup later to remove the proxy as a single point of failure. However, there are several implications to consider:
+If v1.5.0 is initially deployed without a load balancer and without proxy IPs configured, a load balancer can be setup later to remove the proxy as a single point of failure. However, there are several implications to consider:
 
-- Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.4.0.
+- Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
 - Instead of configuring the proxy IPs in Operations manager, use the IPs that were dynamically assigned by looking at the **Status** page. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported; see [Known Issues](#known-issues).
 
 ### <a id="lifecycle-errands"></a>Lifecycle Errands ###
@@ -107,11 +105,11 @@ To help application developers get started with MySQL for PCF, we have provided 
 
 Cloud Foundry users can access a service dashboard for each database from Developer Console via SSO. The dashboard displays current storage utilization and plan quota. On the Space page in Developer Console, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
-## <a id="haproxy-stats"></a>HAProxy Statistics Dashboard ##
+## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
-The service provides a dashboard where administrators can observe metrics for each instance in the proxy tier. Metrics include the number of clients currently connected and the number of connections made to each of the backend database nodes.
+The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of clients currently connected and the number of connections made to each of the backend database nodes.
 
-This statistics dashboard for each proxy instance can be found at: `http://haproxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0; if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://haproxy-0.p-mysql.example.com` and `http://haproxy-1.p-mysql.example.com`.
+This dashboard for each proxy instance can be found at: `http://proxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0; if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0.p-mysql.example.com` and `http://proxy-1.p-mysql.example.com`.
 
 Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
 
