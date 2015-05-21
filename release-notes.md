@@ -2,6 +2,27 @@
 title: Release Notes
 ---
 
+## 1.5.0
+
+- **AWS support:** The clustered database service can now be deployed on Amazon Web Services from the Operations Manager Web UI.
+  - Deployment is limited to a single Availability Zone. Look for multi-AZ in future releases.
+  - Single availability zone is a limitation on AWS. Operations Manager on vSphere continues to support deployment to multiple availability zones.
+  - The default instance type for the cluster nodes on AWS is m3.large.
+  - All jobs are deployed with SSD for ephemeral and persistent disk.
+- **IaaS agnostic**
+  - The same product can be deployed to both AWS and vSphere
+  - Precompiled packages are no longer included
+  - p-mysql 1.5.0 requires Operations Manager 1.4.0
+- **New proxy tier** 
+  - Improved availability: We have entirely re-written the proxy to eliminate situations where clients could hang when a cluster node was unhealthy. 
+  - A dashboard that clearly displays node health in real time
+- **Upgrade support:** This product can be automatically upgraded from version 1.3.2 or 1.4.0 
+- **Cluster node resources increased for vSphere**: The default resources are now 4GB RAM, 2 CPU, 10GB persistent disk
+- **Faster compilation:** Default resource for the compilation jobs on vSphere are now 4GB RAM, 4 CPU, 20GB persistent disk
+- **Bug fix:** Fix broker-deregistrar errand to succeed even when MySQL service is broken
+- **Bug fix:** Quota enforcer could fail when broker hasn't finished initializing
+
+
 ## 1.4.0
 
 - **High Availability**: database server is now clustered and synchronously replicated using MariaDB Galera Cluster. A copy of each database resides on all cluster nodes, and writes to any database are replicated to all copies. All client connections are routed to a primary cluster node, and in the event of a node failure the proxy tier manages failover, routing client connections to a healthy cluster node. MySQL server, proxy, and broker jobs can all be scaled out horizontally for increased availability, eliminating single points of failure.

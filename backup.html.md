@@ -1,5 +1,5 @@
 ---
-title: Back Up MySQL for Pivotal CF
+title: Back Up MySQL for Pivotal Cloud Foundry
 ---
 
 1. Locate the IP address for the MySQL node in the Status tab.
