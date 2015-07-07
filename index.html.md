@@ -9,11 +9,11 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry](https://
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.5.1
-- **Release Date**: 15 minutes into the future
-- **Software component version**: MariaDB 10.0.20, Galera 25.3.9, Xtrabackup 2.2.10
+- **Version**: 1.5.0
+- **Release Date**: 2015-04-08
+- **Software component version**: MariaDB 10.0.16, Galera 25.3.5
 - **Compatible Ops Manager Version(s)**: 1.4.x, 1.5.x
-- **Compatible Elastic Runtime Version(s)**: 1.4.5, 1.5.x
+- **Compatible Elastic Runtime Version(s)**: 1.3.x, 1.4.5, 1.5.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** No
@@ -23,7 +23,7 @@ Current MySQL for Pivotal Cloud Foundry Details
 ## Upgrading to the Latest Version
 Consider the following compatibility information before upgrading MySQL for Pivotal Cloud Foundry.
 
-<p class="note"><strong>Note</strong>: Before you upgrade to Ops Manager 1.4.x or 1.5.x, you must first upgrade MySQL for PCF to any version of **1.3.x**. This allows MySQL for PCF upgrades after you install OpsManager 1.4.x.</p>
+<p class="note"><strong>Note</strong>: Before you upgrade to Ops Manager 1.4.x or 1.5.x, you must first upgrade MySQL for PCF to any version of 1.3 or 1.4. This allows MySQL for PCF upgrades after you install OpsManager 1.4.x.</p>
 
 For more information, refer to the full Product Version Matrix.
 
@@ -32,13 +32,14 @@ For more information, refer to the full Product Version Matrix.
     <th>Supported Upgrades from Imported MySQL Installation</th></tr>
 <tr><th>1.3.x</th>
     <td><ul>
-        <li>From 1.3.2 to 1.3.3</li>
-        <li>From 1.3.2 to 1.3.4.1</li>
+        <li>From 1.2 to 1.3</li>
+        <li>From 1.3.2 to 1.4.0</li>
         </ul></td></tr>
 <tr><th>1.4.x and 1.5.x</th>
     <td><ul>
         <li>From 1.3.2 to 1.4.0</li>
-        <li>From 1.3.3 to 1.4.0</li>
+        <li>From 1.3.2 to 1.5.0</li>
+        <li>From 1.4.0 to 1.5.0</li>
         </ul></td></tr>
 </table>
 
