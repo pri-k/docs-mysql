@@ -34,7 +34,7 @@ title: Back Up MySQL for Pivotal Cloud Foundry
   - Restore from the data dump:
 
     ```
-    $ mysql -u root -p -h $MYSQL_NODE_IP M user_databases.sql
+    $ mysql -u root -p -h $MYSQL_NODE_IP < user_databases.sql
     ```
 
 ### Examples
