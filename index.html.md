@@ -152,8 +152,15 @@ This dashboard for each proxy instance can be found at: `https://proxy-<job inde
 
 Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
 
-## <a id="backup"></a>Back Ups ##
+For more information about SwitchBoard, read the [proxy documentation](proxy.html)
 
-See [Back Up MySQL for PCF](backup.html).
+## <a id="SeeAlso"></a>See Also##
 
-**Note**: For information about backing up your PCF installation, refer to the [Backing Up Pivotal Cloud Foundry](/pivotalcf/customizing/backup-settings.html) topic.
+  * [Notes on cluster configuration](cluster-config.html)
+  * [Backing Up MySQL for PCF](backup.html)<br>
+    **Note**: For information about backing up your PCF installation, refer to the [Backing Up Pivotal Cloud Foundry](/pivotalcf/customizing/backup-settings.html) topic.
+  * [Determining MySQL cluster state](cluster-state.html)
+  * [More on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
+  * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
+
+
