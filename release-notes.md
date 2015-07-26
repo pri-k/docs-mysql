@@ -2,6 +2,30 @@
 title: Release Notes
 ---
 
+## 1.6.0
+
+- Now includes MariaDB 10.0.19 and Galera 5.5.43 ([release notes](https://mariadb.com/kb/en/mariadb-galera-cluster-10019-release-notes/))
+  - Includes several default configuration changes to better manage MariaDB's memory and disk usage during periods of heavy use.
+- **Improved stability:** This version includes an all-new Quota Enforcer for enhanced stability and in preparation for new features in future releases.
+- **Improved stability:** Now provides greater stability during cluster recovery by using the xtrabackup-v2 replication mechanism.
+- Updates to both Service and Proxy dashboards to support the experimental HTTPS-only feature in Elastic Runtime 1.5
+- Now uses the MariaDB connector rather than additionally including the MySQL connector.
+- **Security:** The MySQL deployment now runs as user vcap, not rootA
+- **Security:** Upgraded Ruby and Rails components to address various CVEs.
+- **Bug fix:** Once over quota, write privileges are not restored by dropping all tables.
+- **Bug fix:** The broker-deregistrar errand now succeeds even when a MySQL service is broken.
+- **Bug fix:** Service Broker dashboard should not return 500 if OAuth access token expires.
+
+- **Upgrade support:** This product can be automatically upgraded from version 1.3.3 or 1.4.0
+
+- Documentation now includes several new sections:
+    * [Notes on cluster configuration](cluster-config.html)
+    * [Determining MySQL cluster state](cluster-state.html)
+    * [Background on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
+    * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
+
+* Note: BOSH Stemcell 3012 is required for installation on Ops Manager 1.5.x and above.
+
 ## 1.5.0
 
 - **AWS support:** The clustered database service can now be deployed on Amazon Web Services from the Operations Manager Web UI.
