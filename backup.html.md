@@ -13,9 +13,9 @@ title: Back Up MySQL for Pivotal Cloud Foundry
 ## Backup
 
   Manual backup can be performed with [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/).
-  This backup acquires a global read lock on all tables, but does not hold it for the entire duration fo the dump.
+  This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
 
-  - To backup ALL databases in the MySQL deployment, use `--all-databases`:
+  - To backup **all** databases in the MySQL deployment, use `--all-databases`:
 
     ```
     $ mysqldump -u root -p -h $MYSQL_NODE_IP --all-databases > user_databases.sql
@@ -29,7 +29,7 @@ title: Back Up MySQL for Pivotal Cloud Foundry
 
 ## Restore
   Restoring from a backup is the same whether one or multiple databases were backed up.
-  Executing the SQL dump will drop, recreate and refill the specified databases and tables.
+  Executing the SQL dump will drop, recreate, and refill the specified databases and tables.
 
   - Restore from the data dump:
 
