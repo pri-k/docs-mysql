@@ -3,7 +3,7 @@ title: Bootstrapping a Galera Cluster
 ---
 
 
-Bootstrapping is the process of (re)starting a Galera cluster. Before evaluating whether manual bootstrapping is necessary, ensure the nodes are able to communicate with each other i.e. there are no network partitions. Once network partitions have been resolved, reevaluate the cluster state.
+Bootstrapping is the process of (re)starting a Galera cluster. Before evaluating whether manual bootstrapping is necessary, ensure the nodes are able to communicate with each other, i.e., there are no network partitions. Once network partitions have been resolved, reevaluate the cluster state.
 
 ## When to Bootstrap
 
@@ -17,7 +17,7 @@ Note: The cluster is automatically bootstrapped the first time the cluster is de
 
 ### Symptoms of Lost Quorum
 
-- [All nodes appear "Unhealthy" on the proxy dashboard.](quorum-lost.png)
+- All nodes appear "Unhealthy" on the proxy dashboard.
 - All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary`.
 
     ```sh
@@ -35,7 +35,7 @@ Note: The cluster is automatically bootstrapped the first time the cluster is de
     ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
     ```
 
-See [Cluster Behavior](cluster-behavior.md) for more details about determining cluster state.
+See [Cluster Behavior](./cluster-behavior.html) for more details about determining cluster state.
 
 ## Bootstrapping
 
@@ -73,11 +73,11 @@ Once it has been determined that bootstrapping is required, follow the following
 
         Note: The galera state file will still say `seqno: -1` afterward.
 
-    - If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case there's nothing to recover. Unless all nodes crashed this way, don't choose this node for bootstrapping.
+    - If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case, there is nothing to recover. Unless all nodes crashed this way, do not choose this node for bootstrapping.
 
     Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
-  **Important:** Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See [cluster behavior](cluster-behavior.md) for more details on intentionally abandoning data.
+  **Important**: Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster, unless its data is abandoned. Its mariadb process will exit with an error. See [cluster behavior](cluster-behavior.md) for more details on intentionally abandoning data.
 
 - On the new bootstrap node, update state file and restart the mariadb process:
 
