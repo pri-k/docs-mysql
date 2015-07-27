@@ -77,7 +77,7 @@ Once it has been determined that bootstrapping is required, follow the following
 
     Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
-  **Important**: Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster, unless its data is abandoned. Its mariadb process will exit with an error. See [cluster behavior](cluster-behavior.md) for more details on intentionally abandoning data.
+  **Important**: Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster, unless its data is abandoned. Its mariadb process will exit with an error. See [cluster behavior](cluster-behavior.html) for more details on intentionally abandoning data.
 
 - On the new bootstrap node, update state file and restart the mariadb process:
 
