@@ -9,14 +9,14 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry](https://
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.5.0
-- **Release Date**: 2015-04-08
-- **Software component version**: MariaDB 10.0.16, Galera 25.3.5
+- **Version**: 1.6.0
+- **Release Date**: 2015-07-24
+- **Software component versions**: MariaDB 10.0.19, Galera 5.5.43
 - **Compatible Ops Manager Version(s)**: 1.4.x, 1.5.x
 - **Compatible Elastic Runtime Version(s)**: 1.3.x, 1.4.5, 1.5.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
-- **OpenStack support?** No
+- **OpenStack support?** Beta
 
 </div>
 
@@ -40,6 +40,8 @@ For more information, refer to the full Product Version Matrix.
         <li>From 1.3.2 to 1.4.0</li>
         <li>From 1.3.2 to 1.5.0</li>
         <li>From 1.4.0 to 1.5.0</li>
+        <li>From 1.4.0 to 1.6.0</li>
+        <li>From 1.5.0 to 1.6.0</li>
         </ul></td></tr>
 </table>
 
@@ -152,8 +154,15 @@ This dashboard for each proxy instance can be found at: `https://proxy-<job inde
 
 Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
 
-## <a id="backup"></a>Back Ups ##
+For more information about SwitchBoard, read the [proxy documentation](proxy.html)
 
-See [Back Up MySQL for PCF](backup.html).
+## <a id="SeeAlso"></a>See Also##
 
-**Note**: For information about backing up your PCF installation, refer to the [Backing Up Pivotal Cloud Foundry](/pivotalcf/customizing/backup-settings.html) topic.
+  * [Notes on cluster configuration](cluster-config.html)
+  * [Backing Up MySQL for PCF](backup.html)<br>
+    **Note**: For information about backing up your PCF installation, refer to the [Backing Up Pivotal Cloud Foundry](/pivotalcf/customizing/backup-settings.html) topic.
+  * [Determining MySQL cluster state](cluster-state.html)
+  * [More on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
+  * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
+
+
