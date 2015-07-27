@@ -28,7 +28,7 @@ When a new MariaDb node comes online, it replicates data from the existing node 
 
 If the proxy detects that this node becomes [unhealthy](https://github.com/cloudfoundry/cf-mysql-release/blob/release-candidate/docs/proxy.md#unhealthy), it will sever existing connections, and route all new connections to a different, healthy node. If there are no healthy MariaDb nodes, the proxy will reject all subsequent connections.
 
-While transitioning from one node to a cluster, there will be an undetermined period of performance degradation while the new node sync's all data from the original node.
+While transitioning from one node to a cluster, there will be an undetermined period of performance degradation while the new node syncs all data from the original node.
 
 Note: If you are planning to scale up MariaDb nodes, it is recommended to do so in different Availability Zones to maximize cluster availability. An Availability Zone is a network-distinct section of a given Region. Further details are available in [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
 
@@ -39,7 +39,7 @@ When scaling from multiple nodes to a single MariaDb node, the proxy will determ
 Existing nodes restarted with monit should automatically join the cluster. If an existing node fails to join the cluster, it may be because its transaction record's (`seqno`) is higher than that of the nodes in the cluster with quorum (aka the primary component).
 
   - If the node has a higher `seqno` it will be apparent in the error log `/var/vcap/sys/log/mysql/mysql.err.log`.
-  - If the healthy nodes of a cluster have a lower transaction record number than the failing node, it might be desirable to shut down the healthy nodes and bootstrap from the node with the more recent transaction record number. See the [bootstraping docs](bootstrapping.html) for more details.
+  - If the healthy nodes of a cluster have a lower transaction record number than the failing node, it might be desirable to shut down the healthy nodes and bootstrap from the node with the more recent transaction record number. See the [bootstrapping docs](bootstrapping.html) for more details.
   - Manual recovery may be possible, but is error-prone and involves dumping transactions and applying them to the running cluster (out of scope for this doc).
   - Abandoning the data is also an option, if you're ok with losing the unsynced transactions. Follow the following steps to abandon the data (as root):
     - Stop the process with `monit stop mariadb_ctrl`.
@@ -61,7 +61,7 @@ Existing nodes restarted with monit should automatically join the cluster. If an
     - firewall rule changes
     - vm failure
   - Unresponsive nodes will stop responding to queries and, after timeout, leave the cluster.
-  - Nodes will be marked as unresponsive (innactive) either:
+  - Nodes will be marked as unresponsive (inactive) either:
     - If they fail to respond to one node within 15 seconds
     - OR If they fail to respond to all other nodes within 5 seconds
   - Unresponsive nodes that become responsive again will rejoin the cluster, as long as they are on the same IP which is pre-configured in the gcomm address on all the other running nodes, and a quorum was held by the remaining nodes.
@@ -74,8 +74,8 @@ Existing nodes restarted with monit should automatically join the cluster. If an
 
 ### Simulating node failure
   - To simulate a temporary single node failure, use `kill -9` on the pid of the mysql process. This will only temporarily disable the node because the process is being monitored by monit, which will restart the process if it is not running.
-  - To more permenantly disable the process, execute `monit unmonitor mariadb_ctrl` before `kill -9`.
-  - To simulate multi-node failure without killing a node process, communication can be severed by changing the iptables config to dissallow communication:
+  - To more permanently disable the process, execute `monit unmonitor mariadb_ctrl` before `kill -9`.
+  - To simulate multi-node failure without killing a node process, communication can be severed by changing the iptables config to disallow communication:
 
     ```
     iptables -F && # optional - flush existing rules \
