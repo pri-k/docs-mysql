@@ -9,8 +9,8 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry](https://
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.6.0
-- **Release Date**: 2015-07-24
+- **Version**: 1.6.1.0
+- **Release Date**: 2015-07-31
 - **Software component versions**: MariaDB 10.0.19, Galera 5.5.43
 - **Compatible Ops Manager Version(s)**: 1.4.x, 1.5.x
 - **Compatible Elastic Runtime Version(s)**: 1.3.x, 1.4.5, 1.5.x
@@ -23,7 +23,7 @@ Current MySQL for Pivotal Cloud Foundry Details
 ## Upgrading to the Latest Version
 Consider the following compatibility information before upgrading MySQL for Pivotal Cloud Foundry.
 
-<p class="note"><strong>Note</strong>: Before you upgrade to Ops Manager 1.4.x or 1.5.x, you must first upgrade MySQL for PCF to any version of 1.3 or 1.4. This allows MySQL for PCF upgrades after you install OpsManager 1.4.x.</p>
+<p class="note"><strong>Note</strong>: Before you upgrade to Ops Manager 1.4.x or 1.5.x, you must first upgrade MySQL for PCF to any version of 1.4. This enables upgrades to MySQL for PCF after you install OpsManager 1.4.x.</p>
 
 For more information, refer to the full Product Version Matrix.
 
@@ -40,8 +40,7 @@ For more information, refer to the full Product Version Matrix.
         <li>From 1.3.2 to 1.4.0</li>
         <li>From 1.3.2 to 1.5.0</li>
         <li>From 1.4.0 to 1.5.0</li>
-        <li>From 1.4.0 to 1.6.0</li>
-        <li>From 1.5.0 to 1.6.0</li>
+        <li>From 1.5.0 to 1.6.1</li>
         </ul></td></tr>
 </table>
 
@@ -164,5 +163,3 @@ For more information about SwitchBoard, read the [proxy documentation](proxy.htm
   * [Determining MySQL cluster state](cluster-state.html)
   * [More on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
   * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
-
-

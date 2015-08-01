@@ -2,7 +2,7 @@
 title: Release Notes
 ---
 
-## 1.6.0
+## 1.6.1
 
 - Now includes MariaDB 10.0.19 and Galera 5.5.43 ([release notes](https://mariadb.com/kb/en/mariadb-galera-cluster-10019-release-notes/))
   - Includes several default configuration changes to better manage MariaDB's memory and disk usage during periods of heavy use.
@@ -10,13 +10,13 @@ title: Release Notes
 - **Improved stability:** Now provides greater stability during cluster recovery by using the xtrabackup-v2 replication mechanism.
 - Updates to both Service and Proxy dashboards to support the experimental HTTPS-only feature in Elastic Runtime 1.5
 - Now uses the MariaDB connector rather than additionally including the MySQL connector.
-- **Security:** The MySQL deployment now runs as user vcap, not rootA
+- **Security:** The MySQL deployment now runs as user vcap, not root.
 - **Security:** Upgraded Ruby and Rails components to address various CVEs.
 - **Bug fix:** Once over quota, write privileges are not restored by dropping all tables.
 - **Bug fix:** The broker-deregistrar errand now succeeds even when a MySQL service is broken.
 - **Bug fix:** Service Broker dashboard should not return 500 if OAuth access token expires.
 
-- **Upgrade support:** This product can be automatically upgraded from version 1.3.3 or 1.4.0
+- **Upgrade support:** This product can be automatically upgraded from version 1.5.0
 
 - Documentation now includes several new sections:
     * [Notes on cluster configuration](cluster-config.html)
@@ -24,7 +24,7 @@ title: Release Notes
     * [Background on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
     * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
 
-* Note: BOSH Stemcell 3012 is required for installation on Ops Manager 1.5.x and above.
+* **Note:** BOSH Stemcell 3026 is required; this stemcell is provided by Ops Manager 1.5.1.
 
 ## 1.5.0
 
@@ -37,10 +37,10 @@ title: Release Notes
   - The same product can be deployed to both AWS and vSphere
   - Precompiled packages are no longer included
   - p-mysql 1.5.0 requires Operations Manager 1.4.0
-- **New proxy tier** 
-  - Improved availability: We have entirely re-written the proxy to eliminate situations where clients could hang when a cluster node was unhealthy. 
+- **New proxy tier**
+  - Improved availability: We have entirely re-written the proxy to eliminate situations where clients could hang when a cluster node was unhealthy.
   - A dashboard that clearly displays node health in real time
-- **Upgrade support:** This product can be automatically upgraded from version 1.3.2 or 1.4.0 
+- **Upgrade support:** This product can be automatically upgraded from version 1.3.2 or 1.4.0
 - **Cluster node resources increased for vSphere**: The default resources are now 4GB RAM, 2 CPU, 10GB persistent disk
 - **Faster compilation:** Default resource for the compilation jobs on vSphere are now 4GB RAM, 4 CPU, 20GB persistent disk
 - **Bug fix:** Fix broker-deregistrar errand to succeed even when MySQL service is broken
