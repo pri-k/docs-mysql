@@ -25,7 +25,7 @@ Consider the following compatibility information before upgrading MySQL for Pivo
 
 <p class="note"><strong>Note</strong>: Before you upgrade to Ops Manager 1.4.x or 1.5.x, you must first upgrade MySQL for PCF to any version of 1.4. This enables upgrades to MySQL for PCF after you install OpsManager 1.4.x.</p>
 
-For more information, refer to the full Product Version Matrix.
+For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
 
 <table border="1" class="nice">
 <tr><th>OpsManager Version</th>
