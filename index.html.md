@@ -86,7 +86,7 @@ Provisioning a service instance from this plan creates a MySQL database on a mul
 
 The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
 
-Applications are provided with a hostname or IP address to reach a database managed by the service (for more information, see [About Service Binding](/pivotalcf/devguide/services/#binding-services)). By default, the MySQL service will provide bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections will not be routed through them. This means the first proxy instance is a single point of failure.
+Applications are provided with a hostname or IP address to reach a database managed by the service (for more information, see [Application Binding](/pivotalcf/devguide/services/index.html#application-binding)). By default, the MySQL service will provide bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections will not be routed through them. This means the first proxy instance is a single point of failure.
 
 **In order to eliminate the first proxy instance as a single point of failure, operators must configure a load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer.**
 
