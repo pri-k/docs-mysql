@@ -9,8 +9,8 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry](https://
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.6.0
-- **Release Date**: 2015-07-24
+- **Version**: 1.6.2
+- **Release Date**: 2015-09-04
 - **Software component versions**: MariaDB 10.0.19, Galera 5.5.43
 - **Compatible Ops Manager Version(s)**: 1.4.x, 1.5.x
 - **Compatible Elastic Runtime Version(s)**: 1.3.x, 1.4.5, 1.5.x
@@ -40,8 +40,9 @@ For more information, refer to the full Product Version Matrix.
         <li>From 1.3.2 to 1.4.0</li>
         <li>From 1.3.2 to 1.5.0</li>
         <li>From 1.4.0 to 1.5.0</li>
-        <li>From 1.4.0 to 1.6.0</li>
-        <li>From 1.5.0 to 1.6.0</li>
+        <li>From 1.4.0 to 1.6.0, 1.6.1 and 1.6.2</li>
+        <li>From 1.5.0 to 1.6.0, 1.6.1 and 1.6.2</li>
+        <li>From 1.6.0 to 1.6.1 and 1.6.2</li>
         </ul></td></tr>
 </table>
 
@@ -51,6 +52,7 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 ## <a id="limitations"></a>Limitations ##
 
+- Support for the Experimental HTTPS-only feature is broken, and will be fixed in a coming release.
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
 - Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this nodes will become partitioned. If more than half of cluster nodes are partitioned the cluster will lose quorum and become unusable until manually bootstrapped.

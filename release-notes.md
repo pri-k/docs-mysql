@@ -2,6 +2,27 @@
 title: Release Notes
 ---
 
+## 1.6.2
+
+Release Date: 4 September 2015
+
+Updated stemcell to 3062. This is a regular security upgrade that resolves the following issues:
+
+- [USN-2694-1] PCRE vulnerabilities
+- [USN-2698-1] SQLite vulnerabilities
+- [USN-2710-1] OpenSSH vulnerabilities
+- [USN-2710-2] OpenSSH regression
+- [USN-2718-1] Linux kernel (Vivid HWE) vulnerability
+
+### Known Issues
+- Experimental feature HTTPS traffic to HAProxy does not work; it will be fixed in an upcoming release.
+
+
+## 1.6.1
+
+- Updated stemcell to 3026 to resolve CVE-2015-3290
+
+
 ## 1.6.0
 
 - Now includes MariaDB 10.0.19 and Galera 5.5.43 ([release notes](https://mariadb.com/kb/en/mariadb-galera-cluster-10019-release-notes/))
