@@ -81,7 +81,9 @@ This product requires Pivotal Cloud Foundry version 1.3.4 or greater.
 
 A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user by default. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
-The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified.
+The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified. Thus, if the storage quota is changed to 1024, the new default plan name will be **1024mb-dev**.
+
+**Note**: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run, `cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME` on the command line.
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
