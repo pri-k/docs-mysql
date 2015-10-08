@@ -2,6 +2,16 @@
 title: Release Notes
 ---
 
+## 1.6.3
+
+Release Date: 7 October 2015
+
+Updated stemcell to 3094. This is a regular security upgrade that resolves the following issues:
+
+- [[USN-2765-1](http://www.ubuntu.com/usn/usn-2765-1)] Linux kernel (Vivid HWE) vulnerability
+
+
+
 ## 1.6.2
 
 Release Date: 4 September 2015
