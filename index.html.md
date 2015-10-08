@@ -9,8 +9,8 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry](https://
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.6.2
-- **Release Date**: 2015-09-04
+- **Version**: 1.6.3
+- **Release Date**: 2015-10-07
 - **Software component versions**: MariaDB 10.0.19, Galera 5.5.43
 - **Compatible Ops Manager Version(s)**: 1.4.x, 1.5.x
 - **Compatible Elastic Runtime Version(s)**: 1.3.x, 1.4.5, 1.5.x
@@ -40,9 +40,8 @@ For more information, refer to the full [Product Version Matrix](../compatibilit
         <li>From 1.3.2 to 1.4.0</li>
         <li>From 1.3.2 to 1.5.0</li>
         <li>From 1.4.0 to 1.5.0</li>
-        <li>From 1.4.0 to 1.6.0, 1.6.1 and 1.6.2</li>
-        <li>From 1.5.0 to 1.6.0, 1.6.1 and 1.6.2</li>
-        <li>From 1.6.0 to 1.6.1 and 1.6.2</li>
+        <li>From 1.5.0 to 1.6.1 - 1.6.3</li>
+        <li>From 1.6.1 to 1.6.2 and 1.6.3</li>
         </ul></td></tr>
 </table>
 
@@ -65,8 +64,6 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 - Once the product is deployed with operator-configured proxy IPs, the number of proxy instances can not be reduced, nor can the configured IPs be removed from the **Proxy IPs** field. If instead the product is initially deployed without proxy IPs, IPs added to the **Proxy IPs** field will only be used when adding additional proxy instances, scaling down is unpredictably permitted, and the first proxy instance can never be assigned an operator-configured IP.
 
 ## <a id="installation"></a>Installation ##
-
-This product requires Pivotal Cloud Foundry version 1.3.4 or greater.
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/p-mysql).
 1. Upload the product file to your Ops Manager installation.
