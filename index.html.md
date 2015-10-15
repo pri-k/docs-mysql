@@ -161,7 +161,7 @@ For more information about SwitchBoard, read the [proxy documentation](proxy.htm
 
   * [Notes on cluster configuration](cluster-config.html)
   * [Backing Up MySQL for PCF](backup.html)<br>
-    **Note**: For information about backing up your PCF installation, refer to the [Backing Up Pivotal Cloud Foundry](/pivotalcf/customizing/backup-settings.html) topic.
+    **Note**: For information about backing up your PCF installation, refer to [Backing Up and Restoring Pivotal Cloud Foundry](/pivotalcf/customizing/backup-restore/index.html).
   * [Determining MySQL cluster state](cluster-state.html)
   * [More on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
   * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
