@@ -51,17 +51,15 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 ## <a id="limitations"></a>Limitations ##
 
-- Support for the Experimental HTTPS-only feature is broken, and will be fixed in a coming release.
+- While two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. Please see the note in the [Proxy](#proxy) section below, as well as the entry in [Known Issues](known-issues.md).
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
 - Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this nodes will become partitioned. If more than half of cluster nodes are partitioned the cluster will lose quorum and become unusable until manually bootstrapped.
-- [MariaDB Galera Cluster - Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/).
+- Please also consult the list of [Known limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/) in MariaDB cluster.
 
 ## <a id="known-issues"></a>Known Issues ##
 
-- All proxy instances use the same method to determine cluster health. However, certain conditions may cause the proxy instances to route to different nodes, for example after brief cluster node failures.
-  - This could be an issue for tables that receive highly concurrent writes. Multiple clients writing to the same table could obtain locks on the same row, resulting in a deadlock. One commit will succeed and all others will fail and must be retried. This can be prevented by configuring your load balancer to route connections to only one proxy instance at a time.
-- Once the product is deployed with operator-configured proxy IPs, the number of proxy instances can not be reduced, nor can the configured IPs be removed from the **Proxy IPs** field. If instead the product is initially deployed without proxy IPs, IPs added to the **Proxy IPs** field will only be used when adding additional proxy instances, scaling down is unpredictably permitted, and the first proxy instance can never be assigned an operator-configured IP.
+Consult the [Known Issues](known-issues.md) page for information about issues in current releases of p-mysql.
 
 ## <a id="installation"></a>Installation ##
 
@@ -81,6 +79,8 @@ A single service plan enforces quotas of 100MB of storage per database and 40 co
 The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified. Thus, if the storage quota is changed to 1024, the new default plan name will be **1024mb-dev**.
 
 **Note**: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run, `cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME` on the command line.
+
+**Further note**: This feature does not work properly in versions of p-mysql 1.6.3 and earlier. Please see the entry in [Known Issues](known-issues.md) for the recommended workaround.
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
