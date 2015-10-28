@@ -38,7 +38,7 @@ The proxy will sever all existing connections to newly unhealthy nodes. Clients 
 If node health cannot be determined due to an unreachable or unresponsive healthcheck endpoint, the proxy will consider the node unhealthy. This may happen if there is a network partition or if the VM containing the healthcheck and MariaDB node died.
 
 
-## State Snapshot Transfer (SST)
+## <a id='state-snapshot-transfer-sst'></a>State Snapshot Transfer (SST)
 
 When a new node is added to the cluster or rejoins the cluster, it synchronizes state with the primary component via a process called SST. A single node from the primary component is chosen to act as a state donor. By default Galera uses rsync to perform SST, which blocks for the duration of the transfer. However, cf-mysql-release is configured to use [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup), which allows the donor node to continue to accept reads and writes.
 
