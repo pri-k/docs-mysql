@@ -4,13 +4,13 @@ title: Back Up MySQL for Pivotal Cloud Foundry
 
 
 # Automated Backups
-In versions of p-mysql 1.7.0.0 and higher, automated backups can be enabled in the "Configure Backups" section. Backups enable the following features:
+In versions of p-mysql 1.7.0.0 and higher, automated backups can be enabled in the "Configure Backups" section. Backups has the following features:
 
 - Periodically create and upload backup artifacts suitable for restoring the complete set of database instances allocated in the service.
 - No locks, no downtime. The only affect on the serving systems is the amount of I/O required to copy the database and log files off of the VM.
 - Includes a metadata file which contains the critical details of the backup artifact, including the effective calendar time of the backup.
-- Backup artifacts are encrypted within the p-mysql cluster of VMs; clear data is never transported outside of the p-mysql deployment.
-- Backups are currently stored on Amazon S3. Other storage targets will be added over time.
+- Backup artifacts are encrypted within the p-mysql cluster of VMs; unencrypted data is never transported outside of the p-mysql deployment.
+- Backups are currently stored on **Amazon S3** only. Other storage targets will be added over time.
 
 ![Configure Backups](configure-backups.png)
 
@@ -25,11 +25,12 @@ Backups are enabled by default. If you do not wish for this deployment to be bac
 For each step, refer to the screenshot above.
 
 1. Select "Enable Backups"
-1. Enter an bucket name for the backups to be uploaded. Using the S3 credentials below, p-mysql will automatically create the bucket if it does not exist.
+1. Enter an bucket name for the backups to be uploaded. Using the S3 credentials provided, p-mysql will automatically create the bucket if it does not exist.
 1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertant loss of backup artifacts.
 1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
 1. Specify how often you'd like backups to occur in the final field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as, `@every 1d` to back up once per day.
 
+<p class="note"><strong>Note</strong>: For large databases, the default storage for the `Backup Prepare Node` may not be sufficient. In order to compress and encrypt backup artifacts, the VM must be configured with twice the amount of ephemeral disk space as the persistent disk space of the `MySQL Server` nodes.</p>
 
 ## Understanding Backup Metadata
 Along with each release, p-mysql will upload a `mysql-backup-XXXXXXXXXX.txt` file. The contents of that file will look something like this:
@@ -56,6 +57,9 @@ compressed = N
 encrypted = N
 ```
 
+Within this file, the most important items are the `start_time` and the `server_version` entries. Any transactions that have not been completed at the start of the backup effort will **not** be present in the restored artifact.
+
+**Note**: Both `compressed` and `encrypted` show as `N` in this file, yet the artifact uploaded by p-mysql is both. This is a known defect, and will be fixed in a future release.
 
 ## Restoring a Backup Artifact
 
@@ -73,10 +77,10 @@ The process to restore a backup artifact to a p-mysql cluster is currently entir
     1. From there, use BOSH to the[ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job
         - IP address can be found in P-MySQL > Status > MySQL Server
         - VM credentials can be found in  P-MySQL > Credentials > MySQL Server > Vm Credentials
-    1. `sudo su`
-    1. `monit stop all` (will restart once data has been restored)
+    1. Become super user: `sudo su`
+    1. Pause the local database server: `monit stop all`
     1. `watch monit summary` until all jobs are listed as 'not monitored'
-    1. `rm -rf /var/vcap/store/mysql/*` (delete the existing mysql data which is stored on disk)
+    1. Delete the existing mysql data which is stored on disk: `rm -rf /var/vcap/store/mysql/*`
 1. Restore the backup
     1. Move the compressed backup (named e.g. `mysql-backup.tar.bzip2`) to the node (e.g. via `scp`)
     1. `tar xvjf mysql-backup.tar.bzip2 --directory=/var/vcap/store/mysql` (uncompress the backup artifact into the data directory of MySQL)
