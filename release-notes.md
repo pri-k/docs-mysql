@@ -2,6 +2,17 @@
 title: Release Notes
 ---
 
+## 1.7.0
+
+Release Date: 22 October 2015
+
+- **New Feature**: Automated Operator-configured database [backups](backup.html) for Disasater Recovery.
+- Updated MariaDB to version [10.0.21](https://mariadb.com/kb/en/mariadb/mariadb-10021-release-notes/) which also includes updates from MariaDB [10.0.20](https://mariadb.com/kb/en/mariadb/mariadb-10020-release-notes/).
+- Updated stemcell to version 3100.
+- **Security**: Fixes for CVE-2015-3900, a man-in-the-middle rubygems vulnerability.
+- Bug fix: Switchboard fails to find recreated mysql node when ARP cache locked by hanging SYN_SENT.
+- Bug fix: Every instance of Switchboard registrars the route `proxy-0.p-mysql.` rather than changing based on AZ index.
+
 ## 1.6.3
 
 Release Date: 7 October 2015
