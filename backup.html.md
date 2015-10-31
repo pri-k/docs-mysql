@@ -25,7 +25,7 @@ Backups are enabled by default. If you do not wish for this deployment to be bac
 For each step, refer to the screenshot above.
 
 1. Select "Enable Backups"
-1. Enter an bucket name for the backups to be uploaded. Using the S3 credentials provided, p-mysql will automatically create the bucket if it does not exist.
+1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, p-mysql will automatically create the bucket if it does not exist.
 1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertant loss of backup artifacts.
 1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
 1. Specify how often you'd like backups to occur in the final field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as, `@every 1d` to back up once per day.
@@ -57,34 +57,46 @@ compressed = N
 encrypted = N
 ```
 
-Within this file, the most important items are the `start_time` and the `server_version` entries. Any transactions that have not been completed at the start of the backup effort will **not** be present in the restored artifact.
+Within this file, the most important items are the `start_time` and the `server_version` entries. Transactions that have not been completed at the start of the backup effort will **not** be present in the restored artifact.
 
 **Note**: Both `compressed` and `encrypted` show as `N` in this file, yet the artifact uploaded by p-mysql is both. This is a known defect, and will be fixed in a future release.
 
 ## Restoring a Backup Artifact
 
-The process to restore a backup artifact to a p-mysql cluster is currently entirely manual. Follow these steps to make the data stored offsite available anywhere that you hae p-mysql installed.
+p-mysql is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, please check with support to be sure that your existing cluster is beyond help.
+
+The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
+
+In the event of a total cluster loss,the process to restore a backup artifact to a p-mysql cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
 - Discover the encryption keys in the `Credentials` tab of the p-mysql tile.
 
-1. Reduce the size of the cluster to a single node
+1. If necessary, install the same version of the `p-mysql` product in OpsManager.
+1. Reduce the size of the p-mysql cluster to a single node
     1. Select P-MySQL tile > Settings > Resource Config > MySQL Server > Instances, and set to 1
     1. Click "Save"
-    1. "Back to Installation Dashboard" > Apply Changes
+    1. Click "Back to Installation Dashboard," then "Apply Changes"
     1. Wait for deployment to succeed
 1. Prepare the first node for restoration
     1. [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) onto the OpsManager Director
-    1. From there, use BOSH to the[ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job
+    1. From there, use BOSH to the [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job
         - IP address can be found in P-MySQL > Status > MySQL Server
         - VM credentials can be found in  P-MySQL > Credentials > MySQL Server > Vm Credentials
-    1. Become super user: `sudo su`
-    1. Pause the local database server: `monit stop all`
-    1. `watch monit summary` until all jobs are listed as 'not monitored'
-    1. Delete the existing mysql data which is stored on disk: `rm -rf /var/vcap/store/mysql/*`
+    1. Become super user
+        > sudo su
+    1. Pause the local database server
+       > monit stop all
+    1. Use `watch monit summary` to confirm that all jobs are listed as 'not monitored'
+    1. Delete the existing mysql data which is stored on disk
+       > rm -rf /var/vcap/store/mysql/*
 1. Restore the backup
     1. Move the compressed backup (named e.g. `mysql-backup.tar.bzip2`) to the node (e.g. via `scp`)
-    1. `tar xvjf mysql-backup.tar.bzip2 --directory=/var/vcap/store/mysql` (uncompress the backup artifact into the data directory of MySQL)
-    1. `chown -R vcap:vcap /var/vcap/store/mysql` (MySQL process expects data directory to be owned by a particular user)
+    1. Decrypt the file using the `gpg` command
+       > gpg mysql-backup-1444362715.tar.gpg
+    1. Expand the backup artifact into the data director of MySQL
+       > tar xvjf mysql-backup.tar.bzip2 --directory=/var/vcap/store/mysql
+    1. MySQL process expects data directory to be owned by a particular user
+       > chown -R vcap:vcap /var/vcap/store/mysql
     1. `monit start all`
     1. `watch monit summary` until all jobs are listed as 'running'
     1. Exit out of the MySQL node
