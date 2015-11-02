@@ -1,10 +1,10 @@
 # Known Issues
 
 ### Elastic Runtime HTTPS-only feature
-Support for the Experimental HTTPS-only feature is broken in p-mysql versions 1.6.X and earlier. The HTTPS-only feature works as expected in p-mysql 1.7.0 and later.
+Support for the Experimental HTTPS-only feature is broken in p-mysql versions 1.6.X and earlier. The HTTPS-only feature works as designed in p-mysql 1.7.0 and later.
 
 ### Changing service plan definition
-In p-mysql versions 1.6.3 and earlier, there is only one service plan. Changing the definition of that plan, either the number of megabytes, number of connections, or both, will make it so that any new service instances will have those characteristics.
+In p-mysql versions 1.7.0 and earlier, there is only one service plan. Changing the definition of that plan, either the number of megabytes, number of connections, or both, will make it so that any new service instances will have those characteristics.
 
 There is a bug in p-mysql versions 1.6.3 and earlier. Changing the plan does not change existing service instances. Existing plans will continue to be governed by the plan constraints effective at the time they were created. This is true regardless of whether or not an operator runs `cf update-service`.
 
@@ -32,6 +32,9 @@ This could be an issue for tables that receive many concurrent writes. Multiple 
 
 ### Number of proxy instances cannot be reduced.
 Once the product is deployed with operator-configured proxy IPs, the number of proxy instances can not be reduced, nor can the configured IPs be removed from the **Proxy IPs** field. If instead the product is initially deployed without proxy IPs, IPs added to the **Proxy IPs** field will only be used when adding additional proxy instances, scaling down is unpredictably permitted, and the first proxy instance can never be assigned an operator-configured IP.
+
+### Backups
+In p-mysql 1.7.0, both `compressed` and `encrypted` show as `N` in the backup metadata file. This is due to the fact that p-mysql implements compression and encryption outside of the tool used to generate the file. This is a known defect, and will be corrected in future releases.
 
 ### MyISAM tables
 The clustering plugin used in this release (Galera) does not support replication of MyISAM Tables. However, the service does not prevent the creation of MyISAM tables. When MyISAM tables are created, the tables will be created on every node (DDL statements are replicated), but data written to a node won't be replicated. If the persistent disk is lost on the node data is written to (for MyISAM tables only), data will be lost. To change a table from MyISAM to InnoDB, please follow this [guide](http://dev.mysql.com/doc/refman/5.5/en/converting-tables-to-innodb.html).
