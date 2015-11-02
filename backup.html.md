@@ -1,5 +1,5 @@
 ---
-title: Back Up MySQL for Pivotal Cloud Foundry
+title: Back Up MySQL for Pivotal Cloud Foundry&reg;
 ---
 
 
@@ -26,7 +26,7 @@ For each step, refer to the screenshot above.
 
 1. Select "Enable Backups"
 1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, p-mysql will automatically create the bucket if it does not exist.
-1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertant loss of backup artifacts.
+1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.
 1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
 1. Specify how often you'd like backups to occur in the final field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as, `@every 1d` to back up once per day.
 
@@ -65,7 +65,7 @@ Within this file, the most important items are the `start_time` and the `server_
 
 p-mysql is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, please check with support to be sure that your existing cluster is beyond help.
 
-The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
+The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry&reg; Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
 
 In the event of a total cluster loss,the process to restore a backup artifact to a p-mysql cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
@@ -110,7 +110,7 @@ In the event of a total cluster loss,the process to restore a backup artifact to
 ---
 
 # Manual Process
-If you do not wish to use the automated faciltiy included in p-mysql, you can still perform backups manually.
+If you do not wish to use the automated facility included in p-mysql, you can still perform backups manually.
 
 - Locate the IP address for the MySQL node in the Status tab.
 

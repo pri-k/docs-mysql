@@ -6,7 +6,7 @@ title: Release Notes
 
 Release Date: 22 October 2015
 
-- **New Feature**: Automated Operator-configured database [backups](backup.html) for Disasater Recovery.
+- **New Feature**: Automated Operator-configured database [backups](backup.html) for Disaster Recovery.
 - Updated MariaDB to version [10.0.21](https://mariadb.com/kb/en/mariadb/mariadb-10021-release-notes/) which also includes updates from MariaDB [10.0.20](https://mariadb.com/kb/en/mariadb/mariadb-10020-release-notes/).
 - Updated stemcell to version 3100.
 - **Security**: Fixes for CVE-2015-3900, a man-in-the-middle rubygems vulnerability.

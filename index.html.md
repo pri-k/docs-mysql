@@ -1,12 +1,12 @@
 ---
-title: MySQL for PCF
+title: MySQL for Pivotal Cloud Foundry&reg;
 ---
 
-This is documentation for the MySQL service for [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF).
+This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf) (PCF).
 
 ## Product Snapshot
 
-Current MySQL for Pivotal Cloud Foundry Details
+Current MySQL for Pivotal Cloud Foundry&reg; Details
 <div style="line-height: 1; padding-left: 3em">
 
 - **Version**: 1.7.0
@@ -21,7 +21,7 @@ Current MySQL for Pivotal Cloud Foundry Details
 </div>
 
 ## Upgrading to the Latest Version
-Consider the following compatibility information before upgrading MySQL for Pivotal Cloud Foundry.
+Consider the following compatibility information before upgrading MySQL for Pivotal Cloud Foundry&reg;.
 
 For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
 
@@ -125,7 +125,7 @@ In determining how much persistent disk to make available for databases, operato
 
 ## <a id="provision-and-bind"></a>Provisioning and Binding via Cloud Foundry ##
 
-As part of installation the product is automatically registered with [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) Elastic Runtime (see [Lifecycle Errands](#lifecycle-errands)). On successful installation, the MySQL service is available to application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. Developers can then provision instances of the service and bind them to their applications:
+As part of installation the product is automatically registered with [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf) Elastic Runtime (see [Lifecycle Errands](#lifecycle-errands)). On successful installation, the MySQL service is available to application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. Developers can then provision instances of the service and bind them to their applications:
 
 <pre class="terminal">
 $ cf create-service p-mysql 100mb-dev mydb
@@ -159,7 +159,7 @@ For more information about SwitchBoard, read the [proxy documentation](proxy.htm
 
   * [Notes on cluster configuration](cluster-config.html)
   * [Backing Up MySQL for PCF](backup.html)<br>
-    **Note**: For information about backing up your PCF installation, refer to [Backing Up and Restoring Pivotal Cloud Foundry](/pivotalcf/customizing/backup-restore/index.html).
+    **Note**: For information about backing up your PCF installation, refer to [Backing Up and Restoring Pivotal Cloud Foundry&reg;](/pivotalcf/customizing/backup-restore/index.html).
   * [Determining MySQL cluster state](cluster-state.html)
   * [More on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
   * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
