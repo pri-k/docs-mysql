@@ -2,6 +2,14 @@
 title: Release Notes
 ---
 
+## 1.7.0.1 and 1.6.4.1
+
+Release date: 3 November 2015
+
+Updated stemcell to 3112. This is a regular security upgrade that resolves the following issues:
+
+- [[USN-2778-1](http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-5156.html)] Linux kernel (Vivid HWE) vulnerabilities
+
 ## 1.7.0
 
 Release Date: 22 October 2015
