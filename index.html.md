@@ -9,8 +9,8 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 Current MySQL for Pivotal Cloud Foundry&reg; Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.7.0
-- **Release Date**: 2015-10-22
+- **Version**: 1.7.0.1
+- **Release Date**: 2015-11-03
 - **Software component versions**: MariaDB 10.0.21, Galera 5.5.45
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x
@@ -38,8 +38,22 @@ For more information, refer to the full [Product Version Matrix](../compatibilit
         <li>From 1.3.2 to 1.4.0</li>
         <li>From 1.3.2 to 1.5.0</li>
         <li>From 1.4.0 to 1.5.0</li>
-        <li>From 1.5.0 to 1.6.1 - 1.6.3</li>
-        <li>From 1.6.1 to 1.6.2 and 1.6.3</li>
+        <li>From 1.5.0 to 1.6.1, 1.6.2, 1.6.3, 1.6.3.1</li>
+        <li>From 1.6.1 to 1.6.2, 1.6.3.1, 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.6.2 to 1.6.3, 1.6.3.1, 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.6.3 to 1.6.3.1, 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.6.3.1 to 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.7.0.0 to 1.7.0.1</li>
+        </ul></td></tr>
+<tr><th>1.6.x</th>
+    <td><ul>
+        <li>From 1.4.0 to 1.5.0</li>
+        <li>From 1.5.0 to 1.6.1, 1.6.2, 1.6.3, 1.6.3.1</li>
+        <li>From 1.6.1 to 1.6.2, 1.6.3, 1.6.3.1, 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.6.2 to 1.6.3, 1.6.3.1, 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.6.3 to 1.6.3.1, 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.6.3.1 to 1.7.0.0, 1.7.0.1</li>
+        <li>From 1.7.0.0 to 1.7.0.1</li>
         </ul></td></tr>
 </table>
 
