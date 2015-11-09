@@ -2,7 +2,11 @@
 title: Release Notes
 ---
 
-## 1.7.0.1 and 1.6.4.1
+## <a id="1-7-0-1"></a>1.7.0.1
+
+See below, same update as [version 1.6.4.1](#1-6-4-1)
+
+## <a id="1-6-4-1"></a>1.6.4.1
 
 Release date: 3 November 2015
 
@@ -10,7 +14,7 @@ Updated stemcell to 3112. This is a regular security upgrade that resolves the f
 
 - [[USN-2778-1](http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-5156.html)] Linux kernel (Vivid HWE) vulnerabilities
 
-## 1.7.0
+## <a id="1-7-0"></a>1.7.0
 
 Release Date: 22 October 2015
 
@@ -21,7 +25,7 @@ Release Date: 22 October 2015
 - Bug fix: Switchboard fails to find recreated mysql node when ARP cache locked by hanging SYN_SENT.
 - Bug fix: Every instance of Switchboard registrars the route `proxy-0.p-mysql.` rather than changing based on AZ index.
 
-## 1.6.3
+## <a id="1-6-3"></a>1.6.3
 
 Release Date: 7 October 2015
 
@@ -31,7 +35,7 @@ Updated stemcell to 3094. This is a regular security upgrade that resolves the f
 
 
 
-## 1.6.2
+## <a id="1-6-2"></a>1.6.2
 
 Release Date: 4 September 2015
 
@@ -46,12 +50,12 @@ Updated stemcell to 3062. This is a regular security upgrade that resolves the f
 ### Known Issues
 - Experimental feature HTTPS traffic to HAProxy does not work; it will be fixed in an upcoming release.
 
-## 1.6.1
+## <a id="1-6-1"></a>1.6.1
 
 - Updated stemcell to 3026 to resolve CVE-2015-3290
 
 
-## 1.6.0
+## <a id="1-6-0"></a>1.6.0
 
 - Now includes MariaDB 10.0.19 and Galera 5.5.43 ([release notes](https://mariadb.com/kb/en/mariadb-galera-cluster-10019-release-notes/))
   - Includes several default configuration changes to better manage MariaDB's memory and disk usage during periods of heavy use.
@@ -75,7 +79,7 @@ Updated stemcell to 3062. This is a regular security upgrade that resolves the f
 
 * **Note:** BOSH Stemcell 3026 is required; this stemcell is provided by Ops Manager 1.5.1.
 
-## 1.5.0
+## <a id="1-5-0"></a>1.5.0
 
 - **AWS support:** The clustered database service can now be deployed on Amazon Web Services from the Operations Manager Web UI.
   - Deployment is limited to a single Availability Zone. Look for multi-AZ in future releases.
@@ -101,7 +105,7 @@ Updated stemcell to 3062. This is a regular security upgrade that resolves the f
 * The experimental HTTPS-only feature in Elastic Runtime 1.5 may cause issues with this version of the product. Full support for HTTPS-only traffic is coming in a future release.
 * Note: BOSH Stemcell 2865.1 is required for installation on Ops Manager 1.5.x and above.
 
-## 1.4.0
+## <a id="1-4-0"></a>1.4.0
 
 - **High Availability**: database server is now clustered and synchronously replicated using MariaDB Galera Cluster. A copy of each database resides on all cluster nodes, and writes to any database are replicated to all copies. All client connections are routed to a primary cluster node, and in the event of a node failure the proxy tier manages failover, routing client connections to a healthy cluster node. MySQL server, proxy, and broker jobs can all be scaled out horizontally for increased availability, eliminating single points of failure.
 - **Improved logging and monitoring**: route-registration on the broker is now an independent process
@@ -114,11 +118,11 @@ Updated stemcell to 3062. This is a regular security upgrade that resolves the f
 - Elimination of the proxy as a single point of failure requires configuration of an external load balancer to route connections to proxy instances. For details, see [Proxy Settings](/p-mysql/index.html#proxy).
 - See [Known Issues](/p-mysql/#known-issues).
 
-## 1.3.2
+## <a id="1-3-2"></a>1.3.2
 
 - **Updated stemcell addresses bash-shellshock vulnerabilities**: resolves CVEs discussed [here](http://www.pivotal.io/security/CVE-2014-6271) and [here](http://www.pivotal.io/security/CVE-2014-7186).
 
-## 1.3.0
+## <a id="1-3-0"></a>1.3.0
 
 - **Syslog forwarding**: Syslogs are now streamed to the same host and port configured in Elastic Runtime settings
 - **Dynamic instance capacity management**: Previously operators had to manually configure the maximum number of service instances permitted by the server. This required manual calculation and a knowledge of required system headroom. Admins can now manage instance capacity simply by adjusting persistent disk allocated to mysql nodes. Remaining instance capacity is determined dynamically by subtracting a safe estimate for system headroom and reserved storage for provisioned instances.
@@ -126,7 +130,7 @@ Updated stemcell to 3062. This is a regular security upgrade that resolves the f
 - **Least necessary privileges**: The MySQL service dashboard uses a new, limited permission OAuth scope to determine whether a user currently has access to a service instance. The dashboard no longer has full read access to a user’s account.
 - **Precompiled packages**: Most packages have been precompiled for the targeted stemcell. This will lower initial deployment times, at the cost of a larger download.
 
-## 1.2.0
+## <a id="1-2-0"></a>1.2.0
 
 - Product renamed to 'MySQL for Pivotal CF'
 - Plan attributes are configurable: max storage per database, max concurrent connections per user, and max databases
@@ -149,7 +153,7 @@ Updated stemcell to 3062. This is a regular security upgrade that resolves the f
 * broker-deregistrar
 * acceptance-tests
 
-## 1.1.0
+## <a id="1-1-0"></a>1.1.0
 
 * Updated the format of metadata fields in the broker catalog endpoint and added
 additional fields. For more information, see Catalog Metadata.
