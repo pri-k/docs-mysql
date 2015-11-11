@@ -2,11 +2,23 @@
 title: Release Notes
 ---
 
+## <a id="1-7-0-2"></a>1.7.0.2
+
+See below, same update as [version 1.6.3.2](#1-6-3-2)
+
+## <a id="1-6-3-2"></a>1.6.3.2
+
+Release date: 11 November 2015
+
+Updated stemcell to 3130. This is a regular security upgrade that resolves the following issue:
+
+- [[USN-2806-1](http://www.ubuntu.com/usn/usn-2806-1/)] Linux kernel (Vivid HWE) vulnerability
+
 ## <a id="1-7-0-1"></a>1.7.0.1
 
-See below, same update as [version 1.6.4.1](#1-6-4-1)
+See below, same update as [version 1.6.3.1](#1-6-3-1)
 
-## <a id="1-6-4-1"></a>1.6.4.1
+## <a id="1-6-3-1"></a>1.6.3.1
 
 Release date: 3 November 2015
 
