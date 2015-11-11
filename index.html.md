@@ -84,7 +84,27 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 ## <a id="settings"></a>Settings ##
 
-### <a id="service-plan"></a>Service Plan ###
+### <a id="service-plan"></a>Service Plans ###
+
+In p-mysql v1.7.1.0 and above, the Operator may now configure multiple service plans. The user interface is simple. Select the "Service Plans" configuration screen from within the p-MySQL tile. Click the '**Add**' button to add a new service plan. Click the small triangles to expand or collapse a plan's details. 
+
+Plans are comprised by four required fields, plus the ability to mark plans as 'private':
+
+- Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI.
+- Description: Your descriptive text which will accompany the plan name.
+- Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
+- Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
+- Private: By default, all plans are published to all organizations. Clicking 'Not available by default' requires the Operator to [publish plans manually](https://docs.pivotal.io/pivotalcf/services/access-control.html#enable-access).
+
+Plans can be deleted by clicking on the corresponding trash-can icon. **Note**: If you accidentally click the trash can, do not click the Save button. Simply return to the Installation Dashboard and any accidental changes will be discarded. If you do happen to hit save, do not click the '**Apply Changes**' button on the Installation Dashboard. Instead, use the '**Revert**' button to discard any accidental changes.
+
+P-MySQL cannot be deployed with zero service plans. One plan, minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
+
+On upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, "pre-existing-plan." It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.7.1.0.
+
+#### Service Plans before p-mysql v1.7.1
+
+In versions v1.7.0.0 and below, the product is only capable of offering one service plan at a time.
 
 A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user by default. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
@@ -92,7 +112,7 @@ The name of the plan is **100mb-dev** by default and is automatically updated if
 
 **Note**: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run `cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME` on the command line.
 
-**Further Note**: This feature does not work properly in versions of p-mysql 1.6.3 and earlier. See the entry in [Known Issues](known-issues.html) for the recommended workaround.
+**Further Note**: Changing a plan's definition does not work properly in versions of p-mysql 1.6.3 and earlier. See the entry in [Known Issues](known-issues.html) for the recommended workaround.
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 

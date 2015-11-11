@@ -2,6 +2,15 @@
 title: Release Notes
 ---
 
+## <a id="1-7-1-0"></a>1.7.1.0
+
+Release date: **N/A**
+
+Now introducing multiple service plans!
+
+**Note**: On upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, "pre-existing-plan." It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.7.1.0.
+
+
 ## <a id="1-7-0-1"></a>1.7.0.1
 
 See below, same update as [version 1.6.4.1](#1-6-4-1)
