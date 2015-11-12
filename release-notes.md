@@ -10,9 +10,10 @@ See below, same update as [version 1.6.3.2](#1-6-3-2)
 
 Release date: 11 November 2015
 
-Updated stemcell to 3130. This is a regular security upgrade that resolves the following issue:
+Updated stemcell to 3130. This is a regular security upgrade that resolves the following issues:
 
 - [[USN-2806-1](http://www.ubuntu.com/usn/usn-2806-1/)] Linux kernel (Vivid HWE) vulnerability
+- [[USN-2788-2](http://www.ubuntu.com/usn/usn-2788-2/)] unzip regression
 
 ## <a id="1-7-0-1"></a>1.7.0.1
 
