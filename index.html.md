@@ -179,6 +179,21 @@ To help application developers get started with MySQL for PCF, we have provided 
 
 Cloud Foundry users can access a dashboard for each MySQL service instances via SSO from Apps Manager. The dashboard displays current storage utilization of the database and the plan quota for storage. On the Space page in Apps Manager, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
+Additionally, the dashboard URL can be discovered via the CLI, using `cf service [instance name]`. For example:
+
+```
+$ cf service acceptDB
+
+Service instance: acceptDB
+Service: p-mysql
+Plan: 100mb-dev
+Description: MySQL service for application development and testing
+Documentation url:
+Dashboard: https://p-mysql.sys.acceptance.cf-app.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
+```
+
+In this example, the URL to the instance dashboard is: `https://p-mysql.sys.acceptance.cf-app.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`
+
 ## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
 The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of client connections routed to each backend database cluster node.
