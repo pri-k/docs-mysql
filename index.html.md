@@ -92,15 +92,29 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 In p-mysql v1.7.1.0 and above, the Operator may now configure multiple service plans. The user interface is simple. Select the "Service Plans" configuration screen from within the p-MySQL tile. Click the '**Add**' button to add a new service plan. Click the small triangles to expand or collapse a plan's details. 
 
-Plans are comprised by four required fields, plus the ability to mark plans as 'private':
+Plans consist of four required fields, plus the ability to mark plans as 'private':
 
-- Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI.
-- Description: Your descriptive text which will accompany the plan name.
+- Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI. Plan names may only be made up of lowercase letters, numbers, hyphens and underscores.
+- Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "
 - Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
 - Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
 - Private: By default, all plans are published to all organizations. Clicking 'Not available by default' requires the Operator to [publish plans manually](https://docs.pivotal.io/pivotalcf/services/access-control.html#enable-access).
 
-Plans can be deleted by clicking on the corresponding trash-can icon. **Note**: If you accidentally click the trash can, do not click the Save button. Simply return to the Installation Dashboard and any accidental changes will be discarded. If you do happen to hit save, do not click the '**Apply Changes**' button on the Installation Dashboard. Instead, use the '**Revert**' button to discard any accidental changes.
+##### Deleting a Plan
+Plans can be deleted by clicking on the corresponding Trash Can icon, hitting Save, and finally "Apply Changes" from the Installation Dashboard. You may delete as many plans as you like before hitting Save or Apply Changes.
+
+It is OK to delete a plan that is still in use, i.e., if there are still service instances of that plan that have not been deleted. In this case, the plan is marked 'inactive' within the Cloud Foundry Marketplace. Existing service instances will continue to be maintained, but it is not possible for new instances to be created. The plan will continue to show in the marketplace. Once the last instance of an old plan has been deleted, the Operator can remove it from the Marketplace by following these steps:
+
+1. `bosh deployments`
+    - Find the full name of the p-mysql deployment, for example: _p-mysql-180290d67d5441ebf3c5_
+1. `bosh deployment p-mysql-180290d67d5441ebf3c5`
+1. ` bosh run errand broker-registrar`
+
+If no services instances of the old plan are still in use, the plan will disappear from commands such as `cf marketplace`.
+
+**Note**: If you accidentally click the trash can, do not click the Save button. Simply return to the Installation Dashboard and any accidental changes will be discarded. If you do happen to hit save, do not click the '**Apply Changes**' button on the Installation Dashboard. Instead, use the '**Revert**' button to discard any accidental changes.
+
+---
 
 P-MySQL cannot be deployed with zero service plans. One plan, minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
 
