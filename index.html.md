@@ -90,11 +90,13 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 ### <a id="service-plan"></a>Service Plans ###
 
-In p-mysql v1.7.1.0 and above, the Operator may now configure multiple service plans. The user interface is simple. Select the "Service Plans" configuration screen from within the p-MySQL tile. Click the '**Add**' button to add a new service plan. Click the small triangles to expand or collapse a plan's details. 
+In p-mysql v1.7.1.0 and above, the Operator may now configure multiple service plans. The user interface is simple. Select the "Service Plans" configuration screen from within the p-MySQL tile. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details. 
 
 Plans consist of four required fields, plus the ability to mark plans as 'private':
 
 - Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI. Plan names may only be made up of lowercase letters, numbers, hyphens and underscores.
+  - **Note**: Plan names constraints are only enforced at deploy time. The form does not yet allow for real-time validation. That means if a plan name does not conform to the correct format, the tile will fail to deploy after you've clicked on **Apply Changes**. The error will appear in the Recent Install Logs pull-down, and will look like this:
+  > Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
 - Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "
 - Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
 - Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
@@ -112,7 +114,7 @@ It is OK to delete a plan that is still in use, i.e., if there are still service
 
 If no services instances of the old plan are still in use, the plan will disappear from commands such as `cf marketplace`.
 
-**Note**: If you accidentally click the trash can, do not click the Save button. Simply return to the Installation Dashboard and any accidental changes will be discarded. If you do happen to hit save, do not click the '**Apply Changes**' button on the Installation Dashboard. Instead, use the '**Revert**' button to discard any accidental changes.
+**Note**: If you accidentally click the trash can, do not click **Save**. Instead, return to the Installation Dashboard and any accidental changes will be discarded. If you do happen to hit save, do not click **Apply Changes** on the Installation Dashboard. Instead, click **Revert** to discard any accidental changes.
 
 ---
 
