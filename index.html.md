@@ -1,8 +1,8 @@
 ---
-title: MySQL for Pivotal Cloud Foundry&reg;
+title: MySQL
 ---
 
-This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf) (PCF).
+This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf).
 
 ## Product Snapshot
 
