@@ -9,8 +9,8 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 Current MySQL Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.7.0.2
-- **Release Date**: 2015-11-11
+- **Version**: 1.7.1.0
+- **Release Date**: 2015-FIXME -- AND UPDATE ALL BELOW
 - **Software component versions**: MariaDB 10.0.21, Galera 5.5.45
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x
