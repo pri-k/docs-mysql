@@ -6,7 +6,7 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 
 ## Product Snapshot
 
-Current MySQL for Pivotal Cloud Foundry&reg; Details
+Current MySQL Details
 <div style="line-height: 1; padding-left: 3em">
 
 - **Version**: 1.7.0.2
@@ -21,7 +21,7 @@ Current MySQL for Pivotal Cloud Foundry&reg; Details
 </div>
 
 ## Upgrading to the Latest Version
-Consider the following compatibility information before upgrading MySQL for Pivotal Cloud Foundry&reg;.
+Consider the following compatibility information before upgrading MySQL.
 
 For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
 
