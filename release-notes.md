@@ -4,7 +4,7 @@ title: Release Notes
 
 ## <a id="1-7-0-4"></a>1.7.0.4
 
-See below, same update as [version 1.6.3.4](#1-6-3-4)
+- See below, same update as [version 1.6.3.4](#1-6-3-4)
 
 ## <a id="1-6-3-4"></a>1.6.3.4
 
@@ -16,42 +16,39 @@ Release date: 04 December 2015
 
 ## <a id="1-7-0-3"></a>1.7.0.3
 
-See below, same update as [version 1.6.3.3](#1-6-3-3)
+- See below, same update as [version 1.6.3.3](#1-6-3-3)
 
 ## <a id="1-6-3-3"></a>1.6.3.3
 
 Release date: 02 December 2015
 
-Updated stemcell to 3144. This is a regular security upgrade that resolves the following Ubuntu Security Notices:
-
-- [[USN-2815-1](http://www.ubuntu.com/usn/usn-2815-1/)] libpng vulnerabilities
-- [[USN-2812-1](http://www.ubuntu.com/usn/usn-2812-1/)] libxml2 vulnerabilities
-- [[USN-2810-1](http://www.ubuntu.com/usn/usn-2810-1/)] Kerberos vulnerabilities
+- Updated stemcell to 3144. This is a regular security upgrade that resolves the following Ubuntu Security Notices:
+  - [[USN-2815-1](http://www.ubuntu.com/usn/usn-2815-1/)] libpng vulnerabilities
+  - [[USN-2812-1](http://www.ubuntu.com/usn/usn-2812-1/)] libxml2 vulnerabilities
+  - [[USN-2810-1](http://www.ubuntu.com/usn/usn-2810-1/)] Kerberos vulnerabilities
 
 ## <a id="1-7-0-2"></a>1.7.0.2
 
-See below, same update as [version 1.6.3.2](#1-6-3-2)
+- See below, same update as [version 1.6.3.2](#1-6-3-2)
 
 ## <a id="1-6-3-2"></a>1.6.3.2
 
 Release date: 11 November 2015
 
-Updated stemcell to 3130. This is a regular security upgrade that resolves the following issues:
-
-- [[USN-2806-1](http://www.ubuntu.com/usn/usn-2806-1/)] Linux kernel (Vivid HWE) vulnerability
-- [[USN-2798-1](http://www.ubuntu.com/usn/usn-2798-1/)] Linux kernel (Vivid HWE) vulnerabilities
+- Updated stemcell to 3130. This is a regular security upgrade that resolves the following issues:
+  - [[USN-2806-1](http://www.ubuntu.com/usn/usn-2806-1/)] Linux kernel (Vivid HWE) vulnerability
+  - [[USN-2798-1](http://www.ubuntu.com/usn/usn-2798-1/)] Linux kernel (Vivid HWE) vulnerabilities
 
 ## <a id="1-7-0-1"></a>1.7.0.1
 
-See below, same update as [version 1.6.3.1](#1-6-3-1)
+- See below, same update as [version 1.6.3.1](#1-6-3-1)
 
 ## <a id="1-6-3-1"></a>1.6.3.1
 
 Release date: 3 November 2015
 
-Updated stemcell to 3112. This is a regular security upgrade that resolves the following issues:
-
-- [[USN-2778-1](http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-5156.html)] Linux kernel (Vivid HWE) vulnerabilities
+- Updated stemcell to 3112. This is a regular security upgrade that resolves the following issues:
+  - [[USN-2778-1](http://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-5156.html)] Linux kernel (Vivid HWE) vulnerabilities
 
 ## <a id="1-7-0"></a>1.7.0
 
@@ -68,9 +65,8 @@ Release Date: 22 October 2015
 
 Release Date: 7 October 2015
 
-Updated stemcell to 3094. This is a regular security upgrade that resolves the following issues:
-
-- [[USN-2765-1](http://www.ubuntu.com/usn/usn-2765-1)] Linux kernel (Vivid HWE) vulnerability
+- Updated stemcell to 3094. This is a regular security upgrade that resolves the following issues:
+  - [[USN-2765-1](http://www.ubuntu.com/usn/usn-2765-1)] Linux kernel (Vivid HWE) vulnerability
 
 
 
@@ -78,13 +74,12 @@ Updated stemcell to 3094. This is a regular security upgrade that resolves the f
 
 Release Date: 4 September 2015
 
-Updated stemcell to 3062. This is a regular security upgrade that resolves the following issues:
-
-- [USN-2694-1] PCRE vulnerabilities
-- [USN-2698-1] SQLite vulnerabilities
-- [USN-2710-1] OpenSSH vulnerabilities
-- [USN-2710-2] OpenSSH regression
-- [USN-2718-1] Linux kernel (Vivid HWE) vulnerability
+- Updated stemcell to 3062. This is a regular security upgrade that resolves the following issues:
+  - [USN-2694-1] PCRE vulnerabilities
+  - [USN-2698-1] SQLite vulnerabilities
+  - [USN-2710-1] OpenSSH vulnerabilities
+  - [USN-2710-2] OpenSSH regression
+  - [USN-2718-1] Linux kernel (Vivid HWE) vulnerability
 
 ### Known Issues
 - Experimental feature HTTPS traffic to HAProxy does not work; it will be fixed in an upcoming release.
