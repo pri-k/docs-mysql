@@ -14,8 +14,8 @@ There is a workaround for this bug, which will be resolved in future releases of
 curl -v -k -X PATCH https://BROKER_CREDS_USERNAME:BROKER_CREDS_PASSWORD@p-mysql.SYSTEM.DOMAIN/v2/service_instances/SERVICE_INSTANCE_ID?plan_id=17d793e6-6da6-4f0e-b58d-364a407166a0
 ```
 
-- SYSTEM.DOMAIN is defined in OpsManager, under the Elastic Runtime tile's `Settings Tab`, in the `Cloud Controller` entry.
-- BROKER\_CREDS\_USERNAME and BROKER\_CREDS\_PASSWORD are defined in OpsManager, under the p-mysql tile's `Credentials` tab, in the entry `Broker Auth Credentials`.
+- SYSTEM.DOMAIN is defined in OpsManager, under Elastic Runtime's **Settings** tab, in the `Cloud Controller` entry.
+- BROKER\_CREDS\_USERNAME and BROKER\_CREDS\_PASSWORD are defined in OpsManager, under p-mysql's  **Credentials** tab, in the `Broker Auth Credentials` entry.
 - To get each SERVICE\_INSTANCE\_ID, run `cf service INSTANCE --guid`. You should see output like this example:
 
   ```
@@ -23,7 +23,17 @@ curl -v -k -X PATCH https://BROKER_CREDS_USERNAME:BROKER_CREDS_PASSWORD@p-mysql.
   4cae3a5e-66b1-4c9a-8536-feaff25237bf
   ```
 
-Run this for each service instance to be updated. 
+Run this for each service instance to be updated.
+
+**Furthermore**, if you have changed the max number of connections constraint, then it is necessary to update each bound application's setting directly from my mysql console. Follow these steps:
+1. SSH into your Ops Manager director using these [instructions](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare).
+1. Run `bosh deployments` to discover the name of your p-mysql deployment.
+1. Run `bosh ssh` using your p-mysql's deployment name. Example: `bosh ssh mysql-partition-9d32f5601988152e869b/0`
+1. Run `/var/vcap/packages/mariadb/bin/mysql -u root -p`.
+  - The root user's password is defined in OpsManager, under p-mysql's **Credentials** tab.
+1. Issue this MySQL command: `UPDATE mysql.user SET mysql.user.max_user_connections=NEW_MAX_CONN_VALUE WHERE mysql.user.User NOT LIKE '%root%' ;`
+  - Make sure to change `NEW_MAX_CONN_VALUE` to whatever new setting you've chosen.
+1. `exit;`
 
 ### Proxies may write to different MySQL masters
 All proxy instances use the same method to determine cluster health. However, certain conditions may cause the proxy instances to route to different nodes, for example after brief cluster node failures.
