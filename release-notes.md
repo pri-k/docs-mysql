@@ -2,6 +2,32 @@
 title: Release Notes
 ---
 
+## <a id="1-7-0-4"></a>1.7.0.4
+
+See below, same update as [version 1.6.3.4](#1-6-3-4)
+
+## <a id="1-6-3-4"></a>1.6.3.4
+
+Release date: 04 December 2015
+
+- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in p-mysql v1.7.1, and we are sorry for the inconvenience.
+- Updated stemcell to 3146. This is a security upgrade that resolves the following Ubuntu Security Notices:
+  - [[USN-2821-1](http://www.ubuntu.com/usn/usn-2821-1/)] GnuTLS vulnerability
+
+## <a id="1-7-0-3"></a>1.7.0.3
+
+See below, same update as [version 1.6.3.3](#1-6-3-3)
+
+## <a id="1-6-3-3"></a>1.6.3.3
+
+Release date: 02 December 2015
+
+Updated stemcell to 3144. This is a regular security upgrade that resolves the following Ubuntu Security Notices:
+
+- [[USN-2815-1](http://www.ubuntu.com/usn/usn-2815-1/)] libpng vulnerabilities
+- [[USN-2812-1](http://www.ubuntu.com/usn/usn-2812-1/)] libxml2 vulnerabilities
+- [[USN-2810-1](http://www.ubuntu.com/usn/usn-2810-1/)] Kerberos vulnerabilities
+
 ## <a id="1-7-0-2"></a>1.7.0.2
 
 See below, same update as [version 1.6.3.2](#1-6-3-2)
