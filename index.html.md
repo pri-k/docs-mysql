@@ -6,10 +6,10 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 
 ## Product Snapshot
 
-Current MySQL Details
+Current MySQL for Pivotal Cloud Foundry&reg; Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.7.1.0
+- **Version**: 1.8.0-Beta0
 - **Release Date**: 2015-FIXME -- AND UPDATE ALL BELOW
 - **Software component versions**: MariaDB 10.0.21, Galera 5.5.45
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
@@ -39,25 +39,27 @@ For more information, refer to the full [Product Version Matrix](../compatibilit
         <li>From 1.3.2 to 1.5.0</li>
         <li>From 1.4.0 to 1.5.0</li>
         <li>From 1.5.0 to 1.6.1, 1.6.2, 1.6.3, 1.6.3.1, 1.6.3.2</li>
-        <li>From 1.6.1 to 1.6.2, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.2 to 1.6.3, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.3 to 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.3.1 to 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.3.2 to 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.7.0.1 to 1.7.0.2</li>
+        <li>From 1.6.1 to 1.6.2, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.2 to 1.6.3, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.3 to 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.3.1 to 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.3.2 to 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.7.0.1 to 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.7.0.2 to 1.7.0.3, 1.7.0.4</li>
         </ul></td></tr>
 <tr><th>1.6.x</th>
     <td><ul>
         <li>From 1.4.0 to 1.5.0</li>
         <li>From 1.5.0 to 1.6.1, 1.6.2, 1.6.3, 1.6.3.1, 1.6.3.2</li>
-        <li>From 1.6.1 to 1.6.2, 1.6.3, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.2 to 1.6.3, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.3 to 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.3.1 to 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.6.3.2 to 1.7.0.0, 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2</li>
-        <li>From 1.7.0.1 to 1.7.0.2</li>
+        <li>From 1.6.1 to 1.6.2, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.2 to 1.6.3, 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.3 to 1.6.3.1, 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.3.1 to 1.6.3.2, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.6.3.2 to 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.7.0.1 to 1.7.0.2, 1.7.0.3, 1.7.0.4</li>
+        <li>From 1.7.0.2 to 1.7.0.3, 1.7.0.4</li>
         </ul></td></tr>
 </table>
 
@@ -90,7 +92,7 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 ### <a id="service-plan"></a>Service Plans ###
 
-In p-mysql v1.7.1.0 and above, the Operator may now configure multiple service plans. The user interface is simple. Select the "Service Plans" configuration screen from within the p-MySQL tile. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details. 
+Starting with version 1.8.0 of p-mysql, the Operator may now configure multiple service plans. The user interface is simple. Select the "Service Plans" configuration screen from within the p-MySQL tile. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
 
 Plans consist of four required fields, plus the ability to mark plans as 'private':
 
@@ -111,7 +113,7 @@ It is OK to delete a plan that is still in use, i.e., if there are still service
 1. `bosh deployments`
     - Find the full name of the p-mysql deployment, for example: _p-mysql-180290d67d5441ebf3c5_
 1. `bosh deployment p-mysql-180290d67d5441ebf3c5`
-1. ` bosh run errand broker-registrar`
+1. `bosh run errand broker-registrar`
 
 If no services instances of the old plan are still in use, the plan will disappear from commands such as `cf marketplace`.
 
@@ -121,11 +123,11 @@ If no services instances of the old plan are still in use, the plan will disappe
 
 P-MySQL cannot be deployed with zero service plans. One plan, minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
 
-On upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, "pre-existing-plan." It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.7.1.0.
+<p class="note"><strong>Note</strong>: Unfortunately, the upgrade process is not able to continue using the original name of the plan. Thus, on upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, `pre-existing-plan`. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.8.0.</p>
 
-#### Service Plans before p-mysql v1.7.1
+#### Service Plans before p-mysql v1.8.0
 
-In versions v1.7.0.0 and below, the product is only capable of offering one service plan at a time.
+In versions v1.7 and below, the product is only capable of offering one service plan at a time.
 
 A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user by default. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
@@ -219,7 +221,7 @@ In this example, the URL to the instance dashboard is: `https://p-mysql.sys.acce
 
 The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of client connections routed to each backend database cluster node.
 
-The dashboard for each proxy instance can be found at: `http://proxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0 so if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0.p-mysql.example.com` and `http://proxy-1.p-mysql.example.com`.
+The dashboard for each proxy instance can be found at: `http://proxy-<job index>-p-mysql.<system-domain>`. Job index starts at 0 so if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0-p-mysql.example.com` and `http://proxy-1-p-mysql.example.com`.
 
 Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
 

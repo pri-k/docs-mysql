@@ -59,7 +59,6 @@ encrypted = N
 
 Within this file, the most important items are the `start_time` and the `server_version` entries. Transactions that have not been completed at the start of the backup effort will **not** be present in the restored artifact.
 
-**Note**: Both `compressed` and `encrypted` show as `N` in this file, yet the artifact uploaded by p-mysql is both. This is a known defect, and will be fixed in a future release.
 
 ## Restoring a Backup Artifact
 
@@ -149,4 +148,3 @@ If you do not wish to use the automated facility included in p-mysql, you can st
 
 ### Examples
   More examples can be found in the [MariaDB documentation](http://mariadb.com/kb/en/mariadb/mysqldump/#examples).
-
