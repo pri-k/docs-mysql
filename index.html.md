@@ -153,7 +153,7 @@ $ cf bind-service myapp mydb
 $ cf restart myapp
 </pre>
 
-For more information on use of services, see the [Services Overview](/pivotalcf/devguide/services/).
+For more information about the use of services, see the [Services Overview](/pivotalcf/devguide/services/).
 
 ## <a id="example-app"></a>Example Application ##
 
