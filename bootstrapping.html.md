@@ -39,6 +39,95 @@ See [Cluster Behavior](./cluster-behavior.html) for more details about determini
 
 ## Bootstrapping
 
+Bootstrapping requires you to run commands from the [Ops Manager Director](http://docs.pivotal.io/pivotalcf/customizing/index.html). Follow the instructions to use the [BOSH CLI](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare) for command-line access.
+
+### Automated Bootstrap
+P-mysql versions 1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. In most cases, running the errand is sufficient, however there are some conditions which require additional steps.
+
+### Scenario 1 - Virtual Machines running, Cluster Disrupted
+
+If the nodes are up and running, but the jobs themselves are failing, the output of `bosh instances` will look like this:
+
+   ```
+   $ bosh instances
+   Acting as user 'director' on deployment 'p-mysql-5c0aa34449960359a416' on 'microbosh-94ef1f7745141534babf'
+
+   Director task 2289
+
+   Task 2289 done
+
+   +--------------------------------------------------+---------+------------------------------------------------+------------+
+   | Instance                                         | State   | Resource Pool                                  | IPs        |
+   +--------------------------------------------------+---------+------------------------------------------------+------------+
+   | cf-mysql-broker-partition-a813339fde9330e9b905/0 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 10.0.16.61 |
+   | cf-mysql-broker-partition-a813339fde9330e9b905/1 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 10.0.16.62 |
+   | mysql-partition-a813339fde9330e9b905/0           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.55 |
+   | mysql-partition-a813339fde9330e9b905/1           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.56 |
+   | mysql-partition-a813339fde9330e9b905/2           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.57 |
+   | proxy-partition-a813339fde9330e9b905/0           | running | proxy-partition-a813339fde9330e9b905           | 10.0.16.59 |
+   | proxy-partition-a813339fde9330e9b905/1           | running | proxy-partition-a813339fde9330e9b905           | 10.0.16.60 |
+   +--------------------------------------------------+---------+------------------------------------------------+------------+
+   ```
+In this situation, it is OK to immediately try the bootstrap errand:
+   > $ bosh run errand bootstrap
+
+You will see many lines of output, eventually followed by:
+   ```
+   Bootstrap errand completed
+
+   [stderr]
+   + echo 'Started bootstrap errand ...'
+   + JOB_DIR=/var/vcap/jobs/bootstrap
+   + CONFIG_PATH=/var/vcap/jobs/bootstrap/config/config.yml
+   + /var/vcap/packages/bootstrap/bin/cf-mysql-bootstrap -configPath=/var/vcap/jobs/bootstrap/config/config.yml
+   + echo 'Bootstrap errand completed'
+   + exit 0
+
+   Errand `bootstrap' completed successfully (exit code 0)
+   ```
+There are times when this won't work immediately. Unfortunately, sometimes it is best to wait and try again a few minutes later.
+
+### Scenario 2 - Virtual Machines Rebooted
+
+   ```
+   $ bosh instances
+   +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+   | Instance                                         | State              | Resource Pool                                  | IPs        |
+   +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+   | unknown/unknown                                  | unresponsive agent |                                                |            |
+   +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+   | unknown/unknown                                  | unresponsive agent |                                                |            |
+   +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+   | unknown/unknown                                  | unresponsive agent |                                                |            |
+   +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+   | cf-mysql-broker-partition-e97dae91e44681e0b543/0 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 10.0.16.65 |
+   | cf-mysql-broker-partition-e97dae91e44681e0b543/1 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 10.0.16.66 |
+   +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+   | proxy-partition-e97dae91e44681e0b543/0           | running            | proxy-partition-e97dae91e44681e0b543           | 10.0.16.63 |
+   | proxy-partition-e97dae91e44681e0b543/1           | running            | proxy-partition-e97dae91e44681e0b543           | 10.0.16.64 |
+   +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+   ```
+
+### Part 1 - VM Recovery
+
+VM Recovery is best left to OpsManager by configuring the VM Resurrector. If so, the system will notice that the VMs are gone, and automatically attempt to recreate them. You will be able to see evidence of that by seeing the scan-and-fix job in the output of `bosh tasks recent --no-filter`:
+   ```
+   +-----+------------+-------------------------+----------+--------------------------------------------+---------------------------------------------------+
+   | #   | State      | Timestamp               | User     | Description                                | Result                                            |
+   +-----+------------+-------------------------+----------+--------------------------------------------+---------------------------------------------------+
+   | 123 | queued     | 2016-01-08 00:18:07 UTC | director | scan and fix                               |                                                   |
+   ```
+
+By watching `bosh instances` you'll see the VMs transition from `unresponsive agent` to `starting` and ultimately, two will appear as `failing`:
+   ```
+   +--------------------------------------------------+----------+------------------------------------------------+------------+
+   | mysql-partition-e97dae91e44681e0b543/0           | starting | mysql-partition-e97dae91e44681e0b543           | 10.0.16.60 |
+   | mysql-partition-e97dae91e44681e0b543/1           | failing  | mysql-partition-e97dae91e44681e0b543           | 10.0.16.61 |
+   | mysql-partition-e97dae91e44681e0b543/2           | failing  | mysql-partition-e97dae91e44681e0b543           | 10.0.16.62 |
+   +--------------------------------------------------+----------+------------------------------------------------+------------+
+   ```
+
+### Manual Bootstrap
 Once it has been determined that bootstrapping is required, follow the following steps to shut down the cluster and bootstrap from the nodes with the most transactions.
 
 - SSH to each node in the cluster and, as root, shut down the mariadb process.
