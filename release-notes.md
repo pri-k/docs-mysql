@@ -2,6 +2,18 @@
 title: Release Notes
 ---
 
+## <a id="1-7-1"></a>1.7.1
+
+- See below, same update as [version 1.6.4](#1-6-4)
+
+## <a id="1-6-4"></a>1.6.4
+
+Release date: 07 January 2016
+
+- Updated stemcell to 3146.2. This is a security upgrade that resolves the following Ubuntu Security Notices:
+  - USN-2857-1, USN-2842-1, USN-2842-2, USN-2836-1, USN-2834-1, USN-2830-1, and USN-2829-1
+
+
 ## <a id="1-7-0-4"></a>1.7.0.4
 
 - See below, same update as [version 1.6.3.4](#1-6-3-4)
