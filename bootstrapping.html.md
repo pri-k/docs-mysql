@@ -110,7 +110,7 @@ There are times when this won't work immediately. Unfortunately, sometimes it is
 
 ### Part 1 - VM Recovery
 
-VM Recovery is best left to OpsManager by configuring the VM Resurrector. If so, the system will notice that the VMs are gone, and automatically attempt to recreate them. You will be able to see evidence of that by seeing the scan-and-fix job in the output of `bosh tasks recent --no-filter`:
+VM Recovery is best left to OpsManager by configuring the VM [Resurrector](http://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling). If so, the system will notice that the VMs are gone, and automatically attempt to recreate them. You will be able to see evidence of that by seeing the scan-and-fix job in the output of `bosh tasks recent --no-filter`:
    ```
    +-----+------------+-------------------------+----------+--------------------------------------------+---------------------------------------------------+
    | #   | State      | Timestamp               | User     | Description                                | Result                                            |
