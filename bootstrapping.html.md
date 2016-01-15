@@ -127,6 +127,10 @@ By watching `bosh instances` you'll see the VMs transition from `unresponsive ag
    +--------------------------------------------------+----------+------------------------------------------------+------------+
    ```
 
+### Part 2 - Bootstrap errand
+- Log into the BOSH director
+- `bosh run errand bootstrap`
+
 ### Manual Bootstrap
 Once it has been determined that bootstrapping is required, follow the following steps to shut down the cluster and bootstrap from the nodes with the most transactions.
 
