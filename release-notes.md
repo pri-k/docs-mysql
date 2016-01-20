@@ -13,6 +13,16 @@ Introducing three great new features:
 
 **Note**: On upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to p-MySQL v1.8.0.
 
+## <a id="1-7-2"></a>1.7.2
+
+- See below, same update as [version 1.6.5](#1-6-5)
+
+## <a id="1-6-5"></a>1.6.5
+
+Release date: 18 January 2016
+
+- Updated stemcell to 3146.3. This is a security upgrade that resolves [CVE-2016-0715](https://pivotal.io/security/cve-2016-0715). Additional information can be found at https://pivotal.io/security.
+
 ## <a id="1-7-1"></a>1.7.1
 
 - See below, same update as [version 1.6.4](#1-6-4)
