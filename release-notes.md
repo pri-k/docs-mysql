@@ -32,7 +32,7 @@ Release date: 07 January 2016
 
 Release date: 04 December 2015
 
-- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in p-mysql v1.7.1, and we are sorry for the inconvenience.
+- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in a future release of p-mysql, we are sorry for the inconvenience.
 - Updated stemcell to 3146. This is a security upgrade that resolves the following Ubuntu Security Notices:
   - [[USN-2821-1](http://www.ubuntu.com/usn/usn-2821-1/)] GnuTLS vulnerability
 
