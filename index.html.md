@@ -6,8 +6,6 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 
 ## <a id="edge-release"></a>Edge Release ##
 
-A note about Edge releases:
-
 We're experimenting with Edge releases in order to give early adopters access to features before a release is Feature Complete.  With Edge releases, we can better follow the Semantic Versioning convention by avoiding introducing features in patch releases.
 
 If we stick with this pilot, an Edge release will expose our users to Pivotal's agile process. As we add features they'll be test-driven and have passed through continuous integration.  Edge releases are considered production quality. When a full release is Feature Complete, we'll drop the 'edge' moniker and release the minor, eg 1.9.0, version. Subsequent patch releases, 1.9.1, 1.9.2, etc. will contain only security and bug fixes. New features will be released in the next edge release, 1.10.0-Edge.1.
