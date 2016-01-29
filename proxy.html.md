@@ -68,7 +68,7 @@ Bound applications are provided with a hostname or IP address to reach a databas
 
 **In order to eliminate the first proxy instance as a single point of failure, operators must configure a load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer.**
 
-### <a id="lb-config"><a>Configuring load balancer ###
+### <a id="lb-config"></a>Configuring load balancer ###
 
 Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306. Next, configure the load balancer's healthcheck to use the proxy health port. This is TCP port 1936 by default to maintain backwards compatibility with previous releases. This port is not configurable.
 
