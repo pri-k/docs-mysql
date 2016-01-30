@@ -1,16 +1,23 @@
 ---
-title: MySQL for Pivotal Cloud Foundry&reg;
+title: MySQL
 ---
 
-This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf) (PCF).
+This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf).
 
-## Product Snapshot
+## <a id="edge-release"></a>Edge Release ##
+
+We're experimenting with Edge releases in order to give early adopters access to features before a release is Feature Complete.  With Edge releases, we can better follow the Semantic Versioning convention by avoiding introducing features in patch releases.
+
+If we stick with this pilot, an Edge release will expose our users to Pivotal's agile process. As we add features they'll be test-driven and have passed through continuous integration.  Edge releases are considered production quality. When a full release is Feature Complete, we'll drop the 'edge' moniker and release the minor, eg 1.9.0, version. Subsequent patch releases, 1.9.1, 1.9.2, etc. will contain only security and bug fixes. New features will be released in the next edge release, 1.10.0-Edge.1.
+
+
+## <a id="product-snapshot"></a>Product Snapshot ##
 
 Current MySQL for Pivotal Cloud Foundry&reg; Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.7.2
-- **Release Date**: 2016-01-18
+- **Version**: 1.8.0 - Edge.1
+- **Release Date**: 2016-01-20
 - **Software component versions**: MariaDB 10.0.21, Galera 5.5.45
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x
@@ -20,8 +27,8 @@ Current MySQL for Pivotal Cloud Foundry&reg; Details
 
 </div>
 
-## Upgrading to the Latest Version
-Consider the following compatibility information before upgrading MySQL for Pivotal Cloud Foundry&reg;.
+## <a id="upgrading"></a>Upgrading to the Latest Version ##
+Consider the following compatibility information before upgrading MySQL.
 
 For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
 
@@ -46,29 +53,32 @@ For more information, refer to the full [Product Version Matrix](../compatibilit
         <li>From 1.6.3.2 to 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
         <li>From 1.6.4 to 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
         <li>From 1.6.5 to 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.1 to 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.2 to 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.3 to 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.4 to 1.7.1, 1.7.2</li>
+        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.1 to 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.2 to 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.3 to 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.4 to 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.1 to 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.2 to 1.8.0-e.1</li>
         </ul></td></tr>
 <tr><th>1.6.x</th>
     <td><ul>
         <li>From 1.4.0 to 1.5.0</li>
         <li>From 1.5.0 to 1.6.1, 1.6.2, 1.6.3, 1.6.3.1, 1.6.3.2, 1.6.4, 1.6.5</li>
-        <li>From 1.6.1 to 1.6.2, 1.6.3.1, 1.6.3.2, 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.6.2 to 1.6.3, 1.6.3, 1.6.3.1, 1.6.3.2, 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
+        <li>From 1.6.1 to 1.6.2, 1.6.3, 1.6.3.1, 1.6.3.2, 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
+        <li>From 1.6.2 to 1.6.3, 1.6.3.1, 1.6.3.2, 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
         <li>From 1.6.3 to 1.6.3.1, 1.6.3.2, 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
         <li>From 1.6.3.1 to 1.6.3.2, 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
         <li>From 1.6.3.2 to 1.6.4, 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
         <li>From 1.6.4 to 1.6.5, 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
         <li>From 1.6.5 to 1.7.0.0, 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.1 to 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.2 to 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.3 to 1.7.0.4, 1.7.1, 1.7.2</li>
-        <li>From 1.7.0.4 to 1.7.1, 1.7.2</li>
-        <li>From 1.7.1 to 1.7.2</li>
+        <li>From 1.7.0.0 to 1.7.0.1, 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.1 to 1.7.0.2, 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.2 to 1.7.0.3, 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.3 to 1.7.0.4, 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.0.4 to 1.7.1, 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.1 to 1.7.2, 1.8.0-e.1</li>
+        <li>From 1.7.2 to 1.8.0-e.1</li>
         </ul></td></tr>
 </table>
 
@@ -99,7 +109,44 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 ## <a id="settings"></a>Settings ##
 
-### <a id="service-plan"></a>Service Plan ###
+### <a id="service-plan"></a>Service Plans ###
+
+Starting with version 1.8.0 of p-mysql, the Operator may now configure multiple service plans. The user interface is simple. Select the "Service Plans" configuration screen from within the p-MySQL tile. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
+
+Plans consist of four required fields, plus the ability to mark plans as 'private':
+
+- Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI. Plan names may only be made up of lowercase letters, numbers, hyphens and underscores.
+  - **Note**: Plan names constraints are only enforced at deploy time. The form does not yet allow for real-time validation. That means if a plan name does not conform to the correct format, the tile will fail to deploy after you've clicked on **Apply Changes**. The error will appear in the Recent Install Logs pull-down, and will look like this:
+  > Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
+- Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "
+- Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
+- Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
+- Private: By default, all plans are published to all organizations. Clicking 'Not available by default' requires the Operator to [publish plans manually](https://docs.pivotal.io/pivotalcf/services/access-control.html#enable-access) using `cf enable-service-access`.
+  - **Note**: If you have previously marked a plan as public, and later decide you'd like this plan to be private, you'll have to run `cf dsiable-service-access` manually for each of your Organizations.
+
+##### Deleting a Plan
+Plans can be deleted by clicking on the corresponding Trash Can icon, hitting Save, and finally "Apply Changes" from the Installation Dashboard. You may delete as many plans as you like before hitting Save or Apply Changes.
+
+It is OK to delete a plan that is still in use, i.e., if there are still service instances of that plan that have not been deleted. In this case, the plan is marked 'inactive' within the Cloud Foundry Marketplace. Existing service instances will continue to be maintained, but it is not possible for new instances to be created. The plan will continue to show in the marketplace. Once the last instance of an old plan has been deleted, the Operator can remove it from the Marketplace by following these steps:
+
+1. `bosh deployments`
+    - Find the full name of the p-mysql deployment, for example: _p-mysql-180290d67d5441ebf3c5_
+1. `bosh deployment p-mysql-180290d67d5441ebf3c5`
+1. `bosh run errand broker-registrar`
+
+If no services instances of the old plan are still in use, the plan will disappear from commands such as `cf marketplace`.
+
+**Note**: If you accidentally click the trash can, do not click **Save**. Instead, return to the Installation Dashboard and any accidental changes will be discarded. If you do happen to hit save, do not click **Apply Changes** on the Installation Dashboard. Instead, click **Revert** to discard any accidental changes.
+
+---
+
+P-MySQL cannot be deployed with zero service plans. One plan, minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
+
+<p class="note"><strong>Note</strong>: Unfortunately, the upgrade process is not able to continue using the original name of the plan. Thus, on upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, `pre-existing-plan`. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.8.0.</p>
+
+#### Service Plans before p-mysql v1.8.0
+
+In versions v1.7 and below, the product is only capable of offering one service plan at a time.
 
 A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user by default. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
@@ -107,7 +154,7 @@ The name of the plan is **100mb-dev** by default and is automatically updated if
 
 **Note**: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run `cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME` on the command line.
 
-**Further Note**: This feature does not work properly in versions of p-mysql 1.6.3 and earlier. See the entry in [Known Issues](known-issues.html) for the recommended workaround.
+**Further Note**: Changing a plan's definition does not work properly in versions of p-mysql 1.6.3 and earlier. See the entry in [Known Issues](known-issues.html) for the recommended workaround.
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
@@ -174,11 +221,26 @@ To help application developers get started with MySQL for PCF, we have provided 
 
 Cloud Foundry users can access a dashboard for each MySQL service instances via SSO from Apps Manager. The dashboard displays current storage utilization of the database and the plan quota for storage. On the Space page in Apps Manager, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
+Additionally, the dashboard URL can be discovered via the CLI, using `cf service [instance name]`. For example:
+
+```
+$ cf service acceptDB
+
+Service instance: acceptDB
+Service: p-mysql
+Plan: 100mb-dev
+Description: MySQL service for application development and testing
+Documentation url:
+Dashboard: https://p-mysql.sys.acceptance.cf-app.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
+```
+
+In this example, the URL to the instance dashboard is: `https://p-mysql.sys.acceptance.cf-app.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`
+
 ## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
 The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of client connections routed to each backend database cluster node.
 
-The dashboard for each proxy instance can be found at: `http://proxy-<job index>.p-mysql.<system-domain>`. Job index starts at 0 so if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0.p-mysql.example.com` and `http://proxy-1.p-mysql.example.com`.
+The dashboard for each proxy instance can be found at: `http://proxy-<job index>-p-mysql.<system-domain>`. Job index starts at 0 so if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0-p-mysql.example.com` and `http://proxy-1-p-mysql.example.com`.
 
 Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
 
