@@ -35,6 +35,7 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
 
 See [Cluster Behavior](cluster-behavior.html.md) for more details about determining cluster state.
 
+<a id="auto-bootstrap-errand"></a>
 ## Auto-bootstrap errand
 
 As part of cf-mysql-release v25, we provide an auto-bootstrap feature which runs as a BOSH errand. The errand evaluates if quorum has been lost on a cluster, and if so bootstraps the cluster. Before running the errand, one should ensure that there are no network partitions. Once network partitions have been resolved, the cluster is in a state where the errand can be run.
@@ -76,6 +77,7 @@ The bootstrap errand simply automates the steps in the manual bootstrapping proc
 
 The sequence number of a stopped node can be retained by either reading the node's state file under `/var/vcap/store/mysql/grastate.dat`, or by running a mysqld command with a WSREP flag, like `mysqld --wsrep-recover`.
 
+<a id="auto-bootstrap-errand"></a>
 ## Manual Bootstrap Process
 
 The following steps are prone to user-error and can result in lost data if followed incorrectly.
