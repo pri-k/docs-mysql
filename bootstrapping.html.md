@@ -1,4 +1,6 @@
-# Bootstrapping a Galera Cluster
+---
+title: Bootstrapping a Galera Cluster
+---
 
 Bootstrapping is the process of (re)starting a Galera cluster.
 
