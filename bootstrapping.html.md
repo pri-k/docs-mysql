@@ -1,24 +1,18 @@
----
-title: Bootstrapping a Galera Cluster
----
+# Bootstrapping a Galera Cluster
 
+Bootstrapping is the process of (re)starting a Galera cluster.
 
-Bootstrapping is the process of (re)starting a Galera cluster. Before evaluating whether manual bootstrapping is necessary, ensure the nodes are able to communicate with each other, i.e., there are no network partitions. Once network partitions have been resolved, reevaluate the cluster state.
+## When to Bootstrap
 
-## <a id="when-to-bootstrap"></a>When to Bootstrap ##
+Bootstrapping is only required when the cluster has lost quorum.
 
-Manual bootstrapping should only be required when the cluster has lost quorum.
+Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its DB is in a good state, and it reports itself as ```synced```.
 
-Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period).
+If quorum has *not* been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired (error resolved, node restarted, or connectivity restored).
 
-If quorum has *not* been lost, then individual unhealthy nodes should automatically rejoin the quorum once repaired (error resolved, node restarted, or connectivity restored).
+#### Symptoms of Lost Quorum
 
-Note: The cluster is automatically bootstrapped the first time the cluster is deployed.
-
-
-### <a id="lost-quorum"></a>Symptoms of Lost Quorum ###
-
-- All nodes appear "Unhealthy" on the proxy dashboard.
+- [All nodes appear "Unhealthy" on the proxy dashboard.](quorum-lost.png)
 - All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary`.
 
     ```sh
@@ -29,6 +23,7 @@ Note: The cluster is automatically bootstrapped the first time the cluster is de
     | wsrep_cluster_status | non-Primary |
     +----------------------+-------------+
     ```
+
 - All responsive nodes respond with `ERROR 1047` when queried with most statement types.
 
     ```sh
@@ -36,136 +31,55 @@ Note: The cluster is automatically bootstrapped the first time the cluster is de
     ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
     ```
 
-See [Cluster Behavior](./cluster-behavior.html) for more details about determining cluster state.
+See [Cluster Behavior](cluster-behavior.html.md) for more details about determining cluster state.
 
+## Auto-bootstrap errand
 
-# <a id="bootstrapping"></a>Bootstrapping #
+As part of cf-mysql-release v25, we provide an auto-bootstrap feature which runs as a BOSH errand. The errand evaluates if quorum has been lost on a cluster, and if so bootstraps the cluster. Before running the errand, one should ensure that there are no network partitions. Once network partitions have been resolved, the cluster is in a state where the errand can be run.
 
-Bootstrapping requires you to run commands from the [Ops Manager Director](http://docs.pivotal.io/pivotalcf/customizing/index.html). Follow the instructions to use the [BOSH CLI](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare) for command-line access.
+#### How to run
 
+Run `bosh run errand bootstrap` from the terminal. When done, this should successfully bootstrap the cluster, and all jobs should report as `running`. Note that:
 
-### <a id="assisted-bootstrap"></a>Assisted Bootstrap ###
-P-mysql versions 1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. It is still necessary to manually initiate the bootstrap process, but using this errand greatly simplifies the steps necessary to complete the process.
+If the cluster was already healthy to begin with (i.e. quorum was never lost), the errand will error out saying `bootstrap is not required`.
 
-In most cases, running the errand is sufficient, however there are some conditions which require additional steps.
+If one or more nodes are not reachable (i.e. the VM exists but in an unknown state), it will error out saying `nodes are not reachable`. In this situation, follow the steps below:
 
-
-### <a id="cluster-disrupted"></a>Scenario 1 - Virtual Machines running, Cluster Disrupted ###
-
-If the nodes are up and running, but the cluster has been disrupted, the jobs will appear as `failing.` The output of `bosh instances` will look like this.
-
-   ```
-   $ bosh instances
-   [...]
-   +--------------------------------------------------+---------+------------------------------------------------+------------+
-   | Instance                                         | State   | Resource Pool                                  | IPs        |
-   +--------------------------------------------------+---------+------------------------------------------------+------------+
-   | cf-mysql-broker-partition-a813339fde9330e9b905/0 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 10.0.16.61 |
-   | cf-mysql-broker-partition-a813339fde9330e9b905/1 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 10.0.16.62 |
-   | mysql-partition-a813339fde9330e9b905/0           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.55 |
-   | mysql-partition-a813339fde9330e9b905/1           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.56 |
-   | mysql-partition-a813339fde9330e9b905/2           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.57 |
-   | proxy-partition-a813339fde9330e9b905/0           | running | proxy-partition-a813339fde9330e9b905           | 10.0.16.59 |
-   | proxy-partition-a813339fde9330e9b905/1           | running | proxy-partition-a813339fde9330e9b905           | 10.0.16.60 |
-   +--------------------------------------------------+---------+------------------------------------------------+------------+
-   ```
-In this situation, it is OK to immediately try the bootstrap errand:
-
-  1. Log into the BOSH director.
-  1. `bosh run errand bootstrap`
-
-You will see many lines of output, eventually followed by:
-   ```
-   Bootstrap errand completed
-
-   [stderr]
-   + echo 'Started bootstrap errand ...'
-   + JOB_DIR=/var/vcap/jobs/bootstrap
-   + CONFIG_PATH=/var/vcap/jobs/bootstrap/config/config.yml
-   + /var/vcap/packages/bootstrap/bin/cf-mysql-bootstrap -configPath=/var/vcap/jobs/bootstrap/config/config.yml
-   + echo 'Bootstrap errand completed'
-   + exit 0
-
-   Errand `bootstrap' completed successfully (exit code 0)
-   ```
-There are times when this won't work immediately. Unfortunately, sometimes it is best to wait and try again a few minutes later.
-
-
-### <a id="vms-terminated"></a>Scenario 2 - Virtual Machines Terminated or Lost ###
-
-Other times, due to power failure or other outage, it's possible that all of your VMs have been lost. They'll need to be recreated before you can begin to recover the cluster. In this case, you'll see the nodes appear as `unknown/unknown` in the BOSH output.
-
-```
-$ bosh instances
-+--------------------------------------------------+--------------------+------------------------------------------------+------------+
-| Instance                                         | State              | Resource Pool                                  | IPs        |
-+--------------------------------------------------+--------------------+------------------------------------------------+------------+
-| unknown/unknown                                  | unresponsive agent |                                                |            |
-+--------------------------------------------------+--------------------+------------------------------------------------+------------+
-| unknown/unknown                                  | unresponsive agent |                                                |            |
-+--------------------------------------------------+--------------------+------------------------------------------------+------------+
-| unknown/unknown                                  | unresponsive agent |                                                |            |
-+--------------------------------------------------+--------------------+------------------------------------------------+------------+
-| cf-mysql-broker-partition-e97dae91e44681e0b543/0 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 10.0.16.65 |
-| cf-mysql-broker-partition-e97dae91e44681e0b543/1 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 10.0.16.66 |
-+--------------------------------------------------+--------------------+------------------------------------------------+------------+
-| proxy-partition-e97dae91e44681e0b543/0           | running            | proxy-partition-e97dae91e44681e0b543           | 10.0.16.63 |
-| proxy-partition-e97dae91e44681e0b543/1           | running            | proxy-partition-e97dae91e44681e0b543           | 10.0.16.64 |
-+--------------------------------------------------+--------------------+------------------------------------------------+------------+
-```
-
-
-### <a id="vm-recovery"></a>VM Recovery ###
-
-VM Recovery is best left to OpsManager by configuring the VM [Resurrector](http://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling). If so, the system will notice that the VMs are gone, and automatically attempt to recreate them. You will be able to see evidence of that by seeing the scan-and-fix job in the output of `bosh tasks recent --no-filter`.
-
-```
-+-----+------------+-------------------------+----------+--------------------------------------------+---------------------------------------------------+
-| #   | State      | Timestamp               | User     | Description                                | Result                                            |
-+-----+------------+-------------------------+----------+--------------------------------------------+---------------------------------------------------+
-| 123 | queued     | 2016-01-08 00:18:07 UTC | director | scan and fix                               |                                                   |
-```
-
-If you have not configured the Resurrector to run automatically, you can also invoke it from the command line:
-
-  - `bosh cck`
-
-By watching `bosh instances` you'll see the VMs transition from `unresponsive agent` to `starting` and ultimately, two will appear as `failing`.
-
-```
-+--------------------------------------------------+----------+------------------------------------------------+------------+
-| mysql-partition-e97dae91e44681e0b543/0           | starting | mysql-partition-e97dae91e44681e0b543           | 10.0.16.60 |
-| mysql-partition-e97dae91e44681e0b543/1           | failing  | mysql-partition-e97dae91e44681e0b543           | 10.0.16.61 |
-| mysql-partition-e97dae91e44681e0b543/2           | failing  | mysql-partition-e97dae91e44681e0b543           | 10.0.16.62 |
-+--------------------------------------------------+----------+------------------------------------------------+------------+
-```
-
-Do not proceed to the next step until all three VMs are running.
-
-
-#### <a id="updating-manifest"></a>Update the BOSH manifest ####
-
-In standard deployment, BOSH is configured to run the cluster in a specific way. You must change that configuration in order for the bootstrap errand to perform its work. Follow this process to make it possible for the bootstrap errand to succeed.
-
-1. Log into the BOSH director
+1. `bosh -n stop mysql_z1 && bosh -n stop mysql_z2 && bosh -n stop <arbitrator|mysql>_z3`
 1. `bosh edit deployment`
-1. Set update.canaries to 0, update.max_in_flight to 3, and update.serial to false.
-1. `bosh deploy`
-1. `bosh run errand bootstrap`
+1. Set `update.canaries` to 0, `update.max_in_flight` to 3, and `update.serial` to false.
+1. `bosh deploy`. Note, if you get a 503 error (like `Sending stop request to monit: Request failed, response: Response{ StatusCode: 503, Status: '503 Service Unavailable' }`), it means that monit is still trying to stop the vms. Please wait a few minutes and try this step again.
+1. `bosh -n start mysql_z1 ; bosh -n start mysql_z2 ; bosh -n start <arbitrator|mysql>_z3` (This will throw several errors, but it ensures that all the jobs are present on the VM)
+1. `bosh instances` to verify that all jobs report as failing.
+1. Try running the errand again using `bosh -n run errand bootstrap` as above.
+1. Once the errand succeeds, the cluster is synced, although some jobs might still report as failing.
 1. `bosh edit deployment`
-1. Re-set update.canaries to 1, update.max_in_flight to 1, and update.serial to true.
-1. `bosh deploy`
+1. Set `update.canaries` to 1, `update.max_in_flight` to 1, and `update.serial` to true.
+1. Verify that deployment succeeds and all jobs are healthy. A healthy deployment should look like this:
 
-It is critical that you run all of the steps. If you do not re-set the values in the BOSH manifest, the status of the jobs will not be reported correctly and can lead to troubles in future deploys.
+```
+$ bosh vms cf-warden-mysql'
+Acting as user 'admin' on deployment 'cf-warden-mysql' on 'Bosh Lite Director'
+| mysql_z1/0           | running | mysql_z1           | 10.244.7.2   |
+| mysql_z2/0           | running | mysql_z2           | 10.244.8.2   |
+| arbitrator_z3/0      | running | arbitrator_z3      | 10.244.9.6   |
+...
+```
 
+If these steps did not work for you, please refer to the [Manual Bootstrap Process](#manual-bootstrap-process) below.
 
-## <a id="manual-bootstrap"></a>Manual Bootstrap ##
+## How it works
 
-If the bootstrap errand is not able to automatically recover the cluster, you may need to perform the steps manually.
+The bootstrap errand simply automates the steps in the manual bootstrapping process documented below. It finds the node with the highest transaction sequence number, and asks it to start up by itself (i.e. in bootstrap mode), then asks the remaining nodes to join the cluster.
 
-Once it has been determined that bootstrapping is required, follow the following steps to shut down the cluster and bootstrap from the nodes with the most transactions.
+The sequence number of a stopped node can be retained by either reading the node's state file under `/var/vcap/store/mysql/grastate.dat`, or by running a mysqld command with a WSREP flag, like `mysqld --wsrep-recover`.
 
-- SSH to each node in the cluster and, as root, shut down the mariadb process.
+## Manual Bootstrap Process
+
+The following steps are prone to user-error and can result in lost data if followed incorrectly.
+Please follow the [Auto-bootstrap](#auto-bootstrap-errand) instructions above first, and only resort to the manual process if the errand fails to repair the cluster.
+
+1. SSH to each node in the cluster and, as root, shut down the mariadb process.
 
   ```sh
   $ monit stop mariadb_ctrl
@@ -173,8 +87,9 @@ Once it has been determined that bootstrapping is required, follow the following
 
   Re-bootstrapping the cluster will not be successful unless all other nodes have been shut down.
 
-- Choose a node to bootstrap.
-    - Find the node with the highest transaction sequence number (seqno).
+1. Choose a node to bootstrap.
+
+    Find the node with the highest transaction sequence number (seqno):
 
     - If a node shutdown gracefully, the seqno should be in the galera state file.
 
@@ -197,13 +112,13 @@ Once it has been determined that bootstrapping is required, follow the following
 
         Note: The galera state file will still say `seqno: -1` afterward.
 
-    - If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case, there is nothing to recover. Unless all nodes crashed this way, do not choose this node for bootstrapping.
+    - If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case there's nothing to recover. Unless all nodes crashed this way, don't choose this node for bootstrapping.
 
     Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
-  **Important**: Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster, unless its data is abandoned. Its mariadb process will exit with an error. See [cluster behavior](cluster-behavior.html) for more details on intentionally abandoning data.
+  **Important:** Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See [cluster behavior](cluster-behavior.html.md) for more details on intentionally abandoning data.
 
-- On the new bootstrap node, update state file and restart the mariadb process:
+1. On the new bootstrap node, update state file and restart the mariadb process:
 
   ```sh
   $ echo -n "NEEDS_BOOTSTRAP" > /var/vcap/store/mysql/state.txt
@@ -218,13 +133,13 @@ Once it has been determined that bootstrapping is required, follow the following
 
   It can take up to 10 minutes for monit to start the mariadb process.
 
-- Once the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
+1. Once the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
 
   ```sh
   $ monit start mariadb_ctrl
   ```
 
-- Verify that the new nodes have successfully joined the cluster. The following command should output the total number of nodes in the cluster:
+1. Verify that the new nodes have successfully joined the cluster. The following command should output the total number of nodes in the cluster:
 
   ```sh
   mysql> SHOW STATUS LIKE 'wsrep_cluster_size';
