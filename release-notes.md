@@ -2,17 +2,6 @@
 title: Release Notes
 ---
 
-## <a id="1-8-0"></a>1.8.0-Edge.1
-
-Release date: 20 January 2016
-
-Introducing three great new features:
-- Multiple service plans
-- `bosh` bootstrap errand
-- Arbitrator
-
-**Note**: On upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to p-MySQL v1.8.0.
-
 ## <a id="1-7-2"></a>1.7.2
 
 - See below, same update as [version 1.6.5](#1-6-5)
@@ -34,6 +23,7 @@ Release date: 07 January 2016
 - Updated stemcell to 3146.2. This is a security upgrade that resolves the following Ubuntu Security Notices:
   - USN-2857-1, USN-2842-1, USN-2842-2, USN-2836-1, USN-2834-1, USN-2830-1, and USN-2829-1
 
+
 ## <a id="1-7-0-4"></a>1.7.0.4
 
 - See below, same update as [version 1.6.3.4](#1-6-3-4)
@@ -42,7 +32,7 @@ Release date: 07 January 2016
 
 Release date: 04 December 2015
 
-- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in a future release of p-mysql, and we are sorry for the inconvenience.
+- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in a future release of p-mysql, we are sorry for the inconvenience.
 - Updated stemcell to 3146. This is a security upgrade that resolves the following Ubuntu Security Notices:
   - [[USN-2821-1](http://www.ubuntu.com/usn/usn-2821-1/)] GnuTLS vulnerability
 
