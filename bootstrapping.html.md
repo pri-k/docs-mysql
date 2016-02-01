@@ -33,7 +33,7 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
     ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
     ```
 
-See [Cluster Behavior](cluster-behavior.html.md) for more details about determining cluster state.
+See [Cluster Behavior](./cluster-behavior.html) for more details about determining cluster state.
 
 <a id="auto-bootstrap-errand"></a>
 ## Auto-bootstrap errand
@@ -77,7 +77,7 @@ The bootstrap errand simply automates the steps in the manual bootstrapping proc
 
 The sequence number of a stopped node can be retained by either reading the node's state file under `/var/vcap/store/mysql/grastate.dat`, or by running a mysqld command with a WSREP flag, like `mysqld --wsrep-recover`.
 
-<a id="auto-bootstrap-errand"></a>
+<a id="manual-bootstrap-process"></a>
 ## Manual Bootstrap Process
 
 The following steps are prone to user-error and can result in lost data if followed incorrectly.
@@ -120,7 +120,7 @@ Please follow the [Auto-bootstrap](#auto-bootstrap-errand) instructions above fi
 
     Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
-  **Important:** Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See [cluster behavior](cluster-behavior.html.md) for more details on intentionally abandoning data.
+  **Important:** Only perform these bootstrap commands on the node with the highest `seqno`. Otherwise the node with the highest `seqno` will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See [cluster behavior](./cluster-behavior.html) for more details on intentionally abandoning data.
 
 1. On the new bootstrap node, update state file and restart the mariadb process:
 
