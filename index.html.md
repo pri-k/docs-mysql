@@ -30,7 +30,7 @@ Current MySQL for Pivotal Cloud Foundry&reg; Details
 ## <a id="upgrading"></a>Upgrading to the Latest Version ##
 Consider the following compatibility information before upgrading MySQL.
 
-For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
+For more information, refer to the full [Product Version Matrix](../../compatibility-matrix.pdf).
 
 <table border="1" class="nice">
 <tr><th>OpsManager Version</th>
