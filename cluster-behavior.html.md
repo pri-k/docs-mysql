@@ -40,7 +40,7 @@ Existing nodes restarted with monit should automatically join the cluster. If an
   - If the node has a higher `seqno` it will be apparent in the error log `/var/vcap/sys/log/mysql/mysql.err.log`.
   - If the healthy nodes of a cluster have a lower transaction record number than the failing node, it might be desirable to shut down the healthy nodes and bootstrap from the node with the more recent transaction record number. See the [bootstrapping docs](bootstrapping.html) for more details.
   - Manual recovery may be possible, but is error-prone and involves dumping transactions and applying them to the running cluster (out of scope for this doc).
-  - Abandoning the data is also an option, if you're ok with losing the unsynced transactions. Follow the following steps to abandon the data (as root):
+  - Abandoning the data is also an option, if you're ok with losing the unsynchronized transactions. Follow the following steps to abandon the data (as root):
     - Stop the process with `monit stop mariadb_ctrl`.
     - Delete the galera state (`/var/vcap/store/mysql/grastate.dat`) and cache (`/var/vcap/store/mysql/galera.cache`) files from the persistent disk.
     - Restarting the node with `monit start mariadb_ctrl`.

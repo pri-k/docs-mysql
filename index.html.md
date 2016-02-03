@@ -122,7 +122,7 @@ Plans consist of four required fields, plus the ability to mark plans as 'privat
 - Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
 - Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
 - Private: By default, all plans are published to all organizations. Clicking 'Not available by default' requires the Operator to [publish plans manually](https://docs.pivotal.io/pivotalcf/services/access-control.html#enable-access) using `cf enable-service-access`.
-  - **Note**: If you have previously marked a plan as public, and later decide you'd like this plan to be private, you'll have to run `cf dsiable-service-access` manually for each of your Organizations.
+  - **Note**: If you have previously marked a plan as public, and later decide you'd like this plan to be private, you'll have to run `cf disable-service-access` manually for each of your Organizations.
 
 ##### Deleting a Plan
 Plans can be deleted by clicking on the corresponding Trash Can icon, hitting Save, and finally "Apply Changes" from the Installation Dashboard. You may delete as many plans as you like before hitting Save or Apply Changes.
