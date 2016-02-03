@@ -117,7 +117,9 @@ Plans consist of four required fields, plus the ability to mark plans as 'privat
 
 - Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI. Plan names may only be made up of lowercase letters, numbers, hyphens and underscores.
   - **Note**: Plan names constraints are only enforced at deploy time. The form does not yet allow for real-time validation. That means if a plan name does not conform to the correct format, the tile will fail to deploy after you've clicked on **Apply Changes**. The error will appear in the Recent Install Logs pull-down, and will look like this:
-  > Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
+    ```
+    Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
+    ```
 - Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "
 - Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
 - Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
