@@ -117,7 +117,9 @@ Plans consist of four required fields, plus the ability to mark plans as 'privat
 
 - Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI. Plan names may only be made up of lowercase letters, numbers, hyphens and underscores.
   - **Note**: Plan names constraints are only enforced at deploy time. The form does not yet allow for real-time validation. That means if a plan name does not conform to the correct format, the tile will fail to deploy after you've clicked on **Apply Changes**. The error will appear in the Recent Install Logs pull-down, and will look like this:
-  > Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
+    ```
+    Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
+    ```
 - Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "
 - Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
 - Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
@@ -140,7 +142,7 @@ If no services instances of the old plan are still in use, the plan will disappe
 
 ---
 
-P-MySQL cannot be deployed with zero service plans. A minimum of one plan is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
+P-MySQL cannot be deployed with zero service plans. One plan, minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
 
 <p class="note"><strong>Note</strong>: Unfortunately, the upgrade process is not able to continue using the original name of the plan. Thus, on upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, `pre-existing-plan`. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.8.0.</p>
 

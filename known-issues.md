@@ -2,14 +2,34 @@
 title: Known Issues
 ---
 
+# Known Issues
+
 ### MySQL Backups to AWS S3
-In versions of p-mysql 1.7.X and earlier, backups can only be sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, "us-east-1." This limitation will be addressed in future releases.
+In versions of p-mysql 1.7.X and earlier, backups can only be sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, aka, "us-east-1." This limitation will be addressed in future releases.
 
 ### Elastic Runtime HTTPS-only feature
 Support for the Experimental HTTPS-only feature is broken in p-mysql versions 1.6.X and earlier. The HTTPS-only feature works as designed in p-mysql 1.7.0 and later.
 
+### Accidental deletion of a Service Plan
+
+If and only if the Operator does all of these steps in sequence, a plan will become "unrecoverable":
+
+1. Click the trash-can icon in the Service Plan screen
+1. Enter a plan with the exact same name
+1. Click the 'Save' button on the same screen
+1. Return to the Ops Manager top-level, and click 'Apply Changes'
+
+After clicking 'Apply Changes', the deploy will eventually fail with the error:
+> Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
+
+This unfortunate situation is unavoidable; once the Operator has committed via 'Apply Changes', the plan original plan cannot be recovered. For as long as service instances of that plan exist, you may not enter a new plan of the same name. At this point, the only workaround is to create a new plan with the same specifications, but specify a different name. Existing instances will continue to appear under the old plan name, but new instances will need to be created using the new plan name.
+
+If you have committed steps 1 and 2, but not 4, no problem. Do not hit the 'Save' button. Simply return to the Installation Dashboard. Any accidental changes will be discarded.
+
+If you have committed steps 1, 2 and 3, do not click 'Apply Changes.' Instead, return to the Installation Dashboard and click the '**Revert**' button. Any accidental changes will be discarded.
+
 ### Changing service plan definition
-In p-mysql versions 1.7.0 and earlier, there is only one service plan. Changing the definition of that plan, either the number of megabytes, number of connections, or both, will make it so that any new service instances will have those characteristics.
+In p-mysql versions 1.7.0 and earlier, there is only one service plan. Changing the definition of that plan, the number of megabytes, number of connections, or both, will make it so that any new service instances will have those characteristics.
 
 There is a bug in p-mysql versions 1.6.3 and earlier. Changing the plan does not change existing service instances. Existing plans will continue to be governed by the plan constraints effective at the time they were created. This is true regardless of whether or not an operator runs `cf update-service`.
 
