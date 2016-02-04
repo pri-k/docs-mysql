@@ -26,7 +26,7 @@ Consider the following compatibility information before upgrading MySQL for Pivo
 For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
 
 <table border="1" class="nice">
-<tr><th>OpsManager Version</th>
+<tr><th>Ops Manager Version</th>
     <th>Supported Upgrades from Imported MySQL Installation</th></tr>
 <tr><th>1.3.x</th>
     <td><ul>
