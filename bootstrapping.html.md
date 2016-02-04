@@ -8,7 +8,7 @@ Bootstrapping is the process of (re)starting a Galera cluster.
 
 Bootstrapping is only required when the cluster has lost quorum.
 
-Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its DB is in a good state, and it reports itself as ```synced```.
+Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its database is in a good state, and it reports itself as ```synced```.
 
 If quorum has *not* been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired (error resolved, node restarted, or connectivity restored).
 
@@ -52,7 +52,7 @@ In most cases, running the errand is sufficient, however there are some conditio
 
 #### <a id="how-it-works"></a>How it works ####
 
-The bootstrap errand simply automates the steps in the manual bootstrapping process documented below. It finds the node with the highest transaction sequence number, and asks it to start up by itself (i.e. in bootstrap mode), then asks the remaining nodes to join the cluster.
+The bootstrap errand simply automates the steps in the manual bootstrapping process documented below. It finds the node with the highest transaction sequence number, and asks it to start up by itself (i.e., in bootstrap mode), then asks the remaining nodes to join the cluster.
 
 ### <a id="cluster-disrupted"></a>Scenario 1: Virtual Machines running, Cluster Disrupted ###
 
@@ -125,7 +125,7 @@ $ bosh instances
 
 VM Recovery is best left to OpsManager by configuring the VM [Resurrector](http://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling). If so, the system will notice that the VMs are gone, and automatically attempt to recreate them. You will be able to see evidence of that by seeing the scan-and-fix job in the output of `bosh tasks recent --no-filter`.
 
-```sh
+```
 $ bosh tasks recent --no-filter
 +-----+------------+-------------------------+----------+--------------------------------------------+---------------------------------------------------+
 | #   | State      | Timestamp               | User     | Description                                | Result                                            |
@@ -137,7 +137,7 @@ If you have not configured the Resurrector to run automatically, you can also in
 
   - `bosh cck`
 
-By watching `bosh instances` you'll see the VMs transition from `unresponsive agent` to `starting` and ultimately, two will appear as `failing`.
+By watching `bosh instances`, you'll see the VMs transition from `unresponsive agent` to `starting` and, ultimately, two will appear as `failing`.
 
 ```sh
 $ bosh instances
@@ -158,7 +158,7 @@ In standard deployment, BOSH is configured to run the cluster in a specific way.
 
 1. Log into the BOSH director
 1. `bosh edit deployment`
-1. Set update.canaries to 0, update.max_in_flight to 3, and update.serial to false.
+1. Set update.canaries to 0, update.max\_in\_flight to 3, and update.serial to false.
 1. `bosh deploy`
 
 #### <a id="run-the-errand"></a>3. Run the bootstrap errand ####
@@ -167,7 +167,7 @@ In standard deployment, BOSH is configured to run the cluster in a specific way.
 
 #### <a id="reset-deployment"></a>4. Re-set the manifest ####
 1. `bosh edit deployment`
-1. Re-set update.canaries to 1, update.max_in_flight to 1, and update.serial to true.
+1. Re-set update.canaries to 1, update.max\_in\_flight to 1, and update.serial to true.
 1. `bosh deploy`
 
 It is critical that you run all of the steps. If you do not re-set the values in the BOSH manifest, the status of the jobs will not be reported correctly and can lead to troubles in future deploys.
@@ -179,47 +179,45 @@ It is critical that you run all of the steps. If you do not re-set the values in
 If the bootstrap errand is not able to automatically recover the cluster, you may need to perform the steps manually.
 
 The following steps are prone to user-error and can result in lost data if followed incorrectly.
-Please follow the [assisted boostrap](#assisted-bootstrap) instructions above first, and only resort to the manual process if the errand fails to repair the cluster.
+Please follow the [assisted bootstrap](#assisted-bootstrap) instructions above first, and only resort to the manual process if the errand fails to repair the cluster.
 
 - SSH to each node in the cluster and, as root, shut down the mariadb process.
-
-  ```sh
-  $ monit stop mariadb_ctrl
-  ```
-
-  Re-bootstrapping the cluster will not be successful unless all other nodes have been shut down.
+ 
+    ```sh
+    $ monit stop mariadb_ctrl
+    ```
+    Re-bootstrapping the cluster will not be successful unless all other nodes have been shut down.
 
 - Choose a node to bootstrap.
 
-    <p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest seqno. Otherwise the node with the highest seqno will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See [cluster behavior](./cluster-behavior.html) for more details on intentionally abandoning data.</p>
+    <p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest seqno. Otherwise the node with the highest seqno will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See <a href="./cluster-behavior.html">cluster behavior</a> for more details on intentionally abandoning data.</p>
 
     Find the node with the highest transaction sequence number (seqno). The sequence number of a stopped node can be retained by either reading the node's state file under `/var/vcap/store/mysql/grastate.dat`, or by running a mysqld command with a WSREP flag, like `mysqld --wsrep-recover`.
 
   - If a node shutdown gracefully, the seqno should be in the galera state file.
-
-    ```sh
-    $ cat /var/vcap/store/mysql/grastate.dat | grep 'seqno:'
-    ```
+      
+        ```sh
+        $ cat /var/vcap/store/mysql/grastate.dat | grep 'seqno:'
+        ```
 
   - If the node crashed or was killed, the seqno in the galera state file should be `-1`. In this case, the seqno may be recoverable from the database. The following command will cause the database to start up, log the recovered sequence number, and then exit.
 
-    ```sh
-    $ /var/vcap/packages/mariadb/bin/mysqld --wsrep-recover
-    ```
+        ```sh
+        $ /var/vcap/packages/mariadb/bin/mysqld --wsrep-recover
+        ```
 
-    Scan the error log for the recovered sequence number (the last number after the group id (uuid) is the recovered seqno):
+    Scan the error log for the recovered sequence number. The last number after the group id (uuid) is the recovered seqno:
 
     ```sh
     $ grep "Recovered position" /var/vcap/sys/log/mysql/mysql.err.log | tail -1
     150225 18:09:42 mysqld_safe WSREP: Recovered position e93955c7-b797-11e4-9faa-9a6f0b73eb46:15
     ```
 
-    Note: The galera state file will still say `seqno: -1` afterward.
+    **Note**: The galera state file will still say `seqno: -1` afterward.
 
-    - If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case there's nothing to recover. Unless all nodes crashed this way, don't choose this node for bootstrapping.
-
+- If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case there's nothing to recover. Unless all nodes crashed this way, don't choose this node for bootstrapping.
+<br><br>
     Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
-
 
 - On the new bootstrap node, update state file and restart the mariadb process:
 
@@ -230,9 +228,9 @@ Please follow the [assisted boostrap](#assisted-bootstrap) instructions above fi
 
   - You can check that the mariadb process has started successfully by running:
 
-    ```sh
-    $ watch monit summary
-    ```
+        ```sh
+        $ watch monit summary
+        ```
 
   It can take up to 10 minutes for monit to start the mariadb process.
 
@@ -242,7 +240,7 @@ Please follow the [assisted boostrap](#assisted-bootstrap) instructions above fi
     $ monit start mariadb_ctrl
     ```
 
-- Verify that the new nodes have successfully joined the cluster. The following command should output the total number of nodes in the cluster:
+  - Verify that the new nodes have successfully joined the cluster. The following command should output the total number of nodes in the cluster:
 
     ```sh
     mysql> SHOW STATUS LIKE 'wsrep_cluster_size';
