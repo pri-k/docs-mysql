@@ -140,7 +140,7 @@ If no services instances of the old plan are still in use, the plan will disappe
 
 ---
 
-P-MySQL cannot be deployed with zero service plans. One plan, minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
+P-MySQL cannot be deployed with zero service plans. One plan, at the minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
 
 <p class="note"><strong>Note</strong>: Unfortunately, the upgrade process is not able to continue using the original name of the plan. Thus, on upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, `pre-existing-plan`. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.8.0.</p>
 
