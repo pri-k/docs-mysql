@@ -6,9 +6,9 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 
 ## <a id="edge-release"></a>Edge Release ##
 
-We're experimenting with Edge releases in order to give early adopters access to features before a release is Feature Complete.  With Edge releases, we can better follow the Semantic Versioning convention by avoiding introducing features in patch releases.
+We're experimenting with Edge releases in order to give early adopters access to features before a release is Feature Complete. With Edge releases, we can better follow the Semantic Versioning convention by avoiding introducing features in patch releases.
 
-If we stick with this pilot, an Edge release will expose our users to Pivotal's agile process. As we add features they'll be test-driven and have passed through continuous integration.  Edge releases are considered production quality. When a full release is Feature Complete, we'll drop the 'edge' moniker and release the minor, eg 1.9.0, version. Subsequent patch releases, 1.9.1, 1.9.2, etc. will contain only security and bug fixes. New features will be released in the next edge release, 1.10.0-Edge.1.
+If we stick with this pilot, an Edge release will expose our users to Pivotal's agile process. As we add features, they'll be test-driven and have passed through continuous integration. Edge releases are considered production quality. When a full release is Feature Complete, we'll drop the 'edge' moniker and release the minor, e.g. 1.9.0, version. Subsequent patch releases, 1.9.1, 1.9.2, etc., will contain only security and bug fixes. New features will be released in the next edge release, 1.10.0-Edge.1.
 
 
 ## <a id="product-snapshot"></a>Product Snapshot ##
@@ -30,10 +30,10 @@ Current MySQL for Pivotal Cloud Foundry&reg; Details
 ## <a id="upgrading"></a>Upgrading to the Latest Version ##
 Consider the following compatibility information before upgrading MySQL.
 
-For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
+For more information, refer to the full [Product Version Matrix](../../compatibility-matrix.pdf).
 
 <table border="1" class="nice">
-<tr><th>OpsManager Version</th>
+<tr><th>Ops Manager Version</th>
     <th>Supported Upgrades from Imported MySQL Installation</th></tr>
 <tr><th>1.3.x</th>
     <td><ul>
@@ -91,7 +91,7 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 - While two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](#proxy) section below, as well as the entry in [Known Issues](known-issues.html).
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
-- Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this nodes will become partitioned. If more than half of cluster nodes are partitioned the cluster will lose quorum and become unusable until manually bootstrapped.
+- Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this, nodes will become partitioned. If more than half of cluster nodes are partitioned, the cluster will lose quorum and become unusable until manually bootstrapped.
 - See also the list of [Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/) in MariaDB cluster.
 
 ## <a id="known-issues"></a>Known Issues ##
@@ -102,8 +102,7 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/p-mysql).
 1. Upload the product file to your Ops Manager installation.
-1. Click **Add** next to the uploaded product description in the Available Products view
-   to add this product to your staging area.
+1. Click **Add** next to the uploaded product description in the Available Products view to add this product to your staging area.
 1. Click the newly added tile to review configurable [Settings](#settings).
 1. Click **Apply Changes** to deploy the service.
 
@@ -115,40 +114,39 @@ Starting with version 1.8.0 of p-mysql, the Operator may now configure multiple 
 
 Plans consist of four required fields, plus the ability to mark plans as 'private':
 
-- Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI. Plan names may only be made up of lowercase letters, numbers, hyphens and underscores.
-  - **Note**: Plan names constraints are only enforced at deploy time. The form does not yet allow for real-time validation. That means if a plan name does not conform to the correct format, the tile will fail to deploy after you've clicked on **Apply Changes**. The error will appear in the Recent Install Logs pull-down, and will look like this:
+- Service Plan name: The name by which Developers create service instances both in Apps Manager as well as via the `cf marketplace` CLI. Plan names may include only lowercase letters, numbers, hyphens, and underscores.
+  - **Note**: Plan names constraints are only enforced at deploy time. The form does not yet allow for real-time validation. That means that if a plan name does not conform to the correct format, the tile will fail to deploy after you've clicked on **Apply Changes**. The error will appear in the Recent Install Logs pull-down, and will look like this:
     ```
     Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
     ```
-- Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "
+- Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "general use, small footprint."
 - Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
-- Concurrent Connections Quota: The maximum number of simultaneous database connections allowed each instance of the Service Plan.
+- Concurrent Connections Quota: The maximum number of simultaneous database connections allowed to each instance of the Service Plan.
 - Private: By default, all plans are published to all organizations. Clicking 'Not available by default' requires the Operator to [publish plans manually](https://docs.pivotal.io/pivotalcf/services/access-control.html#enable-access) using `cf enable-service-access`.
   - **Note**: If you have previously marked a plan as public, and later decide you'd like this plan to be private, you'll have to run `cf disable-service-access` manually for each of your Organizations.
 
 ##### Deleting a Plan
-Plans can be deleted by clicking on the corresponding Trash Can icon, hitting Save, and finally "Apply Changes" from the Installation Dashboard. You may delete as many plans as you like before hitting Save or Apply Changes.
+Plans can be deleted by clicking on the corresponding Trash Can icon, clicking **Save**, the clicking **Apply Changes** from the Installation Dashboard. You may delete as many plans as you like before clicking **Save** or **Apply Changes**.
 
-It is OK to delete a plan that is still in use, i.e., if there are still service instances of that plan that have not been deleted. In this case, the plan is marked 'inactive' within the Cloud Foundry Marketplace. Existing service instances will continue to be maintained, but it is not possible for new instances to be created. The plan will continue to show in the marketplace. Once the last instance of an old plan has been deleted, the Operator can remove it from the Marketplace by following these steps:
+You can delete a plan that is still in use, i.e., if there are still service instances of that plan that have not been deleted. In this case, the plan is marked 'inactive' within the Cloud Foundry Marketplace. Existing service instances will continue to be maintained, but new instances cannot be created. The plan will continue to show in the Marketplace. Once the last instance of an old plan has been deleted, the Operator can remove it from the Marketplace by following these steps:
 
-1. `bosh deployments`
-    - Find the full name of the p-mysql deployment, for example: _p-mysql-180290d67d5441ebf3c5_
-1. `bosh deployment p-mysql-180290d67d5441ebf3c5`
+1. Run `bosh deployments` to find the full name of the p-mysql deployment. For example, `p-mysql-180290d67d5441ebf3c5`
+1. Run `bosh deployment P-MYSQL-DEPLOYMENT-NAME`. For example, `bosh deployment p-mysql-180290d67d5441ebf3c5`
 1. `bosh run errand broker-registrar`
 
 If no services instances of the old plan are still in use, the plan will disappear from commands such as `cf marketplace`.
 
-**Note**: If you accidentally click the trash can, do not click **Save**. Instead, return to the Installation Dashboard and any accidental changes will be discarded. If you do happen to hit save, do not click **Apply Changes** on the Installation Dashboard. Instead, click **Revert** to discard any accidental changes.
+**Note**: If you accidentally click the trash can, do not click **Save**. Instead, return to the Installation Dashboard and any accidental changes will be discarded. If you do click **Save**, do not click **Apply Changes** on the Installation Dashboard. Instead, click **Revert** to discard any accidental changes.
 
 ---
 
-P-MySQL cannot be deployed with zero service plans. One plan, minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
+P-MySQL cannot be deployed with zero service plans. One plan, at the minimum, is required. If you wish to deploy P-MySQL without offering any plans, mark the plan as 'private' and do not enable access to any organizations.
 
 <p class="note"><strong>Note</strong>: Unfortunately, the upgrade process is not able to continue using the original name of the plan. Thus, on upgrade from a version of p-MySQL that offered only a single plan, the plan will be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named, `pre-existing-plan`. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' to upgrade to p-MySQL v1.8.0.</p>
 
 #### Service Plans before p-mysql v1.8.0
 
-In versions v1.7 and below, the product is only capable of offering one service plan at a time.
+In versions 1.7 and earlier, the product is only capable of offering one service plan at a time.
 
 A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user by default. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
@@ -170,7 +168,7 @@ Applications are provided with a hostname or IP address to reach a database mana
 
 #### Configuring a load balancer
 
-In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function but in order to take advantage of high availability features they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
+In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function, but, in order to take advantage of high availability features, they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
 
 In order to configure a load balancer with the IPs of the proxy tier before v1.5.0 is deployed and prevent applications from obtaining the IP of the first proxy instance, the product enables an operator to configure the IPs that will be assigned to proxy instances. The following instructions applies to the **Proxy** settings page for the MySQL product in Operation Manager.
 

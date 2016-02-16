@@ -8,7 +8,7 @@ Bootstrapping is the process of (re)starting a Galera cluster.
 
 Bootstrapping is only required when the cluster has lost quorum.
 
-Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its DB is in a good state, and it reports itself as ```synced```.
+Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its database is in a good state, and it reports itself as ```synced```.
 
 If quorum has *not* been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired (error resolved, node restarted, or connectivity restored).
 
@@ -197,7 +197,7 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
             Duration  00:00:00
             Cloudcheck is finished
 
-        By watching `bosh instances` you'll see the VMs transition from `unresponsive agent` to `starting` and ultimately, two will appear as `failing`.
+        By watching `bosh instances` you'll see the VMs transition from `unresponsive agent` to `starting`. Ultimately, two will appear as `failing`, this is OK.
 
             $ bosh instances
             [...]
@@ -208,7 +208,6 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
             +--------------------------------------------------+----------+------------------------------------------------+------------+
 
         Do not proceed to the next step until all three VMs are in the `starting`/`failing` state.
-
 
         #### <a id="updating-manifest"></a>Update the BOSH configuration ####
 
@@ -226,12 +225,14 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
         #### <a id="run-the-errand"></a>Run the bootstrap errand ####
         1. `bosh run errand bootstrap`
-        1. Validate that all mysql instances are in `running` state.
+        1. Validate that the errand completes successfully.
+            - Some instances may still appear as `failing`. It's OK to proceed to the next step.
 
         #### <a id="reset-deployment"></a>Restore the BOSH configuration ####
         1. `bosh edit deployment`
         1. Re-set `canaries` to 1, `max_in_flight` to 1, and `serial` to true in the same manner as above.
         1. `bosh deploy`
+        1. Validate that all mysql instances are in `running` state.
 
         <p class="note"><strong>Note:</strong> It is critical that you run all of the steps. If you do not re-set the values in the BOSH manifest, the status of the jobs will not be reported correctly and can lead to troubles in future deploys.</p>
 
@@ -249,9 +250,7 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
     1. Choose a node to bootstrap.
 
-        <p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest seqno. Otherwise the node with the highest seqno will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See [cluster behavior](./cluster-behavior.html) for more details on intentionally abandoning data.</p>
-
-        Find the node with the highest transaction sequence number (seqno). The sequence number of a stopped node can be retained by either reading the node's state file under `/var/vcap/store/mysql/grastate.dat`, or by running a mysqld command with a WSREP flag, like `mysqld --wsrep-recover`.
+        Find the node with the highest transaction sequence number (seqno). The sequence number of a stopped node can be retained by either reading the node's state file under `/var/vcap/store/mysql/grastate.dat`, or by running a mysqld command with a WSREP flag, like `mysqld --wsrep-recover`.<br><br>
 
         If a node shutdown gracefully, the seqno should be in the galera state file.
 
@@ -261,17 +260,22 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
             $ /var/vcap/packages/mariadb/bin/mysqld --wsrep-recover
 
+        **Note:** The galera state file will still say `seqno: -1` afterward.<br><br>
+
         Scan the error log for the recovered sequence number (the last number after the group id (uuid) is the recovered seqno):
 
             $ grep "Recovered position" /var/vcap/sys/log/mysql/mysql.err.log | tail -1
             150225 18:09:42 mysqld_safe WSREP: Recovered position e93955c7-b797-11e4-9faa-9a6f0b73eb46:15
 
-        Note: The galera state file will still say `seqno: -1` afterward.
-
         If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case there's nothing to recover. Unless all nodes crashed this way, don't choose this node for bootstrapping.
 
+        
+        #### <a id="set-bootstrap-node"></a>Bootstrap the first node ####
+        
         Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
+
+        <p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest seqno. Otherwise the node with the highest seqno will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See <a href="./cluster-behavior.html">cluster behavior</a> for more details on intentionally abandoning data.</p>
 
     1. On the new bootstrap node, update state file and restart the mariadb process:
 
@@ -284,6 +288,8 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
         It can take up to 10 minutes for monit to start the mariadb process.
 
+        #### <a id="restart-nodes"></a>Restart the remaining nodes ####
+        
     1. Once the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
 
             $ monit start mariadb_ctrl
@@ -292,6 +298,3 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
             mysql> SHOW STATUS LIKE 'wsrep_cluster_size';
 
-
-#### Junkyard for Marco to clean up
-<p class="note"><strong>Note</strong>: If you do not see these three <code>unknown/unknown</code> items on your list, you might see the <code>mysql-partition</code> VMs, which indicates that your VMs were not destroyed. If that is the case, disregard the rest of the instructions in this section, Recovering MySQL, and skip to the <a href="#bootstrapping">Bootstrapping</a> section below.</p>
