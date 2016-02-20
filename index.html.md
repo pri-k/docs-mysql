@@ -120,7 +120,7 @@ Plans consist of four required fields, plus the ability to mark plans as 'privat
     Error 100: Error filling in template `settings.yml.erb' for `cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
     ```
 - Description: The descriptive text which will accompany the plan name. Use this to provide context beyond what can be expressed by the plan name, for example, "general use, small footprint."
-- Storage Quota: The maximum amount of storage allowed each instance of the Service Plan.
+- Storage Quota: The maximum amount, in megabytes, of storage allowed each instance of the Service Plan.
 - Concurrent Connections Quota: The maximum number of simultaneous database connections allowed to each instance of the Service Plan.
 - Private: By default, all plans are published to all organizations. Clicking 'Not available by default' requires the Operator to [publish plans manually](https://docs.pivotal.io/pivotalcf/services/access-control.html#enable-access) using `cf enable-service-access`.
   - **Note**: If you have previously marked a plan as public, and later decide you'd like this plan to be private, you'll have to run `cf disable-service-access` manually for each of your Organizations.

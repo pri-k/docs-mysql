@@ -2,8 +2,6 @@
 title: Known Issues
 ---
 
-# Known Issues
-
 ### MySQL Backups to AWS S3
 In versions of p-mysql 1.7.X and earlier, backups can only be sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, "us-east-1." This limitation will be addressed in future releases.
 
