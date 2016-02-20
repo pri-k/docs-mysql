@@ -40,12 +40,12 @@ Additional information can be found at https://pivotal.io/security.
 Release date: 2 February 2016
 
 - Updated stemcell to 3146.6. This is a security upgrade that resolves the following:
-  - [USN-2882-1](http://www.ubuntu.com/usn/usn-2882-1),
-  - [USN-2879-1](http://www.ubuntu.com/usn/usn-2879-1),
-  - [USN-2875-1](http://www.ubuntu.com/usn/usn-2875-1),
-  - [USN-2871-1](http://www.ubuntu.com/usn/usn-2871-1),
-  - [USN-2868-1](http://www.ubuntu.com/usn/usn-2868-1),
-  - [USN-2865-1](http://www.ubuntu.com/usn/usn-2865-1),
+  - [USN-2882-1](http://www.ubuntu.com/usn/usn-2882-1)
+  - [USN-2879-1](http://www.ubuntu.com/usn/usn-2879-1)
+  - [USN-2875-1](http://www.ubuntu.com/usn/usn-2875-1)
+  - [USN-2871-1](http://www.ubuntu.com/usn/usn-2871-1)
+  - [USN-2868-1](http://www.ubuntu.com/usn/usn-2868-1)
+  - [USN-2865-1](http://www.ubuntu.com/usn/usn-2865-1)
   - [USN-2861-1](http://www.ubuntu.com/usn/usn-2861-1)
 
 Additional information can be found at [https://pivotal.io/security](https://pivotal.io/security).
