@@ -16,6 +16,20 @@ Release date: 20 January 2016
   - **Note:** On upgrade from a version of p-MySQL that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to p-MySQL v1.8.0. See [the documentation](./index.html#service-plan) for more information.
 - **New Feature:** `bosh` bootstrap errand
 
+## <a id="1-7-4"></a>1.7.4
+
+- See below, same update as [version 1.6.7](#1-6-7)
+
+## <a id="1-6-7"></a>1.6.7
+
+Release date: 19 February 2016
+
+- Updated stemcell to 3146.8. This is a security upgrade that resolves the following:
+  - [USN-2900-1](http://www.ubuntu.com/usn/usn-2900-1), a critical GNU C lib (glibc) CVE
+  - [USN-2897-1](http://www.ubuntu.com/usn/usn-2897-1)
+  - [USN-2896-1](http://www.ubuntu.com/usn/usn-2896-1)
+
+Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-7-3"></a>1.7.3
 
@@ -30,7 +44,7 @@ Release date: 2 February 2016
   - [USN-2879-1](http://www.ubuntu.com/usn/usn-2879-1),
   - [USN-2875-1](http://www.ubuntu.com/usn/usn-2875-1),
   - [USN-2871-1](http://www.ubuntu.com/usn/usn-2871-1),
-  - [USN-2868-1](http://www.ubuntu.com/usn/usn-2868-1), 
+  - [USN-2868-1](http://www.ubuntu.com/usn/usn-2868-1),
   - [USN-2865-1](http://www.ubuntu.com/usn/usn-2865-1),
   - [USN-2861-1](http://www.ubuntu.com/usn/usn-2861-1)
 
