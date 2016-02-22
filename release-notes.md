@@ -2,6 +2,21 @@
 title: Release Notes
 ---
 
+## <a id="1-7-4"></a>1.7.4
+
+- See below, same update as [version 1.6.7](#1-6-7)
+
+## <a id="1-6-7"></a>1.6.7
+
+Release date: 19 February 2016
+
+- Updated stemcell to 3146.8. This is a security upgrade that resolves the following:
+  - [USN-2900-1](http://www.ubuntu.com/usn/usn-2900-1), a critical GNU C lib (glibc) CVE
+  - [USN-2897-1](http://www.ubuntu.com/usn/usn-2897-1)
+  - [USN-2896-1](http://www.ubuntu.com/usn/usn-2896-1)
+
+Additional information can be found at https://pivotal.io/security.
+
 ## <a id="1-7-3"></a>1.7.3
 
 - See below, same update as [version 1.6.6](#1-6-6)
@@ -11,7 +26,14 @@ title: Release Notes
 Release date: 2 February 2016
 
 - Updated stemcell to 3146.6. This is a security upgrade that resolves the following:
-  - [USN-2882-1](http://www.ubuntu.com/usn/usn-2882-1), [USN-2879-1](http://www.ubuntu.com/usn/usn-2879-1), [USN-2875-1](http://www.ubuntu.com/usn/usn-2875-1), [USN-2871-1](http://www.ubuntu.com/usn/usn-2871-1/), [USN-2868-1](http://www.ubuntu.com/usn/usn-2868-1), [USN-2865-1](http://www.ubuntu.com/usn/usn-2865-1), [USN-2861-1](http://www.ubuntu.com/usn/usn-2861-1)
+  - [USN-2882-1](http://www.ubuntu.com/usn/usn-2882-1)
+  - [USN-2879-1](http://www.ubuntu.com/usn/usn-2879-1)
+  - [USN-2875-1](http://www.ubuntu.com/usn/usn-2875-1)
+  - [USN-2874-1](http://www.ubuntu.com/usn/usn-2874-1)
+  - [USN-2871-1](http://www.ubuntu.com/usn/usn-2871-1)
+  - [USN-2868-1](http://www.ubuntu.com/usn/usn-2868-1)
+  - [USN-2865-1](http://www.ubuntu.com/usn/usn-2865-1)
+  - [USN-2861-1](http://www.ubuntu.com/usn/usn-2861-1)
 
 Additional information can be found at https://pivotal.io/security.
 
@@ -24,7 +46,8 @@ Additional information can be found at https://pivotal.io/security.
 Release date: 18 January 2016
 
 - Updated stemcell to 3146.3. This is a security upgrade that resolves the following:
-  - [USN-2869-1](http://www.ubuntu.com/usn/usn-2869-1), [CVE-2016-0715](https://pivotal.io/security/cve-2016-0715).
+  - [USN-2869-1](http://www.ubuntu.com/usn/usn-2869-1)
+  - [CVE-2016-0715](https://pivotal.io/security/cve-2016-0715).
 
 Additional information can be found at https://pivotal.io/security.
 
