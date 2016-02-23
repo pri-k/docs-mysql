@@ -2,6 +2,17 @@
 title: Release Notes
 ---
 
+## <a id="1-7-5"></a>1.7.5
+
+- See below, same update as [version 1.6.8](#1-6-8)
+
+## <a id="1-6-8"></a>1.6.8
+
+Release date: 24 February 2016
+
+- Updated stemcell to 3146.9. This is a security upgrade that resolves the following:
+  - [USN-2910-1](http://www.ubuntu.com/usn/usn-2910-1/)
+
 ## <a id="1-7-4"></a>1.7.4
 
 - See below, same update as [version 1.6.7](#1-6-7)
