@@ -110,9 +110,9 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 ### <a id="service-plan"></a>Service Plan ###
 
-A single service plan enforces quotas of 100MB of storage per database and 40 concurrent connections per user by default. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
+A single service plan enforces quotas of 100 megabytes of storage per database and 40 concurrent connections per user by default. Users of Operations Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
-The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified. Thus, if the storage quota is changed to 1024, the new default plan name will be **1024mb-dev**.
+The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified. Thus, if the storage quota is changed to 1024 megabytes, the new default plan name will be **1024mb-dev**.
 
 **Note**: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run `cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME` on the command line.
 
