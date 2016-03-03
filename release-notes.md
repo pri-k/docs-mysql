@@ -4,7 +4,7 @@ title: Release Notes
 
 ## <a id="1-8-0-e2"></a>1.8.0-Edge.2
 
-Release date: 26 February 2016
+Release date: 02 March 2016
 
 - See below, same security update as [version 1.6.8](#1-6-8)
 
