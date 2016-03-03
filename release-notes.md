@@ -4,9 +4,9 @@ title: Release Notes
 
 ## <a id="1-8-0-e2"></a>1.8.0-Edge.2
 
-Release date: N/A
+Release date: 02 March 2016
 
-- **New Feature:** Optional arbitrator
+- See below, same security update as [version 1.6.8](#1-6-8)
 
 ## <a id="1-8-0-e1"></a>1.8.0-Edge.1
 
@@ -16,9 +16,20 @@ Release date: 20 January 2016
   - **Note:** On upgrade from a version of p-MySQL that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to p-MySQL v1.8.0. See [the documentation](./index.html#service-plan) for more information.
 - **New Feature:** `bosh` bootstrap errand
 
+## <a id="1-7-5"></a>1.7.5
+
+- See below, same security update as [version 1.6.8](#1-6-8)
+
+## <a id="1-6-8"></a>1.6.8
+
+Release date: 24 February 2016
+
+- Updated stemcell to 3146.9. This is a security upgrade that resolves the following:
+  - [USN-2910-1](http://www.ubuntu.com/usn/usn-2910-1/)
+
 ## <a id="1-7-4"></a>1.7.4
 
-- See below, same update as [version 1.6.7](#1-6-7)
+- See below, same security update as [version 1.6.7](#1-6-7)
 
 ## <a id="1-6-7"></a>1.6.7
 
@@ -33,7 +44,7 @@ Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-7-3"></a>1.7.3
 
-- See below, same update as [version 1.6.6](#1-6-6)
+- See below, same security update as [version 1.6.6](#1-6-6)
 
 ## <a id="1-6-6"></a>1.6.6
 
@@ -52,7 +63,7 @@ Additional information can be found at [https://pivotal.io/security](https://piv
 
 ## <a id="1-7-2"></a>1.7.2
 
-- See below, same update as [version 1.6.5](#1-6-5)
+- See below, same security update as [version 1.6.5](#1-6-5)
 
 ## <a id="1-6-5"></a>1.6.5
 
@@ -62,7 +73,7 @@ Release date: 18 January 2016
 
 ## <a id="1-7-1"></a>1.7.1
 
-- See below, same update as [version 1.6.4](#1-6-4)
+- See below, same security update as [version 1.6.4](#1-6-4)
 
 ## <a id="1-6-4"></a>1.6.4
 
@@ -73,7 +84,7 @@ Release date: 07 January 2016
 
 ## <a id="1-7-0-4"></a>1.7.0.4
 
-- See below, same update as [version 1.6.3.4](#1-6-3-4)
+- See below, same security update as [version 1.6.3.4](#1-6-3-4)
 
 ## <a id="1-6-3-4"></a>1.6.3.4
 
@@ -86,7 +97,7 @@ Release date: 04 December 2015
 
 ## <a id="1-7-0-3"></a>1.7.0.3
 
-- See below, same update as [version 1.6.3.3](#1-6-3-3)
+- See below, same security update as [version 1.6.3.3](#1-6-3-3)
 
 ## <a id="1-6-3-3"></a>1.6.3.3
 
@@ -99,7 +110,7 @@ Release date: 02 December 2015
 
 ## <a id="1-7-0-2"></a>1.7.0.2
 
-- See below, same update as [version 1.6.3.2](#1-6-3-2)
+- See below, same security update as [version 1.6.3.2](#1-6-3-2)
 
 ## <a id="1-6-3-2"></a>1.6.3.2
 
@@ -111,7 +122,7 @@ Release date: 11 November 2015
 
 ## <a id="1-7-0-1"></a>1.7.0.1
 
-- See below, same update as [version 1.6.3.1](#1-6-3-1)
+- See below, same security update as [version 1.6.3.1](#1-6-3-1)
 
 ## <a id="1-6-3-1"></a>1.6.3.1
 
