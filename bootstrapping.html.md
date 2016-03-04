@@ -1,5 +1,6 @@
 ---
 title: Bootstrapping a Galera Cluster
+owner: MySQL
 ---
 
 

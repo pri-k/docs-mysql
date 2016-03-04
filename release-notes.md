@@ -1,5 +1,6 @@
 ---
 title: Release Notes
+owner: MySQL
 ---
 
 ## <a id="1-7-5"></a>1.7.5

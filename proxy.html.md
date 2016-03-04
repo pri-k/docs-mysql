@@ -1,5 +1,6 @@
 ---
 title: Proxy for MySQL for Pivotal Cloud Foundry
+owner: MySQL
 ---
 
 
@@ -19,15 +20,15 @@ If multiple Switchboard proxies are used in parallel (ex: behind a load-balancer
 
 ### Healthy
 
-The proxy queries an HTTP healthcheck process, co-located on the database node, when determining where to route traffic. 
+The proxy queries an HTTP healthcheck process, co-located on the database node, when determining where to route traffic.
 
-If the healthcheck process returns HTTP status code of 200, the node is added to the pool of healthy nodes. 
+If the healthcheck process returns HTTP status code of 200, the node is added to the pool of healthy nodes.
 
-A resurrected node will not immediately receive connections. The proxy will continue to route all connections, new or existing, to the currently active node. In the case of failover, all healthy nodes will be considered as candidates for new connections. 
+A resurrected node will not immediately receive connections. The proxy will continue to route all connections, new or existing, to the currently active node. In the case of failover, all healthy nodes will be considered as candidates for new connections.
 
 ### Unhealthy
 
-If the healthcheck returns HTTP status code 503, the node is considered unhealthy. 
+If the healthcheck returns HTTP status code 503, the node is considered unhealthy.
 
 This happens when a node becomes non-primary, as specified by the [cluster-behavior docs](cluster-behavior.html).
 
