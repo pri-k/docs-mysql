@@ -27,63 +27,82 @@ Consider the following compatibility information before upgrading MySQL for Pivo
 For more information, refer to the full [Product Version Matrix](../compatibility-matrix.pdf).
 
 <table border="1" class="nice">
-<tr><th>Ops Manager Version</th>
-    <th>Supported Upgrades from Imported MySQL Installation</th></tr>
-<tr><th>1.3.x</th>
-    <td><ul>
-        <li>From 1.2 to 1.3</li>
-        <li>From 1.3.2 to 1.4.0</li>
-        </ul></td></tr>
-<tr><th>1.4.x and 1.5.x</th>
-    <td><ul>
-        <li>From 1.3.2 to 1.4.0</li>
-        <li>From 1.3.2 to 1.5.0</li>
-        <li>From 1.4.0 to 1.5.0</li>
-        <li>From 1.5.0 to all releases 1.6.1 through 1.6.7</li>
-        <li>From 1.6.1 to all releases 1.6.2 through 1.7.5</li>
-        <li>From 1.6.2 to all releases 1.6.3 through 1.7.5</li>
-        <li>From 1.6.3 to all releases 1.6.3.1 through 1.7.5</li>
-        <li>From 1.6.3.1 to all releases 1.6.3.2 through 1.7.5</li>
-        <li>From 1.6.3.2 to all releases 1.6.4 through 1.7.5</li>
-        <li>From 1.6.4 to all releases 1.6.5 through 1.7.5</li>
-        <li>From 1.6.5 to all releases 1.6.6 through 1.7.5</li>
-        <li>From 1.6.6 to all releases 1.6.7 through 1.7.5</li>
-        <li>From 1.6.7 to all releases 1.6.8 through 1.7.5</li>
-        <li>From 1.6.8 to all releases 1.7.0.0 through 1.7.5</li>
-        <li>From 1.7.0.0 to all releases 1.7.0.1 through 1.7.5</li>
-        <li>From 1.7.0.1 to all releases 1.7.0.2 through 1.7.5</li>
-        <li>From 1.7.0.2 to all releases 1.7.0.3 through 1.7.5</li>
-        <li>From 1.7.0.3 to all releases 1.7.0.4 through 1.7.5</li>
-        <li>From 1.7.0.4 to all releases 1.7.1 through 1.7.5</li>
-        <li>From 1.7.1 to all releases 1.7.2 through 1.7.5</li>
-        <li>From 1.7.2 to all releases 1.7.3 through 1.7.5</li>
-        <li>From 1.7.3 to 1.7.4 and 1.7.5</li>
-        <li>From 1.7.4 to 1.7.5</li>
-        </ul></td></tr>
-<tr><th>1.6.x</th>
-    <td><ul>
-        <li>From 1.4.0 to 1.5.0</li>
-        <li>From 1.5.0 to all releases 1.6.1 through 1.6.7</li>
-        <li>From 1.6.1 to all releases 1.6.2 through 1.7.5</li>
-        <li>From 1.6.2 to all releases 1.6.3 through 1.7.5</li>
-        <li>From 1.6.3 to all releases 1.6.3.1 through 1.7.5</li>
-        <li>From 1.6.3.1 to all releases 1.6.3.2 through 1.7.5</li>
-        <li>From 1.6.3.2 to all releases 1.6.4 through 1.7.5</li>
-        <li>From 1.6.4 to all releases 1.6.5 through 1.7.5</li>
-        <li>From 1.6.5 to all releases 1.6.6 through 1.7.5</li>
-        <li>From 1.6.6 to all releases 1.6.7 through 1.7.5</li>
-        <li>From 1.6.7 to all releases 1.6.8 through 1.7.5</li>
-        <li>From 1.6.8 to all releases 1.7.0.0 through 1.7.5</li
-        <li>From 1.7.0.0 to all releases 1.7.0.1 through 1.7.5</li>
-        <li>From 1.7.0.1 to all releases 1.7.0.2 through 1.7.5</li>
-        <li>From 1.7.0.2 to all releases 1.7.0.3 through 1.7.5</li>
-        <li>From 1.7.0.3 to all releases 1.7.0.4 through 1.7.5</li>
-        <li>From 1.7.0.4 to all releases 1.7.1 through 1.7.5</li>
-        <li>From 1.7.1 to all releases 1.7.2 through 1.7.5</li>
-        <li>From 1.7.2 to all releases 1.7.3 through 1.7.5</li>
-        <li>From 1.7.3 to 1.7.4 and 1.7.5</li>
-        <li>From 1.7.4 to 1.7.5</li>
-        </ul></td></tr>
+<tr>
+	<th rowspan="2">Ops Manager Version</th>
+	<th colspan="2">Supported Upgrades from Imported MySQL Installation</th>
+</tr>
+
+<tr>
+	<th>From</th>
+	<th>To</th>
+<tr>
+
+<tr>
+	<th rowspan="2">1.3.x</th>
+	<td>1.2</td>
+	<td>1.3</td>
+</tr>
+
+<tr>
+	<td>1.3.2</td>
+	<td>1.4.0</td>
+</tr>
+
+<tr>
+	<th rowspan="2">1.4.x and 1.5.x</th>
+	<td rowspan="2">1.3.2</td>
+	<td>1.4.0</td>
+</tr>
+
+<tr>
+	<td>1.5.0</td>
+</tr>
+
+<tr>
+	<th rowspan="9">1.4.x, 1.5.x and 1.6.x</th>
+	<td>1.4.0</td>
+	<td>1.5.0</td>
+</tr>
+
+<tr>
+	<td>1.5.0</td>
+	<td>1.6.1 - 1.6.7</td>
+</tr>
+
+<tr>
+	<td>1.6.1, 1.6.2, 1.6.4 - 1.6.7</td>
+	<td>Next 1.6.x release - 1.7.5</td>
+</tr>
+
+<tr>
+	<td>1.6.3, 1.6.3.1</td>
+	<td>Next 1.6.3.x release - 1.7.5</td>
+</tr>
+
+<tr>
+	<td>1.6.3.2</td>
+	<td>1.6.4 - 1.7.5</td>
+</tr>
+
+<tr>
+	<td>1.6.8</td>
+	<td>1.7.0.0 - 1.7.5</td>
+</tr>
+
+<tr>
+	<td>1.7.0.0 - 1.7.0.3</td>
+	<td>Next 1.7.0.x release - 1.7.5</td>
+</tr>
+
+<tr>
+	<td>1.7.0.4</td>
+	<td>1.7.1</td>
+</tr>
+
+<tr>
+	<td>1.7.1 - 1.7.4</td>
+	<td>Next 1.7.x release - 1.7.5</td>
+</tr>
 </table>
 
 ## <a id="release-notes"></a>Release Notes ##
