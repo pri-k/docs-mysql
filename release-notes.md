@@ -2,6 +2,12 @@
 title: Release Notes
 ---
 
+## <a id="1-8-0-e3"></a>1.8.0-Edge.3
+
+Release date: 16 March 2016
+
+- See below, same security update as [version 1.6.9](#1-6-9)
+
 ## <a id="1-8-0-e2"></a>1.8.0-Edge.2
 
 Release date: 02 March 2016
@@ -15,6 +21,19 @@ Release date: 20 January 2016
 - **New Feature:** Multiple service plans
   - **Note:** On upgrade from a version of p-MySQL that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to p-MySQL v1.8.0. See [the documentation](./index.html#service-plan) for more information.
 - **New Feature:** `bosh` bootstrap errand
+
+## <a id="1-7-6"></a>1.7.6
+
+- See below, same update as [version 1.6.9](#1-6-9)
+
+## <a id="1-6-9"></a>1.6.9
+
+Release date: 16 March 2016
+
+- Updated stemcell to 3146.10. This is a security upgrade that resolves the following:
+  - [USN-2929-1](http://www.ubuntu.com/usn/usn-2929-1/)
+
+Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-7-5"></a>1.7.5
 
