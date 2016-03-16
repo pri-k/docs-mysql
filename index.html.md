@@ -10,8 +10,8 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 Current MySQL for Pivotal Cloud Foundry&reg; Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.7.5
-- **Release Date**: 2016-02-24
+- **Version**: 1.7.6
+- **Release Date**: 2016-03-16
 - **Software component versions**: MariaDB 10.0.21, Galera 5.5.45
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x
@@ -41,68 +41,54 @@ For more information, refer to the full [Product Version Matrix](../compatibilit
 	<th rowspan="2">1.3.x</th>
 	<td>1.2</td>
 	<td>1.3</td>
-</tr>
-
-<tr>
-	<td>1.3.2</td>
-	<td>1.4.0</td>
+	<tr>
+		<td>1.3.2</td>
+		<td>1.4.0</td>
+	</tr>
 </tr>
 
 <tr>
 	<th rowspan="2">1.4.x and 1.5.x</th>
 	<td rowspan="2">1.3.2</td>
 	<td>1.4.0</td>
+	<tr>
+		<td>1.5.0</td>
+	</tr>
 </tr>
 
-<tr>
-	<td>1.5.0</td>
-</tr>
 
 <tr>
 	<th rowspan="9">1.4.x, 1.5.x and 1.6.x</th>
 	<td>1.4.0</td>
 	<td>1.5.0</td>
+
+	<tr>
+		<td>1.5.0</td>
+		<td>1.6.1 - 1.6.9</td>
+	</tr>
+
+	<tr>
+		<td rowspan="2">1.6.1 - 1.6.9</td>
+		<td>Next 1.6.X release - 1.7.6</td>
+	  <tr>
+		  <td>1.8.0-edge.1 - 1.8.0-edge.3</td>
+	  </tr>
+	</tr>
+
+	<tr>
+		<td rowspan="2">1.7.0 - 1.7.6</td>
+		<td>Next 1.7.X release - 1.7.6</td>
+	  <tr>
+		  <td>1.8.0-edge.1 - 1.8.0-edge.3</td>
+	  </tr>
+	</tr>
+
+	<tr>
+		<td>1.7.6</td>
+		  <td>1.8.0-edge.1 - 1.8.0-edge.3</td>
+	</tr>
 </tr>
 
-<tr>
-	<td>1.5.0</td>
-	<td>1.6.1 - 1.6.7</td>
-</tr>
-
-<tr>
-	<td>1.6.1, 1.6.2, 1.6.4 - 1.6.7</td>
-	<td>Next 1.6.x release - 1.7.5</td>
-</tr>
-
-<tr>
-	<td>1.6.3, 1.6.3.1</td>
-	<td>Next 1.6.3.x release - 1.7.5</td>
-</tr>
-
-<tr>
-	<td>1.6.3.2</td>
-	<td>1.6.4 - 1.7.5</td>
-</tr>
-
-<tr>
-	<td>1.6.8</td>
-	<td>1.7.0.0 - 1.7.5</td>
-</tr>
-
-<tr>
-	<td>1.7.0.0 - 1.7.0.3</td>
-	<td>Next 1.7.0.x release - 1.7.5</td>
-</tr>
-
-<tr>
-	<td>1.7.0.4</td>
-	<td>1.7.1</td>
-</tr>
-
-<tr>
-	<td>1.7.1 - 1.7.4</td>
-	<td>Next 1.7.x release - 1.7.5</td>
-</tr>
 </table>
 
 ## <a id="release-notes"></a>Release Notes ##
