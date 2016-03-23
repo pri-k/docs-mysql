@@ -12,7 +12,7 @@ Current MySQL for Pivotal Cloud Foundry&reg; Details
 
 - **Version**: 1.7.6
 - **Release Date**: 2016-03-16
-- **Software component versions**: MariaDB 10.0.21, Galera 5.5.45
+- **Software component versions**: MariaDB 10.0.21, Galera 25.3.9
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x
 - **vSphere support?** Yes
