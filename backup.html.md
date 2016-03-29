@@ -151,6 +151,12 @@ If you do not wish to use the automated facility included in p-mysql, you can st
     $ mysql -u root -p -h $MYSQL_NODE_IP < user_databases.sql
     ```
 
+  - Flush privileges in order to re-apply user privilege grants. This needs to be done since the backup process ports over the system tables using INSERT statements (and not GRANTs):
+
+    ```
+    $ mysql -u root -p -h $MYSQL_NODE_IP -e "FLUSH PRIVILEGES"
+    ```
+
 ### <a id="examples"></a>Examples ###
 
   More examples can be found in the [MariaDB documentation](http://mariadb.com/kb/en/mariadb/mysqldump/#examples).
