@@ -144,12 +144,21 @@ If you do not wish to use the automated facility included in p-mysql, you can st
 
   Restoring from a backup is the same whether one or multiple databases were backed up.
   Executing the SQL dump will drop, recreate, and refill the specified databases and tables.
+  
+  **Warning**: Restoring a database will delete all data that existed in the database prior to the restore. If a full database server is restored (such as using `mysqldump --all-databases`), this will replace all existing database user permissions. 
 
   - Restore from the data dump:
 
     ```
     $ mysql -u root -p -h $MYSQL_NODE_IP < user_databases.sql
     ```
+   
+  - Clear database permissions cache:
+    
+    ```
+    $ mysql -u root -p -h $MYSQL_NODE_IP -e 'FLUSH PRIVILEGES;'
+    ```
+   
 
   - Flush privileges in order to re-apply user privilege grants. This needs to be done since the backup process ports over the system tables using INSERT statements (and not GRANTs):
 
