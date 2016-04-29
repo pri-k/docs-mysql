@@ -146,6 +146,7 @@ Release Date: 22 October 2015
 - **Security**: Fixes for CVE-2015-3900, a man-in-the-middle rubygems vulnerability.
 - Bug fix: Switchboard fails to find recreated mysql node when ARP cache locked by hanging SYN_SENT.
 - Bug fix: Every instance of Switchboard registrars the route `proxy-0.p-mysql.` rather than changing based on AZ index.
+- Bug fix: p-mysql now supports the Elastic Runtime setting to restrict HAProxy traffic to HTTPS only. Users of p-mysql 1.6 and earlier must upgrade to p-mysql 1.7 or later in order to use this feature.
 
 ## <a id="1-6-3"></a>1.6.3
 
