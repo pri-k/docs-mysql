@@ -14,6 +14,8 @@ Release date: 06 May 2016
 
 - Updated stemcell to 3146.11 This is a security upgrade that resolves the following:
   - [USN-2959-1](http://www.ubuntu.com/usn/usn-2959-1/)
+- **Bug fix**: Updated acceptance tests to pass on PCF-1.7.
+- **Bug fix**: Update `broker-registrar` to avoid runaway CPU condition on broker VMs.
 
 Additional information can be found at https://pivotal.io/security.
 
