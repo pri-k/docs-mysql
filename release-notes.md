@@ -1,7 +1,23 @@
+
 ---
 title: Release Notes
 owner: MySQL
 ---
+
+## <a id="1-7-7"></a>1.7.7
+
+- See below, same update as [version 1.6.10](#1-6-10)
+
+## <a id="1-6-10"></a>1.6.10
+
+Release date: 06 May 2016
+
+- Updated stemcell to 3146.11 This is a security upgrade that resolves the following:
+  - [USN-2959-1](http://www.ubuntu.com/usn/usn-2959-1/)
+- **Bug fix**: Updated acceptance tests to pass on PCF-1.7.
+- **Bug fix**: Update `broker-registrar` to avoid runaway CPU condition on broker VMs.
+
+Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-7-6"></a>1.7.6
 
@@ -148,13 +164,13 @@ Release Date: 22 October 2015
 - Bug fix: Every instance of Switchboard registrars the route `proxy-0.p-mysql.` rather than changing based on AZ index.
 - Bug fix: p-mysql now supports the Elastic Runtime setting to restrict HAProxy traffic to HTTPS only. Users of p-mysql 1.6 and earlier must upgrade to p-mysql 1.7 or later in order to use this feature.
 
+
 ## <a id="1-6-3"></a>1.6.3
 
 Release Date: 7 October 2015
 
 - Updated stemcell to 3094. This is a regular security upgrade that resolves the following issues:
   - [[USN-2765-1](http://www.ubuntu.com/usn/usn-2765-1)] Linux kernel (Vivid HWE) vulnerability
-
 
 
 ## <a id="1-6-2"></a>1.6.2
@@ -172,6 +188,8 @@ Release Date: 4 September 2015
 - Experimental feature HTTPS traffic to HAProxy does not work; it will be fixed in an upcoming release.
 
 ## <a id="1-6-1"></a>1.6.1
+
+Release date: 31 July 2015
 
 - Updated stemcell to 3026 to resolve CVE-2015-3290
 
@@ -202,6 +220,8 @@ Release Date: 4 September 2015
 
 ## <a id="1-5-0"></a>1.5.0
 
+Release date: 08 March 2015
+
 - **AWS support:** The clustered database service can now be deployed on Amazon Web Services from the Operations Manager Web UI.
   - Deployment is limited to a single Availability Zone. Look for multi-AZ in future releases.
   - Single availability zone is a limitation on AWS. Operations Manager on vSphere continues to support deployment to multiple availability zones.
@@ -228,6 +248,8 @@ Release Date: 4 September 2015
 
 ## <a id="1-4-0"></a>1.4.0
 
+Release date: 22 December 2014
+
 - **High Availability**: database server is now clustered and synchronously replicated using MariaDB Galera Cluster. A copy of each database resides on all cluster nodes, and writes to any database are replicated to all copies. All client connections are routed to a primary cluster node, and in the event of a node failure the proxy tier manages failover, routing client connections to a healthy cluster node. MySQL server, proxy, and broker jobs can all be scaled out horizontally for increased availability, eliminating single points of failure.
 - **Improved logging and monitoring**: route-registration on the broker is now an independent process
 - **Bug fix**: calculation of storage utilization for the purposes of quota enforcement when multiple apps are bound
@@ -240,6 +262,8 @@ Release Date: 4 September 2015
 - See [Known Issues](/p-mysql/#known-issues).
 
 ## <a id="1-3-2"></a>1.3.2
+
+Release date: 06 October 2014
 
 - **Updated stemcell addresses bash-shellshock vulnerabilities**: resolves CVEs discussed [here](http://www.pivotal.io/security/CVE-2014-6271) and [here](http://www.pivotal.io/security/CVE-2014-7186).
 
