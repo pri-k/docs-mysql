@@ -10,11 +10,11 @@ This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](htt
 Current MySQL for Pivotal Cloud Foundry&reg; Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.7.6
-- **Release Date**: 2016-03-16
+- **Version**: 1.7.7
+- **Release Date**: 2016-05-06
 - **Software component versions**: MariaDB 10.0.21, Galera 25.3.9
-- **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
-- **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x
+- **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x
+- **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** Yes
@@ -58,34 +58,34 @@ For more information, refer to the full [Product Version Matrix](../compatibilit
 
 
 <tr>
-	<th rowspan="9">1.4.x, 1.5.x and 1.6.x</th>
+	<th rowspan="9">1.4.x, 1.5.x<br>1.6.x, 1.7.x</th>
 	<td>1.4.0</td>
 	<td>1.5.0</td>
 
 	<tr>
 		<td>1.5.0</td>
-		<td>1.6.1 - 1.6.9</td>
+		<td>1.6.1 - 1.6.10</td>
 	</tr>
 
 	<tr>
-		<td rowspan="2">1.6.1 - 1.6.9</td>
-		<td>Next 1.6.X release - 1.7.6</td>
+		<td rowspan="2">1.6.1 - 1.6.10</td>
+		<td>Next 1.6.X release - 1.7.7</td>
 	  <tr>
-		  <td>1.8.0-edge.1 - 1.8.0-edge.3</td>
+		  <td>1.8.0-edge.1 - 1.8.0-edge.5</td>
 	  </tr>
 	</tr>
 
 	<tr>
 		<td rowspan="2">1.7.0 - 1.7.6</td>
-		<td>Next 1.7.X release - 1.7.6</td>
+		<td>Next 1.7.X release - 1.7.7</td>
 	  <tr>
-		  <td>1.8.0-edge.1 - 1.8.0-edge.3</td>
+		  <td>1.8.0-edge.1 - 1.8.0-edge.5</td>
 	  </tr>
 	</tr>
 
 	<tr>
-		<td>1.7.6</td>
-		  <td>1.8.0-edge.1 - 1.8.0-edge.3</td>
+		<td>1.7.7</td>
+		  <td>1.8.0-edge.1 - 1.8.0-edge.5</td>
 	</tr>
 </tr>
 
