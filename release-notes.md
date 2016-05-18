@@ -4,6 +4,17 @@ title: Release Notes
 owner: MySQL
 ---
 
+## <a id="1-7-8"></a>1.7.8
+
+- See below, same update as [version 1.6.11](#1-6-11)
+
+## <a id="1-6-11"></a>1.6.11
+
+Release date: 18 May 2016
+
+- Updated stemcell to 3232.4 This is a security upgrade that resolves the following:
+  - [USN-2977-1](http://www.ubuntu.com/usn/usn-2977-1/)
+
 ## <a id="1-7-7"></a>1.7.7
 
 - See below, same update as [version 1.6.10](#1-6-10)
