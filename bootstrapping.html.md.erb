@@ -39,7 +39,7 @@ Follow the steps below to recover a cluster that has lost quorum.
 
 ## <a id='manifest'></a>Step 1: Choose the Correct Manifest
 
-<p class='note'><strong>Note</strong>: This topic requires you to run commands from the <a href="../pivotalcf/customizing/index.html">Ops Manager Director</a> using the BOSH CLI. Refer to the <a href="../pivotalcf/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a> topic for more information.</p>
+<p class='note'><strong>Note</strong>: This topic requires you to run commands from the <a href="http://docs.pivotal.io/pivotalcf/customizing/index.html">Ops Manager Director</a> using the BOSH CLI. Refer to the <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a> topic for more information.</p>
 
 1. Log into the BOSH director by running `bosh target DIRECTOR-URL` followed by `bosh login USERNAME PASSWORD`.
 
@@ -140,7 +140,7 @@ In this scenario, nodes are up and running, but the cluster has been disrupted. 
 
 In this scenario, severe circumstances such as power failure have terminated all of your VMs. You need to recreate the VMs before you can recover the cluster.
 
-1. If you enabled the [VM Resurrector](./../pivotalcf/customizing/resurrector.html#enabling) in Ops Manager, the system detects the terminated VMs and automatically attempts to recreate them. Run `bosh tasks recent --no-filter` to see the `scan and fix` job run by the VM Resurrector.
+1. If you enabled the [VM Resurrector](http://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling) in Ops Manager, the system detects the terminated VMs and automatically attempts to recreate them. Run `bosh tasks recent --no-filter` to see the `scan and fix` job run by the VM Resurrector.
 
     <pre class="terminal">
     $ bosh tasks recent --no-filter
