@@ -211,3 +211,4 @@ For more information about SwitchBoard, read the [proxy documentation](proxy.htm
   * [Determining MySQL cluster state](cluster-state.html)
   * [More on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
   * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
+  * [Scaling down a MySQL cluster](scaling-down.html)
