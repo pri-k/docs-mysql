@@ -130,7 +130,7 @@ This backup acquires a global read lock on all tables, but does not hold it for 
 
 <p class="note"><strong>Note</strong>: The procedure to manually backup MySQL below does not cover steps that are specific to a particular IaaS. It is important to tailor these instructions based on your infrastructure and configuration requirements. </p>
 
-1. Spin up a virtual machine (VM). Ensure the VM has sufficient disk space to receive the data dump. Configure network access to your p-mysql deployment.
+1. Spin up a virtual machine (VM) to use for your MySQL backup and restore. Ensure the VM has sufficient disk space to receive the data dump. Configure network access to your p-mysql deployment.
 
 1. Install the [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) client of your choice.
 
@@ -152,14 +152,11 @@ Restoring from a backup is the same whether one or multiple databases were backe
 
   <p class="note"><strong>Warning:</strong> Restoring a database will delete all data that existed in the database prior to the restore. Restoring a database using a full backup artifact, produced by `mysqldump --all-databases` for example, will replace all data and user permissions.</p>
 
-1. From the same VM you used to perform the manual backup or similar, restore from the data dump:
-
-  <pre class="terminal">$ mysql -u root -p -h $MYSQL_NODE_IP < user_databases.sql</pre>
+1. From the same VM you used to perform the manual backup, or a similar VM, restore from the data dump:
+  <pre class="terminal">$ mysql -u root -p -h $MYSQL\_NODE\_IP < user_databases.sql</pre>
 
 1. Re-apply user privileges:
-
-  <pre class="terminal">$ mysql -u root -p -h $MYSQL_NODE_IP -e "FLUSH PRIVILEGES"</pre>
-
+  <pre class="terminal">$ mysql -u root -p -h $MYSQL\_NODE\_IP -e "FLUSH PRIVILEGES"</pre>
   This command tells the cluster to re-load user permissions using the data that has just been restored.
 
 ### <a id="examples"></a>Examples ###
