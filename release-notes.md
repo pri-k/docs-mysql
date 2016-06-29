@@ -9,7 +9,7 @@ Release date: 28 June 2016
 
 - Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
   - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
-- Addresses a [known issue](https://docs.pivotal.io/edge/p-mysql/known-issues.html#compile-fails) in which recent versions of p-mysql 1.8.0 do not install without Internet access.
+- Addresses a [known issue](known-issues.html#compile-fails) in which recent versions of p-mysql 1.8.0 do not install without Internet access.
 
 Additional information can be found at https://pivotal.io/security.
 
