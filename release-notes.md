@@ -3,6 +3,19 @@ title: Release Notes
 owner: MySQL
 ---
 
+## <a id="1-7-9"></a>1.7.9
+
+- See below, same update as [version 1.6.12](#1-6-12)
+
+## <a id="1-6-12"></a>1.6.12
+
+Release date: 16 June 2016
+
+- Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
+  - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
+
+Additional information can be found at https://pivotal.io/security.
+
 ## <a id="1-7-8"></a>1.7.8
 
 - See below, same update as [version 1.6.11](#1-6-11)
