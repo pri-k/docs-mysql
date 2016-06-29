@@ -1,0 +1,81 @@
+---
+title: Scaling Down MySQL
+owner: MySQL
+---
+
+This topic describes how to safely scale down your MySQL cluster to a single node.
+
+By default MySQL is a single node. To take advantage of the high availability features of MySQL, you may have scaled the configuration up to three nodes. 
+
+<p class="note"><strong>Note</strong>: If you are only running the MySQL cluster with a single node, you do not need to perform these steps.</p> 
+
+## <a id="check-health"></a>Check the Health of Your Cluster
+
+Before scaling down your MySQL cluster, perform the following actions to ensure the cluster is healthy. 
+
+1. Obtain the IP addresses of your MySQL server by performing the following steps:
+	1. From the Pivotal Cloud Foundry&reg; (PCF) **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
+	1. Click the **Status** tab.
+	1. Record the IP addresses for all instances of the **MySQL Server** job.
+
+1. Obtain the admin credentials for your MySQL server by performing the following steps:
+	1. From the MySQL tile, click the **Credentials** tab.
+	1. Locate the **Mysql Admin Password** entry in the **MySQL Server** section and click **Link to Credential**.
+	1. Record the values for `identity` and `password`.
+
+1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, review the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) section of the Advanced Troubleshooting with the BOSH CLI topic for specific instructions.
+
+1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved above and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
+	1. Create a dummy database in the first node: 
+		<pre class="terminal">
+		$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"
+		</pre>
+	1. Create a dummy table in the dummy database: 
+		<pre class="terminal">
+		$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "create table dummy_table (id int not null primary key auto\_increment, info text) engine='InnoDB';"
+		</pre>
+	1. Insert some data into the dummy table: 
+		<pre class="terminal">
+		$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"
+		</pre>
+	1. Query the table and verify that the three rows of dummy data exist on the first node:
+		<pre class="terminal">
+		mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
+		Enter password:
+		+----+----------------------+
+		| id | info                 |
+		+----+----------------------+
+		|  4 | dummy data           |
+		|  7 | more dummy data      |
+		| 10 | even more dummy data |
+		+----+----------------------+
+	</pre>
+
+1. Verify that the other nodes contain the same dummy data by performing the following steps for each of the remaining MySQL server IP addresses obtained above:
+	1. Query the dummy table, replacing `NEXT-NODE-IP-ADDRESS` with the IP address of the MySQL server instance and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above. 
+		<pre class="terminal">
+	 	$ mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
+	 	</pre>
+	1. Examine the output of the `mysql` command and verify that the node contains the same three rows of dummy data as the other nodes.
+ 		<pre class="terminal">
+		+----+----------------------+
+		| id | info                 |
+		+----+----------------------+
+		|  4 | dummy data           |
+		|  7 | more dummy data      |
+		| 10 | even more dummy data |
+		+----+----------------------+
+		</pre>
+
+1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment. If each MySQL server instance does return the same result, then you can safely proceed to scaling down your cluster to a single node by performing the steps in the following section.
+
+## <a id="scale-down"></a>Scale Down Your Cluster
+
+1. Delete the dummy database, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first MySQL server node and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above. 
+	<pre class="terminal">
+	$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "drop database verify\_healthy;"
+	</pre>
+1. From the PCF **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
+1. Click the **Settings** tab.
+1. Click **Resource Config** and use the drop-down menu to change the **Instances** count for **MySQL Server** to `1`.
+1. Click **Save** to apply the changes.
