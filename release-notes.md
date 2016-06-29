@@ -3,6 +3,16 @@ title: Release Notes
 owner: MySQL
 ---
 
+## <a id="1-8-0-e7"></a>1.8.0-Edge.7
+
+Release date: 28 June 2016
+
+- Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
+  - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
+- Addresses a [known issue](https://docs.pivotal.io/edge/p-mysql/known-issues.html#compile-fails) in which recent versions of p-mysql 1.8.0 do not install without Internet access.
+
+Additional information can be found at https://pivotal.io/security.
+
 ## <a id="1-8-0-e6"></a>1.8.0-Edge.6
 
 Release date: 18 May 2016
@@ -57,6 +67,17 @@ Release date: 20 January 2016
   - **Note:** On upgrade from a version of p-MySQL that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to p-MySQL v1.8.0. See [the documentation](./index.html#service-plan) for more information.
 - **New Feature:** `bosh` bootstrap errand
 - MariaDB updated to version 10.0.22 and Galera 25.3.9.
+
+## <a id="1-7-9"></a>1.7.9
+
+- See below, same update as [version 1.6.12](#1-6-12)
+
+## <a id="1-6-12"></a>1.6.12
+
+Release date: 16 June 2016
+
+- Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
+  - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
 
 ## <a id="1-7-8"></a>1.7.8
 
