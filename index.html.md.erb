@@ -20,11 +20,11 @@ The following diagram shows the lifecycle of edge releases:
 Current MySQL for Pivotal Cloud Foundry&reg; Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.8.0 - Edge.6
-- **Release Date**: 2016-05-18
+- **Version**: 1.8.0 - Edge.7
+- **Release Date**: 2016-06-28
 - **Software component versions**: MariaDB 10.0.23, Galera 25.3.9
-- **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x
-- **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x
+- **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x
+- **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** Yes
@@ -74,22 +74,28 @@ For more information, refer to the full [Product Version Matrix](../../compatibi
 
 	<tr>
 		<td>1.5.0</td>
-		<td>1.6.1 - 1.6.11</td>
+		<td>1.6.1 - 1.6.12</td>
 	</tr>
 
 	<tr>
-		<td>1.6.1 - 1.6.11</td>
-		<td>Next 1.6.X release - 1.8.0-edge.6</td>
+		<td rowspan=2>1.6.1 - 1.6.12</td>
+		<td>Next 1.6.X release - 1.7.9</td>
+	</tr>
+	<tr>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.7</td>
 	</tr>
 
 	<tr>
-		<td>1.7.0 - 1.7.8</td>
-		<td>Next 1.7.X release - 1.8.0-edge.6</td>
+		<td rowspan=2>1.7.0 - 1.7.9</td>
+		<td>Next 1.7.X release - 1.7.9</td>
+	</tr>
+	<tr>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.7</td>
 	</tr>
 
 	<tr>
-		<td>1.8.0-e.1 - 1.8.0-e.5</td>
-		<td>Next 1.8.X release - 1.8.0-edge.6</td>
+		<td>1.8.0-e.1 - 1.8.0-e.6</td>
+		<td>Next 1.8.X release - 1.8.0-edge.7</td>
 	</tr>
 </tr>
 
@@ -163,7 +169,7 @@ Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple s
 1. Click **Service Plans**.
 1. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
 1. Complete the following fields:
-	- **Service Plan name**: Plan names may include only lowercase letters, numbers, hyphens, and underscores. Developers use the name of the service plan to create service instances in Apps Manager and the cf CLI. 
+	- **Service Plan name**: Plan names may include only lowercase letters, numbers, hyphens, and underscores. Developers use the name of the service plan to create service instances in Apps Manager and the cf CLI.
 	  <p class="note"><strong>Note</strong>: PCF enforces plan name constraints only at deploy time. The form does not yet allow for real-time validation. If a plan name does not conform to the correct format, the tile fails to deploy after you click <strong>Apply Changes</strong>. The error appears in the <strong>Recent Install Logs</strong> dropdown in the following format:
 	    <code>
 	    Error 100: Error filling in template 'settings.yml.erb' for 'cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
@@ -180,10 +186,10 @@ Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple s
 #### <a id="deleting-a-plan"></a>Deleting a Plan
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry**.
 1. Click **Service Plans**.
-1. Click the corresponding trash can icon to delete a plan. 
+1. Click the corresponding trash can icon to delete a plan.
 	<p class="note"><strong>Note</strong>: If you accidentally click the trash can, do not click <strong>Save</strong>. Instead, return to the Installation Dashboard and any accidental changes will be discarded. If you do click <strong>Save</strong>, do not click <strong>Apply Changes</strong> on the Installation Dashboard. Instead, click <strong>Revert</strong> to discard any accidental changes.</p>
 1. Click **Save**.
-1. Click **Apply Changes** from the Installation Dashboard. 
+1. Click **Apply Changes** from the Installation Dashboard.
 
 If no service instances of the deleted plan exist, the plan will disappear from the Services Marketplace.
 
@@ -302,7 +308,7 @@ In this example, the URL to the instance dashboard is `https://p-mysql.sys.accep
 
 The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of client connections routed to each backend database cluster node.
 
-The dashboard for each proxy instance can be found at `http://proxy-<job index>-p-mysql.<system-domain>`. 
+The dashboard for each proxy instance can be found at `http://proxy-<job index>-p-mysql.<system-domain>`.
 
 The job index starts at 0 so if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0-p-mysql.example.com` and `http://proxy-1-p-mysql.example.com`.
 
