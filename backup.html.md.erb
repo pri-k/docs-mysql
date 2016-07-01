@@ -69,30 +69,29 @@ p-mysql is normally HA, in that it keeps at least two complete copies of the dat
 
 The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry&reg; Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
 
-In the event of a total cluster loss,the process to restore a backup artifact to a p-mysql cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
+In the event of a total cluster loss, the process to restore a backup artifact to a p-mysql cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
-- Discover the encryption keys in the `Credentials` tab of the p-mysql tile.
-
+1. Discover the encryption keys in the **Credentials** tab of the p-mysql tile.
 1. If necessary, install the same version of the `p-mysql` product in Ops Manager.
-1. Reduce the size of the p-mysql cluster to a single node
+1. Reduce the size of the p-mysql cluster to a single node.
     1. Select P-MySQL tile > Settings > Resource Config > MySQL Server > Instances, and set to 1
     1. Click "Save"
     1. Click "Back to Installation Dashboard," then "Apply Changes"
     1. Wait for deployment to succeed
-1. Prepare the first node for restoration
+1. Prepare the first node for restoration.
     1. [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) onto the Ops Manager Director
-    1. From there, use BOSH to the [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job
+    1. From there, use BOSH to [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job
         - IP address can be found in P-MySQL > Status > MySQL Server
         - VM credentials can be found in  P-MySQL > Credentials > MySQL Server > Vm Credentials
-    1. Become super user<br>
+    1. Become super user.<br>
       `sudo su`
-    1. Pause the local database server<br>
+    1. Pause the local database server.<br>
       `monit stop all`
-    1. Confirm that all jobs are listed as 'not monitored'<br>
+    1. Confirm that all jobs are listed as 'not monitored'.<br>
       `watch monit summary`
-    1. Delete the existing mysql data which is stored on disk<br>
+    1. Delete the existing mysql data that is stored on disk.<br>
       `rm -rf /var/vcap/store/mysql/*`
-1. Restore the backup
+1. Restore the backup.
     1. Move the compressed backup (named e.g. `mysql-backup.tar.bzip2`) to the node (e.g. via `scp`)
     1. Decrypt the file using the `gpg` command<br>
       `gpg --decrypt mysql-backup-1444362715.tar.gpg`
@@ -103,7 +102,7 @@ In the event of a total cluster loss,the process to restore a backup artifact to
     1. `monit start all`
     1. `watch monit summary` until all jobs are listed as 'running'
     1. Exit out of the MySQL node
-1. Increase the size of the cluster back to three
+1. Increase the size of the cluster back to three.
     1. P-MySQL tile > Settings > Resource Config > MySQL Server > Instances to 3
     1. Click "Save"
     1. "Back to Installation Dashboard" > Apply Changes
