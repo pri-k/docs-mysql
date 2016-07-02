@@ -35,7 +35,7 @@ For each step, refer to the screenshot above.
 
 ### <a id="understanding-metadata"></a>Understanding Backup Metadata ###
 
-Along with each release, p-mysql will upload a `mysql-backup-XXXXXXXXXX.txt` file. The contents of that file will look something like this:
+Along with each release, p-mysql uploads a `mysql-backup-XXXXXXXXXX.txt` file. The contents of that file look something like this:
 
 ```
 uuid = dfe9fcdd-7d0f-11e5-93b3-0695a7b9771f
@@ -65,15 +65,15 @@ Within this file, the most important items are the `start_time` and the `server_
 
 ### <a id="restoring"></a>Restoring a Backup Artifact ###
 
-p-mysql is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, please check with support to be sure that your existing cluster is beyond help.
+p-mysql is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, contact Pivotal <%= vars.support_link %> to be sure that your existing cluster requires disaster recovery.
 
-The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry&reg; Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
+The disaster recovery (DR) backups feature of MySQL for PCF recovers data to the same Pivotal Cloud Foundry&reg; from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
 
 In the event of a total cluster loss, the process to restore a backup artifact to a p-mysql cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
 1. Discover the encryption keys in the **Credentials** tab of the p-mysql tile.
 1. If necessary, install the same version of the `p-mysql` product in Ops Manager.
-1. Reduce the size of the p-mysql cluster to a single node.
+1. Scale down the p-mysql cluster to a single node.
     1. Select P-MySQL tile > Settings > Resource Config > MySQL Server > Instances, and set to 1
     1. Click "Save"
     1. Click "Back to Installation Dashboard," then "Apply Changes"
