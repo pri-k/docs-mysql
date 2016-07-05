@@ -31,7 +31,7 @@ For each step, refer to the screenshot above.
 1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
 1. Specify how often you'd like backups to occur in the final field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as, `@every 1d` to back up once per day.
 
-<p class="note"><strong>Note</strong>: For large databases, the default storage for the `Backup Prepare Node` may not be sufficient. In order to compress and encrypt backup artifacts, the VM must be configured with twice the amount of ephemeral disk space as the persistent disk space of the `MySQL Server` nodes.</p>
+<p class="note"><strong>Note</strong>: For large databases, the default storage for the <code>Backup Prepare Node</code> may not be sufficient. In order to compress and encrypt backup artifacts, the VM must be configured with twice the amount of ephemeral disk space as the persistent disk space of the <code>MySQL Server</code> nodes.</p>
 
 ### <a id="understanding-metadata"></a>Understanding Backup Metadata ###
 
@@ -80,17 +80,32 @@ In the event of a total cluster loss, the process to restore a backup artifact t
     1. Wait for deployment to succeed
 1. Prepare the first node for restoration.
     1. [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) onto the Ops Manager Director
-    1. From there, use BOSH to [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job
-        - IP address can be found in P-MySQL > Status > MySQL Server
-        - VM credentials can be found in  P-MySQL > Credentials > MySQL Server > Vm Credentials
-    1. Become super user.<br>
-      `sudo su`
-    1. Pause the local database server.<br>
-      `monit stop all`
-    1. Confirm that all jobs are listed as 'not monitored'.<br>
-      `watch monit summary`
-    1. Delete the existing mysql data that is stored on disk.<br>
-      `rm -rf /var/vcap/store/mysql/*`
+    1. In a command line, run `bosh instances` to locate the MySQL partition. 
+       <pre class="terminal">
+      +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
+      | Instance                                                                                 | State   | AZ  | VM Type                                        | IPs          |
+      +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
+      | acceptance-tests/0 (accdf793-1c9e-4693-a324-757d2f5bba4e)*                               | running | n/a | acceptance-tests                               | 10.85.21.141 |
+      +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
+      | backup-prepare-partition-eef70724fe6d252b1c7c/0 (536b803c-d3bf-4d18-a2ad-473dca8d1873)*  | running | n/a | backup-prepare-partition-eef70724fe6d252b1c7c  | 10.85.21.151 |
+      +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
+      | cf-mysql-broker-partition-eef70724fe6d252b1c7c/0 (807be8d8-00f1-496f-afb2-97882da2dea2)* | running | n/a | cf-mysql-broker-partition-eef70724fe6d252b1c7c | 10.85.21.139 |
+      | cf-mysql-broker-partition-eef70724fe6d252b1c7c/1 (f27cce60-00d8-4ee5-90ca-1abdde2ed22f)  | running | n/a | cf-mysql-broker-partition-eef70724fe6d252b1c7c | 10.85.21.140 |
+      +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
+      | mysql-partition-eef70724fe6d252b1c7c/0 (3b9b45d6-17be-447b-9591-7d28171a1555)*           | running | n/a | mysql-partition-eef70724fe6d252b1c7c           | 10.85.21.134 |
+      | mysql-partition-eef70724fe6d252b1c7c/1 (5123a2f3-af04-4cf7-acb9-43800ebf0daa)            | running | n/a | mysql-partition-eef70724fe6d252b1c7c           | 10.85.21.135 |
+      | mysql-partition-eef70724fe6d252b1c7c/2 (d7c62997-d668-4ef6-8a58-e2b7d295d160)            | running | n/a | mysql-partition-eef70724fe6d252b1c7c           | 10.85.21.136 |
+      +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
+      | proxy-partition-eef70724fe6d252b1c7c/0 (046c3af1-bb22-4c40-8ca8-de32faaa68d5)*           | running | n/a | proxy-partition-eef70724fe6d252b1c7c           | 10.85.21.137 |
+      | proxy-partition-eef70724fe6d252b1c7c/1 (ea91f5e7-6aff-45b0-abde-066d63c9c5f5)            | running | n/a | proxy-partition-eef70724fe6d252b1c7c           | 10.85.21.138 |
+      +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
+     (*) Bootstrap node
+       </pre>        
+    1. Run `bosh ssh MYSQL-PARTITION` where `<MYSQL-PARTITION>` is either the only `mysql` or `mysql-partition-####/0`.  
+    1. Become super user. `sudo su`
+    1. Pause the local database server. `monit stop all`
+    1. Confirm that all jobs are listed as 'not monitored'. `watch monit summary`
+    1. Delete the existing mysql data that is stored on disk. `rm -rf /var/vcap/store/mysql/*`
 1. Restore the backup.
     1. Move the compressed backup (named e.g. `mysql-backup.tar.bzip2`) to the node (e.g. via `scp`)
     1. Decrypt the file using the `gpg` command<br>
