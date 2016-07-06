@@ -59,13 +59,13 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
             +--------------------------------------------------+---------+------------------------------------------------+------------+
             | Instance                                         | State   | Resource Pool                                  | IPs        |
             +--------------------------------------------------+---------+------------------------------------------------+------------+
-            | cf-mysql-broker-partition-a813339fde9330e9b905/0 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 10.0.16.61 |
-            | cf-mysql-broker-partition-a813339fde9330e9b905/1 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 10.0.16.62 |
-            | mysql-partition-a813339fde9330e9b905/0           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.55 |
-            | mysql-partition-a813339fde9330e9b905/1           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.56 |
-            | mysql-partition-a813339fde9330e9b905/2           | failing | mysql-partition-a813339fde9330e9b905           | 10.0.16.57 |
-            | proxy-partition-a813339fde9330e9b905/0           | running | proxy-partition-a813339fde9330e9b905           | 10.0.16.59 |
-            | proxy-partition-a813339fde9330e9b905/1           | running | proxy-partition-a813339fde9330e9b905           | 10.0.16.60 |
+            | cf-mysql-broker-partition-a813339fde9330e9b905/0 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 192.0.2.61 |
+            | cf-mysql-broker-partition-a813339fde9330e9b905/1 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 192.0.2.62 |
+            | mysql-partition-a813339fde9330e9b905/0           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.55 |
+            | mysql-partition-a813339fde9330e9b905/1           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.56 |
+            | mysql-partition-a813339fde9330e9b905/2           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.57 |
+            | proxy-partition-a813339fde9330e9b905/0           | running | proxy-partition-a813339fde9330e9b905           | 192.0.2.59 |
+            | proxy-partition-a813339fde9330e9b905/1           | running | proxy-partition-a813339fde9330e9b905           | 192.0.2.60 |
             +--------------------------------------------------+---------+------------------------------------------------+------------+
 
         In this situation, it is OK to immediately try the bootstrap errand:
@@ -106,11 +106,11 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
             +--------------------------------------------------+--------------------+------------------------------------------------+------------+
             | unknown/unknown                                  | unresponsive agent |                                                |            |
             +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-            | cf-mysql-broker-partition-e97dae91e44681e0b543/0 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 10.0.16.65 |
-            | cf-mysql-broker-partition-e97dae91e44681e0b543/1 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 10.0.16.66 |
+            | cf-mysql-broker-partition-e97dae91e44681e0b543/0 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 192.0.2.65 |
+            | cf-mysql-broker-partition-e97dae91e44681e0b543/1 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 192.0.2.66 |
             +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-            | proxy-partition-e97dae91e44681e0b543/0           | running            | proxy-partition-e97dae91e44681e0b543           | 10.0.16.63 |
-            | proxy-partition-e97dae91e44681e0b543/1           | running            | proxy-partition-e97dae91e44681e0b543           | 10.0.16.64 |
+            | proxy-partition-e97dae91e44681e0b543/0           | running            | proxy-partition-e97dae91e44681e0b543           | 192.0.2.63 |
+            | proxy-partition-e97dae91e44681e0b543/1           | running            | proxy-partition-e97dae91e44681e0b543           | 192.0.2.64 |
             +--------------------------------------------------+--------------------+------------------------------------------------+------------+
 
         #### <a id="vm-recovery"></a>VM Recovery ####
@@ -203,9 +203,9 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
             $ bosh instances
             [...]
             +--------------------------------------------------+----------+------------------------------------------------+------------+
-            | mysql-partition-e97dae91e44681e0b543/0           | starting | mysql-partition-e97dae91e44681e0b543           | 10.0.16.60 |
-            | mysql-partition-e97dae91e44681e0b543/1           | failing  | mysql-partition-e97dae91e44681e0b543           | 10.0.16.61 |
-            | mysql-partition-e97dae91e44681e0b543/2           | failing  | mysql-partition-e97dae91e44681e0b543           | 10.0.16.62 |
+            | mysql-partition-e97dae91e44681e0b543/0           | starting | mysql-partition-e97dae91e44681e0b543           | 192.0.2.60 |
+            | mysql-partition-e97dae91e44681e0b543/1           | failing  | mysql-partition-e97dae91e44681e0b543           | 192.0.2.61 |
+            | mysql-partition-e97dae91e44681e0b543/2           | failing  | mysql-partition-e97dae91e44681e0b543           | 192.0.2.62 |
             +--------------------------------------------------+----------+------------------------------------------------+------------+
 
         Do not proceed to the next step until all three VMs are in the `starting`/`failing` state.
