@@ -33,7 +33,7 @@ What does the error, `blocked because of many connection errors` mean?
 
 There are times when MySQL will blacklist its own proxies:
 ```
-OUT 07:44:02.070 [paasEnv=MYPASS orgName=MYORG spaceName=MYSPACE appName=dc-routing appId=0123456789] [http-nio-8080-exec-5] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Host '192.168.12.15' is blocked because of many connection errors; unblock with 'mysqladmin flush-hosts'
+OUT 07:44:02.070 [paasEnv=MYPASS orgName=MYORG spaceName=MYSPACE appName=dc-routing appId=0123456789] [http-nio-8080-exec-5] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Host '192.0.2.15' is blocked because of many connection errors; unblock with 'mysqladmin flush-hosts'
 ```
 
 You can solve this by running the following on any of the MySQL job VMS:
