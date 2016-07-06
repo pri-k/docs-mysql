@@ -26,7 +26,6 @@ Release date: 16 June 2016
 
 - Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
   - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
-- **Security**: Update to MariaDB 10.0.23 to address [MDEV-9212](https://jira.mariadb.org/browse/MDEV-9212).
 
 Additional information can be found at https://pivotal.io/security.
 
