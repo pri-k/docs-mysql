@@ -101,7 +101,7 @@ In the event of a total cluster loss, the process to restore a backup artifact t
       +------------------------------------------------------------------------------------------+---------+-----+------------------------------------------------+--------------+
      (*) Bootstrap node
        </pre>        
-    1. Run `bosh ssh MYSQL-PARTITION` where `<MYSQL-PARTITION>` is either `mysql-partition-####/0` if you are using AWS, or `mysql/0` if you are using a different IaaS.  
+    1. Run `bosh ssh MYSQL-PARTITION` where `<MYSQL-PARTITION>` is `mysql-partition-####/0`.    
     1. Become super user. `sudo su`
     1. Pause the local database server. `monit stop all`
     1. Confirm that all jobs are listed as 'not monitored'. `watch monit summary`
