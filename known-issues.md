@@ -38,7 +38,7 @@ There is a bug in MySQL for PCF versions 1.6.3 and earlier. Changing the plan do
 There is a workaround for this bug, which will be resolved in future releases of MySQL for PCF. In order for the change to be effective for existing plans, you must trigger this by interacting directly with the service broker: `curl -v -k -X PATCH https://BROKER_CREDS_USERNAME:BROKER_CREDS_PASSWORD@p-mysql.SYSTEM.DOMAIN.example.com/v2/service_instances/SERVICE_INSTANCE_ID?plan_id=17d793e6-6da6-4f0e-b58d-364a407166a0`
 
 - SYSTEM.DOMAIN is defined in Ops Manager, under Elastic Runtime's **Settings** tab, in the `Cloud Controller` entry.
-- BROKER\_CREDS\_USERNAME and BROKER\_CREDS\_PASSWORD are defined in Ops Manager, under p-mysql's  **Credentials** tab, in the `Broker Auth Credentials` entry.
+- BROKER\_CREDS\_USERNAME and BROKER\_CREDS\_PASSWORD are defined in Ops Manager, under MySQL for PCF's  **Credentials** tab, in the `Broker Auth Credentials` entry.
 - To get each SERVICE\_INSTANCE\_ID, run `cf service INSTANCE --guid`. You should see output like this example:
 
   ```
