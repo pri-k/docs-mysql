@@ -4,7 +4,7 @@ owner: MySQL
 ---
 
 
-In Pivotal MySQL for Cloud Foundry&reg;, [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) is used to proxy TCP connections to healthy MariaDB nodes.
+In MySQL for Pivotal Cloud Foundry&reg; (PCF), [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) is used to proxy TCP connections to healthy MariaDB nodes.
 
 A proxy is used to gracefully handle failure of MariaDB nodes. Use of a proxy permits very fast, unambiguous failover to other nodes within the cluster in the event of a node failure.
 
@@ -69,8 +69,8 @@ Bound applications are provided with a hostname or IP address to reach a databas
 
 Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306. Next, configure the load balancer's healthcheck to use the proxy health port. This is TCP port 1936 by default to maintain backwards compatibility with previous releases. This port is not configurable.
 
-### <a id="lb-proxy-config"></a>Configuring p-mysql to give applications the address of the load balancer
-To ensure that bound applications will use the load balancer to reach bound databases, navigate to the p-mysql tile in Operations Manager, then the Resource Config configuration screen within it. **On AWS only**, enter your load balancer's hostname in the "ELB Names" column for the Proxy row.
+### <a id="lb-proxy-config"></a>Configuring MySQL for PCF to give applications the address of the load balancer
+To ensure that bound applications will use the load balancer to reach bound databases, navigate to the MySQL for PCF tile in Operations Manager, then the Resource Config configuration screen within it. **On AWS only**, enter your load balancer's hostname in the "ELB Names" column for the Proxy row.
 
 ### <a id="route-53"></a>AWS Route 53 ###
 

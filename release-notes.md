@@ -148,7 +148,7 @@ Release date: 07 January 2016
 
 Release date: 04 December 2015
 
-- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in a future release of p-mysql, we are sorry for the inconvenience.
+- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in a future release of MySQL for Pivotal Cloud Foundry (PCF), we are sorry for the inconvenience.
 - Updated stemcell to 3146. This is a security upgrade that resolves the following Ubuntu Security Notices:
   - [[USN-2821-1](http://www.ubuntu.com/usn/usn-2821-1/)] GnuTLS vulnerability
 
@@ -198,7 +198,7 @@ Release Date: 22 October 2015
 - **Security**: Fixes for CVE-2015-3900, a man-in-the-middle rubygems vulnerability.
 - Bug fix: Switchboard fails to find recreated mysql node when ARP cache locked by hanging SYN_SENT.
 - Bug fix: Every instance of Switchboard registrars the route `proxy-0.p-mysql.` rather than changing based on AZ index.
-- Bug fix: p-mysql now supports the Elastic Runtime setting to restrict HAProxy traffic to HTTPS only. Users of p-mysql 1.6 and earlier must upgrade to p-mysql 1.7 or later in order to use this feature.
+- Bug fix: MySQL for PCF now supports the Elastic Runtime setting to restrict HAProxy traffic to HTTPS only. Users of MySQL for PCF 1.6 and earlier must upgrade to MySQL for PCF 1.7 or later in order to use this feature.
 
 
 ## <a id="1-6-3"></a>1.6.3
@@ -266,7 +266,7 @@ Release date: 08 March 2015
 - **IaaS agnostic**
   - The same product can be deployed to both AWS and vSphere
   - Precompiled packages are no longer included
-  - p-mysql 1.5.0 requires Operations Manager 1.4.0
+  - MySQL for PCF 1.5.0 requires Operations Manager 1.4.0
 - **New proxy tier**
   - Improved availability: We have entirely re-written the proxy to eliminate situations where clients could hang when a cluster node was unhealthy.
   - A dashboard that clearly displays node health in real time

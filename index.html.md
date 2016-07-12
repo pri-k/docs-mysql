@@ -3,11 +3,11 @@ title: MySQL for Pivotal Cloud Foundry&reg;
 owner: MySQL
 ---
 
-This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf) (PCF).
+This is documentation for the MySQL for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf) (PCF) tile.
 
 ## Product Snapshot
 
-Current MySQL for Pivotal Cloud Foundry&reg; Details
+Current MySQL for PCF Details
 <div style="line-height: 1; padding-left: 3em">
 
 - **Version**: 1.7.10
@@ -22,7 +22,7 @@ Current MySQL for Pivotal Cloud Foundry&reg; Details
 </div>
 
 ## Upgrading to the Latest Version
-Consider the following compatibility information before upgrading MySQL for Pivotal Cloud Foundry&reg;.
+Consider the following compatibility information before upgrading MySQL for PCF.
 
 For more information, refer to the full [Product Version Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
@@ -97,7 +97,7 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 ## <a id="overview"></a> Overview ##
 
-The p-mysql product delivers a fully managed, "Database as a Service" to Cloud Foundry users. When installed, the tile deploys and maintains a single or three-node cluster running a recent release of [MariaDB](http://www.mariadb.org), SQL Proxies for super-fast failover, and Service Brokers for Cloud Foundry integration. We work hard to ship the service configured with sane defaults, following the principle of least surprise for a general-use relational database service.
+The MySQL for PCF product delivers a fully managed, "Database as a Service" to Cloud Foundry users. When installed, the tile deploys and maintains a single or three-node cluster running a recent release of [MariaDB](http://www.mariadb.org), SQL Proxies for super-fast failover, and Service Brokers for Cloud Foundry integration. We work hard to ship the service configured with sane defaults, following the principle of least surprise for a general-use relational database service.
 
 When installed, Developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Connection credentials are automatically provided in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES). Developers can select from a menu of service plans options, which are configured by the platform operator.
 
@@ -135,7 +135,7 @@ Two configurations are supported:
 
 ## <a id="known-issues"></a>Known Issues ##
 
-Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of p-mysql.
+Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
 
 ## <a id="installation"></a>Installation ##
 
@@ -156,7 +156,7 @@ The name of the plan is **100mb-dev** by default and is automatically updated if
 
 **Note**: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run `cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME` on the command line.
 
-**Further Note**: This feature does not work properly in versions of p-mysql 1.6.3 and earlier. See the entry in [Known Issues](known-issues.html) for the recommended workaround.
+**Further Note**: This feature does not work properly in versions of MySQL for PCF 1.6.3 and earlier. See the entry in [Known Issues](known-issues.html) for the recommended workaround.
 
 Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
 
