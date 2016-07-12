@@ -3,7 +3,7 @@ title: Determining Cluster State
 owner: MySQL
 ---
 
-Connect to each MySQL node using a mysql client and check its status.
+Connect to each MySQL node using a MySQL client and check its status.
 
 <pre class="terminal">
 $ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'

@@ -38,11 +38,11 @@ See [Cluster Behavior](cluster-behavior.html) for more details about determining
 
 Bootstrapping requires you to run commands from the [Ops Manager Director](http://docs.pivotal.io/pivotalcf/customizing/index.html). Follow the instructions to use the [BOSH CLI](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cli) for command-line access.
 
-<p class="note"><strong>Note:</strong> The examples in these instructions reflect a three-node p-mysql deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
+<p class="note"><strong>Note:</strong> The examples in these instructions reflect a three-node MySQL for Pivotal Cloud Foundry&reg; (PCF) deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
 
 ### <a id="assisted-bootstrap"></a>Assisted Bootstrap ###
 
-1. P-mysql versions 1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. It is still necessary to manually initiate the bootstrap process, but using this errand reduces the number of manual steps necessary to complete the process.
+1. MySQL for PCF versions 1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. It is still necessary to manually initiate the bootstrap process, but using this errand reduces the number of manual steps necessary to complete the process.
 
     In most cases, running the errand is sufficient, however there are some conditions which require additional steps.
 

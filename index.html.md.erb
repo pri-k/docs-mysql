@@ -3,7 +3,7 @@ title: MySQL for Pivotal Cloud Foundry&reg;
 owner: MySQL
 ---
 
-This is documentation for the MySQL service for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf)(PCF).
+This is documentation for MySQL for [Pivotal Cloud Foundry&reg;](https://network.pivotal.io/products/pivotal-cf)(PCF).
 
 ## <a id="edge-release"></a>Edge Release ##
 
@@ -107,7 +107,7 @@ Consult the [Release Notes](release-notes.html) for information about changes be
 
 ## <a id="overview"></a> Overview ##
 
-The p-mysql product delivers a fully managed, "Database as a Service" to Cloud Foundry users. When installed, the tile deploys and maintains a single or three-node cluster running a recent release of [MariaDB](http://www.mariadb.org), SQL Proxies for super-fast failover, and Service Brokers for Cloud Foundry integration. We work hard to ship the service configured with sane defaults, following the principle of least surprise for a general-use relational database service.
+The MySQL for PCF product delivers a fully managed, "Database as a Service" to Cloud Foundry users. When installed, the tile deploys and maintains a single or three-node cluster running a recent release of [MariaDB](http://www.mariadb.org), SQL Proxies for super-fast failover, and Service Brokers for Cloud Foundry integration. We work hard to ship the service configured with sane defaults, following the principle of least surprise for a general-use relational database service.
 
 When installed, Developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Connection credentials are automatically provided in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES). Developers can select from a menu of service plans options, which are configured by the platform operator.
 
@@ -145,7 +145,7 @@ Two configurations are supported:
 
 ## <a id="known-issues"></a>Known Issues ##
 
-Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of p-mysql.
+Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
 
 ## <a id="installation"></a>Installation ##
 
@@ -195,7 +195,7 @@ If no service instances of the deleted plan exist, the plan will disappear from 
 
 If service instances of the deleted plan exist, they will continue to be maintained, but developers cannot create new instances. The service plan will continue to display in the Services Marketplace, marked as "inactive." Once all service plan instances are deleted, the operator can remove the plan from the Services Marketplace by following these steps:
 
-1. Run `bosh deployments` to find the full name of the p-mysql deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
+1. Run `bosh deployments` to find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
 1. Run `bosh deployment P-MYSQL-DEPLOYMENT-NAME`. For example, `bosh deployment p-mysql-180290d67d5441ebf3c5`.
 1. Run `bosh run errand broker-registrar`.
 
@@ -219,11 +219,11 @@ In the `Database Configuration` pane, you can change the configuration of the fo
 
 - Disable Reverse DNS lookups
 
-    This feature is enabled by default, and improves performance. Un-checking this option causes the MySQL servers to perform a reverse DNS lookup on each new connection. It is only necessary when restricting access by hostname, which is not required in typical `p-mysql` installations.
+    This feature is enabled by default, and improves performance. Un-checking this option causes the MySQL servers to perform a reverse DNS lookup on each new connection. It is only necessary when restricting access by hostname, which is not required in typical MySQL for PCF installations.
 
 - Read-Only User Password
 
-    Activates a special user, `roadmin`, a read-only administrator. Supply a special password, to be used only by administrators who require the ability to view all of the data maintained by the p-mysql installation. Leaving the field blank de-activates the read-only user.
+    Activates a special user, `roadmin`, a read-only administrator. Supply a special password, to be used only by administrators who require the ability to view all of the data maintained by the MySQL for PCF installation. Leaving the field blank de-activates the read-only user.
 
 
 ### <a id="proxy"></a>Proxy ###

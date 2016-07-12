@@ -19,7 +19,7 @@ If more than half of the nodes in a cluster are no longer able to connect to eac
 
 ## <a id="add-nodes"></a> Adding new nodes ##
 
-When new nodes are added to or removed from a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it will update the configuration and restart all of the mysql nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes will cause all connections to that node to be dropped while the node restarts.
+When new nodes are added to or removed from a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it will update the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes will cause all connections to that node to be dropped while the node restarts.
 
 ## <a id="scaling"></a> Scaling the cluster ##
 
@@ -48,7 +48,7 @@ Existing nodes restarted with monit should automatically join the cluster. If an
 
 ### <a id='state-snapshot-transfer-sst'></a>State Snapshot Transfer (SST)
 
-When a new node is added to the cluster or rejoins the cluster, it synchronizes state with the primary component via a process called SST. A single node from the primary component is chosen to act as a state donor. By default Galera uses rsync to perform SST, which blocks for the duration of the transfer. However, p-mysql is configured to use [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup), which allows the donor node to continue to accept reads and writes.
+When a new node is added to the cluster or rejoins the cluster, it synchronizes state with the primary component via a process called SST. A single node from the primary component is chosen to act as a state donor. By default Galera uses rsync to perform SST, which blocks for the duration of the transfer. However, MySQL for Pivotal Cloud Foundry&reg; (PCF) is configured to use [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup), which allows the donor node to continue to accept reads and writes.
 
 
 ## <a id="quorum"></a> Quorum ##
@@ -71,14 +71,14 @@ When a new node is added to the cluster or rejoins the cluster, it synchronizes 
     - OR If they fail to respond to all other nodes within 5 seconds
   - Unresponsive nodes that become responsive again will rejoin the cluster, as long as they are on the same IP which is pre-configured in the gcomm address on all the other running nodes, and a quorum was held by the remaining nodes.
   - All nodes suspend writes once they notice something is wrong with the cluster (write requests hang). After a timeout period of 5 seconds, requests to non-quorum nodes will fail. Most clients return the error: `WSREP has not yet prepared this node for application use`. Some clients may instead return `unknown error`. Nodes who have reached quorum will continue fulfilling write requests.
-  - If deployed using a proxy, a continually inactive node will cause the proxy to fail over, selecting a different mysql node to route new queries to.
+  - If deployed using a proxy, a continually inactive node will cause the proxy to fail over, selecting a different MySQL node to route new queries to.
 
 ## <a id="bootstrapping"></a> Re-bootstrapping the cluster after quorum is lost ##
   - The start script will currently bootstrap node 0 only on initial deploy. If bootstrapping is necessary at a later date, it must be done manually. For more information about manually bootstrapping a cluster, see [Bootstrapping Galera](bootstrapping.html).
   - If the single node is bootstrapped, it will create a new one-node cluster that other nodes can join.
 
 ## <a id="simulating-node-failure"></a> Simulating node failure ##
-  - To simulate a temporary single node failure, use `kill -9` on the pid of the mysql process. This will only temporarily disable the node because the process is being monitored by monit, which will restart the process if it is not running.
+  - To simulate a temporary single node failure, use `kill -9` on the pid of the MySQL process. This will only temporarily disable the node because the process is being monitored by monit, which will restart the process if it is not running.
   - To more permanently disable the process, execute `monit unmonitor mariadb_ctrl` before `kill -9`.
   - To simulate multi-node failure without killing a node process, communication can be severed by changing the iptables config to disallow communication:
 

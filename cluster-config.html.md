@@ -3,7 +3,6 @@ title: Cluster Configuration
 owner: MySQL
 ---
 
-
 This page documents the various configuration decisions that have been made in relation to MariaDB and Galera in cf-mysql-release.
 
 ### SST method

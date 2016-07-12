@@ -13,7 +13,7 @@ Release date: 28 June 2016
 
 - Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
   - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
-- Addresses a [known issue](known-issues.html#compile-fails) in which recent versions of p-mysql 1.8.0 do not install without Internet access.
+- Addresses a [known issue](known-issues.html#compile-fails) in which recent versions of MySQL for Pivotal Cloud Foundry (PCF) 1.8.0 do not install without Internet access.
 - **Bug fix**: When deployed on OpsManager 1.7, the `backup-prepare-node` now requires persistent disk instead of a VM with a large amount of CPUs, RAM and ephemeral disk space.
 
 Additional information can be found at https://pivotal.io/security.
@@ -31,7 +31,7 @@ Release date: 06 May 2016
 
 - Updated stemcell to 3232.2. This is a security upgrade that resolves the following:
   - [USN-2959-1](http://www.ubuntu.com/usn/usn-2959-1/)
-- **Known Issue:** On PCF 1.7 only, the p-mysql acceptance test errand will not work on p-mysql 1.8.0-edge.1 through 1.8.0-edge.5. This will be fixed in the next release.
+- **Known Issue:** On PCF 1.7 only, the MySQL for PCF acceptance test errand will not work on MySQL for PCF 1.8.0-edge.1 through 1.8.0-edge.5. This will be fixed in the next release.
 
 Additional information can be found at https://pivotal.io/security.
 
@@ -58,8 +58,8 @@ Release date: 16 March 2016
 
 Release date: 02 March 2016
 
-- p-mysql now skips reverse DNS resolution when accepting connections.
-  - This change improves performance, and is only necessary when restricting access by hostname, which is not required in typical `p-mysql` installations. You can override this value in the "Database Configuration" configuration pane.
+- MySQL for PCF now skips reverse DNS resolution when accepting connections.
+  - This change improves performance, and is only necessary when restricting access by hostname, which is not required in typical MySQL for PCF installations. You can override this value in the "Database Configuration" configuration pane.
 - **Bug fix**: Enable Operator to specify S3 region.
   - Before this configuration, uploads were limited to the S3 Standard region, 'us-east-1.'
 - See below, same security update as [version 1.6.8](#1-6-8)
@@ -69,7 +69,7 @@ Release date: 02 March 2016
 Release date: 20 January 2016
 
 - **New Feature:** Multiple service plans
-  - **Note:** On upgrade from a version of p-MySQL that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to p-MySQL v1.8.0. See [the documentation](./index.html#service-plan) for more information.
+  - **Note:** On upgrade from a version of MySQL for PCF that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking 'Apply Changes' when upgrading to MySQL for PCF v1.8.0. See [the documentation](./index.html#service-plan) for more information.
 - **New Feature:** `bosh` bootstrap errand
 - MariaDB updated to version 10.0.22 and Galera 25.3.9.
 
@@ -216,7 +216,7 @@ Release date: 07 January 2016
 
 Release date: 04 December 2015
 
-- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in a future release of p-mysql; we are sorry for the inconvenience.
+- Addresses an issue where changing the maximum number of allowed connections in the service plan does not affect the maximum number of allowed connections in service instances, new or existing. Note that the [Known Issue](known-issues.html) for Changing Service Plan Definition still applies; you'll still need to run the manual workaround for existing instances. Please look for improvements in a future release of MySQL for PCF; we are sorry for the inconvenience.
 
 - Updated stemcell to 3146. This is a security upgrade that resolves the following Ubuntu Security Notices:
   - [[USN-2821-1](http://www.ubuntu.com/usn/usn-2821-1/)] GnuTLS vulnerability
@@ -330,7 +330,7 @@ Release Date: 4 September 2015
 - **IaaS agnostic**
   - The same product can be deployed to both AWS and vSphere
   - Precompiled packages are no longer included
-  - p-mysql 1.5.0 requires Operations Manager 1.4.0
+  - MySQL for PCF 1.5.0 requires Operations Manager 1.4.0
 - **New proxy tier**
   - Improved availability: We have entirely re-written the proxy to eliminate situations where clients could hang when a cluster node was unhealthy.
   - A dashboard that clearly displays node health in real time
