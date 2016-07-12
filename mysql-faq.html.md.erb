@@ -25,7 +25,7 @@ It's really hard to get a valid DDL to work on some nodes, yet fail on others. U
 
 > https://www.percona.com/blog/2014/07/21/a-schema-change-inconsistency-with-galera-cluster-for-mysql/
 
-The key thing about this post is that he had to deliberately switch a node to RSU, which p-mysql never does except during SST. So this is a demonstration of what is possible, but does not explain how a customer may actually experience this in production.
+The key thing about this post is that he had to deliberately switch a node to RSU, which MySQL for Pivotal Cloud Foundry&reg; (PCF) never does except during SST. So this is a demonstration of what is possible, but does not explain how a customer may actually experience this in production.
 
 ## <a id="connection-blocked"></a>MySQL has blacklisted its own proxy?
 
@@ -39,6 +39,6 @@ OUT 07:44:02.070 [paasEnv=MYPASS orgName=MYORG spaceName=MYSPACE appName=dc-rout
 You can solve this by running the following on any of the MySQL job VMS:
 > `/var/vcap/jobs/mysql/packages/mariadb/bin/mysqladmin flush-hosts`
 
-This is an artifact of an automatic polling-protection [feature](https://mariadb.com/kb/en/mariadb/server-system-variables/#max_connect_errors) built into MySQL and MariaDB. It is a historical feature intended to block Denial of Service attacks. It is usually triggered by a Load Balancer or System Monitoring software performing empty "port checks" against the MySQL proxies. This is why it is important to configure any Load Balancer to perform TCP checks against the proxy health-check port, default **1936**. Repeated port checks against **3306** will cause an outage for all p-mysql users.
+This is an artifact of an automatic polling-protection [feature](https://mariadb.com/kb/en/mariadb/server-system-variables/#max_connect_errors) built into MySQL and MariaDB. It is a historical feature intended to block Denial of Service attacks. It is usually triggered by a Load Balancer or System Monitoring software performing empty "port checks" against the MySQL proxies. This is why it is important to configure any Load Balancer to perform TCP checks against the proxy health-check port, default **1936**. Repeated port checks against **3306** will cause an outage for all MySQL for Pivotal Cloud Foundry&reg; (PCF) users.
 
-* Note: This issue has been disabled as of p-mysql v1.8.0-edge.4.
+* Note: This issue has been disabled as of MySQL for Pivotal Cloud Foundry&reg; (PCF) v1.8.0-edge.4.

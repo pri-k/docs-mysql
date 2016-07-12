@@ -5,12 +5,12 @@ owner: MySQL
 
 ## <a id="automated-backups"></a>Automated Backups ##
 
-In versions of p-mysql 1.7.0.0 and higher, automated backups can be enabled in the "Configure Backups" section. Backups has the following features:
+In versions of MySQL for Pivotal Cloud Foundry&reg; (PCF) 1.7.0.0 and higher, automated backups can be enabled in the "Configure Backups" section. Backups has the following features:
 
 - Periodically create and upload backup artifacts suitable for restoring the complete set of database instances allocated in the service.
 - No locks, no downtime. The only affect on the serving systems is the amount of I/O required to copy the database and log files off of the VM.
 - Includes a metadata file which contains the critical details of the backup artifact, including the effective calendar time of the backup.
-- Backup artifacts are encrypted within the p-mysql cluster of VMs; unencrypted data is never transported outside of the p-mysql deployment.
+- Backup artifacts are encrypted within the MySQL for PCF cluster of VMs; unencrypted data is never transported outside of the MySQL for PCF deployment.
 - Backups are currently stored on **Amazon S3** only. Other storage targets will be added over time.
 
 ![Configure Backups](configure-backups.png)
@@ -26,7 +26,7 @@ Backups are enabled by default. If you do not wish for this deployment to be bac
 For each step, refer to the screenshot above.
 
 1. Select "Enable Backups"
-1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, p-mysql will automatically create the bucket if it does not exist.
+1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, MySQL for PCF will automatically create the bucket if it does not exist.
 1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.
 1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
 1. Specify how often you'd like backups to occur in the final field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as, `@every 1d` to back up once per day.
@@ -35,7 +35,7 @@ For each step, refer to the screenshot above.
 
 ### <a id="understanding-metadata"></a>Understanding Backup Metadata ###
 
-Along with each release, p-mysql will upload a `mysql-backup-XXXXXXXXXX.txt` file. The contents of that file will look something like this:
+Along with each release, MySQL for PCF will upload a `mysql-backup-XXXXXXXXXX.txt` file. The contents of that file will look something like this:
 
 ```
 uuid = dfe9fcdd-7d0f-11e5-93b3-0695a7b9771f
@@ -61,36 +61,36 @@ encrypted = N
 
 Within this file, the most important items are the `start_time` and the `server_version` entries. Transactions that have not been completed at the start of the backup effort will **not** be present in the restored artifact.
 
-**Note**: Both `compressed` and `encrypted` show as `N` in this file, yet the artifact uploaded by p-mysql is both. This is a known defect, and will be fixed in a future release.
+**Note**: Both `compressed` and `encrypted` show as `N` in this file, yet the artifact uploaded by MySQL for PCF is both. This is a known defect, and will be fixed in a future release.
 
 ### <a id="restoring"></a>Restoring a Backup Artifact ###
 
-p-mysql is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, please check with support to be sure that your existing cluster is beyond help.
+MySQL for PCF is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, please check with support to be sure that your existing cluster is beyond help.
 
-The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry&reg; Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
+The DR backups feature of MySQL for PCF is primarily intended as a way to recover data to the same Pivotal Cloud Foundry&reg; Foundation from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a MySQL for PCF database to a different Foundation.
 
-In the event of a total cluster loss,the process to restore a backup artifact to a p-mysql cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
+In the event of a total cluster loss,the process to restore a backup artifact to a MySQL for PCF cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
-- Discover the encryption keys in the `Credentials` tab of the p-mysql tile.
+- Discover the encryption keys in the `Credentials` tab of the MySQL for PCF tile.
 
-1. If necessary, install the same version of the `p-mysql` product in Ops Manager.
-1. Reduce the size of the p-mysql cluster to a single node
-    1. Select P-MySQL tile > Settings > Resource Config > MySQL Server > Instances, and set to 1
+1. If necessary, install the same version of the MySQL for PCF product in Ops Manager.
+1. Reduce the size of the MySQL for PCF cluster to a single node
+    1. Select the MySQL for PCF tile > Settings > Resource Config > MySQL Server > Instances, and set to 1
     1. Click "Save"
     1. Click "Back to Installation Dashboard," then "Apply Changes"
     1. Wait for deployment to succeed
 1. Prepare the first node for restoration
     1. [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) onto the Ops Manager Director
     1. From there, use BOSH to the [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job
-        - IP address can be found in P-MySQL > Status > MySQL Server
-        - VM credentials can be found in  P-MySQL > Credentials > MySQL Server > Vm Credentials
+        - IP address can be found in MySQL for PCF > Status > MySQL Server
+        - VM credentials can be found in MySQL for PCF > Credentials > MySQL Server > Vm Credentials
     1. Become super user<br>
       `sudo su`
     1. Pause the local database server<br>
       `monit stop all`
     1. Confirm that all jobs are listed as 'not monitored'<br>
       `watch monit summary`
-    1. Delete the existing mysql data which is stored on disk<br>
+    1. Delete the existing MySQL data which is stored on disk<br>
       `rm -rf /var/vcap/store/mysql/*`
 1. Restore the backup
     1. Move the compressed backup (named e.g. `mysql-backup.tar.bzip2`) to the node (e.g. via `scp`)
@@ -104,7 +104,7 @@ In the event of a total cluster loss,the process to restore a backup artifact to
     1. `watch monit summary` until all jobs are listed as 'running'
     1. Exit out of the MySQL node
 1. Increase the size of the cluster back to three
-    1. P-MySQL tile > Settings > Resource Config > MySQL Server > Instances to 3
+    1. MySQL for PCF tile > Settings > Resource Config > MySQL Server > Instances to 3
     1. Click "Save"
     1. "Back to Installation Dashboard" > Apply Changes
     1. Wait for deployment to succeed
@@ -114,7 +114,7 @@ In the event of a total cluster loss,the process to restore a backup artifact to
 
 ## <a id="manual-process"></a>Manual Process ##
 
-If you do not wish to use the automated facility included in p-mysql, you can still [perform backups manually](#manual-backup). If you need to restore from a manual backup, follow the instructions in the [manual restore](#manual-restore) section. 
+If you do not wish to use the automated facility included in MySQL for PCF, you can still [perform backups manually](#manual-backup). If you need to restore from a manual backup, follow the instructions in the [manual restore](#manual-restore) section. 
 
 ### <a id="prerequisites"></a>Prerequisites #####
 
@@ -130,7 +130,7 @@ This backup acquires a global read lock on all tables, but does not hold it for 
 
 <p class="note"><strong>Note</strong>: The procedure to manually backup MySQL below does not cover steps that are specific to a particular IaaS. It is important to tailor these instructions based on your infrastructure and configuration requirements. </p>
 
-1. Spin up a virtual machine (VM) to use for your MySQL backup and restore. Ensure the VM has sufficient disk space to receive the data dump. Configure network access to your p-mysql deployment.
+1. Spin up a virtual machine (VM) to use for your MySQL backup and restore. Ensure the VM has sufficient disk space to receive the data dump. Configure network access to your MySQL for PCF deployment.
 
 1. Install the [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) client of your choice.
 
