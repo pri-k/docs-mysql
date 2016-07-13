@@ -199,7 +199,8 @@ Release Date: 22 October 2015
 - Bug fix: Switchboard fails to find recreated mysql node when ARP cache locked by hanging SYN_SENT.
 - Bug fix: Every instance of Switchboard registrars the route `proxy-0.p-mysql.` rather than changing based on AZ index.
 - Bug fix: MySQL for PCF now supports the Elastic Runtime setting to restrict HAProxy traffic to HTTPS only. Users of MySQL for PCF 1.6 and earlier must upgrade to MySQL for PCF 1.7 or later in order to use this feature.
-
+- Now honors OpenID Connect ID tokens when interacting with UAA.
+  - This will prevent blank pages when clicking 'Manage' in Apps Manager with more recent versions of Elastic Runtime.
 
 ## <a id="1-6-3"></a>1.6.3
 
