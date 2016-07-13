@@ -269,6 +269,8 @@ Release Date: 22 October 2015
 - **Security**: Fixes for CVE-2015-3900, a man-in-the-middle rubygems vulnerability.
 - Bug fix: Switchboard fails to find recreated mysql node when ARP cache locked by hanging SYN_SENT.
 - Bug fix: Every instance of Switchboard registrars the route `proxy-0.p-mysql.` rather than changing based on AZ index.
+- Now honors OpenID Connect ID tokens when interacting with UAA.
+  - This will prevent blank pages when clicking 'Manage' in Apps Manager with more recent versions of Elastic Runtime.
 
 ## <a id="1-6-3"></a>1.6.3
 
