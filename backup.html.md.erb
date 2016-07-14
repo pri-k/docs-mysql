@@ -136,36 +136,36 @@ In the event of a total cluster loss, you must restore a backup artifact to a My
     <pre class="terminal">
       $ rm -rf /var/vcap/store/mysql/* 
     </pre>
+
 1. Restore the backup.
     1. Move the backup (e.g. `mysql-backup-1467246239.tar.gpg`) to the node (e.g. via `scp`).  You should have double the amount of disk space for the recovery process. You could also put the tarball on persistent disk in `var/vcap/store` to ensure you have enough disk space. 
     1. Decrypt the file using the `gpg` command.
-    <pre.class="terminal"> 
-      $ gpg --decrypt mysql-backup-1444362715.tar.gpg
+    <pre class="terminal">
+    $ gpg --decrypt mysql-backup-1444362715.tar.gpg
     </pre>
     1. Expand the backup artifact into the data director of MySQL.
-    <pre.class="terminal"> 
-      $ tar xvjf mysql-backup.tar.gpg --directory=/var/vcap/store/mysql
+    <pre class="terminal">
+    $ tar xvjf mysql-backup.tar.gpg --directory=/var/vcap/store/mysql
     </pre>
     1. MySQL process expects data directory to be owned by a particular user.
-    <pre.class="terminal"> 
-      $ chown -R vcap:vcap /var/vcap/store/mysql
+    <pre class="terminal">
+    $ chown -R vcap:vcap /var/vcap/store/mysql
     </pre>
     1. Run the following:
-    <pre.class="terminal">
-      $ monit start all
+    <pre class="terminal">
+    $ monit start all
     </pre>
     1. Confirm that all jobs are listed as `running`.
-    <pre.class="terminal">
-    watch monit summary
+    <pre class="terminal">
+    $ watch monit summary
     </pre> 
     1. Exit out of the MySQL node.
 
 1. Increase the size of the cluster back to three.
-    1. MySQL for PCF tile > Settings > Resource Config > MySQL Server > Instances to 3
-    1. Click "Save"
-    1. "Back to Installation Dashboard" > Apply Changes
-    1. Wait for deployment to succeed
-
+    1. Navigate to MySQL for PCF tile > **Settings** > **Resource Config** > **MySQL Server** > **Instances** and enter `3`.
+    1. Click **Save**.
+    1. Click **Back to Installation Dashboard** and then **Apply Changes**.
+    1. Wait for the deployment to succeed.
 
 ### <a id="disabling"></a>Disabling Automated Backups ###
 
@@ -173,34 +173,34 @@ Automated backups are enabled by default. If you do not want automated backups, 
 
 1. In the **Configure Backups** section, select **Disable Backups**. 
 1. Click **Save**.
-1. Navigate to **Resource Config**. Change the number of instances for **Backup Prepare Node** to `0`.
+1. Navigate to **Resource Config**. Change the instances for **Backup Prepare Node** to `0`.
 1. Return to the **Installation Dashboard**, and click **Apply Changes**.
 
 ---
 
-## <a id="manual-process"></a>Manual Process ##
+## <a id="manual-process"></a>Manual Backup and Restore ##
 
-If you do not wish to use the automated facility included in MySQL for PCF, you can still [perform backups manually](#manual-backup). If you need to restore from a manual backup, follow the instructions in the [manual restore](#manual-restore) section. 
+If you do not have **Enable Backups** selected under **Automated Database Backups**, you can still [perform backups manually](#manual-backup). To restore from a manual backup, follow the instructions in the [manual restore](#manual-restore) section. 
 
 ### <a id="prerequisites"></a>Prerequisites #####
 
-* Locate the IP address for the MySQL node in the **Status** tab.
+* Record the IP address for the MySQL node in the **Status** tab.
   <%= image_tag("./mysql-server-ip.png") %>
 
-* Locate the root password for the MySQL server in the **Credentials** tab.
+* Record the root password for the MySQL server in the **Credentials** tab.
   <%= image_tag("./mysql-root-password.png") %>
 
 ### <a id="manual-backup"></a>Manual Backup ###
 
-This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
+This backup acquires a global read lock on all tables, but does not hold it for the duration of the dump.
 
-<p class="note"><strong>Note</strong>: The procedure to manually backup MySQL below does not cover steps that are specific to a particular IaaS. It is important to tailor these instructions based on your infrastructure and configuration requirements. </p>
+<p class="note"><strong>Note</strong>: The procedure to manually backup MySQL below does not cover steps that are specific to a particular IaaS. Make sure to tailor these instructions based on your infrastructure and configuration requirements. </p>
 
 1. Spin up a virtual machine (VM) to use for your MySQL backup and restore. Ensure the VM has sufficient disk space to receive the data dump. Configure network access to your MySQL for PCF deployment.
 
 1. Install the [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) client of your choice.
 
-1. In a terminal window, execute the following command. To backup **all** databases in the MySQL deployment, use `--all-databases`:
+1. In a terminal window, execute the following command, or see the [MariaDB documentation](http://mariadb.com/kb/en/mariadb/mysqldump/#examples) for more manual backup examples. To backup **all** databases in the MySQL deployment, use `--all-databases`:
 
     <pre class="terminal">$ mysqldump -u root -p -h $MYSQL_NODE_IP --all-databases > user_databases.sql</pre>
 
@@ -208,9 +208,11 @@ This backup acquires a global read lock on all tables, but does not hold it for 
 
     <pre class="terminal">$ mysqldump -u root -p -h $MYSQL_NODE_IP $DB_NAME > user_databases.sql</pre>
 
+
     <p class="note"><strong>Note</strong>: The backup data you obtain from running the command above is not encrypted nor compressed. Pivotal recommends encrypting the backup artifact before storing it off-site.</p>
 
 1. Store the backup in a different location than the MySQL primary storage, preferably off-site. 
+
 
 ### <a id="manual-restore"></a>Manual Restore ###
 
@@ -225,6 +227,3 @@ Restoring from a backup is the same whether one or multiple databases were backe
   <pre class="terminal">$ mysql -u root -p -h $MYSQL\_NODE\_IP -e "FLUSH PRIVILEGES"</pre>
   This command tells the cluster to re-load user permissions using the data that has just been restored.
 
-### <a id="examples"></a>Examples ###
-
-  More examples can be found in the [MariaDB documentation](http://mariadb.com/kb/en/mariadb/mysqldump/#examples).
