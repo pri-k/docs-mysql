@@ -107,11 +107,11 @@ In the event of a total cluster loss, the process to restore a backup artifact t
     1. Confirm that all jobs are listed as 'not monitored'. `watch monit summary`
     1. Ensure you have a backup of your MySQL data. Delete the existing mysql data stored on disk. `rm -rf /var/vcap/store/mysql/*`
 1. Restore the backup.
-    1. Move the backup (named e.g. `mysql-backup-1467246239.tar.gpg`) to the node (e.g. via `scp`). Pivotal recommends putting the tarball on persistent disk in `var/vcap/store` to ensure you have enough disk space.
+    1. Move the backup (named e.g. `mysql-backup-1467246239.tar.gpg`) to the node (e.g. via `scp`).  You should have double the amount of disk space for the recovery process. You could also put the tarball on persistent disk in `var/vcap/store` to ensure you have enough disk space. 
     1. Decrypt the file using the `gpg` command<br>
       `gpg --decrypt mysql-backup-1444362715.tar.gpg`
     1. Expand the backup artifact into the data director of MySQL<br>
-      `tar xvjf mysql-backup.tar.bzip2 --directory=/var/vcap/store/mysql`
+      `tar xvjf mysql-backup.tar.gpg --directory=/var/vcap/store/mysql`
     1. MySQL process expects data directory to be owned by a particular user<br>
       `chown -R vcap:vcap /var/vcap/store/mysql`
     1. `monit start all`
