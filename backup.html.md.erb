@@ -1,5 +1,5 @@
 ---
-title: Back Up MySQL for Pivotal Cloud Foundry&reg;
+title: Back Up MySQL for Pivotal Cloud Foundry
 owner: MySQL
 ---
 
@@ -61,7 +61,7 @@ Within this file, the most important items are the `start_time` and the `server_
 
 MySQL for PCF is normally highly available (HA), in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, contact Pivotal <%= vars.support_link %> to be sure that your existing cluster requires disaster recovery.
 
-The disaster recovery (DR) backups feature of MySQL for PCF recovers data to the same Pivotal Cloud Foundry&reg; from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a MySQL for PCF database to a different Foundation.
+The disaster recovery (DR) backups feature of MySQL for PCF recovers data to the same Pivotal Cloud Foundry from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a MySQL for PCF database to a different Foundation.
 
 In the event of a total cluster loss, you must restore a backup artifact to a MySQL for PCF cluster manually. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
