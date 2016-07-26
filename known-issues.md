@@ -5,7 +5,7 @@ owner: MySQL
 
 ## <a id="s3-std-region"></a> MySQL Backups to AWS S3 limited to Standard region ##
 
-In MySQL for Pivotal Cloud Foundry&reg; (PCF) 1.7, backups are only sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, "us-east-1." This limitation has been resolved in 1.8.0-Edge.2 and later.
+In MySQL for Pivotal Cloud Foundry (PCF) 1.7, backups are only sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, "us-east-1." This limitation has been resolved in 1.8.0-Edge.2 and later.
 
 ## <a id="https-only"></a> Elastic Runtime HTTPS-only feature ##
 
