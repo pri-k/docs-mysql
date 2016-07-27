@@ -150,9 +150,23 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 ## <a id="installation"></a>Installation ##
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/p-mysql).
-1. Upload the product file to your Ops Manager installation.
+
+1. Navigate to the Ops Manager Installation Dashboard.
+
+	<%= image_tag('available-products.png') %>
+
+1. Click **Import a Product** to upload the product file to your Ops Manager installation.
+
+	<%= image_tag('add-product.png') %>
+
 1. Click **Add** next to the uploaded product description in the Available Products view to add this product to your staging area.
+
+	<%= image_tag('config-mysql.png') %>
+
 1. Click the newly added tile to review configurable [Settings](#settings).
+
+	<%= image_tag('apply-changes.png') %>
+
 1. Click **Apply Changes** to deploy the service.
 
 ## <a id="settings"></a>Settings ##
@@ -161,13 +175,14 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 
 Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple service plans. To add or delete plans, follow the instructions below.
 
-<p class="note"><strong>Note</strong>: If you are upgrading from an earlier version of MySQL for PCF, the upgrade process is not able to continue using the original name of the plan. Upgrading from a version of MySQL for PCF that offered only a single plan causes the plan to be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named <code>pre-existing-plan</code>. To retain the same plan name, edit the name before clicking **Apply Changes** to upgrade to MySQL for PCF v1.8.0.</p>
+<p class="note"><strong>Note</strong>: If you are upgrading from an earlier version of MySQL for PCF, the upgrade process is not able to continue using the original name of the plan. Upgrading from a version of MySQL for PCF that offered only a single plan causes the plan to be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named <code>pre-existing-plan</code>. To retain the same plan name, edit the name before clicking <strong>Apply Changes</strong> to upgrade to MySQL for PCF v1.8.0.</p>
 
 #### <a id="adding-a-plan"></a>Adding a Plan
 
 1. Navigate to the Ops Manager Installation Dashboard and click **MySQL for Pivotal Cloud Foundry**.
 1. Click **Service Plans**.
 1. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
+	<%= image_tag('service-plan-config.png') %>
 1. Complete the following fields:
 	- **Service Plan name**: Plan names may include only lowercase letters, numbers, hyphens, and underscores. Developers use the name of the service plan to create service instances in Apps Manager and the cf CLI.
 	  <p class="note"><strong>Note</strong>: PCF enforces plan name constraints only at deploy time. The form does not yet allow for real-time validation. If a plan name does not conform to the correct format, the tile fails to deploy after you click <strong>Apply Changes</strong>. The error appears in the <strong>Recent Install Logs</strong> dropdown in the following format:
@@ -186,6 +201,7 @@ Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple s
 #### <a id="deleting-a-plan"></a>Deleting a Plan
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry**.
 1. Click **Service Plans**.
+	<%= image_tag('delete-plan.png') %>
 1. Click the corresponding trash can icon to delete a plan.
 	<p class="note"><strong>Note</strong>: If you accidentally click the trash can, do not click <strong>Save</strong>. Instead, return to the Installation Dashboard and any accidental changes will be discarded. If you do click <strong>Save</strong>, do not click <strong>Apply Changes</strong> on the Installation Dashboard. Instead, click <strong>Revert</strong> to discard any accidental changes.</p>
 1. Click **Save**.
