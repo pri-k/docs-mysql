@@ -75,8 +75,10 @@ In the event of a total cluster loss, you must restore a backup artifact to a My
     1. Click **Back to Installation Dashboard**, then **Apply Changes**.
     1. Wait for the deployment to succeed.
 1. Prepare the first node for restoration.
-    1. [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) onto the Ops Manager Director.
-    1. From there, use BOSH to [ssh](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) onto first mysql job.
+    1. SSH into the Ops Manager Director. 
+    <br>For information, see the [SSH into Ops Manager](../pivotalcf/customizing/trouble-advanced.html#ssh) section in the Advanced Troubleshooting with the BOSH CLI topic.
+    1. From there, use the BOSH CLI to SSH into first MySQL job. 
+    <br>For more information, see the [BOSH SSH](../pivotalcf/customizing/trouble-advanced.html#bosh-ssh) section in the Advanced Troubleshooting with the BOSH CLI topic.
         - IP address can be found in **MySQL for PCF** > **Status** > **MySQL Server**.
         - VM credentials can be found in **MySQL for PCF** > **Credentials** > **MySQL Server** > **VM Credentials**.
     1. Become a super user.
