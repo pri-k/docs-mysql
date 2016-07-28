@@ -3,11 +3,13 @@ title: Monitoring the MySQL Service
 owner: MySQL
 ---
 
+This document describes how to use the Replication Canary and Interruptor to monitor your MySQL cluster. 
+
 ## <a id="repcanary"></a>Replication Canary
 
 The Replication Canary is a long-running monitor that validates that replication is working within the MySQL cluster. The clustered solution used by the MySQL for Pivotal Cloud Foundry service provides many benefits, such as quick failover and rolling upgrades. This is more complex than a single node system with no replication. The Replication Canary verifies that the clustering technology is working according to specification.
 
-### How it Works
+### <a id="how"></a>How it Works
 
 The Replication Canary writes to a private dataset on the cluster, then ensures that it is able to read that data from each of the nodes of the cluster. It pauses for a period between write and the reads to ensure that the writesets have been committed across each node of the cluster. The size of the private dataset is constrained, and does not use a significant amount of disk capacity.
 
@@ -20,7 +22,7 @@ When replication is not working properly, the Canary will detect that it is not 
 
 Configure the Replication Canary to e-mail an e-mail address that is closely monitored. The purpose of the Canary is to escalate replication failure as quickly as possible.
 
-### Disabling Cluster Access
+### <a id="disable-access"></a>Disabling Cluster Access
 
 For each attempt that detects that cluster replication is not working properly, the Canary will instruct all Proxies to disable connections to the database cluster.
 
@@ -38,32 +40,44 @@ The Proxy offers an API to determine if access is currently disabled. This is an
   </pre>
 
 
-### Enable the Replication Canary
+### <a id="enable-canary"></a>Enable the Replication Canary
 
-  - In the Pivotal Elastic Runtime tile:
+#### Configure the Elastic Runtime Tile
 
-    - On the **SMTP Config** configuration pane, fill out “From Email” and SMTP server configuration.
-    - On the **Errands** configuration pane, ensure the “Notifications” errand is selected.
+<p class="note"><strong>Note</strong>: In a typical PCF deployment, these settings are already configured.
+</p>
+1. In the **SMTP Config** section, enter a **From Email** that the Replication Canary can use to send notifications, along with the SMTP server configuration.
+1. In the **Errands** section, select the **Notifications** errand.
 
-    In a typical PCF deployment, these settings will already be configured.
 
-  - In the MySQL for Pivotal Cloud Foundry tile:
+#### Configure the MySQL for Pivotal Cloud Foundry (PCF) Tile
 
-    - On the **Advanced Options** configuration pane, ensure that the “Enable Replication Canary” radio button is selected.
-      - Select "Notify only" to configure the Canary to send e-mail only. It will not disable access at the proxy. **Not recommended.** Replication failure is very serious, see note above.
-      - Configure the “E-mail address” with an e-mail address where monitoring notifications should be sent.
-      - Optionally you can override the "Replication canary time period" and "read delay"
-          - Replication canary time period: How frequently the canary checks for replication failure, in seconds. Lower numbers will cause the canary to check more frequently. This adds a small amount of load to the databases, but will cause the canary to react more quickly to replication failure. The default is 30 seconds.
-          - Replication canary read delay: How long the canary waits to verify data is replicating across each MySQL node, in seconds. Clusters under heavy load will experience some small replication lag as writesets are committed across the nodes (see above). Default is 20 seconds.
-    - **Important:** On the **Resource Config** pane, ensure the “Monitoring” job has one instance.
+1. In the **Advanced Options** section, select **Enable replication canary**.
+    ![Enable Replication](enable-replication.png)
+1. If you want to the Replication Canary to send e-mail only, and not disable access at the proxy, select **Notify only**. 
+  <p class="note"><strong>Note</strong>: Pivotal recommends leaving this checkbox unselected due to the serious nature of replication failure.</p>
+1. You can override the **Replication canary time period**. The **Replication canary time period** addresses how frequently the canary checks for replication failure, in seconds. This adds a small amount of load to the databases, but the canary reacts more quickly to replication failure. The default is 30 seconds.
+
+    ![Canary time](canary_time.png)
+
+1. You can override the **Replication canary read delay**. The **Replication canary read delay** addresses how long the canary waits to verify data is replicating across each MySQL node, in seconds. Clusters under heavy load experience some small replication lag as writesets are committed across the nodes (see above). Default is 20 seconds.
+1. Enter an **E-mail address** to receive monitoring notifications.
+1. In the **Resource Config** section, ensure the **Monitoring** job has one instance.
+  ![Resource config](resource-config.png)
 
 ### Disable the Replication Canary
 
-If you do not need the Replication Canary, for instance when using a single MySQL node, both disable the job and the configuration.
+If you do not need the Replication Canary, for instance if you use a single MySQL node, follow this procedure to disable both the job and the resource configuration.
 
-  - In the MySQL for Pivotal Cloud Foundry tile:
-    - On the **Advanced Options** configuration pane, ensure that the “Disable Replication Canary” radio button is selected.
-    - **Important:** On the **Resource Config** pane, ensure the “Monitoring” job is configured to zero instances.
+1. In the MySQL for Pivotal Cloud Foundry tile:
+
+In the **Advanced Options** section of the MySQL for PCF tile, e “Disable Replication Canary” radio button is selected.
+
+![Disable protection](disable-protection.png)
+
+**Important:** On the **Resource Config** pane, ensure the “Monitoring” job is configured to zero instances.
+
+![Monitoring zero](monitoring-zero.png)
 
 ### Sample notification e-mail
 
@@ -137,6 +151,8 @@ Immediately upon preventing a node from rejoining a cluster, the Interruptor wil
 
 ### Disable the Interruptor
 
-The Interruptor is enabled by default. To disable the interruptor, follow these steps:
+The Interruptor is enabled by default. To disable the Interruptor:
 
-  - On the **Advanced Options** pane, under "Enable optional protections", un-check the option, "Prevent node auto re-join".
+In the **Advanced Options** section, under **Enable optional protections**, un-check  **Prevent node auto re-join**.
+
+  ![Prevent node](prevent-node.png)
