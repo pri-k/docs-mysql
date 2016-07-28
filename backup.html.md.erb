@@ -1,5 +1,5 @@
 ---
-title: Back Up MySQL for Pivotal Cloud Foundry&reg;
+title: Back Up MySQL for Pivotal Cloud Foundry
 owner: MySQL
 ---
 
@@ -67,7 +67,7 @@ Within this file, the most important items are the `start_time` and the `server_
 
 p-mysql is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, please check with support to be sure that your existing cluster is beyond help.
 
-The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry&reg; Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
+The DR backups feature of p-mysql is primarily intended as a way to recover data to the same Pivotal Cloud Foundry Foundation from which the data was backed up. This process replaces 100% of the data and state of a running p-mysql cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a p-mysql database to a different Foundation.
 
 In the event of a total cluster loss,the process to restore a backup artifact to a p-mysql cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
