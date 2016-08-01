@@ -3,18 +3,18 @@ title: Scaling Down MySQL
 owner: MySQL
 ---
 
-This topic describes how to safely scale down your MySQL for Pivotal Cloud Foundry&reg; (PCF) cluster to a single node.
+This topic describes how to safely scale down your MySQL for Pivotal Cloud Foundry (PCF) cluster to a single node.
 
-By default MySQL for PCF is a single node. To take advantage of the high availability features of MySQL for PCF, you may have scaled the configuration up to three nodes. 
+By default MySQL for PCF is a single node. To take advantage of the high availability features of MySQL for PCF, you may have scaled the configuration up to three nodes.
 
-<p class="note"><strong>Note</strong>: If you are only running the MySQL cluster with a single node, you do not need to perform these steps.</p> 
+<p class="note"><strong>Note</strong>: If you are only running the MySQL cluster with a single node, you do not need to perform these steps.</p>
 
 ## <a id="check-health"></a>Check the Health of Your Cluster
 
-Before scaling down your MySQL cluster, perform the following actions to ensure the cluster is healthy. 
+Before scaling down your MySQL cluster, perform the following actions to ensure the cluster is healthy.
 
 1. Obtain the IP addresses of your MySQL server by performing the following steps:
-	1. From the Pivotal Cloud Foundry&reg; (PCF) **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
+	1. From the Pivotal Cloud Foundry (PCF) **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
 	1. Click the **Status** tab.
 	1. Record the IP addresses for all instances of the **MySQL Server** job.
 
@@ -26,15 +26,15 @@ Before scaling down your MySQL cluster, perform the following actions to ensure 
 1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, review the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) section of the Advanced Troubleshooting with the BOSH CLI topic for specific instructions.
 
 1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved above and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
-	1. Create a dummy database in the first node: 
+	1. Create a dummy database in the first node:
 		<pre class="terminal">
 		$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"
 		</pre>
-	1. Create a dummy table in the dummy database: 
+	1. Create a dummy table in the dummy database:
 		<pre class="terminal">
 		$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "create table dummy_table (id int not null primary key auto\_increment, info text) engine='InnoDB';"
 		</pre>
-	1. Insert some data into the dummy table: 
+	1. Insert some data into the dummy table:
 		<pre class="terminal">
 		$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"
 		</pre>
@@ -52,7 +52,7 @@ Before scaling down your MySQL cluster, perform the following actions to ensure 
 	</pre>
 
 1. Verify that the other nodes contain the same dummy data by performing the following steps for each of the remaining MySQL server IP addresses obtained above:
-	1. Query the dummy table, replacing `NEXT-NODE-IP-ADDRESS` with the IP address of the MySQL server instance and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above. 
+	1. Query the dummy table, replacing `NEXT-NODE-IP-ADDRESS` with the IP address of the MySQL server instance and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
 		<pre class="terminal">
 	 	$ mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
 	 	</pre>
@@ -71,7 +71,7 @@ Before scaling down your MySQL cluster, perform the following actions to ensure 
 
 ## <a id="scale-down"></a>Scale Down Your Cluster
 
-1. Delete the dummy database, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first MySQL server node and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above. 
+1. Delete the dummy database, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first MySQL server node and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
 	<pre class="terminal">
 	$ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "drop database verify\_healthy;"
 	</pre>

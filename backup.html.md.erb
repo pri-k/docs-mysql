@@ -1,11 +1,11 @@
 ---
-title: Back Up MySQL for Pivotal Cloud Foundry&reg;
+title: Back Up MySQL for Pivotal Cloud Foundry
 owner: MySQL
 ---
 
 ## <a id="automated-backups"></a>Automated Backups ##
 
-In versions of MySQL for Pivotal Cloud Foundry&reg; 1.7.0.0 and higher, automated backups can be enabled in the "Configure Backups" section. Backups has the following features:
+In versions of MySQL for Pivotal Cloud Foundry 1.7.0.0 and higher, automated backups can be enabled in the "Configure Backups" section. Backups has the following features:
 
 - Periodically create and upload backup artifacts suitable for restoring the complete set of database instances allocated in the service.
 - No locks, no downtime. The only affect on the serving systems is the amount of I/O required to copy the database and log files off of the VM.
@@ -67,7 +67,7 @@ Within this file, the most important items are the `start_time` and the `server_
 
 MySQL for PCF is normally HA, in that it keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, please check with support to be sure that your existing cluster is beyond help.
 
-The DR backups feature of MySQL for PCF is primarily intended as a way to recover data to the same Pivotal Cloud Foundry&reg; Foundation from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a MySQL for PCF database to a different Foundation.
+The DR backups feature of MySQL for PCF is primarily intended as a way to recover data to the same Pivotal Cloud Foundry Foundation from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF cluster. This is especially relevant with regard to service instances and bindings. Due to the way in which service instances are defined it is not currently possible to restore a MySQL for PCF database to a different Foundation.
 
 In the event of a total cluster loss,the process to restore a backup artifact to a MySQL for PCF cluster is entirely manual. Follow these steps to use the offsite backups to restore your cluster to its previous state.
 
@@ -80,9 +80,9 @@ In the event of a total cluster loss,the process to restore a backup artifact to
     1. Click "Back to Installation Dashboard," then "Apply Changes"
     1. Wait for deployment to succeed
 1. Prepare the first node for restoration
-    1. SSH into the Ops Manager Director. 
+    1. SSH into the Ops Manager Director.
     <br>For information, see the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/1-7/customizing/trouble-advanced.html#ssh) section in the Advanced Troubleshooting with the BOSH CLI topic.
-    1. From there, use the BOSH CLI to SSH into first MySQL job. 
+    1. From there, use the BOSH CLI to SSH into first MySQL job.
     <br>For more information, see the [BOSH SSH](http://docs.pivotal.io/pivotalcf/1-7/customizing/trouble-advanced.html#bosh-ssh) section in the Advanced Troubleshooting with the BOSH CLI topic.
         - IP address can be found in MySQL for PCF > Status > MySQL Server
         - VM credentials can be found in  MySQL for PCF > Credentials > MySQL Server > Vm Credentials

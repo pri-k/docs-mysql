@@ -3,7 +3,7 @@ title: Proxy for MySQL for Pivotal Cloud Foundry
 owner: MySQL
 ---
 
-In MySQL for Pivotal Cloud Foundry&reg; (PCF), [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) is used to proxy TCP connections to healthy MariaDB nodes.
+In MySQL for Pivotal Cloud Foundry (PCF), [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) is used to proxy TCP connections to healthy MariaDB nodes.
 
 A proxy is used to gracefully handle failure of MariaDB nodes. Use of a proxy permits very fast, unambiguous failover to other nodes within the cluster in the event of a node failure.
 

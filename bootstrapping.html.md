@@ -38,7 +38,7 @@ See [Cluster Behavior](cluster-behavior.html) for more details about determining
 
 Bootstrapping requires you to run commands from the [Ops Manager Director](http://docs.pivotal.io/pivotalcf/customizing/index.html). Follow the instructions to use the [BOSH CLI](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cli) for command-line access.
 
-<p class="note"><strong>Note:</strong> The examples in these instructions reflect a three-node MySQL for Pivotal Cloud Foundry&reg; (PCF) deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
+<p class="note"><strong>Note:</strong> The examples in these instructions reflect a three-node MySQL for Pivotal Cloud Foundry (PCF) deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
 
 ### <a id="assisted-bootstrap"></a>Assisted Bootstrap ###
 
@@ -270,9 +270,9 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
         If the node never connected to the cluster before crashing, it may not even have a group id (uuid in grastate.dat). In this case there's nothing to recover. Unless all nodes crashed this way, don't choose this node for bootstrapping.
 
-        
+
         #### <a id="set-bootstrap-node"></a>Bootstrap the first node ####
-        
+
         Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
 
@@ -290,7 +290,7 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
         It can take up to 10 minutes for monit to start the mariadb process.
 
         #### <a id="restart-nodes"></a>Restart the remaining nodes ####
-        
+
     1. Once the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
 
             $ monit start mariadb_ctrl

@@ -5,7 +5,7 @@ owner: MySQL
 
 ## <a id="compile-fails"></a> Compile fails in environments that do not have access to the Internet ##
 
-In MySQL for Pivotal Cloud Foundry&reg; (PCF) `1.8.0-Edge.5` and `1.8.0-Edge.6`, there is a regression which will cause the compile stage to fail while installing the tile on environments that do not have access to the Internet. We regret the error.
+In MySQL for Pivotal Cloud Foundry (PCF) `1.8.0-Edge.5` and `1.8.0-Edge.6`, there is a regression which will cause the compile stage to fail while installing the tile on environments that do not have access to the Internet. We regret the error.
 
 ## <a id="s3-std-region"></a> MySQL Backups to AWS S3 limited to Standard region ##
 
