@@ -7,7 +7,7 @@ This document describes how to use the Replication Canary and Interruptor to mon
 
 ## <a id="repcanary"></a>Replication Canary
 
-The clustered solution provided by the MySQL for Pivotal Cloud Foundry (PCF) service has many benefits, such as quick failover and rolling upgrades. MySQL for PCF uses replication to make this possible. The Replication Canary is a long-running monitor that validates that replication is working within the MySQL cluster.
+MySQL for Pivotal Cloud Foundry (PCF) is a clustered solution that uses replication to  provide benefits such as quick failover and rolling upgrades. This is more complex than a single node system with no replication. MySQL for PCF includes a Replication Canary to help with the increased complexity. The Replication Canary is a long-running monitor that validates that replication is working within the MySQL cluster. 
 
 ### <a id="overview-canary"></a>How it Works
 
@@ -15,10 +15,10 @@ The Replication Canary writes to a private dataset in the cluster, and attempts 
 
 When replication fails to work properly, the Canary detects that it cannot read the data from all nodes, and immediately takes two actions:
 
-  - E-mails a pre-configured address with a message that replication has failed. See the [sample ](#sample-canary) below.
+  - E-mails a pre-configured address with a message that replication has failed. See the [sample](#sample-canary) below.
   - Disables client [access to the cluster](#access). 
 
-  <p class='note'><strong>Note</strong>: Malfunctioning replication exposes the cluster to the possibility of data loss. Because of this, both behaviors are enabled by default. It is critical that you contact Pivotal support immediately in the case of replication failure.</strong> Support will work with you to determine the nature of the cluster failure, and suggest a resolution.</p>
+  <p class='note'><strong>Note</strong>: Malfunctioning replication exposes the cluster to the possibility of data loss. Because of this, both behaviors are enabled by default. It is critical that you contact Pivotal support immediately in the case of replication failure.</strong> Support will work with you to determine the nature of the cluster failure and provide guidance regarding a solution.</p>
 
 ### <a id="sample-canary"></a>Sample Notification E-mail
 
