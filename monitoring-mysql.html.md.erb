@@ -91,7 +91,7 @@ There are rare cases in which a MySQL node silently falls out of sync with the o
 
 If the node receiving traffic from the proxy falls out of sync with the cluster, it generates a dataset that the other nodes do not have. If the same node later receives a transaction that is not compatible with the datasets of the other nodes, it discards its local dataset and adopts the datasets of the other nodes. This is generally desired behavior, unless data replication is not functioning across the cluster. The node could destroy valid data by discarding its local dataset. When enabled, the Interruptor prevents the node from destroying its local dataset if there is a risk of losing valid data.
 
-  <p class='note'><strong>Note</strong>: If you receive a notification that the Interruptor has activated, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the failure, and suggest a resolution.</p>
+  <p class='note'><strong>Note</strong>: If you receive a notification that the Interruptor has activated, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the failure, and provide guidance regarding a solution.</p>
 
 An out-of-sync node employs one of two [two modes](http://galeracluster.com/documentation-webpages/statetransfer.html) to catch up with the cluster:
 
