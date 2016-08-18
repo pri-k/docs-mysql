@@ -202,6 +202,15 @@ If v1.5.0 is initially deployed without a load balancer and without proxy IPs co
 - Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
 - Instead of configuring the proxy IPs in Operations manager, use the IPs that were dynamically assigned by looking at the **Status** page. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported; see [Known Issues](#known-issues).
 
+### <a id="application-service-groups"></a> Application Service Groups
+
+You must create appropriate
+[Application Security Groups](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASGs) for the MySQL for PCF in order for applications to have access to the service.
+
+<p class="note"><strong>Note</strong>: Without ASGs, the service will not be usable.</p>
+
+See [Creating Application Security Groups for MySQL](./app-security-groups.html) for instructions.
+
 ### <a id="lifecycle-errands"></a>Lifecycle Errands ###
 
 Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
@@ -248,10 +257,10 @@ For more information about SwitchBoard, read the [proxy documentation](proxy.htm
 
 ## <a id="SeeAlso"></a>See Also##
 
-  * [Notes on cluster configuration](cluster-config.html)
-  * [Backing Up MySQL for PCF](backup.html)<br>
+  * [Cluster Configuration](cluster-config.html)
+  * [Backing Up MySQL](backup.html)<br>
     **Note**: For information about backing up your PCF installation, refer to [Backing Up and Restoring Pivotal Cloud Foundry](http://docs.pivotal.io/pivotalcf/customizing/backup-restore/index.html).
-  * [Determining MySQL cluster state](cluster-state.html)
-  * [More on Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
-  * [Bootstrapping an ailing MySQL cluster](bootstrapping.html)
-  * [Scaling down a MySQL cluster](scaling-down.html)
+  * [Determining Cluster State](cluster-state.html)
+  * [Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
+  * [Bootstrapping a Cluster](bootstrapping.html)
+  * [Scaling Down MySQL](scaling-down.html)
