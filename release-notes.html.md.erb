@@ -3,6 +3,24 @@ title: Release Notes
 owner: MySQL
 ---
 
+## <a id="1-7-12"></a>1.7.12
+
+- See below, same update as version 1.6.14.
+- **Bug fix:** Addresses a bug in OpsManager 1.7.0, in which upgrading to a recent version of Pivotal MySQL causes OpsManager to issue an internal server error.
+
+## <a id="1-6-14"></a>1.6.14
+
+Release date: 24 August 2016
+
+- Updated stemcell to 3232.17. This is a security upgrade that resolves the following:
+  - [USN-3064-1](http://www.ubuntu.com/usn/USN-3064-1/)
+  - [USN-3048-1](http://www.ubuntu.com/usn/USN-3048-1/)
+  - [USN-3060-1](http://www.ubuntu.com/usn/USN-3060-1/)
+  - [USN-3061-1](http://www.ubuntu.com/usn/USN-3061-1/)
+  - [USN-3065-1](http://www.ubuntu.com/usn/USN-3065-1/)
+
+Additional info can be found at https://pivotal.io/security
+
 ## <a id="1-7-11"></a>1.7.11
 
 We've discovered a rare condition where a MySQL cluster experiences a fault in replication that can result in some data loss. When this occurs, previous releases do not log the root cause of the bug. In order to best address this issue, version 1.7.11 contains significant additional telemetry and several defensive features which will account for the failure condition and prevent data loss.
