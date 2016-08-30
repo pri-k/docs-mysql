@@ -20,9 +20,9 @@ The following diagram shows the lifecycle of edge releases:
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.8.0 - Edge.8
-- **Release Date**: 2016-07-01
-- **Software component versions**: MariaDB 10.0.23, Galera 25.3.9
+- **Version**: 1.8.0 - Edge.9
+- **Release Date**: 2016-08-29
+- **Software component versions**: MariaDB 10.0.24, Galera 25.3.**14**
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x
 - **vSphere support?** Yes
@@ -74,28 +74,28 @@ For more information, refer to the full [Product Version Matrix](../../compatibi
 
 	<tr>
 		<td>1.5.0</td>
-		<td>1.6.1 - 1.6.13</td>
+		<td>1.6.1 - 1.6.14</td>
 	</tr>
 
 	<tr>
-		<td rowspan=2>1.6.1 - 1.6.13</td>
-		<td>Next 1.6.X release - 1.7.10</td>
+		<td rowspan=2>1.6.1 - 1.6.14</td>
+		<td>Next 1.6.X release - 1.7.12</td>
 	</tr>
 	<tr>
-	  <td>1.8.0-edge.1 - 1.8.0-edge.8</td>
-	</tr>
-
-	<tr>
-		<td rowspan=2>1.7.0 - 1.7.10</td>
-		<td>Next 1.7.X release - 1.7.10</td>
-	</tr>
-	<tr>
-	  <td>1.8.0-edge.1 - 1.8.0-edge.8</td>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.9</td>
 	</tr>
 
 	<tr>
-		<td>1.8.0-e.1 - 1.8.0-e.7</td>
-		<td>Next 1.8.X release - 1.8.0-edge.8</td>
+		<td rowspan=2>1.7.0 - 1.7.12</td>
+		<td>Next 1.7.X release - 1.7.12</td>
+	</tr>
+	<tr>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.9</td>
+	</tr>
+
+	<tr>
+		<td>1.8.0-e.1 - 1.8.0-e.8</td>
+		<td>Next 1.8.X release - 1.8.0-edge.9</td>
 	</tr>
 </tr>
 
@@ -231,7 +231,7 @@ Provisioning a service instance from this plan creates a MySQL database on a mul
 
 ### <a id="options_and_features"></a>Options and Features ###
 
-In the `Database Configuration` pane, you can change the configuration of the following features:
+In the `Advanced Options` pane, you can change the configuration of the following features:
 
 - Disable Reverse DNS lookups
 
@@ -241,6 +241,19 @@ In the `Database Configuration` pane, you can change the configuration of the fo
 
     Activates a special user, `roadmin`, a read-only administrator. Supply a special password, to be used only by administrators who require the ability to view all of the data maintained by the MySQL for PCF installation. Leaving the field blank de-activates the read-only user.
 
+- The Replication Canary, see the [monitoring documentation](monitoring-mysql.html#repcanary).
+- The Interruptor, see the [monitoring documentation](monitoring-mysql.html#interruptor).
+- Quota Enforcer Frequency
+
+    By default, the Quota Enforcer polls for violators and reformers every 30 seconds. This setting, in seconds, changes how long the quota enforcer pauses between checks. If you wish to reduce the small amount of load caused by the Quota Enforcer's polling, you may increase this time period. Be aware, however, that increasing the duration may make it possible for applications to write more data than their pre-determined limit allows.
+
+- Replication Debug logging
+
+    By default, the MySQL service will log events related to replication errors. Only turn off this option if error logging is causing undue strain on your logging systems.
+
+- Server Activity Logging
+
+    The MySQL service now includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/). You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. Note that, due to the sensitive nature of these logs, they are not transmitted to the syslog server.
 
 ### <a id="proxy"></a>Proxy ###
 

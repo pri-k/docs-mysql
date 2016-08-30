@@ -1,0 +1,151 @@
+---
+title: Monitoring the MySQL Service
+owner: MySQL
+---
+
+This document describes how to use the Replication Canary and Interruptor to monitor your MySQL cluster.
+
+## <a id="repcanary"></a>Replication Canary
+
+MySQL for Pivotal Cloud Foundry (PCF) is a clustered solution that uses replication to  provide benefits such as quick failover and rolling upgrades. This is more complex than a single node system with no replication. MySQL for PCF includes a Replication Canary to help with the increased complexity. The Replication Canary is a long-running monitor that validates that replication is working within the MySQL cluster. 
+
+### <a id="overview-canary"></a>How it Works
+
+The Replication Canary writes to a private dataset in the cluster, and attempts to read that data from each node. It pauses between writing and reading to ensure that the writesets have been committed across each node of the cluster. The private dataset does not use a significant amount of disk capacity.
+
+When replication fails to work properly, the Canary detects that it cannot read the data from all nodes, and immediately takes two actions:
+
+  - E-mails a pre-configured address with a message that replication has failed. See the [sample](#sample-canary) below.
+  - Disables client [access to the cluster](#access).
+
+  <p class='note'><strong>Note</strong>: Malfunctioning replication exposes the cluster to the possibility of data loss. Because of this, both behaviors are enabled by default. It is critical that you contact Pivotal support immediately in the case of replication failure.</strong> Support will work with you to determine the nature of the cluster failure and provide guidance regarding a solution.</p>
+
+### <a id="sample-canary"></a>Sample Notification E-mail
+
+If the Canary detects a replication failure, it immediately sends an e-mail through the Elastic Runtime notification service. See the following example:
+
+    Subject: CF Notification: p-mysql Replication Canary, alert 417
+
+    This message was sent directly to your email address.
+
+    {alert-code 417}
+    This is an e-mail to notify you that the MySQL service's replication canary has detected an unsafe cluster condition in which replication is not performing as expected across all nodes.
+
+### <a id="access"></a>Cluster Access
+
+Each time the Canary detects cluster replication failure, it instructs all proxies to disable connections to the database cluster. If the replication issue resolves, the Canary detects this and automatically restores client access to the cluster.
+
+If you must restore access to the cluster regardless of the Replication Canary, contact Support.
+
+#### Determine Proxy State
+
+You can determine if the Canary disabled cluster access by using the Proxy API. See the following example:
+
+<pre class="terminal">ubuntu@ip-10-0-0-38:~$ curl -ku admin:PASSWORD\_FROM\_OPSMGR -X GET http<span>s</span>://proxy-0-p-mysql.SYSTEM-DOMAIN/v0/cluster ; echo
+{"currentBackendIndex":0,"trafficEnabled":false,"message":"Disabling cluster traffic","lastUpdated":"2016-07-27T05:16:29.197754077Z"}</pre>
+
+
+### <a id="enable-canary"></a>Enable the Replication Canary
+
+To enable the Replication Canary, follow the instructions below to configure both the Elastic Runtime tile and the MySQL for PCF tile.
+
+#### Configure the Elastic Runtime Tile
+
+<p class="note"><strong>Note</strong>: In a typical PCF deployment, these settings are already configured.
+</p>
+1. In the **SMTP Config** section, enter a **From Email** that the Replication Canary can use to send notifications, along with the SMTP server configuration.
+1. In the **Errands** section, select the **Notifications** errand.
+
+
+#### Configure the MySQL for PCF Tile
+
+1. In the **Advanced Options** section, select **Enable replication canary**.
+    ![Enable Replication](enable-replication.png)
+1. If you want to the Replication Canary to send e-mail but not disable access at the proxy, select **Notify only**.
+  <p class="note"><strong>Note</strong>: Pivotal recommends leaving this checkbox unselected due to the possibility of data loss from replication failure.</p>
+1. You can override the **Replication canary time period**. The **Replication canary time period** sets how frequently the canary checks for replication failure, in seconds. This adds a small amount of load to the databases, but the canary reacts more quickly to replication failure. The default is 30 seconds.
+
+    ![Canary time](canary_time.png)
+
+1. You can override the **Replication canary read delay**. The **Replication canary read delay** sets how long the canary waits to verify data is replicating across each MySQL node, in seconds. Clusters under heavy load experience some small replication lag as writesets are committed across the nodes. The Default is 20 seconds.
+1. Enter an **E-mail address** to receive monitoring notifications. Use a closely monitoried e-mail address account. The purpose of the Canary is to escalate replication failure as quickly as possible.
+1. In the **Resource Config** section, ensure the **Monitoring** job has one instance.
+  ![Resource config](resource-config.png)
+
+### Disable the Replication Canary
+
+If you do not need the Replication Canary, for instance if you use a single MySQL node, follow this procedure to disable both the job and the resource configuration.
+
+1. In the **Advanced Options** section of the MySQL for PCF tile, select **Disable Replication Canary**.
+    ![Disable protection](disable-protection.png)
+
+1. In the **Resource Config** pane, set the **Monitoring** job to zero instances.
+    ![Monitoring zero](monitoring-zero.png)
+
+## <a id="interruptor"></a>Interruptor
+
+There are rare cases in which a MySQL node silently falls out of sync with the other nodes of the cluster. The [Replication Canary](#repcanary) closely monitors the cluster for this condition. However, if the Replication Canary does not detect the failure, the Interruptor provides a solution for preventing data loss.
+
+### <a id="overview-interuptor"></a>How it Works
+
+
+If the node receiving traffic from the proxy falls out of sync with the cluster, it generates a dataset that the other nodes do not have. If the same node later receives a transaction that is not compatible with the datasets of the other nodes, it discards its local dataset and adopts the datasets of the other nodes. This is generally desired behavior, unless data replication is not functioning across the cluster. The node could destroy valid data by discarding its local dataset. When enabled, the Interruptor prevents the node from destroying its local dataset if there is a risk of losing valid data.
+
+  <p class='note'><strong>Note</strong>: If you receive a notification that the Interruptor has activated, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the failure, and provide guidance regarding a solution.</p>
+
+An out-of-sync node employs one of two [two modes](http://galeracluster.com/documentation-webpages/statetransfer.html) to catch up with the cluster:
+
+* **Incremental State Transfer (IST)**: If a node has been out of the cluster for a relatively short period of time, such as a reboot, the node invokes IST. This is not a dangerous operation, and the Interruptor does not interfere.
+* **State Snapshot Transfer (SST)**: If a node has been unavailable for an extended amount of time, such as a hardware failure that requires physical repair, the node may invoke SST. In cases of failed replication, SST can cause data loss. When enabled, the Interruptor prevents this method of recovery.
+
+### <a id="sample-interruptor"></a>Sample Notification E-mail
+
+The Interruptor sends an email through the Elastic Runtime notification service when it prevents a node from rejoining a cluster. See the following example:
+
+    Subject: CF Notification: p-mysql alert 100
+
+    This message was sent directly to your email address.
+
+    {alert-code 100}
+    Hello, just wanted to let you know that the MySQL node/cluster has gone down and has been disallowed from re-joining by the interruptor.
+
+### <a id="logs"></a>Interruptor Logs
+
+You can confirm that the Interruptor has activated by examining `/var/vcap/sys/log/mysql/mysql.err.log` on the failing node. The log contains the following message:
+
+<pre class="terminal">
+WSREP\_SST: [ERROR] ############################################################################## (20160610 04:33:21.338)
+WSREP\_SST: [ERROR] SST disabled due to danger of data loss. Verify data and bootstrap the cluster (20160610 04:33:21.340)
+WSREP\_SST: [ERROR] ############################################################################## (20160610 04:33:21.341)</pre>
+
+### <a id="force-rejoin"></a>Force a Node to Rejoin the Cluster
+
+In general, if the Interruptor has activated but the Replication Canary has not triggered, it is safe for the node to rejoin the cluster.
+
+<p class='note'><strong>Note</strong>: This topic requires you to run commands from the <a href="http://docs.pivotal.io/pivotalcf/customizing/index.html">Ops Manager Director</a> using the BOSH CLI. Refer to the <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a> topic for more information.</p>
+
+1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
+
+1. Run `bosh run errand rejoin-unsafe` to force a node to rejoin the cluster:
+
+    <pre class="terminal">
+    $ bosh run errand rejoin-unsafe
+    [...]
+    [stdout]
+    Started rejoin-unsafe errand ...
+    Successfully repaired cluster
+    rejoin-unsafe errand completed
+
+    [stderr]
+    None
+
+    Errand `rejoin-unsafe' completed successfully (exit code 0)
+    </pre>
+
+### Disable the Interruptor
+
+The Interruptor is enabled by default. To disable the Interruptor:
+
+In the **Advanced Options** section, under **Enable optional protections**, un-check  **Prevent node auto re-join**.
+
+  ![Prevent node](prevent-node.png)
