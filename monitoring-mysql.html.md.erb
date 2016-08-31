@@ -41,7 +41,7 @@ If you must restore access to the cluster regardless of the Replication Canary, 
 
 You can determine if the Canary disabled cluster access by using the Proxy API. See the following example:
 
-<pre class="terminal">ubuntu@ip-10-0-0-38:~$ curl -ku admin:PASSWORD\_FROM\_OPSMGR -X GET http<span>s</span>://proxy-0-p-mysql.SYSTEM-DOMAIN/v0/cluster ; echo
+<pre class="terminal">ubuntu@ip-10-0-0-38:~$ curl -ku admin:PASSWORD_FROM_OPSMGR -X GET http<span>s</span>://proxy-0-p-mysql.SYSTEM-DOMAIN/v0/cluster ; echo
 {"currentBackendIndex":0,"trafficEnabled":false,"message":"Disabling cluster traffic","lastUpdated":"2016-07-27T05:16:29.197754077Z"}</pre>
 
 
