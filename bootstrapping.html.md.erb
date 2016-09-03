@@ -154,15 +154,6 @@ In this scenario, nodes are up and running, but the cluster has been disrupted.
     mysql> SHOW STATUS LIKE 'wsrep_cluster_size';
     </pre>
 
-1. Complete the following steps to restore the BOSH configuration:
-
-    1. Run `bosh edit deployment`.
-    1. Re-set `canaries` to 1, `max_in_flight` to 1, and `serial` to true in the same manner as above.
-    1. Run `bosh deploy`.
-    1. Validate that all mysql instances are in `running` state.
-
-    <p class="note"><strong>Note:</strong> You must reset the values in the BOSH manifest to ensure successful future deployments and accurate reporting of the status of your jobs.</p>
-
 
 
 ### <a id="vms-terminated"></a>Scenario 2: Virtual Machines Terminated or Lost ###
@@ -268,26 +259,7 @@ In this scenario, severe circumstances such as power failure have terminated all
     +--------------------------------------------------+----------+------------------------------------------------+------------+
     </pre>
 
-1. Complete the following steps to prepare your deployment for bootstrapping:
-
-    1. Run `bosh edit deployment` to launch a `vi` editor and modify the deployment.
-    1. Search for the jobs section: `jobs`.
-    1. Search for the mysql-partition: `mysql-partition`.
-    1. Search for the update section: `update`.
-    1. Change `max_in_flight` to `3`.
-    1. Below the `max_in_flight` line, add a new line: `canaries: 0`.
-    1. Set `update.serial` to `false`.
-    1. Run `bosh deploy`.
 
 1. Complete the steps for [Scenario 1](#cluster-disrupted).
 
 1. Run `bosh instances` and examine the output to confirm that the bootstrap was successful. Some instances may still appear as `failing`.
-
-1. Complete the following steps to restore the BOSH configuration:
-
-    1. Run `bosh edit deployment`.
-    1. Re-set `canaries` to 1, `max_in_flight` to 1, and `serial` to true in the same manner as above.
-    1. Run `bosh deploy`.
-    1. Validate that all mysql instances are in `running` state.
-
-    <p class="note"><strong>Note:</strong> You must reset the values in the BOSH manifest to ensure successful future deployments and accurate reporting of the status of your jobs.</p>
