@@ -291,8 +291,8 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
         #### <a id="restart-nodes"></a>Restart the remaining nodes ####
 
-    1. Once the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
-         - If the Interruptor is enabled, you must additionally run this command before moving to the next step
+    1. After the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
+         - If the Interruptor is enabled, run this command:
 
                 $ touch /var/vcap/sys/run/galera-healthcheck/enable_sst
 
@@ -300,6 +300,6 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
             $ monit start mariadb_ctrl
 
-    1. Verify that the new nodes have successfully joined the cluster. The following command should output the total number of nodes in the cluster:
+    1. Verify that the new nodes have successfully joined the cluster. The following command outputs the total number of nodes in the cluster:
 
             mysql> SHOW STATUS LIKE 'wsrep_cluster_size';
