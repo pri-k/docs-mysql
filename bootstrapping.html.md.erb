@@ -137,13 +137,12 @@ In this scenario, nodes are up and running, but the cluster has been disrupted.
 
     It can take up to ten minutes for `monit` to start the `mariadb` process.
 
-1. Once the bootstrapped node is running, start the `mariadb` process on the remaining nodes using `monit`.
-  - If the Interruptor is enabled, you must additionally run this command before moving to the next step
+1. Once the bootstrapped node is running, start the `mariadb` process on the remaining nodes:
+  1. If the Interruptor is enabled, run the following command before starting `mariadb`:
       <pre class="terminal">
       $ touch /var/vcap/sys/run/galera-healthcheck/enable_sst
       </pre>
-
-    Start the mariadb process:
+  1. Start the mariadb process using `monit`:
     <pre class="terminal">
     $ monit start mariadb_ctrl
     </pre>
