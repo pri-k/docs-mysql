@@ -215,6 +215,8 @@ See [Creating Application Security Groups for MySQL](./app-security-groups.html)
 
 Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
 
+<p class="note"><strong>Note</strong>: You might also notice a "broker-deregistrar" errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by OpsManager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>
+
 ### <a id="resource-config"></a>Resource Config ###
 
 #### <a id="instance-capacity"></a>Instance Capacity ####
