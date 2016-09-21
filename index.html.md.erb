@@ -13,8 +13,8 @@ Current MySQL for PCF Details
 - **Version**: 1.7.12
 - **Release Date**: 2016-08-24
 - **Software component versions**: MariaDB 10.0.21, Galera 25.3.9
-- **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x
-- **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x
+- **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
+- **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** Yes
@@ -126,7 +126,7 @@ Two configurations are supported:
 
 ## <a id="limitations"></a>Limitations ##
 
-- Single and three-node clusters are the only supported topologies. OpsManager will allow the Operator to set the number of instances to other values, only one and three are advised. Please see the [note](cluster-behavior.html#even-number) in the Cluster Behavior document.
+- Single and three-node clusters are the only supported topologies. Ops Manager will allow the Operator to set the number of instances to other values, only one and three are advised. Please see the [note](cluster-behavior.html#even-number) in the Cluster Behavior document.
 - Although two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](#proxy) section, as well as the entry in [Known Issues](known-issues.html).
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
@@ -215,7 +215,7 @@ See [Creating Application Security Groups for MySQL](./app-security-groups.html)
 
 Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
 
-<p class="note"><strong>Note</strong>: You might also notice a "broker-deregistrar" errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by OpsManager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>
+<p class="note"><strong>Note</strong>: You might also notice a <b>broker-deregistrar</b> errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by Ops Manager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>
 
 ### <a id="resource-config"></a>Resource Config ###
 
