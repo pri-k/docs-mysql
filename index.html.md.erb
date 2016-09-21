@@ -177,20 +177,19 @@ Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple s
 
 <p class="note"><strong>Note</strong>: If you are upgrading from an earlier version of MySQL for PCF, the upgrade process is not able to continue using the original name of the plan. Upgrading from a version of MySQL for PCF that offered only a single plan causes the plan to be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named <code>pre-existing-plan</code>. To retain the same plan name, edit the name before clicking <strong>Apply Changes</strong> to upgrade to MySQL for PCF v1.8.0.</p>
 
-##### Updating existing service instances
+#### <a id="update-a-plan"></a> Update Existing Service Instances
 
-- Service instances may be updated via the CLI as follows:
+You can update service instances using the cf CLI as follows:
+	<pre class="terminal">cf update-service SERVICE\_INSTANCE -p NEW\_PLAN</pre>
+        
+The following rules apply when updating a service instance plan:
 
-        cf update-service SERVICE_INSTANCE -p NEW_PLAN
+* Updating a service instance to a plan with a larger `max_storage_mb` is always supported.
+* Updating a service instance to a plan with a smaller `max_storage_mb` is supported only if the current usage is less than the new value.
+* The update command fails if the current usage is greater than the new value.
+* Updating a service instance does not disrupt running application connections so long as the application uses fewer than the maximum number of connections allowed by the new plan.
 
-- Updating a service instance between plans behaves as follows:
-
-  * Updating a service instance to a plan with a larger `max_storage_mb` is always supported.
-  * Updating a service instance to a plan with a smaller `max_storage_mb` is supported only if the current usage is less than the new value.
-   * If the current usage is greater than the new value the update command will fail.
-   * Upgrading a service instance does not disrupt running applications' connections so long as the application uses fewer than the maximum number of connections allowed by the new plan.
-
-#### <a id="adding-a-plan"></a>Adding a Plan
+#### <a id="adding-a-plan"></a>Add a Plan
 
 1. Navigate to the Ops Manager Installation Dashboard and click **MySQL for Pivotal Cloud Foundry**.
 1. Click **Service Plans**.
@@ -211,7 +210,7 @@ Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple s
 
 <p class="note"><strong>Note</strong>: You cannot deploy MySQL for PCF with zero service plans. One plan, at the minimum, is required. If you want to deploy MySQL for PCF without offering any plans, mark the plan as private and do not enable access to any organizations.</p>
 
-#### <a id="deleting-a-plan"></a>Deleting a Plan
+#### <a id="delete-a-plan"></a>Deleting a Plan
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry**.
 1. Click **Service Plans**.
 	<%= image_tag('delete-plan.png') %>
