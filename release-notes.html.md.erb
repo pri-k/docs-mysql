@@ -59,8 +59,6 @@ We've discovered a rare condition where a MySQL cluster experiences a fault in r
   - Logging Changes
     - MySQL job logs are kept local on the VM, in addition to sent to syslog if configured.
     - Binary logs are now enabled and rotated automatically by the system.
-    - Audit logs are now enabled, and automatically configured by the system.
-      - Audit logs are not transmitted to syslog, due to the sensitive nature of the content of the audit logs.
     - Plus a host of debug log changes have been added to aid in diagnosis efforts.
   - XA Transactions are now disallowed.
     - XA Transactions are not compatible with our HA technology.
