@@ -17,58 +17,58 @@ Release date: 29 August 2016
   - Additional info can be found at https://pivotal.io/security
 
 
-We've discovered a rare condition where a MySQL cluster experiences a fault in replication that can result in some data loss. When this occurs, previous releases do not log the root cause of the bug. In order to best address this issue, version 1.8.0-Edge.9 contains significant additional telemetry and several defensive features which will account for the failure condition and prevent data loss.
+There is an uncommon situation where a MySQL cluster experiences a fault in replication that can result in some data loss. When this occurs, previous releases do not log the root cause of the bug. To best address this issue, version 1.8.0-Edge.9 contains significant additional telemetry and several defensive features which account for the failure condition and prevent data loss.
 
-<p class='note'><strong>If any of these protections activate, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the cluster's failure, and advise a suggested resolution. Additionally, contacting Support will provide us with evidence that will enable us to identify and address the root cause in the future.</p>
+<p class='note'><strong>Note</strong>If any of these protections activate, it is critical that you contact Pivotal support immediately. Support will work with you to determine the nature of the cluster's failure and advise a suggested resolution. Additionally, contacting Support provides information that enables Pivotal to identify and address the root cause in the future.</p>
 
   - **Introducing the Replication Canary**
 
-    We've included a new long-running monitor, the **Replication Canary**. The Replication Canary continually monitors the MySQL cluster, watching for instances in which cross-cluster replication has failed. It is enabled by default, and requires an e-mail address in the Advanced Options configuration pane.<br><br>
+    This release includes a new long-running monitor, the **Replication Canary**. The Replication Canary continually monitors the MySQL cluster, watching for instances where cross-cluster replication has failed. It is enabled by default and requires that you provide an e-mail address in the Advanced Options configuration pane.<br><br>
 
-    In the event that replication has failed, the Canary performs two actions:
+    When replication fails, the Canary performs two actions:
 
-    - E-mail the Operator: Part of the Replication Canary's configuration is an e-mail address, which can be directed to any Operator e-mail address, or an escalation system similar to PagerDuty.
-    - Deny Access: When replication has failed, the Replication Canary will automatically disable user and applications' ability to access the cluster via the Proxies.
+    - E-mail the Operator: The Replication Canary configuration includes an e-mail address which can be directed to any operator e-mail address, or an escalation system similar to PagerDuty.
+    - Deny Access: When replication fails, the Replication Canary automatically disables user and applications access to the cluster via the Proxies.
 
-    <p class='note'><strong>Note</strong>: Due to the serious nature of a failure in replication, both behaviors are enabled by default. During configuration, you may elect to set the Replication Canary to notify-only mode, but this is not recommended.</p>
+    <p class='note'><strong>Note</strong>: Due to the serious nature of a failure in replication, both behaviors are enabled by default. During configuration, you may set the Replication Canary to notify-only mode, but this is not recommended.</p>
 
-    - You **must** set the `Monitoring` job to 1 in the Resource Config pane, or the Replication Canary will not be enabled, regardless of configuration.
-    - You **must** also confirm that the Elastic Runtime tile is properly configured to send e-mail. These settings are necessary for any standard Cloud Foundry configuration.
+    - You must set the `Monitoring` job to 1 in the Resource Config pane, or the Replication Canary will not be enabled, regardless of configuration.
+    - You must also confirm that the Elastic Runtime tile is properly configured to send e-mail. These settings are required in any standard Cloud Foundry configuration.
       - Ensure that the `Notifications` errand has been enabled.
       - Ensure that `SMTP Config` has been properly configured.
 
         If either of these are not set, configure and **Apply Changes** before deploying version 1.8.0-Edge.9.
 
-    For more information about the Replication Canary, see the [monitoring documentation](monitoring-mysql.html#repcanary).
+    For more information about the Replication Canary, see the [Monitoring Documentation](monitoring-mysql.html#repcanary).
 
   - **Introducing the Interruptor**
 
-    The MySQL nodes have new logic that, when enabled, will prevent a node from re-joining a cluster under certain conditions. This is a second level of protection against the possibility of data loss.<br><br>
+    The MySQL nodes have new logic that, when enabled, prevent a node from re-joining a cluster under certain conditions. This is a second level of protection against the possibility of data loss.<br><br>
 
-    For more information about the Interruptor, see the [monitoring documentation](monitoring-mysql.html#interruptor).
+    For more information about the Interruptor, see the [Monitoring Documentation](monitoring-mysql.html#interruptor).
 
   - **New feature**: Backing up all nodes
 
-    In the Backups configuration pane, there's now an option to take backups from all MySQL nodes. This feature protects your users from data loss in the case that some nodes have different data than the others.
+    In the Backups configuration pane, there is an option to take backups from all MySQL nodes. This feature protects users from data loss in when some nodes have different data than the others.
   - Logging Changes
-    - MySQL job logs are kept local on the VM, in addition to sent to syslog if configured.
+    - MySQL job logs are kept local on the VM, in addition to being sent to syslog if configured.
     - Binary logs are now enabled and rotated automatically by the system.
     - Audit logs are now enabled, and automatically configured by the system.
       - Audit logs are not transmitted to syslog, due to the sensitive nature of the content of the audit logs.
-    - Plus a host of debug log changes have been added to aid in diagnosis efforts.
+    - Multiple debug log changes have been added to aid in diagnosis efforts.
   - XA Transactions are now disallowed.
-    - XA Transactions are not compatible with our HA technology.
+    - XA Transactions are not compatible with HA technology.
   - Quota Enforcer is now configurable.
   - Maximum open file descriptors now default to maximum possible, over 1 million.
   - **Security fix:** Now includes MariaDB 10.0.24
     - Avoids a possible credential leak and fixes a minor bug.
-  - **Security fix:** In previous releases, Backups caused the MySQL VMs to log the MySQL root password, when enabled.
+  - **Security fix:** In previous releases, backups caused the MySQL VMs to log the MySQL root password, when enabled.
 
-    <p class='note'><strong>Note:</strong> To change this password, see <a href=credential-rotation.html>credential rotation</a> documentation.</p>
+    <p class='note'><strong>Note:</strong> To change this password, see <a href=credential-rotation.html>Credential Rotation</a>.</p>
 
   - **Bug fix:** Addresses a bug in OpsManager 1.7.0, in which upgrading to a recent version of Pivotal MySQL causes OpsManager to issue an internal server error.
 
-  - **Known Issue:** When installed on OpsManager, the tile identifies itself as `p-mysql-1.8.0-edge.9.alpha.934.9c05453.pivotal`. This is a cosmetic error. It should read `p-mysql-1.8.0-edge.9`. It is a normal, supported release.
+  - **Known Issue:** When installed on OpsManager, the tile identifies itself as `p-mysql-1.8.0-edge.9.alpha.934.9c05453.pivotal`. This is an error. It should read `p-mysql-1.8.0-edge.9`. This is a normal, supported release.
 
 ## <a id="1-8-0-e8"></a>1.8.0-Edge.8
 
