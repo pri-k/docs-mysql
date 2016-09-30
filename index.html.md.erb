@@ -20,9 +20,9 @@ The following diagram shows the lifecycle of edge releases:
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.8.0 - Edge.9
-- **Release Date**: 2016-08-29
-- **Software component versions**: MariaDB 10.0.24, Galera 25.3.**14**
+- **Version**: 1.8.0 - Edge.10
+- **Release Date**: 2016-09-29
+- **Software component versions**: MariaDB 10.1.17, Galera 25.3.**17**
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
 - **vSphere support?** Yes
@@ -74,28 +74,28 @@ For more information, refer to the full [Product Version Matrix](../../compatibi
 
 	<tr>
 		<td>1.5.0</td>
-		<td>1.6.1 - 1.6.14</td>
+		<td>1.6.1 - 1.6.16</td>
 	</tr>
 
 	<tr>
-		<td rowspan=2>1.6.1 - 1.6.14</td>
-		<td>Next 1.6.X release - 1.7.12</td>
+		<td rowspan=2>1.6.1 - 1.6.16</td>
+		<td>Next 1.6.X release - 1.7.14</td>
 	</tr>
 	<tr>
-	  <td>1.8.0-edge.1 - 1.8.0-edge.9</td>
-	</tr>
-
-	<tr>
-		<td rowspan=2>1.7.0 - 1.7.12</td>
-		<td>Next 1.7.X release - 1.7.12</td>
-	</tr>
-	<tr>
-	  <td>1.8.0-edge.1 - 1.8.0-edge.9</td>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.10</td>
 	</tr>
 
 	<tr>
-		<td>1.8.0-e.1 - 1.8.0-e.8</td>
-		<td>Next 1.8.X release - 1.8.0-edge.9</td>
+		<td rowspan=2>1.7.0 - 1.7.13</td>
+		<td>Next 1.7.X release - 1.7.14</td>
+	</tr>
+	<tr>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.10</td>
+	</tr>
+
+	<tr>
+		<td>1.8.0-e.1 - 1.8.0-e.9</td>
+		<td>Next 1.8.X release - 1.8.0-edge.10</td>
 	</tr>
 </tr>
 
@@ -181,7 +181,7 @@ Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple s
 
 You can update service instances using the cf CLI as follows:
 	<pre class="terminal">cf update-service SERVICE\_INSTANCE -p NEW\_PLAN</pre>
-        
+
 The following rules apply when updating a service instance plan:
 
 * Updating a service instance to a plan with a larger `max_storage_mb` is always supported.
