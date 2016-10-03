@@ -20,9 +20,11 @@ Release date: 29 September 2016
 
 - Updated stemcell to 3263.3 This is a security upgrade that resolves the following:
   - [USN-3087-2](http://www.ubuntu.com/usn/USN-3087-2/)
-- MariaDB updated to version 10.1.17
-  The upgrade is automatic, and if deployed in HA configuration will not cause downtime for applications.
+  - This also upgrades from the Linux 3.9 kernel to version 4.4.
+- MariaDB updated to version 10.1.17 and Galera 25.3.17.
+  This is an upgrade to a new minor release from MariaDB 10.0 to 10.1. The upgrade is automatic, and if deployed while in HA configuration will not cause downtime for applications.
 - **Bug fix:** Introduced a fix to the replication canary which reduces the possibility of false positives.
+    <p class='note '><strong>Note:</strong> Future releases of p-mysql 1.8.0 will be restricted to versions of OpsManager 1.7 and greater. If you are using OpsManager 1.6 or earlier, you will need to upgrade OpsManager before upgrading to those versions of Pivotal MySQL.</p>
 
 Additional information can be found at https://pivotal.io/security.
 
