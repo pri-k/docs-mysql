@@ -20,6 +20,9 @@ Release date: 29 September 2016
 
 - Updated stemcell to 3263.3 This is a security upgrade that resolves the following:
   - [USN-3087-2](http://www.ubuntu.com/usn/USN-3087-2/)
+- MariaDB updated to version 10.1.17
+  The upgrade is automatic, and if deployed in HA configuration will not cause downtime for applications.
+- **Bug fix:** Introduced a fix to the replication canary which reduces the possibility of false positives.
 
 Additional information can be found at https://pivotal.io/security.
 
