@@ -120,7 +120,7 @@ Two configurations are supported:
   <tr><td>**SQL Proxy**</td><td>1 node</td><td>2 nodes</td></tr>
   <tr><td>**Service Broker**</td><td>1 node</td><td>2 nodes</td></tr>
   <tr><td>High Availability</td><td>-</td><td>Yes</td></tr>
-  <tr><td>Multi-AZ Support</td><td>-</td><td>Yes</td></tr>
+  <tr><td>Multi-AZ Support</td><td>-</td><td>Yes \*</td></tr>
   <tr><td>Rolling Upgrades</td><td>-</td><td>Yes</td></tr>
   <tr><td>Automated Backups</td><td>Yes</td><td>Yes</td></tr>
   <tr><td>Customizable Plans</td><td>Yes</td><td>Yes</td></tr>
@@ -128,10 +128,11 @@ Two configurations are supported:
   <tr><td>Plan Migrations</td><td>Yes</td><td>Yes</td></tr>
   <tr><td>Encrypted Communication</td><td>Yes &#x271D;</td><td>Yes &#x271D;</td></tr>
   <tr><td>Encrypted Data at-rest</td><td>-</td><td>-</td></tr>
-  <tr><td>Long-lived Canaries</td><td>-</td><td>-</td></tr>
+  <tr><td>Long-lived Canaries</td><td>-</td><td>Replication Canary</td></tr>
 </table>
 </center>
 
+(\*) vSphere only. AWS coming soon.<br>
 (&#x271D;) Requires IPSEC BOSH plug-in
 
 ## <a id="limitations"></a>Limitations ##
@@ -146,6 +147,25 @@ Two configurations are supported:
 ## <a id="known-issues"></a>Known Issues ##
 
 Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
+
+## <a id="planning"></a>Planning your Deployment ##
+
+### <a id="network-layout"></a>Network Layout ##
+
+MySQL for PCF supports deployment to multiple availability zones (AZs) on vSphere only. For other infrastructures, make sure to specify only one AZ.
+
+### <a id="application-service-groups"></a> Application Service Groups
+
+You must create an
+[Application Security Group](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASG) for  MySQL for PCF in order for applications to access to the service. See [Creating Application Security Groups for MySQL](./app-security-groups.html) for instructions.
+
+<p class="note"><strong>Note</strong>: The service will not be usable until an ASG is in place.</p>
+
+### <a id="instance-capacity"></a>Instance Capacity ####
+
+An operator can configure how many database instances can be provisioned (instance capacity) by configuring the amount of persistent disk allocated to the MySQL server nodes. The broker will  provision a requested database if there is sufficient unreserved persistent disk. This can be managed using the Persistent Disk field for the MySQL Server job in the Resource Config setting page in Operations Manager. Not all persistent disk will be available for instance capacity; about 2-3 GB is reserved for service operation.
+
+In determining how much persistent disk to make available for databases, operators should also consider that MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests for all databases.
 
 ## <a id="installation"></a>Installation ##
 
@@ -296,28 +316,12 @@ If v1.5.0 is initially deployed without a load balancer and without proxy IPs co
 - Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
 - Instead of configuring the proxy IPs in Operations manager, use the IPs that were dynamically assigned by looking at the **Status** page. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported; see [Known Issues](#known-issues).
 
-### <a id="application-service-groups"></a> Application Service Groups
-
-You must create appropriate
-[Application Security Groups](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASGs) for the MySQL for PCF in order for applications to have access to the service.
-
-<p class="note"><strong>Note</strong>: Without ASGs, the service will not be usable.</p>
-
-See [Creating Application Security Groups for MySQL](./app-security-groups.html) for instructions.
-
 ### <a id="lifecycle-errands"></a>Lifecycle Errands ###
 
 Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
 
 <p class="note"><strong>Note</strong>: You might also notice a <b>broker-deregistrar</b> errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by Ops Manager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>
 
-### <a id="resource-config"></a>Resource Config ###
-
-#### <a id="instance-capacity"></a>Instance Capacity ####
-
-An operator can configure how many database instances can be provisioned (instance capacity) by configuring the amount of persistent disk allocated to the MySQL server nodes. The broker will  provision a requested database if there is sufficient unreserved persistent disk. This can be managed using the Persistent Disk field for the MySQL Server job in the Resource Config setting page in Operations Manager. Not all persistent disk will be available for instance capacity; about 2-3 GB is reserved for service operation. Adding nodes to the cluster increases durability, not capacity. Multiple backend clusters, to increase capacity or for isolation, are not yet supported.
-
-In determining how much persistent disk to make available for databases, operators should also consider that MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests for all databases.
 
 ## <a id="provision-and-bind"></a>Provisioning and Binding via Cloud Foundry ##
 
