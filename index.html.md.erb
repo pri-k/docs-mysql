@@ -137,6 +137,8 @@ Two configurations are supported:
 
 ## <a id="limitations"></a>Limitations ##
 
+When deployed in HA configuration, MySQL for PCF is deployed using multiple master nodes. In this configuration, there are some changes to be aware of that make accessing the service different than a traditional single MySQL database server.
+
 - Single and three-node clusters are the only supported topologies. Ops Manager will allow the Operator to set the number of instances to other values, only one and three are advised. Please see the [note](cluster-behavior.html#even-number) in the Cluster Behavior document.
 - Although two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](#proxy) section, as well as the entry in [Known Issues](known-issues.html).
 - Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
@@ -153,6 +155,8 @@ Consult the [Known Issues](known-issues.html) topic for information about issues
 ### <a id="network-layout"></a>Network Layout ##
 
 MySQL for PCF supports deployment to multiple availability zones (AZs) on vSphere only. For other infrastructures, make sure to specify only one AZ.
+
+To achieve best uptime, it is best to deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below.
 
 ### <a id="application-service-groups"></a> Application Service Groups
 
