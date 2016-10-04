@@ -22,15 +22,15 @@ Release date: 29 September 2016
   - [USN-3087-2](http://www.ubuntu.com/usn/USN-3087-2/)
   - This also upgrades from the Linux 3.9 kernel to version 4.4.
 
-    Additional information can be found at https://pivotal.io/security.
+    See <a href="https://pivotal.io/security">https://pivotal.io/security</a> for more information.
 
 - MariaDB updated to version 10.1.17 and Galera 25.3.17.
   This is an upgrade to a new minor release from MariaDB 10.0 to 10.1. The upgrade is automatic, and if deployed while in HA configuration will not cause downtime for applications.
 - **Bug fix:** Introduced a fix to the replication canary which reduces the possibility of false positives.
-- **Known Issue:** On Ops Manager 1.6 only, the tile will fail to upgrade from p-mysql 1.8.0-edge.9. This will be fixed in a coming release.
-    The error message will look like: `Product 'MySQL' could not be upgraded from 1.8.0.pre.edge.9.alpha.934.9c05453 to 1.8.0.pre.edge.10. Please contact your Pivotal representative.`
+- **Known Issue:** On Ops Manager 1.6 only, the tile fails to upgrade from p-mysql 1.8.0-edge.9. This will be fixed in a coming release.
+    The error message returned will be similar to the following: `Product 'MySQL' could not be upgraded from 1.8.0.pre.edge.9.alpha.934.9c05453 to 1.8.0.pre.edge.10. Please contact your Pivotal representative.`
 
-<p class='note '><strong>Deprecation Notice:</strong> Future releases of p-mysql 1.8.0 will be restricted to versions of OpsManager 1.7 and greater. If you are using OpsManager 1.6 or earlier, you will need to upgrade OpsManager before upgrading to those versions of Pivotal MySQL.</p>
+<p class='note'><strong>Deprecation Notice:</strong> Future releases of p-mysql 1.8.0 will be restricted to versions of OpsManager 1.7 and greater. If you are using OpsManager 1.6 or earlier, you will need to upgrade OpsManager before upgrading to those versions of Pivotal MySQL.</p>
 
 
 ## <a id="1-8-0-e9"></a>1.8.0-Edge.9
