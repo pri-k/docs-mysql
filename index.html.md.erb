@@ -20,8 +20,8 @@ The following diagram shows the lifecycle of edge releases:
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.8.0 - Edge.10
-- **Release Date**: 2016-09-29
+- **Version**: 1.8.0 - Edge.11
+- **Release Date**: 2016-10-05
 - **Software component versions**: MariaDB 10.1.17, Galera 25.3.**17**
 - **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
 - **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
@@ -74,28 +74,28 @@ For more information, refer to the full [Product Version Matrix](../../compatibi
 
 	<tr>
 		<td>1.5.0</td>
-		<td>1.6.1 - 1.6.16</td>
+		<td>1.6.1 - 1.6.17</td>
 	</tr>
 
 	<tr>
-		<td rowspan=2>1.6.1 - 1.6.16</td>
-		<td>Next 1.6.X release - 1.7.14</td>
+		<td rowspan=2>1.6.1 - 1.6.17</td>
+		<td>Next 1.6.X release - 1.7.15</td>
 	</tr>
 	<tr>
-	  <td>1.8.0-edge.1 - 1.8.0-edge.10</td>
-	</tr>
-
-	<tr>
-		<td rowspan=2>1.7.0 - 1.7.13</td>
-		<td>Next 1.7.X release - 1.7.14</td>
-	</tr>
-	<tr>
-	  <td>1.8.0-edge.1 - 1.8.0-edge.10</td>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.11</td>
 	</tr>
 
 	<tr>
-		<td>1.8.0-e.1 - 1.8.0-e.9</td>
-		<td>Next 1.8.X release - 1.8.0-edge.10</td>
+		<td rowspan=2>1.7.0 - 1.7.14</td>
+		<td>Next 1.7.X release - 1.7.15</td>
+	</tr>
+	<tr>
+	  <td>1.8.0-edge.1 - 1.8.0-edge.11</td>
+	</tr>
+
+	<tr>
+		<td>1.8.0-e.1 - 1.8.0-e.10</td>
+		<td>Next 1.8.X release - 1.8.0-edge.11</td>
 	</tr>
 </tr>
 
@@ -158,7 +158,7 @@ MySQL for PCF supports deployment to multiple availability zones (AZs) on vSpher
 
 To achieve best uptime, it is best to deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below.
 
-### <a id="application-service-groups"></a> Application Service Groups
+### <a id="application-service-groups"></a> Application Security Groups
 
 You must create an
 [Application Security Group](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASG) for  MySQL for PCF in order for applications to access to the service. See [Creating Application Security Groups for MySQL](./app-security-groups.html) for instructions.
