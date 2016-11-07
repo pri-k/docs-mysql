@@ -78,3 +78,14 @@ When updating the `max_user_connections` property for an existing plan, the conn
 
 ## <a id="long-sst"></a> Long SST transfers ##
 We provide a `database_startup_timeout` in our manifest which specifies how long to wait for the initial [SST](cluster-behavior.html#state-snapshot-transfer-sst) to complete (default is 150 seconds). If the SST takes longer than this amount of time, the job will report as failing. Versions before `cf-mysql-release v23` have a flaw in our startup script where it does not kill the mysqld process in this case. When monit restarts this process, it sees that mysql is still running and exits without writing a new pidfile. This means the job will continue to report as failing. The only way to fix this is to SSH onto the failing node, kill the mysqld process, and re-run `monit start mariadb_ctrl`.
+
+## <a id="load-balancer-timeout"></a> Long-running queries can be severed by load balancer timeouts ##
+It has been observed that long-running queries can cause MySQL connections to be severed if they exceed the load balancer's idle timeout. A symptom for this issue is the following error:
+
+```
+Lost connection to MySQL server during query
+```
+
+For example, [AWS's Elastic Load Balancer](http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/config-idle-timeout.html) has a default idle timeout of 60 seconds, so if a query takes longer than this duration then the MySQL connection will be severed and an error will be returned.
+
+To prevent these timeouts, increase the idle timeout duration accordingly.
