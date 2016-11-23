@@ -121,6 +121,8 @@ Additional information can be found at https://pivotal.io/security
 
 ## <a id="1-7-11"></a>1.7.11
 
+Release date: 27 July 2016
+
 We've discovered a rare condition where a MySQL cluster experiences a fault in replication that can result in some data loss. When this occurs, previous releases do not log the root cause of the bug. In order to best address this issue, version 1.7.11 contains significant additional telemetry and several defensive features which will account for the failure condition and prevent data loss.
 
 <p class='note'><strong>If any of these protections activate, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the cluster's failure, and advise a suggested resolution. Additionally, contacting Support will provide us with evidence that will enable us to identify and address the root cause in the future.</p>
