@@ -275,7 +275,7 @@ In the `Advanced Options` pane, you can change the configuration of the followin
 
 - Server Activity Logging
 
-    The MySQL service now includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/). You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. Note that, due to the sensitive nature of these logs, they are not transmitted to the syslog server.
+    The MySQL service includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/). You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. When enabled, the file is rotated every 100 megabytes, and 30 of the most recent files are retained. **Note:** Due to the sensitive nature of these logs, they are not transmitted to the syslog server.
 
 ### <a id="proxy"></a>Proxy ###
 
