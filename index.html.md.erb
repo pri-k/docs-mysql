@@ -275,7 +275,9 @@ In the `Advanced Options` pane, you can change the configuration of the followin
 
 - Server Activity Logging
 
-    The MySQL service includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/). You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. The log can be found at, `/var/vcap/store/mysql_audit_logs/mysql_server_audit.log` on each VM. When enabled, the file is rotated every 100 megabytes, and 30 of the most recent files are retained.<br><br>**Note:** Due to the sensitive nature of these logs, they are not transmitted to the syslog server.
+    The MySQL service includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/). You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. The log can be found at `/var/vcap/store/mysql_audit_logs/mysql_server_audit.log` on each VM. When enabled, the file is rotated every 100 megabytes, and 30 of the most recent files are retained.
+
+    <p class="note"><strong>Note</strong>: Due to the sensitive nature of these logs, they are not transmitted to the syslog server.</p>
 
 ### <a id="proxy"></a>Proxy ###
 
