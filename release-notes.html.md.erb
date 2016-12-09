@@ -23,7 +23,7 @@ Release Date: 07 December 2016
 - **AWS Multi-AZ support:** p-mysql 1.8.0 now balances across availability zones if provisioned with a network that has multiple subnets.
 - **Multiple service plans**
 
-      <p class='note'>On upgrade from a version of MySQL for PCF that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking **Apply Changes** when upgrading to MySQL for PCF v1.8.0. See [the documentation](./index.html#service-plan) for more information.</p>
+<p class='note'><strong>Note</strong>: On upgrade from a version of MySQL for PCF that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking **Apply Changes** when upgrading to MySQL for PCF v1.8.0. See [the documentation](./index.html#service-plan) for more information.</p>
 - **New Feature:** `bosh` bootstrap errand
 
 - New `Advanced Options` settings page
@@ -44,7 +44,7 @@ Release Date: 07 December 2016
 
         XA Transactions and table-level locks are not compatible with our HA technology.
 
-        <p class='note'>Deprecation Notice: This release does not remove the privilege to lock tables from existing bindings, so it won't break any applications that are currently deployed. We plan to retroactively remove this permission in version 1.9.0.</p>
+        <p class='note'><strong>Note</strong>: Deprecation Notice: This release does not remove the privilege to lock tables from existing bindings, so it won't break any applications that are currently deployed. We plan to retroactively remove this permission in version 1.9.0.</p>
 - **Backups:**
   - **New feature**: Backing up all nodes
 
@@ -56,7 +56,7 @@ Release Date: 07 December 2016
 
     We've discovered a rare condition where a MySQL cluster experiences a fault in replication that can result in some data loss. When this occurs, previous releases do not log the root cause of the bug. In order to best address this issue, version 1.7.11 contains significant additional telemetry and several defensive features which will account for the failure condition and prevent data loss.
 
-    <p class='note'><strong>If any of these protections activate, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the cluster's failure, and advise a suggested resolution. Additionally, contacting Support will provide us with evidence that will enable us to identify and address the root cause in the future.</p>
+    <p class='note'><strong>Note</strong>: <strong>If any of these protections activate, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the cluster's failure, and advise a suggested resolution. Additionally, contacting Support will provide us with evidence that will enable us to identify and address the root cause in the future.</p>
 
   - **Introducing the Replication Canary**
 
