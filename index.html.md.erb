@@ -5,26 +5,16 @@ owner: MySQL
 
 This is documentation for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF).
 
-## <a id="edge-release"></a>Edge Release ##
-
-Edge releases offer early adopters access to features before a feature is released. Edge releases also enable Pivotal to better follow the Semantic Versioning convention by avoiding introducing features in patch releases.
-
-Edge releases are considered production quality. When a full release is feature complete, it loses the edge moniker and becomes the minor version, such as 1.9.0. Subsequent patch releases, such as 1.9.1, 1.9.2, etc., will contain only security and bug fixes. New features will be released in the next edge release, as 1.10.0-Edge.1.
-
-The following diagram shows the lifecycle of edge releases:
-
-<center><%= image_tag 'Edge-Releases-v2.png' %></center>
-
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
 Current MySQL for Pivotal Cloud Foundry Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.8.0 - Edge.15
-- **Release Date**: 2016-10-26
+- **Version**: 1.8.0
+- **Release Date**: 2016-12-07
 - **Software component versions**: MariaDB 10.1.18, Galera 25.3.17
-- **Compatible Ops Manager Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
-- **Compatible Elastic Runtime Version(s)**: 1.5.x, 1.6.x, 1.7.x, 1.8.x
+- **Compatible Ops Manager Version(s)**: 1.8.x
+- **Compatible Elastic Runtime Version(s)**: 1.8.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** Yes
@@ -48,41 +38,19 @@ For more information, refer to the full [Product Version Matrix](../../compatibi
 	  <tr>
 
 	<tr>
-		<th rowspan="7">1.4.x, 1.5.x<br>1.6.x, 1.7.x</th>
-		<td>1.4.0</td>
-		<td>1.5.0</td></tr>
-
-		<tr>
-			<td>1.5.0</td>
-			<td>1.6.1 - 1.6.19</td>
-		</tr>
-
-		<tr>
-			<td rowspan=2>1.6.1 - 1.6.19</td>
-			<td>Next 1.6.X release - 1.7.18</td>
+	  <th rowspan="6">1.8.X</th>
+		<td rowspan="3">1.6.1 - 1.6.20</td><td>Next 1.6.X release - 1.6.20</td>
 		</tr>
 		<tr>
-		  <td>1.8.0-edge.1 - 1.8.0-edge.14</td>
-		</tr>
-
-		<tr>
-			<td rowspan=2>1.7.0 - 1.7.17</td>
-			<td>Next 1.7.X release - 1.7.18</td>
+		  <td>1.7.0 - 1.7.20</td>
 		</tr>
 		<tr>
-		  <td>1.8.0-edge.1 - 1.8.0-edge.14</td>
+			<td>1.8.0</td>
 		</tr>
-
 		<tr>
-			<td>1.8.0-e.1 - 1.8.0-e.13</td>
-			<td>Next 1.8.X release - 1.8.0-edge.14</td>
-		</tr>
-
-	<tr>
-	  <th rowspan="3">1.8.X</th>
-		<td rowspan=2>1.7.0 - 1.7.17</td><td>Next 1.7.X release - 1.7.18</td>
-	                                   <tr><td>1.8.0-edge.1 - 1.8.0-edge.15</td></tr>
-    <tr><td>1.8.0-e.1 - 1.8.0-e.14</td><td>1.8.0-edge.15</td></tr>
+			<td rowspan=2>1.7.0 - 1.7.19</td><td>Next 1.7.X release - 1.7.20</td>
+	                                   <tr><td>1.8.0</td></tr>
+    <tr><td>1.8.0-e.1 - 1.8.0-e.15</td><td>1.8.0</td></tr>
 	</tr>
 
 </table>
