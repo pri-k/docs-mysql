@@ -23,7 +23,7 @@ Release Date: 07 December 2016
 - **AWS Multi-AZ support:** p-mysql 1.8.0 now balances across availability zones if provisioned with a network that has multiple subnets.
 - **Multiple service plans**
 
-<p class='note'><strong>Note</strong>: On upgrade from a version of MySQL for PCF that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking **Apply Changes** when upgrading to MySQL for PCF v1.8.0. See <a href="./index.html#service-plan">the documentation</a> for more information.</p>
+<p class='note'><strong>Note</strong>: On upgrade from a version of MySQL for PCF that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., <code>100mb-dev</code>), the plan will now be named, <code>pre-existing-plan</code>. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking <strong>Apply Changes</strong> when upgrading to MySQL for PCF v1.8.0. See <a href="./index.html#service-plan">the documentation</a> for more information.</p>
 - **New Feature:** `bosh` bootstrap errand
 
 - New `Advanced Options` settings page
@@ -112,7 +112,7 @@ Additional information can be found at https://pivotal.io/security
 
 ## <a id="1-8-0.Edge.14"></a>1.8.0-Edge.14
 
-Release Date 14 October 2016
+Release Date: 14 October 2016
 
 - Updated stemcell to 3263.7. This is a security upgrade that resolves the following:
   - [USN-3099-2](http://www.ubuntu.com/usn/USN-3099-2/)
@@ -121,14 +121,14 @@ Additional information can be found at https://pivotal.io/security
 
 ## <a id="1-8-0-e13"></a>1.8.0-Edge.13
 
-Release date: 12 October 2016
+Release Date: 12 October 2016
 
 - Includes stability and bug fixes.
 - **Security:** We've made several logging fixes.
 
 ## <a id="1-8-0-e12"></a>1.8.0-Edge.12
 
-Release date: 10 October 2016
+Release Date: 10 October 2016
 
 - **Bug fix:** This release fixes a bug in 1.8.0-edge.11 and 1.8.0-edge.10 where upgrading
  from 1.8.0-edge.9 failed on Ops Manager 1.6 when clicking the "upgrade" button.
@@ -140,13 +140,13 @@ Release date: 10 October 2016
 
 ## <a id="1-8-0-e11"></a>1.8.0-Edge.11
 
-Release date: 05 October 2016
+Release Date: 05 October 2016
 
 - Do not use. Unfortunately, this release did not resolve the known issue mentioned below. Attempting to upgrade from version 1.8.0-edge.9 using Ops Manager 1.6 still results in an error.
 
 ## <a id="1-8-0-e10"></a>1.8.0-Edge.10
 
-Release date: 29 September 2016
+Release Date: 29 September 2016
 
 - Updated stemcell to 3263.3 This is a security upgrade that resolves the following:
   - [USN-3087-2](http://www.ubuntu.com/usn/USN-3087-2/)
@@ -165,7 +165,7 @@ Release date: 29 September 2016
 
 ## <a id="1-8-0-e9"></a>1.8.0-Edge.9
 
-Release date: 29 August 2016
+Release Date: 29 August 2016
 
 - Updated stemcell to 3232.17. This is a security upgrade that resolves the following issues:
   - [USN-3064-1](http://www.ubuntu.com/usn/USN-3064-1/)
@@ -235,7 +235,7 @@ There exists an uncommon situation where a MySQL cluster experiences a fault in 
 
 ## <a id="1-8-0-e7"></a>1.8.0-Edge.7
 
-Release date: 28 June 2016
+Release Date: 28 June 2016
 
 - Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
   - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
@@ -246,14 +246,14 @@ Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-8-0-e6"></a>1.8.0-Edge.6
 
-Release date: 18 May 2016
+Release Date: 18 May 2016
 
 - Updated stemcell to 3232.4. This is a security upgrade that resolves the following:
   - [USN-2977-1](http://www.ubuntu.com/usn/usn-2977-1/)
 
 ## <a id="1-8-0-e5"></a>1.8.0-Edge.5
 
-Release date: 06 May 2016
+Release Date: 06 May 2016
 
 - Updated stemcell to 3232.2. This is a security upgrade that resolves the following:
   - [USN-2959-1](http://www.ubuntu.com/usn/usn-2959-1/)
@@ -263,7 +263,7 @@ Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-8-0-e4"></a>1.8.0-Edge.4
 
-Release date: 8 April 2016
+Release Date: 08 April 2016
 
 - Automated backups can now additionally target a Ceph back-end storage service or direct to another host via SCP.
 - New `Database Configuration` settings page
@@ -276,13 +276,13 @@ Release date: 8 April 2016
 
 ## <a id="1-8-0-e3"></a>1.8.0-Edge.3
 
-Release date: 16 March 2016
+Release Date: 16 March 2016
 
 - See below, same security update as [version 1.6.9](#1-6-9)
 
 ## <a id="1-8-0-e2"></a>1.8.0-Edge.2
 
-Release date: 02 March 2016
+Release Date: 02 March 2016
 
 - MySQL for PCF now skips reverse DNS resolution when accepting connections.
   - This change improves performance, and is only necessary when restricting access by hostname, which is not required in typical MySQL for PCF installations. You can override this value in the "Database Configuration" configuration pane.
@@ -292,7 +292,7 @@ Release date: 02 March 2016
 
 ## <a id="1-8-0-e1"></a>1.8.0-Edge.1
 
-Release date: 20 January 2016
+Release Date: 20 January 2016
 
 - **New Feature:** Multiple service plans
   - **Note:** On upgrade from a version of MySQL for PCF that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking **Apply Changes** when upgrading to MySQL for PCF v1.8.0. See [the documentation](./index.html#service-plan) for more information.
