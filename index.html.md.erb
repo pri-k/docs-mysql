@@ -112,6 +112,12 @@ MySQL for PCF supports deployment to multiple availability zones (AZs) on vSpher
 
 To achieve best uptime, it is best to deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below. When configuring this load balancer, increase the minimum idle timeout if possible, as many load balancers are tuned for short-lived connections unsuitable for long-running database queries. See the [known issue](known-issues.html#load-balancer-timeout) for more details.
 
+| Listening service | TCP Port |
+| ---- | ---- |
+| SQL proxy | 3306 |
+| Proxy healthcheck | 1936 |
+| Service Broker | 8081 |
+
 ### <a id="application-service-groups"></a> Application Security Groups
 
 You must create an
