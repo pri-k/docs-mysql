@@ -3,6 +3,14 @@ title: Known Issues
 owner: MySQL
 ---
 
+## <a id="bad-migrations"></a> Unable to upgrade from previous versions on OpsManager 1.6
+
+MySQL for Pivotal Cloud Foundry versions 1.6.20 through 1.6.21 and 1.7.19 through 1.7.21 are not able to upgrade from previous deployments of MySQL on OpsManager versions 1.6 and earlier. This has been corrected in versions 1.6.22 and 1.7.22.
+
+This is a sample error from Ops Manager when attempting to upgrade to one of the affected versions:
+
+    Product 'MySQL for Pivotal Cloud Foundry' could not be upgraded from '1.7.11' to '1.7.21'. Please contact your Pivotal representative.
+
 ## <a id="s3-std-region"></a> MySQL Backups to AWS S3 limited to Standard region ##
 
 In MySQL for Pivotal Cloud Foundry (PCF) 1.7, backups are only sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, "us-east-1." This limitation has been resolved in 1.8.0-Edge.2 and later.
