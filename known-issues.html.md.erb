@@ -3,9 +3,9 @@ title: Known Issues
 owner: MySQL
 ---
 
-## <a id="bad-migrations"></a> Unable to upgrade from previous versions on OpsManager 1.6
+## <a id="bad-migrations"></a> Unable to upgrade from previous versions on Ops Manager v1.6
 
-MySQL for Pivotal Cloud Foundry versions 1.6.20 through 1.6.21 and 1.7.19 through 1.7.21 are not able to upgrade from previous deployments of MySQL on OpsManager versions 1.6 and earlier. This has been corrected in versions 1.6.22 and 1.7.22.
+MySQL for Pivotal Cloud Foundry (PCF) v1.6.20 through v1.6.21 and v1.7.19 through v1.7.21 are not able to upgrade from previous deployments of MySQL on Ops Manager v1.6 and earlier. This has been corrected in v1.6.22 and v1.7.22.
 
 This is a sample error from Ops Manager when attempting to upgrade to one of the affected versions:
 
@@ -13,25 +13,26 @@ This is a sample error from Ops Manager when attempting to upgrade to one of the
 
 ## <a id="s3-std-region"></a> MySQL Backups to AWS S3 limited to Standard region ##
 
-In MySQL for Pivotal Cloud Foundry (PCF) 1.7, backups are only sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, "us-east-1." This limitation has been resolved in 1.8.0-Edge.2 and later.
+In MySQL for PCF v1.7, backups are only sent to AWS S3 buckets that have been created in the [US Standard](http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) region, "us-east-1." This limitation has been resolved in v1.8.0-Edge.2 and later.
 
 ## <a id="https-only"></a> Elastic Runtime HTTPS-only feature ##
 
-Support for the Experimental HTTPS-only feature is broken in MySQL for PCF versions 1.6.X and earlier. The HTTPS-only feature works as designed in MySQL for PCF 1.7.0 and later.
+Support for the Experimental HTTPS-only feature is broken in MySQL for PCF v1.6.x and earlier. The HTTPS-only feature works as designed in MySQL for PCF v1.7.0 and later.
 
 ## <a id="service-plan-deletion"></a> Accidental deletion of a Service Plan ##
 
 If and only if the Operator does all of these steps in sequence, a plan will become "unrecoverable":
 
-1. Click the trash-can icon in the Service Plan screen
-1. Enter a plan with the exact same name
-1. Click the 'Save' button on the same screen
-1. Return to the Ops Manager top-level, and click 'Apply Changes'
+1. Click the trash-can icon in the Service Plan screen.
+1. Enter a plan with the exact same name.
+1. Click **Save** on the same screen.
+1. Return to the Ops Manager top-level, and click **Apply Changes**.
 
-After clicking 'Apply Changes', the deploy will eventually fail with the error:
-> Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
+After clicking **Apply Changes**, the deploy will eventually fail with the error:
 
-This unfortunate situation is unavoidable; once the Operator has committed via 'Apply Changes', the original plan cannot be recovered. For as long as service instances of that plan exist, you may not enter a new plan of the same name. At this point, the only workaround is to create a new plan with the same specifications, but specify a different name. Existing instances will continue to appear under the old plan name, but new instances will need to be created using the new plan name.
+    Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
+
+This unfortunate situation is unavoidable; after the Operator has committed with **Apply Changes**, the original plan cannot be recovered. For as long as service instances of that plan exist, you may not enter a new plan of the same name. At this point, the only workaround is to create a new plan with the same specifications, but specify a different name. Existing instances will continue to appear under the old plan name, but new instances will need to be created using the new plan name.
 
 If you have committed steps 1 and 2, but not 4, no problem. Do not hit the 'Save' button. Simply return to the Installation Dashboard. Any accidental changes will be discarded.
 
@@ -39,9 +40,9 @@ If you have committed steps 1, 2 and 3, do not click 'Apply Changes.' Instead, r
 
 ## <a id="service-plan-definition"></a> Changing service plan definition ##
 
-In MySQL for PCF versions 1.7.0 and earlier, there is only one service plan. Changing the definition of that plan, the number of megabytes, number of connections, or both, will make it so that any new service instances will have those characteristics.
+In MySQL for PCF v1.7.0 and earlier, there is only one service plan. Changing the definition of that plan, the number of megabytes, number of connections, or both, will make it so that any new service instances will have those characteristics.
 
-There is a bug in MySQL for PCF versions 1.6.3 and earlier. Changing the plan does not change existing service instances. Existing plans will continue to be governed by the plan constraints effective at the time they were created. This is true regardless of whether or not an operator runs `cf update-service`.
+There is a bug in MySQL for PCF v1.6.3 and earlier. Changing the plan does not change existing service instances. Existing plans will continue to be governed by the plan constraints effective at the time they were created. This is true regardless of whether or not an operator runs `cf update-service`.
 
 There is a workaround for this bug, which will be resolved in future releases of MySQL for PCF. In order for the change to be effective for existing plans, you must trigger this by interacting directly with the service broker: `curl -v -k -X PATCH https://BROKER_CREDS_USERNAME:BROKER_CREDS_PASSWORD@p-mysql.SYSTEM.DOMAIN.example.com/v2/service_instances/SERVICE_INSTANCE_ID?plan_id=17d793e6-6da6-4f0e-b58d-364a407166a0`
 
@@ -73,10 +74,10 @@ All proxy instances use the same method to determine cluster health. However, ce
 This could be an issue for tables that receive many concurrent writes. Multiple clients writing to the same table could obtain locks on the same row, resulting in a deadlock. One commit will succeed and all others will fail and must be retried. This can be prevented by configuring your load balancer to route connections to **only one proxy instance at a time**.
 
 ## <a id="proxy-instances"></a> Number of proxy instances cannot be reduced ##
-Once the product is deployed with operator-configured proxy IPs, the number of proxy instances can not be reduced, nor can the configured IPs be removed from the **Proxy IPs** field. If instead the product is initially deployed without proxy IPs, IPs added to the **Proxy IPs** field will only be used when adding additional proxy instances, scaling down is unpredictably permitted, and the first proxy instance can never be assigned an operator-configured IP.
+After the product is deployed with operator-configured proxy IPs, the number of proxy instances can not be reduced, nor can the configured IPs be removed from the **Proxy IPs** field. If instead the product is initially deployed without proxy IPs, IPs added to the **Proxy IPs** field will only be used when adding additional proxy instances, scaling down is unpredictably permitted, and the first proxy instance can never be assigned an operator-configured IP.
 
 ## <a id="backups-medata"></a> Backups Metadata ##
-In MySQL for PCF 1.7.0, both `compressed` and `encrypted` show as `N` in the backup metadata file. This is due to the fact that MySQL for PCF implements compression and encryption outside of the tool used to generate the file. This is a known defect, and will be corrected in future releases.
+In MySQL for PCF v1.7.0, both `compressed` and `encrypted` show as `N` in the backup metadata file. This is due to the fact that MySQL for PCF implements compression and encryption outside of the tool used to generate the file. This is a known defect, and will be corrected in future releases.
 
 ## <a id="myisam"></a> MyISAM tables ##
 The clustering plugin used in this release (Galera) does not support replication of MyISAM Tables. However, the service does not prevent the creation of MyISAM tables. When MyISAM tables are created, the tables will be created on every node (DDL statements are replicated), but data written to a node won't be replicated. If the persistent disk is lost on the node where data is written to (for MyISAM tables only), data will be lost. To change a table from MyISAM to InnoDB, follow this [guide](http://dev.mysql.com/doc/refman/5.5/en/converting-tables-to-innodb.html).
