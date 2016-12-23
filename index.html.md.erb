@@ -281,7 +281,7 @@ In order to configure a load balancer with the IPs of the proxy tier before v1.5
 
 - In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service. This hostname or IP address should resolve to your load balancer and be considered long-lived. When this field is modified, applications must be rebound to receive updated credentials.
 
-Configure your load balancer to route connections for a hostname or IP to the proxy IPs. As proxy instances are not synchronized, we recommend configuring your load balancer to send all traffic to one proxy instance at a time until it fails, then failover to another proxy instance. For details, see the known issue on [proxy behavior](known-issues.html#proxy-sync). Additionally, increase the idle timeout of your load balancer to accomodate long running query times. See the known issue on [load balancer timeouts](known-issues.html#load-balancer-timeout) for more information.
+Configure your load balancer to route connections for a hostname or IP to the proxy IPs. As proxy instances are not synchronized, we recommend configuring your load balancer to send all traffic to one proxy instance at a time until it fails, then failover to another proxy instance. For details, see the known issue on [proxy behavior](known-issues.html#proxy-sync). Additionally, increase the idle timeout of your load balancer to accomodate long running query times. For more information, see the known issue on [load balancer timeouts](known-issues.html#load-balancer-timeout).
 
 **Important**: To configure your load balancer with a healthcheck or monitor, use TCP against port **1936**. Unauthenticated healthchecks against port 3306 will cause the service to become unavailable, and will require manual intervention to fix.
 
@@ -289,7 +289,7 @@ Configure your load balancer to route connections for a hostname or IP to the pr
 
 If v1.5.0 is initially deployed without a load balancer and without proxy IPs configured, a load balancer can be setup later to remove the proxy as a single point of failure. However, there are several implications to consider:
 
-- Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
+- Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information, see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
 - Instead of configuring the proxy IPs in Operations manager, use the IPs that were dynamically assigned by looking at the **Status** page. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported; see [Known Issues](#known-issues).
 
 ### <a id="lifecycle-errands"></a>Lifecycle Errands ###
@@ -346,7 +346,7 @@ The job index starts at 0 so if you have two proxy instances deployed and your s
 
 Basic auth credentials are required to access the dashboard. These can be found in the **Credentials** tab of the MySQL product in Ops Manager.
 
-For more information about SwitchBoard, read the [proxy documentation](proxy.html)
+For more information about SwitchBoard, see the [proxy documentation](proxy.html).
 
 ## <a id="SeeAlso"></a>See Also##
 
