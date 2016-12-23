@@ -7,14 +7,14 @@ This is documentation for MySQL for [Pivotal Cloud Foundry](https://network.pivo
 
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
-Current MySQL for Pivotal Cloud Foundry Details
+Current MySQL for PCF Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: 1.8.1
+- **Version**: v1.8.1
 - **Release Date**: 2016-12-15
-- **Software component versions**: MariaDB 10.1.18, Galera 25.3.17
-- **Compatible Ops Manager Version(s)**: 1.8.x
-- **Compatible Elastic Runtime Version(s)**: 1.8.x
+- **Software component versions**: MariaDB v10.1.18, Galera v25.3.17
+- **Compatible Ops Manager Version(s)**: v1.8.x
+- **Compatible Elastic Runtime Version(s)**: v1.8.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** Yes
@@ -38,19 +38,19 @@ For more information, refer to the full [Product Version Matrix](../../compatibi
 	  <tr>
 
 	<tr>
-	  <th rowspan="6">1.8.X</th>
-		<td rowspan="3">1.6.1 - 1.6.20</td><td>Next 1.6.X release - 1.6.21</td>
+	  <th rowspan="6">v1.8.x</th>
+		<td rowspan="3">v1.6.1 – v1.6.20</td><td>Next v1.6.x release – v1.6.21</td>
 		</tr>
 		<tr>
-		  <td>1.7.0 - 1.7.21</td>
+		  <td>v1.7.0 – v1.7.21</td>
 		</tr>
 		<tr>
-			<td>1.8.1</td>
+			<td>v1.8.1</td>
 		</tr>
 		<tr>
-			<td rowspan=2>1.7.0 - 1.7.20</td><td>Next 1.7.X release - 1.7.21</td>
-	                                   <tr><td>1.8.1</td></tr>
-    <tr><td>1.8.0-e.1 - 1.8.0-e.15</td><td>1.8.1</td></tr>
+			<td rowspan=2>v1.7.0 – v1.7.20</td><td>Next v1.7.x release – v1.7.21</td>
+	                                   <tr><td>v1.8.1</td></tr>
+    <tr><td>v1.8.0-e.1 – v1.8.0-e.15</td><td>v1.8.1</td></tr>
 	</tr>
 
 </table>
@@ -86,7 +86,7 @@ Two configurations are supported:
 </table>
 </center>
 
-(\*) vSphere and AWS (1.8.0-edge.15 and later)<br>
+(\*) vSphere and AWS (v1.8.0-edge.15 and later)<br>
 (&#x271D;) Requires IPSEC BOSH plug-in
 
 ## <a id="limitations"></a>Limitations ##
@@ -165,7 +165,7 @@ In determining how much persistent disk to make available for databases, operato
 
 ### <a id="service-plan"></a>Service Plans ###
 
-Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple service plans. To add or delete plans, follow the instructions below.
+Starting with v1.8.0 of MySQL for PCF, operators can configure multiple service plans. To add or delete plans, follow the instructions below.
 
 <p class="note"><strong>Note</strong>: If you are upgrading from an earlier version of MySQL for PCF, the upgrade process is not able to continue using the original name of the plan. Upgrading from a version of MySQL for PCF that offered only a single plan causes the plan to be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named <code>pre-existing-plan</code>. To retain the same plan name, edit the name before clicking <strong>Apply Changes</strong> to upgrade to MySQL for PCF v1.8.0.</p>
 
@@ -221,7 +221,7 @@ If service instances of the deleted plan exist, they will continue to be maintai
 
 #### Service Plans before MySQL for PCF v1.8.0
 
-In versions 1.7 and earlier, the product is only capable of offering one service plan at a time.
+In v1.7 and earlier, the product is only capable of offering one service plan at a time.
 
 A single service plan enforces quotas of 100 megabytes of storage per database and 40 concurrent connections per user by default. Users of Ops Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
 
@@ -231,7 +231,7 @@ Provisioning a service instance from this plan creates a MySQL database on a mul
 
 <p class="note"><strong>Note</strong>: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run <code>cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME</code> on the command line.</p>
 
-<p class="note"><strong>Note</strong>: Changing a plan's definition does not work properly in versions of MySQL for PCF 1.6.3 and earlier. See the entry in <a href="known-issues.html">Known Issues</a> for the recommended workaround.</p>
+<p class="note"><strong>Note</strong>: Changing a plan's definition does not work properly in versions of MySQL for PCF v1.6.3 and earlier. See the entry in <a href="known-issues.html">Known Issues</a> for the recommended workaround.</p>
 
 ### <a id="options_and_features"></a>Options and Features ###
 
