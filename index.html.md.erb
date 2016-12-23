@@ -114,9 +114,15 @@ To achieve best uptime, it is best to deploy a load balancer in front of the SQL
 
 | Listening service | TCP Port |
 | ---- | ---- |
-| SQL proxy | 3306 |
-| Proxy healthcheck | 1936 |
 | Service Broker | 8081 |
+| SQL proxy | 3306 |
+| Proxy health check | 1936 |
+| Proxy API | 8080 |
+| Proxy health check | 1936 |
+| NATS (outbound) | 4222 |
+| MySQL (internal) | 3306 |
+| Galera (internal) | 4567 |
+| Galera health check (internal) | 9200 |
 
 ### <a id="application-service-groups"></a> Application Security Groups
 
