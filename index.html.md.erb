@@ -112,17 +112,19 @@ MySQL for PCF supports deployment to multiple availability zones (AZs) on vSpher
 
 To achieve best uptime, it is best to deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below. When configuring this load balancer, increase the minimum idle timeout if possible, as many load balancers are tuned for short-lived connections unsuitable for long-running database queries. See the [known issue](known-issues.html#load-balancer-timeout) for more details.
 
-| Listening service | TCP Port |
-| ---- | ---- |
-| Service Broker | 8081 |
-| SQL proxy | 3306 |
-| Proxy health check | 1936 |
-| Proxy API | 8080 |
-| Proxy health check | 1936 |
-| NATS (outbound) | 4222 |
-| MySQL (internal) | 3306 |
-| Galera (internal) | 4567 |
-| Galera health check (internal) | 9200 |
+Provided below is a table for those that deploy the MySQL service on a different network than Elastic Runtime. Refer to this table to configure any firewall rules to allow inbound and outbound traffic required by the MySQL service.
+
+| Type | Listening service | TCP Port |
+| ---- | ---- | ---- |
+| Inbound | Service broker | 8081 |
+| Inbound | SQL proxy | 3306 |
+| Inbound | Proxy health check | 1936 |
+| Inbound | Proxy API | 8080 |
+| Inbound | Proxy health check | 1936 |
+| Outbound | NATS | 4222 |
+| Internal | MySQL server | 3306 |
+| Internal | Galera | 4567 |
+| Internal | Galera health check | 9200 |
 
 ### <a id="application-service-groups"></a> Application Security Groups
 
