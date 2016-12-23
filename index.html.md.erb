@@ -116,15 +116,15 @@ Provided below is a table for those that deploy the MySQL service on a different
 
 | Type | Listening service | TCP Port |
 | ---- | ---- | ---- |
-| Inbound | Service broker | 8081 |
-| Inbound | SQL proxy | 3306 |
-| Inbound | Proxy health check | 1936 |
-| Inbound | Proxy API | 8080 |
-| Inbound | Proxy health check | 1936 |
-| Outbound | NATS | 4222 |
-| Internal | MySQL server | 3306 |
-| Internal | Galera | 4567 |
-| Internal | Galera health check | 9200 |
+| Inbound/TCP | Service broker | 8081 |
+| Inbound/TCP | SQL proxy | 3306 |
+| Inbound/TCP | Proxy health check | 1936 |
+| Inbound/TCP | Proxy API | 8080 |
+| Inbound/TCP | Proxy health check | 1936 |
+| Outbound/TCP | NATS | 4222 |
+| Internal/TCP | MySQL server | 3306 |
+| Internal/TCP | Galera | 4567 |
+| Internal/TCP | Galera health check | 9200 |
 
 ### <a id="application-service-groups"></a> Application Security Groups
 
