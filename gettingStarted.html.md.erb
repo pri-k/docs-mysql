@@ -1,0 +1,28 @@
+---
+title: Getting Started with PCF MySQL Galera
+owner: MySQL
+---
+
+Congratulations on choosing Pivotal MySQL with MariaDB and Galera inside. You've just taken the first step to trust your app's data to the most powerful and cloud-native open source database technology available.
+
+It is important to note that Pivotal MySQL different than standard MySQL and has some limitations that you must be aware of.
+
+## <a id="PCF-MySQL-Galera-Limitations"></a>PCF MySQL Galera Limitations ##
+
+- Only InnoDB tables are supported. Writes to other types of tables, such as MyISAM tables will not replicate across the cluster. 
+- Explicit locking is not supported, i.e. `LOCK TABLES`, `FLUSH TABLES tableA WITH READ_LOCK`.
+- Large DDL (ie, schema changes like ALTER TABLE) will lock all schemas, affecting all sessions with the DB. This can be mitigated via a manual step using [Galera’s RSU](https://docs.google.com/a/pivotal.io/document/d/1jOEeZruQfoB8tgwiifvS2YlCv8g8wavGYZvsLWYa8Yg/edit?usp=sharing) feature.
+- Table partitioning may cause the cluster to get into a hung state. This is as a result of the implicit table locks that are used when running table partition commands.
+- p-mysql supports table triggers; however multiple triggers per table are not supported
+- All tables MUST have a primary key; multi-column primary keys are ok. This is because of the the way Galera replicates using row based replication and ensuring unique rows on each instance
+- While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In a MariaDB Galera cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
+- Do not execute a DML statement in parallel with a DDL statement when both statements affect the same tables. Locking is lax in Galera, even in single node mode. Rather than the DDL waiting for the DML to finish, they will both apply immediately to the cluster and may cause [unexpected side effects](https://jira.mariadb.org/browse/MDEV-468). 
+- Do not rely on auto increment values being sequential as Galera guarantees auto-incrementing unique non-conflicting sequences, so each node will have gaps in IDs. Furthermore, Galera sets user’s to READ ONLY in regards to auto increment variables. Without this feature, Galera would require shared locking of the auto increment variables across the cluster, causing it to be slower and less reliable
+- p-mysql does not support MySQL 5.7's JSON
+- Max size of a DDL or DML is [limted to 2GB](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size)
+- Defining whether the node splits large `Load Data` commands into more [maneageable units] (http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-load-data-splitting)
+
+## <a id="Checking-for-Limitations"></a>How to Check Your App for Limitations ##
+
+Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
+
