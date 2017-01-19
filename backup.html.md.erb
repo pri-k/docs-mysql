@@ -22,7 +22,7 @@ In MySQL for Pivotal Cloud Foundry (PCF) version 1.7.0.0 and higher, you can ena
 1. Under **Bucket Path** enter a folder name for storing this cluster's backups. MySQL for PCF will automatically create the folder if it does not already exist.
 <p class="note"><strong>Note</strong>: Do not use this folder for any other cluster's backups.  Saving backup artifacts from different clusters in the same folder can cause loss of backup data.</p>
 1. Provide an **AWS Access Key ID** and **AWS Secret Access Key**. Pivotal recommends that you create an [Identity and Access Management (IAM)](https://aws.amazon.com/iam/) credential that only has access to this bucket.
-1. For **Cron Schedule** specify backup frequency, using [cron parser syntax](http://godoc.org/github.com/robfig/cron). This syntax is similar to traditional `cron`. It also supports expressions like `@every 1d` to back up once per day.
+1. For **Cron Schedule** specify backup frequency, using [cron parser syntax](http://godoc.org/github.com/robfig/cron). This syntax is similar to traditional `cron`. It also supports expressions like `@daily` to back up once per day.
 
 <p class="note"><strong>Note</strong>: For large databases, the default storage under <strong>Backup Prepare Node</strong> may not be sufficient. In order to compress and encrypt backup artifacts, the VM must be configured with twice the amount of ephemeral disk space as the persistent disk space settings of the <strong>MySQL Server</strong> nodes.</p>
 
