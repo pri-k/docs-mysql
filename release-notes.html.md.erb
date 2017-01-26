@@ -14,9 +14,17 @@ owner: MySQL
      }
 </style>
 
+## <a id="1-8-2"></a>1.8.2
+
+Release Date: January 26, 2017
+
+- Updated stemcell to 3263.17, which is a routine patch update to address medium and low security vulnerabilities.
+
+Additional information can be found at https://pivotal.io/security
+
 ## <a id="1-8-1"></a>1.8.1
 
-Release Date: 16 December 2016
+Release Date: December 16, 2016
 
 - Updated stemcell to 3263.14. This is a security upgrade that resolves the following:
   - [USN-3156-1](http://www.ubuntu.com/usn/USN-3156-1/)
@@ -26,7 +34,7 @@ Additional information can be found at https://pivotal.io/security
 
 ## <a id="1-8-0"></a>1.8.0
 
-Release Date: 07 December 2016
+Release Date: December 7, 2016
 
 - **Important Change:** This release requires OpsManager version **1.8** or greater.
 - MariaDB has been updated to version 10.1.18 and Galera to 25.3.18.
@@ -107,7 +115,7 @@ Release Date: 07 December 2016
 
 ## <a id="1-8-0.Edge.15"></a>1.8.0-Edge.15
 
-Release Date: 26 October 2016
+Release Date: October 26, 2016
 
 - **Important Change:** This release requires OpsManager version **1.7** or greater.
   - Per the deprecation notice first published 29 September, future releases of 1.8.0 will not install on OpsManager 1.6 or below.
@@ -122,7 +130,7 @@ Additional information can be found at https://pivotal.io/security
 
 ## <a id="1-8-0.Edge.14"></a>1.8.0-Edge.14
 
-Release Date: 14 October 2016
+Release Date: October 14, 2016
 
 - Updated stemcell to 3263.7. This is a security upgrade that resolves the following:
   - [USN-3099-2](http://www.ubuntu.com/usn/USN-3099-2/)
@@ -131,14 +139,14 @@ Additional information can be found at https://pivotal.io/security
 
 ## <a id="1-8-0-e13"></a>1.8.0-Edge.13
 
-Release Date: 12 October 2016
+Release Date: October 12 2016
 
 - Includes stability and bug fixes.
 - **Security:** We've made several logging fixes.
 
 ## <a id="1-8-0-e12"></a>1.8.0-Edge.12
 
-Release Date: 10 October 2016
+Release Date: October 10, 2016
 
 - **Bug fix:** This release fixes a bug in 1.8.0-edge.11 and 1.8.0-edge.10 where upgrading
  from 1.8.0-edge.9 failed on Ops Manager 1.6 when clicking the "upgrade" button.
@@ -150,13 +158,13 @@ Release Date: 10 October 2016
 
 ## <a id="1-8-0-e11"></a>1.8.0-Edge.11
 
-Release Date: 05 October 2016
+Release Date: October 5, 2016
 
 - Do not use. Unfortunately, this release did not resolve the known issue mentioned below. Attempting to upgrade from version 1.8.0-edge.9 using Ops Manager 1.6 still results in an error.
 
 ## <a id="1-8-0-e10"></a>1.8.0-Edge.10
 
-Release Date: 29 September 2016
+Release Date: September 29, 2016
 
 - Updated stemcell to 3263.3 This is a security upgrade that resolves the following:
   - [USN-3087-2](http://www.ubuntu.com/usn/USN-3087-2/)
@@ -175,7 +183,7 @@ Release Date: 29 September 2016
 
 ## <a id="1-8-0-e9"></a>1.8.0-Edge.9
 
-Release Date: 29 August 2016
+Release Date: August 29, 2016
 
 - Updated stemcell to 3232.17. This is a security upgrade that resolves the following issues:
   - [USN-3064-1](http://www.ubuntu.com/usn/USN-3064-1/)
@@ -245,7 +253,7 @@ There exists an uncommon situation where a MySQL cluster experiences a fault in 
 
 ## <a id="1-8-0-e7"></a>1.8.0-Edge.7
 
-Release Date: 28 June 2016
+Release Date: June 28, 2016
 
 - Updated stemcell to 3232.8. This is a security upgrade that resolves the following:
   - [USN-3001-1](http://www.ubuntu.com/usn/usn-3001-1/)
@@ -256,14 +264,14 @@ Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-8-0-e6"></a>1.8.0-Edge.6
 
-Release Date: 18 May 2016
+Release Date: May 18, 2016
 
 - Updated stemcell to 3232.4. This is a security upgrade that resolves the following:
   - [USN-2977-1](http://www.ubuntu.com/usn/usn-2977-1/)
 
 ## <a id="1-8-0-e5"></a>1.8.0-Edge.5
 
-Release Date: 06 May 2016
+Release Date: May 6, 2016
 
 - Updated stemcell to 3232.2. This is a security upgrade that resolves the following:
   - [USN-2959-1](http://www.ubuntu.com/usn/usn-2959-1/)
@@ -273,7 +281,7 @@ Additional information can be found at https://pivotal.io/security.
 
 ## <a id="1-8-0-e4"></a>1.8.0-Edge.4
 
-Release Date: 08 April 2016
+Release Date: April 8, 2016
 
 - Automated backups can now additionally target a Ceph back-end storage service or direct to another host via SCP.
 - New `Database Configuration` settings page
@@ -286,13 +294,13 @@ Release Date: 08 April 2016
 
 ## <a id="1-8-0-e3"></a>1.8.0-Edge.3
 
-Release Date: 16 March 2016
+Release Date: March 16, 2016
 
 - See below, same security update as [version 1.6.9](#1-6-9)
 
 ## <a id="1-8-0-e2"></a>1.8.0-Edge.2
 
-Release Date: 02 March 2016
+Release Date: March 2, 2016
 
 - MySQL for PCF now skips reverse DNS resolution when accepting connections.
   - This change improves performance, and is only necessary when restricting access by hostname, which is not required in typical MySQL for PCF installations. You can override this value in the "Database Configuration" configuration pane.
@@ -302,7 +310,7 @@ Release Date: 02 March 2016
 
 ## <a id="1-8-0-e1"></a>1.8.0-Edge.1
 
-Release Date: 20 January 2016
+Release Date: January 20, 2016
 
 - **New Feature:** Multiple service plans
   - **Note:** On upgrade from a version of MySQL for PCF that offered only a single plan, the default plan will be renamed. Regardless of the name of the previous plan (e.g., `100mb-dev`), the plan will now be named, `pre-existing-plan`. It's not possible to automatically reset the plan to the former name. If you wish to retain the same plan name, it's fine to edit that plan name before clicking **Apply Changes** when upgrading to MySQL for PCF v1.8.0. See [the documentation](./index.html#service-plan) for more information.
