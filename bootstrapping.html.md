@@ -292,9 +292,6 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
         #### <a id="restart-nodes"></a>Restart the remaining nodes ####
 
     1. After the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
-         - If the Interruptor is enabled, run this command:
-
-                $ touch /var/vcap/sys/run/galera-healthcheck/enable_sst
 
         Start the mariadb process:
 
