@@ -297,6 +297,8 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
             $ monit start mariadb_ctrl
 
+        If the node is prevented from starting by the Interruptor, use the [manual steps](monitoring-mysql.html#manual-rejoin) to force an SST.
+
     1. Verify that the new nodes have successfully joined the cluster. The following command outputs the total number of nodes in the cluster:
 
             mysql> SHOW STATUS LIKE 'wsrep_cluster_size';
