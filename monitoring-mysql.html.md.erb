@@ -7,7 +7,7 @@ This document describes how to use the Replication Canary and Interruptor to mon
 
 ## <a id="repcanary"></a>Replication Canary
 
-MySQL for Pivotal Cloud Foundry (PCF) is a clustered solution that uses replication to  provide benefits such as quick failover and rolling upgrades. This is more complex than a single node system with no replication. MySQL for PCF includes a Replication Canary to help with the increased complexity. The Replication Canary is a long-running monitor that validates that replication is working within the MySQL cluster. 
+MySQL for Pivotal Cloud Foundry (PCF) is a clustered solution that uses replication to  provide benefits such as quick failover and rolling upgrades. This is more complex than a single node system with no replication. MySQL for PCF includes a Replication Canary to help with the increased complexity. The Replication Canary is a long-running monitor that validates that replication is working within the MySQL cluster.
 
 ### <a id="overview-canary"></a>How it Works
 
@@ -120,7 +120,7 @@ WSREP_SST: [ERROR] #############################################################
 
 ### <a id="force-rejoin"></a>Force a Node to Rejoin the Cluster
 
-In general, if the Interruptor has activated but the Replication Canary has not triggered, it is safe for the node to rejoin the cluster.
+In general, if the Interruptor has activated but the Replication Canary has not triggered, it is safe for the node to rejoin the cluster. You can check the health of the remaining nodes in the cluster by following the same [instructions](scaling-down.html#check-health) used before scaling from clustered to single-node mode.
 
 <p class='note'><strong>Note</strong>: This topic requires you to run commands from the <a href="http://docs.pivotal.io/pivotalcf/customizing/index.html">Ops Manager Director</a> using the BOSH CLI. Refer to the <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a> topic for more information.</p>
 
@@ -141,6 +141,15 @@ In general, if the Interruptor has activated but the Replication Canary has not 
 
     Errand `rejoin-unsafe' completed successfully (exit code 0)
     </pre>
+
+#### <a id="manual-rejoin"></a> Manual Rejoin
+
+- If the `rejoin-unsafe` errand is not able to cause a node to join the cluster, follow these steps to bypass the Interruptor manually.
+  1. Log into each node which has tripped the [interruptor](monitoring-mysql.html#interruptor) and become root.
+  1. monit stop mariadb_ctrl
+  1. rm -rf /var/vcap/store/mysql
+  1. /var/vcap/jobs/mysql/bin/pre-start
+  1. monit start mariadb_ctrl
 
 ### Disable the Interruptor
 
