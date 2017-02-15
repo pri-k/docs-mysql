@@ -292,13 +292,12 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
         #### <a id="restart-nodes"></a>Restart the remaining nodes ####
 
     1. After the bootstrapped node is running, start the mariadb process on the remaining nodes via monit.
-         - If the Interruptor is enabled, run this command:
-
-                $ touch /var/vcap/sys/run/galera-healthcheck/enable_sst
 
         Start the mariadb process:
 
             $ monit start mariadb_ctrl
+
+        If the node is prevented from starting by the Interruptor, use the [manual steps](monitoring-mysql.html#manual-rejoin) to force an SST.
 
     1. Verify that the new nodes have successfully joined the cluster. The following command outputs the total number of nodes in the cluster:
 
