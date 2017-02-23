@@ -15,34 +15,7 @@ The MySQL for PCF product delivers a fully managed, "Database as a Service" to C
 
 When installed, developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Connection credentials are automatically provided in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES). Developers can select from a menu of service plans options, which are configured by the platform operator.
 
-## <a id="checklist"></a>Enterprise-Ready Checklist ##
-
-Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
-
-
-You can deploy MySQL for PCF in either single or high-availability cluster configuration:
-
-<center>
-<table>
-  <tr><th></th><th>Single</th><th>Highly Available</th></tr>
-  <tr><td>**MySQL**</td><td>1 node</td><td>3-node cluster</td></tr>
-  <tr><td>**SQL Proxy**</td><td>1 node</td><td>2 nodes</td></tr>
-  <tr><td>**Service Broker**</td><td>1 node</td><td>2 nodes</td></tr>
-  <tr><td>High Availability</td><td>-</td><td>Yes</td></tr>
-  <tr><td>Multi-AZ Support</td><td>-</td><td>Yes \*</td></tr>
-  <tr><td>Rolling Upgrades</td><td>-</td><td>Yes</td></tr>
-  <tr><td>Automated Backups</td><td>Yes</td><td>Yes</td></tr>
-  <tr><td>Customizable Plans</td><td>Yes</td><td>Yes</td></tr>
-  <tr><td>Customizable VM Instances</td><td>Yes</td><td>Yes</td></tr>
-  <tr><td>Plan Migrations</td><td>Yes</td><td>Yes</td></tr>
-  <tr><td>Encrypted Communication</td><td>Yes &#x271D;</td><td>Yes &#x271D;</td></tr>
-  <tr><td>Encrypted Data at-rest</td><td>-</td><td>-</td></tr>
-  <tr><td>Long-lived Canaries</td><td>-</td><td>Replication Canary</td></tr>
-</table>
-</center>
-
-(\*) vSphere and AWS (1.8.0-edge.15 and later)<br>
-(&#x271D;) Requires IPSEC BOSH plug-in
+You can deploy MySQL for PCF in either single node or high-availability (HA) cluster configuration. HA configuration has three MySQL servers, two proxies, two service brokers, and you need to supply a load balancer.
 
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
@@ -62,6 +35,7 @@ Current MySQL for PCF Details
 </div>
 
 ## <a id="upgrading"></a>Upgrading to the Latest Version ##
+
 Consider the following compatibility information before upgrading MySQL.
 
 For more information, refer to the full [Product Compatibility Matrix](../../compatibility-matrix.pdf).
@@ -94,13 +68,36 @@ For more information, refer to the full [Product Compatibility Matrix](../../com
 
 </table>
 
-## <a id="release-notes"></a>Release Notes ##
+## <a id="configurations"></a>Enterprise Readiness by Configuration ##
 
-Consult the [Release Notes](release-notes.html) for information about changes between versions of this product.
+The table below shows the enterprise-readiness of each MySQL for PCF configuration. Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
 
-## <a id="limitations"></a>Limitations ##
 
-When deployed in HA configuration, MySQL for PCF is deployed using multiple master nodes. In this configuration, there are some changes to be aware of that make accessing the service different than a traditional single MySQL database server.
+<center>
+<table>
+  <tr><th></th><th>Single</th><th>Highly Available</th></tr>
+  <tr><td>**MySQL**</td><td>1 node</td><td>3-node cluster</td></tr>
+  <tr><td>**SQL Proxy**</td><td>1 node</td><td>2 nodes</td></tr>
+  <tr><td>**Service Broker**</td><td>1 node</td><td>2 nodes</td></tr>
+  <tr><td>High Availability</td><td>-</td><td>Yes</td></tr>
+  <tr><td>Multi-AZ Support</td><td>-</td><td>Yes \*</td></tr>
+  <tr><td>Rolling Upgrades</td><td>-</td><td>Yes</td></tr>
+  <tr><td>Automated Backups</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Customizable Plans</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Customizable VM Instances</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Plan Migrations</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Encrypted Communication</td><td>Yes &#x271D;</td><td>Yes &#x271D;</td></tr>
+  <tr><td>Encrypted Data at-rest</td><td>-</td><td>-</td></tr>
+  <tr><td>Long-lived Canaries</td><td>-</td><td>Replication Canary</td></tr>
+</table>
+</center>
+
+(\*) vSphere and AWS (1.8.0-edge.15 and later)<br>
+(&#x271D;) Requires IPSEC BOSH plug-in
+
+## <a id="limitations"></a>HA Limitations ##
+
+When deployed in HA configuration, MySQL for PCF is deployed using three master nodes. In this configuration, there are some changes to be aware of that make accessing the service different than a traditional single MySQL database server.
 
 - Single and three-node clusters are the only supported topologies. Ops Manager will allow the Operator to set the number of instances to other values, only one and three are advised. Please see the [note](cluster-behavior.html#even-number) in the Cluster Behavior document.
 - Although two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](#proxy) section, as well as the entry in [Known Issues](known-issues.html).
@@ -108,6 +105,12 @@ When deployed in HA configuration, MySQL for PCF is deployed using multiple mast
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
 - Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this, nodes will become partitioned. If more than half of cluster nodes are partitioned, the cluster will lose quorum and become unusable until manually bootstrapped.
 - See also the list of [Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/) in MariaDB cluster.
+
+
+## <a id="release-notes"></a>Release Notes ##
+
+Consult the [Release Notes](release-notes.html) for information about changes between versions of this product.
+
 
 ## <a id="known-issues"></a>Known Issues ##
 
