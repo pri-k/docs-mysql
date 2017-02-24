@@ -3,69 +3,59 @@ title: Configuring Your Service
 owner: MySQL
 ---
 
-## <a id="planning"></a>Planning your Deployment ##
+## <a id="service-plan"></a>Service Plans ###
 
-### <a id="network-layout"></a>Network Layout ##
+Operators can configure multiple MySQL service plans in the **Service Plans** pane of the Ops Manager MySQL tile. Follow the instructions below to [add](#add-plan), [modify](#modify-plan), or [delete](#delete-plan) service plans.
 
-MySQL for PCF supports deployment to multiple availability zones (AZs) on vSphere only. For other infrastructures, make sure to specify only one AZ.
+<p class="note"><strong>Note</strong>: Prior to v1.8.0, MySQL for PCF supported only one service plan. Upgrading from v1.7.x or earlier renames this plan to  <code>pre-existing-plan</code> by default. To retain the original name of your plan (e.g., "100mb-dev"), edit its <strong>Service Plan name</strong> field in the <strong>Service Plans</strong> pane before clicking <strong>Apply Changes</strong></p>
 
-To achieve best uptime, it is best to deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below. When configuring this load balancer, increase the minimum idle timeout if possible, as many load balancers are tuned for short-lived connections unsuitable for long-running database queries. See the [known issue](known-issues.html#load-balancer-timeout) for more details.
 
-### <a id="application-service-groups"></a> Application Security Groups
+### <a id="add-plan"></a>Add a Plan
 
-You must create an
-[Application Security Group](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASG) for  MySQL for PCF in order for applications to access to the service. See [Creating Application Security Groups for MySQL](./app-security-groups.html) for instructions.
-
-<p class="note"><strong>Note</strong>: The service will not be usable until an ASG is in place.</p>
-
-### <a id="instance-capacity"></a>Instance Capacity ####
-
-An operator can configure how many database instances can be provisioned (instance capacity) by configuring the amount of persistent disk allocated to the MySQL server nodes. The broker will  provision a requested database if there is sufficient unreserved persistent disk. This can be managed using the Persistent Disk field for the MySQL Server job in the Resource Config setting page in Operations Manager. Not all persistent disk will be available for instance capacity; about 2-3 GB is reserved for service operation.
-
-In determining how much persistent disk to make available for databases, operators should also consider that MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests for all databases.
-
-## <a id="settings"></a>Settings ##
-
-### <a id="service-plan"></a>Service Plans ###
-
-Starting with version 1.8.0 of MySQL for PCF, operators can configure multiple service plans. To add or delete plans, follow the instructions below.
-
-<p class="note"><strong>Note</strong>: If you are upgrading from an earlier version of MySQL for PCF, the upgrade process is not able to continue using the original name of the plan. Upgrading from a version of MySQL for PCF that offered only a single plan causes the plan to be renamed. Regardless of the name of the previous plan (e.g., "100mb-dev"), the plan will now be named <code>pre-existing-plan</code>. To retain the same plan name, edit the name before clicking <strong>Apply Changes</strong> to upgrade to MySQL for PCF v1.8.0.</p>
-
-#### <a id="update-a-plan"></a> Update Existing Service Instances
-
-You can update service instances using the cf CLI as follows:
-	<pre class="terminal">cf update-service SERVICE\_INSTANCE -p NEW\_PLAN</pre>
-
-The following rules apply when updating a service instance plan:
-
-* Updating a service instance to a plan with a larger `max_storage_mb` is always supported.
-* Updating a service instance to a plan with a smaller `max_storage_mb` is supported only if the current usage is less than the new value.
-* The update command fails if the current usage is greater than the new value.
-* Updating a service instance does not disrupt running application connections so long as the application uses fewer than the maximum number of connections allowed by the new plan.
-
-#### <a id="adding-a-plan"></a>Add a Plan
-
-1. Navigate to the Ops Manager Installation Dashboard and click **MySQL for Pivotal Cloud Foundry**.
+1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for PCF** tile.
 1. Click **Service Plans**.
 1. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
 	<%= image_tag('service-plan-config.png') %>
 1. Complete the following fields:
-	- **Service Plan name**: Plan names may include only lowercase letters, numbers, hyphens, and underscores. Developers use the name of the service plan to create service instances in Apps Manager and the cf CLI.
-	  <p class="note"><strong>Note</strong>: PCF enforces plan name constraints only at deploy time. The form does not yet allow for real-time validation. If a plan name does not conform to the correct format, the tile fails to deploy after you click <strong>Apply Changes</strong>. The error appears in the <strong>Recent Install Logs</strong> dropdown in the following format:
+	- **Service Plan name**: Developers see this name in the Services Marketplace and use it to to create service instances in Apps Manager and the cf CLI. Plan names may include only lowercase letters, numbers, hyphens, and underscores.
+	  <p class="note"><strong>Note</strong>: Ops Manager does not prevent you from entering invalid names into the <strong>Service Plan name</strong> field. A plan name containing invalid characters prevents the tile from deploying after you click <strong>Apply Changes</strong> and generates an error like this in the installation log:
 	    <code>
 	    Error 100: Error filling in template 'settings.yml.erb' for 'cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
 	    </code>
 	  </p>
-	- **Description**: The descriptive text that accompanies the plan name. Use this to provide context beyond what can be expressed by the plan name. For example, "general use, small footprint."
+	- **Description**: This descriptive text accompanies the plan name to provide context. For example, "general use, small footprint."
 	- **Storage Quota**: The maximum amount, in megabytes, of storage allowed each instance of the Service Plan.
 	- **Concurrent Connections Quota**: The maximum number of simultaneous database connections allowed to each instance of the Service Plan.
-	- **Private**: By default, all plans are published to all organizations. Clicking **Not available by default** requires the operator to [publish plans manually](https://docs.pivotal.io/pivotalcf/services/access-control.html#enable-access) using `cf enable-service-access`.
-	<p class="note"><strong>Note</strong>: If you have previously marked a plan as public, and later decide you would like this plan to be private, you need to run <code>cf disable-service-access</code> manually for each of your Organizations.</p>
+	- **Not available by default**: By default, plans are _public_ and publish to all orgs. Selecting this checkbox makes the plan _private_, which means the operator must publish the plan manually before developers can use it.
+	See [Access Control](../pivotalcf/services/access-control.html) for how to to change the scope of publication for service plans already deployed.</p>
 
-<p class="note"><strong>Note</strong>: You cannot deploy MySQL for PCF with zero service plans. One plan, at the minimum, is required. If you want to deploy MySQL for PCF without offering any plans, mark the plan as private and do not enable access to any organizations.</p>
+<p class="note"><strong>Note</strong>: You cannot deploy MySQL for PCF without at least one plan defined. If you want to deploy the MySQL tile with no plans configured in the <strong>Service Plans</strong> pane, select <strong>Not available by default</strong> to make the plan private, and do not enable access to any orgs.</p>
 
-#### <a id="delete-a-plan"></a>Deleting a Plan
+### <a id="modify-plan"></a> Modify a Plan
+
+To modify an existing service plan, change its configuration values in the Ops Manager **MySQL** tile **Service Plans** pane, click **Save** and then click **Apply Changes** in the Installation Dashboard.
+
+Do not decrease the **Storage Quota** value for a plan, and only decrease the **Concurrent Connections Quota** value if you are confident that all apps using the plan use fewer concurrent connections than allowed. Reducing these values could cause app failure when existing service instances update. Instead of decreasing quotas for a plan, create a new plan with lower quotas.
+
+After an operator changes a plan's definition, either the operator or a user must update each plan instance by running <code>cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME</code> on the command line.
+
+Changing a plan's definition does not work properly in versions of MySQL for PCF 1.6.3 and earlier. See the entry in <a href="known-issues.html">Known Issues</a> for the recommended workaround.</p>
+
+#### Update Existing Service Instances
+
+After you change a service plan, all new services will reflect the new settings. To make change apply to existing services, update service instances using the cf CLI as follows:
+
+	<pre class="terminal">cf update-service SERVICE\_INSTANCE -p NEW\_PLAN</pre>
+
+The following rules apply when updating a service instance's plan:
+
+* Updating a service instance to a plan with a larger `max_storage_mb` is always supported.
+* Updating a service instance to a plan with a smaller `max_storage_mb` is supported only if the current usage is less than the new value.
+  * The update command fails if the current usage is greater than the new value.
+
+
+### <a id="delete-plan"></a>Delete a Plan
+
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry**.
 1. Click **Service Plans**.
 	<%= image_tag('delete-plan.png') %>
@@ -82,21 +72,8 @@ If service instances of the deleted plan exist, they will continue to be maintai
 1. Run `bosh deployment P-MYSQL-DEPLOYMENT-NAME`. For example, `bosh deployment p-mysql-180290d67d5441ebf3c5`.
 1. Run `bosh run errand broker-registrar`.
 
-#### Service Plans before MySQL for PCF v1.8.0
 
-In versions 1.7 and earlier, the product is only capable of offering one service plan at a time.
-
-A single service plan enforces quotas of 100 megabytes of storage per database and 40 concurrent connections per user by default. Users of Ops Manager can configure these plan quotas. Changes to quotas will apply to all existing database instances as well as new instances. In calculating storage utilization, indexes are included along with raw tabular data.
-
-The name of the plan is **100mb-dev** by default and is automatically updated if the storage quota is modified. Thus, if the storage quota is changed to 1024 megabytes, the new default plan name will be **1024mb-dev**.
-
-Provisioning a service instance from this plan creates a MySQL database on a multi-tenant server, suitable for development workloads. Binding applications to the instance creates unique credentials for each application to access the database.
-
-<p class="note"><strong>Note</strong>: After changing a plan's definition, all instances of the plan must be updated. For each plan, either the operator or the user must run <code>cf update-service SERVICE_INSTANCE -p NEW_PLAN_NAME</code> on the command line.</p>
-
-<p class="note"><strong>Note</strong>: Changing a plan's definition does not work properly in versions of MySQL for PCF 1.6.3 and earlier. See the entry in <a href="known-issues.html">Known Issues</a> for the recommended workaround.</p>
-
-### <a id="options_and_features"></a>Options and Features ###
+## <a id="options_and_features"></a>Options and Features ###
 
 In the `Advanced Options` pane, you can change the configuration of the following features:
 
@@ -126,7 +103,7 @@ In the `Advanced Options` pane, you can change the configuration of the followin
 
     <p class="note"><strong>Note</strong>: Due to the sensitive nature of these logs, they are not transmitted to the syslog server.</p>
 
-### <a id="proxy"></a>Proxy ###
+## <a id="proxy"></a>Proxy ###
 
 The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
 
@@ -134,7 +111,7 @@ Applications are provided with a hostname or IP address to reach a database mana
 
 <p class="note"><strong>Note</strong> In order to eliminate the first proxy instance as a single point of failure, operators must configure a load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer.</p>
 
-#### Configuring a Load Balancer
+### Configuring a Load Balancer
 
 In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function, but, to take advantage of high availability features, they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
 
@@ -160,63 +137,3 @@ If v1.5.0 is initially deployed without a load balancer and without proxy IPs co
 Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
 
 <p class="note"><strong>Note</strong>: You might also notice a <b>broker-deregistrar</b> errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by Ops Manager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>
-
-
-## <a id="provision-and-bind"></a>Provisioning and Binding via Cloud Foundry ##
-
-As part of installation the product is automatically registered with [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) Elastic Runtime (see [Lifecycle Errands](#lifecycle-errands)). On successful installation, the MySQL service is available to application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. Developers can then provision instances of the service and bind them to their applications:
-
-<pre class="terminal">
-$ cf create-service p-mysql 100mb-dev mydb
-$ cf bind-service myapp mydb
-$ cf restart myapp
-</pre>
-
-For more information about the use of services, see the [Services Overview](http://docs.pivotal.io/pivotalcf/devguide/services/).
-
-## <a id="example-app"></a>Example Application ##
-
-To help application developers get started with MySQL for PCF, we have provided an example application, which can be [downloaded here][example-app]. Instructions can be found in the included README.
-
-[example-app]:mysql-example-app.tgz
-
-## <a id="dashboard"></a>Service Instance Dashboard ##
-
-Cloud Foundry users can access a dashboard for each MySQL service instances via SSO from Apps Manager. The dashboard displays current storage utilization of the database and the plan quota for storage. On the Space page in Apps Manager, users with the Space Developer role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
-
-Additionally, the dashboard URL can be discovered via the CLI, using `cf service [instance name]`. For example:
-
-<pre class="terminal">
-$ cf service acceptDB
-
-Service instance: acceptDB
-Service: p-mysql
-Plan: 100mb-dev
-Description: MySQL service for application development and testing
-Documentation url:
-Dashboard: https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
-</pre>
-
-In this example, the URL to the instance dashboard is `https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`
-
-## <a id="proxy-dashboard"></a>Proxy Dashboard ##
-
-The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of client connections routed to each backend database cluster node.
-
-The dashboard for each proxy instance can be found at `http://proxy-<job index>-p-mysql.<system-domain>`.
-
-The job index starts at 0 so if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at `http://proxy-0-p-mysql.example.com` and `http://proxy-1-p-mysql.example.com`.
-
-Basic auth credentials are required to access the dashboard. These can be found in the **Credentials** tab of the MySQL product in Ops Manager.
-
-For more information about SwitchBoard, read the [proxy documentation](proxy.html)
-
-## <a id="SeeAlso"></a>See Also##
-
-  * [Cluster Configuration](cluster-config.html)
-  * [Backing Up MySQL](backup.html)<br>
-    **Note**: For information about backing up your PCF installation, refer to [Backing Up and Restoring Pivotal Cloud Foundry](http://docs.pivotal.io/pivotalcf/customizing/backup-restore/index.html).
-  * [Determining Cluster State](cluster-state.html)
-  * [Cluster Scaling, Node Failure, and Quorum](cluster-behavior.html)
-  * [Bootstrapping a Cluster](bootstrapping.html)
-  * [Scaling Down MySQL](scaling-down.html)

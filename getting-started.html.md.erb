@@ -26,3 +26,40 @@ It is important to note that Pivotal MySQL different than standard MySQL and has
 
 Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
 
+## <a id="provision-and-bind"></a>Provisioning and Binding via Cloud Foundry ##
+
+As part of installation the product is automatically registered with [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) Elastic Runtime (see [Lifecycle Errands](#lifecycle-errands)). On successful installation, the MySQL service is available to application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. Developers can then provision instances of the service and bind them to their applications:
+
+<pre class="terminal">
+$ cf create-service p-mysql 100mb-dev mydb
+$ cf bind-service myapp mydb
+$ cf restart myapp
+</pre>
+
+For more information about the use of services, see the [Services Overview](http://docs.pivotal.io/pivotalcf/devguide/services/).
+
+## <a id="example-app"></a>Example Application ##
+
+To help application developers get started with MySQL for PCF, we have provided an example application, which can be [downloaded here][example-app]. Instructions can be found in the included README.
+
+[example-app]:mysql-example-app.tgz
+
+## <a id="dashboard"></a>Service Instance Dashboard ##
+
+Cloud Foundry users can access a dashboard for each MySQL service instances via SSO from Apps Manager. The dashboard displays current storage utilization of the database and the plan quota for storage. On the Space page in Apps Manager, users with the Space Developer role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
+
+Additionally, the dashboard URL can be discovered via the CLI, using `cf service [instance name]`. For example:
+
+<pre class="terminal">
+$ cf service acceptDB
+
+Service instance: acceptDB
+Service: p-mysql
+Plan: 100mb-dev
+Description: MySQL service for application development and testing
+Documentation url:
+Dashboard: https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
+</pre>
+
+In this example, the URL to the instance dashboard is `https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`
+
