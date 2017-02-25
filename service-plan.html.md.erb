@@ -9,13 +9,12 @@ Operators can configure multiple MySQL service plans in the **Service Plans** pa
 
 <p class="note"><strong>Note</strong>: Prior to v1.8.0, MySQL for PCF supported only one service plan. Upgrading from v1.7.x or earlier renames this plan to  <code>pre-existing-plan</code> by default. To retain the original name of your plan (e.g., "100mb-dev"), edit its <strong>Service Plan name</strong> field in the <strong>Service Plans</strong> pane before clicking <strong>Apply Changes</strong></p>
 
-
 ### <a id="add-plan"></a>Add a Plan
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for PCF** tile.
 1. Click **Service Plans**.
 1. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
-	<%= image_tag('service-plan-config.png') %>
+	<%= image_tag('config-service-plans.png') %>
 1. Complete the following fields:
 	- **Service Plan name**: Developers see this name in the Services Marketplace and use it to to create service instances in Apps Manager and the cf CLI. Plan names may include only lowercase letters, numbers, hyphens, and underscores.
 	  <p class="note"><strong>Note</strong>: Ops Manager does not prevent you from entering invalid names into the <strong>Service Plan name</strong> field. A plan name containing invalid characters prevents the tile from deploying after you click <strong>Apply Changes</strong> and generates an error like this in the installation log:
@@ -53,7 +52,6 @@ The following rules apply when updating a service instance's plan:
 * Updating a service instance to a plan with a smaller `max_storage_mb` is supported only if the current usage is less than the new value.
   * The update command fails if the current usage is greater than the new value.
 
-
 ### <a id="delete-plan"></a>Delete a Plan
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry**.
@@ -71,69 +69,3 @@ If service instances of the deleted plan exist, they will continue to be maintai
 1. Run `bosh deployments` to find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
 1. Run `bosh deployment P-MYSQL-DEPLOYMENT-NAME`. For example, `bosh deployment p-mysql-180290d67d5441ebf3c5`.
 1. Run `bosh run errand broker-registrar`.
-
-
-## <a id="options_and_features"></a>Options and Features ###
-
-In the `Advanced Options` pane, you can change the configuration of the following features:
-
-- Disable Reverse DNS lookups
-
-    This feature is enabled by default, and improves performance. Un-checking this option causes the MySQL servers to perform a reverse DNS lookup on each new connection. It is only necessary when restricting access by hostname, which is not required in typical MySQL for PCF installations.
-
-- Read-Only User Password
-
-    Activates a special user, `roadmin`, a read-only administrator. Supply a special password, to be used only by administrators who require the ability to view all of the data maintained by the MySQL for PCF installation. Leaving the field blank de-activates the read-only user.
-
-- The Replication Canary, see the [monitoring documentation](monitoring-mysql.html#repcanary).
-- The Interruptor, see the [monitoring documentation](monitoring-mysql.html#interruptor).
-- Quota Enforcer Frequency
-
-    By default, the Quota Enforcer polls for violators and reformers every 30 seconds. This setting, in seconds, changes how long the quota enforcer pauses between checks. If you wish to reduce the small amount of load caused by the Quota Enforcer's polling, you may increase this time period. Be aware, however, that increasing the duration may make it possible for applications to write more data than their pre-determined limit allows.
-- MySQL Start Timeout
-
-    The minimum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process has failed to start properly, and will appear as failing in OpsManager and BOSH output. Depending on the data stored by the database, and the time represented in logs, it may be necessary to increase this beyond the default of 60 seconds.
-- Replication Debug logging
-
-    By default, the MySQL service will log events related to replication errors. Only turn off this option if error logging is causing undue strain on your logging systems.
-
-- Server Activity Logging
-
-    The MySQL service includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/). You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. The log can be found at `/var/vcap/store/mysql_audit_logs/mysql_server_audit.log` on each VM. When enabled, the file is rotated every 100 megabytes, and 30 of the most recent files are retained.
-
-    <p class="note"><strong>Note</strong>: Due to the sensitive nature of these logs, they are not transmitted to the syslog server.</p>
-
-## <a id="proxy"></a>Proxy ###
-
-The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
-
-Applications are provided with a hostname or IP address to reach a database managed by the service. For more information, see [Application Binding](http://docs.pivotal.io/pivotalcf/devguide/services/index.html#application-binding). By default, the MySQL service will provide bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections will not be routed through them. This means the first proxy instance is a single point of failure.
-
-<p class="note"><strong>Note</strong> In order to eliminate the first proxy instance as a single point of failure, operators must configure a load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer.</p>
-
-### Configuring a Load Balancer
-
-In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function, but, to take advantage of high availability features, they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
-
-In order to configure a load balancer with the IPs of the proxy tier before v1.5.0 is deployed and prevent applications from obtaining the IP of the first proxy instance, the product enables an operator to configure the IPs that will be assigned to proxy instances. The following instructions applies to the **Proxy** settings page for the MySQL product in Operation Manager.
-
-- In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances. These IP addresses must be in the CIDR range configured in the Director tile and not be currently allocated to another VM. Look at the **Status** pages of other tiles to see what IP addresses are in use.
-
-- In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service. This hostname or IP address should resolve to your load balancer and be considered long-lived. When this field is modified, applications must be rebound to receive updated credentials.
-
-Configure your load balancer to route connections for a hostname or IP to the proxy IPs. As proxy instances are not synchronized, we recommend configuring your load balancer to send all traffic to one proxy instance at a time until it fails, then failover to another proxy instance. For details, see the known issue on [proxy behavior](known-issues.html#proxy-sync). Additionally, increase the idle timeout of your load balancer to accomodate long running query times. See the known issue on [load balancer timeouts](known-issues.html#load-balancer-timeout) for more information.
-
-**Important**: To configure your load balancer with a healthcheck or monitor, use TCP against port **1936**. Unauthenticated healthchecks against port 3306 will cause the service to become unavailable, and will require manual intervention to fix.
-
-#### Adding a Load Balancer after an Initial Deploy
-
-If v1.5.0 is initially deployed without a load balancer and without proxy IPs configured, a load balancer can be setup later to remove the proxy as a single point of failure. However, there are several implications to consider:
-
-- Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
-- Instead of configuring the proxy IPs in Operations manager, use the IPs that were dynamically assigned by looking at the **Status** page. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported; see [Known Issues](#known-issues).
-
-### <a id="lifecycle-errands"></a>Lifecycle Errands ###
-
-Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
-
-<p class="note"><strong>Note</strong>: You might also notice a <b>broker-deregistrar</b> errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by Ops Manager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>

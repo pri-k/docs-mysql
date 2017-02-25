@@ -1,9 +1,32 @@
 ---
-title: Cluster Configuration
+title: Architecture
 owner: MySQL
 ---
 
-This page documents the various configuration decisions that have been made in relation to MariaDB and Galera in cf-mysql-release.
+This topic describes the high-level component architecture of the MySQL for PCF service, in both its single-node and HA configurations. It also describes the defaults and other design decisions applied the service's [MariaDB](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) servers and the [Galera Cluster](http://galeracluster.com) that manages them.
+
+## <a id="healthy"></a> Healthy Cluster
+
+Galera documentation refers to nodes in a healthy cluster as being part of a [primary component](http://galeracluster.com/documentation-webpages/glossary.html#term-primary-component). These nodes will respond normally to all queries, reads, writes, and database modifications.
+
+If an individual node is unable to connect to the rest of the cluster (ex: network partition) it becomes non-primary (stops accepting writes and database modifications). In this case, the rest of the cluster should continue to function normally. A non-primary node may eventually regain connectivity and rejoin the primary component.
+
+If more than half of the nodes in a cluster are no longer able to connect to each other, all of the remaining nodes lose quorum and become non-primary. In this case, the cluster must be manually restarted, as documented in the [bootstrapping docs](bootstrapping.html).
+
+## <a id="quorum"></a> Quorum ##
+
+  - In order for the cluster to continue accepting requests, a quorum must be reached by peer-to-peer communication. More than half of the nodes must be responsive to each other to maintain a quorum.
+  - If more than half of the nodes are unresponsive for a period of time the nodes will stop responding to queries, the cluster will fail, and bootstrapping will be required to re-enable functionality.
+
+![Quorum](slide9.png)
+
+### <a id="even-number"></a> Avoid an even number of nodes ###
+  - It is generally recommended to avoid an even number of nodes. This is because a partition could cause the entire cluster to lose quorum, as neither remaining component has more than half of the total nodes.
+  - A 2 node cluster cannot tolerate the failure of single node failure as this would cause loss of quorum. As such, the minimum number of nodes required to tolerate single node failure is 3.
+
+## <a id="defaults"></a> Defaults 
+
+This section describes the defaults that the MySQL for PCF tile applies to its Galera and MariaDB components.
 
 ### SST method
 
