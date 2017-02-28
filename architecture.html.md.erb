@@ -3,22 +3,44 @@ title: Architecture
 owner: MySQL
 ---
 
-This topic describes the high-level component architecture of the MySQL for PCF service, in both its single-node and HA configurations. It also describes the defaults and other design decisions applied the service's [MariaDB](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) servers and the [Galera Cluster](http://galeracluster.com) that manages them.
+This topic describes the high-level component architecture of the MySQL for PCF service, in both its single-node and HA configurations. It also describes the defaults and other design decisions applied to the service's [MariaDB](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) servers and the [Galera Cluster](http://galeracluster.com) that manages them.
 
-## <a id="healthy"></a> Healthy Cluster
+## <a id="topology"></a> HA Topology ##
 
-Galera documentation refers to nodes in a healthy cluster as being part of a [primary component](http://galeracluster.com/documentation-webpages/glossary.html#term-primary-component). These nodes will respond normally to all queries, reads, writes, and database modifications.
+In HA configuration, the MySQL for PCF service uses the following:
 
-If an individual node is unable to connect to the rest of the cluster (ex: network partition) it becomes non-primary (stops accepting writes and database modifications). In this case, the rest of the cluster should continue to function normally. A non-primary node may eventually regain connectivity and rejoin the primary component.
+* Three MySQL servers running MariaDB as the MySQL engine and Galera to keep them in sync
 
-If more than half of the nodes in a cluster are no longer able to connect to each other, all of the remaining nodes lose quorum and become non-primary. In this case, the cluster must be manually restarted, as documented in the [bootstrapping docs](bootstrapping.html).
+* Two proxies that direct queries to a single backend, and provide superfast failover in the event of a backend server failure
+
+* A customer-provided load balancer that directs traffic to one of the proxies, or to the other proxy in the event of proxy failure
+
+* Two service brokers that create and bind service instances with failover in the event of a service broker failure
+
+If you use multiple availability zones, the MySQL installer spreads MySQL and Proxy components across zones to make the service durable in the event of a zone failure.
+
+![Quorum](topology.png)
+
+## <a id="how-it-works"></a> How It Works
+
+Normally, MySQL for PCF only sends queries to one of the three MySQL servers at a time, the _current master_ node. Galera ensures that the other two servers mirror any changes made on the current master.
+
+Node Failure
+
+Quorum
+
+In a three-node Galera cluster, two nodes define a quorum that automatically maintains availability when any node becomes inaccessible. This can happen when the host fails or in the event of a network partition.
+
+When a single node cannot communicate with the rest of the cluster, it stops accepting traffic. The other two nodes continue to function normally. When the isolated node regains connectivity, it rejoins the cluster.
+
+If two nodes are no longer able to connect to the cluster, quorum is lost and  the cluster is no longer accessible. To bring the cluster back up you must restart it manually, as documented in the [bootstrapping docs](bootstrapping.html).
 
 ## <a id="quorum"></a> Quorum ##
 
+ [primary component](http://galeracluster.com/documentation-webpages/glossary.html#term-primary-component). the all MySQL nodes respond normally to all queries, reads, writes, and database modifications. are part of a .
+
   - In order for the cluster to continue accepting requests, a quorum must be reached by peer-to-peer communication. More than half of the nodes must be responsive to each other to maintain a quorum.
   - If more than half of the nodes are unresponsive for a period of time the nodes will stop responding to queries, the cluster will fail, and bootstrapping will be required to re-enable functionality.
-
-![Quorum](slide9.png)
 
 ### <a id="even-number"></a> Avoid an even number of nodes ###
   - It is generally recommended to avoid an even number of nodes. This is because a partition could cause the entire cluster to lose quorum, as neither remaining component has more than half of the total nodes.

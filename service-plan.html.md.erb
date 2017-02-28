@@ -28,7 +28,7 @@ Operators can configure multiple MySQL service plans in the **Service Plans** pa
 	- **Not available by default**: By default, plans are _public_ and publish to all orgs. Selecting this checkbox makes the plan _private_, which means the operator must publish the plan manually before developers can use it.
 	See [Access Control](../pivotalcf/services/access-control.html) for how to to change the scope of publication for service plans already deployed.</p>
 
-<p class="note"><strong>Note</strong>: You cannot deploy MySQL for PCF without at least one plan defined. If you want to deploy the MySQL tile with no plans configured in the <strong>Service Plans</strong> pane, select <strong>Not available by default</strong> to make the plan private, and do not enable access to any orgs.</p>
+<p class="note"><strong>Note</strong>: You cannot deploy MySQL for PCF without at least one plan defined. If you want to deploy the MySQL tile so that no plans are visible to developers, define one plan, select <strong>Not available by default</strong> to make the plan private, and only enable access to your own org.</p>
 
 ### <a id="modify-plan"></a> Modify a Plan
 
