@@ -3,17 +3,31 @@ title: Installing MySQL for PCF
 owner: MySQL
 ---
 
-This topic explains how to install MySQL for PCF. The installation process includes the following major steps. The sections below describe each step in more detail:
+This topic explains how to install MySQL for PCF.
 
-1. Configure an External [Load Balancer](#load-balancer) (Optional)
+## <a id="plan"></a>Plan your Deployment ##
 
-2. Create an [Application Security Group](#asg)
+### <a id="network-layout"></a>Network Layout ##
 
-3. [Install](#install) the **MySQL for PCF** tile in Ops Manager
+MySQL for PCF supports deployment to multiple availability zones (AZs) on vSphere only. For other infrastructures, make sure to specify only one AZ.
 
-4. [Configure](#configure) the **MySQL for PCF** tile
+To achieve best uptime, it is best to deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below. When configuring this load balancer, increase the minimum idle timeout if possible, as many load balancers are tuned for short-lived connections unsuitable for long-running database queries. See the [known issue](known-issues.html#load-balancer-timeout) for more details.
 
-## <a id="load-balancer"></a> Configure a Load Balancer
+Provided below is a table for those that deploy the MySQL service on a different network than Elastic Runtime. Refer to this table to configure any firewall rules to allow inbound and outbound traffic required by the MySQL service.
+
+| Type | Listening service | TCP Port |
+| ---- | ---- | ---- |
+| Inbound/TCP | Service broker | 8081 |
+| Inbound/TCP | SQL proxy | 3306 |
+| Inbound/TCP | Proxy health check | 1936 |
+| Inbound/TCP | Proxy API | 8080 |
+| Inbound/TCP | Proxy health check | 1936 |
+| Outbound/TCP | NATS | 4222 |
+| Internal/TCP | MySQL server | 3306 |
+| Internal/TCP | Galera | 4567 |
+| Internal/TCP | Galera health check | 9200 |
+
+### <a id="load-balancer"></a> Configure a Load Balancer
 
 In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function, but, to take advantage of high availability features, they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
 
@@ -23,24 +37,36 @@ In order to configure a load balancer with the IPs of the proxy tier before v1.5
 
 - In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service. This hostname or IP address should resolve to your load balancer and be considered long-lived. When this field is modified, applications must be rebound to receive updated credentials.
 
-Configure your load balancer to route connections for a hostname or IP to the proxy IPs. As proxy instances are not synchronized, we recommend configuring your load balancer to send all traffic to one proxy instance at a time until it fails, then failover to another proxy instance. For details, see the known issue on [proxy behavior](known-issues.html#proxy-sync). Additionally, increase the idle timeout of your load balancer to accomodate long running query times. See the known issue on [load balancer timeouts](known-issues.html#load-balancer-timeout) for more information.
+Recommendations for configuring your load balancer:
 
-**Important**: To configure your load balancer with a healthcheck or monitor, use TCP against port **1936**. Unauthenticated healthchecks against port 3306 will cause the service to become unavailable, and will require manual intervention to fix.
+* **Configure your load balancer in failover-only mode.** As proxy instances are not synchronized, we recommend configuring your load balancer to send all traffic to one proxy instance at a time until it fails, then failover to another proxy instance. This is not possible on Amazon ELB.
 
-#### Adding a Load Balancer after an Initial Deploy
+* **Make your idle time out long enough to not interrupt long-running queries.** Long-running queries can be interrupted by load balancer timeout. A connection that is waiting for results will appear to some load balancers as an idle connection. These long-running queries may be interrupted if they exceed the load balancer's idle timeout.  
+For example, [AWS's Elastic Load Balancer](http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/config-idle-timeout.html) has a default idle timeout of 60 seconds, so if a query takes longer than this duration then the MySQL connection will be severed and an error will be returned.
+
+* **To configure your load balancer with a healthcheck or monitor, use TCP against port 1936.**. Unauthenticated healthchecks against port 3306 will cause the service to become unavailable, and will require manual intervention to fix.
+
+#### <a id="proxy-sync"></a> Proxies may write to different MySQL masters
+
+All proxy instances use the same method to determine cluster health. However, certain conditions may cause the proxy instances to route to different nodes, for example after brief cluster node failures.
+
+This could be an issue for tables that receive many concurrent writes. Multiple clients writing to the same table could obtain locks on the same row, resulting in a deadlock. One commit will succeed and all others will fail and must be retried. This can be prevented by configuring your load balancer to route connections to **only one proxy instance at a time**.
+
+
+#### <a id="add-lb"></a> Adding a Load Balancer after an Initial Deploy
 
 If v1.5.0 is initially deployed without a load balancer and without proxy IPs configured, a load balancer can be setup later to remove the proxy as a single point of failure. However, there are several implications to consider:
 
 - Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
 - Instead of configuring the proxy IPs in Operations manager, use the IPs that were dynamically assigned by looking at the **Status** page. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported; see [Known Issues](#known-issues).
 
-## <a id="asg"></a> Create an Application Security Group
+### <a id="asg"></a> Create an Application Security Group
 
 Create an [Application Security Group](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASG) for MySQL for PCF to allow apps to access to the service. See [Creating Application Security Groups for MySQL](./app-security-groups.html) for instructions.
 
 <p class="note"><strong>Note</strong>: The service will not be usable until an ASG is in place.</p>
 
-## <a id="install"></a>Install the PCF for MySQL Tile
+## <a id="install"></a>Install the MySQL for PCF Tile
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/p-mysql).
 
@@ -56,98 +82,8 @@ Create an [Application Security Group](http://docs.pivotal.io/pivotalcf/admingui
 
 	<%= image_tag('config-mysql.png') %>
 
-1. Click the newly added tile to configure the settings for your MySQL for PCF service, including its service plans. See [Configure the PCF for MySQL Tile](#configure) below for instructions.
+1. Click the newly added tile to configure the settings for your MySQL for PCF service, including its service plans. See [Configuring MySQL for PCF](./configuring.html) for instructions.
 
 	<%= image_tag('apply-changes.png') %>
 
 1. Click **Apply Changes** to deploy the service.
-
-## <a id="configure"></a>Configure the PCF for MySQL Tile
-
-To configure your MySQL service, click the **MySQL for PCF** tile in the Ops Manager **Installation Dashboard**, open each pane under the **Settings** tab, and review or change the configurable settings as described in the sections below.
-
-![Configure Settings](config-settings.png)
-
-### <a id="az-network"></a>Assign AZs and Networks
-
-![Configure AZs and Networks](config-az-network.png)
-
-MySQL for PCF supports deployment to multiple availability zones (AZs).
-
-To maximize uptime, deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below. When configuring this load balancer, increase the minimum idle timeout if possible, as many load balancers are tuned for short-lived connections unsuitable for long-running database queries. See the [known issue](./known-issues.html#load-balancer-timeout) for details.
-
-### <a id="plans"></a>Service Plans
-
-![Configure Service Plans](config-service-plans.png)
-
-Service plans offer developers different versions of the MySQL service. An example is tiered service plans with that offer a range of resource limits and pricing. See [Service Plans](./service-plan.html) for how to configure one or more service plans in the **Service Plans** pane.
-
-<p class="note"><strong>Note</strong>: You cannot deploy MySQL for PCF without at least one plan defined.</p>
-
-### <a id="proxy"></a>Proxy
-
-![Configure Proxy](config-proxy.png)
-
-The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
-
-Applications are provided with a hostname or IP address to reach a database managed by the service. For more information, see [Application Binding](http://docs.pivotal.io/pivotalcf/devguide/services/index.html#application-binding). By default, the MySQL service will provide bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections will not be routed through them. This means the first proxy instance is a single point of failure.
-
-<p class="note"><strong>Note</strong> In order to eliminate the first proxy instance as a single point of failure, operators must configure a load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer.</p>
-
-### <a id="server"></a>MySQL Server Configuration
-
-![Configure MySQL Server Configuration](config-servers.png)
-
-### <a id="backups"></a>Backups
-
-![Configure Backups](config-backups.png)
-
-### <a id="advanced"></a>Advanced Options
-
-![Configure Advanced Options](config-advanced.png)
-
-In the **Advanced Options** pane, you can change the configuration of the following features:
-
-- Disable Reverse DNS lookups
-
-    This feature is enabled by default, and improves performance. Un-checking this option causes the MySQL servers to perform a reverse DNS lookup on each new connection. It is only necessary when restricting access by hostname, which is not required in typical MySQL for PCF installations.
-
-- Read-Only User Password
-
-    Activates a special user, `roadmin`, a read-only administrator. Supply a special password, to be used only by administrators who require the ability to view all of the data maintained by the MySQL for PCF installation. Leaving the field blank de-activates the read-only user.
-
-- The Replication Canary, see [Monitoring the MySQL Service](monitoring-mysql.html#repcanary).
-
-- The Interruptor, see [Monitoring the MySQL Service](monitoring-mysql.html#interruptor).
-
-- Quota Enforcer Frequency
-
-    By default, the Quota Enforcer polls for violators and reformers every 30 seconds. This setting, in seconds, changes how long the quota enforcer pauses between checks. If you wish to reduce the small amount of load caused by the Quota Enforcer's polling, you may increase this time period. Be aware, however, that increasing the duration may make it possible for applications to write more data than their pre-determined limit allows.
-- MySQL Start Timeout
-
-    The minimum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process has failed to start properly, and will appear as failing in OpsManager and BOSH output. Depending on the data stored by the database, and the time represented in logs, it may be necessary to increase this beyond the default of 60 seconds.
-- Replication Debug logging
-
-    By default, the MySQL service will log events related to replication errors. Only turn off this option if error logging is causing undue strain on your logging systems.
-
-- Server Activity Logging
-
-    The MySQL service includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/). You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. The log can be found at `/var/vcap/store/mysql_audit_logs/mysql_server_audit.log` on each VM. When enabled, the file is rotated every 100 megabytes, and 30 of the most recent files are retained.
-
-    <p class="note"><strong>Note</strong>: Due to the sensitive nature of these logs, they are not transmitted to the syslog server.</p>
-
-### <a id="errands"></a>Errands
-
-Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
-
-<p class="note"><strong>Note</strong>: You might also notice a <b>broker-deregistrar</b> errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by Ops Manager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>
-
-### <a id="resource-config"></a>Resource Config
-
-![Configure Resources](config-resources.png)
-
-Use this pane to configure how many database instances can be provisioned (instance capacity) by configuring the amount of persistent disk allocated to the MySQL server nodes. The broker will provision a requested database if there is sufficient unreserved persistent disk. Use the Persistent Disk field for the MySQL Server job in the Resource Config setting page in Operations Manager. Not all persistent disk will be available for instance capacity; about 2-3 GB is reserved for service operation.
-
-In determining how much persistent disk to make available for databases, operators should also consider that MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests for all databases.
-
-### <a id="stemcell"></a>Stemcell

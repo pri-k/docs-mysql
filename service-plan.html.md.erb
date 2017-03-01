@@ -1,15 +1,13 @@
 ---
-title: Configuring Your Service
+title: Service Plans
 owner: MySQL
 ---
-
-## <a id="service-plan"></a>Service Plans ###
 
 Operators can configure multiple MySQL service plans in the **Service Plans** pane of the Ops Manager MySQL tile. Follow the instructions below to [add](#add-plan), [modify](#modify-plan), or [delete](#delete-plan) service plans.
 
 <p class="note"><strong>Note</strong>: Prior to v1.8.0, MySQL for PCF supported only one service plan. Upgrading from v1.7.x or earlier renames this plan to  <code>pre-existing-plan</code> by default. To retain the original name of your plan (e.g., "100mb-dev"), edit its <strong>Service Plan name</strong> field in the <strong>Service Plans</strong> pane before clicking <strong>Apply Changes</strong></p>
 
-### <a id="add-plan"></a>Add a Plan
+## <a id="add-plan"></a>Add a Plan
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for PCF** tile.
 1. Click **Service Plans**.
@@ -28,9 +26,11 @@ Operators can configure multiple MySQL service plans in the **Service Plans** pa
 	- **Not available by default**: By default, plans are _public_ and publish to all orgs. Selecting this checkbox makes the plan _private_, which means the operator must publish the plan manually before developers can use it.
 	See [Access Control](../pivotalcf/services/access-control.html) for how to to change the scope of publication for service plans already deployed.</p>
 
+The **Concurrent Connections Quota** field sets the `max_user_connections` property for an existing plan. Changing this value does not affect the connections currently open. For example, if you have decreased from 40 to 20, apps with 40 open connections will keep them open. To force open connections down to the new limit, an operator can restart the proxy job. Otherwise, if any connection above the limit is reset, it won't be able to reconnect, so the number of connections will eventually converge on the new limit.
+
 <p class="note"><strong>Note</strong>: You cannot deploy MySQL for PCF without at least one plan defined. If you want to deploy the MySQL tile so that no plans are visible to developers, define one plan, select <strong>Not available by default</strong> to make the plan private, and only enable access to your own org.</p>
 
-### <a id="modify-plan"></a> Modify a Plan
+## <a id="modify-plan"></a> Modify a Plan
 
 To modify an existing service plan, change its configuration values in the Ops Manager **MySQL** tile **Service Plans** pane, click **Save** and then click **Apply Changes** in the Installation Dashboard.
 
@@ -40,11 +40,12 @@ After an operator changes a plan's definition, either the operator or a user mus
 
 Changing a plan's definition does not work properly in versions of MySQL for PCF 1.6.3 and earlier. See the entry in <a href="known-issues.html">Known Issues</a> for the recommended workaround.</p>
 
-#### Update Existing Service Instances
+### Update Existing Service Instances
 
 After you change a service plan, all new services will reflect the new settings. To make change apply to existing services, update service instances using the cf CLI as follows:
 
-	<pre class="terminal">cf update-service SERVICE\_INSTANCE -p NEW\_PLAN</pre>
+<pre class="terminal">
+cf update-service SERVICE_INSTANCE -p NEW_PLAN</pre>
 
 The following rules apply when updating a service instance's plan:
 
@@ -52,7 +53,7 @@ The following rules apply when updating a service instance's plan:
 * Updating a service instance to a plan with a smaller `max_storage_mb` is supported only if the current usage is less than the new value.
   * The update command fails if the current usage is greater than the new value.
 
-### <a id="delete-plan"></a>Delete a Plan
+## <a id="delete-plan"></a>Delete a Plan
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry**.
 1. Click **Service Plans**.

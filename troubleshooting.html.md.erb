@@ -107,6 +107,25 @@ This is an artifact of an automatic polling-protection [feature](https://mariadb
 
 * Note: This issue has been disabled as of MySQL for PCF v1.8.0-edge.4.
 
+## <a id="service-plan-deletion"></a> Accidental Deletion of a Service Plan ##
+
+If and only if the Operator does all of these steps in sequence, a plan will become "unrecoverable":
+
+1. Click the trash-can icon in the Service Plan screen
+1. Enter a plan with the exact same name
+1. Click the 'Save' button on the same screen
+1. Return to the Ops Manager top-level, and click 'Apply Changes'
+
+After clicking 'Apply Changes', the deploy will eventually fail with the error:
+> Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
+
+This unfortunate situation is unavoidable; once the Operator has committed via 'Apply Changes', the original plan cannot be recovered. For as long as service instances of that plan exist, you may not enter a new plan of the same name. At this point, the only workaround is to create a new plan with the same specifications, but specify a different name. Existing instances will continue to appear under the old plan name, but new instances will need to be created using the new plan name.
+
+If you have committed steps 1 and 2, but not 4, no problem. Do not hit the 'Save' button. Simply return to the Installation Dashboard. Any accidental changes will be discarded.
+
+If you have committed steps 1, 2 and 3, do not click 'Apply Changes.' Instead, return to the Installation Dashboard and click the '**Revert**' button. Any accidental changes will be discarded.
+
+
 ## <a id="unresponsive"></a> Unresponsive node(s) ##
 
   - A node can become unresponsive for a number of reasons:
