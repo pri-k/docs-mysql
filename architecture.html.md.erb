@@ -3,15 +3,15 @@ title: Architecture
 owner: MySQL
 ---
 
-This topic describes the high-level component architecture of the MySQL for PCF service, in both its single-node and HA configurations. It also describes the defaults and other design decisions applied to the service's [MariaDB](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) servers and the [Galera Cluster](http://galeracluster.com) that manages them.
+This topic describes the high-level component architecture of the MySQL for PCF service, in both its single-node and HA configurations. It also describes the defaults and other design decisions applied to the service's MariaDB servers and the Galera Cluster that manages them.
 
 ## <a id="topology"></a> HA Topology ##
 
-In HA configuration, the MySQL for PCF service uses the following:
+In HA topology, the MySQL for PCF service uses the following:
 
-* Three MySQL servers running MariaDB as the MySQL engine and Galera to keep them in sync
+* Three MySQL servers running [MariaDB](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync
 
-* Two proxies that direct queries to a single backend, and provide superfast failover in the event of a backend server failure
+* Two [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) proxies that direct queries to a single backend, and provide superfast failover in the event of a backend server failure
 
 * A customer-provided load balancer that directs traffic to one of the proxies, or to the other proxy in the event of proxy failure
 

@@ -15,7 +15,7 @@ The MySQL for PCF product delivers a fully managed, "Database as a Service" to C
 
 When installed, developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Connection credentials are automatically provided in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES). Developers can select from a menu of service plans options, which are configured by the platform operator.
 
-You can deploy MySQL for PCF in either single node or high-availability (HA) cluster configuration. HA configuration has three MySQL servers, two proxies, two service brokers, and you need to supply a load balancer.
+You can deploy MySQL for PCF in either single node or high-availability (HA) topology. The HA topology has three MySQL servers, two proxies, two service brokers, and you need to supply a load balancer.
 
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
@@ -68,9 +68,9 @@ For more information, refer to the full [Product Compatibility Matrix](../../com
 
 </table>
 
-## <a id="configurations"></a>Enterprise Readiness by Configuration ##
+## <a id="configurations"></a>Enterprise Readiness by Topology ##
 
-The table below shows the enterprise-readiness of each MySQL for PCF configuration. Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
+The table below shows the enterprise-readiness of each MySQL for PCF topology. Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
 
 
 <center>
@@ -97,7 +97,7 @@ The table below shows the enterprise-readiness of each MySQL for PCF configurati
 
 ## <a id="limitations"></a>HA Limitations ##
 
-When deployed in HA configuration, MySQL for PCF is deployed using three master nodes. In this configuration, there are some changes to be aware of that make accessing the service different than a traditional single MySQL database server.
+When deployed in HA topology, MySQL for PCF is deployed using three master nodes. In this configuration, there are some changes to be aware of that make accessing the service different than a traditional single MySQL database server.
 
 - Single and three-node clusters are the only supported topologies. Ops Manager will allow the Operator to set the number of instances to other values, only one and three are advised. Please see the [note](cluster-behavior.html#even-number) in the Cluster Behavior document.
 - Although two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](#proxy) section, as well as the entry in [Known Issues](known-issues.html).
