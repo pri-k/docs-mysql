@@ -41,7 +41,7 @@ A resurrected node will not immediately receive connections. The proxy will cont
 
 If the healthcheck returns HTTP status code 503, the node is considered unhealthy.
 
-This happens when a node becomes non-primary, as specified by the [cluster-behavior docs](cluster-behavior.html).
+This happens when a node becomes non-primary, as specified by the [cluster behavior docs](architecture.html#behavior) section.
 
 The proxy will sever all existing connections to newly unhealthy nodes. Clients are expected to handle reconnecting on connection failure. The proxy will route new connections to a healthy node, assuming such a node exists.
 

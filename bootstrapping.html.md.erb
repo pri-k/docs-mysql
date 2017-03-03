@@ -32,7 +32,7 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
             mysql> select * from mysql.user;
             ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
 
-See [Cluster Behavior](cluster-behavior.html) for more details about determining cluster state.
+See [Cluster Behavior](architecture.html#behavior) for more details about determining cluster state.
 
 ## <a id="bootstrapping"></a>Bootstrapping ##
 
@@ -276,7 +276,7 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
         Use the node with the highest `seqno` value as the new bootstrap node. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
 
-        <p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest seqno. Otherwise the node with the highest seqno will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See <a href="./cluster-behavior.html">cluster behavior</a> for more details on intentionally abandoning data.</p>
+        <p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest seqno. Otherwise the node with the highest seqno will be unable to join the new cluster (unless its data is abandoned). Its mariadb process will exit with an error. See <a href="./architecture.html#behavior">cluster behavior</a> for more details on intentionally abandoning data.</p>
 
     1. On the new bootstrap node, update state file and restart the mariadb process:
 
