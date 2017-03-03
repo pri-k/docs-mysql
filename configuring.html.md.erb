@@ -98,6 +98,21 @@ Use this pane to configure how many database instances can be provisioned (insta
 
 In determining how much persistent disk to make available for databases, operators should also consider that MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests for all databases.
 
+### <a id="switch-topologies"></a> Switch Between Single and HA Topologies
+
+To switch your MySQL service between single-node and High Availability topologies, you change instance counts in the **Resource Config** pane. The table below lists the proper instance count settings for each topology.
+
+<table>
+<tr><th>Resource</th><th>Minimal</th><th>Highly Available</th></tr>
+<tr><td>MySQL Server</td><td>1</td><td>3</td></tr>
+<tr><td>Proxy</td><td>1</td><td>2</td></tr>
+<tr><td>Service Broker</td><td>1</td><td>1-2<sup>*</sup></td></tr>
+</table>
+
+<sup>*</sup>Routine database operations do not require two service brokers.
+
+When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it will update the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes will cause all connections to that node to be dropped while the node restarts.
+
 ## <a id="stemcell"></a>Stemcell
 
 Use this pane to upload the stemcell that you want the service components to run on. Find available stemcells at [Pivotal Network](http://network.pivotal.io).

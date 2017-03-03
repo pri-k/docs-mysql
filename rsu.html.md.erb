@@ -3,7 +3,7 @@ title: When to use RSU for a DDL
 owner: MySQL
 ---
 
-RSU or Rolling Schema Upgrade is a method of performing schema upgrades in which an operator manually takes each node in the cluster out of the cluster and applies the DDL by hand. Because these are happening to each node in turn, the DDL MUST be backwards compatible with the previous schema.
+RSU or Rolling Schema Upgrade is a method of performing schema upgrades in which an operator manually takes each node in the cluster out of the cluster and applies the DDL by hand. Because these are happening to each node in turn, the DDL must be backwards-compatible with the previous schema.
 
 Some DDLs like DROP statements are fast and do not require the oversight of an operator. Other DDLs, like adding an INDEX to a large table can take a very long time to run. While they are running, the cluster will seem unavailable to anyone trying to use it. RSU allows taking a node out of the cluster so that it doesn’t block during these operations.
 
@@ -25,8 +25,8 @@ The following steps assume that you are using import sql file to perform the dat
 		2. Find the values of `cf_mysql.proxy.api_username` and `cf_mysql.proxy.api_password` 
 		3. Visit proxy-0-p-mysql.SYSTEM_DOMAIN and login with the above credentials
 		4. One of the backends should show up as a red bar that says “unhealthy”
-	2. Add set wsrep_osu_method=rsu; to the top of the import file containing the constraints and indexes
-	3. Add set global wsrep_desync=on; to the top of the constraints and indexes file. Add set global wsrep_desync=off; to the bottom of the constraints and indexes file.
+	2. Add `set wsrep_osu_method=rsu;` to the top of the import file containing the constraints and indexes
+	3. Add `set global wsrep_desync=on;` to the top of the constraints and indexes file. Add `set global wsrep_desync=off;` to the bottom of the constraints and indexes file.
 	4. At this point your file should look like
 	`$ cat constraints_and_indexes.sql
 	set wsrep_osu_method=rsu;

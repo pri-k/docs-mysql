@@ -3,18 +3,16 @@ title: Getting Started with PCF MySQL Galera
 owner: MySQL
 ---
 
-Congratulations on choosing Pivotal MySQL with MariaDB and Galera inside. You've just taken the first step to trust your app's data to the most powerful and cloud-native open source database technology available.
+This topic explains how a developer on PCF can start using MySQL with their apps. It is important to note that MySQL for PCF v1 is different than standard MySQL and has some limitations that you must be aware of.
 
-It is important to note that Pivotal MySQL different than standard MySQL and has some limitations that you must be aware of.
-
-## <a id="PCF-MySQL-Galera-Limitations"></a>MySQL for PCF Galera Limitations ##
+## <a id="PCF-MySQL-Galera-Limitations"></a>MySQL for PCF v1 Limitations ##
 
 - Only InnoDB tables are supported. Writes to other types of tables, such as MyISAM tables will not replicate across the cluster. 
 - Explicit locking is not supported, i.e. `LOCK TABLES`, `FLUSH TABLES tableA WITH READ_LOCK`.
 - Large DDL (ie, schema changes like ALTER TABLE) will lock all schemas, affecting all sessions with the DB. This can be mitigated via a manual step using [Galera’s RSU](./rsu.html) feature.
 - Table partitioning may cause the cluster to get into a hung state. This is as a result of the implicit table locks that are used when running table partition commands.
 - MySQL for PCF supports table triggers; however multiple triggers per table are not supported
-- All tables MUST have a primary key; multi-column primary keys are ok. This is because of the the way Galera replicates using row based replication and ensuring unique rows on each instance
+- All tables must have a primary key; multi-column primary keys are OK. This is because of the the way Galera replicates using row based replication and ensuring unique rows on each instance
 - While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In a MariaDB Galera cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
 - Do not execute a DML statement in parallel with a DDL statement when both statements affect the same tables. Locking is lax in Galera, even in single node mode. Rather than the DDL waiting for the DML to finish, they will both apply immediately to the cluster and may cause [unexpected side effects](https://jira.mariadb.org/browse/MDEV-468). 
 - Do not rely on auto increment values being sequential as Galera guarantees auto-incrementing unique non-conflicting sequences, so each node will have gaps in IDs. Furthermore, Galera sets user’s to READ ONLY in regards to auto increment variables. Without this feature, Galera would require shared locking of the auto increment variables across the cluster, causing it to be slower and less reliable

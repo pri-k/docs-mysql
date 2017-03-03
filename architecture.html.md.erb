@@ -73,3 +73,42 @@ Since our connection authentication is implemented using user credentials, the d
 
 ### Large Data File Ingestion
 Now that a major bug has been fixed in MariaDB, we enable `wsrep_load_data_splitting` which splits large data imports into separate transactions to enable loading data into a MariaDB cluster.
+
+## <a id="behavior"></a> Cluster Behavior ##
+
+This section explains how the MySQL cluster behaves when you change the number of nodes.
+
+### Scaling up from 1 to 3 nodes
+
+When a new MariaDb node comes online, it replicates data from the existing node in the cluster. Once replication is complete, the node will join the cluster. The proxy will continue to route all incoming connections to the primary node while it remains healthy.
+
+If the proxy detects that this node becomes [unhealthy](https://github.com/cloudfoundry/cf-mysql-release/blob/release-candidate/docs/proxy.md#unhealthy), it will sever existing connections, and route all new connections to a different, healthy node. If there are no healthy MariaDb nodes, the proxy will reject all subsequent connections.
+
+While transitioning from one node to a cluster, there will be an undetermined period of performance degradation while the new node syncs all data from the original node.
+
+Note: If you are planning to scale up MariaDb nodes, it is recommended to do so in different Availability Zones to maximize cluster availability. An Availability Zone is a network-distinct section of a given Region. Further details are available in [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
+
+### Scaling down from 3 to 1 node
+
+When scaling from multiple nodes to a single MariaDb node, the proxy will determine that the sole remaining node is the primary node (provided it remains healthy). The proxy routes incoming connections to the remaining MariaDb node.
+
+### <a id="removal"></a> Graceful removal of a node ###
+  - Manually shutting down a node with `monit` (or decreasing cluster size by one) will cause the node to gracefully leave the cluster.
+  - Cluster size is reduced by one and maintains healthy state. Cluster will continue to operate, even with a single node, as long as other nodes left gracefully.
+
+### <a id="rejoin"></a> Rejoining the cluster (existing nodes)
+
+Existing nodes restarted with monit should automatically join the cluster. If an existing node fails to join the cluster, it may be because its transaction record's (`seqno`) is higher than that of the nodes in the cluster with quorum (aka the primary component).
+
+  - If the node has a higher `seqno` it will be apparent in the error log `/var/vcap/sys/log/mysql/mysql.err.log`.
+  - If the healthy nodes of a cluster have a lower transaction record number than the failing node, it might be desirable to shut down the healthy nodes and bootstrap from the node with the more recent transaction record number. See the [bootstrapping docs](bootstrapping.html) for more details.
+  - Manual recovery may be possible, but is error-prone and involves dumping transactions and applying them to the running cluster (out of scope for this doc).
+  - Abandoning the data is also an option, if you're ok with losing the unsynchronized transactions. Follow the following steps to abandon the data (as root):
+    - Stop the process with `monit stop mariadb_ctrl`.
+    - Delete the galera state (`/var/vcap/store/mysql/grastate.dat`) and cache (`/var/vcap/store/mysql/galera.cache`) files from the persistent disk.
+    - Restarting the node with `monit start mariadb_ctrl`.
+
+### <a id='state-snapshot-transfer-sst'></a>State Snapshot Transfer (SST)
+
+When a new node is added to the cluster or rejoins the cluster, it synchronizes state with the primary component via a process called SST. A single node from the primary component is chosen to act as a state donor. By default Galera uses rsync to perform SST, which blocks for the duration of the transfer. However, MySQL for Pivotal Cloud Foundry (PCF) is configured to use [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup), which allows the donor node to continue to accept reads and writes.
+
