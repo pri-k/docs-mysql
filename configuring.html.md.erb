@@ -111,6 +111,10 @@ To switch your MySQL service between single-node and High Availability topologie
 
 <sup>*</sup>Routine database operations do not require two service brokers.
 
+Single and three-node clusters are the only supported topologies. Ops Manager  allows you to set the number of **MySQL Server** instances to other values, but Pivotal recommends only one or three.
+
+If you scale up MySQL nodes, Pivotal recommends spreading them across different Availability Zones to maximize cluster availability. An Availability Zone (AZ) is a network-distinct section of a region. For more information about Amazon AZs, see [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
+
 When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it will update the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes will cause all connections to that node to be dropped while the node restarts.
 
 ## <a id="stemcell"></a>Stemcell
