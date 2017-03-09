@@ -41,7 +41,7 @@ A resurrected node will not immediately receive connections. The proxy will cont
 
 If the healthcheck returns HTTP status code 503, the node is considered unhealthy.
 
-This happens when a node becomes non-primary, as specified by the [cluster behavior docs](architecture.html#behavior) section.
+This happens when a node becomes non-primary, as specified by the [cluster behavior](architecture.html#behavior) section of the _Architecture_ topic.
 
 The proxy will sever all existing connections to newly unhealthy nodes. Clients are expected to handle reconnecting on connection failure. The proxy will route new connections to a healthy node, assuming such a node exists.
 
@@ -80,7 +80,7 @@ follow the following instructions:
 2. Click Route 53.
 3. Click Hosted Zones.
 4. Select the hosted zone that contains the domain name to apply round robin routing to.
-5. Click 'Go to Record Sets'.
+5. Click **Go to Record Sets**.
 6. Select the record set containing the desired domain name.
 7. In the value input, enter the IP addresses of each proxy VM, separated by a newline.
 
@@ -93,6 +93,7 @@ The proxy hosts a JSON API at `proxy-<bosh job index>.p-mysql.<system domain>/v0
 The API provides the following route:
 
 Request:
+
 *  Method: GET
 *  Path: `/v0/backends`
 *  Params: ~

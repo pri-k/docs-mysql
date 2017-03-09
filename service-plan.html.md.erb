@@ -24,7 +24,7 @@ Operators can configure multiple MySQL service plans in the **Service Plans** pa
 	- **Storage Quota**: The maximum amount, in megabytes, of storage allowed each instance of the Service Plan.
 	- **Concurrent Connections Quota**: The maximum number of simultaneous database connections allowed to each instance of the Service Plan.
 	- **Not available by default**: By default, plans are _public_ and publish to all orgs. Selecting this checkbox makes the plan _private_, which means the operator must publish the plan manually before developers can use it.
-	See [Access Control](../pivotalcf/services/access-control.html) for how to to change the scope of publication for service plans already deployed.</p>
+	See [Access Control](http://docs.pivotal.io/pivotalcf/services/access-control.html) for how to to change the scope of publication for service plans already deployed.</p>
 
 The **Concurrent Connections Quota** field sets the `max_user_connections` property for an existing plan. Changing this value does not affect the connections currently open. For example, if you have decreased from 40 to 20, apps with 40 open connections will keep them open. To force open connections down to the new limit, an operator can restart the proxy job. Otherwise, if any connection above the limit is reset, it won't be able to reconnect, so the number of connections will eventually converge on the new limit.
 

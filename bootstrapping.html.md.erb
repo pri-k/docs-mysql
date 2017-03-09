@@ -243,7 +243,7 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
 1. If the bootstrap errand is not able to automatically recover the cluster, you may need to perform the steps manually. The following steps are prone to user-error and can result in lost data if followed incorrectly. Please follow the [assisted boostrap](#assisted-bootstrap) instructions above first, and only resort to the manual process if the errand fails to repair the cluster.
 
-    1. SSH to each node in the cluster and, as root, shut down the `mariadb` process. To SSH into BOSH-deployed VMs, see the [Advanced Troubleshooting with the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-7/customizing/trouble-advanced.html) topic.
+    1. SSH to each node in the cluster and, as root, shut down the `mariadb` process. To SSH into BOSH-deployed VMs, see the [Advanced Troubleshooting with the BOSH CLI](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html) topic.
 
             $ monit stop mariadb_ctrl
 

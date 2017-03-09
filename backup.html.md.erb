@@ -5,7 +5,7 @@ owner: MySQL
 
 ## <a id="automated-backups"></a>Automated Backups ##
 
-In versions of MySQL for Pivotal Cloud Foundry 1.7.0.0 and higher, automated backups can be enabled in the "Configure Backups" section. Backups has the following features:
+In versions of MySQL for Pivotal Cloud Foundry (PCF) 1.7.0.0 and higher, automated backups can be enabled in the **Configure Backups** section. Backups has the following features:
 
 - Periodically create and upload backup artifacts suitable for restoring the complete set of database instances allocated in the service.
 - No locks, no downtime. The only affect on the serving systems is the amount of I/O required to copy the database and log files off of the VM.
@@ -17,19 +17,19 @@ In versions of MySQL for Pivotal Cloud Foundry 1.7.0.0 and higher, automated bac
 
 Backups are enabled by default. If you do not wish for this deployment to be backed up, you must disable backups in three steps:
 
-1. Select "Disable Backups" in the Configure Backup section.
-1. Switch to "Resource Config," section, and change the number of instances for `Backup Prepare Node` from 1 to 0.
+1. Select **Disable Backups** in the Configure Backup section.
+1. Switch to the **Resource Config** section, and change the number of instances for `Backup Prepare Node` from `1` to `0`.
 1. Return to the Installation Dashboard, and click `Apply Changes`.
 
 ### <a id="configuring-step-by-step"></a>Configuring Backups Step-by-Step ###
 
 For each step, refer to the screenshot above.
 
-1. Select "Enable Backups"
+1. Select **Enable Backups**.
 1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, MySQL for PCF will automatically create the bucket if it does not exist.
 1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.
 1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
-1. Specify how often you'd like backups to occur in the final field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as `@daily` to back up once per day.
+1. Specify how often you'd like backups to occur in the final field, **Cron Schedule**. The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as `@daily` to back up once per day.
 
 <p class="note"><strong>Note</strong>: For large databases, the default storage for the <code>Backup Prepare Node</code> may not be sufficient. In order to compress and encrypt backup artifacts, the VM must be configured with twice the amount of ephemeral disk space as the persistent disk space of the <code>MySQL Server</code> nodes.</p>
 
@@ -75,41 +75,42 @@ In the event of a total cluster loss,the process to restore a backup artifact to
 
 1. If necessary, install the same version of the `MySQL for PCF` product in Ops Manager.
 1. Reduce the size of the MySQL for PCF cluster to a single node
-    1. Select the MySQL for PCF tile > Settings > Resource Config > MySQL Server > Instances, and set to 1
-    1. Click "Save"
-    1. Click "Back to Installation Dashboard," then "Apply Changes"
-    1. Wait for deployment to succeed
+    1. Select the MySQL for PCF tile. Select **Settings > Resource Config > MySQL Server**.
+    1. Set **Instances** to `1`.
+    1. Click **Save**.
+    1. Click **Back to Installation Dashboard**, then click **Apply Changes**.
+    1. Wait for deployment to succeed.
 1. Prepare the first node for restoration
     1. SSH into the Ops Manager Director.
-    <br>For information, see the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/1-7/customizing/trouble-advanced.html#ssh) section in the Advanced Troubleshooting with the BOSH CLI topic.
+    <br>For more information about this, see the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) section in the Advanced Troubleshooting with the BOSH CLI topic.
     1. From there, use the BOSH CLI to SSH into first MySQL job.
-    <br>For more information, see the [BOSH SSH](http://docs.pivotal.io/pivotalcf/1-7/customizing/trouble-advanced.html#bosh-ssh) section in the Advanced Troubleshooting with the BOSH CLI topic.
+    <br>For more information, see the [BOSH SSH](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh) section in the _Advanced Troubleshooting with the BOSH CLI_ topic.
         - IP address can be found in MySQL for PCF > Status > MySQL Server
         - VM credentials can be found in  MySQL for PCF > Credentials > MySQL Server > Vm Credentials
-    1. Become super user<br>
+    1. Become super user.<br>
       `sudo su`
-    1. Pause the local database server<br>
+    1. Pause the local database serve.<br>
       `monit stop all`
-    1. Confirm that all jobs are listed as 'not monitored'<br>
+    1. Confirm that all jobs are listed as 'not monitored'.<br>
       `watch monit summary`
-    1. Delete the existing mysql data which is stored on disk<br>
+    1. Delete the existing mysql data which is stored on disk.<br>
       `rm -rf /var/vcap/store/mysql/*`
-1. Restore the backup
-    1. Move the compressed backup (named e.g. `mysql-backup.tar.bzip2`) to the node (e.g. via `scp`)
-    1. Decrypt the file using the `gpg` command<br>
+1. Restore the backup.
+    1. Move the compressed backup (named e.g. `mysql-backup.tar.bzip2`) to the node (e.g. via `scp`).
+    1. Decrypt the file using the `gpg` command.<br>
       `gpg --decrypt mysql-backup-1444362715.tar.gpg`
-    1. Expand the backup artifact into the data director of MySQL<br>
+    1. Expand the backup artifact into the data director of MySQL.<br>
       `tar xvjf mysql-backup.tar.bzip2 --directory=/var/vcap/store/mysql`
-    1. MySQL process expects data directory to be owned by a particular user<br>
+    1. MySQL process expects data directory to be owned by a particular user.<br>
       `chown -R vcap:vcap /var/vcap/store/mysql`
     1. `monit start all`
-    1. `watch monit summary` until all jobs are listed as 'running'
-    1. Exit out of the MySQL node
-1. Increase the size of the cluster back to three
-    1. MySQL for PCF tile > Settings > Resource Config > MySQL Server > Instances to 3
-    1. Click "Save"
-    1. "Back to Installation Dashboard" > Apply Changes
-    1. Wait for deployment to succeed
+    1. `watch monit summary` until all jobs are listed as 'running'.
+    1. Exit out of the MySQL node.
+1. Increase the size of the cluster back to three.
+    1. MySQL for PCF tile > Settings > Resource Config > MySQL Server > Instances to `3`.
+    1. Click **Save**
+    1. Click **Back to Installation Dashboard**, then click **Apply Changes**.
+    1. Wait for deployment to succeed.
 
 
 ---

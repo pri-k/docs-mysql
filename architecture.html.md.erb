@@ -3,7 +3,7 @@ title: Architecture
 owner: MySQL
 ---
 
-This topic describes the high-level component architecture of the MySQL for PCF service, in both its single-node and HA configurations. It also describes the defaults and other design decisions applied to the service's MariaDB servers and the Galera Cluster that manages them.
+This topic describes the high-level component architecture of the MySQL for Pivotal Cloud Foundry (PCF) service, in both its single-node and HA configurations. It also describes the defaults and other design decisions applied to the service's MariaDB servers and the Galera Cluster that manages them.
 
 ## <a id="topology"></a> HA Topology ##
 
@@ -29,7 +29,7 @@ In a three-node Galera cluster, two nodes define a quorum that automatically mai
 
 When a single node cannot communicate with the rest of the cluster, it stops accepting traffic. The other two nodes continue to function normally. When the isolated node regains connectivity, it rejoins the cluster.
 
-If two nodes are no longer able to connect to the cluster, quorum is lost and  the cluster is no longer accessible. To bring the cluster back up, you must restart it manually, as documented in the [bootstrapping docs](bootstrapping.html).
+If two nodes are no longer able to connect to the cluster, quorum is lost and  the cluster is no longer accessible. To bring the cluster back up, you must restart it manually, as documented in the [bootstrapping](bootstrapping.html) topic.
 
 ### <a id="even-number"></a> Avoid an Even Number of Nodes ###
 
@@ -118,7 +118,7 @@ You can remove nodes gracefully by manually shutting each down with `monit` or b
 Existing nodes restarted with `monit` should automatically join the cluster. If an existing node fails to join the cluster, it may be because its transaction record's (`seqno`) is higher than that of the nodes in the cluster with quorum (aka the primary component).
 
   - If the node has a higher `seqno` it will be apparent in the error log `/var/vcap/sys/log/mysql/mysql.err.log`.
-  - If the healthy nodes of a cluster have a lower transaction record number than the failing node, it might be desirable to shut down the healthy nodes and bootstrap from the node with the more recent transaction record number. See the [bootstrapping docs](bootstrapping.html) for more details.
+  - If the healthy nodes of a cluster have a lower transaction record number than the failing node, it might be desirable to shut down the healthy nodes and bootstrap from the node with the more recent transaction record number. See the [bootstrapping](bootstrapping.html) topic for more details.
   - Manual recovery may be possible, but is error-prone and involves dumping transactions and applying them to the running cluster (out of scope for this doc).
   - Abandoning the data is also an option, if you're OK with losing the unsynchronized transactions. Follow the following steps to abandon the data (as root):
     - Stop the process with `monit stop mariadb_ctrl`.
