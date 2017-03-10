@@ -68,6 +68,14 @@ For more information, refer to the full [Product Compatibility Matrix](../../com
 
 </table>
 
+### Before Upgrading
+
+<p class='note'><strong>Note</strong>: This version contains **breaking changes**. Please read the notes below before upgrading to MySQL for PCF v1.9.0.</p>
+
+- Validate the health of your cluster: If running in the HA configuration, be sure to download, configure and run the [mysql-diag](http://bit.ly/pivotal-mysql-diag) tool. Do not use **Apply Changes** for any reason if `mysql-diag` shows any cluster issues. Be sure to resolve those issues before upgrading.
+- MySQL for PCF v1.9.0 retroactively removes the ability to `LOCK TABLES` from all application bindings. (The ability was removed for new bindings in v1.8.0.) This change may disrupt applications that assume they are able to `LOCK TABLES`. If you have audit logs enabled<sup>[*](index.html#options_and_features)</sup>, you can identify applications that may be affected by looking for table locking activity.
+- MariaDB 10.1.20, included in this release, includes a [breaking change](https://jira.mariadb.org/browse/MDEV-12210) in large index creation. Where previously large indices were silently truncated, now `ALTER TABLE` and `CREATE INDEX` statements may fail. In order to create large indices, tables must be created or altered to use ROW_FORMAT DYNAMIC or ROW_FORMAT COMPRESSED if they are to contain an index with greater than 767 bytes in it.
+
 ## <a id="configurations"></a>Enterprise Readiness by Topology ##
 
 The table below shows the enterprise-readiness of each MySQL for PCF topology. Consult the [Known Issues](known-issues.html) topic for information about issues in current releases of MySQL for PCF.
