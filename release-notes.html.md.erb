@@ -18,6 +18,9 @@ owner: MySQL
 
 Release Date: 2017 March 10
 
+- **Bug fix:** Changed the value of `wsrep_max_ws_rows` to 0 to prevent MariaDB bug [MDEV-11817](https://jira.mariadb.org/browse/MDEV-11817) from affecting DDLs.
+- **Bug fix:** The server variable, `innodb_large_prefix`, can be disabled via the **Advanced Options** configuration pane. This allows operators to avoid application errors due to [MDEV-12210](https://jira.mariadb.org/browse/MDEV-12210), a bug in MariaDB 10.1.18. Please see the documentation on [cluster configuration](cluster-config.html) for more information. This option will not be necessary in `p-mysql 1.9` and greater.
+- **Bug fix:** We fixed a condition in which a spontaneously rebooted VM may not automatically rejoin the cluster.
 - Updated stemcell to 3263.21. This is a security upgrade that resolves the following:
   - [USN-3220-2](http://www.ubuntu.com/usn/USN-3220-2/)
 
