@@ -29,7 +29,7 @@ Innodb allows using either a single file to represent all data, or a separate fi
 To take advantage of all the extra features available with the `innodb_file_per_table = ON` option, we use the `Barracuda` file format.
 
 ### Innodb Large Prefix
-The feature, `innodb_large_prefix` is enabled by default. When disabled, large index prefixes are silently truncated. When enabled, larger index key prefixes may be created by additionally specifying DYNAMIC or COMPRESSED row formats. Row format is not defined by default. Thus, when `innodb_large_prefix` is enabled, applications must specify row format for each table which will use large index prefixes.
+The `innodb_large_prefix` feature is enabled by default. When disabled, large index prefixes are silently truncated. When enabled, larger index key prefixes may be created by additionally specifying DYNAMIC or COMPRESSED row formats. Row format is not defined by default. Thus, when `innodb_large_prefix` is enabled, applications must specify row format for each table which will use large index prefixes.
 
 ### Temporary Tables
 MySQL is configured to convert temporary in-memory tables to temporary on-disk tables when a query EITHER generates more than 16 million rows of output or uses more than 32MB of data space.
