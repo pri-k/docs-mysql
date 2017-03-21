@@ -3,82 +3,88 @@ title: MySQL Proxy
 owner: MySQL
 ---
 
-In MySQL for Pivotal Cloud Foundry (PCF), [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) is used to proxy TCP connections to healthy MariaDB nodes.
+MySQL for Pivotal Cloud Foundry (PCF) uses the [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) router to proxy TCP connections to healthy MariaDB nodes.
 
-A proxy is used to gracefully handle failure of MariaDB nodes. Use of a proxy permits very fast, unambiguous failover to other nodes within the cluster in the event of a node failure.
-
-When a node becomes unhealthy, the proxy re-routes all subsequent connections to a healthy node. All existing connections to the unhealthy node are closed.
+Using a proxy gracefully handles failure of MariaDB nodes, enabling fast, unambiguous failover to other server nodes within the cluster. When a server node becomes unhealthy, the proxy closes all connections to the unhealthy node and re-routes all subsequent connections to a healthy server node.
 
 ## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
-The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of client connections routed to each backend database cluster node.
+The service provides a dashboard where administrators can observe health and metrics for each proxy instance. Metrics include the number of client connections routed to each backend database cluster node.
 
-The dashboard for each proxy instance can be found at: `http://proxy-<job index>-p-mysql.<system-domain>`. The job index starts at 0. For example, if you have two proxy instances deployed and your system-domain is `example.com`, dashboards would be accessible at:
+From a browser, you can open the dashboard for each proxy instance at: `http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN`. The job index starts at `0`. For example, if you have two proxy instances deployed and your system domain is `example.com`, you would access your proxy instance dashboards would at:
 
 - [http://proxy-0-p-mysql.example.com](http://proxy-0-p-mysql.example.com)
 - http://proxy-1-p-mysql.example.com
 
-Basic auth credentials are required to access the dashboard. These can be found in the Credentials tab of the MySQL product in Operations Manager.
+You need basic auth credentials to access these dashboards. You can find them in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
 
-## <a id="consistent-routing"></a>Consistent Routing ##
+## <a id="consistent-routing"></a>Consistent Routing with Multiple Proxies##
 
-At any given time, Switchboard will only route to one active node. That node will continue to be the only active node until it becomes unhealthy.
+Switchboard only routes to one server node at a time. While that node remains healthy, it serves as the only active node, the only node taking requests.
 
-If multiple Switchboard proxies are used in parallel (ex: behind a load-balancer) there is no guarantee that the proxies will choose the same active node. This can result in deadlocks, wherein attempts to update the same row by multiple clients will result one commit succeeding and the other fails. This is a known issue, with exploration of mitigation options on the roadmap for this product. To avoid this problem, use a single proxy instance or an external failover system to direct traffic to one proxy instance at a time.
-
+If you run multiple Switchboard proxies in parallel (ex: behind a load-balancer) the proxies may not choose the same active node. This can result in deadlocks when multiple clients attempt to update the same database row,  one commit succeeds, and the other fails. This is a known issue. To avoid this problem, use a single proxy instance or an external failover system to direct traffic to one proxy instance at a time.
 
 ## <a id="node-health"></a>Node Health ##
 
+When determining where to route traffic, the proxy queries an HTTP healthcheck process running on the database node VM. This healthcheck can return as either healthy or unhealthy, or the node can be unresponsive.
+
 ### <a id="healthy"></a>Healthy ###
 
-The proxy queries an HTTP healthcheck process, co-located on the database node, when determining where to route traffic.
+If the healthcheck process returns HTTP status code `200`, the proxy includes the node in its pool of healthy nodes.
 
-If the healthcheck process returns HTTP status code of 200, the node is added to the pool of healthy nodes.
-
-A resurrected node will not immediately receive connections. The proxy will continue to route all connections, new or existing, to the currently active node. In the case of failover, all healthy nodes will be considered as candidates for new connections.
+When a new or resurrected nodes rejoin the cluster, the proxy continues to route all connections to the currently active node. In the case of failover, the proxy considers all healthy nodes as candidates for new connections.
 
 ### <a id="unhealthy"></a>Unhealthy ###
 
-If the healthcheck returns HTTP status code 503, the node is considered unhealthy.
+If the healthcheck returns HTTP status code `503`, the proxy considers the node unhealthy.
 
 This happens when a node becomes non-primary, as specified by the [cluster behavior](architecture.html#behavior) section of the _Architecture_ topic.
 
-The proxy will sever all existing connections to newly unhealthy nodes. Clients are expected to handle reconnecting on connection failure. The proxy will route new connections to a healthy node, assuming such a node exists.
+The proxy severs existing connections to newly unhealthy node. The proxy routes new connections to a healthy node, assuming such a node exists. Clients are expected to handle reconnecting on connection failure should the entire cluster become inaccessible.
 
 ### <a id="unresponsive"></a>Unresponsive ###
 
-If node health cannot be determined due to an unreachable or unresponsive healthcheck endpoint, the proxy will consider the node unhealthy. This may happen if there is a network partition or if the VM containing the healthcheck and MariaDB node died.
+If node health cannot be determined due to an unreachable or unresponsive healthcheck endpoint, the proxy considers the node unhealthy. This may happen if there is a network partition or if the VM running the MariaDB node and healthcheck died.
 
+## <a id="proxy-count"></a>Proxy Count ##
 
-## <a id="proxy-count"></a>Proxy count ##
+If the operator sets the total number of proxy hosts to `0` in OpsManager or BOSH deployment manifest, apps connect directly to one MariaDB server node. This makes that node a single point of failure (SPOF) for the cluster.
 
-If the operator sets the total number of proxies to 0 hosts in OpsManager or BOSH deployment manifest, then applications will connect directly to one healthy MariaDB node making that node a single point of failure for the cluster.
+For high-availability, Pivotal recommends running two proxies, which provides redundancy should one of the proxies fail.
 
-The recommended number of proxies are 2; this provides redundancy should one of the proxies fail.
+## <a id="proxy-spof"></a>Removing the Proxy as a SPOF ##
 
-## <a id="proxy-spof"></a>Removing the proxy as a SPOF ##
+Bound applications are provided with a hostname or IP address to reach a database managed by the service. By default, the MySQL service provides bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections do not route through them. This means the first proxy instance is a single point of failure.
 
-The proxy tier is responsible for routing connections from applications to healthy MariaDB cluster nodes, even in the event of node failure.
+To eliminate the first proxy instance as a single point of failure:
 
-Bound applications are provided with a hostname or IP address to reach a database managed by the service. By default, the MySQL service will provide bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections will not be routed through them. This means the first proxy instance is a single point of failure.
+1. [Configure a load balancer](#lb-config) to route client connections across multiple proxy IPs.
 
-**In order to eliminate the first proxy instance as a single point of failure, operators must configure a load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer.**
+1. [Configure MySQL for PCF](#lb-proxy-config) to give bound applications the hostname or IP address for the load balancer.
 
-### <a id="lb-config"></a>Configuring load balancer ###
+### <a id="lb-config"></a>Configure a Load Balancer to Remove Proxy SPOF
 
-Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306. Next, configure the load balancer's healthcheck to use the proxy health port. This is TCP port 1936 by default to maintain backwards compatibility with previous releases. This port is not configurable.
+To configure a load balancer to route traffic across multiple proxies:
 
-### <a id="lb-proxy-config"></a>Configuring MySQL for PCF to give applications the address of the load balancer
-To ensure that bound applications will use the load balancer to reach bound databases, navigate to the MySQL for PCF tile in Operations Manager, then the Resource Config configuration screen within it. **On AWS only**, enter your load balancer's hostname in the "ELB Names" column for the Proxy row.
+1. Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306. 
+
+1. Configure the load balancer's healthcheck to use the proxy health port. This defaults to TCP port `1936`, to maintain backwards compatibility with previous releases. This port is not configurable.
+
+### <a id="lb-proxy-config"></a>Configure MySQL for PCF to Remove Proxy SPOF
+
+To ensure that bound applications will use the load balancer to reach bound databases:
+
+1. **AWS only**: Set up Round Robin DNS across your proxy IPs using [AWS Route 53](#route-53).
+
+1. In the Ops Manager **MySQL for PCF** tile > **Resource Config** pane, enter your load balancer's hostname in the **Proxy** row > **ELB Names** column.
 
 ### <a id="route-53"></a>AWS Route 53 ###
 
-To set up a Round Robin DNS across multiple proxy IPs using AWS Route 53,
-follow the following instructions:
+To set up a Round Robin DNS across multiple proxy IPs using AWS Route 53:
 
 1. Log in to AWS.
-2. Click Route 53.
-3. Click Hosted Zones.
+2. Click **Route 53**.
+3. Click **Hosted Zones**.
 4. Select the hosted zone that contains the domain name to apply round robin routing to.
 5. Click **Go to Record Sets**.
 6. Select the record set containing the desired domain name.
@@ -127,6 +133,3 @@ Response:
 ]
 ```
 
----
-
-For more information about SwitchBoard, read the [proxy documentation](proxy.html)
