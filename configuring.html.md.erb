@@ -85,7 +85,7 @@ The **Advanced Options** pane lets you configure the following features:
 
 - **Quota Enforcer Frequency**
 
-    By default, the Quota Enforcer polls for violators and reformers every 30 seconds. This setting, in seconds, changes how long the quota enforcer pauses between checks.  
+    By default, the Quota Enforcer polls for violators and reformers every 30 seconds. This setting, in seconds, changes how long the quota enforcer pauses between checks.
     Quota Enforcer polling draws minimal resources, but if you want to reduce this load, increase this interval. Be aware, however, that a long Quota Enforcer interval may cause apps to write more data than their pre-determined limit allows.
 
 ## <a id="errands"></a>Errands
@@ -100,7 +100,7 @@ Two post-deploy errands run by default: the **broker registrar** and the **smoke
 
 This pane configures the number, persistent disk capacity, and VM type for all component VMs that run the MySQL for PCF service.
 
-Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases.
+Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases. The MariaDB cluster nodes are configured by default with 100GB of persistent disk. The deployment will fail if this is less than 3GB; we recommend allocating 10GB minimum.
 
 ### <a id="switch-topologies"></a> Switch Between Single and HA Topologies
 
@@ -124,5 +124,3 @@ When you change the instance counts for a MySQL service, a top-level property is
 ## <a id="stemcell"></a>Stemcell
 
 This pane uploads the stemcell that you want the service components to run on. Find available stemcells at [Pivotal Network](http://network.pivotal.io).
-
-
