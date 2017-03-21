@@ -14,7 +14,7 @@ Operators can configure multiple MySQL service plans in the **Service Plans** pa
 1. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
 	<%= image_tag('config-service-plans.png') %>
 1. Complete the following fields:
-	- **Service Plan name**: Developers see this name in the Services Marketplace and use it to to create service instances in Apps Manager and the cf CLI. Plan names may include only lowercase letters, numbers, hyphens, and underscores.
+	- **Service Plan name**: Developers see this name in the Services Marketplace and use it to create service instances in Apps Manager and the cf CLI. Plan names may include only lowercase letters, numbers, hyphens, and underscores.
 	  <p class="note"><strong>Note</strong>: Ops Manager does not prevent you from entering invalid names into the <strong>Service Plan name</strong> field. A plan name containing invalid characters prevents the tile from deploying after you click <strong>Apply Changes</strong> and generates an error like this in the installation log:
 	    <code>
 	    Error 100: Error filling in template 'settings.yml.erb' for 'cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
@@ -24,7 +24,7 @@ Operators can configure multiple MySQL service plans in the **Service Plans** pa
 	- **Storage Quota**: The maximum amount, in megabytes, of storage allowed each instance of the Service Plan.
 	- **Concurrent Connections Quota**: The maximum number of simultaneous database connections allowed to each instance of the Service Plan.
 	- **Not available by default**: By default, plans are _public_ and publish to all orgs. Selecting this checkbox makes the plan _private_, which means the operator must publish the plan manually before developers can use it.
-	See [Access Control](http://docs.pivotal.io/pivotalcf/services/access-control.html) for how to to change the scope of publication for service plans already deployed.</p>
+	See [Access Control](http://docs.pivotal.io/pivotalcf/services/access-control.html) for how to change the scope of publication for service plans already deployed.</p>
 
 The **Concurrent Connections Quota** field sets the `max_user_connections` property for an existing plan. Changing this value does not affect the connections currently open. For example, if you have decreased from 40 to 20, apps with 40 open connections will keep them open. To force open connections down to the new limit, an operator can restart the proxy job. Otherwise, if any connection above the limit is reset, it won't be able to reconnect, so the number of connections will eventually converge on the new limit.
 

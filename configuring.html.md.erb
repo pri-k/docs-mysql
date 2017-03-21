@@ -90,24 +90,24 @@ The **Advanced Options** pane lets you configure the following features:
 
 ## <a id="errands"></a>Errands
 
-Two lifecycle errands are run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that applications pushed to Elastic Runtime can be bound and write to MySQL service instances. Both errands can be turned on or off on the **Lifecycle Errands** page under the **Settings** tab.
+Two post-deploy errands run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that apps pushed to Elastic Runtime can be bound and write to MySQL service instances. You can turn both errands on or off in the **Errands** pane under the **Settings** tab.
 
-<p class="note"><strong>Note</strong>: You might also notice a <b>broker-deregistrar</b> errand. <b>Do not run this errand unless instructed to do so by Support.</b> Broker-deregistrar is a part of the automation used by Ops Manager while deleting a tile. Running this errand under any other circumstance will delete user data.</p>
+<p class="note"><strong>Note</strong>: The <strong>Errands</strong> pane also shows a <b>broker-deregistrar</b> pre-delete errand. Do not run this errand unless instructed to do so by Support. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running this errand under any other circumstance deletes user data.</p>
 
 ## <a id="resource-config"></a>Resource Config
 
 ![Configure Resources](config-resources.png)
 
-Use this pane to configure how many database instances can be provisioned (instance capacity) by configuring the amount of persistent disk allocated to the MySQL server nodes. The broker will provision a requested database if there is sufficient unreserved persistent disk. Use the Persistent Disk field for the MySQL Server job in the Resource Config setting page in Operations Manager. Not all persistent disk will be available for instance capacity; about 2-3 GB is reserved for service operation.
+This pane configures the number, persistent disk capacity, and VM type for all component VMs that run the MySQL for PCF service.
 
-In determining how much persistent disk to make available for databases, operators should also consider that MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests for all databases.
+Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases.
 
 ### <a id="switch-topologies"></a> Switch Between Single and HA Topologies
 
-To switch your MySQL service between single-node and High Availability topologies, you change instance counts in the **Resource Config** pane. The table below lists the proper instance count settings for each topology.
+To switch your MySQL for PCF service between single-node and high availability (HA) topologies, navigate to the **Resource Config** pane and change the **Instances** settings for the **MySQL Server**, **Proxy**, and **Service Broker** components as shown in this table:
 
 <table>
-<tr><th>Resource</th><th>Minimal</th><th>Highly Available</th></tr>
+<tr><th>Resource</th><th>Single-Node</th><th>High Availability (HA)</th></tr>
 <tr><td>MySQL Server</td><td>1</td><td>3</td></tr>
 <tr><td>Proxy</td><td>1</td><td>2</td></tr>
 <tr><td>Service Broker</td><td>1</td><td>1-2<sup>*</sup></td></tr>
@@ -117,12 +117,12 @@ To switch your MySQL service between single-node and High Availability topologie
 
 Single and three-node clusters are the only supported topologies. Ops Manager  allows you to set the number of **MySQL Server** instances to other values, but Pivotal recommends only one or three.
 
-If you scale up MySQL nodes, Pivotal recommends spreading them across different Availability Zones to maximize cluster availability. An Availability Zone (AZ) is a network-distinct section of a region. For more information about Amazon AZs, see [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
+If you scale up to three MySQL nodes, Pivotal recommends spreading them across different Availability Zones to maximize cluster availability. An Availability Zone (AZ) is a network-distinct section of a region. For more information about Amazon AZs, see [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
 
 When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it will update the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes will cause all connections to that node to be dropped while the node restarts.
 
 ## <a id="stemcell"></a>Stemcell
 
-Use this pane to upload the stemcell that you want the service components to run on. Find available stemcells at [Pivotal Network](http://network.pivotal.io).
+This pane uploads the stemcell that you want the service components to run on. Find available stemcells at [Pivotal Network](http://network.pivotal.io).
 
 
