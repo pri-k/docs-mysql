@@ -9,11 +9,11 @@ This topic explains how to install MySQL for Pivotal Cloud Foundry (PCF).
 
 ### <a id="network-layout"></a>Network Layout ##
 
-MySQL for PCF supports deployment to multiple availability zones (AZs) on vSphere only. For other infrastructures, make sure to specify only one AZ.
+MySQL for PCF supports deployment to multiple availability zones (AZs) on vSphere only. On other infrastructures, specify only one AZ.
 
-To achieve best uptime, it is best to deploy a load balancer in front of the SQL Proxy nodes. Please see the note in the [proxy](#proxy) section below. When configuring this load balancer, increase the minimum idle timeout if possible, as many load balancers are tuned for short-lived connections unsuitable for long-running database queries. See the [known issue](known-issues.html#load-balancer-timeout) for more details.
+To optimize uptime, deploy a load balancer in front of the SQL Proxy nodes. Configure the load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer. This eliminates the first proxy instance as a single point of failure. See [Configure a Load Balancer](#load-balancer) below for load balancer configuration recommendations.
 
-Provided below is a table for those that deploy the MySQL service on a different network than Elastic Runtime. Refer to this table to configure any firewall rules to allow inbound and outbound traffic required by the MySQL service.
+If you deploy the MySQL service on a different network than Elastic Runtime, configure the firewall rules as follows to allow traffic between Elastic Runtime and the MySQL service.
 
 | Type | Listening service | TCP Port |
 | ---- | ---- | ---- |
@@ -31,7 +31,7 @@ Provided below is a table for those that deploy the MySQL service on a different
 
 In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function, but, to take advantage of high availability features, they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
 
-In order to configure a load balancer with the IPs of the proxy tier before v1.5.0 is deployed and prevent applications from obtaining the IP of the first proxy instance, the product enables an operator to configure the IPs that will be assigned to proxy instances. The following instructions applies to the **Proxy** settings page for the MySQL product in Operation Manager.
+In order to configure a load balancer with the IPs of the proxy tier before v1.5.0 is deployed and prevent applications from obtaining the IP of the first proxy instance, the product enables an operator to configure the IPs that will be assigned to proxy instances. The following instructions applies to the **Proxy** pane under the MySQL tile **Settings** tab in Ops Manager.
 
 - In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances. These IP addresses must be in the CIDR range configured in the Director tile and not be currently allocated to another VM. Look at the **Status** pages of other tiles to see what IP addresses are in use.
 
@@ -39,12 +39,12 @@ In order to configure a load balancer with the IPs of the proxy tier before v1.5
 
 Recommendations for configuring your load balancer:
 
-* **Configure your load balancer in failover-only mode.** As proxy instances are not synchronized, we recommend configuring your load balancer to send all traffic to one proxy instance at a time until it fails, then failover to another proxy instance. This is not possible on Amazon ELB.
+* **Configure your load balancer in failover-only mode.** Because proxy instances are not synchronized, Pivotal recommends configuring your load balancer to send all traffic to one proxy instance and to redirect all traffic to the other proxy if the first proxy fails. Amazon ELB does not support this configuration.
 
-* **Make your idle time out long enough to not interrupt long-running queries.** Long-running queries can be interrupted by load balancer timeout. A connection that is waiting for results will appear to some load balancers as an idle connection. These long-running queries may be interrupted if they exceed the load balancer's idle timeout.  
+* **Make your idle time out long enough to not interrupt long-running queries.** When queries take a long time, the load balancer can time out and interrupt the query.  
 For example, [AWS's Elastic Load Balancer](http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/config-idle-timeout.html) has a default idle timeout of 60 seconds, so if a query takes longer than this duration then the MySQL connection will be severed and an error will be returned.
 
-* **To configure your load balancer with a healthcheck or monitor, use TCP against port 1936.**. Unauthenticated healthchecks against port 3306 will cause the service to become unavailable, and will require manual intervention to fix.
+* **Configure your load balancer with a healthcheck or monitor, using TCP against port 1936**. Unauthenticated healthchecks against port 3306 may cause the service to become unavailable and require manual intervention to fix.
 
 #### <a id="proxy-sync"></a> Proxies may write to different MySQL masters
 
@@ -55,10 +55,10 @@ This could be an issue for tables that receive many concurrent writes. Multiple 
 
 #### <a id="add-lb"></a> Adding a Load Balancer after an Initial Deploy
 
-If v1.5.0 is initially deployed without a load balancer and without proxy IPs configured, a load balancer can be setup later to remove the proxy as a single point of failure. However, there are several implications to consider:
+If you initially deploy v1.5.0 without a load balancer and without proxy IPs configured, you can set up a load balancer later to remove the proxy as a single point of failure. When adding a load balancer to an existing installation, you need to:
 
-- Applications will have to be rebound to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
-- Instead of configuring the proxy IPs in Operations manager, use the IPs that were dynamically assigned by looking at the **Status** page. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported; see [Known Issues](#known-issues).
+- Rebind your apps to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
+- Instead of configuring the proxy IPs in Ops Manager, configure DNS for your load balancer to point to the IPs that were dynamically assigned to your proxies. You can find these IPs in the **Status** tab. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported.
 
 ### <a id="asg"></a> Create an Application Security Group
 
@@ -78,11 +78,11 @@ Create an [Application Security Group](http://docs.pivotal.io/pivotalcf/admingui
 
 	<%= image_tag('add-product.png') %>
 
-1. Click **Add** next to the uploaded product description in the Available Products view to add this product to your staging area.
+1. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.
 
 	<%= image_tag('config-mysql.png') %>
 
-1. Click the newly added tile to configure the settings for your MySQL for PCF service, including its service plans. See [Configuring MySQL for PCF](./configuring.html) for instructions.
+1. Click the newly-added tile to configure the settings for your MySQL for PCF service, including its service plans. See [Configuring MySQL for PCF](./configuring.html) for instructions.
 
 	<%= image_tag('apply-changes.png') %>
 
