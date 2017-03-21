@@ -47,13 +47,13 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
   1. Record the IP addresses for all instances of the **MySQL Server** job.
 
 1. Obtain the admin credentials for your MySQL server by performing the following steps:
-  1. From the MySQL for PCF tile, click the **Credentials** tab.
+  1. From the **MySQL for PCF** tile, click the **Credentials** tab.
   1. Locate the **Mysql Admin Password** entry in the **MySQL Server** section and click **Link to Credential**.
   1. Record the values for `identity` and `password`.
 
 1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, review the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) section of the Advanced Troubleshooting with the BOSH CLI topic for specific instructions.
 
-1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved above and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
+1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved from the initial step and `YOUR-IDENTITY` with the `identity` value obtained from the second step. When prompted for a password, provide the `password` value obtained from the second step.
   1. Create a dummy database in the first node:
     <pre class="terminal">
     $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"
@@ -95,7 +95,7 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
     +----+----------------------+
     </pre>
 
-1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment. If each MySQL server instance does return the same result, then you can safely proceed to scaling down your cluster to a single node by performing the steps in the following section.
+1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment. If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node by performing the steps in the following section.
 
 ### <a id="simulating-node-failure"></a> Simulating node failure ##
   - To simulate a temporary single node failure, use `kill -9` on the pid of the MySQL process. This will only temporarily disable the node because the process is being monitored by monit, which will restart the process if it is not running.
@@ -134,7 +134,7 @@ $ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status
 
 If all nodes are in the `Primary` component, you have a healthy cluster. If some nodes are in a `Non-primary` component, those nodes are not able to join the cluster.
 
-See how many nodes are in the cluster.
+To check how many nodes are in the cluster perform the following command:
 
 <pre class="terminal">
 $ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
@@ -155,11 +155,9 @@ Bootstrapping is the process of (re)starting a Galera cluster.
 
 ### <a id="replication-errors"></a> Many replication errors in the logs
 
-I see lots of replication errors in my logs! Is the cluster broken?
+Unless the GRA files show a clear execution error (e.g., out of disk space) seeing many replication errors in your logs is a normal behavior. We will be working on more advanced monitoring to detect the failure case and alert Operators in the future.
 
-Unless the GRA files show a clear execution error (e.g., out of disk space) this is a normal behavior, and it's nothing to worry about. We will be working on more advanced monitoring to detect the failure case, and alert Operators in the future.
-
-Occasionally, you'll see replication errors in the MySQL logs that will look something like this:
+Occasionally, replication errors in the MySQL logs will resemble the following:
 
 <pre class="terminal">
 160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
@@ -201,14 +199,14 @@ This is an artifact of an automatic polling-protection [feature](https://mariadb
 
 ### <a id="service-plan-deletion"></a> Accidental Deletion of a Service Plan ##
 
-If and only if the Operator does all of these steps in sequence, a plan will become "unrecoverable":
+If and only if the Operator does all of the following steps in sequence, a plan will become "unrecoverable":
 
-1. Click the trash-can icon in the Service Plan screen
-1. Enter a plan with the exact same name
-1. Click the 'Save' button on the same screen
-1. Return to the Ops Manager top-level, and click 'Apply Changes'
+1. Click the trash-can icon in the Service Plan screen.
+1. Enter a plan with the exact same name.
+1. Click the 'Save' button on the same screen.
+1. Return to the Ops Manager top-level, and click 'Apply Changes'.
 
-After clicking 'Apply Changes', the deploy will eventually fail with the error:
+After clicking 'Apply Changes', the deploy will eventually fail with the following error:
 
 <pre class="terminal">
 Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
@@ -228,10 +226,10 @@ If you have committed steps 1, 2 and 3, do not click 'Apply Changes.' Instead, r
     - firewall rule changes
     - vm failure
   - Unresponsive nodes will stop responding to queries and, after timeout, leave the cluster.
-  - Nodes will be marked as unresponsive (inactive) either:
+  - Nodes will be marked as unresponsive/inactive under eith of the following circumstances:
     - If they fail to respond to one node within 15 seconds
-    - OR If they fail to respond to all other nodes within 5 seconds
-  - Unresponsive nodes that become responsive again will rejoin the cluster, as long as they are on the same IP which is pre-configured in the gcomm address on all the other running nodes, and a quorum was held by the remaining nodes.
+    - If they fail to respond to all other nodes within 5 seconds
+  - Unresponsive nodes that become responsive again will rejoin the cluster, as long as they are on the same IP which is pre-configured in the gcomm address on all the other running nodes and a quorum was held by the remaining nodes.
   - All nodes suspend writes once they notice something is wrong with the cluster (write requests hang). After a timeout period of 5 seconds, requests to non-quorum nodes will fail. Most clients return the error: `WSREP has not yet prepared this node for application use`. Some clients may instead return `unknown error`. Nodes who have reached quorum will continue fulfilling write requests.
   - If deployed using a proxy, a continually inactive node will cause the proxy to fail over, selecting a different MySQL node to route new queries to.
 
