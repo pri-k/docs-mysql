@@ -5,30 +5,4 @@ owner: MySQL
 
 This topic lists known issues with specific releases of MySQL for Pivotal Cloud Foundry (PCF).
 
-## <a id="broken-errand-templates"></a> Bootstrap and Rejoin-Unsafe Errand Issue
-
-There is an issue in versions 1.8.0 - 1.8.2 in which the `bootstrap` and `rejoin-unsafe` errands fail with an error like this:
-
-<pre class="terminal">
-Error 100: Unable to render jobs for instance group 'rejoin-unsafe'. Errors are:
-    - Unable to render templates for job 'rejoin-unsafe'. Errors are:
-      - Error filling in template 'config.yml.erb' (line 8: Can't find link 'arbitrator')
-</pre>
-
-This is a bug in those releases. It will be addressed in a coming release. In the meanwhile, it may be necessary to perform these steps manually:
-
-  - For `boostrap`, use the [manual bootstrap](bootstrapping.html#manual-bootstrap) instructions to restore access to the cluster.
-  - For `rejoin-unsafe`, follow these steps:
-    1. Log into the node which has tripped the [interruptor](monitoring-mysql.html#interruptor) and become root.
-    1. Run `monit stop mariadb_ctrl`
-    1. Run `rm -rf /var/vcap/store/mysql`
-    1. Run `/var/vcap/jobs/mysql/bin/pre-start`
-    1. Run `monit start mariadb_ctrl`
-
-## <a id="compile-fails"></a> Compile fails in environments that do not have access to the Internet ##
-
-MySQL for PCF v1.8.0-Edge.5 and v1.8.0-Edge.6 contain a regression that causes compilation to fail when the installation environment lacks Internet access.
-
-## <a id="backups-medata"></a> Backups Metadata ##
-
-In MySQL for PCF 1.7.0, both `compressed` and `encrypted` incorrectly show as `N` in the backup metadata file. This is due to the fact that MySQL for PCF implements compression and encryption outside of the tool that generates the file.
+There are no known issues with MySQL for PCF 1.9.0 at this time.

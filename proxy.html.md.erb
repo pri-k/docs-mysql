@@ -18,12 +18,6 @@ From a browser, you can open the dashboard for each proxy instance at: `http://p
 
 You need basic auth credentials to access these dashboards. You can find them in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
 
-## <a id="consistent-routing"></a>Consistent Routing with Multiple Proxies##
-
-Switchboard only routes to one server node at a time. While that node remains healthy, it serves as the only active node, the only node taking requests.
-
-If you run multiple Switchboard proxies in parallel (ex: behind a load-balancer) the proxies may not choose the same active node. This can result in deadlocks when multiple clients attempt to update the same database row,  one commit succeeds, and the other fails. This is a known issue. To avoid this problem, use a single proxy instance or an external failover system to direct traffic to one proxy instance at a time.
-
 ## <a id="node-health"></a>Node Health ##
 
 When determining where to route traffic, the proxy queries an HTTP healthcheck process running on the database node VM. This healthcheck can return as either healthy or unhealthy, or the node can be unresponsive.
@@ -51,46 +45,6 @@ If node health cannot be determined due to an unreachable or unresponsive health
 If the operator sets the total number of proxy hosts to `0` in OpsManager or BOSH deployment manifest, apps connect directly to one MariaDB server node. This makes that node a single point of failure (SPOF) for the cluster.
 
 For high-availability, Pivotal recommends running two proxies, which provides redundancy should one of the proxies fail.
-
-## <a id="proxy-spof"></a>Removing the Proxy as a SPOF ##
-
-Bound applications are provided with a hostname or IP address to reach a database managed by the service. By default, the MySQL service provides bound applications with the IP of the first instance in the proxy tier. Even if additional proxy instances are deployed, client connections do not route through them. This means the first proxy instance is a single point of failure.
-
-To eliminate the first proxy instance as a single point of failure:
-
-1. [Configure a load balancer](#lb-config) to route client connections across multiple proxy IPs.
-
-1. [Configure MySQL for PCF](#lb-proxy-config) to give bound applications the hostname or IP address for the load balancer.
-
-### <a id="lb-config"></a>Configure a Load Balancer to Remove Proxy SPOF
-
-To configure a load balancer to route traffic across multiple proxies:
-
-1. Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306. 
-
-1. Configure the load balancer's healthcheck to use the proxy health port. This defaults to TCP port `1936`, to maintain backwards compatibility with previous releases. This port is not configurable.
-
-### <a id="lb-proxy-config"></a>Configure MySQL for PCF to Remove Proxy SPOF
-
-To ensure that bound applications will use the load balancer to reach bound databases:
-
-1. **AWS only**: Set up Round Robin DNS across your proxy IPs using [AWS Route 53](#route-53).
-
-1. In the Ops Manager **MySQL for PCF** tile > **Resource Config** pane, enter your load balancer's hostname in the **Proxy** row > **ELB Names** column.
-
-### <a id="route-53"></a>AWS Route 53 ###
-
-To set up a Round Robin DNS across multiple proxy IPs using AWS Route 53:
-
-1. Log in to AWS.
-2. Click **Route 53**.
-3. Click **Hosted Zones**.
-4. Select the hosted zone that contains the domain name to apply round robin routing to.
-5. Click **Go to Record Sets**.
-6. Select the record set containing the desired domain name.
-7. In the value input, enter the IP addresses of each proxy VM, separated by a newline.
-
-Finally, update the manifest property `properties.mysql_node.host` for the cf-mysql-broker job, as described above.
 
 ## <a id="switchboard-api"></a> API
 

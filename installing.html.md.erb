@@ -29,33 +29,37 @@ If you deploy the MySQL service on a different network than Elastic Runtime, con
 
 ### <a id="load-balancer"></a> Configure a Load Balancer
 
-In older versions of the product, applications were given the IP of the single MySQL server in bind credentials. When upgrading to v1.5.0, existing applications will continue to function, but, to take advantage of high availability features, they must be rebound to receive either the IP of the first proxy instance or the IP/hostname of a load balancer.
+For high availability, Pivotal recommends using a load balancer in front of the proxies:
 
-In order to configure a load balancer with the IPs of the proxy tier before v1.5.0 is deployed and prevent applications from obtaining the IP of the first proxy instance, the product enables an operator to configure the IPs that will be assigned to proxy instances. The following instructions applies to the **Proxy** pane under the MySQL tile **Settings** tab in Ops Manager.
-
-- In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances. These IP addresses must be in the CIDR range configured in the Director tile and not be currently allocated to another VM. Look at the **Status** pages of other tiles to see what IP addresses are in use.
-
-- In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service. This hostname or IP address should resolve to your load balancer and be considered long-lived. When this field is modified, applications must be rebound to receive updated credentials.
-
-Recommendations for configuring your load balancer:
-
-* **Configure your load balancer in failover-only mode.** Because proxy instances are not synchronized, Pivotal recommends configuring your load balancer to send all traffic to one proxy instance and to redirect all traffic to the other proxy if the first proxy fails. Amazon ELB does not support this configuration.
+* **Configure your load balancer for failover-only mode.** Failover-only mode sends all traffic to one proxy instance at a time, and redirects to the other proxy only if the first proxy fails. This behavior prevents deadlocks when different proxies send queries to update the same database row. This can happen during brief server node failures, when the active server node changes.  
+Amazon ELB does not support this mode; see [AWS Route 53](#route-53) for the alternative configuration.
 
 * **Make your idle time out long enough to not interrupt long-running queries.** When queries take a long time, the load balancer can time out and interrupt the query.  
 For example, [AWS's Elastic Load Balancer](http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/config-idle-timeout.html) has a default idle timeout of 60 seconds, so if a query takes longer than this duration then the MySQL connection will be severed and an error will be returned.
 
-* **Configure your load balancer with a healthcheck or monitor, using TCP against port 1936**. Unauthenticated healthchecks against port 3306 may cause the service to become unavailable and require manual intervention to fix.
+* **Configure  a healthcheck or monitor, using TCP against port 1936**. This defaults to TCP port `1936`, to maintain backwards compatibility with previous releases. This port is not configurable. Unauthenticated healthchecks against port 3306 may cause the service to become unavailable and require manual intervention to fix.
 
-#### <a id="proxy-sync"></a> Proxies may write to different MySQL masters
+* **Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306**. 
 
-All proxy instances use the same method to determine cluster health. However, certain conditions may cause the proxy instances to route to different nodes, for example after brief cluster node failures.
+After you install MySQL for PCF, you [assign IPs to the proxy instances](./configuring.html#proxy) in Ops Manager.
 
-This could be an issue for tables that receive many concurrent writes. Multiple clients writing to the same table could obtain locks on the same row, resulting in a deadlock. One commit will succeed and all others will fail and must be retried. This can be prevented by configuring your load balancer to route connections to **only one proxy instance at a time**.
+#### <a id="route-53"></a>AWS Route 53 ###
 
+Use AWS Route 53 to set up Round Robin DNS across multiple proxy IPs as follows:
 
-#### <a id="add-lb"></a> Adding a Load Balancer after an Initial Deploy
+1. Log in to AWS.
+2. Click **Route 53**.
+3. Click **Hosted Zones**.
+4. Select the hosted zone that contains the domain name to apply round robin routing to.
+5. Click **Go to Record Sets**.
+6. Select the record set containing the desired domain name.
+7. In the value input, enter the IP addresses of each proxy VM, separated by a newline.
 
-If you initially deploy v1.5.0 without a load balancer and without proxy IPs configured, you can set up a load balancer later to remove the proxy as a single point of failure. When adding a load balancer to an existing installation, you need to:
+Finally, update the manifest property `properties.mysql_node.host` for the cf-mysql-broker job, as described above.
+
+#### <a id="add-lb"></a> Add a Load Balancer to an Existing Installation
+
+If you initially deploy MySQL for PCF v1.5.0 without a load balancer and without proxy IPs configured, you can set up a load balancer later to remove the proxy as a single point of failure. When adding a load balancer to an existing installation, you need to:
 
 - Rebind your apps to receive the hostname or IP that resolves to the load balancer. To rebind: unbind your application from the service instance, bind it again, then restage your application. For more information see [Managing Service Instances with the CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). In order to avoid unnecessary rebinding, we recommend configuring a load balancer before deploying v1.5.0.
 - Instead of configuring the proxy IPs in Ops Manager, configure DNS for your load balancer to point to the IPs that were dynamically assigned to your proxies. You can find these IPs in the **Status** tab. Configuration of proxy IPs after the product is deployed with dynamically assigned IPs is not well supported.
