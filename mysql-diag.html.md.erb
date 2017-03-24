@@ -20,7 +20,7 @@ In Pivotal MySQL 1.9.0+, `mysql-diag` is automatically installed and configured.
 
 Pivotal MySQL 1.9.0 and above will have the `mysql-diag-agent` present. Older versions of Pivotal MySQL do not have the `mysql-diag-agent`. If the `mysql-diag-agent` is not available, your output from the mysql-diag tool will not include the percentage of Persistent and Ephemeral Disk space used by a Host.
 
-## <a id="sample-output">Outputs</a> ##
+## <a id="sample-output"></a> Outputs ##
 
 After preparing your environment, run the `mysql-diag` command from your terminal:
 <pre class="terminal">$ mysql-diag</pre>
@@ -65,16 +65,16 @@ In the event of a broken cluster, running `mysql-diag` will output actionable st
 +------------+-----------+-------------------+----------------------+--------------------+
   |    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
   +------------+-----------+-------------------+----------------------+--------------------+
-  | 10.0.16.44 | mysql/a1  | N/A - ERROR            | N/A - ERROR              |                N/A - ERROR |
-  | 10.0.16.45 | mysql/b2 | N/A - ERROR           | N/A - ERROR              |                N/A - ERROR |
-  | 10.0.32.10 | mysql/c3  | N/A - ERROR            | N/A - ERROR              |                N/A - ERROR |
+  | 10.0.16.44 | mysql/a1  | N/A - ERROR       | N/A - ERROR  | N/A - ERROR |
+  | 10.0.16.45 | mysql/b2 | N/A - ERROR        | N/A - ERROR  |      N/A - ERROR |
+  | 10.0.32.10 | mysql/c3  | N/A - ERROR            | N/A - ERROR  | N/A - ERROR |
   +------------+-----------+-------------------+----------------------+--------------------+
 +------------+-----------+-------------------+----------------------+--------------------+
   |    HOST    | NAME/UUID | PERSISTENT DISK USED | EPHEMERAL DISK USED |
   +------------+-----------+-------------------+----------------------+--------------------+
-  | 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)        |                 
-  | 10.0.32.10 | mysql/c3  |  9.0% of 98.3G (0.0% of 6.55M inodes)          |              |  35.4% of 2.9G (30.0% of 0.20M inodes)               
-  | 10.0.16.45 | mysql/b2  |  9.0% of 98.3G (0.0% of 6.55M inodes)          |            |   35.4% of 2.9G (30.0% of 0.20M inodes)              
+  | 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|                 
+  | 10.0.32.10 | mysql/c3  |  9.0% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|            
+  | 10.0.16.45 | mysql/b2  |  9.0% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|            
   +------------+-----------+-------------------+----------------------+--------------------+
 
 [CRITICAL] The replication process is unhealthy. Writes are disabled.
@@ -87,6 +87,7 @@ For full information about how to download and use the download-logs command see
 Do not perform the following unless instructed by Pivotal Support:
 - Do not scale down the cluster to one node then scale back. This puts user data at risk.
 - Avoid “bosh recreate” and “bosh cck”. These options remove logs on the VMs making it harder to diagnose cluster issues. 
+
 </pre>
 
 
