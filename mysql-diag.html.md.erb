@@ -3,23 +3,23 @@ title: MySQL-Diag
 owner: MySQL
 ---
 
-This topic discusses how to use the `mysql-diag` tool in Pivotal MySQL. MySQL-diag relays the state of your MySQL service and suggests steps to take in the event of a node failure. In conjunction with Support, this tool helps expedite the diagnosis and resolution of problems with MySQL. 
+This topic discusses how to use the `mysql-diag` tool in Pivotal MySQL. `mysql-diag` relays the state of your MySQL service and suggests steps to take in the event of a node failure. In conjunction with Support, this tool helps expedite the diagnosis and resolution of problems with MySQL. 
 
 In Pivotal MySQL 1.9.0+, `mysql-diag` is automatically installed and configured. If you are on a prior version, select the documentation for your version of MySQL for PCF. 
 
 ## <a id="prepare"></a> Prepare Your Environment ##
 1. If this is your first time using `mysql-diag`, follow the instructions within the [Prepare to Use the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) topic. If you have completed this step in a prior use of `mysql-diag`, move directly to Step 2.
-1. Select either Elastic Runtime or Pivotal MySQL as your deployment to troubleshoot. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot
-](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#product) topic.
+
+1. Select either Elastic Runtime or Pivotal MySQL as your deployment to troubleshoot. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#product) topic.
 
 1. Run `bosh ssh` from the Ops Manager VM and select the **mysql-monitor node** from the list. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot
 ](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#bosh-ssh) topic.
 
 ## <a id="diag-agent"></a> mysql-diag-agent ##
 
-Pivotal MySQL 1.9.0 and above will have the `mysql-diag-agent` present. Older versions of Pivotal MySQL do not have the `mysql-diag-agent`. If the `mysql-diag-agent` is not available, your output from the mysql-diag tool will not include the percentage of Persistent and Ephemeral Disk space used by a Host.
+Pivotal MySQL 1.9.0 and above will have the `mysql-diag-agent` present. Older versions of Pivotal MySQL do not have the `mysql-diag-agent`. If the `mysql-diag-agent` is not available, your output from the `mysql-diag` tool will not include the percentage of Persistent and Ephemeral Disk space used by a Host.
 
-## <a id="sample-output"></a> Outputs ##
+## <a id="sample-output"></a> Run Command and View Output ##
 
 After preparing your environment, run the `mysql-diag` command from your terminal:
 <pre class="terminal">$ mysql-diag</pre>
@@ -37,7 +37,6 @@ Checking cluster status of mysql/b2 at 10.0.16.45 ...
 Checking cluster status of mysql/a1 at 10.0.16.44 ... done
 Checking cluster status of mysql/c3 at 10.0.32.10 ... done
 Checking cluster status of mysql/b2 at 10.0.16.45 ... done
-
 +------------+-----------+-------------------+----------------------+--------------------+
 |    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
 +------------+-----------+-------------------+----------------------+--------------------+
