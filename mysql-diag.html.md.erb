@@ -3,13 +3,12 @@ title: MySQL-Diag
 owner: MySQL
 ---
 
-This topic discusses how to use the mysql-diag tool in Pivotal MySQL. MySQL-diag relays the state of your MySQL service and suggests steps to take in the event of a node failure. In conjunction with Support, this tool helps expedite the diagnosis and resolution of problems with MySQL. 
+This topic discusses how to use the `mysql-diag` tool in Pivotal MySQL. MySQL-diag relays the state of your MySQL service and suggests steps to take in the event of a node failure. In conjunction with Support, this tool helps expedite the diagnosis and resolution of problems with MySQL. 
 
 In Pivotal MySQL 1.9.0+, `mysql-diag` is automatically installed and configured. If you are on a prior version, select the documentation for your version of MySQL for PCF. 
 
 ## <a id="prepare"></a> Prepare Your Environment ##
-1. If this is your first time using mysql-diag, follow the instructions within the [Prepare to Use the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) topic. If you have completed this step in a prior use of mysql-diag, move directly to Step 2.
-
+1. If this is your first time using `mysql-diag`, follow the instructions within the [Prepare to Use the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) topic. If you have completed this step in a prior use of `mysql-diag`, move directly to Step 2.
 1. Select either Elastic Runtime or Pivotal MySQL as your deployment to troubleshoot. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot
 ](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#product) topic.
 
@@ -29,7 +28,7 @@ Upon running `mysql-diag` in your terminal, you will see the following if your c
  
 <pre class="terminal">Checking canary status...healthy</pre> 
 
-Here is a sample `mysql-diag` output after the tool identifies a healthy cluster:  
+Here is a sample `mysql-diag` output after the tool identified a healthy cluster:  
 
 <pre class="terminal">
 Checking cluster status of mysql/a1 at 10.0.16.44 ...
@@ -40,42 +39,62 @@ Checking cluster status of mysql/c3 at 10.0.32.10 ... done
 Checking cluster status of mysql/b2 at 10.0.16.45 ... done
 
 +------------+-----------+-------------------+----------------------+--------------------+
-  |    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
-  +------------+-----------+-------------------+----------------------+--------------------+
-  | 10.0.16.44 | mysql/a1  | Synced            | Primary              |                  3 |
-  | 10.0.32.10 | mysql/c3  | Synced            | Primary              |                  3 |
-  | 10.0.16.45 | mysql/b2  | Synced            | Primary              |                  3 |
-  +------------+-----------+-------------------+----------------------+--------------------+
+|    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
 +------------+-----------+-------------------+----------------------+--------------------+
-  |    HOST    | NAME/UUID | PERSISTENT DISK USED | EPHEMERAL DISK USED |
-  +------------+-----------+-------------------+----------------------+--------------------+
-  | 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)        |                 
-  | 10.0.32.10 | mysql/c3  |  7.4% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)  |             
-  | 10.0.16.45 | mysql/b2  |  7.4% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes) |             
-  +------------+-----------+-------------------+----------------------+--------------------+
+| 10.0.16.44 | mysql/a1  | Synced            | Primary              |                  3 |
+| 10.0.32.10 | mysql/c3  | Synced            | Primary              |                  3 |
+| 10.0.16.45 | mysql/b2  | Synced            | Primary              |                  3 |
++------------+-----------+-------------------+----------------------+--------------------+
+I don't think bootstrap is necessary
+Checking disk status of mysql/a1 at 10.0.16.44 ...
+Checking disk status of mysql/c3 at 10.0.32.10 ...
+Checking disk status of mysql/b2 at 10.0.16.45 ...
+Checking disk status of mysql/a1 at 10.0.16.44 ... done
+Checking disk status of mysql/c3 at 10.0.32.10 ... done
+Checking disk status of mysql/b2 at 10.0.16.45 ... done
++------------+-----------+-------------------+----------------------+---------------------------------------+
+|    HOST    | NAME/UUID |          PERSISTENT DISK USED            |            EPHEMERAL DISK USED        | 
++------------+-----------+-------------------+----------------------+---------------------------------------+
+| 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)    |  35.4% of 2.9G (30.0% of 0.20M inodes)|                 
+| 10.0.32.10 | mysql/c3  |  7.4% of 98.3G (0.0% of 6.55M inodes)    |  35.4% of 2.9G (30.0% of 0.20M inodes)|             
+| 10.0.16.45 | mysql/b2  |  7.4% of 98.3G (0.0% of 6.55M inodes)    |  35.4% of 2.9G (30.0% of 0.20M inodes)|             
++------------+-----------+-------------------+----------------------+---------------------------------------+
 </pre>
 
 Upon running `mysql-diag` in your terminal, you will see the following if your canary status is unhealthy:
 
 <pre class="terminal">Checking canary status...unhealthy</pre> 
 
-In the event of a broken cluster, running `mysql-diag` will output actionable steps meant to expedite that cluster’s recovery. Below is a sample `mysql-diag` output after the tool identifies a healthy cluster:  
+In the event of a broken cluster, running `mysql-diag` will output actionable steps meant to expedite that cluster’s recovery. Below is a sample `mysql-diag` output after the tool identified an unhealthy cluster:  
 
-<pre class="terminal"> 
+<pre class="terminal">Checking cluster status of mysql/a1 at 10.0.16.44 ...
+Checking cluster status of mysql/c3 at 10.0.32.10 ...
+Checking cluster status of mysql/b2 at 10.0.16.45 ...
+Checking cluster status of mysql/a1 at 10.0.16.44 ... dial tcp 10.0.16.44: getsockopt: connection refused
+Checking cluster status of mysql/c3 at 10.0.32.10 ... dial tcp 10.0.32.10: getsockopt: connection refused
+Checking cluster status of mysql/b2 at 10.0.16.45 ... dial tcp 10.0.16.45: getsockopt: connection refused
+
 +------------+-----------+-------------------+----------------------+--------------------+
-  |    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
-  +------------+-----------+-------------------+----------------------+--------------------+
-  | 10.0.16.44 | mysql/a1  | N/A - ERROR       | N/A - ERROR  | N/A - ERROR |
-  | 10.0.16.45 | mysql/b2 | N/A - ERROR        | N/A - ERROR  |      N/A - ERROR |
-  | 10.0.32.10 | mysql/c3  | N/A - ERROR            | N/A - ERROR  | N/A - ERROR |
-  +------------+-----------+-------------------+----------------------+--------------------+
+|    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
 +------------+-----------+-------------------+----------------------+--------------------+
-  |    HOST    | NAME/UUID | PERSISTENT DISK USED | EPHEMERAL DISK USED |
-  +------------+-----------+-------------------+----------------------+--------------------+
-  | 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|                 
-  | 10.0.32.10 | mysql/c3  |  9.0% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|            
-  | 10.0.16.45 | mysql/b2  |  9.0% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|            
-  +------------+-----------+-------------------+----------------------+--------------------+
+| 10.0.16.44 | mysql/a1  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        |
+| 10.0.16.45 | mysql/b2  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        | 
+| 10.0.32.10 | mysql/c3  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        |
++------------+-----------+-------------------+----------------------+--------------------+
+
+Checking disk status of mysql/a1 at 10.0.16.44 ...
+Checking disk status of mysql/c3 at 10.0.32.10 ...
+Checking disk status of mysql/b2 at 10.0.16.45 ...
+Checking disk status of mysql/a1 at 10.0.16.44 ... done
+Checking disk status of mysql/c3 at 10.0.32.10 ... done
+Checking disk status of mysql/b2 at 10.0.16.45 ... done
++------------+-----------+-------------------+----------------------+----------------------------------+
+|    HOST    | NAME/UUID |          PERSISTENT DISK USED            |       EPHEMERAL DISK USED        |
++------------+-----------+-------------------+----------------------+----------------------------------+
+| 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|                 
+| 10.0.32.10 | mysql/c3  | 9.0% of 98.3G (0.0% of 6.55M inodes) | 35.4% of 2.9G (30.0% of 0.20M inodes)|            
+| 10.0.16.45 | mysql/b2  | 9.0% of 98.3G (0.0% of 6.55M inodes) | 35.4% of 2.9G (30.0% of 0.20M inodes)|            
++------------+-----------+-------------------+----------------------+----------------------------------+
 
 [CRITICAL] The replication process is unhealthy. Writes are disabled.
 
