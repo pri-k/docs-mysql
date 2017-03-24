@@ -61,7 +61,7 @@ Each virtual machine only runs one `mysqld` process, so they do not need externa
 
 ### Max Allowed Packet: 256MB
 
-MySQL for PCF allows blobs up to 256MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log file size. To store larger files, consider using our Riak CS service.
+MySQL for PCF allows blobs up to 256MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log file size.
 
 ### InnoDB File-Per-Table Tablespaces
 
@@ -71,16 +71,12 @@ InnoDB allows using either a single file to represent all data, or a separate fi
 
 MySQL for PCF uses the `Barracuda` file format to take advantage of extra features available with the `innodb_file_per_table = ON` option.
 
-### Temporary Tables
+### <a id="temp-tables"></a>Temporary Tables
 
 MySQL converts temporary in-memory tables to temporary on-disk tables when either of the following occurs:
 
 * A query generates more than 16 million rows of output
 * A query uses more than 32MB of data space
-
-Users can see if a query is using a temporary table by using the `EXPLAIN` command and looking for `Using temporary` in the output.
-
-If a server simultaneously processes multiple very large queries that use `/tmp` space, queries may return `no space left` errors.
 
 ### Reverse Name Resolution Off
 
@@ -113,23 +109,4 @@ When you scale down from multiple MariaDB nodes to a single node, the primary no
 Removing nodes from a cluster _gracefully_ means that the cluster size decreases while the cluster maintains its healthy state.
 
 You can remove nodes gracefully by manually shutting each down with `monit` or by decreasing the cluster size as described in the [Switch Between Single and HA Topologies](./configuring.html#switch-topologies) section of the Configuring MySQL for PCF topic.
-
-### <a id="rejoin"></a> Rejoining Detached Nodes
-
-Existing server nodes restarted with `monit` should automatically join the cluster. If a detached existing node fails to join the cluster, it may be because its transaction record's sequence number (`seqno`) is higher than that of the nodes with quorum.
-
-A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks. Check this by looking at the error log `/var/vcap/sys/log/mysql/mysql.err.log`.
-
-If the detached node has a higher sequence number than the primary, do one of the following to restore the cluster:
-
-  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data. See the [bootstrapping](bootstrapping.html) topic for more details.
-  - Abandon the unsynchronized data on the detached node. To do this:
-  	1. Log into the detached node as root.
-    1. Run `monit stop mariadb_ctrl` to stop the process.
-    1. Delete the Galera state file `/var/vcap/store/mysql/grastate.dat`.
-    1. Delete the Galera cache file `/var/vcap/store/mysql/galera.cache`.
-    1. Run `monit start mariadb_ctrl` to restart the node.
-
-It may also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone and beyond the scope of this document.
-
 

@@ -11,11 +11,11 @@ MySQL is a powerful open-source relational database used by applications since t
 
 ## <a id="about-p-mysql"></a>About MySQL for PCF ##
 
-The MySQL for PCF product delivers a fully managed, "Database as a Service" to Cloud Foundry users. The tile deploys and maintains a MySQL server running a recent release of [MariaDB](http://www.mariadb.org), a SQL proxy for fast failover, and a service broker. The tile configures sane defaults for a general-use relational database service.
+The MySQL for PCF product delivers a fully managed, "Database as a Service" to Cloud Foundry users. The tile deploys and maintains a MySQL server running a recent release of [MariaDB](http://www.mariadb.org) and [Galera](http://galeracluster.com); a SQL proxy, [Switchboard](https://github.com/cloudfoundry-incubator/switchboard); and a service broker. The tile configures sane defaults for a general-use relational database service.
 
 With MySQL for PCF installed, developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Developers can retrieve connection credentials in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES), from the `VCAP-SERVICES` environment variable. Developers can select from a menu of service plans options, which are configured by the platform operator.
 
-You can deploy MySQL for PCF in either single node or high-availability (HA) topology. The HA topology has three MySQL servers, two proxies, two service brokers, and you need to supply a load balancer.
+You can deploy MySQL for PCF in either single-node or high availability (HA) topology. The HA topology has three MySQL servers, two proxies, two service brokers, and you need to supply a load balancer.
 
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
@@ -38,7 +38,7 @@ Current MySQL for PCF Details
 
 Consider the following compatibility information before upgrading MySQL.
 
-For more information, refer to the full [Product Compatibility Matrix](../../compatibility-matrix.pdf).
+For more information, refer to the full [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
 <table border="1" class="nice">
 	<tr>
@@ -75,7 +75,7 @@ The table below shows the enterprise-readiness of each MySQL for PCF topology. C
 
 <center>
 <table>
-  <tr><th></th><th>Single</th><th>Highly Available</th></tr>
+  <tr><th></th><th>Single-Node</th><th>High Availability (HA)</th></tr>
   <tr><td>**MySQL**</td><td>1 node</td><td>3-node cluster</td></tr>
   <tr><td>**SQL Proxy**</td><td>1 node</td><td>2 nodes</td></tr>
   <tr><td>**Service Broker**</td><td>1 node</td><td>2 nodes</td></tr>
@@ -95,12 +95,12 @@ The table below shows the enterprise-readiness of each MySQL for PCF topology. C
 (\*) vSphere and AWS (1.8.0-edge.15 and later)<br>
 (&#x271D;) Requires IPSEC BOSH plug-in
 
-## <a id="limitations"></a>HA Limitations ##
+## <a id="limitations"></a>High Availability Limitations ##
 
 When deployed in HA topology, MySQL for PCF runs three master nodes. This cluster arrangement imposes some limitations that you should be aware of, which do not apply to single-node MySQL database servers.
 
 - Although two proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](proxy.html) section, as well as the entry in [Known Issues](known-issues.html).
-- MySQL for PCF only supports the InnoDB storage engine; it is the default storage engine for new tables. Attempting to use other storage engines (including MyISAM) may lose data.
+- MySQL for PCF only supports the InnoDB storage engine; it is the default storage engine for new tables. Pre-existing tables that are not InnoDB are at risk because they are not replicated within a cluster.
 - The database servers are shared, managed by multi-tenant processes to serve apps across the PCF deployment. Although data is securely isolated between tenants using unique credentials, app performance may be impacted by noisy neighbors.
 - Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and become unusable until manually bootstrapped.
 - See also the list of [Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/) in MariaDB cluster.
