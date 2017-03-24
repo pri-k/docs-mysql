@@ -7,7 +7,7 @@ This topic discusses how to use the mysql-diag tool in Pivotal MySQL. MySQL-diag
 
 In Pivotal MySQL 1.9.0+, `mysql-diag` is automatically installed and configured. If you are on a prior version, select the documentation for your version of MySQL for PCF. 
 
-## <a id="prepare">Prepare Your Environment</a>
+## <a id="prepare"></a> Prepare Your Environment ##
 1. If this is your first time using mysql-diag, follow the instructions within the [Prepare to Use the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) topic. If you have completed this step in a prior use of mysql-diag, move directly to Step 2.
 
 1. Select either Elastic Runtime or Pivotal MySQL as your deployment to troubleshoot. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot
@@ -16,11 +16,11 @@ In Pivotal MySQL 1.9.0+, `mysql-diag` is automatically installed and configured.
 1. Run `bosh ssh` from the Ops Manager VM and select the **mysql-monitor node** from the list. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot
 ](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#bosh-ssh) topic.
 
-## <a id="diag-agent">mysql-diag-agent</a>
+## <a id="diag-agent"></a> mysql-diag-agent ##
 
 Pivotal MySQL 1.9.0 and above will have the `mysql-diag-agent` present. Older versions of Pivotal MySQL do not have the `mysql-diag-agent`. If the `mysql-diag-agent` is not available, your output from the mysql-diag tool will not include the percentage of Persistent and Ephemeral Disk space used by a Host.
 
-## <a id="sample-output">Outputs</a>
+## <a id="sample-output">Outputs</a> ##
 
 After preparing your environment, run the `mysql-diag` command from your terminal:
 <pre class="terminal">$ mysql-diag</pre>
@@ -50,8 +50,8 @@ Checking cluster status of mysql/b2 at 10.0.16.45 ... done
   |    HOST    | NAME/UUID | PERSISTENT DISK USED | EPHEMERAL DISK USED |
   +------------+-----------+-------------------+----------------------+--------------------+
   | 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)        |                 
-  | 10.0.32.10 | mysql/c3  |  7.4% of 98.3G (0.0% of 6.55M inodes)          |              |  35.4% of 2.9G (30.0% of 0.20M inodes)               
-  | 10.0.16.45 | mysql/b2  |  7.4% of 98.3G (0.0% of 6.55M inodes)          |            |   35.4% of 2.9G (30.0% of 0.20M inodes)              
+  | 10.0.32.10 | mysql/c3  |  7.4% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)  |             
+  | 10.0.16.45 | mysql/b2  |  7.4% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes) |             
   +------------+-----------+-------------------+----------------------+--------------------+
 </pre>
 
@@ -61,6 +61,7 @@ Upon running `mysql-diag` in your terminal, you will see the following if your c
 
 In the event of a broken cluster, running `mysql-diag` will output actionable steps meant to expedite that cluster’s recovery. Below is a sample `mysql-diag` output after the tool identifies a healthy cluster:  
 
+<pre class="terminal"> 
 +------------+-----------+-------------------+----------------------+--------------------+
   |    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
   +------------+-----------+-------------------+----------------------+--------------------+
