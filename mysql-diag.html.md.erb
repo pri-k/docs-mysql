@@ -15,6 +15,8 @@ In Pivotal MySQL 1.9.0+, `mysql-diag` is automatically installed and configured.
 1. Run `bosh ssh` from the Ops Manager VM and select the **mysql-monitor node** from the list. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot
 ](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#bosh-ssh) topic.
 
+1. Once on the `mysql-monitor` VM type `mysql-diag` at the terminal prompt.
+
 ## <a id="diag-agent"></a> mysql-diag-agent ##
 
 Pivotal MySQL 1.9.0 and above will have the `mysql-diag-agent` present. Older versions of Pivotal MySQL do not have the `mysql-diag-agent`. If the `mysql-diag-agent` is not available, your output from the `mysql-diag` tool will not include the percentage of Persistent and Ephemeral Disk space used by a Host.
