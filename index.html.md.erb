@@ -30,6 +30,7 @@ Current MySQL for PCF Details
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** Yes
+- **Azure support?** Yes
 - **IPSec support?** Yes
 
 </div>
@@ -62,7 +63,7 @@ Prior to upgrading you should:
 <p class='note'><strong>Note</strong>: MySQL for PCF v1.9.0 contains <b>breaking changes</b>. Please read the notes below before upgrading to this version.</p>
 
 - Validate the health of your cluster. If running in the HA configuration, download, configure and run the [mysql-diag](http://bit.ly/pivotal-mysql-diag) tool. Do not use **Apply Changes** if `mysql-diag` shows any cluster issues. Be sure to resolve those issues before upgrading.
-- Identify and rewrite any applications that lock tables. MySQL for PCF v1.9.0 retroactively removes the ability to `LOCK TABLES` from all app bindings. If you have activity logging enabled<sup>[*](configuring.html#server)</sup>, you can use it to search for table locking events and then identify the apps that requested those actions. Rewrite your apps as necessary so they no longer use table locking. 
+- Identify and rewrite any applications that lock tables. MySQL for PCF v1.9.0 retroactively removes the ability to `LOCK TABLES` from all app bindings. If you have activity logging enabled<sup>[*](configuring.html#server)</sup>, you can use it to search for table locking events and then identify the apps that requested those actions. Rewrite your apps as necessary so they no longer use table locking.
 - MariaDB 10.1.20, included in this release, has a [breaking change](https://jira.mariadb.org/browse/MDEV-12210) in large index creation. Where previously large indices were silently truncated, now `ALTER TABLE` and `CREATE INDEX` statements may fail. In order to create large indices, tables must be created or altered to use `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED` if they are to contain an index with greater than 767 bytes in it.
 - If any of your apps already use or want to create indices with more than 767 bytes, create or change them to use `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED`. Otherwise, `ALTER TABLE` and `CREATE INDEX` statements may fail. Older versions of MariaDB silently truncated large indices, MariaDB 10.1.20, included in but MySQL v1.9 includes, [breaks](https://jira.mariadb.org/browse/MDEV-12210) when it creates too-large indices.
 
