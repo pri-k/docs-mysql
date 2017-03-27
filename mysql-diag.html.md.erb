@@ -7,7 +7,7 @@ This topic discusses how to use the `mysql-diag` tool in  MySQL for Pivotal Clou
 
 In MySQL for PCF 1.9.0 and later, the `mysql-diag` tool is automatically installed and configured. If you are on a prior version, select the documentation for your version of MySQL for PCF. 
 
-## <a id="prepare"></a> Prepare Your Environment ##
+## <a id="run"></a> Run mysql-diag ##
 1. If this is your first time using `mysql-diag`, follow the instructions within the [Prepare to Use the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) topic. If you have completed this step in a prior use of `mysql-diag`, move directly to Step 2.
 
 1. Select either Elastic Runtime or MySQL for PCF as your deployment to troubleshoot. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#product) topic.
@@ -15,7 +15,7 @@ In MySQL for PCF 1.9.0 and later, the `mysql-diag` tool is automatically install
 1. Run `bosh ssh` from the Ops Manager VM and select the **mysql-monitor node** from the list. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot
 ](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#bosh-ssh) topic.
 
-1. Once on the `mysql-monitor` VM type the following command to run mysql-diag:
+1. Once on the `mysql-monitor` VM type the following command to run `mysql-diag`:
 <pre class="terminal">$ mysql-diag</pre>
 
 
@@ -63,7 +63,7 @@ Checking disk status of mysql/b2 at 10.0.16.45 ... done
 
 ## <a id="unhealthy"></a> Example Unhealthy Output ##
 
-The mysql-diag command returns the following message if your canary status is unhealthy:
+The `mysql-diag` command returns the following message if your canary status is unhealthy:
 
 <pre class="terminal">Checking canary status...unhealthy</pre> 
 
