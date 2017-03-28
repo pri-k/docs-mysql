@@ -18,11 +18,11 @@ To download `mysql-diag`:
 1. Download the file labeled **mysql-diag.conf** attached to the [Diagnosing problems with Elastic Runtime MySQL or the Pivotal MySQL Tile](https://discuss.pivotal.io/hc/en-us/articles/115001980967-Diagnosing-problems-with-Elastic-Runtime-MySQL-or-the-Pivotal-MySQL-Tile) Knowledge Base article. 
 
 1. Copy that binary to the `mysql-monitor` VM with the following command:
-`bosh scp JOB-NAME JOB-INSTANCE-NUMBER --upload LOCAL-FILE-PATH REMOTE-FILE-PATH`
+<pre class="terminal">bosh scp JOB-NAME JOB-INSTANCE-NUMBER --upload LOCAL-FILE-PATH REMOTE-FILE-PATH</pre>
 
-Running the `bosh instances` command will display the information needed to insert the JOB-NAME and JOB-INSTANCE-NUMBER options. For more information on the `bosh istances` command, see the [bosh documentation](https://bosh.io/docs/sysadmin-commands.html) on system administration tasks. The LOCAL-FILE-PATH option is the path to where you want to locate the **mysql-diag.conf** file. The REMOTE-FILE-PATH option is the initial location of the **mysql-diag.conf** file.
+Running the `bosh instances` command will display the information needed to insert the **JOB-NAME** and **JOB-INSTANCE-NUMBER** options. For more information on the `bosh istances` command, see the [bosh documentation](https://bosh.io/docs/sysadmin-commands.html) on system administration tasks. The **LOCAL-FILE-PATH** option is the path to where you want to locate the **mysql-diag.conf** file. The **REMOTE-FILE-PATH** option is the initial location of the **mysql-diag.conf** file.
 
-1. Execute the**mysql-diag.conf** file with the following command:
+1. Execute the **mysql-diag.conf** file with the following command:
 
 <pre class="terminal">mysql-diag -c ./mysql-diag.conf</pre>
 
