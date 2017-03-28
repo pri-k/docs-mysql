@@ -11,7 +11,7 @@ In versions of MySQL for Pivotal Cloud Foundry 1.7.0.0 and higher, automated bac
 - No locks, no downtime. The only affect on the serving systems is the amount of I/O required to copy the database and log files off of the VM.
 - Includes a metadata file which contains the critical details of the backup artifact, including the effective calendar time of the backup.
 - Backup artifacts are encrypted within the MySQL for PCF cluster of VMs; unencrypted data is never transported outside of the MySQL for PCF deployment.
-- Backups are currently stored on **Amazon S3** only. Other storage targets will be added over time.
+- You can send backup artifacts to a variety of destinations including Amazon S3, Ceph, or via SCP.
 
 ![Configure Backups](configure-backups.png)
 
@@ -26,10 +26,19 @@ Backups are enabled by default. If you do not wish for this deployment to be bac
 For each step, refer to the screenshot above.
 
 1. Select "Enable Backups"
-1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, MySQL for PCF will automatically create the bucket if it does not exist.
-1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.
-1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
-1. Specify how often you'd like backups to occur in the final field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as `@daily` to back up once per day.
+  1. Specify how often you'd like backups to occur in the field, "Cron Schedule." The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, plus easy features such as `@daily` to back up once per day.
+1. Choose the Backup Destination
+  1. Amazon S3 or Ceph (S3-compatible)
+    1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, MySQL for PCF will automatically create the bucket if it does not exist.
+    1. Enter a folder name for this cluster's backups to be stored. Again, the folder will be automatically created if it does not exist. **It is important to use this folder exclusively for this cluster's backup artifacts.** Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.
+    1. Provide an AWS Access Key and Secret Access Key in the following fields. We recommend that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
+  1. SCP to a Remote Host
+    Using SCP allows you to store backup artifacts on arbitrary backing-stores. Instead of connecting to a service, create a VM on your IaaS and attach whatever storage you prefer to that VM. MySQL for PCF's backup automation will upload artifacts to that storage using SCP (via the SSH protocol).
+    1. Provide the Username.
+    1. Provide the Hostname.
+    1. Provide the Destination Directory file path to the volume where you'd like the artifacts to be written.
+    1. Copy and paste the ssh private key, into the Private Key field.
+    1. If using a non-default SSH port, enter the port number in the SCP Port field.
 
 <p class="note"><strong>Note</strong>: For large databases, the default storage for the <code>Backup Prepare Node</code> may not be sufficient. In order to compress and encrypt backup artifacts, the VM must be configured with twice the amount of ephemeral disk space as the persistent disk space of the <code>MySQL Server</code> nodes.</p>
 
