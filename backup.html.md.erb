@@ -27,20 +27,19 @@ For each step, refer to the screenshot above.
 
 1. Select "Enable Backups"
   1. Specify how often you want backups to occur in the **Cron Schedule** field. The [syntax definition](http://godoc.org/github.com/robfig/cron) is similar to traditional cron, with additional features such as `@daily` to back up once per day.
-
 1. Choose the **Backup Destination**:
-  1. **Amazon S3 or Ceph (S3-compatible)**
-      1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, MySQL for PCF automatically creates the bucket if it does not exist.
-      1. Enter the name of a folder in which to store the backups for this cluster. Similarly, MySQL for PCF  automatically creats the folder if it does not exist. 
-      <p class="note"><strong>Note</strong>: It is important to use this folder exclusively for this cluster's backup artifacts. Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.</p>
-      1. Provide an **AWS Access Key** and **Secret Access Key**. Pivotal recommends that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
-  1. **SCP to a Remote Host**<br>
+  * **Amazon S3 or Ceph (S3-compatible)**
+    1. Enter the bucket name where backup artifacts will be uploaded. Using the S3 credentials provided, MySQL for PCF automatically creates the bucket if it does not exist.
+    1. Enter the name of a folder in which to store the backups for this cluster. Similarly, MySQL for PCF  automatically creats the folder if it does not exist. 
+       <p class="note"><strong>Note</strong>: It is important to use this folder exclusively for this cluster's backup artifacts. Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.</p>
+    1. Provide an **AWS Access Key** and **Secret Access Key**. Pivotal recommends that you create an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
+  * **SCP to a Remote Host**
     Using SCP allows you to store backup artifacts on arbitrary backing-stores. Instead of connecting to a service, create a VM on your IaaS and attach whatever storage you prefer to that VM. The backup automation feature for MySQL for PCF uploads artifacts to that storage using SCP (via the SSH protocol).
-      1. Provide the **Username**.
-      1. Provide the **Hostname**.
-      1. Provide the **Destination Directory** file path to the volume where you want the artifacts to be written.
-      1. Copy and paste the ssh private key into the **Private Key** field.
-      1. If using a non-default SSH port, enter the port number in the **SCP Port** field.
+    1. Provide the **Username**.
+    1. Provide the **Hostname**.
+    1. Provide the **Destination Directory** file path to the volume where you want the artifacts to be written.
+    1. Copy and paste the ssh private key into the **Private Key** field.
+    1. If using a non-default SSH port, enter the port number in the **SCP Port** field.
 
 <p class="note"><strong>Note</strong>: For large databases, the default storage for the <code>Backup Prepare Node</code> may not be sufficient. In order to compress and encrypt backup artifacts, the VM must be configured with twice the amount of ephemeral disk space as the persistent disk space of the <code>MySQL Server</code> nodes.</p>
 
