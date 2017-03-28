@@ -15,21 +15,21 @@ The Replication Canary writes to a private dataset in the cluster, and attempts 
 
 When replication fails to work properly, the Canary detects that it cannot read the data from all nodes, and immediately takes two actions:
 
-  - E-mails a pre-configured address with a message that replication has failed. See the [sample](#sample-canary) below.
+  - Emails a pre-configured address with a message that replication has failed. See the [sample](#sample-canary) below.
   - Disables client [access to the cluster](#access).
 
   <p class='note'><strong>Note</strong>: Malfunctioning replication exposes the cluster to the possibility of data loss. Because of this, both behaviors are enabled by default. It is critical that you contact Pivotal support immediately in the case of replication failure.</strong> Support will work with you to determine the nature of the cluster failure and provide guidance regarding a solution.</p>
 
-### <a id="sample-canary"></a>Sample Notification E-mail
+### <a id="sample-canary"></a>Sample Notification Email
 
-If the Canary detects a replication failure, it immediately sends an e-mail through the Elastic Runtime notification service. See the following example:
+If the Canary detects a replication failure, it immediately sends an email through the Elastic Runtime notification service. See the following example:
 
     Subject: CF Notification: p-mysql Replication Canary, alert 417
 
     This message was sent directly to your email address.
 
     {alert-code 417}
-    This is an e-mail to notify you that the MySQL service's replication canary has detected an unsafe cluster condition in which replication is not performing as expected across all nodes.
+    This is an email to notify you that the MySQL service's replication canary has detected an unsafe cluster condition in which replication is not performing as expected across all nodes.
 
 ### <a id="access"></a>Cluster Access
 
@@ -61,14 +61,14 @@ To enable the Replication Canary, follow the instructions below to configure bot
 
 1. In the **Advanced Options** section, select **Enable replication canary**.
     ![Enable Replication](enable-replication.png)
-1. If you want to the Replication Canary to send e-mail but not disable access at the proxy, select **Notify only**.
+1. If you want to the Replication Canary to send email but not disable access at the proxy, select **Notify only**.
   <p class="note"><strong>Note</strong>: Pivotal recommends leaving this checkbox unselected due to the possibility of data loss from replication failure.</p>
 1. You can override the **Replication canary time period**. The **Replication canary time period** sets how frequently the canary checks for replication failure, in seconds. This adds a small amount of load to the databases, but the canary reacts more quickly to replication failure. The default is 30 seconds.
 
     ![Canary time](canary_time.png)
 
 1. You can override the **Replication canary read delay**. The **Replication canary read delay** sets how long the canary waits to verify data is replicating across each MySQL node, in seconds. Clusters under heavy load experience some small replication lag as writesets are committed across the nodes. The Default is 20 seconds.
-1. Enter an **E-mail address** to receive monitoring notifications. Use a closely monitoried e-mail address account. The purpose of the Canary is to escalate replication failure as quickly as possible.
+1. Enter an **Email address** to receive monitoring notifications. Use a closely monitored email address account. The purpose of the Canary is to escalate replication failure as quickly as possible.
 1. In the **Resource Config** section, ensure the **Monitoring** job has one instance.
   ![Resource config](monitoring-resource-config.png)
 
