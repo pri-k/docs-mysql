@@ -1,0 +1,137 @@
+---
+title: Running mysql-diag
+owner: MySQL
+---
+
+This topic discusses how to use the `mysql-diag` tool in MySQL for Pivotal Cloud Foundry (PCF). `mysql-diag` relays the state of your MySQL service and suggests steps to take in the event of a node failure. In conjunction with Support, this tool helps expedite the diagnosis and resolution of problems with MySQL for PCF. 
+
+In MySQL for PCF 1.9.0 and later, `mysql-diag` is automatically installed and configured. If you are running MySQL for PCF 1.8.x and under, then you will need to create a configuration file in order to use `mysql-diag`.
+
+## <a id="prepare"></a> Prepare Your Environment ##
+MySQL for PCF 1.9.0 and later ships with the `mysql-diag` tool and comes with an automatically generated configuration file. In versions 1.9.0. and later, you can find `mysql-diag` on the `mysql-monitor` node. If you are running MySQL for PCF 1.8.x or earlier then you must download `mysql-diag` and create a configuration file. If you do not have a monitor node, as is the case with some older versions of the software, Pivotal recommends that you use one of the mysql cluster nodes instead.
+
+Only complete the installation instructions below if you are on MySQL for PCF 1.8.x or earlier, complete the installation instructions below.
+
+### <a id="download"></a> Download mysql-diag
+To download `mysql-diag`:
+
+1. Download the file labeled **mysql-diag.conf** attached to the [Diagnosing problems with Elastic Runtime MySQL or the Pivotal MySQL Tile](https://discuss.pivotal.io/hc/en-us/articles/115001980967-Diagnosing-problems-with-Elastic-Runtime-MySQL-or-the-Pivotal-MySQL-Tile) Knowledge Base article. 
+
+1. Copy that binary to the `mysql-monitor` VM with the following command:
+`bosh scp JOB-NAME JOB-INSTANCE-NUMBER --upload LOCAL-FILE-PATH REMOTE-FILE-PATH`
+
+Running the `bosh instances` command will display the information needed to insert the JOB-NAME and JOB-INSTANCE-NUMBER options. For more information on the `bosh istances` command, see the [bosh documentation](https://bosh.io/docs/sysadmin-commands.html) on system administration tasks. The LOCAL-FILE-PATH option is the path to where you want to locate the **mysql-diag.conf** file. The REMOTE-FILE-PATH option is the initial location of the **mysql-diag.conf** file.
+
+1. Execute the**mysql-diag.conf** file with the following command:
+
+<pre class="terminal">mysql-diag -c ./mysql-diag.conf</pre>
+
+### <a id="configure"></a> Configure mysql-diag
+To configure `mysql-diag`:
+
+1. Paste the Configuration File Template below into a text editor
+
+    ```
+    {
+        "mysql": {
+          "username": "repcanary",
+          "password": "password",
+          "port": 3306,
+          "nodes": [                             
+            {
+              "host": "10.244.7.4",
+            },
+            {
+              "host": "10.244.8.4",
+            },
+            {
+              "host": "10.244.9.4",
+            }
+          ]
+        }
+      }
+      ```
+
+1. Replace the passwords with the values that you find in **OpsMan** within the **Credentials** tab.
+
+1. Copy the completed template into the same VM that you downloaded the `mysql-diag` tool, using the `bosh scp` command.
+
+1. Move the configuration file to the same directory as the `mysql-diag` tool. 
+
+1. Run the following command in order to start the tool:
+<pre class="terminal">$ mysql-diag -c ./diag-config.json</pre>
+
+## <a id="diag-agent"></a> mysql-diag-agent ##
+MySQL for PCF 1.9.0 and later will have the `mysql-diag-agent` present. Versions 1.8.x and earlier of MySQL for PCF do not have the `mysql-diag-agent`. If the `mysql-diag-agent` is not available, your output from the `mysql-diag` tool will not include the percentage of Persistent and Ephemeral Disk space used by a Host.
+
+## <a id="healthy"></a> Example Healthy Output ##
+Upon running `mysql-diag` in your terminal, you will see the following if your canary status is healthy:
+ 
+<pre class="terminal">Checking canary status...healthy</pre> 
+
+Here is a sample `mysql-diag` output after the tool has identified a healthy cluster in a MySQL for PCF version that does not contain the `mysql-diag-agent`:  
+
+<pre class="terminal">
+Checking cluster status of mysql/a1 at 10.0.16.44 ...
+Checking cluster status of mysql/c3 at 10.0.32.10 ...
+Checking cluster status of mysql/b2 at 10.0.16.45 ...
+Checking cluster status of mysql/a1 at 10.0.16.44 ... done
+Checking cluster status of mysql/c3 at 10.0.32.10 ... done
+Checking cluster status of mysql/b2 at 10.0.16.45 ... done
++------------+-----------+-------------------+----------------------+--------------------+
+|    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
++------------+-----------+-------------------+----------------------+--------------------+
+| 10.0.16.44 | mysql/a1  | Synced            | Primary              |                  3 |
+| 10.0.32.10 | mysql/c3  | Synced            | Primary              |                  3 |
+| 10.0.16.45 | mysql/b2  | Synced            | Primary              |                  3 |
++------------+-----------+-------------------+----------------------+--------------------+
+I don't think bootstrap is necessary
+Checking disk status of mysql/a1 at 10.0.16.44 ...
+Checking disk status of mysql/c3 at 10.0.32.10 ...
+Checking disk status of mysql/b2 at 10.0.16.45 ...
+Checking disk status of mysql/a1 at 10.0.16.44 ... dial tcp 10.0.16.44: getsockopt: connection refuse
+Checking disk status of mysql/c3 at 10.0.32.10 ... dial tcp 10.0.16.44: getsockopt: connection refuse
+Checking disk status of mysql/b2 at 10.0.16.45 ... dial tcp 10.0.16.44: getsockopt: connection refuse
+</pre>
+
+## <a id="unhealthy"></a> Example Unhealthy Output ##
+The `mysql-diag` command returns the following message if your canary status is unhealthy.
+
+<pre class="terminal">Checking canary status...unhealthy</pre> 
+
+In the event of a broken cluster, running `mysql-diag` outputs actionable steps meant to expedite the recovery of the cluster. Below is a sample `mysql-diag` output after the tool identified an unhealthy cluster in a MySQL for PCF version that does not contain the `mysql-diag-agent`:  
+
+<pre class="terminal">Checking cluster status of mysql/a1 at 10.0.16.44 ...
+Checking cluster status of mysql/c3 at 10.0.32.10 ...
+Checking cluster status of mysql/b2 at 10.0.16.45 ...
+Checking cluster status of mysql/a1 at 10.0.16.44 ... dial tcp 10.0.16.44: getsockopt: connection refused
+Checking cluster status of mysql/c3 at 10.0.32.10 ... dial tcp 10.0.32.10: getsockopt: connection refused
+Checking cluster status of mysql/b2 at 10.0.16.45 ... dial tcp 10.0.16.45: getsockopt: connection refused
+
++------------+-----------+-------------------+----------------------+--------------------+
+|    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
++------------+-----------+-------------------+----------------------+--------------------+
+| 10.0.16.44 | mysql/a1  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        |
+| 10.0.16.45 | mysql/b2  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        | 
+| 10.0.32.10 | mysql/c3  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        |
++------------+-----------+-------------------+----------------------+--------------------+
+
+Checking disk status of mysql/a1 at 10.0.16.44 ...
+Checking disk status of mysql/c3 at 10.0.32.10 ...
+Checking disk status of mysql/b2 at 10.0.16.45 ...
+Checking disk status of mysql/a1 at 10.0.16.44 ... dial tcp 10.0.16.44: getsockopt: connection refused
+Checking disk status of mysql/c3 at 10.0.32.10 ... dial tcp 10.0.32.10: getsockopt: connection refused
+Checking disk status of mysql/b2 at 10.0.16.45 ... dial tcp 10.0.16.45: getsockopt: connection refused
+
+[CRITICAL] The replication process is unhealthy. Writes are disabled.
+
+[CRITICAL] Run the download-logs command:
+$ download-logs -d /tmp/output -n 10.0.16.44 -n 10.16.45 -n 10.0.32.10
+For full information about how to download and use the download-logs command see https://discuss.pivotal.io/hc/en-us/articles/221504408
+
+[WARNING]
+Do not perform the following unless instructed by Pivotal Support:
+- Do not scale down the cluster to one node then scale back. This puts user data at risk.
+- Avoid “bosh recreate” and “bosh cck”. These options remove logs on the VMs making it harder to diagnose cluster issues. 
+</pre>
+
