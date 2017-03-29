@@ -3,14 +3,14 @@ title: Running mysql-diag
 owner: MySQL
 ---
 
-This topic discusses how to use the `mysql-diag` tool in MySQL for Pivotal Cloud Foundry (PCF). `mysql-diag` relays the state of your MySQL service and suggests steps to take in the event of a node failure. In conjunction with Support, this tool helps expedite the diagnosis and resolution of problems with MySQL for PCF. 
+This topic discusses how to use the `mysql-diag` tool in MySQL for Pivotal Cloud Foundry (PCF). `mysql-diag` relays the state of your MySQL service and suggests steps to take in the event of a node failure. In conjunction with Pivotal Support, this tool helps expedite the diagnosis and resolution of problems with MySQL for PCF. 
 
 In MySQL for PCF 1.9.0 and later, `mysql-diag` is automatically installed and configured. If you are running MySQL for PCF 1.8.x and earlier, then you will need to create a configuration file in order to use `mysql-diag`.
 
 ## <a id="prepare"></a> Prepare Your Environment ##
 MySQL for PCF 1.9.0 and later ships with the `mysql-diag` tool and comes with an automatically generated configuration file. In versions 1.9.0. and later, you can find `mysql-diag` on the `mysql-monitor` node. If you are running MySQL for PCF 1.8.x or earlier then you must download `mysql-diag` and create a configuration file. If you do not have a monitor node, as is the case with some older versions of the software, Pivotal recommends that you use one of the mysql cluster nodes instead.
 
-Only complete the installation instructions below if you are on MySQL for PCF 1.8.x or earlier.
+Only complete the download and configuration instructions below if you are on MySQL for PCF 1.8.x or earlier.
 
 ### <a id="download"></a> Download and Run mysql-diag
 To download `mysql-diag`:
