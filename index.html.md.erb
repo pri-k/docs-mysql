@@ -246,6 +246,16 @@ To help application developers get started with MySQL for PCF, we have provided 
 
 Cloud Foundry users can access a dashboard for each MySQL service instances via SSO from Apps Manager. The dashboard displays current storage utilization of the database and the plan quota for storage. On the Space page in Apps Manager, users with the SpaceDeveloper role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
+## <a id="plugin"></a>Connect to your Database with the MySQL Plugin ##
+
+You can use the Cloud Foundry Command Line Interface (cf CLI) MySQL plugin to connect to the MySQL databases used by your Cloud Foundry apps. The plugin supports the following actions:
+
+* Inspecting databases for debugging purposes. 
+* Manually adjusting database schema or contents in development environments.
+* Dumping and restoring databases. 
+
+For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.  
+
 ## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
 The service provides a dashboard where administrators can observe health and metrics for each instance in the proxy tier. Metrics include the number of client connections routed to each backend database cluster node.
