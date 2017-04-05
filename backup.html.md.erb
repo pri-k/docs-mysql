@@ -28,7 +28,17 @@ Automated backups have the following features:
 
 ## <a id="enable-backups"></a>Enable Automated Backups ##
 
-To enable and configure automated backups, perform the following steps:
+You can configure MySQL for PCF to automatically back up its databases to external storage.
+
+* **How and Where**: There are two options for how automated backups transfer backup data and where the data saves out to:
+  - MySQL for PCF runs an `scp` command that secure-copies backup files to a VM or physical machine operating outside of PCF. The operator provisions the backup machine separately from their PCF installation. This is the most efficient option.
+  - MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
+
+* **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
+
+* **What**: You can back up just the primary node, or all nodes in the cluster.
+
+To enable automated backups and configure them for options above, perform the following steps:
 
 1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
 1. Click **Backups**.
