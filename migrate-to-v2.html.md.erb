@@ -3,51 +3,97 @@ title: Migrating a Database to MySQL for PCF v2
 owner: MySQL
 ---
 
-This page provides instructions on how to backup and restore your MySQL database. In particular, it provides instructions on taking a manual backup of your old instance and restoring to a new instance.
+This page provides instructions on how to backup and restore your MySQL database via the following steps:
 
-## <a id="backing-up"></a>Backing Up Your Current Database
+1. Preemptively create a new service instance to minimize downtime
+1. Stop traffic to the old database and take a backup
+1. Import the backup into your new service instance
+1. Connect the application to the new database and restart application
+
+
+
+## <a id='prepare'></a>Prerequisites
+
+To minimize downtime while migrating, preemptively create a new service instance.
+
+* The application source code can use `p.mysql` as a valid key for [accessing the database](./use.html#call).
+* Create a new service instance of `p.mysql` with a persistent disk large enough for the data. If you do not have 
+  an instance, follow the instructions to [create a new service instance](./use.html#create) in the same space as your existing service instance.
+
+	<p class="note">Do not bind the new service instance to your application. We’ll do that later.</p>
+
+## <a id='backup'></a>Backing Up Your Current Database
 
 If you are migrating from a MySQL for PCF v1.X database, please refer to the instructions below. If you are migrating from another MySQL provider, please refer to their documentation on taking a MySQL backup.
 
-### <a id="backing-up-v1"></a>MySQL for PCF v1.X Instance
+### Backing Up Your MySQL for PCF v1.X Instance
 
-1. Stop any traffic to your existing database by stopping the application and unbinding the service. Assuming your application is deployed to Pivotal Cloud Foundry, do the following:
-  1. `cf stop APP_NAME`
-  1. `cf unbind-service APP_NAME OLD_SERVICE_INSTANCE_NAME`
+1. Stop any traffic to your existing database by stopping the application:
+ <pre class="terminal">
+  $ cf stop my-app
+    Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+ </pre>
+  
+1. Unbind your application from the old service instance:
+  <pre class="terminal">
+   $ cf unbind-service my-app my-old-instance
+    Unbinding app my-app from service my-old-instance in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+  </pre>
 
-1. Use a cf application to [create an ssh tunnel](https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-services.html#push-app) to connect to your old service instance. The tunnel may appear as though it is hanging.
-<p class="note"><strong>Note</strong>: Since your application is now stopped, you’ll need another application for the ssh tunnel. If you don’t have a running app running, try using https://github.com/cloudfoundry-samples/test-app.</p>
+1. Use a [cf application to create an ssh tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to connect to your old service instance. The tunnel may appear as though it is hanging.
+   <p class="note">Since your application is now stopped, you’ll need another application for the ssh tunnel. If you don’t have a running app, you can clone and cf push this [sample app](https://github.com/cloudfoundry-samples/test-app) for tunneling. You can use any running app in the same Org/Space</p>
+   - An ssh tunnel is necessary as the MySQL service is only accessible within the Cloud Foundry network. 
 
-1. Take a backup of the existing database
-  * `mysqldump --single-transaction --add-drop-table --add-locks --create-options --disable-keys --extended-insert --quick --set-charset --skip-opt --routines --flush-privileges -u USERNAME -p -h 0 -P 63306 SERVICE_KEY_DB_NAME > backup.sql`
-     * `SERVICE_KEY_DB_NAME` is the “name” property from your service-key
-     * `USERNAME` is the “username” property from your service-key
-     * `63306` is the available port you configured in the ssh tunnel on your local machine
+1. Take a backup of the existing database in a separate shell:
+ <pre class="terminal">
+ $ mysqldump --single-transaction --add-drop-table --add-locks --create-options --disable-keys --extended-insert --quick --set-charset --routines --flush-privileges -u USERNAME -p -h 0 -P 63306 DB_NAME > backup.sql
+ </pre>
+  * DB_NAME is the “name” property from your service-key
+  * USERNAME is the “username” property from your service-key
+  * 63306 is the available port you configured in the ssh tunnel on your local machine
+  * You will be prompted for a password after entering the previous command which is the “password” property from your service-key
+
 1. Kill the ssh tunnel
 
-##  <a id="restoring"></a>Restoring To Your New Database
+## <a id='restore'></a>Restoring To Your New Database
+This section provides steps to restore your backup to a new service instance of MySQL for PCF: 
 
-#### Prerequisites 
+1. Use [cf ssh to create a tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to remotely access your new MySQL instance.  
 
-* The persistent disk is large enough to hold the data from your backup.
+1. In another shell, restore your backup to the new service instance via the ssh tunnel:
+ <pre class="terminal">
+ $ mysql -u USERNAME -p -h 0 -P 63306 -D service_instance_db < backup.sql
+ </pre>
+  * USERNAME is the “username” property from your service-key
+  * 63306 is the available port you configured in the ssh tunnel on your local machine
+  * backup.sql is the path to the backup on your local machine
+  * You will be prompted for a password after entering the previous command which is the “password” property from your service-key
+
+1. Validate that data that you expect to see has been imported into the new service instance by using the following command to enter a mysql shell.
+ <pre class="terminal">
+ $ mysql -u USERNAME -p -h 0 -P 63306 -D service_instance_db
+ </pre>
+  * USERNAME is the “username” property from your service-key
+  * 63306 is the available port you configured in the ssh tunnel on your local machine
+  * You will be prompted for a password after entering the previous command which is the “password” property from your service-key
+
+1. Exit the mysql shell and kill the ssh tunnel
+1. Bind the application to the new service instance
+ <pre class="terminal">
+ $ cf bind-service my-app my-new-instance
+ Binding service my-new-instance to app my-app in org my-org / space my-space as user<span>@</span>example.com...
+ OK
+ TIP: Use 'cf restage my-app' to ensure your env variable changes take effect
+ </pre>
  
- To restore your backup to a new service instance of MySQL for PCF:
- 
- 1. Create a new instance of the plan that you wish to restore to by following [these steps](using.html#create).
- 
- 1. Import your backup into your newly created service instance.
-   1. Use a cf application to [create an ssh tunnel](https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-services.html#push-app) to connect to your new service instance. The tunnel may appear as though it is hanging.
-      <p class="note"><strong>Note</strong>: Since your application is now stopped, you’ll need another application for the ssh tunnel. If you don’t have a running app running, try using https://github.com/cloudfoundry-samples/test-app.</p>
-   
-   1. Restore your backup to the new service instance via the ssh tunnel
-     1. `mysql -u USERNAME -p -h 0 -P 63306 -D SERVICE_KEY_DB_NAME < backup.sql`
-        * `USERNAME` is the “username” property from your service-key
-        * `SERVICE_KEY_DB_NAME` is the “name” property from your service-key
-        * `63306` is the available port you configured in the ssh tunnel on your local machine
-        * `backup.sql` is the path to the backup on your local machine
-     1. Kill the ssh tunnel
-  
- 1. Bind your application to the new service instance and restart your application
-   1. `cf bind-service APP_NAME NEW_SERVICE_INSTANCE`
-   1. `cf restage APP_NAME`
-   1. `cf start APP_NAME`
+1. Restage the app to restart the app with the new changes
+ <pre class="terminal">
+ $ cf restage my-app
+   Restaging app my-app in org my-org / space my-space as user<span>@</span>example.com...
+   [...]
+ </pre>
+
+
+1. Your application is now using your new MySQL for Pivotal Cloud Foundry v2 database and should be operational again.
