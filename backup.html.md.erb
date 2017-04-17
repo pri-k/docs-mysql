@@ -125,35 +125,6 @@ In the event of a total cluster loss,the process to restore a backup artifact to
 
 ---
 
-## <a id="manual-process"></a>Manual Process ##
-
-If you do not wish to use the automated facility included in MySQL for PCF, you can still perform backups manually.
-
-- Locate the IP address for the MySQL node in the Status tab.
-
-  ![MySQL Server IP](mysql-server-ip.png)
-
-- Locate the root password for the MySQL server in the Credentials tab.
-
-  ![MySQL Server Root Password](mysql-root-password.png)
-
-### <a id="manual-backup"></a>Manual Backup ###
-
-  Manual backup can be performed with [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/).
-  This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
-
-  - To backup **all** databases in the MySQL deployment, use `--all-databases`:
-
-    ```
-    $ mysqldump -u root -p -h $MYSQL_NODE_IP --all-databases > user_databases.sql
-    ```
-
-  - To backup a single database, specify the database name:
-
-    ```
-    $ mysqldump -u root -p -h $MHQL_NODE_IP $DB_NAME > user_databases.sql
-    ```
-
 ### <a id="manual-restore"></a>Manual Restore ###
 
   Restoring from a backup is the same whether one or multiple databases were backed up.
