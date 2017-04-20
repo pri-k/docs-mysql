@@ -1,0 +1,173 @@
+---
+title: Using MySQL for PCF v2
+owner: MySQL
+---
+
+This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry v2 service for their Pivotal Cloud Foundry (PCF) apps. MySQL provides a relational database for apps and devices.
+
+These procedures use the Cloud Foundry Command-Line Interface (cf CLI). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to perform the same tasks using a graphical UI.
+
+For general information, see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html). 
+
+## <a id="prereqs"></a>Prerequisites
+
+To use MySQL for PCF v2 with your PCF apps, you need:
+
+* A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
+* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the PCF installation
+* A local machine with the following installed:
+   - a browser
+   - a shell
+   - the [Cloud Foundry Command-Line Interface](http://docs.pivotal.io/pivotalcf/cf-cli/install-go-cli.html) (cf CLI)
+   - the Linux [watch](http://www.linfo.org/watch.html) command
+* To [log into](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
+
+## <a id='process'></a>The Create-Bind Process
+
+Because every app and service in PCF is scoped to a [space](http://docs.pivotal.io/pivotalcf/concepts/roles.html#spaces), an app can only use a service if an instance of the service exists in the same space. 
+
+To use MySQL in a PCF app:
+
+1. Use the [cf CLI](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) or [Apps Manager](http://docs.pivotal.io/pivotalcf/customizing/console-login.html) to log into the org and space that contains the app.
+
+1. Make sure an instance of the MySQL for PCF service exists in the same space as the app.
+   - If the space does not already have a MySQL for PCF instance, [create](#create) one.
+   - If the space already has a MySQL for PCF instance, you can [bind](#bind) your app to the existing instance or create a new instance to bind to your app.
+
+2. [Bind](#bind) the app to the MySQL for PCF service instance, to enable the app to use MySQL.
+
+## <a id='marketplace'></a>Confirm Service Availability
+
+For an app to use a service, 1) the service must be available in the Marketplace for its space and 2) an instance of the service must exist in its space.
+
+You can confirm both of these using the cf CLI as follows.
+
+1. To find out if a MySQL for PCF v2 service is available in the Marketplace:
+   1. Enter `cf marketplace`
+   1. If the output lists `p.mysql` in the `service` column, on-demand MySQL for PCF is available. If it is not available, ask your operator to install it.
+
+    <pre class="terminal">
+    $ cf marketplace
+    Getting services from marketplace in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    service             plans          description
+    [...]
+    p.mysql             db-small       Dedicated instances of MySQL service to provide a relational database
+    [...]
+    </pre>
+
+1. To confirm that a MySQL for PCF v2 instance is running in the space
+    1. Enter `cf services`
+    1. Any `p.mysql` listings in the `service` column are service instances of on-demand MySQL in the space.
+
+    <pre class="terminal">
+    $ cf services
+    Getting services in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    name          service     plan        bound apps    last operation
+    my-instance   p.mysql     db-small                  create succeeded
+    </pre>
+    You can [bind](#bind) your app to an existing instance or [create](#create) a new instance to bind to your app.
+
+## <a id='create'></a>Create a Service Instance
+
+Unlike pre-provisioned services, on-demand services are created asynchronously, not immediately. The `watch` command shows you when your service instance is ready to bind and use.
+
+To create an instance of the MySQL for PCF v2 service, run `cf create-service`:
+
+1. Enter `cf create-service p.mysql db-small SERVICE_INSTANCE`
+
+    Where `SERVICE_INSTANCE` is a name you choose to identify the service instance. This name will appear under `service` \[sic\] in output from `cf services`.
+
+1. Enter `watch cf services` and wait for the `last operation` for your instance to show as `create succeeded`. 
+
+    <pre class="terminal">
+   $ cf create-service p.mysql db-small my-instance<br>
+    Creating service my-instance in org my-org / space my-space as user<span>@</span>example.com...
+    OK<br>
+   $ watch cf services<br>
+    Getting services in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    name          service       plan        bound apps    last operation
+    my-instance   p.mysql       db-small                  create succeeded
+</pre>
+
+    If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
+
+## <a id="bind"></a>Bind a Service Instance to Your App
+
+For an app to use a service, you must bind it to a service instance. Do this after you push or re-push the app using `cf push`.
+
+To bind an app to a MySQL instance run `$ cf bind-service`.
+
+1. Enter `cf bind-service APP SERVICE_INSTANCE`
+
+    Where `APP` is the app you want to use the MySQL service instance and `SERVICE_INSTANCE` is the name you supplied when you ran `cf create-service`.
+
+    <pre class="terminal">
+   $ cf bind-service my-app my-instance<br>
+    Binding service mydb to my-app in org my-org / space test as user<span>@</span>example.com...
+    OK
+    TIP: Use 'cf push' to ensure your env variable changes take effect
+</pre>
+
+## <a id="call"></a>Use the MySQL Service in Your App
+
+To access the MySQL service from your app:
+
+1. Run `cf env APP_NAME` with the name of the app bound to the MySQL for PCF instance.
+
+1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app.
+
+1. In your app code, call the MySQL service using the connection strings.
+
+For how to code your app to use MySQL messaging, see **About Using Pivotal MySQL** > **Client Documentation** in the [MySQL documentation](https://docs.pivotal.io/p-mysql).
+
+## <a id="restage"></a>Restage an App with a New Service Instance
+
+If a service instance has been updated based on a new version of the service, you need to run `cf restage` to restage your app to use the new instance.
+
+1. Enter `cf restage-app APP`
+
+    Where `APP` is the app you want to use the updated service instance.
+
+    <pre class="terminal">
+   $ cf restage-app my-app
+</pre>
+
+When a new version of a service obsoletes an older version, the platform operator may ask you to update your instances of the service and restage any apps bound to the service instances.
+
+Pushing new version of an app automatically restages the app on any service instances it is bound to.
+
+## <a id="unbind"></a>Unbind a Service Instance to Your App
+
+To stop an app from using a service it no longer needs, unbind it from the service instance using `cf unbind-service`.
+
+1. Enter `cf unbind-service APP SERVICE_INSTANCE`
+
+    Where `APP` is the app you want to stop using the MySQL service instance and `SERVICE_INSTANCE` is the name you supplied when you ran `cf create-service`.
+
+    <pre class="terminal">
+   $ cf unbind-service my-app my-instance<br>
+    Unbinding app my-app from service my-instance in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+</pre>
+
+## <a id="delete"></a>Delete a Service Instance
+
+To delete a service instance, run `cf delete-service`.
+
+1. Enter `cf delete-service SERVICE_INSTANCE`
+
+    Where `SERVICE_INSTANCE` is the name of the service to delete.
+
+    <pre class="terminal">
+   $ cf delete-service my-instance<br>
+    Are you sure you want to delete the service my-instance ? y
+    Deleting service my-service in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+</pre>
+
+1. Enter `watch cf service SERVICE_INSTANCE` and wait for a `Service instance not found` error indicating that the instance no longer exists.
+
+You cannot delete a service instance that an app is bound to.

@@ -1,0 +1,90 @@
+---
+title: Troubleshooting Instances
+owner: MySQL
+---
+
+This topic provides basic instructions for app developers troubleshooting On-Demand MySQL for PCF.
+
+## <a id="errors"></a> Errors
+
+You may see an error when using the Cloud Foundry Command-Line Interface (cf CLI) to perform basic operations on a MySQL for PCF service instance:
+
+* `cf create`
+* `cf update`
+* `cf bind`
+* `cf unbind`
+* `cf delete`
+
+
+### <a id="parse-error"></a> Parse a CF Error Message
+
+If you see an error, record the contents of the **Message** field, which is useful for debugging. Please provide this information to Pivotal Support when filing a [ticket](#ticket).
+
+To retrieve the error's **Message** field after the error occurs, enter `cf service MY-SERVICE` where MY-SERVICE is the service instance name.
+
+If you do not have the service instance name, [retrieve](#instance) it with `cf services`.
+    <pre class="terminal">
+    $ cf service myservice
+    Service instance: myservice
+    Service: p.mysql
+    Bound apps:
+    Tags:
+    Plan: db-small
+    Description: Dedicated Instance
+    Documentation url:
+    Dashboard: 
+    Last Operation
+    Status: create failed
+    Message: Instance provisioning failed: There was a problem completing your request. 
+        Please contact your operations team providing the following information: 
+        service: p.mysql, 
+        service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089,
+        broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac, 
+        task-id: 442, 
+        operation: create
+    Started: 2017-03-13T10:16:55Z
+    Updated: 2017-03-13T10:17:58Z
+</pre>
+
+The **Message** field contains the following sub-fields:
+
+  * **service-instance-guid**: identifies the service instance.
+
+  * **task-id**: if present, indicates the BOSH Task ID of the instance creation task. You can retrieve more information about the task by running `bosh task TASK-ID` using the [BOSH CLI](https://bosh.io/docs/bosh-cli.html).
+
+  * **broker-request-id**: identifies the portion of the On-Demand Broker log that contains the failed step. To debug further, access the broker log via your syslog aggregator, or access BOSH logs for the broker by running `bosh logs broker 0`.  
+  If you have more than one broker instance, repeat this process, incrementing the index for each instance from `0` to `1` and so on.
+
+### <a id="instance"></a> Retrieve Service Instance Information
+
+1. Log into the space containing the instance or failed instance. 
+    <pre class="terminal">
+    $ cf login
+    </pre>
+
+1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space. The service instances are listed in the `name` column.
+    <pre class="terminal">
+    $ cf services
+    Getting services in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    name          service      plan        bound apps    last operation
+    my-instance   p.mysql      db-small                  create succeeded
+    </pre>
+
+1. Run `cf service SERVICE-INSTANCE-NAME` to retrieve more information about a specific instance.
+
+1. Run `cf service SERVICE-INSTANCE-NAME --guid` to retrieve the GUID of the instance, which is useful for debugging.
+
+## <a id="kb"></a> Knowledge Base
+
+For help from the PCF community, consult the [Pivotal Knowledge Base](http://discuss.pivotal.io).
+
+## <a id="ticket"></a> File a Support Ticket
+
+For help from Pivotal Support, file a [support ticket](https://support.pivotal.io/).
+
+Please provide the following if possible, to help expedite troubleshooting:
+
+* The [error message](#parsing-a-cf-error-message) from `cf service SERVICE-INSTANCE-NAME`
+* Your [service broker logs](#access-broker)
+* Your [service instance logs](#access-instance)

@@ -1,48 +1,101 @@
 ---
-title: Creating Application Security Groups for MySQL
+title: MySQL for Pivotal Cloud Foundry
 owner: MySQL
 ---
 
-This topic describes how to create [Application Security Groups](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASGs) for MySQL for Pivotal Cloud Foundry (PCF).
+<p class="note"><strong>Note</strong>: Pre-released DRAFT documentation. </p>
+This guide describes setting up and using MySQL for Pivotal Cloud Foundry (PCF) as an on-demand service.
 
-To allow applications to access MySQL for PCF, you must create an appropriate ASG and bind it to the service.
+## <a id='AboutTile'></a>About MySQL for PCF
 
-<p class="note"><strong>Note</strong>: Without an ASG, the service will not be usable.</p>
+MySQL for PCF enables PCF app developers to provision and use a MySQL database with a
+single command.
 
-In addition, application containers that access instances of this service require an outbound network connection to the load balancer configured for the MySQL for PCF service.
+MySQL for PCF v2.0 introduces a new type of service, an *on-demand* service. MySQL for PCF v2.0 replaces the *pre-provisioned* service
+that was in the v1.x series.
 
-To create ASGs for the MySQL for PCF service, perform the following steps:
+This table summarizes the main differences between the two:
 
-1. Create a JSON file with the following contents called `p-mysql-security-group.json`:
+<table id='mysql-odb-vs-pre' border="1" class="nice"><tr>
+   <th></th>
+   <th>Available Since</th>
+   <th>VMs it Runs On</th>
+   <th>How VMs are Created</th>
+   <th>Metrics Name Prefix</th>
+   </tr><tr>
+   <th>On-Demand Service</th>
+   <td>New for v2.0</td>
+   <td>Dedicated VM that serves a single service instance</td>
+   <td>PCF creates each VM on-demand when app developer creates service instance</td>
+   <td><code>p.mysql</code> (with a dot)</td>
+   </tr><tr>
+   <th>Pre-Provisioned Service</th>
+   <td>v1.4</td>
+   <td>Multi-tenant VMs shared by apps across PCF deployment</td>
+   <td>PCF creates all VMs when operator deploys or updates service</td>
+   <td><code>p-mysql</code> (with a dash)</td>
+   </tr>
+</table>
 
-	<pre class="terminal">
-    [
-      {
-         "ports": "3306",
-         "protocol": "tcp",
-         "destination": "REPLACE WITH THE P-MYSQL LOAD BALANCER IP, RANGE OR CIDR"
-      }
-    ]
-    </pre>
-   
-   	In the `destination` field, add the IP address, range, or CIDR of the load balancer that you configured for the MySQL for PCF service.
-   
-1. Log in to your PCF deployment as an administrator, and create an ASG called `p-mysql-service`.
+## <a id='snapshot'></a> Product Snapshot
 
-	<pre class="terminal">
-    # after logging in as an administrator
-    $ cf create-security-group p-mysql-service p-mysql-security-group.json
-    </pre>
+The following table provides version and version-support information about RabbitMQ for PCF.
 
-1. Bind the new ASG to the `default-running` ASG set to allow all applications to access the service.
+<table class="nice">
+    <th>Element</th>
+    <th>Details</th>
+    <tr>
+        <td>Version</td>
+        <td>v2.0.0</td>
+    </tr>
+    <tr>
+        <td>Release date</td>
+        <td>April 15, 2017</td>
+    </tr>
+    <tr>
+        <td>Software component version</td>
+        <td>Percona Server v5.7.17-11</td>
+    </tr>
+    <tr>
+        <td>Compatible Ops Manager version(s)</td>
+        <td>v1.10.x</td>
+    </tr>
+    <tr>
+        <td>Compatible Elastic Runtime version(s)</td>
+        <td>v1.10.x</td>
+    </tr>
+    <tr>
+        <td>IaaS support</td>
+        <td>AWS, Azure, GCP, OpenStack, and vSphere</td>
+    </tr>
+</table>
 
-	<pre class="terminal">
-	$ cf bind-running-security-group p-mysql-service
-    </pre>
+## <a id="overview"></a> Overview ##
 
-	If the service should only be made available to specific spaces, bind the
-ASG directly to those spaces.
+The MySQL for PCF product delivers dedicated instances on demand, "Database as a Service" to Cloud Foundry users. When installed, the tile deploys and maintains a single Service Broker that is responsible for Cloud Foundry integration. We work hard to ship the service configured with sane defaults, following the principle of least surprise for a general-use relational database service.
 
-	<pre class="terminal">
-   $ cf bind-security-group p-mysql-service ORGANIZATION_NAME SPACE_NAME
-   	</pre>
+When installed, developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Connection credentials are automatically provided in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES). Developers can select from a menu of service plans options, which are configured by the platform operator.
+
+The service offering meets the following criteria:
+
+<center>
+<table>
+  <tr><th></th><th>Single</th></tr>
+  <tr><td>**MySQL**</td><td>1 node</td></tr>
+
+  <tr><td>**Service Broker**</td><td>1 node</td></tr>
+  <tr><td>High Availability</td><td>-</td></tr>
+  <tr><td>Multi-AZ Support</td><td>Yes</td></tr>
+  <tr><td>Rolling Upgrades</td><td>-</td><tr>
+  <tr><td>Automated Backups</td><td>Yes</td></tr>
+  <tr><td>Customizable Plans</td><td>Yes</td></tr>
+  <tr><td>Customizable VM Instances</td><td>Yes</td></tr>
+  <tr><td>Plan Migrations</td><td>Yes</td></tr>
+  <tr><td>Encrypted Communication</td><td>Yes &#x271D;</td></tr>
+  <tr><td>Encrypted Data at-rest</td><td>-</td></tr>
+  <tr><td>Long-lived Canaries</td><td>-</td></tr>
+</table>
+</center>
+
+(*) vSphere only, v1.7 and earlier<br>
+(&#x271D;) Requires IPSEC BOSH plug-in
