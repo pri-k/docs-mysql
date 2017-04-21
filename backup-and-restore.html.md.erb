@@ -1,0 +1,183 @@
+---
+title: Backing Up and Restoring On-Demand MySQL
+owner: MySQL
+---
+
+<style>
+    .note.warning {
+        background-color: #fdd;
+        border-color: #fbb
+    }
+
+    .note.warning:before {
+        color: #f99;
+    }
+</style>
+
+This topic describes backing up and restoring databases in MySQL for Pivotal Cloud Foundry (PCF).
+
+## <a id="restore"></a> Restoring a Backup to a Service Instance
+
+### Downloading the Backup Artifact
+
+These instructions assume that you are using AWS S3 as your backup destination.
+
+1. Determine the guid associated with the service instance that you want to restore
+ <pre class="terminal">
+  $ cf service my-instance --guid
+  b3a30744-52cd-4bf2-b417-3f1c2aec1304
+ </pre>
+
+1. Download the manifest for the service instance deployment using the guid from above:
+  <pre class="terminal">
+   $ bosh download manifest service-instance_b3a30744-52cd-4bf2-b417-3f1c2aec1304 ./manifest.yml
+  </pre>
+  <p class="note">Follow the instructions for logging into BOSH in the Ops Manager VM. http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html</p>
+
+1. Inspect the downloaded manifest and take note of the `properties.cf-mysql-backup.symmetric_key` and backup destination bucket. You will need this later to decrypt the backup
+
+1. Login to AWS via the console or using the AWS cli. List the available backups for the instance:
+ <pre class="terminal">
+  $ aws s3 ls --recursive s3://BUCKET_NAME/service-instance_b3a30744-52cd-4bf2-b417-3f1c2aec1304
+ </pre>
+
+1. Choose the most recent backup. The backups artifacts are timestamped in the filename and have a `.gpg` extension.
+
+1. Download the selected backup:
+ <pre class="terminal">
+  $ aws s3 cp s3://$BUCKET_NAME/$BUCKET_PATH/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
+ </pre>
+
+### Restoring a Backup
+
+These instructions assume you have a backup artifact downloaded. It provides steps of restoring to a new service instance.
+
+1. [Create a new service instance](./use.html#create) to restore to 
+ ```
+  $ cf create-service p.mysql db-small NEW_SERVICE_INSTANCE
+ ```
+
+1. Prepare the service instance for restoration:
+  1. Determine the guid associated with your service instance:
+   ```
+    $ cf service NEW_SERVICE_INSTANCE --guid
+   ```
+  
+  1. Download the manifest for the service instance deployment using the guid from above:
+   ```
+    $ bosh download manifest service-instance_GUID ./manifest.yml
+   ```
+   
+  1. Set the bosh deployment to new downloaded manifest
+    ```
+     $ bosh deployment ./manifest.yml
+    ```
+  
+  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance. 
+   ```
+    $ bosh ssh mysql
+   ```
+  
+  1. After ssh'ing onto the mysql VM become root
+   ```
+    $ sudo su
+   ```
+  
+  1. Stop all currently running processes
+   ```
+    $ monit stop all
+   ```
+  
+  1. Wait until all jobs have successfully halted. They will be listed as "not monitored":
+   ```
+    $ watch monit summary
+   ```
+  
+  1. Delete the existing mysql database which is stored on disk:
+   ```
+    $ rm -rf /var/vcap/store/mysql/data/*
+   ```
+   <p class="note warning">This is a destructive action and should only be run on a new and unused service instance.</p>
+
+  1. Exit the mysql VM
+
+1. Restore the backup artifact to the service instance:
+  1. Copy the downloaded backup artifact to the new service instance:
+    ```
+     $ bosh scp mysql-backup-TIMESTAMP.tar.gpg <bosh_instance>:<destination_path>
+    ```
+     - `bosh_instance` should be set to `mysql/instance-id`, for example: `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`
+     - `destination_path` should be the destination to send the backup to on the bosh VM, for example: `/tmp/`
+  
+  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance. 
+    ```
+     $ bosh ssh mysql
+    ```
+
+  1. After ssh'ing onto the mysql VM become root
+   ```
+    $ sudo su
+   ```
+
+  1. Use the gpg descryption passphrase from above to descrypt the backup. You will be proprted for the decryption passphrase.
+    ```
+     $ gpg --decrypt /tmp/mysql-backup.tar.gpg > /tmp/mysql-backup.tar
+    ```
+  
+  1. Expand the backup artifact into the data directory for the MySQL server:
+    ```
+     $ tar xvf /tmp/mysql-backup.tar --directory=/var/vcap/store/mysql/data/
+    ```
+  
+  1. Modify the data directory owner to `vcap` or the mysql server cannot access the data.
+    ```
+     $ chown -R vcap:vcap /var/vcap/store/mysql
+    ```
+  
+  1. Restart the BOSH jobs to resume the MySQL server
+    ```
+     $ monit start all
+    ```
+  
+  1. Use monit to ensure all processes start successfully; all processes should be listed as `running`
+    ```
+     $ watch monit summary
+    ```
+
+  1. Delete old service binding created users. User tables get backed up along with databases, so any users that existed
+     in the backup are transferred over during restoration. To secure the database, determine and delete all users
+     that have randomly generated usernames:
+     <pre class="terminal">
+      $ /var/vcap/packages/percona-server/bin/mysql -uadmin -p
+      <br />
+      mysql> select USER from mysql.user;
+      +----------------------------------+
+      | USER                             |
+      +----------------------------------+
+      | 9b930c5813e049ca863b4acbf4000a8c |
+      | admin                            |
+      | e82b9b479bf64eb5854c93065810c95b |
+      | mysql.sys                        |
+      +----------------------------------+
+      4 rows in set (0.00 sec)
+      <br />
+      mysql> drop user 9b930c5813e049ca863b4acbf4000a8c;
+      <br />
+      mysql> drop user e82b9b479bf64eb5854c93065810c95b;
+     </pre>
+
+  1. Exit the mysql VM
+  
+1. Update your CF application to bind to the new service instance
+  ```
+   $ cf bind-service my-app NEW_SERVICE_INSTANCE 
+  ```
+  
+1. Start your CF application
+  ```
+   $ cf start my-app
+  ```
+  
+1. At this point your application should be running and the restored data accessible to it.
+
+
