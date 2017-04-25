@@ -11,12 +11,131 @@ owner: MySQL
 
     .note.warning:before {
         color: #f99;
-    }
+     }
 </style>
 
-This topic describes backing up and restoring databases in MySQL for Pivotal Cloud Foundry (PCF).
+This topic describes how to enable, configure, and use backups in MySQL for Pivotal Cloud Foundry (PCF).
 
-## <a id="restore"></a> Restoring a Backup to a Service Instance
+## <a id="overview"></a>Overview ##
+
+Automated backups have the following features:
+
+- Periodically create and upload backup artifacts suitable for restoring the complete set of database instances allocated in the service
+- No locks, no downtime
+- Includes a metadata file that contains the critical details of the backup artifact, including the effective calendar time of the backup
+- Backup artifacts are encrypted within the MySQL for PCF VM; unencrypted data is never transported outside of the MySQL for PCF deployment
+
+## <a id="enable-backups"></a>Enable Automated Backups ##
+
+You can configure MySQL for PCF to automatically back up its databases to external storage.
+
+* **How and Where**: There are two options for how automated backups transfer backup data and where the data saves out to:
+  - MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
+
+* **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
+
+* **What**: Backup the entirety of the MySQL data directory, consistent to a specific point in time.
+
+To enable automated backups and configure them for options above, perform the following steps:
+
+1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
+1. Click **Backups**.
+
+### <a id='ceph-aws'></a>Ceph or Amazon S3
+
+To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the following steps:
+
+1. On the **Backups** form, click on the **Ceph or Amazon S3** radio button.
+  ![S3 Backup Configuration Form](images/S3-backups.png)
+
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><td><strong>Access Key ID</strong></strong></td>
+        <td>Enter your S3 Access Key IDfor uploading backup artifacts. The Access Key and Secret Access Key require specific permissions: https://docs.pivotal.io/svc-sdk/service-backup/18-0/#backup-destinations.</td></tr>
+    <tr><td><strong>Secret Access Key</strong></td>
+        <td>Enter your S3 Secret Access Key for uploading backup artifacts</td></tr>
+    <tr><td><strong>Endpoint URL</strong></td>
+        <td>Enter the S3 compatible endpoint URL for uploading backups. URL must start with http:// or https://. The default is https://s3.amazonaws.com</td></tr>
+    <tr><td><strong>Bucket Name</strong></td>
+        <td>Enter the bucket name in which to upload </td></tr>
+    <tr><td><strong>Bucket Path</strong></td>
+        <td>Enter the path in the bucket to store backups.</td></tr>
+    <tr><td><strong>Cron Schedule</strong></td>
+        <td>Enter a cron schedule, using standard cron syntax, to take backups of each service instance.</td></tr>
+  </table>
+
+1. To enable backups using [Ceph](http://docs.ceph.com/docs/master/) or AWS, continue to the [Ceph or AWS](#ceph-aws) section. To enable backups using SCP, continue to the [SCP](#scp) section.
+
+### <a id='scp'></a>SCP
+
+To back up your database using SCP, perform the following steps:
+
+1. Select **SCP to a Remote Host**.
+<%= image_tag('configure-backups-scp.png') %>
+1. Enter the **Username**, **Hostname**, and **Destination Directory** for the backups.
+  <p class="note"><strong>Note</strong>: Pivotal recommends using a VM not within the PCF deployment for the destination of SCP backups. SCP enables the operator to use any desired storage solution on the destination VM.</p>
+1. For **Private Key**, paste in the private key that will be used to encrypt the SCP transfer.
+1. Enter the **SCP Port**. SCP runs on port 22 by default.
+1. Click **Save**.
+
+## <a id="disable-backups"></a>Disable Automated Backups ##
+
+To disable automated backups, perform the following steps:
+
+1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
+
+1. Click **Backups**.
+
+  ![Disable Backups](images/disable-backups.png)
+
+1. On the **Backups** form, click **Disable Backups**.
+
+1. Click **Save**.
+
+1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
+
+To configure automated backups for MySQL for PCF, perform the following steps:
+
+1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
+1. Click **Backups**.
+
+## <a id="understanding-metadata"></a>Understand Backup Metadata ##
+
+Along with each release, MySQL for PCF will upload a `mysql-backup-XXXXXXXXXX.txt` metadata file.
+
+The contents of the metadata file resemble the following:
+
+```
+ibbackup_version = 2.4.5
+end_time = 2017-04-24 21:00:03
+lock_time = 0
+binlog_pos =
+incremental = N
+encrypted = N
+server_version = 5.7.16-10-log
+start_time = 2017-04-24 21:00:00
+tool_command = --user=admin --password=... --stream=tar tmp/
+innodb_from_lsn = 0
+innodb_to_lsn = 2491844
+format = tar
+compact = N
+name =
+tool_name = innobackupex
+partial = N
+compressed = N
+uuid = fd13cf26-2930-11e7-871e-42010a000807
+tool_version = 2.4.5
+```
+
+Within this file, the most important items are the `start_time` and the `server_version` entries. Transactions that have not been completed at the start of the backup effort will not be present in the restored artifact.
+
+<p class="note"><strong>Note</strong>: Both <code>compressed</code> and <code>encrypted</code> show as <code>N</code> in this file, yet the artifact uploaded by MySQL for PCF is both compressed and encrypted. This is a known bug.</p>
+
+## <a id="restore"></a> Restoring a Backup Artifact to a Service Instance
+
+The disaster recovery backups feature of MySQL for PCF is primarily intended as a way to recover data to the same PCF foundation from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF service instance.
+
+The process to restore a backup artifact to a MySQL for PCF service instance is entirely manual. Perform the following steps to use the offsite backups to restore your cluster to its previous state:
 
 ### Downloading the Backup Artifact
 
@@ -52,7 +171,7 @@ These instructions assume that you are using AWS S3 as your backup destination.
 
 These instructions assume you have a backup artifact downloaded. It provides steps of restoring to a new service instance.
 
-1. [Create a new service instance](./use.html#create) to restore to 
+1. [Create a new service instance](./use.html#create) to restore to
  ```
   $ cf create-service p.mysql db-small NEW_SERVICE_INSTANCE
  ```
@@ -62,37 +181,37 @@ These instructions assume you have a backup artifact downloaded. It provides ste
    ```
     $ cf service NEW_SERVICE_INSTANCE --guid
    ```
-  
+
   1. Download the manifest for the service instance deployment using the guid from above:
    ```
     $ bosh download manifest service-instance_GUID ./manifest.yml
    ```
-   
+
   1. Set the bosh deployment to new downloaded manifest
     ```
      $ bosh deployment ./manifest.yml
     ```
-  
-  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance. 
+
+  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance.
    ```
     $ bosh ssh mysql
    ```
-  
+
   1. After ssh'ing onto the mysql VM become root
    ```
     $ sudo su
    ```
-  
+
   1. Stop all currently running processes
    ```
     $ monit stop all
    ```
-  
+
   1. Wait until all jobs have successfully halted. They will be listed as "not monitored":
    ```
     $ watch monit summary
    ```
-  
+
   1. Delete the existing mysql database which is stored on disk:
    ```
     $ rm -rf /var/vcap/store/mysql/data/*
@@ -108,8 +227,8 @@ These instructions assume you have a backup artifact downloaded. It provides ste
     ```
      - `bosh_instance` should be set to `mysql/instance-id`, for example: `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`
      - `destination_path` should be the destination to send the backup to on the bosh VM, for example: `/tmp/`
-  
-  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance. 
+
+  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance.
     ```
      $ bosh ssh mysql
     ```
@@ -123,22 +242,22 @@ These instructions assume you have a backup artifact downloaded. It provides ste
     ```
      $ gpg --decrypt /tmp/mysql-backup.tar.gpg > /tmp/mysql-backup.tar
     ```
-  
+
   1. Expand the backup artifact into the data directory for the MySQL server:
     ```
      $ tar xvf /tmp/mysql-backup.tar --directory=/var/vcap/store/mysql/data/
     ```
-  
+
   1. Modify the data directory owner to `vcap` or the mysql server cannot access the data.
     ```
      $ chown -R vcap:vcap /var/vcap/store/mysql
     ```
-  
+
   1. Restart the BOSH jobs to resume the MySQL server
     ```
      $ monit start all
     ```
-  
+
   1. Use monit to ensure all processes start successfully; all processes should be listed as `running`
     ```
      $ watch monit summary
@@ -167,17 +286,15 @@ These instructions assume you have a backup artifact downloaded. It provides ste
      </pre>
 
   1. Exit the mysql VM
-  
+
 1. Update your CF application to bind to the new service instance
   ```
-   $ cf bind-service my-app NEW_SERVICE_INSTANCE 
+   $ cf bind-service my-app NEW_SERVICE_INSTANCE
   ```
-  
+
 1. Start your CF application
   ```
    $ cf start my-app
   ```
-  
+
 1. At this point your application should be running and the restored data accessible to it.
-
-
