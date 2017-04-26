@@ -64,19 +64,7 @@ To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the fo
         <td>Enter a cron schedule, using standard cron syntax, to take backups of each service instance.</td></tr>
   </table>
 
-1. To enable backups using [Ceph](http://docs.ceph.com/docs/master/) or AWS, continue to the [Ceph or AWS](#ceph-aws) section. To enable backups using SCP, continue to the [SCP](#scp) section.
-
-### <a id='scp'></a>SCP
-
-To back up your database using SCP, perform the following steps:
-
-1. Select **SCP to a Remote Host**.
-<%= image_tag('configure-backups-scp.png') %>
-1. Enter the **Username**, **Hostname**, and **Destination Directory** for the backups.
-  <p class="note"><strong>Note</strong>: Pivotal recommends using a VM not within the PCF deployment for the destination of SCP backups. SCP enables the operator to use any desired storage solution on the destination VM.</p>
-1. For **Private Key**, paste in the private key that will be used to encrypt the SCP transfer.
-1. Enter the **SCP Port**. SCP runs on port 22 by default.
-1. Click **Save**.
+1. To enable backups using [Ceph](http://docs.ceph.com/docs/master/) or AWS, continue to the [Ceph or AWS](#ceph-aws) section.
 
 ## <a id="disable-backups"></a>Disable Automated Backups ##
 
