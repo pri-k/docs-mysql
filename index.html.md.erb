@@ -22,11 +22,11 @@ You can deploy MySQL for PCF in either single-node or high availability (HA) top
 Current MySQL for PCF Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: v1.8.3
-- **Release Date**: February 9, 2017
-- **Software component versions**: MariaDB v10.1.18, Galera v25.3.17
-- **Compatible Ops Manager Version(s)**: v1.8.x, v1.9.x
-- **Compatible Elastic Runtime Version(s)**: v1.8.x, v1.9.x
+- **Version**: v1.9.3
+- **Release Date**: April 26, 2017
+- **Software component versions**: MariaDB v10.1.20, Galera v25.3.19
+- **Compatible Ops Manager Version(s)**: v1.9.x, v1.10.x
+- **Compatible Elastic Runtime Version(s)**: v1.9.x, v1.10.x
 - **vSphere support?** Yes
 - **AWS support?** Yes
 - **OpenStack support?** Yes
@@ -52,7 +52,7 @@ For more information, refer to the full [Product Compatibility Matrix](https://d
 	  <tr>
 
 	<tr>
-	  <th rowspan="6">v1.8.x, v1.9.x</th>
+	  <th rowspan="6">v1.9.x, v1.10.x</th>
     <tr><td>v1.8.X</td><td>v1.9.X</td></tr>
 	</tr>
 
@@ -60,14 +60,24 @@ For more information, refer to the full [Product Compatibility Matrix](https://d
 
 Prior to upgrading you should:
 
-<p class='note'><strong>Note</strong>: MySQL for PCF v1.9.0 contains <b>breaking changes</b>. Please read the notes below before upgrading to this version.</p>
-
 - Validate the health of your cluster. If running in the HA configuration, download, configure and run the [mysql-diag](http://bit.ly/pivotal-mysql-diag) tool. Do not use **Apply Changes** if `mysql-diag` shows any cluster issues. Be sure to resolve those issues before upgrading.
-- Identify and rewrite any applications that lock tables. MySQL for PCF v1.9.0 retroactively removes the ability to `LOCK TABLES` from all app bindings. If you have activity logging enabled<sup>[*](configuring.html#server)</sup>, you can use it to search for table locking events and then identify the apps that requested those actions. Rewrite your apps as necessary so they no longer use table locking.
-- MariaDB 10.1.20, included in this release, has a [breaking change](https://jira.mariadb.org/browse/MDEV-12210) in large index creation. Where previously large indices were silently truncated, now `ALTER TABLE` and `CREATE INDEX` statements may fail. In order to create large indices, tables must be created or altered to use `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED` if they are to contain an index with greater than 767 bytes in it.
-- If any of your apps already use or want to create indices with more than 767 bytes, create or change them to use `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED`. Otherwise, `ALTER TABLE` and `CREATE INDEX` statements may fail. Older versions of MariaDB silently truncated large indices, MariaDB 10.1.20, included in but MySQL v1.9 includes, [breaks](https://jira.mariadb.org/browse/MDEV-12210) when it creates too-large indices.
 
-See the [release notes](release-notes.html#1.9.1) for more information about these changes.
+<p class='note'><strong>Note</strong>: MySQL for PCF v1.9.0 enables strict mode, please read below.</p>
+- p-mysql 1.9 now enables [strict mode](https://mariadb.com/kb/en/mariadb/sql-mode/#strict-mode). Where previously large indices were silently truncated, now `ALTER TABLE` and `CREATE INDEX` statements may fail. If any of your apps already use or want to create indices with more than 767 bytes, create or altered using `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED`. Otherwise, `ALTER TABLE` and `CREATE INDEX` statements may fail. Without this setting, the default behavior of MariaDB is to silently truncate column content and large indices.
+  - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
+
+See the [release notes](release-notes.html) for more information about these changes.
+
+### <a id="deprecation-lock-tables"></a> Deprecation Notice
+
+<p class='note warning'><strong>Warning:</strong> p-mysql 1.10 will retroactively remove the ability to lock tables from all existing service instances.</p>
+
+When running in clustered mode, table-level locks are not distributed across the cluster. Previous versions of MySQL for PCF have allowed applications to attain a table lock, regardless that it will exist only on the current master. This means that applications and application developers are not aware that they do not exclusively have a lock across all nodes. This can lead to deadlocks when writes happen on different masters.
+
+MySQL for PCF first started to limit applications' ability to request table locks in version 1.8.0, by not allowing new service bindings to lock tables. In the next minor release, v1.9, all existing service instances will no longer have the ability to lock tables. Apps that attempt to lock tables will now see an error of the form:
+
+    MariaDB [cf\_eedd5768\_9c6c\_4388\_ae0b\_dc64f4022bf4] LOCK TABLES fruit WRITE;
+    ERROR 1044 (42000): Access denied for user 'uoY64cqdw6qyMtNl'@'%' to database 'cf\_eedd5768\_9c6c\_4388\_ae0b\_dc64f4022bf4'
 
 ## <a id="configurations"></a>Enterprise Readiness by Topology ##
 

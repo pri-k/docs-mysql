@@ -37,54 +37,77 @@ Pivotal recommends deploying either one or three MySQL server nodes, avoiding an
 
 The minimum number of nodes required to tolerate a single node failure is three. With a two-node cluster, a single node failure causes loss of quorum.
 
-## <a id="defaults"></a> MySQL Server Defaults 
+## <a id="defaults"></a> MySQL Server Defaults
 
 This section describes the defaults that the MySQL for PCF tile applies to its Galera and MariaDB components.
 
-### SST Method: Xtrabackup
-
-When a new node is added to or rejoins a cluster, a primary node from the cluster is designated as the state donor. Then the new node synchronizes with the donor through the [State Snapshot Transfer](http://www.percona.com/doc/percona-xtradb-cluster/5.5/manual/state_snapshot_transfer.html) (SST) process.
-
-MySQL for PCF uses [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup) for SST, which lets the state donor node continue accepting reads and writes during the transfer. Galera defaults to using `rsync` to perform SST, which is usually fastest, but blocks requests during the transfer.
-
-### InnoDB Log Files: 1GB
+#### InnoDB Log Files: 1GB
 
 MySQL for PCF clusters default to a log file size of 1GB to support large blobs.
 
-### Max User Connections: 40
+#### Max User Connections: 40
 
 To ensure all users get fair access to system resources, MySQL for PCF defaults each user's number of connections to 40. Operators can override this setting for each service plan in the **Service Plans** configuration pane.
 
-### Skip External Locking
+#### Skip External Locking
 
 Each virtual machine only runs one `mysqld` process, so they do not need external locking.
 
-### Max Allowed Packet: 256MB
+#### Max Allowed Packet: 256MB
 
 MySQL for PCF allows blobs up to 256MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log file size.
 
-### InnoDB File-Per-Table Tablespaces
+#### InnoDB File-Per-Table Tablespaces
 
 InnoDB allows using either a single file to represent all data, or a separate file for each table. MySQL for PCF uses a separate file for each table (`innodb_file_per_table = ON`) to optimize flexibility and efficiency. For a full list of pros and cons, see MySQL's documentation for [InnoDB File-Per-Table Mode](http://dev.mysql.com/doc/refman/5.5/en/innodb-multiple-tablespaces.html).
 
-### InnoDB File Format: Barracuda
+#### InnoDB File Format: Barracuda
 
 MySQL for PCF uses the `Barracuda` file format to take advantage of extra features available with the `innodb_file_per_table = ON` option.
 
-### <a id="temp-tables"></a>Temporary Tables
+#### <a id="temp-tables"></a>Temporary Tables
 
 MySQL converts temporary in-memory tables to temporary on-disk tables when either of the following occurs:
 
 * A query generates more than 16 million rows of output
 * A query uses more than 32MB of data space
 
-### Reverse Name Resolution Off
+#### Reverse Name Resolution Off
 
 MySQL for PCF authenticates with user credentials, which does not restrict the host that a user connects from. The service defaults to disabling reverse name resolution, to save time on each new connection.
 
-### Large Data File Splitting Enabled
+#### Sql_mode Additionally Enables Strict Mode
+
+[sql_mode](https://mariadb.com/kb/en/mariadb/sql-mode/) is set to: `NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES`. `sql_mode` was not set on versions before p-mysql version 1.8.0.
+
+  - `NO_ENGINE_SUBSTITUTION`: Guards against applications unintentionally creating non-InnoDB tables. Previously, the current master would accept, but not replicate such tables across the cluster.
+  - `NO_AUTO_CREATE_USER`: Prevents implicitly creating users without a password.
+  - `STRICT_ALL_TABLES`: Enables [strict mode](https://mariadb.com/kb/en/mariadb/sql-mode/#strict-mode)
+    - Strict mode means that applications may see errors, such as when inserting strings that are too long, or numeric values that are out of range. Without this setting the default MariaDB behavior is to silently modify data on commit.
+    - Strict mode also does not allow a user to specify large indices even if <code>innodb\_large\_index</code> is set to <code>ON</code>. Users will need to additionally specify <code>ROW\_FORMAT=DYNAMIC</code> or <code>ROW\_FORMAT=COMPRESSED</code> in each table create statement. Apps that do not specify this additional clause will see an error during DDL similar to:
+        ```ERROR 1709 (HY000): Index column size too large. The maximum column size is 767 bytes.```
+      - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
+
+### Settings for Galera
+
+
+#### SST Method: Xtrabackup
+
+When a new node is added to or rejoins a cluster, a primary node from the cluster is designated as the state donor. Then the new node synchronizes with the donor through the [State Snapshot Transfer](http://www.percona.com/doc/percona-xtradb-cluster/5.5/manual/state_snapshot_transfer.html) (SST) process.
+
+MySQL for PCF uses [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup) for SST, which lets the state donor node continue accepting reads and writes during the transfer. Galera defaults to using `rsync` to perform SST, which is usually fastest, but blocks requests during the transfer.
+
+#### Large Data File Splitting Enabled
 
 MySQL for PCF enables `wsrep_load_data_splitting` to split large data imports into separate transactions. This facilitates loading large files into a MariaDB cluster.
+
+#### Maximum Transaction Sizes
+[wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) is set to 2GB, the maximum allowed by Galera.
+
+[wsrep\_max\_ws\_rows](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-rows) enforces the default of 0
+  - For more information about these limitations, see the documentation on [transaction size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).
+  - **Note:** There is a [known issue](https://jira.mariadb.org/browse/MDEV-11817) in which this setting also affects DDLs. It will be fixed in a future release of MariaDB.
+
 
 ## <a id="scale-behavior"></a> Cluster Scaling Behavior ##
 
@@ -109,4 +132,3 @@ When you scale down from multiple MariaDB nodes to a single node, the primary no
 Removing nodes from a cluster _gracefully_ means that the cluster size decreases while the cluster maintains its healthy state.
 
 You can remove nodes gracefully by manually shutting each down with `monit` or by decreasing the cluster size as described in the [Switch Between Single and HA Topologies](./configuring.html#switch-topologies) section of the Configuring MySQL for PCF topic.
-
