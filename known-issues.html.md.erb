@@ -5,4 +5,12 @@ owner: MySQL
 
 This topic lists known issues with specific releases of MySQL for Pivotal Cloud Foundry (PCF).
 
-There are no known issues with MySQL for PCF 1.9.0 at this time.
+## <a id="rejoin-unsafe-fails"></a>Rejoin Unsafe Fails
+
+- Due to a timeout in the startup procedure, if a node takes a long time to catch up while rejoining the cluster, the procedure will appear to fail. This will be fixed in coming releases.
+
+### <a id="node-cannot-rejoin"></a>Node Cannot Rejoin
+
+In releases previous to p-mysql 1.9.2, there is a condition in which, if MariaDB crashes, and further fails during re-start, the startup processes will not notice the failure. Most frequently, this happens when MariaDB legitimately crashes during normal operation, and when restarting, needs to SST but is prevented by the Interruptor. Be aware that there are other conditions when a node crashes on startup (such as full disk, persistent storage issue, etc). To resolve this, it is necessary to run `monit stop mariadb_ctrl` on the failing node, before you can successfully run the `rejoin-unsafe` errand.
+
+This failure condition can happen silently; it is necessary that you monitor the state of your cluster - either by watching `wsrep_cluster_size`, watching the proxy page or via `mysql-diag` tool to notice that a node is unable to restart.
