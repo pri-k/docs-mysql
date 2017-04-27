@@ -41,28 +41,28 @@ To enable automated backups and configure them for options above, perform the fo
 1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
 1. Click **Backups**.
 
-### <a id='ceph-aws'></a>Ceph or Amazon S3
+## <a id='ceph-aws'></a>Ceph or Amazon S3
 
 To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the following steps:
 
 1. On the **Backups** form, click on the **Ceph or Amazon S3** radio button.
   ![S3 Backup Configuration Form](images/S3-backups.png)
 
-  <table>
-    <tr><th>Field</th><th>Instructions</th></tr>
-    <tr><td><strong>Access Key ID</strong></strong></td>
-        <td>Enter your S3 Access Key IDfor uploading backup artifacts. The Access Key and Secret Access Key require specific permissions: https://docs.pivotal.io/svc-sdk/service-backup/18-0/#backup-destinations.</td></tr>
-    <tr><td><strong>Secret Access Key</strong></td>
-        <td>Enter your S3 Secret Access Key for uploading backup artifacts</td></tr>
-    <tr><td><strong>Endpoint URL</strong></td>
-        <td>Enter the S3 compatible endpoint URL for uploading backups. URL must start with http:// or https://. The default is https://s3.amazonaws.com</td></tr>
-    <tr><td><strong>Bucket Name</strong></td>
-        <td>Enter the bucket name in which to upload </td></tr>
-    <tr><td><strong>Bucket Path</strong></td>
-        <td>Enter the path in the bucket to store backups.</td></tr>
-    <tr><td><strong>Cron Schedule</strong></td>
-        <td>Enter a cron schedule, using standard cron syntax, to take backups of each service instance.</td></tr>
-  </table>
+    <table>
+      <tr><th>Field</th><th>Instructions</th></tr>
+      <tr><td><strong>Access Key ID</strong></strong></td>
+          <td>Enter your S3 Access Key IDfor uploading backup artifacts. The Access Key and Secret Access Key require specific permissions: https://docs.pivotal.io/svc-sdk/service-backup/18-0/#backup-destinations.</td></tr>
+      <tr><td><strong>Secret Access Key</strong></td>
+          <td>Enter your S3 Secret Access Key for uploading backup artifacts.</td></tr>
+      <tr><td><strong>Endpoint URL</strong></td>
+          <td>Enter the S3 compatible endpoint URL for uploading backups. URL must start with http:// or https://. The default is https://s3.amazonaws.com</td></tr>
+      <tr><td><strong>Bucket Name</strong></td>
+          <td>Enter the bucket name in which to upload.</td></tr>
+      <tr><td><strong>Bucket Path</strong></td>
+          <td>Enter the path in the bucket to store backups.</td></tr>
+      <tr><td><strong>Cron Schedule</strong></td>
+          <td>Enter a cron schedule, using standard cron syntax, to take backups of each service instance.</td></tr>
+    </table>
 
 1. To enable backups using [Ceph](http://docs.ceph.com/docs/master/) or AWS, continue to the [Ceph or AWS](#ceph-aws) section.
 
