@@ -44,10 +44,15 @@ In MySQL for PCF v1.7.0 and earlier, there is only one service plan. Changing th
 
 There is a bug in MySQL for PCF v1.6.3 and earlier. Changing the plan does not change existing service instances. Existing plans will continue to be governed by the plan constraints effective at the time they were created. This is true regardless of whether or not an operator runs `cf update-service`.
 
-There is a workaround for this bug, which will be resolved in future releases of MySQL for PCF. In order for the change to be effective for existing plans, you must trigger this by interacting directly with the service broker: `curl -v -k -X PATCH https://BROKER_CREDS_USERNAME:BROKER_CREDS_PASSWORD@p-mysql.SYSTEM.DOMAIN.example.com/v2/service_instances/SERVICE_INSTANCE_ID?plan_id=17d793e6-6da6-4f0e-b58d-364a407166a0`
+There is a workaround for this bug, which will be resolved in future releases of MySQL for PCF. In order for the change to be effective for existing plans, you must trigger this by interacting directly with the service broker: `curl -v -k -X PATCH https://BROKER_CREDS_USERNAME:BROKER_CREDS_PASSWORD@p-mysql.SYSTEM.DOMAIN.example.com/v2/service_instances/SERVICE_INSTANCE_ID?plan_id=UNIQUE_ID`
 
 - SYSTEM.DOMAIN is defined in Ops Manager, under Elastic Runtime's **Settings** tab, in the `Cloud Controller` entry.
 - BROKER\_CREDS\_USERNAME and BROKER\_CREDS\_PASSWORD are defined in Ops Manager, under MySQL for PCF's  **Credentials** tab, in the `Broker Auth Credentials` entry.
+- To get the UNIQUE\_ID for the service plan:
+    1. Run `cf curl /v2/services`
+    1. In the output, find the data object with the `entity` > `label` and `description` for the service with the changed plan, and record its `metadata` > `guid` value.
+    1. Run `cf curl /v2/services/SERVICE-GUID/service_plans` with the service GUID from the last step.
+    1. In the output, find the data object with the `entity` > `label` and `description` for the changed service plan, and record its `unique_id` value. This is the UNIQUE\_ID value to pass to the `plan_id` argument above; do not use the plan's GUID.
 - To get each SERVICE\_INSTANCE\_ID, run `cf service INSTANCE --guid`. You should see output like this example:
 
   ```
@@ -55,7 +60,7 @@ There is a workaround for this bug, which will be resolved in future releases of
   4cae3a5e-66b1-4c9a-8536-feaff25237bf
   ```
 
-Run this for each service instance to be updated.
+Run this `curl` command for each service instance to be updated.
 
 **Furthermore**, if you have changed the max number of connections constraint, then it is necessary to update each bound application's setting directly from the MySQL console. Follow these steps:
 
