@@ -42,7 +42,7 @@ If you have committed steps 1, 2 and 3, do not click 'Apply Changes.' Instead, r
 
 In MySQL for PCF v1.7.0 and earlier, there is only one service plan. Changing the definition of that plan, the number of megabytes, number of connections, or both, will make it so that any new service instances will have those characteristics.
 
-There is a bug in MySQL for PCF v1.6.3 and earlier. Changing the plan does not change existing service instances. Existing plans will continue to be governed by the plan constraints effective at the time they were created. This is true regardless of whether or not an operator runs `cf update-service`.
+There is a bug in MySQL for PCF v1.7 and earlier. Changing the plan does not change existing service instances. Existing plans will continue to be governed by the plan constraints effective at the time they were created. This is true regardless of whether or not an operator runs `cf update-service`.
 
 There is a workaround for this bug, which will be resolved in future releases of MySQL for PCF. In order for the change to be effective for existing plans, you must trigger this by interacting directly with the service broker: `curl -v -k -X PATCH https://BROKER_CREDS_USERNAME:BROKER_CREDS_PASSWORD@p-mysql.SYSTEM.DOMAIN.example.com/v2/service_instances/SERVICE_INSTANCE_ID?plan_id=UNIQUE_ID`
 
