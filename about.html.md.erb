@@ -5,12 +5,11 @@ owner: MySQL
 
 This topic describes the architecture for on-demand MySQL for Pivotal Cloud Foundry (PCF).
 
-For information about architecture of the older, pre-provisioned service, see Deploying the MySQL Service # ADD LINKS
+For information about architecture of the older, pre-provisioned service, see the [Architecture](http://docs.pivotal.io/p-mysql/1-9/architecture.html) topic for MySQL for PCF v1.9.
 
 ## <a id='on-demand'></a>Default Network and Service Network
 
-Like other on-demand PCF services, on-demand MySQLfor PCF relies on the BOSH 2.0 ability to 
-dynamically deploy VMs in a dedicated network. 
+Like other on-demand PCF services, on-demand MySQL for PCF relies on the BOSH 2.0 ability to dynamically deploy VMs in a dedicated network. 
 The on-demand service broker uses this capability to create single-tenant service instances in a dedicated service network.
 
 <%= partial '../../mysql/odb/on_demand_architecture' %>

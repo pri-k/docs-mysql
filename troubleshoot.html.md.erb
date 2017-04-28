@@ -1,548 +1,172 @@
 ---
-title: Troubleshooting On-Demand MySQL for PCF
+title: Troubleshooting MySQL for PCF
 owner: MySQL
 ---
 
-<style>
-    .note.warning {
-        background-color: #fdd;
-        border-color: #fbb
-    }
-
-    .note.warning:before {
-        color: #f99;
-    }
-</style>
-
-
 This topic provides operators with basic instructions for troubleshooting on-demand MySQL for PCF.
+
 ## <a id="errors"></a>Troubleshooting Errors
 
 Start here if you're responding to a specific errors or error messages.
 
 ### <a id="install-fail"></a>Failed Install
 
-1. Certificate issues - ODB requires valid certificates. Ensure that your certificates are valid and generate new ones if necessary via Ops Manager 
-1. Deploy fails - Deploys can fail for a variety of reasons. View the logs via Ops Manager to determine why the deploy is failing.
-1. [Networking problems](#network) - These can occur when:
-  - CF cannot reach the service broker
-  - CF cannot reach the service instances
-  - The service network cannot access the BOSH director 
-1. [Register broker errand](#register-broker) fails
-1. The Smoke test errand failed
-1. Resource sizing issues - These occur when the resource sizes selected for a given plan are less than the service requires to function. Check your resource configuration in Ops Manager and ensure that the configuration matches that recommended by the service.
-1. Service specific issues
+<%= partial '../../mysql/odb/tshoot-err-install-fail' %>
 
-### <a id="cannot-create-delete"></a>Devs Cannot Create or Delete Service Instances
+### <a id="cannot-create-delete"></a>Cannot Create or Delete Service Instances
 
- 
-```
-Instance provisioning failed: There was a problem completing your request. Please contact your operations team providing the following information: service: redis-acceptance, service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089, broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac, task-id: 442, operation: create
-``` 
-Check the BOSH task information:
-Follow the advanced BOSH troubleshooting guide to log in to BOSH and target the service instance using the instructions on parsing an error message.
+<%= partial '../../mysql/odb/tshoot-err-cannot-create-delete' %>
 
-`bosh task $task-id` from the error above
+### <a id="timeouts"></a>Broker Request Timeouts
 
-1. Configuration errors: If the BOSH error shows a problem with the deployment manifest
+<%= partial '../../mysql/odb/tshoot-err-timeouts' %>
 
-Get the service-instance-manifest:
-`bosh download manifest service-instance_$guid myservice.yml`
+### <a id="cannot-bind"></a>Cannot Bind to or Unbind from Service Instances
 
-[Access the broker logs](#access-broker)  and use the `broker-request-id` from the error message above to search the log for more information.
+#### <a id="instance-not-exist"></a>Instance Does Not Exist
 
-2. [Authentication errors](#auth)
+<%= partial '../../mysql/odb/tshoot-err-instance-not-exist' %>
 
-3. [Network errors](#network)
+#### <a id="other-errors"></a>Other Errors
 
-4. [Quota errors](#quotas) 
+<%= partial '../../mysql/odb/tshoot-err-other-errors' %>
 
-### <a id="cannot-bind"></a>Devs Cannot Bind to or Unbind from Service Instances
+### <a id="cannot-connect"></a>Cannot Connect to a Service Instance
 
-#### <a id="instance-not-exist"></a>Instance does not exist
+<%= partial '../../mysql/odb/tshoot-err-cannot-connect' %>
 
-If the error message says “Server error, status code: 502, error code: 10001, message: Service broker error: instance does not exist”
+### <a id="upgrade-all-fails"></a>Upgrade All Instances Fails
 
-1. Check that the service instance exists in BOSH and CF
-```
-cf service myservice --guid
-```
-2. Record the guid response and run the bosh vms command
-<pre class="terminal">
-bosh vms service-instance_$guid
-</pre>
-If the bosh deployment is not found then it has been deleted from BOSH. Contact Pivotal support for further assistance on recovery steps.
+<%= partial '../../mysql/odb/tshoot-err-upgrade-all-fails' %>
 
-#### <a id="other-errors"></a>Other errors
+### <a id="missing-logs"></a>Missing Logs and Metrics
 
-```
-Server error, status code: 502, error code: 10001, message: Service broker error: There was a problem completing your request. Please contact your operations team providing the following information: service: example-service, service-instance-guid: 8d69de6c-88c6-4283-b8bc-1c46103714e2, broker-request-id: 15f4f87e-200a-4b1a-b76c-1c4b6597c2e1, operation: bind
-```
-
-To find out the exact issue with creating the binding [access the service broker logs](#access-broker)
-
-Use the broker-request-id from the error message above to search the log for more information. 
-
-Contact Pivotal support for further assistance if you are unable to resolve the problem.
-
-2. [Authentication errors](#auth)
-
-3. [Network errors](#network)
-
-### <a id="cannot-connect"></a>Devs Cannot Connect to a Created Service
-
-Ask the user to send application logs that show the connection error. If the error is originating from the service, then follow service-specific instructions. If the issue appears to be network-related, then:
-
-1. Check that [application security groups](https://docs.cloudfoundry.org/adminguide/app-sec-groups.html) are configured correctly.
-Access should be configured for the service network that the tile is deployed to.
-
-1. Ensure that the network the PCF Elastic Runtime tile is deployed to has network access to the service network.
-
-1. In Ops Manager go into the service tile and see the service network that is configured in the networks tab.
-
-1. In Ops Manager go into the ERT tile and see the network it is assigned to.
-Make sure that these networks can access each other.
+<%= partial '../../mysql/odb/tshoot-err-missing-logs' %>
 
 ## <a id="components"></a>Troubleshooting Components
 
-Guidance on checking for and fixing issues in the ODB components.
+Guidance on checking for and fixing issues in on-demand service components.
 
 ### <a id="bosh"></a>BOSH problems
 
 #### <a id="no-bosh-uuid"></a>Missing BOSH Director UUID
 
-If using the BOSH v1 CLI you need to re-add the director\_uuid to the manifest
-```
-bosh status --uuid
-```
-Edit the manifest and add the `director_uuid: ` from the previous command at the top of the manifest. For more, see https://bosh.io/docs/manifest-v2.html#deployment 
+<%= partial '../../mysql/odb/tshoot-comp-no-bosh-uuid' %>
 
 #### <a id="large-queue"></a>Large BOSH Queue
 
-OpsManager currently deploys two BOSH workers. On-demand service brokers will add tasks to the BOSH queue. Until the workers reach the queued items the application developer will see `create in progess` in the cf CLI. 
-
-The number of BOSH workers will become configurable in future version of OpsManager.
+<%= partial '../../mysql/odb/tshoot-comp-large-queue' %>
 
 ### <a id="bosh-config"></a>Configuration
 
 #### <a id="bosh-instance-fail"></a>Service instances in failing state
 
-You may have configured a VM / Disk type in tile plan page in OpsManager that is too low for the service instance to start. Please see tile specific guideance on resource requirements.
+<%= partial '../../mysql/odb/tshoot-comp-bosh-instance-fail' %>
 
 ### <a id="auth"></a>Authentication
 
 #### <a id="uaa-change"></a>UAA Changes
 
-If you have rotated any UAA users credentials then you may see authenticiatin issues in the service broker logs. 
-
-To resolve this you should redeloy the service tile in OpsManager, which will provide the broker with the latest configuration.
-
-<p class="note"><strong>Note</strong>: You must ensure that any changes to UAA credentials are reflected in the OpsManager <code>credentials</code> tab of the Elastic Runtime Tile.</p>
+<%= partial '../../mysql/odb/tshoot-comp-uaa-change' %>
 
 ### <a id="network"></a>Networking
 
-Common issues include:
-
-1. Network latency issues when connecting to the service instance to create or delete a binding. Solution is to try again or improve network performance
-1. Network firewall rules are blocking connections from the service broker to the service instance. In OpsManager go into the tile and see the two networks that are configured in the networks tab. Ensure that these networks allow access to each other.
-1. Network firewall rules are blocking connections from the service network to the BOSH director network. Service instances must have access to the director so that the BOSH agents can report in.
-1. Cloud Foundry application security groups may not be configured to allow access to the service network. This is required to allow applications on the runtime to connect to services.
-1. There could also be a problem accessing BOSH’s UAA or the BOSH director. Follow network troubleshooting and check BOSH director is online
+<%= partial '../../mysql/odb/tshoot-comp-network' %>
 
 #### <a id="broker-to-instances"></a>Validate Service Broker Connectivity to Service Instances
 
-To validate you can `bosh ssh` onto the service broker by first downloading the broker manifest and targeting the deployment, and try to reach the service instance. If no BOSH task-id is in the error message, then look in the broker log using the broker-request-id from the task.
+<%= partial '../../mysql/odb/tshoot-comp-broker-to-instances' %>
 
 #### <a id="app-to-instances"></a>Validate App Access to Service Instance
 
-You can use `cf ssh` to gain access to the application container and then attempt to connect to the service instance using the binding detailed in the `VCAP_SERVICES` environment variable.
+<%= partial '../../mysql/odb/tshoot-comp-app-to-instances' %>
 
 ### <a id="quotas"></a>Quotas
 
 #### <a id="plan-quotas"></a>Plan Quota issues
 
-If you see the following error:
-
-```
-Message: Service broker error: The quota for this service plan has been exceeded. 
-Please contact your Operator for help.
-```
-
-1. Check your current plan quota 
-1. Increase the plan quota
-1. Log into ops manager
-1. Reconfigure the quota on the plan page
-1. Deploy the tile
-1. Find who is using the plan quota and take the appropriate action
+<%= partial '../../mysql/odb/tshoot-comp-plan-quotas' %>
 
 #### <a id="global-quotas"></a>Global Quota Issues
 
-If you see this error:
-
-```
-Message: Service broker error: The quota for this service has been exceeded. 
-Please contact your Operator for help.
-```
-
-1. Check your current global quota
-1. Increase the global quota 
-1. Log into ops manager
-1. Reconfigure the quota on the on-demand settings page
-1. Deploy the tile
-1. Find out who is using the quota and take the appropriate action
+<%= partial '../../mysql/odb/tshoot-comp-global-quotas' %>
 
 #### <a id="failing-jobs"></a>Failing jobs and unhealthy instances
 
-To determine whether there is an issue with the service deployment
-
-<pre class="terminal">
-$ bosh vms --vitals service-instance_$guid
-</pre>
-
-For additional information
-
-<pre class="terminal">
-$ bosh instances --ps --vitals
-</pre>
-
-If the VM is failing you will need to follow the service specific information, as any unadvised corrective actions (such as running bosh restart on a VM) may cause issues in the service instance.
-
-### <a id="missing-logs"></a>Missing logs and metrics
-
-If no logs are being emitted by the on-demand broker, check that your syslog forwarding address is correct in Ops Manager.
-
-To verify if metrics are being emitted to the firehose:
-
-1. Install the [`cf nozzle` plugin](https://github.com/cloudfoundry/firehose-plugin)
-1. `grep` the output of `cf nozzle` for the name of your service: 
-<pre class="terminal">
-$ cf nozzle -f ValueMetric | grep --line-buffered “on-demand-broker/my-service” 
-</pre>
-
-If no metrics appear within 5 minutes:
-Verify that the broker network has access to the loggregator system, on all required ports. [Contact Pivotal support](#filing-a-support-ticket) if you are unable to resolve the issue. 
-
-### <a id="orphan"></a>Orphaned Instances
-
-If you have orphaned instances (instances that are recognized by CF but not by BOSH or vice versa), you can remove the deployment from BOSH and CF directly:
-
-1. To find orphaned instances, run the `orphan-deployments` bosh errand
-<pre class="terminal">
-$ bosh run errand orphan-deployments
-</pre>
-
-1. Run 
-<pre class="terminal">
-$ cf service --guid
-</pre>
-
-1. Record this guid
-
-1. Run
-<pre class="terminal">
-$ bosh delete deployment service-instance_$guid
-</pre>
-
-1. If this fails, you can ignore any errors while deleting by running 
-<pre class="terminal">
-$ bosh delete deployment service-instance_$guid --force
-</pre>
-<p class="note warning">
-<strong>WARNING: </strong> This may leave IaaS resources in an unusable state.
-</p>
-
-1. Next purge the service instance in CF
-```
-$ cf purge-service-instance myservices
-```
+<%= partial '../../mysql/odb/tshoot-comp-failing-jobs' %>
 
 ## <a id="techniques"></a>Techniques for Troubleshooting
 
 Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
 
-### <a id="bosh-cf-access"></a>Use BOSH and CF to access logs and SSH
-
-1. Follow the steps described here to [target your BOSH CLI](https://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) and [log-in to your cf CLI](https://docs.cloudfoundry.org/cf-cli/getting-started.html)
-
-#### <a id="access-broker"></a>Access Broker Logs and VM(s)
-
-1. Identify the ODB deployment using 
-```
-$ bosh deployments
-```
-1. Download the ODB manifest using 
-```
-$ bosh download manifest ODB-DEPLOYMENT-NAME odb.yml
-```
-1. Select the ODB deployment using 
-```
-$ bosh deployment odb.yml
-```
-1. View VMs in the deployment using 
-```
-$ bosh instances
-```
-1. Download broker logs by using the 
-```
-$ bosh logs INSTANCE-ID
-```
-1. To ssh onto the VM use 
-```
-$ bosh ssh INSTANCE-ID
-```
-
-#### <a id="access-instance"></a>Access Service Instance Logs and VMs
-
-1. To target an individual service instance deployment, retrieve the 
-the guid of your service instance with the cf CLI command 
-```
-$ cf service MY-SERVICE --guid
-```
-
-1. Pre-pend the text `service_instance-` to the GUID you just obtained to create the ID that BOSH uses for your service instance (e.g. if your GUID is `1Hy6H`, this becomes `service_instance-1Hy6H`).
-
-1. Download your bosh manifest for the service using 
-```
-$ bosh download manifest SERVICE-INSTANCE-GUID MY-SERVICE.yml
-```
-1. Select the deployment using 
-```
-$ bosh deployment MY-SERVICE.yml
-```
-1. View VMs in the deployment using 
-```
-$ bosh instances
-```
-1. Download instance logs by using the 
-```
-$ bosh logs INSTANCE-ID
-```
-1. To ssh onto the VM use 
-```
-$ bosh ssh INSTANCE-ID
-```
-
-### <a id="parse-error"></a>Parse a CF error message
-
-Failed operations (create, update, bind, unbind, delete) will result in an error message that can be retrieved using the CF cli
-
-<pre class="terminal">
-$ cf service myservice
-
-Service instance: myservice
-Service: super-db
-Bound apps:
-Tags:
-Plan: dedicated-vm
-Description: Dedicated Instance
-Documentation url:
-Dashboard: 
-
-Last Operation
-Status: create failed
-Message: Instance provisioning failed: There was a problem completing your request. 
-     Please contact your operations team providing the following information: 
-     service: redis-acceptance, 
-     service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089,
-     broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac, 
-     task-id: 442, 
-     operation: create
-Started: 2017-03-13T10:16:55Z
-Updated: 2017-03-13T10:17:58Z
-</pre>
-
-The information under the "Message" field can be used to debug further. Please provide this information to Pivotal Support when filing a ticket.
+## <a id="parse-error"></a>Parse a Cloud Foundry (CF) Error Message
 
-The `task-id` field maps to the BOSH task id. For further information on a failed BOSH task, use the `bosh task <task-id>` command in the BOSH CLI.
-
-The `broker-request-guid` maps to the portion of the On-Demand Broker log containing the failed step. Access the broker log via your syslog aggregator, or access bosh logs for the broker by typing `bosh logs broker 0`. If you have more than one broker instance, you will need to repeat this process for each instance.
+<%= partial '../../mysql/odb/tshoot-tech-parse-error' %>
 
-### <a id="reinstall"></a>Reinstall a Tile
-
-To reinstall a tile in the same environment where it was previously uninstalled:
-
-1. Ensure that the previous tile was correctly uninstalled
-1. `cf login` as an admin user
-1. `cf m` does not list the service
-1. `bosh login` as an admin user
-1. `bosh deployments` does not show a deployment for the service. For example no `pivotal-mysql-$guid` deployment exists
-1. Before reinstalling a tile all previous service instances and service brokers must be deleted from the BOSH director
-1. If the service broker still exists then run the [Delete All Service Instances errand](#delete-all) and then [deregister-broker errand](#deregister-broker)
-1. Next delete the service broker BOSH deployment
-1. Finally install the tile again
+## <a id="bosh-cf-access"></a>Access Broker and Instance Logs and VMs
 
-### <a id="broker-errands"></a>Service Broker Errands
+<%= partial '../../mysql/odb/tshoot-tech-bosh-cf-access' %>
 
-#### <a id="register-broker"></a>Register Broker
+### <a id="access-broker"></a>Access Broker Logs and VM(s)
 
-This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+<%= partial '../../mysql/odb/tshoot-tech-access-broker' %>
 
-Plans with disabled service access will not be visible to non-admin Cloud Foundry users (including Org Managers and Space Managers). Admin Cloud Foundry users can see all plans including those with disabled service access.
+### <a id="access-instance"></a>Access Service Instance Logs and VMs
 
-The errand will do the following operations:
+<%= partial '../../mysql/odb/tshoot-tech-access-instance' %>
 
-- Register the service broker with Cloud Controller
-- Enable service access for any plans that have the radio button set to `enabled` in the tile plan page.
-- Disable service access for any plans that have the radio button set to `disabled` in the tile plan page.
-- Do nothing for any for any plans that have the radio button set to `manual`
+## <a id="broker-errands"></a>Run Service Broker Errands to Manage Brokers and Instances
 
-To run this errand use the following BOSH command against the on-demand service broker deployment:
+<%= partial '../../mysql/odb/tshoot-tech-broker-errands' %>
 
-```
-bosh run errand register-broker
-```
+### <a id="register-broker"></a>Register Broker
 
-#### <a id="deregister-broker"></a>Deregister Broker
+<%= partial '../../mysql/odb/tshoot-tech-register-broker' %>
 
-This errand deregisters a broker from Cloud Foundry. It requires that there are no existing service instances. You can use the [Delete All Service Instances errand](#delete-all) to delete any existing service instances that are problematic.
+### <a id="deregister-broker"></a>Deregister Broker
 
-The errand will do the following operations:
+<%= partial '../../mysql/odb/tshoot-tech-deregister-broker' %>
 
-- Delete the service broker from Cloud Controller
-- Fail if there are any service instances, with or without bindings
+### <a id="upgrade-all"></a>Upgrade All Service Instances
 
-To run this errand use the following BOSH command against the on-demand service broker deployment:
+<%= partial '../../mysql/odb/tshoot-tech-upgrade-all' %>
 
-```
-bosh run errand deregister-broker
-```
+### <a id="delete-all"></a>Delete All Service Instances
 
-#### <a id="upgrade-all"></a>Upgrade All Service Instances
+<%= partial '../../mysql/odb/tshoot-tech-delete-all' %>
 
-If you have made changes to the plan defintion or uploaded a new tile into OpsManager you may want to upgrade all the services to the latest software / plan definition. 
+## <a id="detect-orphans"></a>Detect Orphaned Instances Service Instances
 
-To do this you can either select the errand through the OpsManager UI and have this happen along with the `apply-changes` action or run the errand directly.
+<%= partial '../../mysql/odb/tshoot-tech-detect-orphans' %>
 
-The errand will do the following operaitons:
+## <a id="instance-deployment"></a>Select the BOSH Deployment for a Service Instance
 
-- Collect all of the service instances the on-demand broker has registered
-- For each instance the errand will serially:
-  - Issue an upgrade command to the on-demand broker 
-  - The on-demand broker will re-generate the service instance manifest based on its latest configuration from the tile.
-  - The on-demand broker will deploy the new mainfest for the service instance.
-  - The errand will wait for this operation to complete, then proceed to the next instance.
-- Any instances that have ongoing BOSH tasks at the time of upgrade will be added to a retry list.
-- Any instances in the retry list will be retried at the end of the errand until all are upgraded.
-- If any instance fails to upgrade the errand will fail immediately.
-  - This prevents any systemic problem from spreading to the rest of your service instances. 
+<%= partial '../../mysql/odb/tshoot-tech-instance-deployment' %>
 
-#### <a id="detect-orphans"></a>Detect Orphaned Service Instances 
+## <a id="instance-creds"></a>Get Admin Credentials for a Service Instance
 
-A service instance is defined as ‘Orphaned’ when the BOSH deployment for the instance is still running, but the service is no longer registered in Cloud Foundry.
+<%= partial '../../mysql/odb/tshoot-tech-instance-creds' %>
 
-The orphan-deployments errand will collate a list of service deployments that have no matching service instances in Cloud Foundry and return the list to the operator. It is then up to the operator to remove the orphaned bosh deployments.
+## <a id="reinstall"></a>Reinstall a Tile
 
-To run this errand use the following BOSH command against the on-demand service broker deployment:
+<%= partial '../../mysql/odb/tshoot-tech-reinstall' %>
 
-```
-bosh run errand orphan-deployments
-```
+## <a id="view-resources"></a>View Resource Saturation and Scaling
 
-If orphan deployments are present, the errand will output a list of deployment names:
+<%= partial '../../mysql/odb/tshoot-tech-view-resources' %>
 
-```
-[stdout]
-[{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
+## <a id="id-instance-owner"></a>Identify Service Instance Owner
 
-[stderr]
-None
+<%= partial '../../mysql/odb/tshoot-tech-id-instance-owner' %>
 
-Errand 'orphan-deployments' completed successfully (exit code 0)
-```
+## <a id="monitor-quota"></a>Monitor Quota Saturation and Service Instance Count
 
-To cleanup orphaned instances you can perform the following actions:
-
-<p class="note warning">
-<strong>WARNING: </strong> Deleting the bosh deployment will destroy the vm, any data present will be lost.
-</p>
-
-To delete the orphan deployment run the following BOSH command:
-```
-bosh delete deployment service-instance_$GUID
-```
-
-#### <a id="delete-all"></a>Delete All Service Instances
-
-This errand deletes all service instances of your broker’s service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don’t correspond to a known service instance. Orphan BOSH deployments should never happen, but in practice they might. Use the orphan-deployments errand to identify them.
-
-The errand will do the following operations:
-
-- Unbind all applications from the service instances
-- Delete all service instances sequentially
-- Check if any instances have been created while the errand was running
-- If instances are detected the errand will fail 
-
-<p class="note warning">
-<strong>WARNING: </strong> This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.
-</p>
-
-To run this errand use the following BOSH command against the on-demand service broker deployment:
-
-```
-bosh run errand delete-all-service-instances
-```
-
-### <a id="view-resources"></a>View Resource Saturation and Scaling
-
-Once a deployment has been selected, you can use the `bosh vms --vitals` or the `bosh instances --vitals` commands to view current resource utilization. You can also view process level information by using `bosh instances --ps`.
-
-### <a id="id-instance-owner"></a>Identify Service Instance Owner
-If you have spotted a failing deployment, you can identify which org/space owns this service instance, as well as retrieve a list of apps bound to it by following the steps below: 
-
-1. `bosh vms $deployment` shows a vm in failing state
-1. Take the deployment name and strip the `service-instance_` leaving you with a `guid`
-1. Login to CF using a CF Admin user
-1. Run 
-```
-$ cf curl /v2/service_instances/:guid | grep "space_url"
-"space_url": "/v2/spaces/$space_guid"
-```
-2. Take the space url and run 
-```
-$ cf curl /v2/spaces/$space_guid | grep -E "name|organization_url"
-"name": "myspace",
-"organization_url": "/v2/organizations/$org_guid"
-```
-
-3. Take the organization url and run 
-```
-cf curl /v2/organizations/$org_guid | grep “name”
-"name": "myorg"
-```
-
-4. Combine the output of the names to give you the org and space of the service instance. 
-From here run:
-```
-cf target -o $org -s $space
-``` 
-5. `cf services` shows you all the services and bound apps
-6. To find who is the space manger run:
-```
-cf curl /v2/spaces/$space_guid/managers
-```
-7. Use this information to contact the manager if needed 
-
-### <a id="monitor-quota"></a>Monitor Quota Saturation and Service Instance Count
-
-Quota saturation and total number of service instances are available via ODB metrics emitted to loggregator. The metric names are shown below:
-
-| **Metric Name**                                                           | **Description**                                           |
-|---------------------------------------------------------------------------|-----------------------------------------------------------|
-| `on-demand-broker/{service-name-marketplace}/quota_remaining`             | global quota remaining for all instances across all plans |
-| `on-demand-broker/{service-name-marketplace}/{plan_name}/quota_remaining` | quota remaining for a particular plan                     |
-| `on-demand-broker/{service-name-marketplace}/total_instances`             | total instances created across all plans                  |
-| `on-demand-broker/{service-name-marketplace}/{plan_name}/total_instances` | total instances created for a given plan                  |
-
-<p class="note"><strong>Note</strong>: Quota metrics are not emitted if no quota has been set.</p>
+<%= partial '../../mysql/odb/tshoot-tech-monitor-quota' %>
 
 ## <a id="support"></a>File a Support Ticket
 
-You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](#parse-error) from 
-```
-$ cf service <your-service>
-``` 
-Please also provide your [service broker logs](#access-broker), your [service instance logs](#access-instance) and [BOSH task output](#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
+<%= partial '../../mysql/odb/tshoot-support' %>
 
 ## <a id="kb"></a>Knowledge Base (Community)
 
-Imagine a world where we autopopulate the first 10 hits from http://discuss.pivotal.io . For now, you'll just have to click on the link.
+<%= partial '../../mysql/odb/tshoot-kb' %>

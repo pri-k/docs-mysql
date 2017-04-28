@@ -3,14 +3,12 @@ title: Migrating a Database to MySQL for PCF v2
 owner: MySQL
 ---
 
-This page provides instructions on how to backup and restore your MySQL database via the following steps:
+This page provides instructions on how to migrate your MySQL for PCF v1.x databases to MySQL for PCF v2. To perform the migration, you use the backup and restore process as follows:
 
-1. Preemptively create a new service instance to minimize downtime
-1. Stop traffic to the old database and take a backup
-1. Import the backup into your new service instance
-1. Connect the application to the new database and restart application
-
-
+1. Preemptively create a new v2 service instance to minimize downtime.
+1. Stop traffic to the old database and take a backup.
+1. Import the backup into your new service instance.
+1. Connect your app to the new database and restart the app.
 
 ## <a id='prepare'></a>Prerequisites
 
@@ -22,11 +20,11 @@ To minimize downtime while migrating, preemptively create a new service instance
 
 	<p class="note">Do not bind the new service instance to your application. We’ll do that later.</p>
 
-## <a id='backup'></a>Backing Up Your Current Database
+## <a id='backup'></a>Back Up Your Current Database
 
-If you are migrating from a MySQL for PCF v1.X database, please refer to the instructions below. If you are migrating from another MySQL provider, please refer to their documentation on taking a MySQL backup.
+If you are migrating from a MySQL for PCF v1.x database, please refer to the instructions below. If you are migrating from another MySQL provider, please refer to their documentation on taking a MySQL backup.
 
-### Backing Up Your MySQL for PCF v1.X Instance
+### Back Up Your MySQL for PCF v1.x Instance
 
 1. Stop any traffic to your existing database by stopping the application:
  <pre class="terminal">
@@ -57,7 +55,7 @@ If you are migrating from a MySQL for PCF v1.X database, please refer to the ins
 
 1. Kill the ssh tunnel
 
-## <a id='restore'></a>Restoring To Your New Database
+## <a id='restore'></a>Restore to Your New Database
 This section provides steps to restore your backup to a new service instance of MySQL for PCF: 
 
 1. Use [cf ssh to create a tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to remotely access your new MySQL instance.  

@@ -1,9 +1,9 @@
 ---
-title: Installing and Configuring MySQL for PCF as an On-Demand Service
+title: Installing and Configuring MySQL for PCF
 owner: MySQL
 ---
 
-This topic provides instructions to PCF operators about how to install, configure, and deploy the MySQL for PCF tile to provide on-demand service. 
+This topic provides instructions to PCF operators about how to install, configure, and deploy the MySQL for PCF v2.0 tile. The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQL service instances on demand. 
 
 ## <a id="install"></a> Download and Install the Tile
 
@@ -13,51 +13,41 @@ This topic provides instructions to PCF operators about how to install, configur
 
 1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF. This adds the tile to your staging area.
 
-1. Click the newly added **MySQL for PCF** tile.
+1. Click the newly-added **MySQL for PCF** tile to open its configuration panes.
 
-## <a id="config-on-demand"></a>  Configure the Tile for On-Demand Service
+## <a id="config-on-demand"></a> Configure the Tile
 
-Follow the steps below to configure the MySQL for PCF tile for on-demand service instances. 
-This procedure only addresses how to configure MySQL for PCF as an on-demand service. 
-Currently there is only one type of plan available for the on-demand service. 
-Its default name is Plan1.
+Follow the steps below to configure the MySQL for PCF service. MySQL for PCF v2.0 has only one service plan, `Plan1`, which creates dedicated MySQL service instances on demand.
 
-1. Click **Assign AZs and Networks**.
-    <p class="note"><strong>IMPORTANT</strong>: You cannot change the regions or networks after you have clicked **Apply Changes** in the <a href="#apply-changes">final step</a> below.</p>
+Earlier versions of MySQL for PCF, in contrast, offer services that run on shared service instances.
 
-1. Configure the fields on the **Assign AZs and Networks** as follows:
+1. Select the **Assign AZs and Networks** pane and configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Place singleton jobs in</strong></td>
-        <td>Select the region that you want for singleton VMs. PCF creates the MySQL broker in this availability zone (AZ).</td></tr>
+        <td>Select the Availability Zone (AZ) that you want the MySQL broker VM to run in. The broker runs as a singleton job.</td></tr>
     <tr><td><strong>Balance other jobs in</strong></td>
-        <td>Select additional region. This selection does not affect the on-demand MySQL for PCF service.</td></tr>
+        <td>Ignore; not used.</td></tr>
     <tr><td><strong>Network</strong></td>
-        <td>Select a subnet for the MySQL broker.<br>
+        <td>Select a subnet for the MySQL broker. This is typically the same subnet that includes the Elastic Runtime component VMs.<br>
             This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
-            Typically, you select the subnet used for the Pivotal Elastic Runtime components.
-            <strong>Q:</strong> Who sets up this subnet? Should I use the same subnet as for my ERT components? Do we need to specify that it cannot be an IPsec subnet?
-            <a href="https://docs.pivotal.io/p-mysql/2-0/">https://docs.pivotal.io/p-mysql/2-0/</a>.</td></tr>
+            </td></tr>
     <tr><td><strong>Service Network</strong></td>
-        <td> This is the subnet that the on-demand service instances are on. 
-             A typical practice is to put all on-demand services on a single subnet. (?) 
-             This network is represented by the Services Network in this <a href="./about.html#on-demand">picture</a>. 
-             If you are not using on-demand services but only pre-provisioned services, you need to specify a subnet but which subnet you specify does not matter.</td></tr>
+        <td> Select the subnet for the on-demand service instances, the Services Network in this <a href="./about.html#on-demand">picture</a></td></tr>
   </table>
+    <p class="note"><strong>IMPORTANT</strong>: You cannot change the regions or networks after you have clicked **Apply Changes** in the <a href="#apply-changes">final step</a> below.</p>
 
 1. Click **Save**.
 
-1. Click **Plan1**. 
+1. Select the **Plan1** pane and configure its fields as follows:
 
      ![plan-1-tab-v2.0.0](service-plan-configuration.png)
-
-1. Configure the fields on the **Plan 1**page as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Enable this plan</strong></strong></td>
-        <td>Select the checkbox.</td></tr>
+        <td>Select this checkbox.</td></tr>
     <tr><td><strong>Service instance quota</strong></td>
-        <td>Enter the maximum number of dedicated service instances that can be available at one time.</td></tr>
+        <td>Enter the maximum number of service instances that can exist at one time.</td></tr>
     <tr><td><strong>Plan name</strong></td>
         <td>Accept the default or enter a name. This is the name that appears in the Marketplace.</td></tr>
     <tr><td><strong>Plan description</strong></td>
@@ -65,11 +55,11 @@ Its default name is Plan1.
     <tr><td><strong>Plan features</strong></td>
         <td>Accept the default or enter information about the plan to help your app developers.</td></tr>
     <tr><td><strong>MySQL VM Type</strong></td>
-        <td>Select a VM type.<br>The plan will create a service instance of this size.</td></tr>
+        <td>Select a VM type.<br>The plan will create service instances of this size.</td></tr>
     <tr><td><strong>Persistent disk type</strong></td>
         <td>Select a disk size.<br>This disk will store the MySQL messages.</td></tr>
     <tr><td><strong>AZ placement</strong></td>
-        <td>Select one AZ for the single node.<br>The plan will create all the on-demand service instance VMs in this AZ.</td></tr>
+        <td>Select one AZ for the single node.<br>The plan will create all service instance VMs in this AZ.</td></tr>
   </table>
     
 1. Click **Save**.

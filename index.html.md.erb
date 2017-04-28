@@ -76,14 +76,13 @@ The MySQL for PCF product delivers dedicated instances on demand, "Database as a
 
 When installed, developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Connection credentials are automatically provided in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES). Developers can select from a menu of service plans options, which are configured by the platform operator.
 
-The service offering meets the following criteria:
+Each instance of the service offering meets the following criteria:
 
 <center>
 <table>
-  <tr><th></th><th>Single</th></tr>
-  <tr><td>**MySQL**</td><td>1 node</td></tr>
+  <tr><td>**MySQL Server**</td><td>1 dedicated VM</td></tr>
 
-  <tr><td>**Service Broker**</td><td>1 node</td></tr>
+  <tr><td>**Service Broker**</td><td>1 dedicated VM</td></tr>
   <tr><td>High Availability</td><td>-</td></tr>
   <tr><td>Multi-AZ Support</td><td>Yes</td></tr>
   <tr><td>Rolling Upgrades</td><td>-</td><tr>

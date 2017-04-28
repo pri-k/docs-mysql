@@ -58,8 +58,8 @@ For example, in AWS create a new custom policy (**IAM** > **Policies** > **Creat
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::MY_BUCKET_NAME/*",
-        "arn:aws:s3:::MY_BUCKET_NAME"
+        "arn:aws:s3:::MY\_BUCKET\_NAME/*",
+        "arn:aws:s3:::MY\_BUCKET\_NAME"
       ]
     }
   ]
@@ -193,16 +193,16 @@ These instructions assume you have a backup artifact downloaded. To restore the 
 
 1. [Create a new service instance](./use.html#create) to restore to.
  <pre class="terminal">
-  $ cf create-service p.mysql db-small NEW_SERVICE_INSTANCE
+  $ cf create-service p.mysql db-small NEW\_SERVICE\_INSTANCE
  </pre>
 
-1. Prepare the service instance for restoration:
+1. Prepare the service instance for restoration.
   1. Determine the GUID associated with your service instance:
  <pre class="terminal">
     $ cf service NEW\_SERVICE\_INSTANCE --guid
  </pre>
 
-  1. Download the manifest for the service instance deployment using the GUID from above:
+  1. Download the manifest for the service instance deployment using the GUID from above.
  <pre class="terminal">
     $ bosh download manifest service-instance_GUID ./manifest.yml
  </pre>
@@ -227,7 +227,7 @@ These instructions assume you have a backup artifact downloaded. To restore the 
     $ monit stop all
  </pre>
 
-  1. Run `watch` with `monit summary` and wait until all jobs show as `not monitored`. This means they have halted.
+  1. Run `watch` with `monit summary` and wait until all jobs show as `not monitored`. This means they have stopped.
  <pre class="terminal">
     $ watch monit summary
  </pre>
@@ -245,8 +245,8 @@ These instructions assume you have a backup artifact downloaded. To restore the 
     <pre class="terminal">
      $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
     </pre>
-      - BOSH-INSTANCE is `mysql/INSTANCE-GUID`, for example: `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
-      - DESTINATION-PATH is where on the BOSH VM the backup file saves, for example: `/tmp/`.
+      - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+      - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
   1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
  <pre class="terminal">
@@ -258,7 +258,7 @@ These instructions assume you have a backup artifact downloaded. To restore the 
     $ sudo su
  </pre>
 
-  1. Use the gpg decryption passphrase from above to decrypt the backup. You will be prompted for the decryption passphrase.
+  1. Run `gpg --decrypt` to decrypt the backup file. When prompted, enter the [GPG](https://www.gnupg.org) decryption passphrase from the service instance manifest's `properties.cf-mysql-backup.symmetric_key` value, which you recorded earlier.
  <pre class="terminal">
      $ gpg --decrypt /tmp/mysql-backup.tar.gpg > /tmp/mysql-backup.tar
  </pre>
