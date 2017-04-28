@@ -9,11 +9,11 @@ This topic describes the high-level component architecture of the MySQL for Pivo
 
 In HA topology, the MySQL for PCF service uses the following:
 
-* Three MySQL servers running [MariaDB](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync.
+* Three MySQL servers running [MariaDB](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync
 
-* Two [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) proxies that direct queries to a single backend and provide superfast failover in the event of a backend server failure.
+* Two [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) proxies that direct queries to a single backend and provide superfast failover in the event of a backend server failure
 
-* A customer-provided load balancer that directs traffic to one of the proxies, or to the other proxy in the event of proxy failure.
+* A customer-provided load balancer that directs traffic to one of the proxies, or to the other proxy in the event of proxy failure
 
 * Two service brokers that create and bind service instances with failover in the event of a service broker failure
 
@@ -41,9 +41,9 @@ The minimum number of nodes required to tolerate a single node failure is three.
 
 This section describes the defaults that the MySQL for PCF tile applies to its Galera and MariaDB components.
 
-#### InnoDB Log Files: 1GB
+#### InnoDB Log Files: 1&nbsp;GB
 
-MySQL for PCF clusters default to a log file size of 1GB to support large blobs.
+MySQL for PCF clusters default to a log-file size of 1&nbsp;GB to support large blobs.
 
 #### Max User Connections: 40
 
@@ -53,9 +53,9 @@ To ensure all users get fair access to system resources, MySQL for PCF defaults 
 
 Each virtual machine only runs one `mysqld` process, so they do not need external locking.
 
-#### Max Allowed Packet: 256MB
+#### Max Allowed Packet: 256&nbsp;MB
 
-MySQL for PCF allows blobs up to 256MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log file size.
+MySQL for PCF allows blobs up to 256&nbsp;MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log-file size.
 
 #### InnoDB File-Per-Table Tablespaces
 
@@ -70,7 +70,7 @@ MySQL for PCF uses the `Barracuda` file format to take advantage of extra featur
 MySQL converts temporary in-memory tables to temporary on-disk tables when either of the following occurs:
 
 * A query generates more than 16 million rows of output
-* A query uses more than 32MB of data space
+* A query uses more than 32&nbsp;MB of data space
 
 #### Reverse Name Resolution Off
 
@@ -78,15 +78,15 @@ MySQL for PCF authenticates with user credentials, which does not restrict the h
 
 #### Sql_mode Additionally Enables Strict Mode
 
-[sql_mode](https://mariadb.com/kb/en/mariadb/sql-mode/) is set to: `NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES`. `sql_mode` was not set on versions before p-mysql version 1.8.0.
+[sql_mode](https://mariadb.com/kb/en/mariadb/sql-mode/) is set to: `NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES`. `sql_mode` was not set on versions before p-mysql v1.8.0.
 
-  - `NO_ENGINE_SUBSTITUTION`: Guards against applications unintentionally creating non-InnoDB tables. Previously, the current master would accept, but not replicate such tables across the cluster.
+  - `NO_ENGINE_SUBSTITUTION`: Guards against apps unintentionally creating non-InnoDB tables. Previously, the current master would accept, but not replicate such tables across the cluster.
   - `NO_AUTO_CREATE_USER`: Prevents implicitly creating users without a password.
   - `STRICT_ALL_TABLES`: Enables [strict mode](https://mariadb.com/kb/en/mariadb/sql-mode/#strict-mode)
-    - Strict mode means that applications may see errors, such as when inserting strings that are too long, or numeric values that are out of range. Without this setting the default MariaDB behavior is to silently modify data on commit.
-    - Strict mode also does not allow a user to specify large indices even if <code>innodb\_large\_index</code> is set to <code>ON</code>. Users will need to additionally specify <code>ROW\_FORMAT=DYNAMIC</code> or <code>ROW\_FORMAT=COMPRESSED</code> in each table create statement. Apps that do not specify this additional clause will see an error during DDL similar to:
+    - Strict mode means that apps may see errors, such as when inserting strings that are too long, or numeric values that are out of range. Without this setting the default MariaDB behavior is to silently modify data on commit.
+    - Strict mode also does not allow a user to specify large indices even if <code>innodb\_large\_index</code> is set to <code>ON</code>. Addtionally, users need to specify <code>ROW\_FORMAT=DYNAMIC</code> or <code>ROW\_FORMAT=COMPRESSED</code> in each table create statement. Apps that do not specify this additional clause see an error during DDL similar to:
         ```ERROR 1709 (HY000): Index column size too large. The maximum column size is 767 bytes.```
-      - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
+    - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
 
 ### Settings for Galera
 
@@ -102,7 +102,7 @@ MySQL for PCF uses [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup) f
 MySQL for PCF enables `wsrep_load_data_splitting` to split large data imports into separate transactions. This facilitates loading large files into a MariaDB cluster.
 
 #### Maximum Transaction Sizes
-[wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) is set to 2GB, the maximum allowed by Galera.
+[wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) is set to 2&nbsp;GB, the maximum allowed by Galera.
 
 [wsrep\_max\_ws\_rows](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-rows) enforces the default of 0
   - For more information about these limitations, see the documentation on [transaction size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).

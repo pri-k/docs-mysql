@@ -62,15 +62,15 @@ Prior to upgrading you should:
 
 - Validate the health of your cluster. If running in the HA configuration, download, configure and run the [mysql-diag](http://bit.ly/pivotal-mysql-diag) tool. Do not use **Apply Changes** if `mysql-diag` shows any cluster issues. Be sure to resolve those issues before upgrading.
 
-<p class='note'><strong>Note</strong>: MySQL for PCF v1.9.0 enables strict mode, please read below.</p>
+<p class='note'><strong>Note</strong>: MySQL for PCF v1.9.0 enables strict mode. For more information, see below.</p>
 - p-mysql 1.9 now enables [strict mode](https://mariadb.com/kb/en/mariadb/sql-mode/#strict-mode). Where previously large indices were silently truncated, now `ALTER TABLE` and `CREATE INDEX` statements may fail. If any of your apps already use or want to create indices with more than 767 bytes, create or altered using `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED`. Otherwise, `ALTER TABLE` and `CREATE INDEX` statements may fail. Without this setting, the default behavior of MariaDB is to silently truncate column content and large indices.
   - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
 
-See the [release notes](release-notes.html) for more information about these changes.
+For more information about these changes, see [Release Notes](release-notes.html).
 
 ### <a id="deprecation-lock-tables"></a> Deprecation Notice
 
-<p class='note warning'><strong>Warning:</strong> p-mysql 1.10 will retroactively remove the ability to lock tables from all existing service instances.</p>
+<p class='note warning'><strong>WARNING!</strong> p-mysql 1.10 will retroactively remove the ability to lock tables from all existing service instances.</p>
 
 When running in clustered mode, table-level locks are not distributed across the cluster. Previous versions of MySQL for PCF have allowed applications to attain a table lock, regardless that it will exist only on the current master. This means that applications and application developers are not aware that they do not exclusively have a lock across all nodes. This can lead to deadlocks when writes happen on different masters.
 
@@ -90,16 +90,16 @@ The table below shows the enterprise-readiness of each MySQL for PCF topology. C
   <tr><td>**MySQL**</td><td>1 node</td><td>3-node cluster</td></tr>
   <tr><td>**SQL Proxy**</td><td>1 node</td><td>2 nodes</td></tr>
   <tr><td>**Service Broker**</td><td>1 node</td><td>2 nodes</td></tr>
-  <tr><td>High Availability</td><td>-</td><td>Yes</td></tr>
-  <tr><td>Multi-AZ Support</td><td>-</td><td>Yes \*</td></tr>
-  <tr><td>Rolling Upgrades</td><td>-</td><td>Yes</td></tr>
+  <tr><td>High Availability</td><td><em>n/a</em></td><td>Yes</td></tr>
+  <tr><td>Multi-AZ Support</td><td><em>n/a</em></td><td>Yes \*</td></tr>
+  <tr><td>Rolling Upgrades</td><td><em>n/a</em></td><td>Yes</td></tr>
   <tr><td>Automated Backups</td><td>Yes</td><td>Yes</td></tr>
   <tr><td>Customizable Plans</td><td>Yes</td><td>Yes</td></tr>
   <tr><td>Customizable VM Instances</td><td>Yes</td><td>Yes</td></tr>
   <tr><td>Plan Migrations</td><td>Yes</td><td>Yes</td></tr>
   <tr><td>Encrypted Communication</td><td>Yes &#x271D;</td><td>Yes &#x271D;</td></tr>
-  <tr><td>Encrypted Data at-rest</td><td>-</td><td>-</td></tr>
-  <tr><td>Long-lived Canaries</td><td>-</td><td>Replication Canary</td></tr>
+  <tr><td>Encrypted Data at-rest</td><td><em>n/a</em></td><td><em>n/a</em></td></tr>
+  <tr><td>Long-lived Canaries</td><td><em>n/a</em></td><td>Replication Canary</td></tr>
 </table>
 </center>
 
