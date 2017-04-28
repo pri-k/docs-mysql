@@ -16,7 +16,7 @@ owner: MySQL
 
 This topic describes how to enable and configure automated backups for the MySQL for Pivotal Cloud Foundry (PCF) service, and how to manually restore a MySQL service instance from a backup.
 
-## <a id="overview"></a>Overview ##
+## <a id="overview"></a>Overview
 
 Automated backups do the following:
 
@@ -25,7 +25,7 @@ Automated backups do the following:
 - Include a metadata file that contains the critical details of the backup artifact, including the effective calendar time of the backup.
 - Encrypt backup artifacts within the MySQL for PCF VM; unencrypted data is never transported outside of the MySQL for PCF deployment.
 
-## <a id="enable-backups"></a>Enable Automated Backups ##
+## <a id="enable-backups"></a>Enable Automated Backups
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
@@ -41,11 +41,9 @@ Follow the procedures below to enable and configure automated backups.
 
 MySQL for PCF accesses your S3 store through a user account. Pivotal recommends that this account be solely for MySQL for PCF. You need to apply a minimal policy that lets the user account upload backup artifacts to your S3 store.
 
-1. Create a policy for your MySQL for PCF user account. Policy creation varies across S3 providers, but MySQL for PCF needs to list and upload to buckets. To use buckets that do not already exist, it additionally needs to create buckets.
-
-For example, in AWS create a new custom policy (**IAM** > **Policies** > **Create Policy** > **Create Your Own Policy**) and paste in the following permissions:
-
-```json
+1. Create a policy for your MySQL for PCF user account. Policy creation varies across S3 providers, but MySQL for PCF needs permission to list and upload to buckets. To use buckets that do not already exist, it additionally needs permission to create buckets.  
+For example, in AWS create a new custom policy (**IAM** > **Policies** > **Create Policy** > **Create Your Own Policy**) and paste in the following permissions:  
+     <pre class="highlight json">
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -66,22 +64,21 @@ For example, in AWS create a new custom policy (**IAM** > **Policies** > **Creat
     }
   ]
 }
-```
+</pre>
 
 1. (Recommended) Create a new user for MySQL for PCF and record its Access Key ID and Secret Access Key, the user credentials.
 
-1. Attach this policy to your AWS user (**IAM** > **Policies** > **Policy Actions** > **Attach**).
+1. Attach the policy you created to the AWS user account that MySQL for PCF will use to access S3 (**IAM** > **Policies** > **Policy Actions** > **Attach**).
 
 
-### <a id="configure"></a> Configure in Ops Manager
+### <a id="configure"></a> Configure Backups in Ops Manager
 
 Use Ops Manager to connect MySQL for PCF to your S3 account.
 
 1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
 
-1. Select the **Ceph or Amazon S3** radio button.
-
-  ![S3 Backup Configuration Form](images/S3-backups.png)
+1. Select the **Ceph or Amazon S3** radio button.  
+![S3 Backup Configuration Form](S3-backups.png)
 
 Fill in the fields as follows:
 
@@ -97,17 +94,14 @@ Fill in the fields as follows:
           Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
 </table>
 
-## <a id="disable-backups"></a>Disable Automated Backups ##
+## <a id="disable-backups"></a>Disable Automated Backups
 
-To disable automated backups, perform the following steps:
+To disable MySQL for PCF automated backups:
 
-1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
+1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
 
-1. Click **Backups**.
-
-  ![Disable Backups](images/disable-backups.png)
-
-1. On the **Backups** form, click **Disable Backups**.
+1. Select **Disable Backups**.  
+![Disable Backups](disable-backups.png)
 
 1. Click **Save**.
 
@@ -115,14 +109,14 @@ To disable automated backups, perform the following steps:
 
 To configure automated backups for MySQL for PCF, perform the following steps:
 
-1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
-1. Click **Backups**.
+## <a id="understanding-metadata"></a>Understand Backup Files and Metadata
 
-## <a id="understanding-metadata"></a>Understand Backup Metadata ##
+When MySQL for PCF runs a backup, it uploads two files with Unix epoch-timestamped filenames of the form `mysql-backup-TIMESTAMP`:
 
-Along with each release, MySQL for PCF will upload a `mysql-backup-XXXXXXXXXX.txt` metadata file.
+  * The encrypted data backup file `mysql-backup-TIMESTAMP.tar.gpg`
+  * A metadata file `mysql-backup-TIMESTAMP.txt`
 
-The contents of the metadata file resemble the following:
+The metadata file contains information about the backup and looks like this:
 
 ```
 ibbackup_version = 2.4.5
@@ -146,141 +140,148 @@ uuid = fd13cf26-2930-11e7-871e-42010a000807
 tool_version = 2.4.5
 ```
 
-Within this file, the most important items are the `start_time` and the `server_version` entries. Transactions that have not been completed at the start of the backup effort will not be present in the restored artifact.
+Within this file, the most important items are the `start_time` and the `server_version` entries.
+
+The backup process does not interrupt MySQL service, but backup artifacts only reflect transactions that completed before their `start_time`.
 
 <p class="note"><strong>Note</strong>: Both <code>compressed</code> and <code>encrypted</code> show as <code>N</code> in this file, yet the artifact uploaded by MySQL for PCF is both compressed and encrypted. This is a known bug.</p>
 
-## <a id="restore"></a> Restore a Backup Artifact
+## <a id="restore"></a> Restore a Service Instance from Backup
 
-The disaster recovery backups feature of MySQL for PCF is primarily intended as a way to recover data to the same PCF foundation from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF service instance.
+Restoring MySQL for PCF from backup is a manual process primarily intended for disaster recovery. Restoring a MySQL for PCF service instance replaces 100% of its data and running state.
 
-The process to restore a backup artifact to a MySQL for PCF service instance is entirely manual. Perform the following steps to use the offsite backups to restore your cluster to its previous state:
+To restore a MySQL for PCF instance from an offsite backup, download the backup artifact and restore to a new instance as follows:
 
-### Downloading the Backup Artifact
+### Download the Backup Artifact
 
 These instructions assume that you are using AWS S3 as your backup destination.
 
-1. Determine the guid associated with the service instance that you want to restore
+1. Run `cf service` to determine the GUID associated with the service instance that you want to restore.
  <pre class="terminal">
   $ cf service my-instance --guid
   b3a30744-52cd-4bf2-b417-3f1c2aec1304
  </pre>
 
-1. Download the manifest for the service instance deployment using the guid from above:
+1. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI.
+
+1. Download the manifest for the service instance deployment using the GUID from above.
   <pre class="terminal">
    $ bosh download manifest service-instance_b3a30744-52cd-4bf2-b417-3f1c2aec1304 ./manifest.yml
   </pre>
-  <p class="note">Follow the instructions for logging into BOSH in the Ops Manager VM. http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html</p>
 
-1. Inspect the downloaded manifest and take note of the `properties.cf-mysql-backup.symmetric_key` and backup destination bucket. You will need this later to decrypt the backup
+1. Inspect the downloaded manifest and record the `properties.cf-mysql-backup.symmetric_key` and backup destination bucket. You will use this later to decrypt the backup.
 
-1. Login to AWS via the console or using the AWS cli. List the available backups for the instance:
+1. Install and log in to the [AWS CLI](https://aws.amazon.com/cli/).
+
+1. List the available backups for the instance.
  <pre class="terminal">
-  $ aws s3 ls --recursive s3://BUCKET_NAME/service-instance_b3a30744-52cd-4bf2-b417-3f1c2aec1304
+  $ aws s3 ls --recursive s3://BUCKET\_NAME/service-instance\_b3a30744-52cd-4bf2-b417-3f1c2aec1304
  </pre>
 
-1. Choose the most recent backup. The backups artifacts are timestamped in the filename and have a `.gpg` extension.
+1. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
 
-1. Download the selected backup:
+1. Download the selected backup.
  <pre class="terminal">
-  $ aws s3 cp s3://$BUCKET_NAME/$BUCKET_PATH/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
+  $ aws s3 cp s3://$BUCKET\_NAME/$BUCKET\_PATH/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
  </pre>
 
-### Restoring a Backup
+<p class="note"><strong>Note: </strong> You can also log in to AWS and download S3 backup artifacts from a browser.</p>
 
-These instructions assume you have a backup artifact downloaded. It provides steps of restoring to a new service instance.
+### Restore the Service Instance
 
-1. [Create a new service instance](./use.html#create) to restore to
- ```
+These instructions assume you have a backup artifact downloaded. To restore the backup to a new service instance:
+
+1. [Create a new service instance](./use.html#create) to restore to.
+ <pre class="terminal">
   $ cf create-service p.mysql db-small NEW_SERVICE_INSTANCE
- ```
+ </pre>
 
 1. Prepare the service instance for restoration:
-  1. Determine the guid associated with your service instance:
-   ```
-    $ cf service NEW_SERVICE_INSTANCE --guid
-   ```
+  1. Determine the GUID associated with your service instance:
+ <pre class="terminal">
+    $ cf service NEW\_SERVICE\_INSTANCE --guid
+ </pre>
 
-  1. Download the manifest for the service instance deployment using the guid from above:
-   ```
+  1. Download the manifest for the service instance deployment using the GUID from above:
+ <pre class="terminal">
     $ bosh download manifest service-instance_GUID ./manifest.yml
-   ```
+ </pre>
 
-  1. Set the bosh deployment to new downloaded manifest
-    ```
+  1. Set the BOSH deployment to new downloaded manifest.
+ <pre class="terminal">
      $ bosh deployment ./manifest.yml
-    ```
+ </pre>
 
-  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance.
-   ```
+  1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
+ <pre class="terminal">
     $ bosh ssh mysql
-   ```
+ </pre>
 
-  1. After ssh'ing onto the mysql VM become root
-   ```
+  1. After securely logging into MySQL, run `sudo su` to become root.
+ <pre class="terminal">
     $ sudo su
-   ```
+ </pre>
 
-  1. Stop all currently running processes
-   ```
+  1. Stop all running processes.
+ <pre class="terminal">
     $ monit stop all
-   ```
+ </pre>
 
-  1. Wait until all jobs have successfully halted. They will be listed as "not monitored":
-   ```
+  1. Run `watch` with `monit summary` and wait until all jobs show as `not monitored`. This means they have halted.
+ <pre class="terminal">
     $ watch monit summary
-   ```
+ </pre>
 
-  1. Delete the existing mysql database which is stored on disk:
-   ```
+  1. Delete the existing MySQL database stored on disk.
+ <pre class="terminal">
     $ rm -rf /var/vcap/store/mysql/data/*
-   ```
+ </pre>
    <p class="note warning">This is a destructive action and should only be run on a new and unused service instance.</p>
 
-  1. Exit the mysql VM
+  1. Exit the MySQL VM.
 
-1. Restore the backup artifact to the service instance:
-  1. Copy the downloaded backup artifact to the new service instance:
-    ```
-     $ bosh scp mysql-backup-TIMESTAMP.tar.gpg <bosh_instance>:<destination_path>
-    ```
-     - `bosh_instance` should be set to `mysql/instance-id`, for example: `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`
-     - `destination_path` should be the destination to send the backup to on the bosh VM, for example: `/tmp/`
+1. Restore the backup artifact to the new service instance:
+  1. Copy the downloaded backup artifact to the new service instance.
+    <pre class="terminal">
+     $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+    </pre>
+      - BOSH-INSTANCE is `mysql/INSTANCE-GUID`, for example: `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+      - DESTINATION-PATH is where on the BOSH VM the backup file saves, for example: `/tmp/`.
 
-  1. Use the [BOSH CLI to ssh](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) to the newly created MySQL service instance.
-    ```
+  1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
+ <pre class="terminal">
      $ bosh ssh mysql
-    ```
+ </pre>
 
-  1. After ssh'ing onto the mysql VM become root
-   ```
+  1. After securely logging into MySQL, run `sudo su` to become root.
+ <pre class="terminal">
     $ sudo su
-   ```
+ </pre>
 
-  1. Use the gpg descryption passphrase from above to descrypt the backup. You will be proprted for the decryption passphrase.
-    ```
+  1. Use the gpg decryption passphrase from above to decrypt the backup. You will be prompted for the decryption passphrase.
+ <pre class="terminal">
      $ gpg --decrypt /tmp/mysql-backup.tar.gpg > /tmp/mysql-backup.tar
-    ```
+ </pre>
 
-  1. Expand the backup artifact into the data directory for the MySQL server:
-    ```
+  1. Expand the backup artifact into the data directory for the MySQL server.
+ <pre class="terminal">
      $ tar xvf /tmp/mysql-backup.tar --directory=/var/vcap/store/mysql/data/
-    ```
+ </pre>
 
   1. Modify the data directory owner to `vcap` or the mysql server cannot access the data.
-    ```
+ <pre class="terminal">
      $ chown -R vcap:vcap /var/vcap/store/mysql
-    ```
+ </pre>
 
-  1. Restart the BOSH jobs to resume the MySQL server
-    ```
+  1. Restart the BOSH jobs to resume the MySQL server.
+  <pre class="terminal">
      $ monit start all
-    ```
+ </pre>
 
-  1. Use monit to ensure all processes start successfully; all processes should be listed as `running`
-    ```
+  1. Use monit to ensure all processes start successfully; all processes should be listed as `running`.
+ <pre class="terminal">
      $ watch monit summary
-    ```
+ </pre>
 
   1. Delete old service binding created users. User tables get backed up along with databases, so any users that existed
      in the backup are transferred over during restoration. To secure the database, determine and delete all users
@@ -304,16 +305,16 @@ These instructions assume you have a backup artifact downloaded. It provides ste
       mysql> drop user e82b9b479bf64eb5854c93065810c95b;
      </pre>
 
-  1. Exit the mysql VM
+  1. Exit the MySQL VM.
 
-1. Update your CF application to bind to the new service instance
-  ```
-   $ cf bind-service my-app NEW_SERVICE_INSTANCE
-  ```
+1. Update your CF application to bind to the new service instance.
+ <pre class="terminal">
+   $ cf bind-service my-app NEW\_SERVICE\_INSTANCE
+ </pre>
 
-1. Start your CF application
-  ```
+1. Start your CF application.
+ <pre class="terminal">
    $ cf start my-app
-  ```
+ </pre>
 
-1. At this point your application should be running and the restored data accessible to it.
+1. Your app should be running and able to access the restored data.
