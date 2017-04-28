@@ -14,57 +14,88 @@ owner: MySQL
      }
 </style>
 
-This topic describes how to enable, configure, and use backups in MySQL for Pivotal Cloud Foundry (PCF).
+This topic describes how to enable and configure automated backups for the MySQL for Pivotal Cloud Foundry (PCF) service, and how to manually restore a MySQL service instance from a backup.
 
 ## <a id="overview"></a>Overview ##
 
-Automated backups have the following features:
+Automated backups do the following:
 
-- Periodically create and upload backup artifacts suitable for restoring the complete set of database instances allocated in the service
-- No locks, no downtime
-- Includes a metadata file that contains the critical details of the backup artifact, including the effective calendar time of the backup
-- Backup artifacts are encrypted within the MySQL for PCF VM; unencrypted data is never transported outside of the MySQL for PCF deployment
+- Periodically create and upload backup artifacts suitable for restoring all of the databases used by the service instance.
+- Operate without locking apps out of the database; no downtime.
+- Include a metadata file that contains the critical details of the backup artifact, including the effective calendar time of the backup.
+- Encrypt backup artifacts within the MySQL for PCF VM; unencrypted data is never transported outside of the MySQL for PCF deployment.
 
 ## <a id="enable-backups"></a>Enable Automated Backups ##
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
-* **How and Where**: There are two options for how automated backups transfer backup data and where the data saves out to:
-  - MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
+* **How and Where**: MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
 
 * **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
 
 * **What**: Back up the entire MySQL data directory, consistent to a specific point in time.
 
-To enable automated backups and configure them for options above, perform the following steps:
+Follow the procedures below to enable and configure automated backups.
 
-1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
-1. Click **Backups**.
+### <a id="access-key"></a> Create a Policy and Access Key 
 
-## <a id='ceph-aws'></a>Ceph or Amazon S3
+MySQL for PCF accesses your S3 store through a user account. Pivotal recommends that this account be solely for MySQL for PCF. You need to apply a minimal policy that lets the user account upload backup artifacts to your S3 store.
 
-To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the following steps:
+1. Create a policy for your MySQL for PCF user account. Policy creation varies across S3 providers, but MySQL for PCF needs to list and upload to buckets. To use buckets that do not already exist, it additionally needs to create buckets.
 
-1. On the **Backups** form, click on the **Ceph or Amazon S3** radio button.
+For example, in AWS create a new custom policy (**IAM** > **Policies** > **Create Policy** > **Create Your Own Policy**) and paste in the following permissions:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ServiceBackupPolicy",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads",
+        "s3:ListMultipartUploadParts",
+        "s3:CreateBucket",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::MY_BUCKET_NAME/*",
+        "arn:aws:s3:::MY_BUCKET_NAME"
+      ]
+    }
+  ]
+}
+```
+
+1. (Recommended) Create a new user for MySQL for PCF and record its Access Key ID and Secret Access Key, the user credentials.
+
+1. Attach this policy to your AWS user (**IAM** > **Policies** > **Policy Actions** > **Attach**).
+
+
+### <a id="configure"></a> Configure in Ops Manager
+
+Use Ops Manager to connect MySQL for PCF to your S3 account.
+
+1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+
+1. Select the **Ceph or Amazon S3** radio button.
+
   ![S3 Backup Configuration Form](images/S3-backups.png)
 
-    <table>
-      <tr><th>Field</th><th>Instructions</th></tr>
-      <tr><td><strong>Access Key ID</strong></strong></td>
-          <td>Enter your S3 Access Key IDfor uploading backup artifacts. The Access Key and Secret Access Key require specific permissions: https://docs.pivotal.io/svc-sdk/service-backup/18-0/#backup-destinations.</td></tr>
-      <tr><td><strong>Secret Access Key</strong></td>
-          <td>Enter your S3 Secret Access Key for uploading backup artifacts.</td></tr>
-      <tr><td><strong>Endpoint URL</strong></td>
-          <td>Enter the S3 compatible endpoint URL for uploading backups. URL must start with http:// or https://. The default is https://s3.amazonaws.com</td></tr>
-      <tr><td><strong>Bucket Name</strong></td>
-          <td>Enter the bucket name in which to upload.</td></tr>
-      <tr><td><strong>Bucket Path</strong></td>
-          <td>Enter the path in the bucket to store backups.</td></tr>
-      <tr><td><strong>Cron Schedule</strong></td>
-          <td>Enter a cron schedule, using standard cron syntax, to take backups of each service instance.</td></tr>
-    </table>
+Fill in the fields as follows:
 
-1. To enable backups using [Ceph](http://docs.ceph.com/docs/master/) or AWS, continue to the [Ceph or AWS](#ceph-aws) section.
+  * **Access Key ID** and **Secret Access Key** 
+      Enter the S3 Access Key ID and Secret Access Key from above.
+  * **Endpoint URL**
+      Enter the S3 compatible endpoint URL for uploading backups. URL must start with `http://` or `https://`. The default is https://s3.amazonaws.com
+  * **Bucket Name**
+      Enter the bucket name in which to upload.
+  * **Bucket Path**
+      Enter the path in the bucket to store backups.
+  * **Cron Schedule**
+          Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
+</table>
 
 ## <a id="disable-backups"></a>Disable Automated Backups ##
 
