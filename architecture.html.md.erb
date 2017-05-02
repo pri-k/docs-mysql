@@ -103,12 +103,15 @@ MySQL for PCF uses [Xtrabackup](http://www.percona.com/doc/percona-xtrabackup) f
 MySQL for PCF enables `wsrep_load_data_splitting` to split large data imports into separate transactions. This facilitates loading large files into a MariaDB cluster.
 
 #### Maximum Transaction Sizes
-[wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) is set to 2&nbsp;GB, the maximum allowed by Galera.
 
-[wsrep\_max\_ws\_rows](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-rows) enforces the default of 0
-  - For more information about these limitations, see the documentation on [transaction size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).
-  - **Note:** There is a [known issue](https://jira.mariadb.org/browse/MDEV-11817) in which this setting also affects DDLs. It will be fixed in a future release of MariaDB.
+These are the maximum transaction sizes set for Galera:
 
++ [wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) is set to 2&nbsp;GB, the maximum allowed by Galera.
+
++ [wsrep\_max\_ws\_rows](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-rows) enforces the default of 0. 
+Specifying no limit avoids a [known issue](https://jira.mariadb.org/browse/MDEV-11817) with MariaDB.
+
+For general information, see [Transaction Size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).
 
 ## <a id="scale-behavior"></a> Cluster Scaling Behavior ##
 
