@@ -7,41 +7,61 @@ This is documentation for the MySQL for Pivotal Cloud Foundry (PCF) service tile
 
 ## <a id="about-mysql"></a>About MySQL##
 
-MySQL is a powerful open-source relational database used by applications since the mid-90s. Developers have relied on MySQL as a first step to storing, processing and sharing data. As its user community has grown, MySQL has become a robust system capable of handling a wide variety of use cases and very significant workloads. Unlike other traditional databases which centralize and consolidate data, MySQL lends itself to dedicated deployment supporting the "shared nothing" context of building applications in the cloud.
+MySQL is a powerful open-source relational database used by apps since the mid-90s. Developers have relied on MySQL as a first step to storing, processing and sharing data. As its user community has grown, MySQL has become a robust system capable of handling a wide variety of use cases and very significant workloads. Unlike other traditional databases which centralize and consolidate data, MySQL lends itself to dedicated deployment supporting the "shared nothing" context of building apps in the cloud.
 
 ## <a id="about-p-mysql"></a>About MySQL for PCF ##
 
-The MySQL for PCF product delivers a fully managed, "Database as a Service" to Cloud Foundry users. The tile deploys and maintains a MySQL server running a recent release of [MariaDB](http://www.mariadb.org) and [Galera](http://galeracluster.com); a SQL proxy, [Switchboard](https://github.com/cloudfoundry-incubator/switchboard); and a service broker. The tile configures sane defaults for a general-use relational database service.
+The MySQL for PCF product delivers a fully managed, "Database as a Service" to Cloud Foundry users. The tile deploys and maintains a MySQL server running a recent release of [MariaDB](http://www.mariadb.org) and [Galera](http://galeracluster.com); an SQL proxy, [Switchboard](https://github.com/cloudfoundry-incubator/switchboard); and a service broker. The tile configures sane defaults for a general-use relational database service.
 
-With MySQL for PCF installed, developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Developers can retrieve connection credentials in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES), from the `VCAP-SERVICES` environment variable. Developers can select from a menu of service plans options, which are configured by the platform operator.
+With MySQL for PCF installed, developers can attach a database to their apps in as little as two commands, `cf create-service` and `cf bind-service`. Developers can retrieve connection credentials in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES), from the `VCAP-SERVICES` environment variable. Developers can select from a menu of service plans options, which are configured by the platform operator.
 
-You can deploy MySQL for PCF in either single-node or high availability (HA) topology. The HA topology has three MySQL servers, two proxies, two service brokers, and you need to supply a load balancer.
+You can deploy MySQL for PCF in either single-node or high availability (HA) topology. The HA topology has three MySQL servers, two proxies, and two service brokers, and you need to supply a load balancer.
 
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
-Current MySQL for PCF Details
-<div style="line-height: 1; padding-left: 3em">
+The following table provides version and version-support information about MySQL for PCF:
 
-- **Version**: v1.9.3
-- **Release Date**: April 26, 2017
-- **Software component versions**: MariaDB v10.1.20, Galera v25.3.19
-- **Compatible Ops Manager Version(s)**: v1.9.x, v1.10.x
-- **Compatible Elastic Runtime Version(s)**: v1.9.x, v1.10.x
-- **vSphere support?** Yes
-- **AWS support?** Yes
-- **OpenStack support?** Yes
-- **Azure support?** Yes
-- **IPSec support?** Yes
+<table class="nice">
+    <th>Element</th>
+    <th>Details</th>
+    <tr>
+        <td>Version</td>
+        <td>v1.9.2</td>
+    </tr>
+    <tr>
+        <td>Release date</td>
+        <td>April 26, 2017</td>
+    </tr>
+    <tr>
+        <td>Software component version</td>
+        <td>MariaDB v10.1.20, Galera v25.3.19</td>
+    </tr>
+    <tr>
+        <td>Compatible Ops Manager version(s)</td>
+        <td>v1.9.x, v1.10.x</td>
+    </tr>
+    <tr>
+        <td>Compatible Elastic Runtime version(s)</td>
+        <td>v1.9.x, v1.10.x</td>
+    </tr>
+    <tr>
+        <td>IaaS support</td>
+        <td>AWS, Azure, OpenStack, and vSphere</td>
+    </tr>
+    <tr>
+        <td>IPsec support</td>
+        <td>Yes</td>
+    </tr>
+</table>
 
-</div>
+## <a id="upgrading"></a>Prepare to Upgrade ##
 
-## <a id="upgrading"></a>Upgrading to the Latest Version ##
 
-Consider the following compatibility information before upgrading MySQL.
+Before upgrading to the latest version of MySQL for PCF, do the following:
 
-For more information, refer to the full [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
+1. Confirm that you are on Ops Manager v1.9 or later and are on MySQL for PCF v1.8 or later.
 
-<table border="1" class="nice">
+    <table border="1" class="nice">
 	<tr>
 		<th rowspan="2">Ops Manager Version</th>
 		<th colspan="2">Supported Upgrades from Imported MySQL Installation</th>
@@ -53,31 +73,38 @@ For more information, refer to the full [Product Compatibility Matrix](https://d
 
 	<tr>
 	  <th rowspan="6">v1.9.x, v1.10.x</th>
-    <tr><td>v1.8.X</td><td>v1.9.X</td></tr>
+    <tr><td>v1.8.x</td><td>v1.9.x</td></tr>
 	</tr>
+  </table><br>
 
-</table>
+    For more information about upgrade versions, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
-Prior to upgrading you should:
+1. If you are running in the HA configuration, check the health of the cluster:
+  1. Download, configure, and run the [mysql-diag](http://bit.ly/pivotal-mysql-diag) tool.
+  2. If `mysql-diag` shows any cluster issues, fix them.
+  3. Do not apply changes to the upgrade until the issues have been resolved.
 
-- Validate the health of your cluster. If running in the HA configuration, download, configure and run the [mysql-diag](http://bit.ly/pivotal-mysql-diag) tool. Do not use **Apply Changes** if `mysql-diag` shows any cluster issues. Be sure to resolve those issues before upgrading.
+1. As of v1.9.0, MySQL for PCF enables strict mode. 
+This means that where previously large indices were silently truncated, 
+now `ALTER TABLE` and `CREATE INDEX` statements may fail with an error.
+<p class='note'><strong>IMPORTANT</strong>: If any of your apps already use or want to create indices 
+with more than 767 bytes, then create or alter the apps to use `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED`.</p>
+A workaround for failures due to strict mode is to use the `IGNORE` keyword: this converts the error to a warning. <br>
+For more information about these changes, see [MySQL Server Tuning and Defaults](release-notes.html#tuning).
 
-<p class='note'><strong>Note</strong>: MySQL for PCF v1.9.0 enables strict mode. For more information, see below.</p>
-- p-mysql 1.9 now enables [strict mode](https://mariadb.com/kb/en/mariadb/sql-mode/#strict-mode). Where previously large indices were silently truncated, now `ALTER TABLE` and `CREATE INDEX` statements may fail. If any of your apps already use or want to create indices with more than 767 bytes, create or altered using `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED`. Otherwise, `ALTER TABLE` and `CREATE INDEX` statements may fail. Without this setting, the default behavior of MariaDB is to silently truncate column content and large indices.
-  - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
+## <a id="deprecation-lock-tables"></a>Deprecation of Table Locks in MySQL for PCF v1.10
 
-For more information about these changes, see [Release Notes](release-notes.html).
+In MySQL for PCF v1.8 and v1.9, new service bindings are not able to lock tables. 
+In MySQL for PCF v1.10, the privilege to lock tables will also be removed from **existing service instances**.
+<p class="note warning"><strong>WARNING</strong>: As of <strong>v1.10</strong>, MySQL for PCF will disallow LOCK TABLES for all applications.</p>
 
-### <a id="deprecation-lock-tables"></a> Deprecation Notice
+In MySQL for PCF v1.10, apps will see an error when they attempt to lock tables.
 
-<p class='note warning'><strong>WARNING!</strong> p-mysql 1.10 will retroactively remove the ability to lock tables from all existing service instances.</p>
-
-When running in clustered mode, table-level locks are not distributed across the cluster. Previous versions of MySQL for PCF have allowed applications to attain a table lock, regardless that it will exist only on the current master. This means that applications and application developers are not aware that they do not exclusively have a lock across all nodes. This can lead to deadlocks when writes happen on different masters.
-
-MySQL for PCF first started to limit applications' ability to request table locks in version 1.8.0, by not allowing new service bindings to lock tables. In the next minor release, v1.9, all existing service instances will no longer have the ability to lock tables. Apps that attempt to lock tables will now see an error of the form:
-
-    MariaDB [cf\_eedd5768\_9c6c\_4388\_ae0b\_dc64f4022bf4] LOCK TABLES fruit WRITE;
-    ERROR 1044 (42000): Access denied for user 'uoY64cqdw6qyMtNl'@'%' to database 'cf\_eedd5768\_9c6c\_4388\_ae0b\_dc64f4022bf4'
+When running in clustered mode, table-level locks are not distributed across the cluster. 
+In the current version of MySQL for PCF apps are allowed apps to attain a table lock, 
+even though it only exists on the current master. 
+Apps and app developers are not aware that they do not exclusively have a lock across all nodes. 
+This can lead to deadlocks when writes happen on different masters.
 
 ## <a id="configurations"></a>Enterprise Readiness by Topology ##
 

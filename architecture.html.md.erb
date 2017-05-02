@@ -37,9 +37,9 @@ Pivotal recommends deploying either one or three MySQL server nodes, avoiding an
 
 The minimum number of nodes required to tolerate a single node failure is three. With a two-node cluster, a single node failure causes loss of quorum.
 
-## <a id="defaults"></a> MySQL Server Defaults
+## <a id="defaults"></a> MySQL Server Defaults for MariaDB Components
 
-This section describes the defaults that the MySQL for PCF tile applies to its Galera and MariaDB components.
+This section describes the defaults that the MySQL for PCF tile applies to its MariaDB components.
 
 #### InnoDB Log Files: 1&nbsp;GB
 
@@ -88,8 +88,9 @@ MySQL for PCF authenticates with user credentials, which does not restrict the h
         ```ERROR 1709 (HY000): Index column size too large. The maximum column size is 767 bytes.```
     - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
 
-### Settings for Galera
+## <a id="galeradefaults"></a> MySQL Server Defaults for Galera Components
 
+This section describes some defaults that the MySQL for PCF tile applies to its Galera components.
 
 #### SST Method: Xtrabackup
 

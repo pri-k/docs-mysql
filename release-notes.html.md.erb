@@ -14,36 +14,36 @@ owner: MySQL
      }
 </style>
 
-## <a id="1-9-2"></a>1.9.2
+## <a id="1-9-2"></a>v1.9.2
 
-Release Date: 2017 April 3
+Release Date: April 3, 2017
 
 - Updated stemcell to 3312.24. This is a security upgrade that resolves the following:
   - [USN-3265-2](http://www.ubuntu.com/usn/USN-3265-2/)
 - **Bug fix:** Addressed an issue where backups were unable to store backups on AWS S3 regions that require the v4 signature.
 - **Bug fix:** Addressed an issue where nodes may fail to rejoin the cluster after restart. See the [Rejoin Unsafe Fails](known-issues.html#node-cannot-rejoin) Known Issue for more details.
-- Note: The title of the tile will now appear as "MySQL for PCF," not simply "MySQL."
+- Note: The title of the tile now appears as "MySQL for PCF," not simply "MySQL."
 
 Additional information can be found at https://pivotal.io/security
 
 ## <a id="1-9-1"></a>1.9.1
 
-<p class="note">p-mysql 1.9 requires Ops Manager 1.9.0 and above.</p>
+<p class="note">MySQL for PCF v1.9 requires Ops Manager v1.9.0 and higher.</p>
 
 ### Deprecation Notice
 
-p-mysql 1.10 will disallow `LOCK TABLES` for all applications. Please see the [notice](index.html#deprecation-lock-tables) for more details.
+MySQL for PCF v1.10 will disallow `LOCK TABLES` for all applications. See the [notice](index.html#deprecation-lock-tables) for more details.
 
-## Introducing mysql-diag
+### Introducing mysql-diag
 
-If configured, the monitoring VM comes with a pre-configured `mysql-diag` tool. This tool will give you a snapshot of the current state of the cluster.
+If configured, the monitoring VM comes with a pre-configured `mysql-diag` tool. This tool gives you a snapshot of the current state of the cluster.
 
-We recommend to always run `mysql-diag` before upgrade. Attempting to upgrade while a cluster is in a less-than-healthy state will not go smoothly. Always be sure that the cluster is healthy before upgrading.
+Pivotal recommends that you always run `mysql-diag` before upgrade. Attempting to upgrade while a cluster is in a less-than-healthy state will not go smoothly. Always be sure that the cluster is healthy before upgrading.
 
 The `mysql-diag` tool also works on earlier releases of MySQL for PCF, but it won't be pre-installed and configured. Instructions and a download are located in the [Pivotal Knowledgebase](http://bit.ly/pivotal-mysql-diag).
 
 
-## MySQL Server Tuning and Defaults
+### <a name="tuning"></a> MySQL Server Tuning and Defaults
 - Several configuration settings have been moved to a new configuration pane, **MySQL Server Configuration**
 - [sql_mode](https://mariadb.com/kb/en/mariadb/sql-mode/) is now set: `NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES`. `sql_mode` was not set on previously versions.
   - `NO_ENGINE_SUBSTITUTION`: Guards against applications unintentionally creating non-InnoDB tables. Previously, the current master would accept, but not replicate such tables across the cluster.
@@ -61,6 +61,6 @@ The `mysql-diag` tool also works on earlier releases of MySQL for PCF, but it wo
 
 - There is a known issue that sometimes causes the `rejoin-unsafe` errand to fail. See [Rejoin Unsafe Fails](known-issues.html#rejoin-unsafe-fails) Known Issue for more information.
 
-## <a id="1-9-0"></a>1.9.0
+## <a id="1-9-0"></a>v1.9.0
 
-Version 1.9.0 was not released. Please use version 1.9.1.
+Version 1.9.0 was not released. Use v1.9.1.
