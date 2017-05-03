@@ -7,17 +7,18 @@ This topic provides instructions to PCF operators about how to install, configur
 
 ## <a id="install"></a> Download and Install the Tile
 
-1. Download the product file from Pivotal Network.
+1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/p-mysql/).
 
 1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file. 
 
-1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF. This adds the tile to your staging area.
+1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF. 
+   This adds the tile to your staging area.
 
 1. Click the newly-added **MySQL for PCF** tile to open its configuration panes.
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
-Follow the steps below to configure the MySQL for PCF service. MySQL for PCF v2.0 has only one service plan, `Plan1`, which creates dedicated MySQL service instances on demand.
+Follow the steps below to configure the MySQL for PCF service. MySQL for PCF v2.0 has only one service plan, `Plan 1`, which creates dedicated MySQL service instances on demand.
 
 Earlier versions of MySQL for PCF, in contrast, offer services that run on shared service instances.
 
@@ -33,13 +34,13 @@ Earlier versions of MySQL for PCF, in contrast, offer services that run on share
             This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
-        <td> Select the subnet for the on-demand service instances, the Services Network in this <a href="./about.html#on-demand">picture</a></td></tr>
+        <td> Select the subnet for the on-demand service instances, the Services Network in this <a href="./about.html#on-demand">picture</a>.</td></tr>
   </table>
     <p class="note"><strong>IMPORTANT</strong>: You cannot change the regions or networks after you have clicked **Apply Changes** in the <a href="#apply-changes">final step</a> below.</p>
 
 1. Click **Save**.
 
-1. Select the **Plan1** pane and configure its fields as follows:
+1. Select the **Plan 1** pane and configure its fields as follows:
 
      ![plan-1-tab-v2.0.0](service-plan-configuration.png)
   <table>
@@ -73,4 +74,4 @@ Earlier versions of MySQL for PCF, in contrast, offer services that run on share
    [GCP](https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#stemcell), or
    [vSphere](https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#stemcell).
 
-1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
+1. <a name="apply-changes"></a>Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
