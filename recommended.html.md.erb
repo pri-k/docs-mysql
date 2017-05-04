@@ -38,7 +38,7 @@ max_resources = (plan_1_quota x plan_1_resources) + ( plan_2_quota x plan_2_reso
 
 To calculate the current IaaS cost/ usage across On-Demand plans:
 
-1. Current instances provisioned for all plans can be found by referencing the `total_instance` metric as [documented here](monitoring.html#usage)
+1. Current instances provisioned for all plans can be found by referencing the `total_instance` metric.
 1. Multiple the `total_instance` for each plan by that plan's resources. Sum all plans that are active to get your total current usage
 
 <pre>current_usage = (plan_1_total_instances x plan_1_resources) + (plan_2_total_instances x plan_2_resources)</pre>
