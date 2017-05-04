@@ -30,7 +30,7 @@ The following table provides version and version-support information about MySQL
     </tr>
     <tr>
         <td>Release date</td>
-        <td>April 26, 2017</td>
+        <td>April 27, 2017</td>
     </tr>
     <tr>
         <td>Software component version</td>
@@ -84,26 +84,26 @@ Before upgrading to the latest version of MySQL for PCF, do the following:
   2. If `mysql-diag` shows any cluster issues, fix them.
   3. Do not apply changes to the upgrade until the issues have been resolved.
 
-1. As of v1.9.0, MySQL for PCF enables strict mode. 
-This means that where previously large indices were silently truncated, 
+1. As of v1.9.0, MySQL for PCF enables strict mode.
+This means that where previously large indices were silently truncated,
 now `ALTER TABLE` and `CREATE INDEX` statements may fail with an error.
-<p class='note'><strong>IMPORTANT</strong>: If any of your apps already use or want to create indices 
+<p class='note'><strong>IMPORTANT</strong>: If any of your apps already use or want to create indices
 with more than 767 bytes, then create or alter the apps to use `ROW_FORMAT DYNAMIC` or `ROW_FORMAT COMPRESSED`.</p>
 A workaround for failures due to strict mode is to use the `IGNORE` keyword: this converts the error to a warning. <br>
 For more information about these changes, see [MySQL Server Tuning and Defaults](release-notes.html#tuning).
 
 ## <a id="deprecation-lock-tables"></a>Deprecation of Table Locks in MySQL for PCF v1.10
 
-In MySQL for PCF v1.8 and v1.9, new service bindings are not able to lock tables. 
+In MySQL for PCF v1.8 and v1.9, new service bindings are not able to lock tables.
 In MySQL for PCF v1.10, the privilege to lock tables will also be removed from **existing service instances**.
 <p class="note warning"><strong>WARNING</strong>: As of <strong>v1.10</strong>, MySQL for PCF will disallow LOCK TABLES for all applications.</p>
 
 In MySQL for PCF v1.10, apps will see an error when they attempt to lock tables.
 
-When running in clustered mode, table-level locks are not distributed across the cluster. 
-In the current version of MySQL for PCF apps are allowed apps to attain a table lock, 
-even though it only exists on the current master. 
-Apps and app developers are not aware that they do not exclusively have a lock across all nodes. 
+When running in clustered mode, table-level locks are not distributed across the cluster.
+In the current version of MySQL for PCF apps are allowed apps to attain a table lock,
+even though it only exists on the current master.
+Apps and app developers are not aware that they do not exclusively have a lock across all nodes.
 This can lead to deadlocks when writes happen on different masters.
 
 ## <a id="configurations"></a>Enterprise Readiness by Topology ##
