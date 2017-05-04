@@ -13,6 +13,9 @@ MySQL is a powerful open-source relational database used by apps since the mid-9
 * Each on-demand plan instance is deployed to its own VM and is suitable for production workloads.
 * The maximum-number of on-demand plan instances available to developers is set by the operator and enforced on both a global and per-plan level quota. The global quota cannot exceed 50.
 * Operators can update the plan settings, including the VM size and disk size after the plans have been created. **Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.**
+* All plans deploy a single VM of the specified size with the specified disk type.
+* Cannot scale down the size of VMs on the plan once deployed (this protects against data loss).
+* The default maximum number of connections is set at 750.
 
 #### <a id="resources"></a> Resource Usage Planning for On-Demand plans
 
@@ -39,15 +42,6 @@ To calculate the current IaaS cost/ usage across On-Demand plans:
 1. Multiple the `total_instance` for each plan by that plan's resources. Sum all plans that are active to get your total current usage
 
 <pre>current_usage = (plan_1_total_instances x plan_1_resources) + (plan_2_total_instances x plan_2_resources)</pre>
-
-### Dedicated-VM Plan
-
-* Each dedicated VM plan instances is deployed to its own VM and is suitable for production workloads.
-* The number of Dedicated-VM plan instances available to developers is set by the operator.
-* Direct access to MySQL server configurations outside of runtime is not currently supported.
-* All plans deploy a single VM of the specified size with the specified disk type.
-* Cannot scale down the size of VMs on the plan once deployed (this protects against data loss).
-* The default maximum number of connections is set at 750.
 
 ## Availability Using Multiple AZs
 
