@@ -18,9 +18,9 @@ This topic provides instructions to PCF operators about how to install, configur
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
-Follow the steps below to configure the MySQL for PCF service. MySQL for PCF v2.0 has only one service plan, `Plan 1`, which creates dedicated MySQL service instances on demand.
+Follow the steps below to configure the MySQL for PCF service. MySQL for PCF v2.0 has five service plans that deploy dedicated MySQL service instances on demand.
 
-Earlier versions of MySQL for PCF, in contrast, offer services that run on shared service instances.
+By default, MySQL for PCF has 3 active plans. The 4th and 5th plans are not active by default.
 
 1. Select the **Assign AZs and Networks** pane and configure the fields as follows:
   <table>
@@ -40,30 +40,52 @@ Earlier versions of MySQL for PCF, in contrast, offer services that run on share
 
 1. Click **Save**.
 
-1. Select the **Plan 1** pane and configure its fields as follows:
+### Configure Active Service Plans
 
-     ![plan-1-tab-v2.0.0](service-plan-configuration.png)
-  <table>
-    <tr><th>Field</th><th>Instructions</th></tr>
-    <tr><td><strong>Enable this plan</strong></strong></td>
-        <td>Select this checkbox.</td></tr>
-    <tr><td><strong>Service instance quota</strong></td>
-        <td>Enter the maximum number of service instances that can exist at one time.</td></tr>
-    <tr><td><strong>Plan name</strong></td>
-        <td>Accept the default or enter a name. This is the name that appears in the Marketplace.</td></tr>
-    <tr><td><strong>Plan description</strong></td>
-        <td>Accept the default or enter a description.</td></tr>
-    <tr><td><strong>Plan features</strong></td>
-        <td>Accept the default or enter information about the plan to help your app developers.</td></tr>
-    <tr><td><strong>MySQL VM Type</strong></td>
-        <td>Select a VM type.<br>The plan will create service instances of this size.</td></tr>
-    <tr><td><strong>Persistent disk type</strong></td>
-        <td>Select a disk size.<br>This disk will store the MySQL messages.</td></tr>
-    <tr><td><strong>AZ placement</strong></td>
-        <td>Select one AZ for the single node.<br>The plan will create all service instance VMs in this AZ.</td></tr>
-  </table>
+For each plan that you choose to activate and be used in your PCF Foundation.
+
+1. Open the **Plan 1** pane.
+
+1. Select the **Active** radio button.
+
+![plan-1-tab-v2.0.0](service-plan-configuration.png)
+
+Fill in the fields as follows:
+
+  * **Service Plan Access**
+      Accept the default to enable access to all organizations in your PCF foundation. Select "Disable" to disable creating new services instances of this plan for all organizations. Select "Manual to manually control service access via the cf CLI.
+  * **Plan Name**
+      Accept the default or enter a name. This is the name that appears in the PCF Marketplace for developers.
+  * **Plan Description**
+      Accept the default or enter a description to help developers understand plan features. It is recommended to add VM type details and disk size to this field.
+  * **Plan Quota**
+      Enter the maximum number of service instances that can exist at one time.
+  * **MySQL VM Type**
+      Select a VM type. The plan will create service instances of this size.
+  * **Persistent disk type**
+      Select a disk size. This disk will store the MySQL messages.
+  * **AZ placement**
+      Select one AZ for the single node.<br>The plan will create all service instance VMs in this AZ.
+
+<p class="note warn">If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers. See the backups page for more information. </p>
     
 1. Click **Save**.
+
+### Configure Inactive Service Plans
+
+For each plan that you choose would like to be inactive, do the following:
+
+1. Open the **Plan 1** pane.
+
+1. Select the **Inactive** radio button.
+
+![plan-inactive-tab-v2.0.0](service-plan-inactive.png)
+
+<p class="note"><strong>IMPORTANT</strong>: You cannot inactivate a plan that currently has existing service instances. Disable the plan and delete existing service instances before deactiving.</p>
+
+1. Click **Save**.
+
+1. Continue
 
 1. Click **Stemcell**.
 
