@@ -1,0 +1,52 @@
+---
+title: Lifecycle Event Expectations
+owner: MySQL
+---
+
+This guide provides expectations for various events in the lifecycle of a MySQL for Pivotal Cloud Foundry (PCF) service instance.
+
+## <a id='failures'></a>Lifecycle Events and Impact
+
+### Planned Deployment
+- <strong>Example:</strong> Operator updates a stemcell or upgrades MySQL for PCF.
+- <strong>Impact:</strong> Applications will be unable to connect to MySQL while the service instance is updated. The service should be resumed within 10 - 15 minutes.
+- <strong>Required Actions:</strong> No further action is required if the deployment is successful. The application should reconnect automatically.
+
+### Developer Updates Service Instance
+- <strong>Example:</strong> Developer updates their service instance to a larger plan.
+- <strong>Impact:</strong> Applications will be unable to connect to MySQL while the service instance is updated. The service should be resumed within 10 - 15 minutes.
+- <strong>Required Actions:</strong> No further action is required if the deployment is successful. The application should reconnect automatically.
+
+### VM Process Failure
+- <strong>Example:</strong> A process, like MySQL, crashes on the service instance VM.
+- <strong>Impact:</strong>
+  - BOSH (monit) will bring the process back automatically.
+  - Depending on the process and what it was doing, the app developer may experience a small window of downtime or loss of other features such as metrics and/or logging.
+  - Applications may be unable to connect to MySQL while the process is resumed.
+  - Expected downtime of 60 - 120 seconds, assuming the process resumes cleanly without manual intervention.
+- <strong>Required Actions:</strong> No further action is required if monit restarts the process successfully. The application should reconnect automatically.
+
+### VM Failure
+- <strong>Example:</strong> VM fails and goes offline; no distinction between virtualization issue or host hardware problem.
+- <strong>Impact:</strong>
+  - If the BOSH Resurrector is enabled (recommended), BOSH should notice and recreate the VM and reattach the same persistent disk and IP address.
+  - The downtime will largely depend on how quickly the resurrector notices, usually 1 or 2 minutes, and the speed of the IaaS to trigger a new deployment and create a VM.
+  - If the Resurrector is not enabled, some IaaS have similar resurrection or HA features such as vSphere.
+  - Applications will not be able to connect to MySQL until the VM is recreated and the process is resumed.
+  - Based on prior experience with BOSH Resurrector in PCF, downtime is about 8 - 10 minutes.
+- <strong>Required Actions:</strong> When the VM comes back, no further action should be required for the application developer to continue operations.
+
+### AZ Failure
+- <strong>Example:</strong> An AZ fails, either goes entirely offline or loses connectivity (net split) to other AZs. Assumes PCF is deployed across AZs.
+- <strong>Impact:</strong> (Assumes Diego deployed across AZs and multiple instances of the application)
+  - Some app instances may still be able to connect and continue operating.
+  - App instances in the other AZs will not be able to connect.
+  - Downtime - Unknown
+- <strong>Required Actions:</strong>  Recovery of the app / database connection should be automatic. Depending on the application, manual intervention may be required to check data consistency.
+
+### Region Failure
+- <strong>Example:</strong> An entire region fails, meaning an entire PCF foundation is offline.
+- <strong>Impact:</strong>
+  - The entire foundation is offline and will need to be brought back manually to ensure correct restart of foundation.
+  - Downtime – Unknown
+- <strong>Required Actions:</strong> - Each service instance may need to be [individually restored](./backup-and-restore.html#restore) dependent upon how the foundation was restored.
