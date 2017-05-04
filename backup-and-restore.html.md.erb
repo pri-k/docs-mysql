@@ -236,7 +236,7 @@ These instructions assume you have a backup artifact downloaded. To restore the 
  <pre class="terminal">
     $ rm -rf /var/vcap/store/mysql/data/*
  </pre>
-   <p class="note warning">This is a destructive action and should only be run on a new and unused service instance.</p>
+   <p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
 
   1. Exit the MySQL VM.
 
@@ -307,12 +307,12 @@ These instructions assume you have a backup artifact downloaded. To restore the 
 
   1. Exit the MySQL VM.
 
-1. Update your CF application to bind to the new service instance.
+1. Update your CF app to bind to the new service instance.
  <pre class="terminal">
    $ cf bind-service my-app NEW\_SERVICE\_INSTANCE
  </pre>
 
-1. Start your CF application.
+1. Start your CF app.
  <pre class="terminal">
    $ cf start my-app
  </pre>
