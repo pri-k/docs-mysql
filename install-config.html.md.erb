@@ -20,7 +20,7 @@ This topic provides instructions to PCF operators about how to install, configur
 
 Follow the steps below to configure the MySQL for PCF service. MySQL for PCF v2.0 has five service plans that deploy dedicated MySQL service instances on demand.
 
-By default, MySQL for PCF has 3 active plans. The 4th and 5th plans are not active by default.
+By default, MySQL for PCF has three active plans. The fourth and fifth plans are not active by default.
 
 1. Select the **Assign AZs and Networks** pane and configure the fields as follows:
   <table>
@@ -46,29 +46,27 @@ For each plan that you choose to activate and be used in your PCF Foundation.
 
 1. Open the **Plan 1** pane.
 
-1. Select the **Active** radio button.
+1. Click **Active**.
 
-![plan-1-tab-v2.0.0](service-plan-configuration.png)
+    ![plan-1-tab-v2.0.0](service-plan-configuration.png)
 
-Fill in the fields as follows:
-
-  * **Service Plan Access**:
+1. Fill in the fields as follows:
+      * **Service Plan Access**:
       Accept the default to enable access to all organizations in your PCF foundation. Select "Disable" to disable creating new services instances of this plan for all organizations. Select "Manual to manually control service access via the cf CLI.
-  * **Plan Name**:
+      * **Plan Name**:
       Accept the default or enter a name. This is the name that appears in the PCF Marketplace for developers.
-  * **Plan Description**:
+      * **Plan Description**:
       Accept the default or enter a description to help developers understand plan features. It is recommended to add VM type details and disk size to this field.
-  * **Plan Quota**:
+      * **Plan Quota**:
       Enter the maximum number of service instances that can exist at one time.
-  * **MySQL VM Type**:
-      Select a VM type. The plan will create service instances of this size.
-  * **MySQL Persistent Disk**:
-      Select a disk size. This disk will store the MySQL messages.
-  * **MySQL Availability Zone**:
-      Select one AZ for the single node.<br>The plan will create all service instance VMs in this AZ.
+      * **MySQL VM Type**:
+      Select a VM type. The plan creates service instances of this size.
+      * **MySQL Persistent Disk**:
+      Select a disk size. This disk stores the MySQL messages.
+      * **MySQL Availability Zone**:
+      Select one AZ for the single node.<br>The plan creates all service instance VMs in this AZ.
 
-<p class="note warn">If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers. See the backups page for more information. </p>
-    
+    <p class="note"><strong>Note</strong>:If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p> 
 1. Click **Save**.
 
 ### Configure Inactive Service Plans
@@ -77,19 +75,19 @@ For each plan that you choose would like to be inactive, do the following:
 
 1. Open the **Plan 1** pane.
 
-1. Select the **Inactive** radio button.
+1. Click **Inactive**.
 
-![plan-inactive-tab-v2.0.0](service-plan-inactive.png)
+    ![plan-inactive-tab-v2.0.0](service-plan-inactive.png)
 
-<p class="note"><strong>IMPORTANT</strong>: You cannot inactivate a plan that currently has existing service instances. Disable the plan and delete existing service instances before deactiving.</p>
+     <p class="note"><strong>IMPORTANT</strong>: You cannot inactivate a plan that currently has existing service instances. Disable the plan and delete existing service instances before deactiving.</p>
 
 1. Click **Save**.
 
 ### Configure Global Settings
 
-Open the **Settings** pane.
+1. Open the **Settings** pane.
 
-![global-settings](global-settings.png)
+    ![global-settings](global-settings.png)
 
 1. If needed, tick the checkbox to allow for outbound internet access. This is critical for service instances to be able to use logs or backups. Additionally, this the checkbox must be ticked if an external blob store has been configured for BOSH.
 
