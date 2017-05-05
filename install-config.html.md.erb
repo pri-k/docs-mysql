@@ -52,19 +52,19 @@ For each plan that you choose to activate and be used in your PCF Foundation.
 
 Fill in the fields as follows:
 
-  * **Service Plan Access**
+  * **Service Plan Access**:
       Accept the default to enable access to all organizations in your PCF foundation. Select "Disable" to disable creating new services instances of this plan for all organizations. Select "Manual to manually control service access via the cf CLI.
-  * **Plan Name**
+  * **Plan Name**:
       Accept the default or enter a name. This is the name that appears in the PCF Marketplace for developers.
-  * **Plan Description**
+  * **Plan Description**:
       Accept the default or enter a description to help developers understand plan features. It is recommended to add VM type details and disk size to this field.
-  * **Plan Quota**
+  * **Plan Quota**:
       Enter the maximum number of service instances that can exist at one time.
-  * **MySQL VM Type**
+  * **MySQL VM Type**:
       Select a VM type. The plan will create service instances of this size.
-  * **Persistent disk type**
+  * **MySQL Persistent Disk**:
       Select a disk size. This disk will store the MySQL messages.
-  * **AZ placement**
+  * **MySQL Availability Zone**:
       Select one AZ for the single node.<br>The plan will create all service instance VMs in this AZ.
 
 <p class="note warn">If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers. See the backups page for more information. </p>
