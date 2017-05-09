@@ -3,7 +3,8 @@ title: Installing and Configuring MySQL for PCF
 owner: MySQL
 ---
 
-This topic provides instructions to PCF operators about how to install, configure, and deploy the MySQL for PCF v2.0 tile. The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQL service instances on demand. 
+This topic provides instructions to PCF operators about how to install, configure, and deploy the MySQL for PCF v2.0 tile. 
+The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQL service instances on demand. 
 
 ## <a id="install"></a> Download and Install the Tile
 
@@ -18,15 +19,20 @@ This topic provides instructions to PCF operators about how to install, configur
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
-Follow the steps below to configure the MySQL for PCF service. MySQL for PCF v2.0 has five service plans that deploy dedicated MySQL service instances on demand.
+Follow the steps below to configure the MySQL for PCF service. 
+MySQL for PCF v2.0 has five service plans that deploy dedicated MySQL service instances on demand.
 
 By default, MySQL for PCF has three active plans. The fourth and fifth plans are not active by default.
+
+###<a id="azs"></a> Configure AZs and Networks
+
+Follow the steps below to choose an Availability Zone (AZ) to run the service broker and to select networks.
 
 1. Select the **Assign AZs and Networks** pane and configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Place singleton jobs in</strong></td>
-        <td>Select the Availability Zone (AZ) that you want the MySQL broker VM to run in. The broker runs as a singleton job.</td></tr>
+        <td>Select the AZ that you want the MySQL broker VM to run in. The broker runs as a singleton job.</td></tr>
     <tr><td><strong>Balance other jobs in</strong></td>
         <td>Ignore; not used.</td></tr>
     <tr><td><strong>Network</strong></td>
@@ -40,7 +46,7 @@ By default, MySQL for PCF has three active plans. The fourth and fifth plans are
 
 1. Click **Save**.
 
-### Configure Active Service Plans
+###<a id="active"></a> Configure Active Service Plans
 
 Follow the steps below for each plan that you want to be active and used in your PCF deployment:
 
@@ -52,11 +58,14 @@ Follow the steps below for each plan that you want to be active and used in your
 
 1. Fill in the fields as follows:
       * **Service Plan Access**:
-      Accept the default to enable access to all organizations in your PCF deployment. Select "Disable" to disable creating new services instances of this plan for all organizations. Select "Manual to manually control service access via the cf CLI.
+      Accept the default to enable access to all organizations in your PCF deployment. 
+      Select **Disable** to disable creating new services instances of this plan for all organizations. 
+      Select **Manual** to manually control service access with the cf CLI.
       * **Plan Name**:
       Accept the default or enter a name. This is the name that appears in the PCF Marketplace for developers.
       * **Plan Description**:
-      Accept the default or enter a description to help developers understand plan features. It is recommended to add VM type details and disk size to this field.
+      Accept the default or enter a description to help developers understand plan features. 
+      Pivotal recommends adding VM type details and disk size to this field.
       * **Plan Quota**:
       Enter the maximum number of service instances that can exist at one time.
       * **MySQL VM Type**:
@@ -69,7 +78,7 @@ Follow the steps below for each plan that you want to be active and used in your
     <p class="note"><strong>Note</strong>: If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p> 
 1. Click **Save**.
 
-### Configure Inactive Service Plans
+###<a id="inactive"></a> Configure Inactive Service Plans
 
 Follow the steps below for each plan that you want to be inactive:
 
@@ -83,15 +92,18 @@ Follow the steps below for each plan that you want to be inactive:
 
 1. Click **Save**.
 
-### Configure Global Settings
+###<a id="global"></a> Configure Global Settings
 
 1. Open the **Settings** pane.
 
     ![global-settings](global-settings.png)
 
-1. If needed, tick the checkbox to allow for outbound internet access. This is critical for service instances to be able to use logs or backups. Additionally, this the checkbox must be ticked if an external blob store has been configured for BOSH.
+1. If needed, enable the checkbox to allow for outbound internet access. 
+This is critical for service instances to be able to use logs or backups. 
+Additionally, this the checkbox must be ticked if an external blob store has been configured for BOSH.
 
-1. Enter the global quota for all on-demand instances for every on demand plan. Please review the guidance on how to understand the resource implications for on-demand instances.
+1. Enter the global quota for all on-demand instances for every on demand plan. 
+Review the guidance on how to understand the resource implications for on-demand instances.
 
 1. Click **Stemcell**.
 
