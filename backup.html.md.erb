@@ -95,7 +95,7 @@ To configure automated backups for MySQL for PCF, perform the following steps:
 
 ## <a id="understanding-metadata"></a>Understand Backup Metadata ##
 
-Along with each release, MySQL for PCF will upload a `mysql-backup-XXXXXXXXXX.txt` metadata file. 
+Along with each release, MySQL for PCF will upload a `mysql-backup-XXXXXXXXXX.txt` metadata file.
 
 The contents of the metadata file resemble the following:
 
@@ -129,7 +129,7 @@ Within this file, the most important items are the `start_time` and the `server_
 
 MySQL for PCF keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, contact [Pivotal Support](https://support.pivotal.io) to ensure your existing cluster is beyond help.
 
-The disaster recovery backups feature of MySQL for PCF is primarily intended as a way to recover data to the same PCF deployment from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF cluster. This is especially relevant with regard to service instances and bindings. 
+The disaster recovery backups feature of MySQL for PCF is primarily intended as a way to recover data to the same PCF deployment from which the data was backed up. This process replaces 100% of the data and state of a running MySQL for PCF cluster. This is especially relevant with regard to service instances and bindings.
 
 <p class="note"><strong>Note</strong>: Because of how services instances are defined, you cannot restore a MySQL for PCF database to a different PCF deployment.</p>
 
@@ -158,21 +158,19 @@ In the event of a total cluster loss, the process to restore a backup artifact t
       <pre class="terminal">$ rm -rf /var/vcap/store/mysql/*</pre>
 1. Perform the following steps to restore the backup:
     1. Move the compressed backup file to the node using `scp`.
-    1. Decrypt the file using the `gpg` command:
-      <pre class="terminal">$ gpg --decrypt mysql-backup.tar.gpg</pre>
-    1. Expand the backup artifact into the data director of MySQL:
-      <pre class="terminal">$ tar xvjf mysql-backup.tar.bzip2 --directory=/var/vcap/store/mysql</pre>
+    1. Decrypt and expand the file using `gpg`, sending the output to tar:
+      <pre class="terminal">$ gpg --decrypt mysql-backup.tar.gpg | tar -C /var/vcap/store/mysql -xvf -</pre>
     1. Change the owner of the data directory, because MySQL expects the data directory to be owned by a particular user:
       <pre class="terminal">$ chown -R vcap:vcap /var/vcap/store/mysql</pre>
     1. Start all services with `monit`:
       <pre class="terminal">$ monit start all</pre>
     1. Watch the summary until all jobs are listed as `running`:
-      <pre class="terminal">$ watch monit summary</pre> 
+      <pre class="terminal">$ watch monit summary</pre>
     1. Exit out of the MySQL node.
 1. Perform the following steps to increase the size of the cluster back to three:
     1. From the Ops Manager Installation Dashboard, click the **MySQL for PCF** tile.
     1. Click **Resource Config**.
-    1. Set the number of instances for **MySQL Server** to 1.
+    1. Set the number of instances for **MySQL Server** to 3.
     1. Click **Save**.
     1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
 
@@ -184,11 +182,11 @@ If you do not want to use the automated backups included in MySQL for PCF, you c
 
 Perform the following steps to retrieve the IP address and credentials required for a manual backup:
 
-1. From the Ops Manager Installation Dashboard, click the **MySQL for PCF** tile. 
+1. From the Ops Manager Installation Dashboard, click the **MySQL for PCF** tile.
 1. Click the **Status** tab.
 1. Locate the IP address for the MySQL node under **MySQL Server**.
     ![MySQL Server IP](mysql-server-ip.png)
-1. Locate the root password for the MySQL server in the **Credentials** tab.
+1. Locate the admin password for the MySQL server in the **Credentials** tab.
     ![MySQL Server Root Password](mysql-root-password.png)
 
 ### <a id="manual-backup"></a>Manual Backup ###
@@ -196,14 +194,14 @@ Perform the following steps to retrieve the IP address and credentials required 
 Back up your data manually with [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/).
   This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
 
-To back up all databases in the MySQL deployment, use the `--all-databases` flag:
+To back up all databases in the MySQL deployment:
 <pre class="terminal">
-$ mysqldump -u root -p -h $MYSQL\_NODE\_IP --all-databases > user_databases.sql
+$ mysqldump -u admin -p -h $MYSQL\_NODE\_IP --all-databases --single-transaction > user_databases.sql
 </pre>
 
 To back up a single database, specify the database name:
 <pre class="terminal">
-$ mysqldump -u root -p -h $MYSQL\_NODE\_IP $DB\_NAME > user_databases.sql
+$ mysqldump -u admin -p -h $MYSQL\_NODE\_IP $DB\_NAME --single-transaction > user_databases.sql
 </pre>
 
 ### <a id="manual-restore"></a>Manual Restore ###
@@ -211,14 +209,26 @@ $ mysqldump -u root -p -h $MYSQL\_NODE\_IP $DB\_NAME > user_databases.sql
 The procedure for restoring from a backup is the same whether one or multiple databases were backed up.
 Executing the SQL dump will drop, recreate, and refill the specified databases and tables.
 
-  <p class="warning"><strong>Warning:</strong> Restoring a database will delete all data that existed in the database prior to the restore. Restoring a database using a full backup artifact, produced by <code>mysqldump --all-databases</code> for example, will replace all data and user permissions.</p>
+  <p class="note"><strong>Warning:</strong> Restoring a database will delete all data that existed in the database prior to the restore. Restoring a database using a full backup artifact, produced by <code>mysqldump --all-databases</code> for example, will replace all data and user permissions.</p>
 
-To restore from the data dump, run the following command:
+Prepare to restore:
 
-<pre class="terminal">$ mysql -u root -p -h $MYSQL\_NODE\_IP < user\_databases.sql</pre>
+- If running in HA configuration, reduce the size of the MySQL for PCF cluster to a single node, following the [restore instructions](#restoring) above.
+- Locate the Mysql Admin credentials in the **Credentials** tab, as above.
+- Access the mysql database as admin, and issue the following command:
+  <pre class="terminal">
+  $ mysql -u admin -p -h $MYSQL\_NODE\_IP -e "SET GLOBAL enforce\_storage\_engine=NULL"
+  </pre>
+- Restore from the data dump, run the following command:
+  <pre class="terminal">
+  $ mysql -u admin -p -h $MYSQL\_NODE\_IP < user\_databases.sql
+  </pre>
+- To restore HA mode, re-configure MySQL for PCF to run using three nodes in the same way as the [restoring instructions](#restoring) above.
+- If not running HA mode, it's important to restart the database server. This step is not necessary if scaling back to three MySQL nodes.
+  <pre class="terminal">
+  $ monit stop mariadb\_ctrl
+  $ monit start mariadb\_ctrl
+  </pre>
 
-To re-apply users privileges, tell the cluster to re-load user permissions using the data that has just been restored:
-
-<pre class="terminal">$ mysql -u root -p -h $MYSQL\_NODE\_IP -e "FLUSH PRIVILEGES"</pre>
 
 For more examples of manual backup and restore procedures, see the [MariaDB documentation](http://mariadb.com/kb/en/mariadb/mysqldump/#examples).
