@@ -100,25 +100,25 @@ Along with each release, MySQL for PCF uploads a `mysql-backup-XXXXXXXXXX.txt` m
 The contents of the metadata file resemble the following:
 
 ```
-uuid = dfe9fcdd-7d0f-11e5-93b3-0695a7b9771f
-name =
-tool_name = innobackupex
-tool_command = --user=root --password=... --stream=tar tmp/
-tool_version = 1.5.1-xtrabackup
-ibbackup_version = xtrabackup version 2.2.10 based on MySQL server 5.6.22 Linux (x86_64) (revision id: )
-server_version = 10.0.21-MariaDB-wsrep
-start_time = 2015-10-28 01:04:40
-end_time = 2015-10-28 01:04:43
-lock_time = 1
-binlog_pos =
-innodb_from_lsn = 0
-innodb_to_lsn = 1730899
-partial = N
+compact = N
+encrypted = N
+tool_version = 2.4.5
+server_version = 10.1.20-MariaDB
+end_time = 2017-05-05 23:26:19
+binlog_pos = filename 'mysql-bin.000016', position '7000000', GTID of the last change '0-1-30000'
 incremental = N
 format = tar
-compact = N
 compressed = N
-encrypted = N
+uuid = 30000000-3000-1000-9000-40000000000f
+name =
+lock_time = 0
+innodb_from_lsn = 0
+innodb_to_lsn = 6286393
+partial = N
+tool_command = --user=admin --password=... --stream=tar tmp/
+ibbackup_version = 2.4.5
+tool_name = innobackupex
+start_time = 2017-05-05 23:26:17
 ```
 
 Within this file, the most important items are the `start_time` and the `server_version` entries. Transactions that have not been completed at the start of the backup effort are not present in the restored artifact.
@@ -186,8 +186,7 @@ Perform the following steps to retrieve the IP address and credentials required 
 1. Click the **Status** tab.
 1. Locate the IP address for the MySQL node under **MySQL Server**.
     ![MySQL Server IP](mysql-server-ip.png)
-1. Locate the admin password for the MySQL server in the **Credentials** tab.
-    ![MySQL Server Root Password](mysql-root-password.png)
+1. In the **Credentials** tab, from the **MySQL Server** job and **Mysql Admin Password** name, obtain the admin password.
 
 ### <a id="manual-backup"></a>Manual Backup ###
 
