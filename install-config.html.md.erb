@@ -17,6 +17,8 @@ The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQ
 
 1. Click the newly-added **MySQL for PCF** tile to open its configuration panes.
 
+    ![AZ and Network Assignments pane](config-azs.png)
+
 ## <a id="config-on-demand"></a> Configure the Tile
 
 Follow the steps below to configure the MySQL for PCF service. 
@@ -28,7 +30,9 @@ By default, MySQL for PCF has three active plans. The fourth and fifth plans are
 
 Follow the steps below to choose an Availability Zone (AZ) to run the service broker and to select networks.
 
-1. Select the **Assign AZs and Networks** pane and configure the fields as follows:
+1. Click **Assign AZs and Networks**.
+
+2. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Place singleton jobs in</strong></td>
@@ -50,30 +54,36 @@ Follow the steps below to choose an Availability Zone (AZ) to run the service br
 
 Follow the steps below for each plan that you want to be active and used in your PCF deployment:
 
-1. Open the **Plan 1** pane.
+1. Click a plan side-tab, for example, **Plan 1**.
 
 1. Click **Active**.
 
     ![plan-1-tab-v2.0.0](service-plan-configuration.png)
 
-1. Fill in the fields as follows:
-      * **Service Plan Access**:
-      Accept the default to enable access to all organizations in your PCF deployment. 
-      Select **Disable** to disable creating new services instances of this plan for all organizations. 
-      Select **Manual** to manually control service access with the cf CLI.
-      * **Plan Name**:
-      Accept the default or enter a name. This is the name that appears in the PCF Marketplace for developers.
-      * **Plan Description**:
-      Accept the default or enter a description to help developers understand plan features. 
-      Pivotal recommends adding VM type details and disk size to this field.
-      * **Plan Quota**:
-      Enter the maximum number of service instances that can exist at one time.
-      * **MySQL VM Type**:
-      Select a VM type. The plan creates service instances of this size.
-      * **MySQL Persistent Disk**:
-      Select a disk size. This disk stores the MySQL messages.
-      * **MySQL Availability Zone**:
-      Select one AZ for the single node.<br>The plan creates all service instance VMs in this AZ.
+2. Configure the fields as follows:
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><td><strong>Service Plan Access</strong></td>
+        <td>Accept the default to enable access to all organizations in your PCF deployment.
+            Select **Disable** to disable creating new services instances of this plan for all organizations.
+            Select **Manual** to manually control service access with the cf CLI.</td></tr>
+    <tr><td><strong>Plan Name</strong></td>
+        <td>Accept the default or enter a name. 
+            This is the name that appears in the PCF Marketplace for developers.</td></tr>
+    <tr><td><strong>Plan Description</strong></td>
+        <td>Accept the default or enter a description to help developers understand plan features. 
+            Pivotal recommends adding VM type details and disk size to this field.
+        </td></tr>
+    <tr><td><strong>Plan Quota</strong></td>
+        <td>Enter the maximum number of service instances that can exist at one time.</td></tr>
+    <tr><td><strong>MySQL VM Type</strong></td>
+        <td>Select a VM type. The plan creates service instances of this size.</td></tr>
+    <tr><td><strong>MySQL Persistent Disk</strong></td>
+        <td>Select a disk size. This disk stores the MySQL messages.</td></tr>
+    <tr><td><strong>MySQL Availability Zone</strong></td>
+        <td>Select one AZ for the single node.
+            The plan creates all service instance VMs in this AZ.</td></tr>
+  </table>
 
     <p class="note"><strong>Note</strong>: If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p> 
 1. Click **Save**.
@@ -82,7 +92,7 @@ Follow the steps below for each plan that you want to be active and used in your
 
 Follow the steps below for each plan that you want to be inactive:
 
-1. Open the **Plan 1** pane.
+1. Click a plan side-tab, for example, **Plan 2**.
 
 1. Click **Inactive**.
 
@@ -94,16 +104,31 @@ Follow the steps below for each plan that you want to be inactive:
 
 ###<a id="global"></a> Configure Global Settings
 
-1. Open the **Settings** pane.
+Follow the steps below to determine if service instances are assigned public IP addresses 
+and to set the total number of service instances allowed across all plans. 
+
+1. Click **Settings**.
 
     ![global-settings](global-settings.png)
 
-1. If needed, enable the checkbox to allow for outbound internet access. 
-This is critical for service instances to be able to use logs or backups. 
-Additionally, this the checkbox must be ticked if an external blob store has been configured for BOSH.
+2. Configure the fields as follows:
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><td><strong>Provide public IP addresses to all Service VMs</strong></td>
+        <td>Enable this checkbox:<ul>
+            <li>If the service instances need an external backup, blobstore, or syslog storage</li>
+            <li>If you have configured BOSH to use an external blobstore.</li></ul>
+            </td></tr>
+    <tr><td><strong>Maximum service instances</strong></td>
+        <td>Enter the global quota for all on-demand instances summed across every on-demand plan.
+            For information about determining global quotas, see <a href="recommended.html#serviceplan">
+            Service Plan Recommended Usage and Limitations</a>.
+           </td></tr>
+  </table>
 
-1. Enter the global quota for all on-demand instances for every on demand plan. 
-Review the guidance on how to understand the resource implications for on-demand instances.
+1. Click **Save**.
+
+###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
 1. Click **Stemcell**.
 
@@ -113,5 +138,7 @@ Review the guidance on how to understand the resource implications for on-demand
    [Azure](https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#stemcell), 
    [GCP](https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#stemcell), or
    [vSphere](https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#stemcell).
+
+1. Click **Save**.
 
 1. <a name="apply-changes"></a>Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
