@@ -9,9 +9,12 @@ owner: MySQL
 
 Release Date: May 19, 2017
 
-- We've made two changes to address issues with MySQL for PCF when the [IPSec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed.
-  - **Bug fix:** While installing MySQL for PCF with IPSec installed, the product may fail to deploy. This may be due to an issue where the default probe timeout is too long while running under IPSec, and should be reduced. Version 1.7.29 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. Read more about this in the Read more about this in the [options and features](https://docs.pivotal.io/p-mysql/1-8/index.html#options_and_features) topic.
-  - **Bug fix:** We also made a small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPSec is installed.
+- Bug fixes to address issues with MySQL for PCF when the [IPsec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed:
+  - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product might fail to deploy. 
+      This may be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced. 
+      Version 1.7.29 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. 
+      For more information, see [Options and Features](https://docs.pivotal.io/p-mysql/1-8/index.html#options_and_features) in the v1.8 documentation.
+  - **Bug fix:** We also made a small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPsec is installed.
 
 ## <a id="1-7-28"></a>v1.7.28
 
@@ -46,7 +49,7 @@ Additional information can be found at https://pivotal.io/security
 
 Release Date: 2017 March 23
 
-- Updated dependency of Go language to version 1.7. This change does not impact functionality, it is done only to keep up to date with supported versions of Go.
+- Updated dependency of Go language to v1.7. This change does not impact functionality, it is done only to keep up to date with supported versions of Go.
 
 ## <a id="1-7-25"></a>v1.7.25
 
