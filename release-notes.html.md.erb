@@ -5,6 +5,14 @@ owner: MySQL
 
 <html class="list-style-none"></html>
 
+## <a id="1-7-29"></a>v1.7.29
+
+Release Date: May 19, 2017
+
+- We've made two changes to address issues with MySQL for PCF when the [IPSec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed.
+  - **Bug fix:** While installing MySQL for PCF with IPSec installed, the product may fail to deploy. This may be due to an issue where the default probe timeout is too long while running under IPSec, and should be reduced. Version 1.7.29 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. Read more about this in the Read more about this in the [options and features](https://docs.pivotal.io/p-mysql/1-8/index.html#options_and_features) topic.
+  - **Bug fix:** We also made a small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPSec is installed.
+
 ## <a id="1-7-28"></a>v1.7.28
 
 Release Date: April 27, 2017
