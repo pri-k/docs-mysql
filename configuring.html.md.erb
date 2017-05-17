@@ -61,6 +61,10 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
     The minimum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process has failed to start properly, and will appear as failing in Ops Manager and BOSH output. Depending on the data stored by the database, and the time represented in logs, you may need to increase this above the default of 60 seconds.
 
+- **New Cluster Probe Timeout**
+
+    There is special logic to detect if a starting node is the first node of a new installation, or if it is part of an existing cluster. Part of this logic is to probe if the other nodes of the cluster have already been deployed. This is set to 30s by default, however due to high latency, this timeout period may be too long. When these probes take too long to respond, it's possible that the **MySQL Start Timeout** may fail the deployment. To account for this, either increase the **MySQL Start Timeout** or lower the **New Cluster Probe Timeout** such that a new node doesn't spend too long performing this test.
+
 - **Enable replication debug logging**
 
     By default, the MySQL for PCF service logs replication error events. Disable this option only if error logging is straining your logging systems.

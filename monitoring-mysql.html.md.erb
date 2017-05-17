@@ -3,7 +3,181 @@ title: Monitoring the MySQL Service
 owner: MySQL
 ---
 
-This document describes how to use the Replication Canary and Interruptor to monitor your MySQL cluster.
+This document describes the metrics that are produced by MySQL for PCF, and everything you need to know about the Replication Canary. For information about the Interruptor, please see the [Troubleshooting](troubleshooting.html#interruptor) topic.
+
+## <a id="mysql-metrics"></a>Metrics
+
+MySQL emits a number of metrics that can be used to monitor the health and performance of the MySQL deployment.
+The PCF firehose exposes these metrics.
+
+The metrics polling interval defaults to 30 seconds. This can be changed by navigating to the Advanced Options configuration pane and entering a new value in **Metrics polling interval (min: 10)**.
+
+![Metrics Polling Interval](images/metrics_polling.png)
+
+Third-party monitoring tools can consume MySQL for PCF's metrics via [a nozzle](https://docs.pivotal.io/tiledev/nozzle.html) to monitor MySQL performance and health. For an example Datadog configuration that displays some of the significant metrics outlined below, see the [CF Redis and MySQL example dashboards](https://github.com/pivotal-cf/metrics-datadog-dashboard). Pivotal does not endorse or provide support for any third party solution.
+
+
+### MySQL-specific Metrics
+|   | Description |
+| --- | --- |
+| **Data source** | /p-mysql/available |
+| Description | Indicator if the local database server is available and responding. |
+| Metric label | binary |
+| **Data source** |  /p-mysql/innodb/buffer\_pool\_free   |
+| Description | The number of free pages in the InnoDB Buffer Pool.   |
+| Metric label | page |
+| **Data source** |  /p-mysql/innodb/buffer\_pool\_total   |
+| Description | The total number of pages in the InnoDB Buffer Pool.   |
+| Metric label | page |
+| **Data source** |  /p-mysql/innodb/buffer\_pool\_used   |
+| Description | The number of used pages in the InnoDB Buffer Pool.   |
+| Metric label | page |
+| **Data source** |  /p-mysql/innodb/buffer\_pool\_utilization   |
+| Description | The utilization of the InnoDB Buffer Pool.   |
+| Metric label | fraction |
+| **Data source** |  /p-mysql/innodb/current\_row\_locks   |
+| Description | The number of current row locks.   |
+| Metric label | lock |
+| **Data source** |  /p-mysql/innodb/data\_reads   |
+| Description | The rate of data reads.   |
+| Metric label | read/second |
+| **Data source** |  /p-mysql/innodb/data\_writes   |
+| Description | The rate of data writes.   |
+| Metric label | write/second |
+| **Data source** |  /p-mysql/innodb/mutex\_os\_waits   |
+| Description | The rate of mutex OS waits.   |
+| Metric label | event/second |
+| **Data source** |  /p-mysql/innodb/mutex\_spin\_rounds   |
+| Description | The rate of mutex spin rounds.   |
+| Metric label | event/second |
+| **Data source** |  /p-mysql/innodb/mutex\_spin\_waits   |
+| Description | The rate of mutex spin waits.   |
+| Metric label | event/second |
+| **Data source** |  /p-mysql/innodb/os\_log\_fsyncs   |
+| Description | The rate of fsync writes to the log file.   |
+| Metric label | write/second |
+| **Data source** |  /p-mysql/innodb/row\_lock\_time   |
+| Description | Time spent in acquring row locks.   |
+| Metric label | millisecond/second |
+| **Data source** |  /p-mysql/innodb/row\_lock\_waits   |
+| Description | The number of times per second a row lock had to be waited for.   |
+| Metric label | event/second |
+| **Data source** |  /p-mysql/net/connections   |
+| Description | The rate of connections to the server.   |
+| Metric label | connection/second |
+| **Data source** |  /p-mysql/net/max\_connections   |
+| Description | The maximum number of connections that have been in use simultaneously since the server started.   |
+| Metric label | connection |
+| **Data source** |  /p-mysql/performance/com\_delete   |
+| Description | The rate of delete statements.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/com\_delete\_multi   |
+| Description | The rate of delete-multi statements.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/com\_insert   |
+| Description | The rate of insert statements.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/com\_insert\_select   |
+| Description | The rate of insert-select statements.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/com\_replace\_select   |
+| Description | The rate of replace-select statements.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/com\_select   |
+| Description | The rate of select statements.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/com\_update   |
+| Description | The rate of update statements.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/com\_update\_multi   |
+| Description | The rate of update-multi.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/created\_tmp\_disk\_tables   |
+| Description | The rate of internal on-disk temporary tables created by second by the server while executing statements.   |
+| Metric label | table/second |
+| **Data source** |  /p-mysql/performance/created\_tmp\_files   |
+| Description | The rate of temporary files created by second.   |
+| Metric label | file/second |
+| **Data source** |  /p-mysql/performance/created\_tmp\_tables   |
+| Description | The rate of internal temporary tables created by second by the server while executing statements.   |
+| Metric label | table/second |
+| **Data source** |  /p-mysql/performance/kernel\_time   |
+| Description | Percentage of CPU time spent in kernel space by MySQL.   |
+| Metric label | percent |
+| **Data source** |  /p-mysql/performance/key\_cache\_utilization   |
+| Description | The key cache utilization ratio.   |
+| Metric label | fraction |
+| **Data source** |  /p-mysql/performance/open\_files   |
+| Description | The number of open files.   |
+| Metric label | file |
+| **Data source** |  /p-mysql/performance/open\_tables   |
+| Description | The number of of tables that are open.   |
+| Metric label | table |
+| **Data source** |  /p-mysql/performance/qcache\_hits   |
+| Description | The rate of query cache hits.   |
+| Metric label | hit/second |
+| **Data source** |  /p-mysql/performance/questions   |
+| Description | The rate of statements executed by the server.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/slow\_queries   |
+| Description | The rate of slow queries.   |
+| Metric label | query/second |
+| **Data source** |  /p-mysql/performance/table\_locks\_waited   |
+| Description | The total number of times that a request for a table lock could not be granted immediately and a wait was needed.   |
+| Metric label | number |
+| **Data source** |  /p-mysql/performance/threads\_connected   |
+| Description | The number of currently open connections.   |
+| Metric label | connection |
+| **Data source** |  /p-mysql/performance/threads\_running   |
+| Description | The number of threads that are not sleeping.   |
+| Metric label | thread |
+| **Data source** |  /p-mysql/performance/user\_time   |
+| Description | Percentage of CPU time spent in user space by MySQL.   |
+| Metric label | percent |
+| **Data source** |  /p-mysql/performance/max\_connections   |
+| Description | The maximum permitted number of simultaneous client connections.   |
+| Metric label | integer |
+| **Data source** |  /p-mysql/performance/open\_files\_limit   |
+| Description | The number of files that the operating system permits [ **mysqld** ](https://dev.mysql.com/doc/refman/5.6/en/mysqld.html "4.3.1 mysqld — The MySQL Server") to open.   |
+| Metric label | integer |
+| **Data source** |  /p-mysql/performance/open\_tables   |
+| Description | The number of tables that are open.   |
+| Metric label | integer |
+| **Data source** |  /p-mysql/performance/opened\_tables   |
+| Description | The number of tables that have been opened.   |
+| Metric label | integer |
+| **Data source** |  /p-mysql/performance/opened\_table\_definitions   |
+| Description | The number of `.frm` files that have been cached.   |
+| Metric label | integer |
+
+### Galera-specific Metrics
+
+|  | Description |
+| --- | --- |
+| **Data source** | /p-mysql/galera/wsrep\_ready   |
+| Description | Shows whether the node can accept queries.   |
+| Metric label | boolean |
+| **Data source** |  /p-mysql/galera/wsrep\_cluster\_size   |
+| Description | The current number of nodes in the Galera cluster.   |
+| Metric label | node |
+| **Data source** |  /p-mysql/galera/wsrep\_cluster\_status   |
+| Description | Shows the primary status of the cluster component that the node is in.   |
+| Metric label | State ID. Values are Primary=1, Non-primary=0, Disconnected=-1 (See: [https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/)](https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/ ) |
+| **Data source** |  /p-mysql/galera/wsrep\_local\_recv\_queue\_avg   |
+| Description | Shows the average size of the local received queue since the last status query.   |
+| Metric label | float |
+| **Data source** |  /p-mysql/galera/wsrep\_local\_send\_queue\_avg   |
+| Description | Shows the average size of the local sent queue since the last status query.   |
+| Metric label | float |
+| **Data source** |  /p-mysql/galera/wsrep\_local\_index   |
+| Description | This node index in the cluster (base 0).   |
+| Metric label | int |
+| **Data source** |  /p-mysql/galera/wsrep\_local\_state |
+| Description | This is the node's local state |
+| Metric label | int |
+
+For more information on monitoring PCF, see the [Monitoring Pivotal Cloud Foundry](https://docs.pivotal.io/pivotalcf/monitoring/index.html) topic.
+
 
 ## <a id="repcanary"></a>Replication Canary
 
