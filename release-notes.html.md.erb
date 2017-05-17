@@ -14,15 +14,18 @@ owner: MySQL
      }
 </style>
 
-## <a id="1-8-8"></a>1.8.8
+## <a id="1-8-8"></a>v1.8.8
 
 Release Date: May 19, 2017
 
-- We've made two changes to address issues with MySQL for PCF when the [IPSec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed.
-  - **Bug fix:** While installing MySQL for PCF with IPSec installed, the product may fail to deploy. This may be due to an issue where the default probe timeout is too long while running under IPSec, and should be reduced. Version 1.8.8 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. Read more about this in the [options and features](index.html#options_and_features) topic.
-  - **Bug fix:** We also made a small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPSec is installed.
+- Bug fixes to address issues with MySQL for PCF when the [IPsec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed.
+  - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product may fail to deploy. 
+      This might be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced. 
+      Version 1.8.8 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. 
+      For more information, see [Options and Features](index.html#options_and_features).
+  - **Bug fix:** A small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPsec is installed.
 
-## <a id="1-8-7"></a>1.8.7
+## <a id="1-8-7"></a>v1.8.7
 
 Release Date: April 27, 2017
 
@@ -33,7 +36,7 @@ Release Date: April 27, 2017
 
 Additional information can be found at https://pivotal.io/security
 
-## <a id="1-8-6"></a>1.8.6
+## <a id="1-8-6"></a>v1.8.6
 
 Release Date: April 3, 2017
 
@@ -44,7 +47,7 @@ Release Date: April 3, 2017
 
 Additional information can be found at https://pivotal.io/security
 
-## <a id="1-8-5"></a>1.8.5
+## <a id="1-8-5"></a>v1.8.5
 
 Release Date: March 10, 2017
 
@@ -54,7 +57,7 @@ Release Date: March 10, 2017
 - Updated stemcell to 3263.21. This is a security upgrade that resolves the following:
   - [USN-3220-2](http://www.ubuntu.com/usn/USN-3220-2/)
 
-## <a id="1-8-4"></a>1.8.4
+## <a id="1-8-4"></a>v1.8.4
 
 Release Date: February 24, 2017
 
@@ -62,13 +65,13 @@ Release Date: February 24, 2017
   - [USN-3208-2](http://www.ubuntu.com/usn/USN-3208-2/)
 - **Bug fix:** Also addresses a minor issue in which the Operator cannot specify an IP address as the binding credentials host. Previously, this was restricted only to fully-qualified hostnames.
 
-## <a id="1-8-3"></a>1.8.3
+## <a id="1-8-3"></a>v1.8.3
 
 Release Date: February 9, 2017
 
 - **Bug fix:** Addresses an issue in which rejoin-unsafe and bootstrap errands fail to run properly.
 
-## <a id="1-8-2"></a>1.8.2
+## <a id="1-8-2"></a>v1.8.2
 
 Release Date: January 26, 2017
 
@@ -76,7 +79,7 @@ Release Date: January 26, 2017
 
 Additional information can be found at https://pivotal.io/security
 
-## <a id="1-8-1"></a>1.8.1
+## <a id="1-8-1"></a>v1.8.1
 
 Release Date: December 16, 2016
 
@@ -86,12 +89,12 @@ Release Date: December 16, 2016
 
 Additional information can be found at https://pivotal.io/security
 
-## <a id="1-8-0"></a>1.8.0
+## <a id="1-8-0"></a>v1.8.0
 
 Release Date: December 7, 2016
 
-- **Important Change:** This release requires OpsManager version **1.8** or greater.
-- MariaDB has been updated to version 10.1.18 and Galera to 25.3.18.
+- **Important Change:** This release requires OpsManager v**1.8** or higher.
+- MariaDB has been updated to v10.1.18 and Galera to v25.3.18.
 - **AWS Multi-AZ support:** p-mysql 1.8.0 now balances across availability zones if provisioned with a network that has multiple subnets.
 - **Multiple service plans**
 
@@ -116,7 +119,7 @@ Release Date: December 7, 2016
 
         XA Transactions and table-level locks are not compatible with our HA technology.
 
-        <p class='note'><strong>Note</strong>: Deprecation Notice: This release does not remove the privilege to lock tables from existing bindings, so it won't break any applications that are currently deployed. We plan to retroactively remove this permission in version 1.9.0.</p>
+        <p class='note'><strong>Note</strong>: Deprecation Notice: This release does not remove the privilege to lock tables from existing bindings, so it won't break any applications that are currently deployed. We plan to retroactively remove this permission in v1.9.0.</p>
 - **Backups:**
   - **New feature**: Backing up all nodes
 
@@ -126,7 +129,7 @@ Release Date: December 7, 2016
 
 - **New Protections:**
 
-    We've discovered a rare condition where a MySQL cluster experiences a fault in replication that can result in some data loss. When this occurs, previous releases do not log the root cause of the bug. In order to best address this issue, version 1.7.11 contains significant additional telemetry and several defensive features which will account for the failure condition and prevent data loss.
+    We've discovered a rare condition where a MySQL cluster experiences a fault in replication that can result in some data loss. When this occurs, previous releases do not log the root cause of the bug. In order to best address this issue, v1.7.11 contains significant additional telemetry and several defensive features which will account for the failure condition and prevent data loss.
 
     <p class='note'><strong>Note</strong>: <strong>If any of these protections activate, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the cluster's failure, and advise a suggested resolution. Additionally, contacting Support will provide us with evidence that will enable us to identify and address the root cause in the future.</p>
 
@@ -146,7 +149,7 @@ Release Date: December 7, 2016
           - Ensure that the `Notifications` errand has been enabled.
           - Ensure that `SMTP Config` has been properly configured.
 
-            If either of these are not set, configure and **Apply Changes** before deploying version 1.7.11.
+            If either of these are not set, configure and **Apply Changes** before deploying v1.7.11.
 
         For more information about the Replication Canary, see the [monitoring documentation](monitoring-mysql.html#repcanary).<br><br>
 
