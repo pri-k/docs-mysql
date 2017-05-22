@@ -128,6 +128,38 @@ and to set the total number of service instances allowed across all plans.
 
 1. Click **Save**.
 
+###<a id="syslog"></a> Configure System Logging
+
+Follow the steps below to enable system logging for the MySQL broker and service instance VMs.
+
+1. Click **Syslog**.
+
+1. Click **Yes**.
+
+    ![syslog](syslog.png)
+
+1. Configure the fields as follows:
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr>
+        <td><strong>Address</strong></td>
+        <td>Enter the address or host of the syslog server for sending logs.</td></tr>
+    <tr><td><strong>Port</strong></td>
+        <td>Enter the port of the syslog server for sending logs.</td></tr>
+    <tr><td><strong>Transport Protocol</strong></td>
+        <td>Select the protocol over which you would like to see system logs.</td></tr>
+    <tr><td><strong>Enable TLS</strong></td>
+        <td>Check the box to send logs encrypted over TLS.</td></tr>
+    <tr><td><strong>Permitted Peer</strong></td>
+        <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, e.g. *.example.com</td></tr>
+    <tr><td><strong>SSL Certificate</strong></td>
+        <td>Enter the SSL Certificate(s) for the syslog server. This will ensure the logs are transported securely.</td></tr>
+  </table>
+
+  <p class="note"><strong>IMPORTANT</strong>: If your syslog server is external to PCF, you may need to check the "Provide public IP addresses to all Service VMs" on the "Settings" page<p>
+
+1. Click **Save**.
+
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
 1. Click **Stemcell**.
