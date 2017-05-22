@@ -82,10 +82,10 @@ Follow the steps below for each plan that you want to be active and used in your
         <td>Select a disk size. This disk stores the MySQL messages.</td></tr>
     <tr><td><strong>MySQL Availability Zone</strong></td>
         <td>Select one AZ for the single node.
-            The plan creates all service instance VMs in this AZ.</td></tr>
+            The plan creates all service instance VMs in this AZ. Choose a different AZ than the one that the broker is in.</td></tr>
   </table>
-
-    <p class="note"><strong>Note</strong>: If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p> 
+    <p class="note"><strong>Note</strong>: If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
+    <p class="note"><strong>Note</strong>: It is strongly recommended to put services instances in a separate AZ than the broker in the event of an AZ failure.</p>
 1. Click **Save**.
 
 ###<a id="inactive"></a> Configure Inactive Service Plans
