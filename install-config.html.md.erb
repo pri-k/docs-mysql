@@ -128,6 +128,32 @@ and to set the total number of service instances allowed across all plans.
 
 1. Click **Save**.
 
+###<a id="monitoring"></a> Configure Monitoring
+
+Follow the steps below to enable different types of monitoring and logging available in the MySQL service.
+
+1. Click **Monitoring**.
+
+1. Click **Yes**.
+
+    ![monitoring](monitoring.png)
+
+1. Configure the fields as follows:
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><td><strong>Enable User Statistics Logging</strong></td>
+        <td>Enable this checkbox to better understand server activity and identify sources of load on a MySQL server.
+            For more information about user statistics, see <a href="https://www.percona.com/doc/percona-server/5.7/diagnostics/user_stats.html">
+            User Statistics Documentation</a>
+            </td></tr>
+    <tr><td><strong>Enable Server Activity Logging</strong></td>
+        <td>Enable this checkbox to record who connects to the servers and what queries are processed using the Percona Audit Log Plugin.
+            For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a>.
+           </td></tr>
+  </table>
+
+1. Click **Save**.
+
 ###<a id="syslog"></a> Configure System Logging
 
 Follow the steps below to enable system logging for the MySQL broker and service instance VMs.
