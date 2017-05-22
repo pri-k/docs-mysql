@@ -3,11 +3,13 @@ title: Upgrading MySQL for PCF
 owner: MySQL
 ---
 
-This topic explains how to upgrade the MySQL for Pivotal Cloud Foundry (PCF) service and existing service instances. It also explains the service interruptions that can result from service changes and upgrades, and from failures at the process, VM, and IaaS level.
+This topic explains how to upgrade the MySQL for Pivotal Cloud Foundry (PCF) service and existing service instances. 
+It also explains the service interruptions that can result from service changes and upgrades and from failures at the process, VM, and IaaS level.
 
 ## <a id="upgrade-service"></a>Upgrade MySQL for PCF
 
-To upgrade the MySQL for PCF service, you follow the same Ops Manager process that you use to install the service for the first time. Your configuration settings migrate to the new version automatically. To perform an upgrade:
+To upgrade the MySQL for PCF service, you follow the same Ops Manager process that you use to install the service for the first time. 
+Your configuration settings migrate to the new version automatically. To perform an upgrade:
 
 1. Review the [Release Notes](./release-notes.html) for the version you are upgrading to.
 
@@ -25,13 +27,15 @@ Upgrading the MySQL for PCF service and service instances can temporarily interr
 
 ## <a id="upgrade-instances"></a>Upgrade MySQL Instances
 
-After [upgrading](#upgrade-service) the MySQL for PCF service, operators can run the [upgrade-all](./troubleshoot.html#upgrade-all) service broker errand to upgrade existing service instances to be in sync with the new version of the service.
+After [upgrading](#upgrade-service) the MySQL for PCF service, operators can run the [upgrade-all](./troubleshoot.html#upgrade-all) 
+service broker errand to upgrade existing service instances to be in sync with the new version of the service.
 
-Both operators and developers can upgrade existing service instances individually by running the `cf update-service` command. See [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
+Both operators and developers can upgrade existing service instances individually by running the `cf update-service` command. 
+See [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
 
 ## <a id="interruptions"></a>Service Interruptions
 
-Service changes and upgrades, and failures at the process, VM and IaaS level can cause  outages in the MySQL for PCF service, as described below.
+Service changes and upgrades and failures at the process, VM, and IaaS level can cause outages in the MySQL for PCF service, as described below.
 
 Read this section if:
 
@@ -42,14 +46,16 @@ Read this section if:
 
 An operator updates a stemcell version or their version of MySQL for PCF.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. The service should resume within 10–15 minutes.
+- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. 
+          The service should resume within 10–15 minutes.
 - <strong>Required Actions:</strong> None. If the update deploys successfully, apps reconnect automatically.
 
 ### <a id='change-plan'></a>Plan Change
 
 A developer changes their service instance to provide a different service plan, using `cf update-service` or Apps Manager.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. The service should resume within 10–15 minutes.
+- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. 
+          The service should resume within 10–15 minutes.
 - <strong>Required Actions:</strong> None. If the plan change deploys successfully, apps reconnect automatically.
 
 ### <a id='process-fail'></a>VM Process Failure
@@ -67,7 +73,8 @@ A process, like the MySQL server, crashes on the service instance VM.
 A MySQL for PCF VM fails and goes offline due to either a virtualization problem or a host hardware problem.
 
 - <strong>Impact:</strong>
-  - If the [BOSH Resurrector](https://bosh.io/docs/resurrector.html) is enabled (recommended), BOSH should detect the failure, recreate the VM, and reattach the same persistent disk and IP address.
+  - If the [BOSH Resurrector](https://bosh.io/docs/resurrector.html) is enabled (recommended), BOSH should detect the failure, 
+    recreate the VM, and reattach the same persistent disk and IP address.
   - Downtime largely depends on how quickly the Resurrector notices, usually 1–2 minutes, and how long it takes the IaaS to create a replacement VM.
   - If the Resurrector is not enabled, some IaaSes such as vSphere have similar resurrection or high availability features.
   - Apps cannot connect to MySQL until the VM is recreated and the MySQL server process is resumed.
@@ -77,13 +84,15 @@ A MySQL for PCF VM fails and goes offline due to either a virtualization problem
 ### <a id='az-fail'></a>AZ Failure
 
 An Availability Zone (AZ) goes offline entirely or loses connectivity to other AZs (net split). 
-This causes service interruption in multi-AZ PCF deployments where [Diego](http://docs.pivotal.io/pivotalcf/1-10/concepts/diego/diego-auction.html) has placed multiple instances of a MySQL-using app in different AZs.
+This causes service interruption in multi-AZ PCF deployments where [Diego](http://docs.pivotal.io/pivotalcf/1-10/concepts/diego/diego-auction.html) 
+has placed multiple instances of a MySQL-using app in different AZs.
 
 - <strong>Impact:</strong>
   - Some app instances might still be able to connect and continue operating.
   - App instances in the other AZs are not able to connect.
   - Downtime: Unknown
-- <strong>Required Actions:</strong>  Recovery of the app / database connection should be automatic. Depending on the app, manual intervention might be required to check data consistency.
+- <strong>Required Actions:</strong>  Recovery of the app / database connection should be automatic. 
+          Depending on the app, manual intervention might be required to check data consistency.
 
 ### <a id='region-fail'></a>Region Failure
 
@@ -92,5 +101,6 @@ An entire region fails, bringing PCF platform components offline.
 - <strong>Impact:</strong>
   - The entire PCF platform needs to be brought back up manually.
   - Downtime: Unknown
-- <strong>Required Actions:</strong> Each service instance might need to be [restored individually](./backup-and-restore.html#restore) depending on the restored state of the platform.
+- <strong>Required Actions:</strong> Each service instance might need to be [restored individually](./backup-and-restore.html#restore) 
+          depending on the restored state of the platform.
 
