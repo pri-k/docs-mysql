@@ -18,10 +18,15 @@ owner: MySQL
 
 Release Date: May 19, 2017
 
-- MySQL for PCF now emits performance metrics which can be read via the firehose. This allows Operators to monitor and understand performance aspects of the MySQL cluster. Read more about this in the [monitoring](monitoring-mysql.html) topic.
-- We've made two changes to address issues with MySQL for PCF when the [IPSec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed.
-  - **Bug fix:** While installing MySQL for PCF with IPSec installed, the product may fail to deploy. This may be due to an issue where the default probe timeout is too long while running under IPSec, and should be reduced. Version 1.9.3 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. Read more about this in the [configuring](configuring.html#server) topic.
-  - **Bug fix:** We also made a small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPSec is installed.
+- MySQL for Pivotal Cloud Foundry (PCF) now emits performance metrics which can be read via the Loggregator Firehose.
+This allows operators to monitor and understand performance aspects of the MySQL cluster.
+For more information, see [Monitoring the MySQL Service](monitoring-mysql.html).
+- Bug fixes to address issues with MySQL for PCF when the [IPsec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed:
+  - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product may fail to deploy.
+This may be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced. 
+Version 1.9.3 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page.
+For more information, see [MySQL Server Configuration](configuring.html#server).
+  - **Bug fix:** A small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPsec is installed.
 
 ## <a id="1-9-2"></a>v1.9.2
 
@@ -35,7 +40,7 @@ Release Date: April 27, 2017
 
 Additional information can be found at https://pivotal.io/security
 
-## <a id="1-9-1"></a>1.9.1
+## <a id="1-9-1"></a>v1.9.1
 
 <p class="note"><strong>Note</strong>: MySQL for PCF v1.9 requires Ops Manager v1.9.0 and later.</p>
 

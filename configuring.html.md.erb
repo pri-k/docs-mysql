@@ -63,7 +63,13 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
 - **New Cluster Probe Timeout**
 
-    There is special logic to detect if a starting node is the first node of a new installation, or if it is part of an existing cluster. Part of this logic is to probe if the other nodes of the cluster have already been deployed. This is set to 30s by default, however due to high latency, this timeout period may be too long. When these probes take too long to respond, it's possible that the **MySQL Start Timeout** may fail the deployment. To account for this, either increase the **MySQL Start Timeout** or lower the **New Cluster Probe Timeout** such that a new node doesn't spend too long performing this test.
+    There is special logic to detect if a starting node is the first node of a new installation, or if it is part of an existing cluster.
+Part of this logic is to probe if the other nodes of the cluster have already been deployed. 
+This is set to 30 s by default.
+However due to high latency, this timeout period may be too long.
+When these probes take too long to respond, it's possible that the **MySQL Start Timeout** might fail the deployment.
+To account for this, either increase the **MySQL Start Timeout** or lower the **New Cluster Probe Timeout** 
+so that a new node doesn't spend too long performing this test.
 
 - **Enable replication debug logging**
 
