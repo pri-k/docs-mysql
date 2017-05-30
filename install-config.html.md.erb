@@ -32,7 +32,7 @@ Follow the steps below to choose an Availability Zone (AZ) to run the service br
 
 1. Click **Assign AZs and Networks**.
 
-2. Configure the fields as follows:
+1. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Place singleton jobs in</strong></td>
@@ -60,7 +60,7 @@ Follow the steps below for each plan that you want to be active and used in your
 
     ![plan-1-tab-v2.0.0](service-plan-configuration.png)
 
-2. Configure the fields as follows:
+1. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Service Plan Access</strong></td>
@@ -82,10 +82,10 @@ Follow the steps below for each plan that you want to be active and used in your
         <td>Select a disk size. This disk stores the MySQL messages.</td></tr>
     <tr><td><strong>MySQL Availability Zone</strong></td>
         <td>Select one AZ for the single node.
-            The plan creates all service instance VMs in this AZ.</td></tr>
+            The plan creates all service instance VMs in this AZ. Choose a different AZ than the one that the broker is in.</td></tr>
   </table>
-
-    <p class="note"><strong>Note</strong>: If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p> 
+    <p class="note"><strong>Note</strong>: If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
+    <p class="note"><strong>Note</strong>: It is strongly recommended to put services instances in a separate AZ than the broker in the event of an AZ failure.</p>
 1. Click **Save**.
 
 ###<a id="inactive"></a> Configure Inactive Service Plans
@@ -111,7 +111,7 @@ and to set the total number of service instances allowed across all plans.
 
     ![global-settings](global-settings.png)
 
-2. Configure the fields as follows:
+1. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Provide public IP addresses to all Service VMs</strong></td>
@@ -125,6 +125,64 @@ and to set the total number of service instances allowed across all plans.
             Service Plan Recommended Usage and Limitations</a>.
            </td></tr>
   </table>
+
+1. Click **Save**.
+
+###<a id="monitoring"></a> Configure Monitoring
+
+Follow the steps below to enable different types of monitoring and logging available in the MySQL service.
+
+1. Click **Monitoring**.
+
+1. Click **Yes**.
+
+    ![monitoring](monitoring.png)
+
+1. Configure the fields as follows:
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><td><strong>Enable User Statistics Logging</strong></td>
+        <td>Enable this checkbox to better understand server activity and identify sources of load on a MySQL server.
+            For more information about user statistics, see <a href="https://www.percona.com/doc/percona-server/5.7/diagnostics/user_stats.html">
+            User Statistics Documentation</a>
+            </td></tr>
+    <tr><td><strong>Enable Server Activity Logging</strong></td>
+        <td>Enable this checkbox to record who connects to the servers and what queries are processed using the Percona Audit Log Plugin.
+            For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a>.
+           </td></tr>
+  </table>
+
+1. Click **Save**.
+
+###<a id="syslog"></a> Configure System Logging
+
+Follow the steps below to enable system logging for the MySQL broker and service instance VMs.
+
+1. Click **Syslog**.
+
+1. Click **Yes**.
+
+    ![syslog](syslog.png)
+
+1. Configure the fields as follows:
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr>
+        <td><strong>Address</strong></td>
+        <td>Enter the address or host of the syslog server for sending logs.</td></tr>
+    <tr><td><strong>Port</strong></td>
+        <td>Enter the port of the syslog server for sending logs.</td></tr>
+    <tr><td><strong>Transport Protocol</strong></td>
+        <td>Select the protocol over which you would like to see system logs.</td></tr>
+    <tr><td><strong>Enable TLS</strong></td>
+        <td>Check the box to send logs encrypted over TLS.</td></tr>
+    <tr><td><strong>Permitted Peer</strong></td>
+        <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, e.g. *.example.com</td></tr>
+    <tr><td><strong>SSL Certificate</strong></td>
+        <td>Enter the SSL Certificate(s) for the syslog server. This will ensure the logs are transported securely.</td></tr>
+  </table>
+
+  <p class="note"><strong>IMPORTANT</strong>: If your syslog server is external to PCF, you may need to check the "Provide public IP addresses to all Service VMs" on the "Settings" page<p>
 
 1. Click **Save**.
 
