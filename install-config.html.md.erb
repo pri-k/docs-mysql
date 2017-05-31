@@ -3,7 +3,7 @@ title: Installing and Configuring MySQL for PCF
 owner: MySQL
 ---
 
-This topic provides instructions to PCF operators about how to install, configure, and deploy the MySQL for PCF v2.0 tile. 
+This topic provides instructions to operators of Pivotal Cloud Foundry (PCF) about how to install, configure, and deploy the MySQL for PCF v2.0 tile. 
 The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQL service instances on demand. 
 
 ## <a id="install"></a> Download and Install the Tile
@@ -84,7 +84,7 @@ Follow the steps below for each plan that you want to be active and used in your
         <td>Select one AZ for the single node.
             The plan creates all service instance VMs in this AZ. Choose a different AZ than the one that the broker is in.</td></tr>
   </table>
-    <p class="note"><strong>Note</strong>: If you will be enabling backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
+    <p class="note"><strong>Note</strong>: If you intend to enable backups, choose a persistent disk type that is three times as large as you intend to provide to developers.  For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     <p class="note"><strong>Note</strong>: It is strongly recommended to put services instances in a separate AZ than the broker in the event of an AZ failure.</p>
 1. Click **Save**.
 
@@ -115,7 +115,7 @@ and to set the total number of service instances allowed across all plans.
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Provide public IP addresses to all Service VMs</strong></td>
-        <td>Enable this checkbox:<ul>
+        <td>Select this checkbox:<ul>
             <li>If the service instances need an external backup, blobstore, or syslog storage</li>
             <li>If you have configured BOSH to use an external blobstore.</li></ul>
             </td></tr>
@@ -134,20 +134,18 @@ Follow the steps below to enable different types of monitoring and logging avail
 
 1. Click **Monitoring**.
 
-1. Click **Yes**.
-
     ![monitoring](monitoring.png)
 
 1. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Enable User Statistics Logging</strong></td>
-        <td>Enable this checkbox to better understand server activity and identify sources of load on a MySQL server.
+        <td>Select this checkbox to better understand server activity and identify sources of load on a MySQL server.
             For more information about user statistics, see <a href="https://www.percona.com/doc/percona-server/5.7/diagnostics/user_stats.html">
-            User Statistics Documentation</a>
+            User Statistics Documentation</a>.
             </td></tr>
     <tr><td><strong>Enable Server Activity Logging</strong></td>
-        <td>Enable this checkbox to record who connects to the servers and what queries are processed using the Percona Audit Log Plugin.
+        <td>Select this checkbox to record who connects to the servers and what queries are processed using the Percona Audit Log Plugin.
             For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a>.
            </td></tr>
   </table>
@@ -173,16 +171,16 @@ Follow the steps below to enable system logging for the MySQL broker and service
     <tr><td><strong>Port</strong></td>
         <td>Enter the port of the syslog server for sending logs.</td></tr>
     <tr><td><strong>Transport Protocol</strong></td>
-        <td>Select the protocol over which you would like to see system logs.</td></tr>
+        <td>Select the protocol over which you want system logs.</td></tr>
     <tr><td><strong>Enable TLS</strong></td>
-        <td>Check the box to send logs encrypted over TLS.</td></tr>
+        <td>Select this checkbox to send logs encrypted over TLS.</td></tr>
     <tr><td><strong>Permitted Peer</strong></td>
-        <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, e.g. *.example.com</td></tr>
+        <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, for example, <code>*.example.com</strong></td></tr>
     <tr><td><strong>SSL Certificate</strong></td>
-        <td>Enter the SSL Certificate(s) for the syslog server. This will ensure the logs are transported securely.</td></tr>
+        <td>Enter the SSL Certificate(s) for the syslog server. This ensuress the logs are transported securely.</td></tr>
   </table>
-
-  <p class="note"><strong>IMPORTANT</strong>: If your syslog server is external to PCF, you may need to check the "Provide public IP addresses to all Service VMs" on the "Settings" page<p>
+  <p class="note"><strong>IMPORTANT</strong>: If your syslog server is external to PCF, you might need to select
+            <strong>Provide public IP addresses to all Service VMs</strong> on the <strong>Settings</strong> page.<p>
 
 1. Click **Save**.
 
