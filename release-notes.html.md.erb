@@ -14,6 +14,15 @@ owner: MySQL
      }
 </style>
 
+## <a id="1-9-4"></a>v1.9.4
+
+Release Date: June 2, 2017
+
+- Updated stemcell to 3312.28. This is a security upgrade that resolves the following:
+  - [USN-3291-3](http://www.ubuntu.com/usn/USN-3291-3/)
+
+Additional information can be found at https://pivotal.io/security
+
 ## <a id="1-9-3"></a>v1.9.3
 
 Release Date: May 19, 2017
@@ -23,7 +32,7 @@ This allows operators to monitor and understand performance aspects of the MySQL
 For more information, see [Monitoring the MySQL Service](monitoring-mysql.html).
 - Bug fixes to address issues with MySQL for PCF when the [IPsec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed:
   - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product may fail to deploy.
-This may be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced. 
+This may be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced.
 Version 1.9.3 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page.
 For more information, see [MySQL Server Configuration](configuring.html#server).
   - **Bug fix:** A small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPsec is installed.
