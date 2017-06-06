@@ -123,21 +123,20 @@ To access the MySQL service from your app:
 
 For how to code your app to use MySQL messaging, see **About Using Pivotal MySQL** > **Client Documentation** in the [MySQL documentation](https://docs.pivotal.io/p-mysql).
 
-## <a id="restage"></a>Restage an App with a New Service Instance
+## <a id="update"></a>Update to a Larger Service Instance
 
-If a service instance has been updated based on a new version of the service, you need to run `cf restage` to restage your app to use the new instance.
+As applications and their databases grow, it may be necessary to update the service instance to a larger plan.
 
-1. Enter `cf restage-app APP`
+1. Enter `cf update-service -p PLAN`
 
-    Where `APP` is the app you want to use the updated service instance.
+    Where `PLAN` is the plan you want to upgrade the service instance to.
 
     <pre class="terminal">
-   $ cf restage-app my-app
+   $ cf update-service -p db-large
 </pre>
 
-When a new version of a service obsoletes an older version, the platform operator may ask you to update your instances of the service and restage any apps bound to the service instances.
-
-Pushing new version of an app automatically restages the app on any service instances it is bound to.
+Doing so does not require a rebinding of your application. However, while the instance is being migrated to a new service instance
+the database will be unavailable for several minutes.
 
 ## <a id="unbind"></a>Unbind a Service Instance to Your App
 
