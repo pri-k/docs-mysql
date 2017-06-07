@@ -29,7 +29,9 @@ Automated backups do the following:
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
-* **How and Where**: MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
+* **How and Where**: There are two options for how automated backups transfer backup data and where the data saves out to:
+  - MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
+  - MySQL for PCF runs an `scp` command that secure-copies backup files to a VM or physical machine operating outside of PCF. The operator provisions the backup machine separately from their PCF installation. This is the most efficient option.
 
 * **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
 
@@ -37,7 +39,11 @@ You can configure MySQL for PCF to automatically back up its databases to extern
 
 Follow the procedures below to enable and configure automated backups.
 
-### <a id="access-key"></a> Create a Policy and Access Key 
+### <a id="ceph-or-s3"></a> Ceph or AWS S3
+
+To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the following steps:
+
+#### <a id="access-key"></a> Create a Policy and Access Key
 
 MySQL for PCF accesses your S3 store through a user account. Pivotal recommends that this account be solely for MySQL for PCF. You need to apply a minimal policy that lets the user account upload backup artifacts to your S3 store.
 
@@ -70,8 +76,7 @@ For example, in AWS create a new custom policy (**IAM** > **Policies** > **Creat
 
 1. Attach the policy you created to the AWS user account that MySQL for PCF will use to access S3 (**IAM** > **Policies** > **Policy Actions** > **Attach**).
 
-
-### <a id="configure"></a> Configure Backups in Ops Manager
+#### <a id="configure"></a> Configure Backups in Ops Manager
 
 Use Ops Manager to connect MySQL for PCF to your S3 account.
 
@@ -92,7 +97,53 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
       Enter the path in the bucket to store backups.
   * **Cron Schedule**
           Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
-</table>
+
+### <a id="scp"></a> SCP
+
+SCP enables the operator to use any desired storage solution on the destination VM.
+
+To back up your database using SCP, perform the following steps:
+
+#### <a id="scp-keys"></a> Create a Public and Private Key Pair
+
+MySQL for PCF accesses a remote host as a user with a private key for authentication. Pivotal recommends that this user and key pair be solely for MySQL for PCF.
+
+1. Determine the remote host that you will be using to store backup artifacts for MySQL for PCF. Ensure that the MySQL service instances will be able to access
+   the remote host.
+
+   <p class="note"><strong>Note</strong>: Pivotal recommends using a VM outside the PCF deployment for the destination of SCP backups. As a result you may need to enable public IPs for the MySQL VMs. </p>
+
+1. (Recommended) Create a new user for MySQL for PCF on the destination VM.
+
+1. (Recommended) Create a new public and private key pair for authenticating as the above user on the destination VM.
+
+#### <a id="configure"></a> Configure Backups in Ops Manager
+
+Use Ops Manager to configure MySQL for PCF to backup using SCP.
+
+1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+
+1. Select the **SCP** radio button.
+    ![SCP Backup Configuration Form](scp-backups.png)
+
+1. Fill in the fields as follows:
+
+  * **Username**
+      Enter the user that you created above.
+  * **Private Key**
+      Enter the private key that you created above. The public key should be stored for ssh and scp access on the destination VM.
+  * **Hostname**
+      Enter the IP or DNS entry that should be used to access the destination VM.
+  * **Destination Directory**
+      Enter the directory in which MySQL for PCF should upload backup artifacts.
+  * **Cron Schedule**
+          Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
+  * **Fingerprint**
+          Enter the fingerprint of the destination VMs public key. This helps to detect any changes to the destination VM.
+  * **Enable Email Alerts**
+          Check the box if you would like to receive email notifications when a backup failure occurs.
+          <p class="note"><strong>Note</strong>: Email Alerts require that CF Notifications are configured and enabled in Elastic Runtime.</p>
+          <p class="note"><strong>Note</strong>: Any user that should be notified for backup failures should be added to the System org and System space.</p>
 
 ## <a id="disable-backups"></a>Disable Automated Backups
 
