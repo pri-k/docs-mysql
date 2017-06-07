@@ -29,9 +29,10 @@ Automated backups do the following:
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
-* **How and Where**: There are two options for how automated backups transfer backup data and where the data saves out to:
+* **How and Where**: There are three options for how automated backups transfer backup data and where the data saves out to:
   - MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
   - MySQL for PCF runs an `scp` command that secure-copies backup files to a VM or physical machine operating outside of PCF. The operator provisions the backup machine separately from their PCF installation. This is the most efficient option.
+  - MySQL for PCF runs an [GCS](https://cloud.google.com/storage/) SDK that saves backups to an Google Cloud Storage bucket.
 
 * **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
 
@@ -148,6 +149,49 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
           Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
   * **Fingerprint**
           Enter the fingerprint of the destination VMs public key. This helps to detect any changes to the destination VM.
+  * **Enable Email Alerts**
+          Check the box if you would like to receive email notifications when a backup failure occurs.
+          <p class="note"><strong>Note</strong>: Email Alerts require that CF Notifications are configured and enabled in Elastic Runtime.</p>
+          <p class="note"><strong>Note</strong>: Any user that should be notified for backup failures should be added to the System org and System space.</p>
+
+### <a id="gcs"></a> Google Cloud Storage
+
+To back up your database on Google Cloud Storage (GCS), perform the following steps:
+
+#### <a id="access-key"></a> Create a Policy and Access Key
+
+MySQL for PCF accesses your GCS store through a service account. Pivotal recommends that this account be solely for MySQL for PCF. You need to apply a minimal policy that lets the user account upload backup artifacts to your GCS store.
+
+1. Create a service account for MySQL for PCF. MySQL for PCF needs permission to list and upload to buckets. To use buckets that do not already exist, it additionally needs permission to create buckets.
+In the GCS console, create a new service account (**IAM and Admin** > **Service Accounts** > **Create Service Account**).
+
+1. Enter a unique name in the **Service account name** textbox, such as `MySQL-for-PCF`.
+
+1. In the **Roles** dropdown, grant the `MySQL-for-PCF` service account the **Storage Admin** role.
+
+1. Check the **Furnish a new private key** box so that a new key is created and downloaded.
+
+1. Click **Create** and take note of the name and location of the service account json file that is downloaded.
+
+#### <a id="configure"></a> Configure Backups in Ops Manager
+
+Use Ops Manager to connect MySQL for PCF to your GCS account.
+
+1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+
+1. Select the **GCS** radio button.
+    ![GCS Backup Configuration Form](gcs-backups.png)
+
+1. Fill in the fields as follows:
+
+  * **Project ID**
+      Enter the Project ID for the Google Cloud project that you are using.
+  * **Bucket Name**
+      Enter the bucket name in which to upload.
+  * **Service Account JSON**
+      Enter the contents of the service account json file that you downloaded when creating a service account above.
+  * **Cron Schedule**
+          Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
   * **Enable Email Alerts**
           Check the box if you would like to receive email notifications when a backup failure occurs.
           <p class="note"><strong>Note</strong>: Email Alerts require that CF Notifications are configured and enabled in Elastic Runtime.</p>
