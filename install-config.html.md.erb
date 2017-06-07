@@ -44,7 +44,11 @@ Follow the steps below to choose an Availability Zone (AZ) to run the service br
             This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
-        <td> Select the subnet for the on-demand service instances, the Services Network in this <a href="./about.html#on-demand">picture</a>.</td></tr>
+        <td>Select the subnet for the on-demand service instances, the Services Network in this <a href="./about.html#on-demand">picture</a>.
+            <br >
+            If you are adding IPSec to encrypt MySQL communication, it is recommended that you deploy MySQL to its own network
+            to avoid potential conflicts with services that are not IPSec compatible.
+         </td></tr>
   </table>
     <p class="note"><strong>IMPORTANT</strong>: You cannot change the regions or networks after you have clicked **Apply Changes** in the <a href="#apply-changes">final step</a> below.</p>
 
