@@ -77,27 +77,4 @@ The MySQL for PCF product delivers dedicated instances on demand, "Database as a
 When installed, the tile deploys and maintains a single Service Broker that is responsible for Cloud Foundry integration.
 The service is configured with sane defaults, following the principle of least surprise for a general-use relational database service.
 
-When installed, developers can attach a database to their applications in as little as two commands, `cf create-service` and `cf bind-service`. Connection credentials are automatically provided in the [standard manner](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES). 
-Developers select from a menu of service plans options, which are configured by the platform operator.
-
-Each instance of the service offering meets the following criteria:
-
-<center>
-<table>
-  <tr><td>**MySQL Server**</td><td>1 dedicated VM</td></tr>
-  <tr><td>**Service Broker**</td><td>1 dedicated VM</td></tr>
-  <tr><td>High Availability</td><td><em>n/a</em></td></tr>
-  <tr><td>Multi-AZ Support</td><td>Yes</td></tr>
-  <tr><td>Rolling Upgrades</td><td><em>n/a</em></td><tr>
-  <tr><td>Automated Backups</td><td>Yes</td></tr>
-  <tr><td>Customizable Plans</td><td>Yes</td></tr>
-  <tr><td>Customizable VM Instances</td><td>Yes</td></tr>
-  <tr><td>Plan Migrations</td><td>Yes</td></tr>
-  <tr><td>Encrypted Communication</td><td>Yes &#x271D;</td></tr>
-  <tr><td>Encrypted Data at-rest</td><td><em>n/a</em></td></tr>
-  <tr><td>Long-lived Canaries</td><td><em>n/a</em></td></tr>
-</table>
-</center>
-
-(*) vSphere only, v1.7 and earlier<br>
-(&#x271D;) Requires IPSEC BOSH plug-in
+For more information about MySQL for PCF v2.0 see the product's <a href="/p-mysql/2-0/minor-overview.html">Minor Overview</a>.
