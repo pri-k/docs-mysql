@@ -3,34 +3,25 @@ title: Backing Up and Restoring On-Demand MySQL
 owner: MySQL
 ---
 
-<style>
-    .note.warning {
-        background-color: #fdd;
-        border-color: #fbb
-    }
+This topic describes how to enable and configure automated backups for the MySQL for Pivotal Cloud Foundry (PCF) service
+and how to manually restore a MySQL service instance from a backup.
 
-    .note.warning:before {
-        color: #f99;
-     }
-</style>
-
-This topic describes how to enable and configure automated backups for the MySQL for Pivotal Cloud Foundry (PCF) service, and how to manually restore a MySQL service instance from a backup.
-
-## <a id="overview"></a>Overview
+## <a id="overview"></a>About Automated Backups
 
 Automated backups do the following:
 
 - Periodically create and upload backup artifacts suitable for restoring all of the databases used by the service instance.
 - Operate without locking apps out of the database; no downtime.
 - Include a metadata file that contains the critical details of the backup artifact, including the effective calendar time of the backup.
-- Encrypt backup artifacts within the MySQL for PCF VM; unencrypted data is never transported outside of the MySQL for PCF deployment.
+- Encrypt backup artifacts within the MySQL for PCF VM; unencrypted data is never transported outside the MySQL for PCF deployment.
 
-## <a id="enable-backups"></a>Enable Automated Backups
+## <a id="enable-backups"></a>About Enabling Automated Backups
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
-* **How and Where**: There are four options for how automated backups transfer backup data and where the data saves out to:
-  - MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
+* **How and where**: There are four options for how automated backups transfer backup data and where the data saves to:
+  - MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket,
+    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
   - MySQL for PCF runs an `scp` command that secure-copies backup files to a VM or physical machine operating outside of PCF. The operator provisions the backup machine separately from their PCF installation. This is the most efficient option.
   - MySQL for PCF runs an [GCS](https://cloud.google.com/storage/) SDK that saves backups to an Google Cloud Storage bucket.
   - MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/) SDK that saves backups to an Azure storage account.
@@ -41,9 +32,9 @@ You can configure MySQL for PCF to automatically back up its databases to extern
 
 Follow the procedures below to enable and configure automated backups.
 
-### <a id="ceph-or-s3"></a> Ceph or AWS S3
+### <a id="ceph-or-s3"></a> Ceph or S3
 
-To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the following steps:
+To back up your database on Ceph or Amazon S3, perform the following steps:
 
 #### <a id="access-key"></a> Create a Policy and Access Key
 
@@ -290,7 +281,7 @@ To restore a MySQL for PCF instance from an offsite backup, download the backup 
 
 ### Download the Backup Artifact
 
-These instructions assume that you are using AWS S3 as your backup destination.
+These instructions assume that you are using S3 as your backup destination.
 
 1. Run `cf service` to determine the GUID associated with the service instance that you want to restore.
  <pre class="terminal">
