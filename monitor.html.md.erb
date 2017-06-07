@@ -36,7 +36,7 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
       <th width="25%">Description</th>
       <td>MySQL Server is currently responding to requests, which indicates if the component is available.<br><br>
 
-      <strong>Use</strong>: If the server does not emit heartbeats, this indicates that it is offline.
+      <strong>Use</strong>: If the server does not emit heartbeats, it is offline.
       <br><br>
       <strong>Origin</strong>: Doppler/Firehose<br>
       <strong>Type</strong>: boolean<br>
@@ -67,7 +67,7 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
       <th width="25%">Description</th>
       <td>The rate of connections to the server shown as connection/second.<br><br>
 
-      <strong>Use</strong>: If the number of connections drastically changes, or applications are unable to connect, may indicate a network or application issue.</p>
+      <strong>Use</strong>: If the number of connections drastically changes or if apps are unable to connect, there might be  a network or app issue.</p>
       <strong>Origin</strong>: Doppler/Firehose<br>
       <strong>Type</strong>: count<br>
       <strong>Frequency</strong>: 30 s<br>
@@ -84,7 +84,7 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    <tr>
       <th>Recommended response</th>
       <td>The connections / second for a given service instance will vary based on application instances and app utilization. If this metric is met or exceeded for an extended period of time, consider one of the following actions:
-      <ul><li>Monitoring application usage to ensure everything is behaving as expected.</li>
+      <ul><li>Monitoring app usage to ensure everything is behaving as expected.</li>
       </td>
    </tr>
 </table>
