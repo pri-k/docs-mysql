@@ -26,7 +26,13 @@ Pivotal recommends that operators continue to fine-tune the alert measures to th
 Pivotal also recommends that operators expand beyond this guidance and create new, installation-specific monitoring
 metrics, thresholds, and alerts based on learning from their own installations.
 
-For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#mysql-metrics).
+### <a id="kpi4MySQL"></a>KPIs for MySQL Service Instances
+
+This section lists the KPIs that are specific for MySQL for PCF instances. 
+
+For a list of general KPIs that apply to all instances, and not specifically to MySQL for PCF instances, see [BOSH System Metrics](#bosh).
+
+For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysql-metrics).
 
 #### <a id="server-heartbeat"></a> Server Availability
 
@@ -54,9 +60,9 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    <tr>
       <th>Recommended response</th>
       <td>
-         Check the MySQL Server logs for errors. You can find the VM by targeting your MySQL deployment with BOSH and inspecting logs for the instance.
-         For more information, see Failing Jobs and Unhealthy Instances
-         here: https://docs.pivotal.io/p-mysql/2-0/troubleshoot.html
+         Check the MySQL Server logs for errors.
+         You can find the instance by targeting your MySQL deployment with BOSH and inspecting logs for the instance.
+         For more information, see <a href="./troubleshoot.html#failing-jobs">Failing Jobs and Unhealthy Instances</a>.
       </td>
    </tr>
 </table>
@@ -85,8 +91,9 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    </tr>
    <tr>
       <th>Recommended response</th>
-      <td>The connections / second for a given service instance will vary based on application instances and app utilization. If this metric is met or exceeded for an extended period of time, consider one of the following actions:
-      <ul><li>Monitoring app usage to ensure everything is behaving as expected.</li>
+      <td>The connections/second for a service instance vary based on application instances and app utilization.
+          If this metric is met or exceeded for an extended period of time, 
+          monitor app usage to ensure everything is behaving as expected.
       </td>
    </tr>
 </table>
@@ -97,9 +104,9 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/performance/open_files<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>The rate of statements executed by the server. Shown as query/second<br><br>
+      <td>The rate of statements executed by the server, shown as queries per second.<br><br>
 
-      <strong>Use</strong>: This can be used to gain insight into trends and utilization of the server.
+      <strong>Use</strong>: For insight into trends and utilization of the server.
       <br><br>
       <strong>Origin</strong>: Doppler/Firehose<br>
       <strong>Type</strong>: count<br>
@@ -126,7 +133,7 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/performance/user_time<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>Percentage of CPU time spent in user space by MySQL shown as percent The difference is whether the time is spent in user space or kernel space. User CPU time is time spent on the processor running your program's code (or code in libraries); system CPU time is the time spent running code in the operating system kernel on behalf of your program.<br><br>
+      <td>Percentage of CPU time spent by MySQL in user space, executing user code, as opposed to kernel space, executing system functions.<br><br>
 
       <strong>Use</strong>: This closely reflects the number of tables that the MySQL server has created.
       <br><br>
@@ -146,7 +153,7 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    <tr>
       <th>Recommended response</th>
       <td>If this metric meets or exceeds the recommended thresholds for extended periods of time,
-      Run SHOW PROCESSLIST, identify which queries or apps are using so much CPU.
+      run SHOW PROCESSLIST and identify which queries or apps are using so much CPU.
       </td>
    </tr>
 </table>
@@ -225,7 +232,7 @@ All BOSH-deployed components generate the following system metrics; these system
    <tr><th colspan="2" style="text-align: center;"><br> persistent.disk.percent<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>Ephemeral Disk being consumed by the MySQL service instance.<br><br>
+      <td>Persistent disk being consumed by the MySQL service instance.<br><br>
       <strong>Use</strong>: If the persistent disk fills up, dataloss and recovery is difficult.
       <br><br>
       <strong>Origin</strong>: JMX Bridge or BOSH HM<br>
@@ -250,7 +257,7 @@ All BOSH-deployed components generate the following system metrics; these system
 
 ## <a id="mysql-metrics"></a> All MySQL Metrics
 
-In addition to the above Key Performance Indicators, the MySQL service emits the followings metrics that can be used for monitoring and alerting.
+In addition to the above KPIs, the MySQL service emits the followings metrics that can be used for monitoring and alerting.
 
 | **Data Source** | **Description** | **Metric Unit** |
 | --- | --- | --- |
