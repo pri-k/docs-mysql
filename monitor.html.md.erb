@@ -7,7 +7,7 @@ This topic explains how to monitor the health of the MySQL for Pivotal Cloud Fou
 
 See [Logging and Metrics](http://docs.pivotal.io/pivotalcf/loggregator/index.html) for general information about logging and metrics in PCF.
 
-## <a id="metrics"></a>Metrics
+## <a id="metrics"></a>About Metrics
 
 Metrics are regularly-generated log messages that report measured component states. The metrics polling interval is 30 seconds for MySQL instances and 60 seconds for the service broker.
 
@@ -55,6 +55,8 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
       <th>Recommended response</th>
       <td>
          Check the MySQL Server logs for errors. You can find the VM by targeting your MySQL deployment with BOSH and inspecting logs for the instance.
+         For more information, see Failing Jobs and Unhealthy Instances
+         here: https://docs.pivotal.io/p-mysql/2-0/troubleshoot.html
       </td>
    </tr>
 </table>
@@ -114,7 +116,7 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    </tr>
    <tr>
       <th>Recommended response</th>
-      <td>Investigate the MySQL server logs, such as the audit log, to understand why questions changed and determine appropriate action.</td>
+      <td>Investigate the MySQL server logs, such as the audit log, to understand why query rate changed and determine appropriate action.</td>
    </tr>
 </table>
 
@@ -124,7 +126,7 @@ For a list of all MySQL for PCF raw component metrics, see [All MySQL Metrics](#
    <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/performance/user_time<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>Percentage of CPU time spent in user space by MySQL shown as percent<br><br>
+      <td>Percentage of CPU time spent in user space by MySQL shown as percent The difference is whether the time is spent in user space or kernel space. User CPU time is time spent on the processor running your program's code (or code in libraries); system CPU time is the time spent running code in the operating system kernel on behalf of your program.<br><br>
 
       <strong>Use</strong>: This closely reflects the number of tables that the MySQL server has created.
       <br><br>
@@ -159,7 +161,7 @@ All BOSH-deployed components generate the following system metrics; these system
    <tr><th colspan="2" style="text-align: center;"><br> system.mem.percent <br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>RAM being consumed by the <code>p-rabbitmq</code> VM.<br><br>
+      <td>RAM being consumed by the MySQL service instance.<br><br>
 
       <strong>Use</strong>: MySQL increases its memory footprint as the server increases in size.
               As long as there is enough remaining RAM for other processes on the service instance, the MySQL
@@ -191,7 +193,7 @@ All BOSH-deployed components generate the following system metrics; these system
    <tr><th colspan="2" style="text-align: center;"><br> system.cpu.percent<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>CPU being consumed by the MySQL server.<br><br>
+      <td>CPU being consumed by the MySQL service instance.<br><br>
 
       <strong>Use</strong>: A node that experiences context switching or high CPU usage will become unresponsive.
       This also affects the ability of the node to report metrics.
@@ -223,7 +225,7 @@ All BOSH-deployed components generate the following system metrics; these system
    <tr><th colspan="2" style="text-align: center;"><br> persistent.disk.percent<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>Ephemeral Disk being consumed by the MySQL database.<br><br>
+      <td>Ephemeral Disk being consumed by the MySQL service instance.<br><br>
       <strong>Use</strong>: If the persistent disk fills up, dataloss and recovery is difficult.
       <br><br>
       <strong>Origin</strong>: JMX Bridge or BOSH HM<br>

@@ -1,5 +1,5 @@
 ---
-title: Backing Up and Restoring On-Demand MySQL
+title: Backing Up and Restoring On-Demand MySQL for PCF
 owner: MySQL
 ---
 
@@ -12,7 +12,7 @@ Automated backups do the following:
 
 - Periodically create and upload backup artifacts suitable for restoring all of the databases used by the service instance.
 - Operate without locking apps out of the database; no downtime.
-- Include a metadata file that contains the critical details of the backup artifact, including the effective calendar time of the backup.
+- Include a metadata file that contains the critical details of the backup artifact, including the calendar time of the backup.
 - Encrypt backup artifacts within the MySQL for PCF VM; unencrypted data is never transported outside the MySQL for PCF deployment.
 
 ## <a id="enable-backups"></a>About Enabling Automated Backups
@@ -20,23 +20,26 @@ Automated backups do the following:
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
 * **How and where**: There are four options for how automated backups transfer backup data and where the data saves to:
-  - MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket,
+  - MySQL for PCF runs an `scp` command that secure-copies backup artifacts to a VM or physical machine operating outside of PCF.
+   The operator provisions the backup machine separately from their PCF installation. This is the fastest option.
+  - MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an S3 bucket,
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
-  - MySQL for PCF runs an `scp` command that secure-copies backup files to a VM or physical machine operating outside of PCF. The operator provisions the backup machine separately from their PCF installation. This is the most efficient option.
   - MySQL for PCF runs an [GCS](https://cloud.google.com/storage/) SDK that saves backups to an Google Cloud Storage bucket.
   - MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/) SDK that saves backups to an Azure storage account.
 
 * **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
 
-* **What**: Back up the entire MySQL data directory, consistent to a specific point in time.
+* **What**: Each MySQL instance backs up its entire MySQL data directory, consistent to a specific point in time.
 
 Follow the procedures below to enable and configure automated backups.
 
-### <a id="ceph-or-s3"></a> Ceph or S3
+## <a id="ceph-or-s3"></a> Option 2: Back up to Ceph or S3
 
 To back up your database on Ceph or Amazon S3, perform the following steps:
 
 #### <a id="access-key"></a> Create a Policy and Access Key
+
+JD: Consider making these one procedure. 
 
 MySQL for PCF accesses your S3 store through a user account. Pivotal recommends that this account be solely for MySQL for PCF. You need to apply a minimal policy that lets the user account upload backup artifacts to your S3 store.
 
@@ -95,8 +98,9 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
   * **Cron Schedule**
           Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
   * **Enable Email Alerts**
-          Check the box if you would like to receive email notifications when a backup failure occurs.
-          <p class="note"><strong>Note</strong>: Email Alerts require that CF Notifications are configured and enabled in Elastic Runtime.</p>
+          Check the box if you would like to receive email notifications when a backup failure occurs.  JD: to figure out how to direct readers for more info.
+          <p class="note"><strong>Note</strong>: Email Alerts require that CF Notifications are configured and enabled in Elastic Runtime.
+             For more information about CF Notifications, see [IaaS](https://docs.pivotal.io/pivotalcf/1-10/customizing/config-er-vmware.html#smtp) </p>
           <p class="note"><strong>Note</strong>: Any user that should be notified for backup failures should be added to the System org and System space.</p>
 
 ### <a id="scp"></a> SCP
@@ -234,8 +238,6 @@ To disable MySQL for PCF automated backups:
 
 1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
 
-To configure automated backups for MySQL for PCF, perform the following steps:
-
 ## <a id="understanding-metadata"></a>Understand Backup Files and Metadata
 
 When MySQL for PCF runs a backup, it uploads two files with Unix epoch-timestamped filenames of the form `mysql-backup-TIMESTAMP`:
@@ -282,6 +284,7 @@ To restore a MySQL for PCF instance from an offsite backup, download the backup 
 ### Download the Backup Artifact
 
 These instructions assume that you are using S3 as your backup destination.
+Steps 6 and 8 are different for different backup options. [JD to make links]
 
 1. Run `cf service` to determine the GUID associated with the service instance that you want to restore.
  <pre class="terminal">
