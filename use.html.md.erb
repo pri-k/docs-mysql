@@ -125,7 +125,7 @@ For how to code your app to use MySQL messaging, see **About Using Pivotal MySQL
 
 ## <a id="update"></a>Update to a Larger Service Instance
 
-As applications and their databases grow, it may be necessary to update the service instance to a larger plan.
+As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
 
 1. Enter `cf update-service -p PLAN`
 
@@ -135,7 +135,7 @@ As applications and their databases grow, it may be necessary to update the serv
    $ cf update-service -p db-large
 </pre>
 
-Doing so does not require a rebinding of your application. However, while the instance is being migrated to a new service instance
+This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
 the database will be unavailable for several minutes.
 
 ## <a id="unbind"></a>Unbind a Service Instance to Your App
