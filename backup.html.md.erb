@@ -48,7 +48,11 @@ To enable automated backups and configure them for options above, perform the fo
   <%= image_tag('enable-backups.png') %>
 1. For **Cron Schedule**, enter a cron schedule for the backups. The syntax is similar to traditional cron, with additional features such as `@every 1d`, which specifies daily backups. See the cron Go library [documentation](https://godoc.org/github.com/robfig/cron) for more information.
 1. If you want to back up all nodes, select the **Back up all nodes** checkbox.
-1. To enable backups using [Ceph](http://docs.ceph.com/docs/master/) or AWS, continue to the [Ceph or AWS](#ceph-aws) section. To enable backups using SCP, continue to the [SCP](#scp) section.
+1. Configure a destination where backup artifacts will be delivered. Skip to the appropriate section below:
+  - [Ceph or AWS](#ceph-aws)
+  - [Azure](#azure)
+  - [Google Cloud Storage](#gcs)
+  - [SCP](#scp)
 
 ### <a id='ceph-aws'></a>Ceph or AWS
 
@@ -71,7 +75,7 @@ To back up your database on Azure, perform the following steps:
   <br><%= image_tag('configure-backups-azure.png') %>
 1. Enter your **Azure Storage Account**. For instance, `mystorageaccount`.
 1. Enter your **Azure Storage Access Key**.
-1. Enter your **Container** name. For instance, `mycontainer`. 
+1. Enter your **Container** name. For instance, `mycontainer`.
 1. For **Container Path**, specify a folder within the container to hold your MySQL backups. Do not include a trailing `/`. If the folder does not already exist, it will be created automatically.
    <p class="note"><strong>Note</strong>: You must use this folder exclusively for this cluster's backup artifacts. Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.</p>
 1. Optionally, configure **Base URL** to specify the base url for your on-premise blobstore.
