@@ -4,11 +4,16 @@ owner: London Services
 ---
 
 This topic describes the significant new features in MySQL for PCF v2.0.
-This topic also presents a checklist that you can use to decide if Redis for PCF is ready to meet your business requirements.
+This topic also presents a checklist that you can use to decide if MySQL for PCF is ready to meet your business requirements.
 
 ##<a id="intro"></a> Introduction
 
-MySQL for PCF v2.0 introduces the On-Demand Service, which provides dedicated instances of MySQL that App Developers can provision on-demand from the command line. The MySQL for PCF On-Demand service is designed to improve the flexibility in how and when instances are provisioned and allows for more efficient and seamless resource use for both Operator and App Developer. Additionally, both Operator and App Developer can configure essential MySQL settings. MySQL for PCF v2.0 can be installed alongside the earlier MySQL for PCF v1.x tiles.
+MySQL for PCF v2.0 introduces the On-Demand Service, which provides dedicated instances of
+MySQL that App Developers can provision on-demand from the command line.
+The MySQL for PCF On-Demand service is designed to improve the flexibility in how and when
+instances are provisioned and allows for more efficient and seamless resource use for both Operator and App Developer.
+Additionally, both Operator and App Developer can configure essential MySQL settings.
+MySQL for PCF v2.0 can be installed alongside the earlier MySQL for PCF v1.x tiles.
 
 MySQL for PCF's On-Demand Service leverages the [on-demand service broker](https://docs.pivotal.io/svc-sdk/odb/0-15/).
 
@@ -24,12 +29,15 @@ The following features are new in MySQL for PCF v2.0:
 
 ## <a id="service"></a>On Demand Service Plan Descriptions
 
-PCF MySQL offers five on-demand plans as the `p.mysql` service within the PCF MySQL tile. The plans can be configured in any way that you see fit. However, plans should be configured such that they increase in size.
+PCF MySQL offers five on-demand plans as the `p.mysql` service within the PCF MySQL tile.
+The plans can be configured in any way that you see fit.
+However, plans should be configured such that they increase in size.
 
 For each service plan, the operator can configure the **Plan name**, **Plan description**, **Server VM type** and **Server Disk type**, or choose to disable the plan completely.
 
 Operators can update certain plan settings after the plans have been created.
-If the Operator updates the VM size or disk size these settings will be implemented in all instances already created. Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.
+If the Operator updates the VM size or disk size these settings will be implemented in all instances already created.
+Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
@@ -61,7 +69,7 @@ Review the following table to determine if MySQL for PCF v2.0 has the features n
     <td><a href="#other-notes">About Multiple AZs in MySQL for PCF</a></td></tr>
 
 <tr><th colspan=2>Encryption</th><th>More Information</th></tr>
-<tr><td>Encrypted Communication in Transit</td><td>Redis for PCF has been tested successfully with the BOSH IPsec Add-on</td>
+<tr><td>Encrypted Communication in Transit</td><td>MySQL for PCF has been tested successfully with the BOSH IPsec Add-on</td>
     <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">Securing Data in Transit with the IPsec Add-on</a></td></tr>
 
 </table>
