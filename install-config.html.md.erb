@@ -19,6 +19,46 @@ The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQ
 
     ![AZ and Network Assignments pane](config-azs.png)
 
+### <a id="asg"></a> Application Security Groups
+
+To allow this service to have network access you must create [Application Security Groups (ASGs)](http://docs.pivotal.io/pivotalcf/1-11/adminguide/app-sec-groups.html).
+Ensure your security group allows access to the MySQL service network. You can obtain the range of this network in Ops Manager under the **Create Networks**
+section of the Ops Manager tile and find the network with **Service Network** checked.
+
+<p class="note"><strong>Note</strong>: Without ASGs, this service is unusable.</p>
+
+##### Application Container Network Connections
+
+Application containers that use instances of the MySQL service require the following outbound network connections:
+
+<table><thead>
+<tr>
+<th>Destination</th>
+<th>Ports</th>
+<th>Protocol</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>ASSIGNED_NETWORK</code></td>
+<td>3306</td>
+<td>tcp</td>
+<td>Enable application to access on demand MySQL network.</td>
+</tr>
+</tbody></table>
+
+Create an ASG called `p.mysql` with the below configuration and bind it to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set and restart your apps. Example:
+
+```json
+[
+  {
+    "protocol": "tcp",
+    "destination": "ASSIGNED_NETWORK",
+    "ports": "3306"
+  }
+]
+```
+
 ## <a id="config-on-demand"></a> Configure the Tile
 
 Follow the steps below to configure the MySQL for PCF service. 
