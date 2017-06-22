@@ -3,9 +3,12 @@ title: Release Notes
 owner: MySQL
 ---
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older v1.7.x version, upgrade to the latest v1.7.x version before upgrading to the latest v1.8.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor line,
+then upgrade to the latest available version of the new minor line.
+For example, if you use an older v1.7.x version,
+upgrade to the latest v1.7.x version before upgrading to the latest v1.8.x version.
 
-See the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf) for product versions and upgrade paths.
+For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
 ## <a id="20x"></a>v2.0.x
 
@@ -18,7 +21,8 @@ See the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matr
 * Fixes a bug where the tile could not be installed if the BOSH director was configured with a hostname.
 
 **Known Issues**
-* The **Upgrade all On-Demand MySQL Service Instances** errand will exit 0 even if it fails to update a service instance.
+
+* The **Upgrade all On-Demand MySQL Service Instances** errand exits with 0 even if it failed to update a service instance.
 
 ### v2.0.0
 
