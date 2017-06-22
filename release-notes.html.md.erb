@@ -9,6 +9,17 @@ See the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matr
 
 ## <a id="20x"></a>v2.0.x
 
+### v2.0.1
+
+**Release Date:  June 22, 2017**
+
+* Requires stemcell 3263.26
+* Changes order of Post-Deploy Errands so that **Smoke Tests** are run before **Upgrade all On-demand MySQL Service Instances**
+* Fixes a bug where the tile could not be installed if the BOSH director was configured with a hostname.
+
+**Known Issues**
+* The **Upgrade all On-demand MySQL Service Instances** errand will exit 0 even if it fails to update a service instance.
+
 ### v2.0.0
 
 **Release Date:  June 15, 2017**
