@@ -3,6 +3,21 @@ title: Release Notes
 owner: MySQL
 ---
 
+## <a id="1-8-10"></a>v1.8.10
+
+Release Date: June 22, 2017
+
+- We've added a configuration pane just for syslog.
+
+    Previously, MySQL for PCF has used the same configuration settings as Elastic Runtime. Some users have expressed the need to send MySQL for PCF's logs to separate destinations than Elastic Runtime's logs. Thus, MySQL for PCF now has separate configuration, similar to RabbitMQ and Redis for PCF.
+
+    As a reminder that settings are not automatically copied from Elastic Runtime, Syslog configuration is _required_ by default. If you don't want syslogging, just select **Disable syslog** and click **Save**.
+
+- Updated stemcell to 3312.29. This is a security upgrade that resolves the following:
+  - [USN-3334-1](http://www.ubuntu.com/usn/USN-3334-1/)
+
+Additional information can be found at https://pivotal.io/security
+
 ## <a id="1-8-9"></a>v1.8.9
 
 Release Date: June 2, 2017
@@ -17,9 +32,9 @@ Additional information can be found at https://pivotal.io/security
 Release Date: May 19, 2017
 
 - Bug fixes to address issues with MySQL for PCF when the [IPsec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed.
-  - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product may fail to deploy. 
-      This might be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced. 
-      Version 1.8.8 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. 
+  - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product may fail to deploy.
+      This might be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced.
+      Version 1.8.8 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page.
       For more information, see [Options and Features](index.html#options_and_features).
   - **Bug fix:** A small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPsec is installed.
 
