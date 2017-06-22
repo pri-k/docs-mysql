@@ -5,6 +5,20 @@ owner: MySQL
 
 <html class="list-style-none"></html>
 
+## <a id="1-7-31"></a>v1.7.31
+
+Release Date: June 22, 2017
+
+- We've added a configuration pane just for syslog.
+
+    Previously, MySQL for PCF has used the same configuration settings as Elastic Runtime. Some users have expressed the need to send MySQL for PCF's logs to separate destinations than Elastic Runtime's logs. Thus, MySQL for PCF now has separate configuration, similar to RabbitMQ and Redis for PCF.
+
+    As a reminder that settings are not automatically copied from Elastic Runtime, Syslog configuration is _required_ by default. If you don't want syslogging, just select **Disable syslog** and click **Save**.
+
+- Updated stemcell to 3312.29. This is a security upgrade that resolves the following:
+  - [USN-3334-1](http://www.ubuntu.com/usn/USN-3334-1/)
+
+Additional information can be found at https://pivotal.io/security
 ## <a id="1-7-30"></a>v1.7.30
 
 Release Date: June 2, 2017
