@@ -76,6 +76,10 @@ MySQL converts temporary in-memory tables to temporary on-disk tables when eithe
 
 MySQL for PCF authenticates with user credentials, which does not restrict the host that a user connects from. The service defaults to disabling reverse name resolution, to save time on each new connection.
 
+#### Slow Query Log
+
+MySQL for PCF automatically enables the [slow query log](https://mariadb.com/kb/en/mariadb/slow-query-log-overview/) and sets it to record any query that takes longer than 10 seconds. By default, those logs appear in the file `/var/vcap/sys/log/mysql/mysql_slow_query.log` on each node. For a consolidated view, use a syslog server.
+
 #### Sql_mode Additionally Enables Strict Mode
 
 [sql_mode](https://mariadb.com/kb/en/mariadb/sql-mode/) is set to: `NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES`. `sql_mode` was not set on versions before p-mysql v1.8.0.
