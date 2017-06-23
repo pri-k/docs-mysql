@@ -30,9 +30,11 @@ Automated backups have the following features:
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
-* **How and Where**: There are two options for how automated backups transfer backup data and where the data saves out to:
+* **How and Where**: There are four options for how automated backups transfer backup data and where the data saves out to:
   - MySQL for PCF runs an `scp` command that secure-copies backup files to a VM or physical machine operating outside of PCF. The operator provisions the backup machine separately from their PCF installation. This is the most efficient option.
   - MySQL for PCF runs an [S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an Amazon S3 bucket, [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or other S3-compatible endpoint certified by Pivotal.
+  - MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/) client that saves backups to a Azure blob store container.
+  - MySQL for PCF runs a [GCS](https://cloud.google.com/storage/docs/) client that saves backups to a Google Cloud Storage bucket.
 
 * **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
 
@@ -46,7 +48,11 @@ To enable automated backups and configure them for options above, perform the fo
   <%= image_tag('enable-backups.png') %>
 1. For **Cron Schedule**, enter a cron schedule for the backups. The syntax is similar to traditional cron, with additional features such as `@every 1d`, which specifies daily backups. See the cron Go library [documentation](https://godoc.org/github.com/robfig/cron) for more information.
 1. If you want to back up all nodes, select the **Back up all nodes** checkbox.
-1. To enable backups using [Ceph](http://docs.ceph.com/docs/master/) or AWS, continue to the [Ceph or AWS](#ceph-aws) section. To enable backups using SCP, continue to the [SCP](#scp) section.
+1. Configure a destination where backup artifacts will be delivered. Skip to the appropriate section below:
+  - [Ceph or AWS](#ceph-aws)
+  - [Azure](#azure)
+  - [Google Cloud Storage](#gcs)
+  - [SCP](#scp)
 
 ### <a id='ceph-aws'></a>Ceph or AWS
 
@@ -59,6 +65,33 @@ To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the fo
 1. For **Bucket Path**, specify a folder within the bucket to hold your MySQL backups. Do not include a trailing `/`. If the folder does not already exist, it will be created automatically.
   <p class="note"><strong>Note</strong>: You must use this folder exclusively for this cluster's backup artifacts. Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.</p>
 1. For **AWS Access Key ID** and **AWS Secret Access Key**, enter your Ceph or AWS credentials. For AWS, Pivotal recommends creating an [IAM](https://aws.amazon.com/iam/) credential that only has access to this bucket.
+1. Click **Save**.
+
+### <a id='azure'></a>Azure
+
+To back up your database on Azure, perform the following steps:
+
+1. Select **Azure Blob Storage**.
+  <br><%= image_tag('configure-backups-azure.png') %>
+1. Enter your **Azure Storage Account**. For instance, `mystorageaccount`.
+1. Enter your **Azure Storage Access Key**.
+1. Enter your **Container** name. For instance, `mycontainer`.
+1. For **Container Path**, specify a folder within the container to hold your MySQL backups. Do not include a trailing `/`. If the folder does not already exist, it will be created automatically.
+   <p class="note"><strong>Note</strong>: You must use this folder exclusively for this cluster's backup artifacts. Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.</p>
+1. Optionally, configure **Base URL** to specify the base url for your on-premise blobstore.
+   <p class="note"><strong>Note</strong>: By default, backups are sent to the public Azure blobstore. To use an on-premise blobstore, specify the base URL here.
+1. Click **Save**.
+
+### <a id='gcs'></a>Google Cloud Storage
+
+To back up your database on Google Cloud Storage (GCS), perform the following steps:
+
+1. Select **Google Cloud Storage**.
+  <br><%= image_tag('configure-backups-gcs.png') %>
+1. Enter your **Google Cloud Storage Account**. For instance, `mystorageaccount@google.com`.
+   <p class="note"><strong>Note</strong>: Service account must have Storage Admin IAM permissions. See documentation for how to generate the JSON key.
+1. Enter your **Google Cloud Storage Bucket Name**. For instance, `mybucket`.
+1. Enter your **Google Cloud Storage Project ID**. For instance, `my-project-id`.
 1. Click **Save**.
 
 ### <a id='scp'></a>SCP
