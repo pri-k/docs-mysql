@@ -89,7 +89,7 @@ Finally, update the manifest property `properties.mysql_node.host` for the cf-my
 
 ## <a id="switchboard-api"></a> API
 
-The proxy hosts a JSON API at `proxy-<bosh job index>.p-mysql.<system domain>/v0/`.
+The proxy hosts a JSON API at `proxy-<bosh job index>-p-mysql.<system domain>/v0/`.
 
 The API provides the following route:
 
