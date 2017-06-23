@@ -18,22 +18,26 @@ owner: MySQL
 
 Release Date: June 22, 2017
 
-- We've added a configuration pane just for syslog.
+- New configuration pane for syslog:
 
-    Previously, MySQL for PCF has used the same configuration settings as Elastic Runtime. Some users have expressed the need to send MySQL for PCF's logs to separate destinations than Elastic Runtime's logs. Thus, MySQL for PCF now has separate configuration, similar to RabbitMQ and Redis for PCF.
+    Previously, MySQL for PCF used the same configuration settings as Elastic Runtime.
+    However, some users want to send MySQL for PCF logs to destinations other than Elastic Runtime logs.
+    Thus, MySQL for PCF now has separate configuration, similar to RabbitMQ for PCF and Redis for PCF.
 
-    As a reminder that settings are not automatically copied from Elastic Runtime, Syslog configuration is _required_ by default. If you don't want syslogging, just select **Disable syslog** and click **Save**.
+    As a reminder that settings are not automatically copied from Elastic Runtime, Syslog configuration is _required_ by default.
 
-- Updated stemcell to 3312.29. This is a security upgrade that resolves the following:
-  - [USN-3334-1](http://www.ubuntu.com/usn/USN-3334-1/)
+    If you don't want syslogging, select **Disable syslog** and click **Save**.
 
-Additional information can be found at https://pivotal.io/security
+- Updated stemcell to 3312.29. This security upgrade resolves the following:
+  [USN-3334-1](http://www.ubuntu.com/usn/USN-3334-1/).
+
+  For more information, see [pivotal.io/security](https://pivotal.io/security)
 
 ## <a id="1-9-4"></a>v1.9.4
 
 Release Date: June 2, 2017
 
-- Updated stemcell to 3312.28. This is a security upgrade that resolves the following:
+- Updated stemcell to 3312.28. This security upgrade resolves the following:
   - [USN-3291-3](http://www.ubuntu.com/usn/USN-3291-3/)
 
 Additional information can be found at https://pivotal.io/security
@@ -56,7 +60,7 @@ For more information, see [MySQL Server Configuration](configuring.html#server).
 
 Release Date: April 27, 2017
 
-- Updated stemcell to 3312.24. This is a security upgrade that resolves the following:
+- Updated stemcell to 3312.24. This security upgrade resolves the following:
   - [USN-3265-2](http://www.ubuntu.com/usn/USN-3265-2/)
 - **Bug fix:** Addressed an issue where backups were unable to store backups on AWS S3 regions that require the v4 signature.
 - **Bug fix:** Addressed an issue where nodes may fail to rejoin the cluster after restart. See the [Rejoin Unsafe Fails](known-issues.html#node-cannot-rejoin) Known Issue for more details.
