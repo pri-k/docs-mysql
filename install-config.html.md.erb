@@ -25,8 +25,11 @@ To allow this service to have network access, you must create Application Securi
 
 When creating the ASGs, ensure your security group allows access to the MySQL service network. To obtain the IP range of this network, do the following:</br>
 
-1. In Ops Manager, go to the **Create Networks** section of the Ops Manager tile.  
-1. Find the network that has **Service Network** checked.
+1. In Ops Manager, click the Ops Manager director tile, and then click **Create Networks**.</br> 
+    ![Create Networks page](opsman-dir-networks.png)
+1. Find the network that has **Service Network** checked, and then find the **Reserved IP Ranges** that you can use in your ASGs.
+    </br>
+    ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
 
 For more information on ASGs, see [Application Security Groups (ASGs)](http://docs.pivotal.io/pivotalcf/1-11/adminguide/app-sec-groups.html).
 
