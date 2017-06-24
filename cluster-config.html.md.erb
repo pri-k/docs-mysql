@@ -31,6 +31,9 @@ To take advantage of all the extra features available with the `innodb_file_per_
 ### Innodb Large Prefix
 The `innodb_large_prefix` feature is enabled by default. When disabled, large index prefixes are silently truncated. When enabled, larger index key prefixes may be created by additionally specifying DYNAMIC or COMPRESSED row formats. Row format is not defined by default. Thus, when `innodb_large_prefix` is enabled, applications must specify row format for each table which will use large index prefixes.
 
+### Slow Query Log
+MySQL for PCF automatically enables the [slow query log](https://mariadb.com/kb/en/mariadb/slow-query-log-overview/) and sets it to record any query that takes longer than 10 seconds. By default, those logs appear in the file `/var/vcap/sys/log/mysql/mysql_slow_query.log` on each node. For a consolidated view, use a syslog server.
+
 ### Temporary Tables
 MySQL is configured to convert temporary in-memory tables to temporary on-disk tables when a query EITHER generates more than 16 million rows of output or uses more than 32MB of data space.
 Users can see if a query is using a temporary table by using the EXPLAIN command and looking for "Using temporary," in the output.
