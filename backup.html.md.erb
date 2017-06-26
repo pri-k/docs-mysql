@@ -69,17 +69,17 @@ To back up your database on Ceph or Amazon Web Services (AWS) S3, perform the fo
 
 ### <a id='azure'></a>Azure
 
-To back up your database on Azure, perform the following steps:
+To back up your database on Azure, do the following:
 
 1. Select **Azure Blob Storage**.
   <br><%= image_tag('configure-backups-azure.png') %>
-1. Enter your **Azure Storage Account**. For instance, `mystorageaccount`.
+1. Enter your **Azure Storage Account**, for example `mystorageaccount`.
 1. Enter your **Azure Storage Access Key**.
-1. Enter your **Container** name. For instance, `mycontainer`.
+1. Enter your **Container** name, for example `mycontainer`.
 1. For **Container Path**, specify a folder within the container to hold your MySQL backups. Do not include a trailing `/`. If the folder does not already exist, it will be created automatically.
    <p class="note"><strong>Note</strong>: You must use this folder exclusively for this cluster's backup artifacts. Mixing the backup artifacts from different clusters within a single folder can cause confusion and possible inadvertent loss of backup artifacts.</p>
-1. Optionally, configure **Base URL** to specify the base url for your on-premise blobstore.
-   <p class="note"><strong>Note</strong>: By default, backups are sent to the public Azure blobstore. To use an on-premise blobstore, specify the base URL here.
+1. Optionally, configure **Base URL** to specify the base url for your on-premise blobstore. </br></br>
+    If you don't specify a URL here, by default, backups are sent to the public Azure blobstore.
 1. Click **Save**.
 
 ### <a id='gcs'></a>Google Cloud Storage
@@ -89,7 +89,7 @@ To back up your database on Google Cloud Storage (GCS), perform the following st
 1. Select **Google Cloud Storage**.
   <br><%= image_tag('configure-backups-gcs.png') %>
 1. Enter your **Google Cloud Storage Account**. For instance, `mystorageaccount@google.com`.
-   <p class="note"><strong>Note</strong>: Service account must have Storage Admin IAM permissions. See documentation for how to generate the JSON key.
+   <p class="note"><strong>Note</strong>: Service accounts must have Storage Admin IAM permissions. See documentation for how to generate the JSON key.
 1. Enter your **Google Cloud Storage Bucket Name**. For instance, `mybucket`.
 1. Enter your **Google Cloud Storage Project ID**. For instance, `my-project-id`.
 1. Click **Save**.
