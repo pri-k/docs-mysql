@@ -19,58 +19,41 @@ The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQ
 
     ![AZ and Network Assignments pane](config-azs.png)
 
-### <a id="asg"></a> Application Security Groups
+## <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
-To allow this service to have network access, you must create Application Security Groups (ASGs). Follow [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create ASGs.
+To allow this service to have network access, you must create an Application Security Group (ASG). Follow [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create an ASG.
 
-When creating the ASGs, ensure your security group allows access to the MySQL service network. To obtain the IP range of this network, do the following:</br>
+Creating an ASG enables applications running in Cloud Foundry external access to communicate with the MySQL service network. To obtain the IP range of this network, do the following:</br>
 
 1. In Ops Manager, click the Ops Manager director tile, and then click **Create Networks**.</br> 
     ![Create Networks page](opsman-dir-networks.png)
-1. Find the network that has **Service Network** checked, and then find the **Reserved IP Ranges** that you can use in your ASGs.
+1. Find the network that has **Service Network** checked, and then find the **CIDR** that you can use in your ASGs.
     </br>
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
 
-For more information on ASGs, see [Application Security Groups (ASGs)](http://docs.pivotal.io/pivotalcf/1-11/adminguide/app-sec-groups.html).
-
-
-<p class="note"><strong>Important</strong>: Without ASGs, this service is unusable.</p>
-
-#### <a id="appcontain-connection"></a> Application Container Network Connections
-
-Application containers that use instances of the MySQL service require the following outbound network connections:
-
-<table><thead>
-<tr>
-<th>Destination</th>
-<th>Ports</th>
-<th>Protocol</th>
-<th>Reason</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code>ASSIGNED_NETWORK</code></td>
-<td>3306</td>
-<td>tcp</td>
-<td>Enable application to access on demand MySQL network.</td>
-</tr>
-</tbody></table>
-</br>
-To enable this connection, do the following:
-
-1. Create an ASG called `p.mysql` with the configuration below:
+1. Using the CIDR that you found in the above step, create a JSON file `mysql-asg.json` with the configuration below:
 
     ```json
     [
       {
         "protocol": "tcp",
-        "destination": "ASSIGNED_NETWORK",
+        "destination": "CIDR",
         "ports": "3306"
       }
     ]
     ```
 
-1. Bind the ASG to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set, and then restart your apps. 
+1. Use the CF CLI and the JSON file that you created to create an ASG called `p.mysql`:
+
+    ```
+    $ cf create-security-group p.mysql ./mysql-asg.json
+    ```
+
+1. Bind the ASG to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set, and then restart your apps.
+
+     ```
+    $ cf bind-running-security-group p.mysql
+    ```
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
