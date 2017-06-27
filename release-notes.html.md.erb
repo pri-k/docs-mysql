@@ -18,18 +18,12 @@ owner: MySQL
 
 Release Date: June 22, 2017
 
-- New configuration pane for syslog:
+- There is a new configuration pane for syslog. Previously, MySQL for PCF used the same configuration settings as Elastic Runtime. However, some users want to send MySQL for PCF logs to destinations other than Elastic Runtime logs. To address this, MySQL for PCF now has a separate configuration, similar to that of RabbitMQ for PCF and Redis for PCF.
 
-    Previously, MySQL for PCF used the same configuration settings as Elastic Runtime.
-    However, some users want to send MySQL for PCF logs to destinations other than Elastic Runtime logs.
-    Thus, MySQL for PCF now has separate configuration, similar to RabbitMQ for PCF and Redis for PCF.
-
-    Action required: During installation or upgrade of MySQL for PCF, you must configure or disable syslogging
+    **Action required:** During installation or upgrade of MySQL for PCF, you must configure or disable syslogging
     in the **Syslog** settings pane.
 
-- New backup storage options:
-
-    MySQL for PCF v1.9 can now store backup artifacts on Google Cloud Storage or Azure Blob Storage.
+- MySQL for PCF v1.9 has new backup storage options. Backup artifacts can now be stored on Google Cloud Storage or Azure Blob Storage.
 
 - Updated stemcell to 3312.29. This security upgrade resolves the following:
   + [USN-3334-1](http://www.ubuntu.com/usn/USN-3334-1/).
@@ -101,7 +95,7 @@ The `mysql-diag` tool also works on earlier releases of MySQL for PCF, but it wo
 - [wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) is set to the maximum, 2GB
 - [wsrep\_max\_ws\_rows](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-rows) enforces the default of 0
   - For more information about these limitations, see the documentation on [transaction size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).
-  - **Note:** There is a [known issue](https://jira.mariadb.org/browse/MDEV-11817) in which this setting also affects DDLs. It will be fixed in a future release of MariaDB.
+  - There is a [known issue](https://jira.mariadb.org/browse/MDEV-11817) in which this setting also affects DDLs. It will be fixed in a future release of MariaDB.
 
 
 - There is a known issue that sometimes causes the `rejoin-unsafe` errand to fail. See [Rejoin Unsafe Fails](known-issues.html#rejoin-unsafe-fails) Known Issue for more information.
