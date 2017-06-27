@@ -7,6 +7,8 @@ MySQL for Pivotal Cloud Foundry (PCF) uses the [Switchboard](https://github.com/
 
 Using a proxy gracefully handles failure of MariaDB nodes, enabling fast, unambiguous failover to other server nodes within the cluster. When a server node becomes unhealthy, the proxy closes all connections to the unhealthy node and re-routes all subsequent connections to a healthy server node.
 
+On-demand versions of MySQL for PCF do not use proxies.
+
 ## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
 The service provides a dashboard where administrators can observe health and metrics for each proxy instance. Metrics include the number of client connections routed to each backend database cluster node.
