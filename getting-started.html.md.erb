@@ -20,7 +20,7 @@ This topic explains how a developer on PCF can start using MySQL with their apps
 - Max size of a DDL or DML is [limted to 2GB](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size)
 - Defining whether the node splits large `Load Data` commands into more [maneageable units] (http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-load-data-splitting)
 
-## <a id="Checking-for-Limitations"></a>How to Check Your App for Limitations ##
+### <a id="Checking-for-Limitations"></a>Check Your App for Limitations ##
 
 Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
 
@@ -42,7 +42,34 @@ To help application developers get started with MySQL for PCF, we have provided 
 
 [example-app]:mysql-example-app.tgz
 
-## <a id="dashboard"></a>Service Instance Dashboard ##
+## <a id="dev-tools"></a>MySQL for PCF Tools ##
+
+### <a id="mysqlweb"></a>Pivotal MySQLWeb Database Management App ##
+
+The Pivotal MySQLWeb app provides a web-based UI for managing MySQL for PCF databases. The free app lets you view and operate on tables, indexes, constraints, and other database structures, and directly execute SQL commands.
+
+![Pivotal MySQLWeb](mysqlweb.png)
+
+You can run the Pivotal MySQLWeb app in two ways:
+
+* Standalone on your own machine
+* Deployed to PCF
+
+If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically bind to a specific service instance.
+
+See the PIvotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLWeb) and [demo video](https://drive.google.com/file/d/0B2wmRcJj8XF-SXloNFNNaGJXbFk/view) for how to install and run Pivotal MySQLWeb.
+
+### <a id="plugin"></a>Cloud Foundry Command-Line Interface MySQL Plugin ##
+
+To connect to the MySQL databases used by your Cloud Foundry apps from a command line, you can use the Cloud Foundry Command-Line Interface (cf CLI) MySQL plugin. The plugin supports the following actions:
+
+* Inspecting databases for debugging purposes. 
+* Manually adjusting database schema or contents in development environments.
+* Dumping and restoring databases. 
+
+For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.
+
+### <a id="dashboard"></a>Service Instance Dashboard ##
 
 Cloud Foundry users can access a dashboard for each MySQL service instances via SSO from Apps Manager. The dashboard displays current storage utilization of the database and the plan quota for storage. On the Space page in Apps Manager, users with the Space Developer role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
 
@@ -60,13 +87,3 @@ Dashboard: https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/dd
 </pre>
 
 In this example, the URL to the instance dashboard is `https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`
-
-## <a id="plugin"></a>Connect to your Database with the MySQL Plugin ##
-
-You can use the Cloud Foundry Command Line Interface (cf CLI) MySQL plugin to connect to the MySQL databases used by your Cloud Foundry apps. The plugin supports the following actions:
-
-* Inspecting databases for debugging purposes. 
-* Manually adjusting database schema or contents in development environments.
-* Dumping and restoring databases. 
-
-For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.  
