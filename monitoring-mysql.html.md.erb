@@ -3,12 +3,12 @@ title: Monitoring the MySQL Service
 owner: MySQL
 ---
 
-This document describes the metrics that are produced by MySQL for PCF, and everything you need to know about the Replication Canary. For information about the Interruptor, please see the [Troubleshooting](troubleshooting.html#interruptor) topic.
+This document describes the metrics that are produced by MySQL for PCF, and everything you need to know about the Replication Canary. For information about the Interruptor, see [Troubleshooting](troubleshooting.html#interruptor).
 
 ## <a id="mysql-for-pcf-metrics"></a>Metrics
 
 MySQL emits a number of metrics that can be used to monitor the health and performance of the MySQL deployment.
-The PCF firehose exposes these metrics.
+The Loggregator Firehose exposes these metrics.
 
 The metrics polling interval defaults to 30 seconds. This can be changed by navigating to the Advanced Options configuration pane and entering a new value in **Metrics polling interval (min: 10)**.
 
@@ -196,7 +196,7 @@ All BOSH-deployed components generate the following system metrics; these system
 | `/p-mysql/galera/wsrep_local_index` | This node index in the cluster (base 0). | int |
 | `/p-mysql/galera/wsrep_local_state` | This is the node's local state | int |
 
-For more information on monitoring PCF, see the [Monitoring Pivotal Cloud Foundry](https://docs.pivotal.io/pivotalcf/monitoring/index.html) topic.
+For more information on monitoring PCF, see [Monitoring Pivotal Cloud Foundry](https://docs.pivotal.io/pivotalcf/monitoring/index.html).
 
 
 ## <a id="repcanary"></a>Replication Canary
