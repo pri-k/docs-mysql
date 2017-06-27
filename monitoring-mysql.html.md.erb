@@ -46,7 +46,7 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
 
 || **/p-mysql/galera/wsrep_ready** |
 | --- | --- |
-| **Description** | Shows whether each cluster node can accept queries. Returns only 0 or 1. When this metric is 0, almost all queries to that node fail with the error:<br> ```ERROR 1047 (08501) Unknown Command```<br><br> **Use:** Discover when nodes of a cluster have been unable to communicate, and thus unable to accept transactions.<br><br>**Origin:** Doppler/Firehose<br> **Type:** boolean<br>**Frequency:** 30 s (default) |
+| **Description** | Shows whether each cluster node can accept queries. Returns only 0 or 1. When this metric is 0, almost all queries to that node fail with the error:<br> ```ERROR 1047 (08501) Unknown Command```<br><br> **Use:** Discover when nodes of a cluster have been unable to communicate and, thus, unable to accept transactions.<br><br>**Origin:** Doppler/Firehose<br> **Type:** boolean<br>**Frequency:** 30 s (default) |
 | **Recommended measurement** | Average of values of each cluster node, over the last 5 minutes |
 | **Recommended alert thresholds** | **Yellow warning:** < 1.0<br> **Red critical:** 0 (cluster is down)  |
 | **Recommended response** | - Run `mysql-diag` and check the MySQL Server logs for errors.<br> - Make sure there has been no infrastructure event that affects intra-cluster communication.<br>- Ensure that `wsrep_ready` has not been set to off by using the query:<br>```SHOW STATUS LIKE 'wsrep_ready';``` |
@@ -79,7 +79,7 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
 | **Description** | Connections per second made to the server.<br><br> **Use:** If the number of connections drastically changes or if apps are unable to connect, there might be a network or app issue.<br><br> **Origin:** Doppler/Firehose<br> **Type:** count<br> **Frequency:** 30 s (default) |
 | **Recommended measurement** | (Average of all nodes / max connections), over last 1 minute |
 | **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
-| **Recommended response** | When approaching 100% of max connections, Applications may be experiencing times when they cannot connect to the database. The connections per second for the cluster vary based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
+| **Recommended response** | When approaching 100% of max connections, Apps may be experiencing times when they cannot connect to the database. The connections per second for the cluster vary based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
 
 
 #### <a id="open-files"></a> Questions
@@ -88,7 +88,7 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
 | --- | --- |
 | **Description** | The rate of statements execute by the server, shown as queries per second.<br><br> **Use:** The cluster should always be processing some queries, if just as part of the internal automation. <br><br> **Origin:** Doppler/Firehose<br> **Type:** count<br>**Frequency:** 30 s (default) |
 | **Recommended measurement** | Average over the last two minutes |
-| **Recommended alert thresholds** | **Yellow warning:** 0 for 90s <br>**Red critical:** 0 for 120s|
+| **Recommended alert thresholds** | **Yellow warning:** 0 for 90 s <br>**Red critical:** 0 for 120 s|
 | **Recommended response** | If the rate is ever zero for an extended time, run `mysql-diag` and investigate the MySQL server logs to understand why query rate changed and determine appropriate action. |
 
 
@@ -97,10 +97,10 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
 || **/p-mysql/performance/busy_time** |
 | --- | --- |
 | **Description** |  |
-| **Recommended measurement** | Percentage of CPU time spent by MySQL on user activity, executing user code, as opposed to kernel activity processing system calls.<br><br> **Use:** This closely reflects the amount of server activity dedicated to application queries.<br><br>**Origin:** Doppler/Firehose<br> **Type:** percentage<br> **Frequency:** 30 s (default) |
+| **Recommended measurement** | Percentage of CPU time spent by MySQL on user activity, executing user code, as opposed to kernel activity processing system calls.<br><br> **Use:** This closely reflects the amount of server activity dedicated to app queries.<br><br>**Origin:** Doppler/Firehose<br> **Type:** percentage<br> **Frequency:** 30 s (default) |
 | **Recommended measurement** | Average over last 2 minutes |
 | **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
-| **Recommended response** | If this metric meets or exceeds the recommended thresholds for extended periods of time, run `SHOW PROCESSLIST` and identify which queries or apps are using so much CPU. Optionally redeploy the MySQL jobs using VMs that offer more CPU capacity. |
+| **Recommended response** | If this metric meets or exceeds the recommended thresholds for extended periods of time, run `SHOW PROCESSLIST` and identify which queries or apps are using so much CPU. Optionally redeploy the MySQL jobs using VMs with more CPU capacity. |
 
 ### <a id="bosh"></a> BOSH System Metrics
 
@@ -123,7 +123,7 @@ All BOSH-deployed components generate the following system metrics; these system
 | **Description** | CPU time being consumed by the MySQL cluster.<br><br> **Use:** A node that experiences context switching or high CPU usage will become unresponsive. This also affects the ability of the node to report metrics.<br><br> **Origin:** JMX Bridge or BOSH HM<br>**Type:** percent<br> **Frequency:** 60 s |
 | **Recommended measurement** | Average over the last 10 minutes |
 | **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
-| **Recommended response** | Determine what is utilizing so much CPU. If it is from normal processes, update the service instance to use a VM with larger CPU capacity. |
+| **Recommended response** | Determine what is using so much CPU. If it is from normal processes, update the service instance to use a VM with larger CPU capacity. |
 
 
 #### <a id="persistent-disk"></a> Persistent Disk
