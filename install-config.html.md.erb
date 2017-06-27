@@ -6,28 +6,17 @@ owner: MySQL
 This topic provides instructions to operators of Pivotal Cloud Foundry (PCF) about how to install, configure, and deploy the MySQL for PCF v2.0 tile. 
 The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQL service instances on demand. 
 
-## <a id="install"></a> Download and Install the Tile
+## <a id="prereq"></a> Prepare Your Ops Manager and PCF installation for PCF for MYSQL
 
-1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/p-mysql/).
+### <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
-1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file. 
+To allow this service to have network access, you must create an Application Security Group (ASG). Creating an ASG enables applications running in Cloud Foundry external access to communicate with the MySQL service network.
 
-1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF. 
-   This adds the tile to your staging area.
-
-1. Click the newly-added **MySQL for PCF** tile to open its configuration panes.
-
-    ![AZ and Network Assignments pane](config-azs.png)
-
-## <a id="asg"></a> Create an Application Security Group for MySQL for PCF
-
-To allow this service to have network access, you must create an Application Security Group (ASG). Creating an ASG enables applications running in Cloud Foundry external access to communicate with the MySQL service network. 
-
-The example below follows [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create an ASG. 
+The example below follows [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create an ASG.
 
 To create an ASG for MySQL for PCF, do the following:</br>
 
-1. In Ops Manager, click the Ops Manager director tile, and then click **Create Networks**.</br> 
+1. In Ops Manager, click the Ops Manager director tile, and then click **Create Networks**.</br>
     ![Create Networks page](opsman-dir-networks.png)
 1. Find the network that has **Service Network** checked, and then find the **CIDR** that you can use in your ASGs.
     </br>
@@ -51,13 +40,43 @@ To create an ASG for MySQL for PCF, do the following:</br>
     $ cf create-security-group p.mysql ./mysql-asg.json
     ```
 
-1. Bind the ASG to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set: 
+1. Bind the ASG to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set:
 
      ```
     $ cf bind-running-security-group p.mysql
     ```
 
-1. Restart your apps.
+### <a id="resurrector"></a> Enable the Ops Manager Resurrector
+
+The [Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html) increases the availability of MySQL for PCF by restarting and resuming MySQL service in the following ways:
+
+- Reacts to hardware failure and network disruptions by restarting virtual machines on active, stable hosts
+- Detects operating system failures by continuously monitoring virtual machines and restarting them as required
+- Continuously monitors the BOSH Agent running on each service instance VM and restarts the VM as required
+
+Pivotal recommends enabling the Ops Manager Resurrector when installing MySQL for PCF. To enable the Ops Manager Resurrector,
+do the following:
+
+1. On the Ops Manager Product Dashboard, select **Ops Manager Director**
+
+1. In the left navigation menu, select **Director Config**
+
+1. Check **Enable VM Resurrector Plugin** and click **Save**.
+
+The [Pivotal CF documentation](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html#enabling) includes more information on enabling the Ops Manager Resurrector.
+
+## <a id="install"></a> Download and Install the Tile
+
+1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/pivotal-mysql/).
+
+1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file. 
+
+1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF. 
+   This adds the tile to your staging area.
+
+1. Click the newly-added **MySQL for PCF** tile to open its configuration panes.
+
+    ![AZ and Network Assignments pane](config-azs.png)
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
