@@ -69,7 +69,9 @@ You can confirm both of these using the cf CLI as follows.
     </pre>
     You can [bind](#bind) your app to an existing instance or [create](#create) a new instance to bind to your app.
 
-## <a id='create'></a>Create a Service Instance
+## <a id='manage-instances'></a>Create, Use, and Manage Service Instances
+
+### <a id='create'></a>Create a Service Instance
 
 Unlike pre-provisioned services, on-demand services are created asynchronously, not immediately. The `watch` command shows you when your service instance is ready to bind and use.
 
@@ -94,7 +96,7 @@ To create an instance of the MySQL for PCF v2 service, run `cf create-service`:
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-## <a id="bind"></a>Bind a Service Instance to Your App
+### <a id="bind"></a>Bind a Service Instance to Your App
 
 For an app to use a service, you must bind it to a service instance. Do this after you push or re-push the app using `cf push`.
 
@@ -111,7 +113,7 @@ To bind an app to a MySQL instance run `$ cf bind-service`.
     TIP: Use 'cf push' to ensure your env variable changes take effect
 </pre>
 
-## <a id="call"></a>Use the MySQL Service in Your App
+### <a id="call"></a>Use the MySQL Service in Your App
 
 To access the MySQL service from your app:
 
@@ -123,7 +125,7 @@ To access the MySQL service from your app:
 
 For how to code your app to use MySQL messaging, see **About Using Pivotal MySQL** > **Client Documentation** in the [MySQL documentation](https://docs.pivotal.io/p-mysql).
 
-## <a id="update"></a>Update to a Larger Service Instance
+### <a id="update"></a>Update to a Larger Service Instance
 
 As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
 
@@ -138,7 +140,7 @@ As apps and their databases grow, it may be necessary to update the service inst
 This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
 the database will be unavailable for several minutes.
 
-## <a id="unbind"></a>Unbind a Service Instance to Your App
+### <a id="unbind"></a>Unbind a Service Instance to Your App
 
 To stop an app from using a service it no longer needs, unbind it from the service instance using `cf unbind-service`.
 
@@ -152,7 +154,7 @@ To stop an app from using a service it no longer needs, unbind it from the servi
     OK
 </pre>
 
-## <a id="delete"></a>Delete a Service Instance
+### <a id="delete"></a>Delete a Service Instance
 
 To delete a service instance, run `cf delete-service`.
 
@@ -170,3 +172,45 @@ To delete a service instance, run `cf delete-service`.
 1. Enter `watch cf service SERVICE_INSTANCE` and wait for a `Service instance not found` error indicating that the instance no longer exists.
 
 You cannot delete a service instance that an app is bound to.
+
+## <a id="example-app"></a>Example Application ##
+
+To help application developers get started with MySQL for PCF, we have provided an example application, which can be [downloaded here][example-app]. Instructions can be found in the included README.
+
+[example-app]:mysql-example-app.tgz
+
+## <a id="dev-tools"></a>MySQL for PCF Tools ##
+
+The following tools let developers access their MySQL for PCF databases.
+
+### <a id="mysqlweb"></a>Pivotal MySQLWeb Database Management App ##
+
+The Pivotal MySQLWeb app provides a web-based UI for managing MySQL for PCF databases. The free app lets you view and operate on tables, indexes, constraints, and other database structures, and directly execute SQL commands.
+
+![Pivotal MySQLWeb](mysqlweb.png)
+
+You can run the Pivotal MySQLWeb app in two ways:
+
+* Standalone on your own machine
+* Deployed to PCF
+
+If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically bind to a specific service instance.
+
+See the PIvotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLWeb) and [demo video](https://drive.google.com/file/d/0B2wmRcJj8XF-SXloNFNNaGJXbFk/view) for how to install and run Pivotal MySQLWeb.
+
+### <a id="plugin"></a>Command-Line Interface MySQL Plugin ##
+
+To connect to your MySQL for PCF databases from a command line, use the Cloud Foundry Command-Line Interface (cf CLI) MySQL plugin. The plugin lets you:
+
+* Inspect databases for debugging. 
+* Manually adjust database schema or contents in development environments.
+* Dump and restore databases. 
+
+To install the cf CLI MySQL plugin, run the following:
+
+<pre class="terminal">
+$ cf install-plugin -r "CF-Community" mysql-plugin
+</pre>
+
+For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.
+
