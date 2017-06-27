@@ -18,14 +18,16 @@ owner: MySQL
 
 Release Date: June 22, 2017
 
-- There is a new configuration pane for syslog. Previously, MySQL for PCF used the same configuration settings as Elastic Runtime. However, some users want to send MySQL for PCF logs to destinations other than Elastic Runtime logs. </br></br>
+- There is a new configuration pane for syslog. Previously, MySQL for PCF used the same configuration settings as Elastic Runtime. 
+However, some users want to send MySQL for PCF logs to destinations other than Elastic Runtime logs. </br></br>
 
     To address this, MySQL for PCF now has a separate configuration, similar to that of RabbitMQ for PCF and Redis for PCF. </br></br>
 
     **Action required:** During installation or upgrade of MySQL for PCF, you must configure or disable syslogging
     in the **Syslog** settings pane.
 
-- MySQL for PCF v1.9 has new backup storage options. Backup artifacts can now be stored on Google Cloud Storage or Azure Blob Storage.
+- MySQL for PCF v1.9 has new backup storage options. 
+Backup artifacts can now be stored on Google Cloud Storage or Azure Blob Storage.
 
 - Updated stemcell to 3312.29. This security upgrade resolves the following:
   + [USN-3334-1](http://www.ubuntu.com/usn/USN-3334-1/).
@@ -62,7 +64,8 @@ Release Date: April 27, 2017
 - Updated stemcell to 3312.24. This security upgrade resolves the following:
   - [USN-3265-2](http://www.ubuntu.com/usn/USN-3265-2/)
 - **Bug fix:** Addressed an issue where backups were unable to store backups on AWS S3 regions that require the v4 signature.
-- **Bug fix:** Addressed an issue where nodes may fail to rejoin the cluster after restart. See the [Rejoin Unsafe Fails](known-issues.html#node-cannot-rejoin) Known Issue for more details.
+- **Bug fix:** Addressed an issue where nodes may fail to rejoin the cluster after restart. 
+See the [Rejoin Unsafe Fails](known-issues.html#node-cannot-rejoin) Known Issue for more details.
 - Note: The title of the tile now appears as "MySQL for PCF," not simply "MySQL."
 
 Additional information can be found at https://pivotal.io/security
@@ -73,34 +76,51 @@ Additional information can be found at https://pivotal.io/security
 
 ### Deprecation Notice
 
-MySQL for PCF v1.10 will disallow `LOCK TABLES` for all applications. See the [notice](index.html#deprecation-lock-tables) for more details.
+MySQL for PCF v1.10 will disallow `LOCK TABLES` for all applications. 
+See the [notice](index.html#deprecation-lock-tables) for more details.
 
 ### Introducing mysql-diag
 
-If configured, the monitoring VM comes with a pre-configured `mysql-diag` tool. This tool gives you a snapshot of the current state of the cluster.
+If configured, the monitoring VM comes with a pre-configured `mysql-diag` tool. 
+This tool gives you a snapshot of the current state of the cluster.
 
-Pivotal recommends that you always run `mysql-diag` before upgrade. Attempting to upgrade while a cluster is in a less-than-healthy state will not go smoothly. Always be sure that the cluster is healthy before upgrading.
+Pivotal recommends that you always run `mysql-diag` before upgrade. 
+Attempting to upgrade while a cluster is in a less-than-healthy state will not go smoothly. 
+Always be sure that the cluster is healthy before upgrading.
 
-The `mysql-diag` tool also works on earlier releases of MySQL for PCF, but it won't be pre-installed and configured. Instructions and a download are located in the [Pivotal Knowledgebase](http://bit.ly/pivotal-mysql-diag).
+The `mysql-diag` tool also works on earlier releases of MySQL for PCF, but it won't be pre-installed and configured. 
+Instructions and a download are located in the [Pivotal Knowledgebase](http://bit.ly/pivotal-mysql-diag).
 
 
 ### <a name="tuning"></a> MySQL Server Tuning and Defaults
 - Several configuration settings have been moved to a new configuration pane, **MySQL Server Configuration**
-- [sql_mode](https://mariadb.com/kb/en/mariadb/sql-mode/) is now set: `NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES`. `sql_mode` was not set on previously versions.
-  - `NO_ENGINE_SUBSTITUTION`: Guards against applications unintentionally creating non-InnoDB tables. Previously, the current master would accept, but not replicate such tables across the cluster.
+- [sql_mode](https://mariadb.com/kb/en/mariadb/sql-mode/) is now set: `NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES`. 
+`sql_mode` was not set on previously versions.
+  - `NO_ENGINE_SUBSTITUTION`: Guards against applications unintentionally creating non-InnoDB tables. 
+Previously, the current master would accept, but not replicate such tables across the cluster.
   - `NO_AUTO_CREATE_USER`: Prevents implicitly creating users without a password.
   - `STRICT_ALL_TABLES`: Enables [strict mode](https://mariadb.com/kb/en/mariadb/sql-mode/#strict-mode)
-    - **Warning:** Enabling strict mode means that Applications may now start seeing errors, such as when inserting strings that are too long, or numeric values that are out of range. Previously, MariaDB silently modified the data on commit.
-    - Additionally, these settings no longer allow a user to specify large indices despite <code>innodb\_large\_index=ON</code> without additionally specifying <code>ROW_FORMAT=DYNAMIC</code> in each table create statement. Apps that do not specify this additional clause will see an error during DDL similar to:
+    - **Warning:** Enabling strict mode means that Applications may now start seeing errors, 
+such as when inserting strings that are too long, or numeric values that are out of range. 
+Previously, MariaDB silently modified the data on commit.
+    - Additionally, these settings no longer allow a user to specify large indices despite <code>innodb\_large\_index=ON</code> 
+without additionally specifying <code>ROW_FORMAT=DYNAMIC</code> in each table create statement. 
+Apps that do not specify this additional clause will see an error during DDL similar to:
         ```ERROR 1709 (HY000): Index column size too large. The maximum column size is 767 bytes.```
-      - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
-- [wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) is set to the maximum, 2GB
-- [wsrep\_max\_ws\_rows](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-rows) enforces the default of 0
-  - For more information about these limitations, see the documentation on [transaction size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).
-  - There is a [known issue](https://jira.mariadb.org/browse/MDEV-11817) in which this setting also affects DDLs. It will be fixed in a future release of MariaDB.
+      - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when 
+strict mode is set to convert the error to a warning.
+- [wsrep\_max\_ws\_size](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size) 
+is set to the maximum, 2GB
+- [wsrep\_max\_ws\_rows](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-rows) 
+enforces the default of 0
+  - For more information about these limitations, 
+see the documentation on [transaction size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).
+  - There is a [known issue](https://jira.mariadb.org/browse/MDEV-11817) in which this setting also affects DDLs. 
+It will be fixed in a future release of MariaDB.
 
 
-- There is a known issue that sometimes causes the `rejoin-unsafe` errand to fail. See [Rejoin Unsafe Fails](known-issues.html#rejoin-unsafe-fails) Known Issue for more information.
+- There is a known issue that sometimes causes the `rejoin-unsafe` errand to fail. 
+See [Rejoin Unsafe Fails](known-issues.html#rejoin-unsafe-fails) Known Issue for more information.
 
 ## <a id="1-9-0"></a>v1.9.0
 
