@@ -21,9 +21,11 @@ The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQ
 
 ## <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
-To allow this service to have network access, you must create an Application Security Group (ASG). Follow [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create an ASG.
+To allow this service to have network access, you must create an Application Security Group (ASG). Creating an ASG enables applications running in Cloud Foundry external access to communicate with the MySQL service network. 
 
-Creating an ASG enables applications running in Cloud Foundry external access to communicate with the MySQL service network. To obtain the IP range of this network, do the following:</br>
+The example below follows [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create an ASG. 
+
+To create an ASG for MySQL for PCF, do the following:</br>
 
 1. In Ops Manager, click the Ops Manager director tile, and then click **Create Networks**.</br> 
     ![Create Networks page](opsman-dir-networks.png)
@@ -49,11 +51,13 @@ Creating an ASG enables applications running in Cloud Foundry external access to
     $ cf create-security-group p.mysql ./mysql-asg.json
     ```
 
-1. Bind the ASG to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set, and then restart your apps.
+1. Bind the ASG to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set: 
 
      ```
     $ cf bind-running-security-group p.mysql
     ```
+
+1. Restart your apps.
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
