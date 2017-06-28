@@ -85,7 +85,13 @@ so that a new node doesn't spend too long performing this test.
 
 ![Configure Backups](config-backups.png)
 
-See the [Backups](./backup.html) topic for instructions on configuring backups.
+The **Backups** pane configures automated database backups. To configure backups:
+
+1. Choose **Disable Backups** or **Enable Backups**.  If you enable automated backups, follow the instructions in the [Backups](./backup.html) topic to configure the backups.
+
+2. Ensure that the **Instances** setting for **Backup Prepare Node** in the **Resource Config** pane matches your automated backups enable or disable choice:
+  - **Disable Backups** selected: set **Backup Prepare Node** > **Instances** to `0`.
+  - **Enable Backups** selected: set **Backup Prepare Node** > **Instances** to `1`.
 
 ## <a id="advanced"></a>Advanced Options
 
@@ -115,6 +121,8 @@ Two post-deploy errands run by default: the **broker registrar** and the **smoke
 This pane configures the number, persistent disk capacity, and VM type for all component VMs that run the MySQL for PCF service.
 
 Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases. The MariaDB cluster nodes are configured by default with 100GB of persistent disk. The deployment will fail if this is less than 3GB; we recommend allocating 10GB minimum.
+
+If **Enable Backups** is selected in the **Backups** pane, set **Backup Prepare Node** > **Instances** to `1`.
 
 ### <a id="switch-topologies"></a> Switch Between Single and HA Topologies
 

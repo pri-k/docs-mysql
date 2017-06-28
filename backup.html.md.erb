@@ -42,8 +42,9 @@ You can configure MySQL for PCF to automatically back up its databases to extern
 
 To enable automated backups and configure them for options above, perform the following steps:
 
-1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
-1. Click **Backups**.
+1. Navigate to the **MySQL for Pivotal Cloud Foundry** tile on the Ops Manager Installation Dashboard.
+1. Click the tile to open the configuration settings.
+1. Under the **Settings** tab, click **Backups**. The **Automated Database Backups** pane opens.
 1. Under **Backups**, click **Enable Backups**.
   <%= image_tag('enable-backups.png') %>
 1. For **Cron Schedule**, enter a cron schedule for the backups. The syntax is similar to traditional cron, with additional features such as `@every 1d`, which specifies daily backups. See the cron Go library [documentation](https://godoc.org/github.com/robfig/cron) for more information.
@@ -53,6 +54,9 @@ To enable automated backups and configure them for options above, perform the fo
   - [Azure](#azure)
   - [Google Cloud Storage](#gcs)
   - [SCP](#scp)
+1. Under the **Settings** tab, click **Resource Config**.
+1. Set the number of instances for **Backup Prepare Node** to `1`.
+1. Click **Save**.
 
 ### <a id='ceph-aws'></a>Ceph or AWS
 
