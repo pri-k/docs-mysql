@@ -73,7 +73,7 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/net/connections<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>Connections per second made to the server.<br><br>
+      <td>The rate of connections to the server, shown as connections per second.<br><br>
 
       <strong>Use</strong>: If the number of connections drastically changes or if apps are unable to connect, there might be  a network or app issue.</p>
       <strong>Origin</strong>: Doppler/Firehose<br>
@@ -82,7 +82,7 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
    <tr>
       <th>Recommended measurement</th>
-      <td>Average over last 1 minute</td>
+      <td>(Number of connections / Max connections) over last 1 minute</td>
    </tr>
    <tr>
       <th>Recommended alert thresholds</th>
@@ -91,22 +91,23 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
    <tr>
       <th>Recommended response</th>
-      <td>The connections/second for a service instance vary based on application instances and app utilization.
+      <td>When approaching 100% of max connections, apps may be experiencing times when they cannot connect to the database.
+          The connections/second for a service instance vary based on application instances and app utilization.
           If this metric is met or exceeded for an extended period of time, 
           monitor app usage to ensure everything is behaving as expected.
       </td>
    </tr>
 </table>
 
-#### <a id="open-files"></a> Open Files
+#### <a id="open-files"></a> Questions
 
 <table>
-   <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/performance/open_files<br><br></th></tr>
+   <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/performance/questions<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
       <td>The rate of statements executed by the server, shown as queries per second.<br><br>
 
-      <strong>Use</strong>: For insight into trends and utilization of the server.
+      <strong>Use</strong>: The server should always be processing some queries, if just as part of the internal automation.
       <br><br>
       <strong>Origin</strong>: Doppler/Firehose<br>
       <strong>Type</strong>: count<br>
@@ -118,8 +119,8 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
    <tr>
       <th>Recommended alert thresholds</th>
-      <td><strong>Yellow warning</strong>: 0 <br>
-      <strong>Red critical</strong>: &gt; 120 </td>
+      <td><strong>Yellow warning</strong>: 0 for 90 s<br>
+      <strong>Red critical</strong>: 0 for 120 s</td>
    </tr>
    <tr>
       <th>Recommended response</th>
@@ -127,18 +128,18 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
 </table>
 
-#### <a id="user-time"></a> User Time
+#### <a id="user-time"></a> Busy Time
 
 <table>
-   <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/performance/user_time<br><br></th></tr>
+   <tr><th colspan="2" style="text-align: center;"><br> /p-mysql/performance/busy_time<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>Percentage of CPU time spent by MySQL in user space, executing user code, as opposed to kernel space, executing system functions.<br><br>
+      <td>Percentage of CPU time spent by MySQL on user activity, executing user code, as opposed to kernel activity, executing system functions.<br><br>
 
-      <strong>Use</strong>: This closely reflects the number of tables that the MySQL server has created.
+      <strong>Use</strong>: This closely reflects the amount of server activity dedicated to app queries.
       <br><br>
       <strong>Origin</strong>: Doppler/Firehose<br>
-      <strong>Type</strong>: count<br>
+      <strong>Type</strong>: percentage<br>
       <strong>Frequency</strong>: 30 s
    </tr>
    <tr>
@@ -153,7 +154,8 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    <tr>
       <th>Recommended response</th>
       <td>If this metric meets or exceeds the recommended thresholds for extended periods of time,
-      run SHOW PROCESSLIST and identify which queries or apps are using so much CPU.
+          run `SHOW PROCESSLIST` and identify which queries are using so much CPU.
+          Optionally scale to a larger service plan with more CPU capacity.
       </td>
    </tr>
 </table>
@@ -162,70 +164,6 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
 
 All BOSH-deployed components generate the following system metrics; these system metrics also serve as KPIs for the MySQL for PCF service.
 
-#### <a id="ram"></a> RAM
-
-<table>
-   <tr><th colspan="2" style="text-align: center;"><br> system.mem.percent <br><br></th></tr>
-   <tr>
-      <th width="25%">Description</th>
-      <td>RAM being consumed by the MySQL service instance.<br><br>
-
-      <strong>Use</strong>: MySQL increases its memory footprint as the server increases in size.
-              As long as there is enough remaining RAM for other processes on the service instance, the MySQL
-              server should be ok.
-      <br><br>
-      <strong>Origin</strong>: JMX Bridge or BOSH HM<br>
-      <strong>Type</strong>: percent<br>
-      <strong>Frequency</strong>: 30 s (default)
-   </tr>
-   <tr>
-      <th>Recommended measurement</th>
-      <td>Average over last 10 minutes</td>
-   </tr>
-   <tr>
-      <th>Recommended alert thresholds</th>
-      <td><strong>Yellow warning</strong>: &gt; 80 <br>
-      <strong>Red critical</strong>: &gt; 90</td>
-   </tr>
-   <tr>
-      <th>Recommended response</th>
-      <td>Update the service instance to use a larger plan.
-      </td>
-   </tr>
-</table>
-
-#### <a id="cpu"></a> CPU
-
-<table>
-   <tr><th colspan="2" style="text-align: center;"><br> system.cpu.percent<br><br></th></tr>
-   <tr>
-      <th width="25%">Description</th>
-      <td>CPU being consumed by the MySQL service instance.<br><br>
-
-      <strong>Use</strong>: A node that experiences context switching or high CPU usage will become unresponsive.
-      This also affects the ability of the node to report metrics.
-      <br><br>
-      <strong>Origin</strong>: JMX Bridge or BOSH HM<br>
-      <strong>Type</strong>: percent<br>
-      <strong>Frequency</strong>: 30 s (default)
-   </tr>
-   <tr>
-      <th>Recommended measurement</th>
-      <td>Average over last 10 minutes</td>
-   </tr>
-   <tr>
-      <th>Recommended alert thresholds</th>
-      <td><strong>Yellow warning</strong>: &gt; 78 <br>
-      <strong>Red critical</strong>: &gt; 85</td>
-   </tr>
-   <tr>
-      <th>Recommended response</th>
-      <td> Determine what is utilizing so much CPU. If it is from normal processes, update the service instance to use
-      a larger plan.
-      </td>
-   </tr>
-</table>
-
 #### <a id="persistent-disk"></a> Persistent Disk
 
 <table>
@@ -233,11 +171,11 @@ All BOSH-deployed components generate the following system metrics; these system
    <tr>
       <th width="25%">Description</th>
       <td>Persistent disk being consumed by the MySQL service instance.<br><br>
-      <strong>Use</strong>: If the persistent disk fills up, dataloss and recovery is difficult.
+      <strong>Use</strong>: If the persistent disk fills up, MySQL will be unable to process queries and recovery is difficult.
       <br><br>
       <strong>Origin</strong>: JMX Bridge or BOSH HM<br>
       <strong>Type</strong>: percent<br>
-      <strong>Frequency</strong>: 30 s (default)
+      <strong>Frequency</strong>: 60 s (default)
    </tr>
    <tr>
       <th>Recommended measurement</th>
@@ -250,7 +188,72 @@ All BOSH-deployed components generate the following system metrics; these system
    </tr>
    <tr>
       <th>Recommended response</th>
-      <td>Update the service instance to use a larger plan.
+      <td>Update the service instance to use a plan with a larger persistent disk. This process may take some time,
+        as the data is copied from the original persistent disk to a new one.
+      </td>
+   </tr>
+</table>
+
+#### <a id="ram"></a> RAM
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> system.mem.percent <br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>RAM being consumed by the MySQL service instance.<br><br>
+
+      <strong>Use</strong>: MySQL increases its memory usage as the data set increases.
+         This is normal, as much of that RAM is used to buffer IO.
+         As long as there is enough remaining RAM for other processes on the instance, the MySQL server should be OK.
+      <br><br>
+      <strong>Origin</strong>: JMX Bridge or BOSH HM<br>
+      <strong>Type</strong>: percentage<br>
+      <strong>Frequency</strong>: 60 s (default)
+   </tr>
+   <tr>
+      <th>Recommended measurement</th>
+      <td>Average over last 10 minutes</td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td><strong>Yellow warning</strong>: &gt; 95 <br>
+      <strong>Red critical</strong>: &gt; 99</td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>Update the service instance to a plan with more RAM.
+      </td>
+   </tr>
+</table>
+
+#### <a id="cpu"></a> CPU
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> system.cpu.percent<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>CPU time being consumed by the MySQL service.<br><br>
+
+      <strong>Use</strong>: A node that experiences context switching or high CPU usage will become unresponsive.
+      This also affects the ability of the node to report metrics.
+      <br><br>
+      <strong>Origin</strong>: JMX Bridge or BOSH HM<br>
+      <strong>Type</strong>: percent<br>
+      <strong>Frequency</strong>: 60 s (default)
+   </tr>
+   <tr>
+      <th>Recommended measurement</th>
+      <td>Average over last 10 minutes</td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td><strong>Yellow warning</strong>: &gt; 80 <br>
+      <strong>Red critical</strong>: &gt; 90</td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td> Determine what is using so much CPU. If it is from normal processes, update the service instance to use
+      a plan with larger CPU capacity.
       </td>
    </tr>
 </table>
