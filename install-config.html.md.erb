@@ -6,19 +6,28 @@ owner: MySQL
 This topic provides instructions to operators of Pivotal Cloud Foundry (PCF) about how to install, configure, and deploy the MySQL for PCF v2.0 tile. 
 The MySQL for PCF v2.0 service lets PCF developers create and use their own MySQL service instances on demand. 
 
-## <a id="prereq"></a> Prepare Your Ops Manager and PCF installation for PCF for MYSQL
+## <a id="prereq"></a> Prepare Your Ops Manager and PCF Installation for MySQL for PCF
+
+Before you download and install the MySQL for PCF tile, complete the following these procedures:
+
++ [Create an Application Security Group for MySQL for PCF](#asg)
++ [Enable the Ops Manager Resurrector](#resurrector)
 
 ### <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
-To allow this service to have network access, you must create an Application Security Group (ASG). Creating an ASG enables applications running in Cloud Foundry external access to communicate with the MySQL service network.
+To allow the MySQL for PCF service to have network access, you must create an Application Security Group (ASG).
+Creating an ASG enables apps running in Cloud Foundry external access to communicate with the MySQL service network.
 
 The example below follows [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create an ASG.
 
 To create an ASG for MySQL for PCF, do the following:</br>
 
-1. In Ops Manager, click the Ops Manager director tile, and then click **Create Networks**.</br>
+1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
+
+1. Click **Create Networks**.</br>
     ![Create Networks page](opsman-dir-networks.png)
-1. Find the network that has **Service Network** checked, and then find the **CIDR** that you can use in your ASGs.
+
+1. Find the network that has **Service Network** checked, and find the **CIDR** that you can use in your ASGs.
     </br>
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
 
@@ -48,22 +57,26 @@ To create an ASG for MySQL for PCF, do the following:</br>
 
 ### <a id="resurrector"></a> Enable the Ops Manager Resurrector
 
-The [Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html) increases the availability of MySQL for PCF by restarting and resuming MySQL service in the following ways:
+The [Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html)
+increases the availability of MySQL for PCF by restarting and resuming MySQL service in the following ways:
 
-- Reacts to hardware failure and network disruptions by restarting virtual machines on active, stable hosts
-- Detects operating system failures by continuously monitoring virtual machines and restarting them as required
+- Reacts to hardware failure and network disruptions by restarting VMs on active, stable hosts
+- Detects operating system failures by continuously monitoring VMs and restarting them as required
 - Continuously monitors the BOSH Agent running on each service instance VM and restarts the VM as required
 
 Pivotal recommends enabling the Ops Manager Resurrector when installing MySQL for PCF. To enable the Ops Manager Resurrector,
 do the following:
 
-1. On the Ops Manager Product Dashboard, select **Ops Manager Director**
+1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
 
-1. In the left navigation menu, select **Director Config**
+2. Click **Director Config**.
 
-1. Check **Enable VM Resurrector Plugin** and click **Save**.
+3. Select the **Enable VM Resurrector Plugin** checkbox.
 
-The [Pivotal CF documentation](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html#enabling) includes more information on enabling the Ops Manager Resurrector.
+4. Click **Save**.
+
+For general information about the Ops Manager Resurrector,
+see [Using Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling)
 
 ## <a id="install"></a> Download and Install the Tile
 
@@ -109,7 +122,8 @@ Follow the steps below to choose an Availability Zone (AZ) to run the service br
             to avoid conflicts with services that are not IPsec compatible.
          </td></tr>
   </table>
-    <p class="note"><strong>IMPORTANT</strong>: You cannot change the regions or networks after you click **Apply Changes** in the <a href="#apply-changes">final step</a> below.</p>
+    <p class="note"><strong>IMPORTANT</strong>: You cannot change the regions or networks
+    after you click **Apply Changes** in the <a href="#apply-changes">final step</a> below.</p>
 
 1. Click **Save**.
 
@@ -163,7 +177,8 @@ Follow the steps below for each plan that you want to be inactive:
 
     ![plan-inactive-tab-v2.0.0](service-plan-inactive.png)
 
-     <p class="note"><strong>IMPORTANT</strong>: You cannot inactivate a plan that currently has existing service instances. Disable the plan and delete existing service instances before deactiving.</p>
+     <p class="note"><strong>IMPORTANT</strong>: You cannot inactivate a plan that currently has existing service instances.
+        Disable the plan and delete existing service instances before deactiving.</p>
 
 1. Click **Save**.
 
