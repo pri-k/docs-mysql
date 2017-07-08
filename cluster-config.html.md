@@ -21,7 +21,7 @@ To ensure all users get fair access to system resources, we have capped each use
 Since each Virtual Machine only has one mysqld process running, we do not need external locking.
 
 ### Max Allowed Packet
-We allow blobs up to 256MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log file size. Consider using our Riak CS service for storing large files.
+We allow blobs up to 256MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log file size. 
 
 ### Innodb File Per Table
 Innodb allows using either a single file to represent all data, or a separate file for each table. We chose to use a separate file for each table as this provides more flexibility and optimization. For a full list of pros and cons, see MySQL's documentation for [InnoDB File-Per-Table Mode](http://dev.mysql.com/doc/refman/5.5/en/innodb-multiple-tablespaces.html).
