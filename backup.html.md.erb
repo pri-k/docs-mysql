@@ -213,14 +213,18 @@ Executing the SQL dump will drop, recreate, and refill the specified databases a
 Prepare to restore:
 
 - If running in HA configuration, reduce the size of the MySQL for PCF cluster to a single node, following the [restore instructions](#restoring) above.
-- Locate the Mysql Admin credentials in the **Credentials** tab, as above.
-- Access the mysql database as admin, and issue the following command:
+- Locate the MySQL Admin credentials in the **Credentials** tab, as above.
+- Use the MySQL password and IP address to enable the creation of tables using any storage engine.
   <pre class="terminal">
   $ mysql -u admin -p -h $MYSQL\_NODE\_IP -e "SET GLOBAL enforce\_storage\_engine=NULL"
   </pre>
-- Restore from the data dump, run the following command:
+- Use the MySQL password and IP address to restore the MySQL databases by running the following command.
   <pre class="terminal">
   $ mysql -u admin -p -h $MYSQL\_NODE\_IP < user\_databases.sql
+  </pre>
+- Use the MySQL password and IP address to restore original storage engine restriction.
+  <pre class="terminal">
+  $ mysql -u admin -p -h $MYSQL\_NODE\_IP -e "SET GLOBAL enforce\_storage\_engine='InnoDB'"
   </pre>
 - To restore HA mode, re-configure MySQL for PCF to run using three nodes in the same way as the [restoring instructions](#restoring) above.
 - If not running HA mode, it's important to restart the database server. This step is not necessary if scaling back to three MySQL nodes.
