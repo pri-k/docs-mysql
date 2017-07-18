@@ -14,11 +14,22 @@ owner: MySQL
      }
 </style>
 
-This topic describes how to check the status of your MySQL cluster and if necessary bootstrap it to restore its health.
+## <a id="diagnosing"></a> Diagnosing
 
-## <a id="techniques"></a> Techniques ##
+If your cluster is experiencing downtime or is in a degraded state, we suggest the following workflow for gathering information to diagnose the type of failure it's experiencing.
 
-### <a id="when-to-bootstrap"></a> When to Bootstrap ##
+1. Use the [mysql-diag](mysql-diag.html) tool to gather a summary of the network, disk, and replication state of each cluster node.
+1. Run [download-logs](https://discuss.pivotal.io/hc/en-us/articles/221504408-Script-to-download-logs-from-MYSQL-server-tile-for-further-troubleshooting) against each node in your MySQL cluster, the MySQL proxies, and the MySQL backup-prepare node. It's important to do this prior to attempting recovery, as any failures in the recovery procedure can result in logs being lost or made inaccessible.
+1. Depending on the reported state from `mysql-diag`, the [techniques](#techniques) listed below may allow you to recover your cluster.
+1. If you have any uncertainty about what recovery steps to take, submit a ticket through [Pivotal Support](https://support.pivotal.io/) with the following information:
+  - logs fetched by running the `download-logs` script
+  - output from `mysql-diag`
+  - what type of environment the mysql deployment is running in (ERT, p-mysql, other?)
+  - what versions of OpsManager, ERT, p-mysql are installed
+
+## <a id="techniques"></a> Techniques
+
+### <a id="when-to-bootstrap"></a> When to Bootstrap
 
 Bootstrapping is only required when the cluster has lost quorum.
 
@@ -130,7 +141,7 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
     ```
     iptables -F
     ```
-    
+
 ### <a id="check-state"></a> Check Cluster State
 
 Connect to each MySQL node using a MySQL client and check its status.
@@ -346,4 +357,3 @@ The Interruptor is enabled by default. To disable the Interruptor:
 In the **Advanced Options** section, under **Enable optional protections**, un-check  **Prevent node auto re-join**.
 
   ![Prevent node](prevent-node.png)
-
