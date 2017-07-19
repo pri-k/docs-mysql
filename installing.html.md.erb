@@ -43,20 +43,6 @@ For example, [AWS's Elastic Load Balancer](http://docs.aws.amazon.com/elasticloa
 
 After you install MySQL for PCF, you [assign IPs to the proxy instances](./configuring.html#proxy) in Ops Manager.
 
-#### <a id="route-53"></a>AWS Route 53 ###
-
-Use AWS Route 53 to set up Round Robin DNS across multiple proxy IPs as follows:
-
-1. Log in to AWS.
-2. Click **Route 53**.
-3. Click **Hosted Zones**.
-4. Select the hosted zone that contains the domain name to apply round robin routing to.
-5. Click **Go to Record Sets**.
-6. Select the record set containing the desired domain name.
-7. In the value input, enter the IP addresses of each proxy VM, separated by a newline.
-
-Finally, update the manifest property `properties.mysql_node.host` for the cf-mysql-broker job, as described above.
-
 #### <a id="add-lb"></a> Add a Load Balancer to an Existing Installation
 
 If you initially deploy MySQL for PCF v1.5.0 without a load balancer and without proxy IPs configured, you can set up a load balancer later to remove the proxy as a single point of failure. When adding a load balancer to an existing installation, you need to:
