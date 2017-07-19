@@ -26,91 +26,21 @@ MySQL for PCF 1.9.0 and later will have the `mysql-diag-agent` present. Older ve
 ## <a id="healthy"></a> Example Healthy Output ##
 
 The `mysql-diag` command returns the following message if your canary status is healthy:
- 
-<pre class="terminal">Checking canary status...healthy</pre> 
 
-Here is a sample `mysql-diag` output after the tool identified a healthy cluster:  
+<pre class="terminal">Checking canary status...healthy</pre>
 
-<pre class="terminal">
-Checking cluster status of mysql/a1 at 10.0.16.44 ...
-Checking cluster status of mysql/c3 at 10.0.32.10 ...
-Checking cluster status of mysql/b2 at 10.0.16.45 ...
-Checking cluster status of mysql/a1 at 10.0.16.44 ... done
-Checking cluster status of mysql/c3 at 10.0.32.10 ... done
-Checking cluster status of mysql/b2 at 10.0.16.45 ... done
-+------------+-----------+-------------------+----------------------+--------------------+
-|    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
-+------------+-----------+-------------------+----------------------+--------------------+
-| 10.0.16.44 | mysql/a1  | Synced            | Primary              |                  3 |
-| 10.0.32.10 | mysql/c3  | Synced            | Primary              |                  3 |
-| 10.0.16.45 | mysql/b2  | Synced            | Primary              |                  3 |
-+------------+-----------+-------------------+----------------------+--------------------+
-I don't think bootstrap is necessary
-Checking disk status of mysql/a1 at 10.0.16.44 ...
-Checking disk status of mysql/c3 at 10.0.32.10 ...
-Checking disk status of mysql/b2 at 10.0.16.45 ...
-Checking disk status of mysql/a1 at 10.0.16.44 ... done
-Checking disk status of mysql/c3 at 10.0.32.10 ... done
-Checking disk status of mysql/b2 at 10.0.16.45 ... done
-+------------+-----------+-------------------+----------------------+---------------------------------------+
-|    HOST    | NAME/UUID |          PERSISTENT DISK USED            |            EPHEMERAL DISK USED        | 
-+------------+-----------+-------------------+----------------------+---------------------------------------+
-| 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)    |  35.4% of 2.9G (30.0% of 0.20M inodes)|                 
-| 10.0.32.10 | mysql/c3  |  7.4% of 98.3G (0.0% of 6.55M inodes)    |  35.4% of 2.9G (30.0% of 0.20M inodes)|             
-| 10.0.16.45 | mysql/b2  |  7.4% of 98.3G (0.0% of 6.55M inodes)    |  35.4% of 2.9G (30.0% of 0.20M inodes)|             
-+------------+-----------+-------------------+----------------------+---------------------------------------+
-</pre>
+Here is a sample `mysql-diag` output after the tool identified a healthy cluster:
+
+<%= image_tag('mysql-diag-healthy-screen-shot.png') %>
+<a href="images/mysql-diag-healthy-screen-shot.png" target="_blank">View a larger version of this image.</a>
 
 ## <a id="unhealthy"></a> Example Unhealthy Output ##
 
 The `mysql-diag` command returns the following message if your canary status is unhealthy:
 
-<pre class="terminal">Checking canary status...unhealthy</pre> 
+<pre class="terminal">Checking canary status...unhealthy</pre>
 
-In the event of a broken cluster, running `mysql-diag` outputs actionable steps meant to expedite the recovery of that cluster. Below is a sample `mysql-diag` output after the tool identified an unhealthy cluster:  
+In the event of a broken cluster, running `mysql-diag` outputs actionable steps meant to expedite the recovery of that cluster. Below is a sample `mysql-diag` output after the tool identified an unhealthy cluster:
 
-<pre class="terminal">Checking cluster status of mysql/a1 at 10.0.16.44 ...
-Checking cluster status of mysql/c3 at 10.0.32.10 ...
-Checking cluster status of mysql/b2 at 10.0.16.45 ...
-Checking cluster status of mysql/a1 at 10.0.16.44 ... dial tcp 10.0.16.44: getsockopt: connection refused
-Checking cluster status of mysql/c3 at 10.0.32.10 ... dial tcp 10.0.32.10: getsockopt: connection refused
-Checking cluster status of mysql/b2 at 10.0.16.45 ... dial tcp 10.0.16.45: getsockopt: connection refused
-
-+------------+-----------+-------------------+----------------------+--------------------+
-|    HOST    | NAME/UUID | WSREP LOCAL STATE | WSREP CLUSTER STATUS | WSREP CLUSTER SIZE |
-+------------+-----------+-------------------+----------------------+--------------------+
-| 10.0.16.44 | mysql/a1  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        |
-| 10.0.16.45 | mysql/b2  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        | 
-| 10.0.32.10 | mysql/c3  | N/A - ERROR       | N/A - ERROR          | N/A - ERROR        |
-+------------+-----------+-------------------+----------------------+--------------------+
-
-Checking disk status of mysql/a1 at 10.0.16.44 ...
-Checking disk status of mysql/c3 at 10.0.32.10 ...
-Checking disk status of mysql/b2 at 10.0.16.45 ...
-Checking disk status of mysql/a1 at 10.0.16.44 ... done
-Checking disk status of mysql/c3 at 10.0.32.10 ... done
-Checking disk status of mysql/b2 at 10.0.16.45 ... done
-+------------+-----------+-------------------+----------------------+----------------------------------+
-|    HOST    | NAME/UUID |          PERSISTENT DISK USED            |       EPHEMERAL DISK USED        |
-+------------+-----------+-------------------+----------------------+----------------------------------+
-| 10.0.16.44 | mysql/a1  | 87.1% of 98.3G (0.0% of 6.55M inodes)| 35.4% of 2.9G (30.0% of 0.20M inodes)|                 
-| 10.0.32.10 | mysql/c3  | 9.0% of 98.3G (0.0% of 6.55M inodes) | 35.4% of 2.9G (30.0% of 0.20M inodes)|            
-| 10.0.16.45 | mysql/b2  | 9.0% of 98.3G (0.0% of 6.55M inodes) | 35.4% of 2.9G (30.0% of 0.20M inodes)|            
-+------------+-----------+-------------------+----------------------+----------------------------------+
-
-[CRITICAL] The replication process is unhealthy. Writes are disabled.
-
-[CRITICAL] Run the download-logs command:
-$ download-logs -d /tmp/output -n 10.0.16.44 -n 10.16.45 -n 10.0.32.10
-For full information about how to download and use the download-logs command see https://discuss.pivotal.io/hc/en-us/articles/221504408
-
-[WARNING]
-Do not perform the following unless instructed by Pivotal Support:
-- Do not scale down the cluster to one node then scale back. This puts user data at risk.
-- Avoid "bosh recreate" and "bosh cck". These options remove logs on the VMs making it harder to diagnose cluster issues. 
-
-</pre>
-
-
-
-
+<%= image_tag('mysql-diag-unhealthy-screen-shot.png') %>
+<a href="images/mysql-diag-unhealthy-screen-shot.png" target="_blank">View a larger version of this image.</a>
