@@ -17,15 +17,15 @@ If you deploy the MySQL service on a different network than Elastic Runtime, con
 
 | Type | Listening service | TCP Port |
 | ---- | ---- | ---- |
-| Inbound/TCP | Service broker | 8081 |
+| Inbound/HTTP | Service broker | 8081 |
+| Inbound/TCP | Proxy health check | 1936 |
+| Inbound/HTTP | Proxy health check | 1936 |
 | Inbound/TCP | SQL proxy | 3306 |
-| Inbound/TCP | Proxy health check | 1936 |
 | Inbound/TCP | Proxy API | 8080 |
-| Inbound/TCP | Proxy health check | 1936 |
 | Outbound/TCP | NATS | 4222 |
 | Internal/TCP | MySQL server | 3306 |
 | Internal/TCP | Galera | 4567 |
-| Internal/TCP | Galera health check | 9200 |
+| Internal/HTTP | Galera health check | 9200 |
 
 ### <a id="load-balancer"></a> Configure a Load Balancer
 
