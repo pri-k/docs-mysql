@@ -9,16 +9,20 @@ Using a proxy gracefully handles failure of MariaDB nodes, enabling fast, unambi
 
 On-demand versions of MySQL for PCF do not use proxies.
 
-## <a id="proxy-dashboard"></a>Proxy Dashboard ##
+Switchboard offers three separate functions, for which it uses three separate ports. The default ports are documented, along with all other network port requirements, on the [installation](installing.html#network-layout) page.
 
-The service provides a dashboard where administrators can observe health and metrics for each proxy instance. Metrics include the number of client connections routed to each backend database cluster node.
+- **MySQL Server Access**
 
-From a browser, you can open the dashboard for each proxy instance at: `http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN`. The job index starts at `0`. For example, if you have two proxy instances deployed and your system domain is `example.com`, you would access your proxy instance dashboards would at:
+    MySQL clients communicate with the MySQL servers through this network port. Do not configure any load balancer to check Proxy health via this port; these connections will be automatically passed through to the MySQL servers.
 
-- [http://proxy-0-p-mysql.example.com](http://proxy-0-p-mysql.example.com)
-- http://proxy-1-p-mysql.example.com
+- **Proxy Health**
 
-You need basic auth credentials to access these dashboards. You can find them in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
+    Switchboard listens for connections on Port 1936. When using a load balancer to balance across multiple instances of Switchboard, configure the load balancer to test for health by connecting to port 1936. To support different kinds of load balancers, Switchboard supports simple TCP connection checks and HTTP requests. HTTP connections are not authenticated, and require no special load balancer configuration.
+
+- **Proxy Dashboard and API**
+
+    Operators can connect to Switchboard to view the state of the cluster back-ends. Read either the [Dashboard](#proxy-dashboard) or [API](#proxy-api) documentation for more information.
+
 
 ## <a id="node-health"></a>Node Health ##
 
@@ -48,7 +52,18 @@ If the operator sets the total number of proxy hosts to `0` in OpsManager or BOS
 
 For high-availability, Pivotal recommends running two proxies, which provides redundancy should one of the proxies fail.
 
-## <a id="switchboard-api"></a> API
+## <a id="proxy-dashboard"></a>Proxy Dashboard ##
+
+The service provides a dashboard where administrators can observe health and metrics for each proxy instance. Metrics include the number of client connections routed to each backend database cluster node.
+
+From a browser, you can open the dashboard for each proxy instance at: `http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN`. The job index starts at `0`. For example, if you have two proxy instances deployed and your system domain is `example.com`, you would access your proxy instance dashboards would at:
+
+- [http://proxy-0-p-mysql.example.com](http://proxy-0-p-mysql.example.com)
+- http://proxy-1-p-mysql.example.com
+
+You need basic auth credentials to access these dashboards. You can find them in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
+
+## <a id="proxy-api"></a> API ##
 
 The proxy hosts a JSON API at `proxy-<bosh job index>.p-mysql.<system domain>/v0/`.
 
