@@ -56,10 +56,12 @@ For high-availability, Pivotal recommends running two proxies, which provides re
 
 The service provides a dashboard where administrators can observe health and metrics for each proxy instance. Metrics include the number of client connections routed to each backend database cluster node.
 
-From a browser, you can open the dashboard for each proxy instance at: `http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN`. The job index starts at `0`. For example, if you have two proxy instances deployed and your system domain is `example.com`, you would access your proxy instance dashboards would at:
+From a browser, you can open the dashboard for each proxy instance at: `http://JOB-INDEX-proxy-p-mysql.SYSTEM-DOMAIN`. The job index starts at `0`. For example, if you have two proxy instances deployed and your system domain is `example.com`, you would access your proxy instance dashboards would at:
 
-- [http://proxy-0-p-mysql.example.com](http://proxy-0-p-mysql.example.com)
-- http://proxy-1-p-mysql.example.com
+- https://0-proxy-p-mysql.example.com
+- https://1-proxy-p-mysql.example.com
+
+<p class="note"><strong>Note</strong>: Earlier versions of MySQL for PCF use a different hostname format for the proxies, in the form: <a>http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN</a><br>For example: <a>https://proxy-0-p-mysql.example.com</a></p>
 
 You need basic auth credentials to access these dashboards. You can find them in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
 
