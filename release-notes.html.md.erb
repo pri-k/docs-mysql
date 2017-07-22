@@ -14,10 +14,18 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 ### v2.0.3
 
+<p class="note"><strong>Caution</strong> Do not use. There is a known issue with this version where it will fail to install.</p>
+
 **Release Date:  July 17, 2017**
 
 * Uses the system provided OpenSSL library for compiling Percona Server.
 * Updates several releases to use Golang 1.8 for long-term support: On Demand Services SDK, Service Metrics, and Service Backup.
+
+**Known Issues**
+
+* When installing the tile, the installation will fail with `Error 30005: Release 'dedicated-mysql' doesn't exist`. If it has been installed, the actual MySQL
+VMs will remain operational, but any attempt to modify them will fail. To make changes to other products, the tile must first
+be deleted; when doing this, the **Pre-Delete** errands may need to be disabled.
 
 ### v2.0.2
 
