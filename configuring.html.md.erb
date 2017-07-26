@@ -194,7 +194,9 @@ The **Advanced Options** pane lets you configure the following features:
 
 Two post-deploy errands run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that apps pushed to Elastic Runtime can be bound and write to MySQL service instances. You can turn both errands on or off in the **Errands** pane under the **Settings** tab.
 
-<p class="note"><strong>Note</strong>: The <strong>Errands</strong> pane also shows a <b>broker-deregistrar</b> pre-delete errand. Do not run this errand unless instructed to do so by Support. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data.</p>
+<p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. Do not reconfigure errands in your deployment without instruction from Support.
+
+Additionally, the <strong>Errands</strong> pane also shows a <b>broker-deregistrar</b> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Support.</p>
 
 ## <a id="resource-config"></a>Resource Config
 
