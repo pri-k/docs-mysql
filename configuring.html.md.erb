@@ -49,37 +49,39 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
 ![Configure MySQL Server Configuration](config-servers.png)
 
-- **Enable Strict Mode**
+The following options can be changed to suit your environment. These changes will affect all service instances, exercise caution when making changes.
+
+For additional information about how MySQL for PCF is configured, see the [architecture documentation](architecture.html).
+
+- <a id="innodb-strict-mode"></a>**Enable InnoDB Strict Mode**
 
     Default: Enabled
 
-    Enabling this feature will cause the database storage engine (InnoDB) to return errors instead of warnings in certain cases. For more information, refer to the [MariaDB strict mode documentation](https://mariadb.com/kb/en/mariadb/xtradbinnodb-strict-mode/).
+    See the [architecture documentation](architecture.html#innodb-strict-mode) for information on this setting.
 
-- **Allow Clients to Send Files**
-
-    Default: Enabled
-
-    This option allows clients to send files to the server. Disabling ensures that clients will not be directed to reveal information to rogue database servers.
-
-- **Allow Command History**
+- <a id="local-infile"></a>**Allow Clients to Send Files**
 
     Default: Enabled
 
-    When disabled, prohibits the creation of command line history files on the MySQL nodes. If administrators frequently `ssh` into the MySQL VMs without using `bosh ssh`, the default setting of Enabled will automatically create history files of their interactions with the server. These files can contain possibly sensitive information. Disable this option to ensure that no trace files are left on the file system.
+    See the [architecture documentation](architecture.html#local-infile) for information on this setting.
 
-- **Disable Reverse DNS lookups**
+- <a id="command-history"></a>**Allow Command History**
 
     Default: Enabled
 
-    Disabling reverse DNS lookups improves performance. Clearing this option causes the MySQL servers to perform a reverse DNS lookup on each new connection. Typically, MySQL uses this to restrict access by hostname, but MySQL for PCF installations do not need reverse DNS lookups.
+    See the [architecture documentation](architecture.html#command-history) for information on this setting.
 
-- **Allow Remote Admin Access**
+- <a id="reverse-dns-lookups"></a>**Disable Reverse DNS lookups**
+
+    Default: Enabled
+
+    See the [architecture documentation](architecture.html#reverse-dns-lookups) for information on this setting.
+
+- <a id="remote-admin"></a>**Allow Remote Admin Access**
 
     Default: Disabled
 
-    When enabled, `mysql` clients will be allowed to connect as administrator from remote hosts. When disabled, administrators must `bosh ssh` into each MySQL VM to connect as the MySQL super user. Note that this is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
-
-    This setting affects the admin and roadmin accounts only.
+    See the [architecture documentation](architecture.html#remote-admin) for information on how to configure this setting.
 
 - **Read-Only User Password**
 
@@ -103,7 +105,7 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
     Default: Enabled
 
-    Disable if index creation is failing. Advanced configuration. Read the sections on [large prefixes](architecture.html#innodb-large-prefix) and [SQL mode](architecture.html#sql-mode) before disabling.
+    See the [architecture documentation](architecture.html#innnodb-large-prefix) for information on this setting.
 
 - **Enable replication debug logging**
 
@@ -119,27 +121,27 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
 - **Maximum Temporary Table Memory Size**
 
-    Default: 33554432 bytes
+    Default: 33554432 bytes (32 MB)
 
-    The maximum size (in bytes) of internal in-memory temporary tables. Read the [MariaDB documentation on tmp\_table\_size](https://mariadb.com/kb/en/mariadb/server-system-variables/#tmp_table_size) for more information.
+    The maximum size (in bytes) of internal in-memory temporary tables. See the [architecture documentation](architecture.html#temp-tables) for information on this setting.
 
 - **Table Open Cache Size**
 
     Default: 2000 tables
 
-    The number of table handles to keep open. Read the [MariaDB documentation on optimizing table\_open\_cache size](https://mariadb.com/kb/en/mariadb/optimizing-table_open_cache/) for more information.
+    The number of table handles to keep open. See the [architecture documentation](architecture.html#table-open-cache-size) for information on this setting.
 
 - **Table Definition Cache Size**
 
     Default: 8192 tables
 
-    Set this to a number relative to the number of tables the server will manage. Read the [MariaDB documentation on table\_definition\_cache](https://mariadb.com/kb/en/mariadb/server-system-variables/#table_definition_cache) for more information.
+    Set this to a number relative to the number of tables the server will manage. See the [architecture documentation](architecture.html#table-definition-cache-size) for information on this setting.
 
 - **InnoDB Buffer Pool Size**
 
     Default: 50 percent of instance RAM
 
-    Choose Percent to configure the percent of system RAM allocated to the memory buffer used by InnoDB. Choose Bytes to configure the size in bytes, instead. Read the [MariaDB documentation on the InnoDB Buffer Pool](https://mariadb.com/kb/en/mariadb/xtradbinnodb-buffer-pool/) for more information.
+    Choose Percent to configure the percent of system RAM allocated to the memory buffer used by InnoDB. Choose Bytes to configure the size in bytes, instead. See the [architecture documentation](architecture.html#innodb-buffer-pool-size) for information on this setting.
 
 - **Maximum Server Connections**
 

@@ -37,15 +37,39 @@ Pivotal recommends deploying either one or three MySQL server nodes, avoiding an
 
 The minimum number of nodes required to tolerate a single node failure is three. With a two-node cluster, a single node failure causes loss of quorum.
 
+## <a id="scale-behavior"></a> Cluster Scaling Behavior ##
+
+This section explains how the MySQL cluster behaves when you change its number of nodes.
+
+### <a id="scale-up"></a>Scaling Up from One to Three Nodes
+
+When you add new MariaDB nodes to an existing node, they replicate data from the existing primary node and join the cluster once replication is complete. Performance may temporarily degrade while the new nodes sync all data from the original node.
+
+After new nodes have joined the cluster, the proxy continues to route incoming connections to the primary node.
+
+If the proxy detects that the primary node is [unhealthy](https://github.com/cloudfoundry/cf-mysql-release/blob/release-candidate/docs/proxy.md#unhealthy), it severs connections to the primary node and routes all new connections to a different, healthy node.
+
+If the proxy detects that no healthy MariaDB nodes exist in the cluster, it rejects all connections and the cluster becomes inaccessible.
+
+### <a id="scale-down"></a>Scaling Down from Three to One Node
+
+When you scale down from multiple MariaDB nodes to a single node, the primary node continues survives as the sole remaining node (provided it remains healthy), and the proxy continues to route incoming connections to the node.
+
+### <a id="removal"></a> Graceful Removal of Nodes
+
+Removing nodes from a cluster _gracefully_ means that the cluster size decreases while the cluster maintains its healthy state.
+
+You can remove nodes gracefully by manually shutting each down with `monit` or by decreasing the cluster size as described in the [Switch Between Single and HA Topologies](./configuring.html#switch-topologies) section of the Configuring MySQL for PCF topic.
+
+---
+
 ## <a id="defaults"></a> MySQL Server Defaults for MariaDB Components
 
-This section describes the defaults that the MySQL for PCF tile applies to its MariaDB components.
+This section describes the defaults that the MySQL for PCF tile applies to its MariaDB components. There are additional properties which can be customized. See the [configuration documentation](configuring.html#server) for more information.
 
-#### InnoDB Log Files: 1&nbsp;GB
+#### InnoDB Log Files
 
-MySQL for PCF clusters default to a log-file size of 1&nbsp;GB to support large blobs.
-
-#### Max User Connections: 40
+#### Max User Connections
 
 To ensure all users get fair access to system resources, MySQL for PCF defaults each user's number of connections to 40. Operators can override this setting for each service plan in the **Service Plans** configuration pane.
 
@@ -53,9 +77,17 @@ To ensure all users get fair access to system resources, MySQL for PCF defaults 
 
 Each virtual machine only runs one `mysqld` process, so they do not need external locking.
 
+Default: 1&nbsp;GB (cannot be configured)
+
+MySQL for PCF clusters default to a log-file size of 1&nbsp;GB to support large blobs.
+
 #### Max Allowed Packet: 256&nbsp;MB
 
 MySQL for PCF allows blobs up to 256&nbsp;MB. This size is unlikely to limit a user's query, but is also manageable for our InnoDB log-file size.
+
+#### <a id="query-cache"></a>Query Cache Type and Size
+
+MySQL for PCF matches MariaDB's default as of [version 10.1.7](https://mariadb.com/kb/en/mariadb/mariadb-1017-release-notes/) and later, by disabling `query_cache_type` and setting `query_cache_size` to 0.
 
 #### InnoDB File-Per-Table Tablespaces
 
@@ -65,9 +97,23 @@ InnoDB allows using either a single file to represent all data, or a separate fi
 
 MySQL for PCF uses the `Barracuda` file format to take advantage of extra features available with the `innodb_file_per_table = ON` option.
 
-### <a id="innodb-large-prefix"></a>Innodb Large Prefix
+#### <a id="innodb-buffer-pool-size"></a>InnoDB Buffer Pool Size
+
+Read the [MariaDB documentation on the InnoDB Buffer Pool](https://mariadb.com/kb/en/mariadb/xtradbinnodb-buffer-pool/) for more information.
+
+#### <a id="innodb-flush-method"></a>InnoDB Flush Method
+
+Defines the method used to flush data to InnoDB data files, which can affect I/O throughput. MySQL for PCF uses MariaDB's default, `fsync()`. Read the [MariaDB documentation on InnoDB Flush Method](https://mariadb.com/kb/en/mariadb/xtradbinnodb-server-system-variables/#innodb_flush_method) for more information.
+
+#### <a id="innodb-large-prefix"></a>Innodb Large Prefix
 
 The `innodb_large_prefix` feature is enabled by default. When disabled, large index prefixes are silently truncated. When enabled, larger index key prefixes may be created by additionally specifying DYNAMIC or COMPRESSED row formats. Row format is not defined by default. Thus, when `innodb_large_prefix` is enabled, applications must specify row format for each table which will use large index prefixes.
+
+See also the section on [SQL mode](#sql-mode) before disabling.
+
+#### <a id="innodb-strict-mode"></a>InnoDB Strict Mode
+
+Enabling this feature will cause the database storage engine (InnoDB) to return errors instead of warnings in certain cases. For more information, refer to the [MariaDB strict mode documentation](https://mariadb.com/kb/en/mariadb/xtradbinnodb-strict-mode/).
 
 #### <a id="temp-tables"></a>Temporary Tables
 
@@ -76,9 +122,19 @@ MySQL converts temporary in-memory tables to temporary on-disk tables when eithe
 * A query generates more than 16 million rows of output
 * A query uses more than 32&nbsp;MB of data space
 
-#### Reverse Name Resolution Off
+Read the [MariaDB documentation on tmp\_table\_size](https://mariadb.com/kb/en/mariadb/server-system-variables/#tmp_table_size) for more information.
 
-MySQL for PCF authenticates with user credentials, which does not restrict the host that a user connects from. The service defaults to disabling reverse name resolution, to save time on each new connection.
+#### <a id="table-open-cache-size"></a>Table Open Cache
+
+Read the [MariaDB documentation on optimizing table\_open\_cache size](https://mariadb.com/kb/en/mariadb/optimizing-table_open_cache/) for more information.
+
+#### <a id="table-definition-cache-size"></a>Table Definition Cache Size
+
+Read the [MariaDB documentation on table\_definition\_cache](https://mariadb.com/kb/en/mariadb/server-system-variables/#table_definition_cache) for more information.
+
+#### <a id="reverse-dns-lookups"></a>Reverse Name Resolution Off
+
+Disabling reverse DNS lookups improves performance. Clearing this option causes the MySQL servers to perform a reverse DNS lookup on each new connection. Typically, MySQL uses this to restrict access by hostname, but MySQL for PCF uses user credentials to authenticate access, not hostnames. Thus, most deployments do not need reverse DNS lookups.
 
 #### Slow Query Log
 
@@ -95,6 +151,26 @@ MySQL for PCF automatically enables the [slow query log](https://mariadb.com/kb/
     - Strict mode also does not allow a user to specify large indices even if <code>innodb\_large\_index</code> is set to <code>ON</code>. Addtionally, users need to specify <code>ROW\_FORMAT=DYNAMIC</code> or <code>ROW\_FORMAT=COMPRESSED</code> in each table create statement. Apps that do not specify this additional clause see an error during DDL similar to:
         ```ERROR 1709 (HY000): Index column size too large. The maximum column size is 767 bytes.```
     - The [IGNORE](https://mariadb.com/kb/en/mariadb/ignore/) keyword can be used when strict mode is set to convert the error to a warning.
+
+### Security Configuration Defaults
+
+#### <a id="skip-symbolic-links"></a>Skip Symbolic Links
+
+MySQL for PCF is configured to not permit the use of symlinks to tables. This is a [recommended security setting](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html) which prevents users from possibly manipulating files on the server's file system.
+
+#### <a id="local-infile"></a>Allow Client to Send Files
+
+This option allows clients to send files to the server. Disabling ensures that clients will not be directed to inadvertently share data with unknown database servers.
+
+#### <a id="remote-admin"></a>Allow Remote Admin Access
+
+When enabled, `mysql` clients will be allowed to connect as administrator from remote hosts. When disabled, administrators must `bosh ssh` into each MySQL VM to connect as the MySQL super user. Note that this is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
+
+This setting affects the admin and roadmin accounts only.
+
+#### <a id="command-history"></a>Allow Command History
+
+When disabled, prohibits the creation of command line history files on the MySQL nodes. If administrators frequently `ssh` into the MySQL VMs without using `bosh ssh`, the default setting of Enabled will automatically create history files of their interactions with the server. These files can contain possibly sensitive information. Disable this option to ensure that no trace files are left on the file system.
 
 ## <a id="galeradefaults"></a> MySQL Server Defaults for Galera Components
 
@@ -120,27 +196,3 @@ These are the maximum transaction sizes set for Galera:
 Specifying no limit avoids a [known issue](https://jira.mariadb.org/browse/MDEV-11817) with MariaDB.
 
 For general information, see [Transaction Size](http://galeracluster.com/documentation-webpages/limitations.html#transaction-size).
-
-## <a id="scale-behavior"></a> Cluster Scaling Behavior ##
-
-This section explains how the MySQL cluster behaves when you change its number of nodes.
-
-### <a id="scale-up"></a>Scaling Up from One to Three Nodes
-
-When you add new MariaDB nodes to an existing node, they replicate data from the existing primary node and join the cluster once replication is complete. Performance may temporarily degrade while the new nodes sync all data from the original node.
-
-After new nodes have joined the cluster, the proxy continues to route incoming connections to the primary node.
-
-If the proxy detects that the primary node is [unhealthy](https://github.com/cloudfoundry/cf-mysql-release/blob/release-candidate/docs/proxy.md#unhealthy), it severs connections to the primary node and routes all new connections to a different, healthy node.
-
-If the proxy detects that no healthy MariaDB nodes exist in the cluster, it rejects all connections and the cluster becomes inaccessible.
-
-### <a id="scale-down"></a>Scaling Down from Three to One Node
-
-When you scale down from multiple MariaDB nodes to a single node, the primary node continues survives as the sole remaining node (provided it remains healthy), and the proxy continues to route incoming connections to the node.
-
-### <a id="removal"></a> Graceful Removal of Nodes
-
-Removing nodes from a cluster _gracefully_ means that the cluster size decreases while the cluster maintains its healthy state.
-
-You can remove nodes gracefully by manually shutting each down with `monit` or by decreasing the cluster size as described in the [Switch Between Single and HA Topologies](./configuring.html#switch-topologies) section of the Configuring MySQL for PCF topic.
