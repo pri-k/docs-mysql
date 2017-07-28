@@ -49,37 +49,39 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
 ![Configure MySQL Server Configuration](config-servers.png)
 
-- **Enable Strict Mode**
+The following options can be changed to suit your environment. These changes will affect all service instances, exercise caution when making changes.
+
+For additional information about how MySQL for PCF is configured, see the [architecture documentation](architecture.html).
+
+- <a id="innodb-strict-mode"></a>**Enable InnoDB Strict Mode**
 
     Default: Enabled
 
-    Enabling this feature will cause the database storage engine (InnoDB) to return errors instead of warnings in certain cases. For more information, refer to the [MariaDB strict mode documentation](https://mariadb.com/kb/en/mariadb/xtradbinnodb-strict-mode/).
+    See the [architecture documentation](architecture.html#innodb-strict-mode) for information on this setting.
 
-- **Allow Clients to Send Files**
-
-    Default: Enabled
-
-    This option allows clients to send files to the server. Disabling ensures that clients will not be directed to reveal information to rogue database servers.
-
-- **Allow Command History**
+- <a id="local-infile"></a>**Allow Clients to Send Files**
 
     Default: Enabled
 
-    When disabled, prohibits the creation of command line history files on the MySQL nodes. If administrators frequently `ssh` into the MySQL VMs without using `bosh ssh`, the default setting of Enabled will automatically create history files of their interactions with the server. These files can contain possibly sensitive information. Disable this option to ensure that no trace files are left on the file system.
+    See the [architecture documentation](architecture.html#local-infile) for information on this setting.
 
-- **Disable Reverse DNS lookups**
+- <a id="command-history"></a>**Allow Command History**
 
     Default: Enabled
 
-    Disabling reverse DNS lookups improves performance. Clearing this option causes the MySQL servers to perform a reverse DNS lookup on each new connection. Typically, MySQL uses this to restrict access by hostname, but MySQL for PCF installations do not need reverse DNS lookups.
+    See the [architecture documentation](architecture.html#command-history) for information on this setting.
 
-- **Allow Remote Admin Access**
+- <a id="reverse-dns-lookups"></a>**Disable Reverse DNS lookups**
+
+    Default: Enabled
+
+    See the [architecture documentation](architecture.html#reverse-dns-lookups) for information on this setting.
+
+- <a id="remote-admin"></a>**Allow Remote Admin Access**
 
     Default: Disabled
 
-    When enabled, `mysql` clients will be allowed to connect as administrator from remote hosts. When disabled, administrators must `bosh ssh` into each MySQL VM to connect as the MySQL super user. Note that this is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
-
-    This setting affects the admin and roadmin accounts only.
+    See the [architecture documentation](architecture.html#remote-admin) for information on how to configure this setting.
 
 - **Read-Only User Password**
 
@@ -93,7 +95,7 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
     The maximum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process has failed to start properly, and will appear as failing in Ops Manager and BOSH output. Depending on the data stored by the database, and the time represented in logs, you may need to increase this above the default of 60 seconds.
 
-- **New Cluster Probe Timeout**
+- <a id="cluster-probe-timeout"></a>**New Cluster Probe Timeout**
 
     Default: 10 seconds
 
@@ -103,7 +105,7 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
     Default: Enabled
 
-    Disable if index creation is failing. Advanced configuration. Read the sections on [large prefixes](architecture.html#innodb-large-prefix) and [SQL mode](architecture.html#sql-mode) before disabling.
+    See the [architecture documentation](architecture.html#innnodb-large-prefix) for information on this setting.
 
 - **Enable replication debug logging**
 
@@ -119,27 +121,27 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
 - **Maximum Temporary Table Memory Size**
 
-    Default: 33554432 bytes
+    Default: 33554432 bytes (32 MB)
 
-    The maximum size (in bytes) of internal in-memory temporary tables. Read the [MariaDB documentation on tmp\_table\_size](https://mariadb.com/kb/en/mariadb/server-system-variables/#tmp_table_size) for more information.
+    The maximum size (in bytes) of internal in-memory temporary tables. See the [architecture documentation](architecture.html#temp-tables) for information on this setting.
 
 - **Table Open Cache Size**
 
     Default: 2000 tables
 
-    The number of table handles to keep open. Read the [MariaDB documentation on optimizing table\_open\_cache size](https://mariadb.com/kb/en/mariadb/optimizing-table_open_cache/) for more information.
+    The number of table handles to keep open. See the [architecture documentation](architecture.html#table-open-cache-size) for information on this setting.
 
 - **Table Definition Cache Size**
 
     Default: 8192 tables
 
-    Set this to a number relative to the number of tables the server will manage. Read the [MariaDB documentation on table\_definition\_cache](https://mariadb.com/kb/en/mariadb/server-system-variables/#table_definition_cache) for more information.
+    Set this to a number relative to the number of tables the server will manage. See the [architecture documentation](architecture.html#table-definition-cache-size) for information on this setting.
 
 - **InnoDB Buffer Pool Size**
 
     Default: 50 percent of instance RAM
 
-    Choose Percent to configure the percent of system RAM allocated to the memory buffer used by InnoDB. Choose Bytes to configure the size in bytes, instead. Read the [MariaDB documentation on the InnoDB Buffer Pool](https://mariadb.com/kb/en/mariadb/xtradbinnodb-buffer-pool/) for more information.
+    Choose Percent to configure the percent of system RAM allocated to the memory buffer used by InnoDB. Choose Bytes to configure the size in bytes, instead. See the [architecture documentation](architecture.html#innodb-buffer-pool-size) for information on this setting.
 
 - **Maximum Server Connections**
 
@@ -151,7 +153,7 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
     Default: 7 days
 
-    Time in days to store binlogs before purging.
+    Time in days to store binary logs before purging. These logs are not used by MySQL for PCF. They are stored only for diagnostic purposes.
 
 ## <a id="backups"></a>Backups
 
@@ -180,15 +182,15 @@ The **Advanced Options** pane lets you configure the following features:
     By default, the Quota Enforcer polls for violators and reformers every 30 seconds. This setting, in seconds, changes how long the quota enforcer pauses between checks.
     Quota Enforcer polling draws minimal resources, but if you want to reduce this load, increase this interval. Be aware, however, that a long Quota Enforcer interval may cause apps to write more data than their pre-determined limit allows.
 
-- **Cluster Name**
+- <a id="cluster-name"></a>**Cluster Name**
 
-  Default: `cf-mariadb-galera-cluster`
+    Default: `cf-mariadb-galera-cluster`
 
-  Set a unique name for the cluster. When examining the state or making manual changes to a Pivotal MySQL cluster, it's useful to check the name of the cluster. You can see the name of the cluster by running the query, `select @@wsrep_cluster_name`.
+    Set a unique name for the cluster. When examining the state or making manual changes to a Pivotal MySQL cluster, it's useful to check the name of the cluster. You can see the name of the cluster by running the query, `select @@wsrep_cluster_name`.
 
-  <p class="note"><strong>Important:</strong> may only be set during initial deployment. Changing this field after the cluster has been deployed will cause **Apply Changes** to fail.</p>
+    <p class="note"><strong>Important:</strong> may only be set during initial deployment. Changing this field after the cluster has been deployed will cause <strong>Apply Changes</strong> to fail.</p>
 
-  Please contact Pivotal Support for help in changing the name of a cluster that has already been deployed.
+    Please contact Pivotal Support for help in changing the name of a cluster that has already been deployed.
 
 ## <a id="errands"></a>Errands
 
@@ -196,7 +198,7 @@ Two post-deploy errands run by default: the **broker registrar** and the **smoke
 
 <p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. Do not reconfigure errands in your deployment without instruction from Support.
 
-Additionally, the <strong>Errands</strong> pane also shows a <b>broker-deregistrar</b> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Support.</p>
+Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Support.</p>
 
 ## <a id="resource-config"></a>Resource Config
 
