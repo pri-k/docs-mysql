@@ -188,7 +188,7 @@ The **Advanced Options** pane lets you configure the following features:
 
     Set a unique name for the cluster. When examining the state or making manual changes to a Pivotal MySQL cluster, it's useful to check the name of the cluster. You can see the name of the cluster by running the query, `select @@wsrep_cluster_name`.
 
-    <p class="note"><strong>Important:</strong> may only be set during initial deployment. Changing this field after the cluster has been deployed will cause **Apply Changes** to fail.</p>
+    <p class="note"><strong>Important:</strong> may only be set during initial deployment. Changing this field after the cluster has been deployed will cause <strong>Apply Changes</strong> to fail.</p>
 
     Please contact Pivotal Support for help in changing the name of a cluster that has already been deployed.
 
@@ -198,7 +198,7 @@ Two post-deploy errands run by default: the **broker registrar** and the **smoke
 
 <p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. Do not reconfigure errands in your deployment without instruction from Support.
 
-Additionally, the <strong>Errands</strong> pane also shows a <b>broker-deregistrar</b> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Support.</p>
+Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Support.</p>
 
 ## <a id="resource-config"></a>Resource Config
 
