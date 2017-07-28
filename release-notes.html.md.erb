@@ -20,7 +20,7 @@ owner: MySQL
 
 Release Date: June 28, 2017
 
-- MySQL for PCF 1.9 has been updated with several security and performance tuning enhancements. See the [architecture](architecture.html) and [configuration](configuration.html) documentation for more details.
+- MySQL for PCF 1.9 has been updated with several security and performance tuning enhancements. See the [architecture](architecture.html) and [configuration](configuring.html) documentation for more details.
 - The URL for the proxy has changed. The old scheme for each proxy dashboard was:
 
         proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN
@@ -32,8 +32,8 @@ Release Date: June 28, 2017
         JOB-INDEX-proxy-p-mysql.SYSTEM-DOMAIN
 
     for example: `0-proxy-p-mysql.sys.bosh-lite.com`
-- Now includes an [Advanced Configuration](configuring.html#cluster-name) to set a cluster's name before initial deployment.
-- MariaDB has been updated to v10.1.24 and Galera to v25.3.20
+- There is a new [Advanced Configuration](configuring.html#cluster-name) to set a cluster's name before initial deployment.
+- MariaDB has been updated to v10.1.24 and Galera to v25.3.20.
 - Updated nokogiri to address [CVE-2017-5029](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5029).
 
 ## <a id="1-9-5"></a>v1.9.5

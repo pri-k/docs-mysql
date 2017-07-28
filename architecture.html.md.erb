@@ -47,13 +47,13 @@ When you add new MariaDB nodes to an existing node, they replicate data from the
 
 After new nodes have joined the cluster, the proxy continues to route incoming connections to the primary node.
 
-If the proxy detects that the primary node is [unhealthy](https://github.com/cloudfoundry/cf-mysql-release/blob/release-candidate/docs/proxy.md#unhealthy), it severs connections to the primary node and routes all new connections to a different, healthy node.
+If the proxy detects that the primary node is [unhealthy](proxy.html#unhealthy), it severs connections to the primary node and routes all new connections to a different, healthy node.
 
 If the proxy detects that no healthy MariaDB nodes exist in the cluster, it rejects all connections and the cluster becomes inaccessible.
 
 ### <a id="scale-down"></a>Scaling Down from Three to One Node
 
-When you scale down from multiple MariaDB nodes to a single node, the primary node continues survives as the sole remaining node (provided it remains healthy), and the proxy continues to route incoming connections to the node.
+When you scale down from multiple MariaDB nodes to a single node, the primary node continues to survive as the sole remaining node (provided it remains healthy), and the proxy continues to route incoming connections to the node.
 
 ### <a id="removal"></a> Graceful Removal of Nodes
 
@@ -107,13 +107,13 @@ Defines the method used to flush data to InnoDB data files, which can affect I/O
 
 #### <a id="innodb-large-prefix"></a>Innodb Large Prefix
 
-The `innodb_large_prefix` feature is enabled by default. When disabled, large index prefixes are silently truncated. When enabled, larger index key prefixes may be created by additionally specifying DYNAMIC or COMPRESSED row formats. Row format is not defined by default. Thus, when `innodb_large_prefix` is enabled, applications must specify row format for each table which will use large index prefixes.
+The `innodb_large_prefix` feature is enabled by default. When disabled, large index prefixes are silently truncated. When enabled, larger index key prefixes may be created by additionally specifying DYNAMIC or COMPRESSED row formats. Row format is not defined by default. Thus, when `innodb_large_prefix` is enabled, applications must specify row format for each table that will use large index prefixes.
 
 See also the section on [SQL mode](#sql-mode) before disabling.
 
 #### <a id="innodb-strict-mode"></a>InnoDB Strict Mode
 
-Enabling this feature will cause the database storage engine (InnoDB) to return errors instead of warnings in certain cases. For more information, refer to the [MariaDB strict mode documentation](https://mariadb.com/kb/en/mariadb/xtradbinnodb-strict-mode/).
+Enabling this feature causes the database storage engine (InnoDB) to return errors instead of warnings in certain cases. For more information, refer to the [MariaDB strict mode documentation](https://mariadb.com/kb/en/mariadb/xtradbinnodb-strict-mode/).
 
 #### <a id="temp-tables"></a>Temporary Tables
 
@@ -156,11 +156,11 @@ MySQL for PCF automatically enables the [slow query log](https://mariadb.com/kb/
 
 #### <a id="secure-file-priv"></a>Restrict Client Access to Server File System
 
-The MariaDB setting [secure\_file\_priv](https://mariadb.com/kb/en/mariadb/server-system-variables/#secure_file_priv) has been set to only allow file access from the server directory, `/var/vcap/data/mysql/files/`. This prevents clients from reading arbitrary files on the server file system. If a user wishes to do a bulk-import, an administrator must first deliver the file to that directory.
+The MariaDB setting [secure\_file\_priv](https://mariadb.com/kb/en/mariadb/server-system-variables/#secure_file_priv) is set to only allow file access from the server directory, `/var/vcap/data/mysql/files/`. This prevents clients from reading arbitrary files on the server file system. If a user wishes to do a bulk-import, an administrator must first deliver the file to that directory.
 
 #### <a id="skip-symbolic-links"></a>Skip Symbolic Links
 
-MySQL for PCF is configured to not permit the use of symlinks to tables. This is a [recommended security setting](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html) which prevents users from possibly manipulating files on the server's file system.
+MySQL for PCF is configured to prevent the use of symlinks to tables. This is a [recommended security setting](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html) which prevents users from manipulating files on the server's file system.
 
 #### <a id="local-infile"></a>Allow Client to Send Files
 
@@ -168,13 +168,13 @@ This option allows clients to send files to the server. Disabling ensures that c
 
 #### <a id="remote-admin"></a>Allow Remote Admin Access
 
-When enabled, `mysql` clients will be allowed to connect as administrator from remote hosts. When disabled, administrators must `bosh ssh` into each MySQL VM to connect as the MySQL super user. Note that this is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
+When enabled, `mysql` clients are allowed to connect as administrator from remote hosts. When disabled, administrators must `bosh ssh` into each MySQL VM to connect as the MySQL super user. Note that this is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
 
 This setting affects the admin and roadmin accounts only.
 
 #### <a id="command-history"></a>Allow Command History
 
-When disabled, prohibits the creation of command line history files on the MySQL nodes. If administrators frequently `ssh` into the MySQL VMs without using `bosh ssh`, the default setting of Enabled will automatically create history files of their interactions with the server. These files can contain possibly sensitive information. Disable this option to ensure that no trace files are left on the file system.
+When disabled, this prohibits the creation of command line history files on the MySQL nodes. If administrators frequently `ssh` into the MySQL VMs without using `bosh ssh`, the default setting of Enabled automatically creates history files of their interactions with the server. These files may contain sensitive information. Disable this option to ensure that no trace files are left on the file system.
 
 ## <a id="galeradefaults"></a> MySQL Server Defaults for Galera Components
 

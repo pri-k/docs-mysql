@@ -49,9 +49,9 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
 ![Configure MySQL Server Configuration](config-servers.png)
 
-The following options can be changed to suit your environment. These changes will affect all service instances, exercise caution when making changes.
+You can change the following options to suit your environment. Since these changes affect all service instances, exercise caution when making changes.
 
-For additional information about how MySQL for PCF is configured, see the [architecture documentation](architecture.html).
+For more information about how MySQL for PCF is configured, see the [architecture documentation](architecture.html).
 
 - <a id="innodb-strict-mode"></a>**Enable InnoDB Strict Mode**
 
@@ -93,7 +93,7 @@ For additional information about how MySQL for PCF is configured, see the [archi
 
     Default: 60 seconds
 
-    The maximum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process has failed to start properly, and will appear as failing in Ops Manager and BOSH output. Depending on the data stored by the database, and the time represented in logs, you may need to increase this above the default of 60 seconds.
+    The maximum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process failed to start properly, and appear as failing in Ops Manager and BOSH output. Depending on the data stored by the database, and the time represented in logs, you may need to increase this above the default of 60 seconds.
 
 - <a id="cluster-probe-timeout"></a>**New Cluster Probe Timeout**
 
@@ -188,7 +188,7 @@ The **Advanced Options** pane lets you configure the following features:
 
     Set a unique name for the cluster. When examining the state or making manual changes to a Pivotal MySQL cluster, it's useful to check the name of the cluster. You can see the name of the cluster by running the query, `select @@wsrep_cluster_name`.
 
-    <p class="note"><strong>Important:</strong> may only be set during initial deployment. Changing this field after the cluster has been deployed will cause <strong>Apply Changes</strong> to fail.</p>
+    <p class="note"><strong>Important:</strong> may only be set during initial deployment. Changing this field after the cluster has been deployed causes <strong>Apply Changes</strong> to fail.</p>
 
     Please contact Pivotal Support for help in changing the name of a cluster that has already been deployed.
 
@@ -196,9 +196,9 @@ The **Advanced Options** pane lets you configure the following features:
 
 Two post-deploy errands run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that apps pushed to Elastic Runtime can be bound and write to MySQL service instances. You can turn both errands on or off in the **Errands** pane under the **Settings** tab.
 
-<p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. Do not reconfigure errands in your deployment without instruction from Support.
+<p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. Do not reconfigure errands in your deployment without instruction from Pivotal Support.
 
-Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Support.</p>
+Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Pivotal Support.</p>
 
 ## <a id="resource-config"></a>Resource Config
 
@@ -206,7 +206,7 @@ Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-dere
 
 This pane configures the number, persistent disk capacity, and VM type for all component VMs that run the MySQL for PCF service.
 
-Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases. The MariaDB cluster nodes are configured by default with 100GB of persistent disk. The deployment will fail if this is less than 3GB; we recommend allocating 10GB minimum.
+Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases. The MariaDB cluster nodes are configured by default with 100GB of persistent disk. The deployment fails if this is less than 3GB; we recommend allocating 10GB minimum.
 
 If **Enable Backups** is selected in the **Backups** pane, set **Backup Prepare Node** > **Instances** to `1`.
 
@@ -227,7 +227,7 @@ Single and three-node clusters are the only supported topologies. Ops Manager  a
 
 If you scale up to three MySQL nodes, Pivotal recommends spreading them across different Availability Zones to maximize cluster availability. An Availability Zone (AZ) is a network-distinct section of a region. For more information about Amazon AZs, see [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
 
-When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it will update the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes will cause all connections to that node to be dropped while the node restarts.
+When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it updates the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes causes all connections to that node to be dropped while the node restarts.
 
 ## <a id="stemcell"></a>Stemcell
 
