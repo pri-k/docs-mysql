@@ -14,6 +14,23 @@ owner: MySQL
      }
 </style>
 
+## <a id="1-9-6"></a>v1.9.6
+
+Release Date: June 28, 2017
+
+- MySQL for PCF 1.9 has been updated with several security and performance tuning enhancements. See the [architecture](architecture.html) and [configuration](configuration.html) documentation for more details.
+- The URL for the proxy has changed. The old scheme was:
+
+        proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN
+
+    for example: `proxy-0-p-mysql.sys.bosh-lite.com`
+
+    The new scheme is now:
+
+        JOB-INDEX-proxy-p-mysql.SYSTEM-DOMAIN
+
+    for example: `0-proxy-p-mysql.sys.bosh-lite.com`
+
 ## <a id="1-9-5"></a>v1.9.5
 
 Release Date: June 22, 2017
