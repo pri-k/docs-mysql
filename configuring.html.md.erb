@@ -117,6 +117,19 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
     The MySQL service includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/) to log server activity. You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. The log can be found at `/var/vcap/store/mysql_audit_logs/mysql_server_audit.log` on each VM. When server logging is enabled, the file is rotated every 100 megabytes, and the 30 most recent files are retained.
 
+    - Event types
+
+        Default: `connect,query`
+
+    - Exclude users
+
+        Supply a comma-separated list of additional database users that should not be included in the activity log. Note that these users are always excluded form audit logging:
+        - `repcanary`
+        - `mysql-metrics`
+        - `cluster-health-logger`
+        - `galera-healthcheck`
+        - `quota-enforcer`
+
     <p class="note"><strong>Note</strong>: Due to the sensitive nature of these logs, they are not transmitted to the syslog server.</p>
 
 - **Maximum Temporary Table Memory Size**
