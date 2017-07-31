@@ -67,8 +67,6 @@ You can remove nodes gracefully by manually shutting each down with `monit` or b
 
 This section describes the defaults that the MySQL for PCF tile applies to its MariaDB components. There are additional properties which can be customized. See the [configuration documentation](configuring.html#server) for more information.
 
-#### InnoDB Log Files
-
 #### Max User Connections
 
 To ensure all users get fair access to system resources, MySQL for PCF defaults each user's number of connections to 40. Operators can override this setting for each service plan in the **Service Plans** configuration pane.
@@ -76,10 +74,6 @@ To ensure all users get fair access to system resources, MySQL for PCF defaults 
 #### Skip External Locking
 
 Each virtual machine only runs one `mysqld` process, so they do not need external locking.
-
-Default: 1&nbsp;GB (cannot be configured)
-
-MySQL for PCF clusters default to a log-file size of 1&nbsp;GB to support large blobs.
 
 #### Max Allowed Packet: 256&nbsp;MB
 
@@ -97,6 +91,10 @@ InnoDB allows using either a single file to represent all data, or a separate fi
 
 MySQL for PCF uses the `Barracuda` file format to take advantage of extra features available with the `innodb_file_per_table = ON` option.
 
+#### InnoDB Log Files: 1&nbsp;GB
+
+MySQL for PCF clusters default to a log-file size of 1&nbsp;GB to support large blobs.
+
 #### <a id="innodb-buffer-pool-size"></a>InnoDB Buffer Pool Size
 
 Read the [MariaDB documentation on the InnoDB Buffer Pool](https://mariadb.com/kb/en/mariadb/xtradbinnodb-buffer-pool/) for more information.
@@ -104,6 +102,10 @@ Read the [MariaDB documentation on the InnoDB Buffer Pool](https://mariadb.com/k
 #### <a id="innodb-flush-method"></a>InnoDB Flush Method
 
 Defines the method used to flush data to InnoDB data files, which can affect I/O throughput. MySQL for PCF uses MariaDB's default, `fsync()`. Read the [MariaDB documentation on InnoDB Flush Method](https://mariadb.com/kb/en/mariadb/xtradbinnodb-server-system-variables/#innodb_flush_method) for more information.
+
+#### <a id="innodb-flush-log-at-trx-commit"></a>InnoDB Flush Log policy: 1
+
+We set [innodb_flush_log_at_trx_commit](https://mariadb.com/kb/en/mariadb/xtradbinnodb-server-system-variables/#innodb_flush_log_at_trx_commit) at the default, `1`, which is required for ACID compliance.
 
 #### <a id="innodb-large-prefix"></a>Innodb Large Prefix
 
