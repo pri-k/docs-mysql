@@ -96,6 +96,17 @@ To create an instance of the MySQL for PCF v2 service, run `cf create-service`:
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
+#### <a id='optional-param'></a> Provide Optional Parameters
+
+You can create a customized service instance by passing optional parameters to `cf create-service` using the `-c` flag.
+The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
+provided either in-line or in a file.
+
+The MySQL service broker supports the following parameter:
+
+* `enable_lower_case_table_names`: A boolean value that defaults to `false`. If set to true, MySQL's `lower_case_table_names` property is set to `1`.
+  For more information, consult the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
+
 ### <a id="bind"></a>Bind a Service Instance to Your App
 
 For an app to use a service, you must bind it to a service instance. Do this after you push or re-push the app using `cf push`.
