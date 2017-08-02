@@ -65,10 +65,24 @@ If no service instances of the deleted plan exist, the plan disappears from the 
 
 ### <a id="deleted-plan-instances"></a>When Deleted Plans Have Running Instances
 
-When running instances exist for a deleted service plan, they continue to run, but developers cannot create new instances of the plan. The service plan displays in the Services Marketplace as "inactive."
+When you have deleted a plan, and the `broker-registrar` errand runs, you will receive the following error if running instances still exist:
+
+```
+Warning: Service plans are missing from the broker's catalog (BROKER_CATALOG_URL) but can not be removed from Cloud Foundry while instances exist. The plans have been deactivated to prevent users from attempting to provision new instances of these plans. The broker should continue to support bind, unbind, and delete for existing instances; if these operations fail contact your broker provider.
+```
 
 Once all service plan instances are deleted, the operator can remove the plan from the Services Marketplace by following these steps:
 
 1. Run `bosh deployments` to find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
 1. Run `bosh deployment P-MYSQL-DEPLOYMENT-NAME`. For example, `bosh deployment p-mysql-180290d67d5441ebf3c5`.
 1. Run `bosh run errand broker-registrar`.
+
+### <a id="re-adding-deleted-plans"></a>Re-adding Deleted Plans
+
+A plan name can only be reused if the old plan has been fully purged using the above instructions.
+
+Failure to delete the service instances under a plan will result in the following error:
+
+```
+Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service. Service p-mysql already has a plan named <PLAN_NAME>
+```
