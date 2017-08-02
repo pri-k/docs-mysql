@@ -306,6 +306,42 @@ To disable MySQL for PCF automated backups:
 
 1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
 
+## <a id="manual-backup"></a> Manual Backup
+
+Back up your data manually with [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html). This backup
+acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
+
+To backup a MySQL for PCF service instance VM:
+
+1. Determine the GUID associated with your service instance:
+ <pre class="terminal">
+  $ cf service SERVICE_INSTANCE --guid
+ </pre>
+
+1. Download the manifest for the service instance deployment using the GUID from above.
+ <pre class="terminal">
+  $ bosh download manifest service-instance_GUID ./manifest.yml
+ </pre>
+
+1. Set the BOSH deployment to the downloaded manifest.
+ <pre class="terminal">
+  $ bosh deployment ./manifest.yml
+ </pre>
+
+1. Find the IP address of the MySQL service instance VM:
+ <pre class="terminal">
+  $ bosh instances
+ </pre>
+
+1. Find the admin password for the service instance in the manifest:
+ <pre class="terminal">
+  $ cat ./manifest.yml | grep admin_password
+ </pre>
+
+1. Use mysqldump to backup the database:
+ <pre class="terminal">
+  $ $ mysqldump -u admin -p -h $MYSQL_IP --all-databases --single-transaction > backup.sql
+ </pre>
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 
