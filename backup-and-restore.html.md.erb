@@ -311,7 +311,7 @@ To disable MySQL for PCF automated backups:
 Back up your data manually with [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html). This backup
 acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
 
-To backup a MySQL for PCF service instance VM:
+Perform the following steps to backup a MySQL for PCF service instance VM:
 
 1. Determine the GUID associated with your service instance:
  <pre class="terminal">
@@ -340,7 +340,7 @@ To backup a MySQL for PCF service instance VM:
 
 1. Use mysqldump to backup the database:
  <pre class="terminal">
-  $ $ mysqldump -u admin -p -h $MYSQL_IP --all-databases --single-transaction > backup.sql
+  $ mysqldump -u admin -p -h $MYSQL_IP --all-databases --single-transaction > backup.sql
  </pre>
 
 ## <a id="restore"></a> Restore a Service Instance from Backup

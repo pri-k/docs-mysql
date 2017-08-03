@@ -54,6 +54,6 @@ Redeploying MySQL for PCF for configuration changes or upgrades will result in M
 ##<a id="persistent"></a> MySQL Persistent Disk Utilization
 
 MySQL backups are taken on the VM and temporarily stored and encrypted on the VM. This results in increased disk utilization while backups are being taken.
-When enabling backups, we recommend choosing persistent disk sizes that are three times larger than you intend to be available to app devs using the service.
+When enabling backups, we recommend choosing persistent disk sizes that are three times larger than you intend to be available to app developers using the service.
 
 Backups require two to three times as much disk space as the server needs. The first is for the actual data, the second is the copied backup, and the third is for the encrypted backup.
