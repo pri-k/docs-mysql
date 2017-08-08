@@ -350,10 +350,10 @@ Restoring a MySQL for PCF service instance replaces all of its data and running 
 
 To restore a MySQL for PCF instance from an offsite backup, download the backup and restore to a new instance by following these procedures:
 
-+ [Download the Backups](#download)
++ [Download the Backup Artifact](#download)
 + [Restore the Service Instance](#restore)
 
-###<a id="download"></a> Download the Backups
+###<a id="download"></a> Download the Backup Artifact
 
 These instructions assume that you are using S3 as your backup destination.
 If you are using one of the other backup options, steps [6](#six) and [8](#eight) are different.
@@ -398,116 +398,57 @@ These instructions assume you have a backup downloaded. To restore the backup to
   $ cf create-service p.mysql db-small NEW\_SERVICE\_INSTANCE
  </pre>
 
-1. Prepare the service instance for restoration.
-  1. Determine the GUID associated with your service instance:
+
+1. Determine the GUID associated with your service instance:
  <pre class="terminal">
     $ cf service NEW\_SERVICE\_INSTANCE --guid
  </pre>
 
-  1. Download the manifest for the service instance deployment using the GUID from above.
+1. Download the manifest for the service instance deployment using the GUID from above.
  <pre class="terminal">
     $ bosh download manifest service-instance_GUID ./manifest.yml
  </pre>
 
-  1. Set the BOSH deployment to new downloaded manifest.
+1. Determine and record the admin password
+ <pre class="terminal">
+  $ cat ./manifest | grep admin_password
+ </pre>
+
+1. Set the BOSH deployment to new downloaded manifest.
  <pre class="terminal">
      $ bosh deployment ./manifest.yml
  </pre>
 
-  1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
+1. Copy the downloaded backup to the new service instance.
+ <pre class="terminal">
+   $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+ </pre>
+   - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+   - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
+
+1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
  <pre class="terminal">
     $ bosh ssh mysql
  </pre>
 
-  1. After securely logging into MySQL, run `sudo su` to become root.
+1. After securely logging into MySQL, run `sudo su` to become root.
  <pre class="terminal">
     $ sudo su
  </pre>
 
-  1. Stop all running processes.
+1. Move the backup artifact to the script's expected location.
  <pre class="terminal">
-    $ monit stop all
+    $ mv /tmp/mysql-backup-1498863859-0.tar.gpg /var/vcap/store/restore-artifact/
  </pre>
 
-  1. Run `watch` with `monit summary` and wait until all jobs show as `not monitored`. This means they have stopped.
+1. Run the restore utility to restore the backup artifact into the data directory.
  <pre class="terminal">
-    $ watch monit summary
+  $ /var/vcap/packages/mysql-restore/bin/restore --encryption-key ENCRYPTION-KEY --mysql-username admin --mysql-password ADMINPASSWORD
  </pre>
+ * This process will delete any existing data, decrypt and untar the backup artifact, and restore it into the mysql data directory.
+ <p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
 
-  1. Delete the existing MySQL database stored on disk.
- <pre class="terminal">
-    $ rm -rf /var/vcap/store/mysql/data/*
- </pre>
-   <p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
-
-  1. Exit the MySQL VM.
-
-1. Restore the backup to the new service instance:
-  1. Copy the downloaded backup to the new service instance.
-    <pre class="terminal">
-     $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
-    </pre>
-      - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
-      - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
-
-  1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
- <pre class="terminal">
-     $ bosh ssh mysql
- </pre>
-
-  1. After securely logging into MySQL, run `sudo su` to become root.
- <pre class="terminal">
-    $ sudo su
- </pre>
-
-  1. Run `gpg --decrypt` to decrypt the backup file. When prompted, enter the [GPG](https://www.gnupg.org) decryption passphrase from the service instance manifest's `properties.cf-mysql-backup.symmetric_key` value, which you recorded earlier.
- <pre class="terminal">
-     $ gpg --decrypt /tmp/mysql-backup.tar.gpg > /tmp/mysql-backup.tar
- </pre>
-
-  1. Expand the backup into the data directory for the MySQL server.
- <pre class="terminal">
-     $ tar xvf /tmp/mysql-backup.tar --directory=/var/vcap/store/mysql/data/
- </pre>
-
-  1. Modify the data directory owner to `vcap` or the mysql server cannot access the data.
- <pre class="terminal">
-     $ chown -R vcap:vcap /var/vcap/store/mysql
- </pre>
-
-  1. Restart the BOSH jobs to resume the MySQL server.
-  <pre class="terminal">
-     $ monit start all
- </pre>
-
-  1. Use monit to ensure all processes start successfully; all processes should be listed as `running`.
- <pre class="terminal">
-     $ watch monit summary
- </pre>
-
-  1. Delete old service binding created users. User tables get backed up along with databases, so any users that existed
-     in the backup are transferred over during restoration. To secure the database, determine and delete all users
-     that have randomly generated usernames:
-     <pre class="terminal">
-      $ /var/vcap/packages/percona-server/bin/mysql -uadmin -p
-      <br />
-      mysql> select USER from mysql.user;
-      +----------------------------------+
-      | USER                             |
-      +----------------------------------+
-      | 9b930c5813e049ca863b4acbf4000a8c |
-      | admin                            |
-      | e82b9b479bf64eb5854c93065810c95b |
-      | mysql.sys                        |
-      +----------------------------------+
-      4 rows in set (0.00 sec)
-      <br />
-      mysql> drop user 9b930c5813e049ca863b4acbf4000a8c;
-      <br />
-      mysql> drop user e82b9b479bf64eb5854c93065810c95b;
-     </pre>
-
-  1. Exit the MySQL VM.
+1. Exit the MySQL VM.
 
 1. Update your CF app to bind to the new service instance.
  <pre class="terminal">
@@ -520,3 +461,5 @@ These instructions assume you have a backup downloaded. To restore the backup to
  </pre>
 
 1. Your app should be running and able to access the restored data.
+
+1. Restore the backup to the new service instance:
