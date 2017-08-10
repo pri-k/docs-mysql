@@ -14,7 +14,7 @@ Operators can configure multiple MySQL service plans in the **Service Plans** pa
 1. Click **Add** to add a new service plan. Click the small triangles to expand or collapse a plan's details.
 	<%= image_tag('config-service-plans.png') %>
 1. Complete the following fields:
-	- **Service Plan name**: Developers see this name in the Services Marketplace and use it to create service instances in Apps Manager and the cf CLI. Plan names may include only lowercase letters, numbers, hyphens, and underscores.
+	- **Service Plan name**: Developers see this name in the Marketplace and use it to create service instances in Apps Manager and the cf CLI. Plan names may include only lowercase letters, numbers, hyphens, and underscores.
 	  <p class="note"><strong>Note</strong>: Ops Manager does not prevent you from entering invalid names into the <strong>Service Plan name</strong> field. A plan name containing invalid characters prevents the tile from deploying after you click <strong>Apply Changes</strong> and generates an error like this in the installation log:
 	    <code>
 	    Error 100: Error filling in template 'settings.yml.erb' for 'cf-mysql-broker-partition-20d9770a220f749796c2/0' (line 40: Plan name 'ONE HUNDRED MEGA BYTES!!!' must only contain lowercase letters, numbers, hyphen(-), or underscore(_).)
@@ -41,7 +41,8 @@ After an operator changes a plan's definition, either the operator or a user mus
 
 ### Update Existing Service Instances
 
-After you change a service plan, all new services will reflect the new settings. To apply a change to existing services, update service instances using the cf CLI as follows:
+After you change a service plan, all new services reflect the new settings.
+To apply a change to existing services, update service instances using the cf CLI as follows:
 
 <pre class="terminal">
 cf update-service SERVICE_INSTANCE -p NEW_PLAN
@@ -63,12 +64,13 @@ The following rules apply when updating a service instance's plan:
 1. Click **Save**.
 1. Click **Apply Changes** from the Installation Dashboard.
 
+  The plan no longer appears in the Marketplace for non-admin users.
+  Existing service instances continue to exist until deleted.
 
-The plan will no longer appear in the Services Marketplace for non-admin users. Existing service instances will continue to exist until deleted.
+### <a id="leftover-plan-instances"></a>Instances Leftover after Plan Deletion
 
-### <a id="leftover-plan-instances"></a>Instances Left Over After Plan Deletion
-
-When deleting a plan, the **Apply Changes** step will run the `broker-registrar` errand. If there are still services instances that were created under that plan, the errand will show this warning:
+When deleting a plan, the **Apply Changes** step runs the `broker-registrar` errand.
+If there are still services instances that were created under that plan, the errand shows this warning:
 
 <pre class="terminal">
 Warning: Service plans are missing from the broker's catalog (BROKER_CATALOG_URL)
@@ -88,9 +90,11 @@ GROUP BY max_storage_mb
 ORDER BY max_storage_mb DESC;
 </pre>
 
-Once all service plan instances have been deleted, remove the plan from the Services Marketplace by following running the `broker-registrar` errand again:
+After all service plan instances have been deleted,
+remove the plan from the Marketplace by running the `broker-registrar` errand again:
 
-1. Find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
+1. Find the full name of the MySQL for PCF deployment. 
+   For example, `p-mysql-180290d67d5441ebf3c5`.
     <pre class="terminal">bosh deployments</pre>
 1. Set the deployment:
     <pre class="terminal">bosh deployment p-mysql-180290d67d5441ebf3c5</pre>
@@ -99,9 +103,9 @@ Once all service plan instances have been deleted, remove the plan from the Serv
 
 ### <a id="re-adding-deleted-plans"></a>Re-adding Deleted Plans
 
-A plan name can only be reused if the old plan has been fully purged using the above instructions.
+A plan name can only be reused if the old plan has been fully purged using the instructions above.
 
-If there are still service instances for a plan which has been deleted, the `broker-registrar` errand will fail with the following error:
+If there are still service instances for a plan that has been deleted, the `broker-registrar` errand fails with the following error:
 
 <pre class="terminal">
 Server error, status code: 502, error code: 270012, message: Service broker
