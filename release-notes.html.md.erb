@@ -5,6 +5,25 @@ owner: MySQL
 
 <html class="list-style-none"></html>
 
+## <a id="1-7-32"></a>v1.7.32
+
+Release Date:
+
+<p class='note'><strong>This is the last planned release of MySQL for PCF 1.7.</strong> The support period for version 1.7 has expired. To stay up to date with the latest software and security updates, please plan to update to more recent releases of MySQL for PCF.</p>
+
+- **Change the Interruptor's default setting to OFF.**
+
+    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](troubleshooting.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if rejoining may delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
+
+    In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual Operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
+
+    If you wish to continue using the Interruptor, make sure that "Prevent node auto re-join" is checked in the "Advanced Options" configuration pane, then hit **Apply Changes.**
+- Upgrades several dependencies including `nokogiri 1.8.0` and `golang 1.8.3`, `xtrabackup 2.4.5`, `boost 1.59.0`, and `python 2.7.13`
+- Updated stemcell to 3312.32. This security upgrade resolves the following:
+  - [USN-3265-2](http://www.ubuntu.com/usn/USN-3265-2/)
+
+  For more information, see [pivotal.io/security](https://pivotal.io/security).
+
 ## <a id="1-7-31"></a>v1.7.31
 
 Release Date: June 22, 2017
@@ -20,7 +39,7 @@ Release Date: June 22, 2017
 
 - Updated stemcell to 3312.29. This security upgrade resolves the following:
   + [USN-3334-1](http://www.ubuntu.com/usn/USN-3334-1/).
-  
+
     For more information, see [pivotal.io/security](https://pivotal.io/security).
 
 ## <a id="1-7-30"></a>v1.7.30
@@ -37,9 +56,9 @@ Release Date: June 2, 2017
 Release Date: May 19, 2017
 
 - Bug fixes to address issues with MySQL for PCF when the [IPsec add-on](https://docs.pivotal.io/addon-ipsec/) is also installed:
-  - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product might fail to deploy. 
-      This may be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced. 
-      Version 1.7.29 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page. 
+  - **Bug fix:** While installing MySQL for PCF with IPsec installed, the product might fail to deploy.
+      This may be due to an issue where the default probe timeout is too long while running under IPsec, and should be reduced.
+      Version 1.7.29 of MySQL for PCF allows you to reduce the New Cluster Probe Timeout in the MySQL server configuration page.
       For more information, see [Options and Features](https://docs.pivotal.io/p-mysql/1-8/index.html#options_and_features) in the v1.8 documentation.
   - **Bug fix:** We also made a small change in the way that MySQL nodes shut down, which should better allow nodes to leave the cluster gracefully while IPsec is installed.
 
