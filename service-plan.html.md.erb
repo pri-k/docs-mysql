@@ -44,7 +44,8 @@ After an operator changes a plan's definition, either the operator or a user mus
 After you change a service plan, all new services will reflect the new settings. To apply a change to existing services, update service instances using the cf CLI as follows:
 
 <pre class="terminal">
-cf update-service SERVICE_INSTANCE -p NEW_PLAN</pre>
+cf update-service SERVICE_INSTANCE -p NEW_PLAN
+</pre>
 
 The following rules apply when updating a service instance's plan:
 
@@ -58,17 +59,52 @@ The following rules apply when updating a service instance's plan:
 	<%= image_tag('delete-plan.png') %>
 1. Click the trash can icon to the right of the service plan listing you want to delete.
 	<p class="note"><strong>Note</strong>: If you accidentally click the trash can, do not click <strong>Save</strong>. Instead, return to the Installation Dashboard and any accidental changes will be discarded. If you do click <strong>Save</strong>, do not click <strong>Apply Changes</strong> on the Installation Dashboard. Instead, click <strong>Revert</strong> to discard any accidental changes.</p>
+
 1. Click **Save**.
 1. Click **Apply Changes** from the Installation Dashboard.
 
-If no service instances of the deleted plan exist, the plan disappears from the Services Marketplace. See [below](#deleted-plan-instances) for how PCF handles already-running service instances of a deleted plan.
 
-### <a id="deleted-plan-instances"></a>When Deleted Plans Have Running Instances
+The plan will no longer appear in the Services Marketplace for non-admin users. Existing service instances will continue to exist until deleted.
 
-When running instances exist for a deleted service plan, they continue to run, but developers cannot create new instances of the plan. The service plan displays in the Services Marketplace as "inactive."
+### <a id="leftover-plan-instances"></a>Instances Left Over After Plan Deletion
 
-Once all service plan instances are deleted, the operator can remove the plan from the Services Marketplace by following these steps:
+When deleting a plan, the **Apply Changes** step will run the `broker-registrar` errand. If there are still services instances that were created under that plan, the errand will show this warning:
 
-1. Run `bosh deployments` to find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
-1. Run `bosh deployment P-MYSQL-DEPLOYMENT-NAME`. For example, `bosh deployment p-mysql-180290d67d5441ebf3c5`.
-1. Run `bosh run errand broker-registrar`.
+<pre class="terminal">
+Warning: Service plans are missing from the broker's catalog (BROKER_CATALOG_URL)
+but can not be removed from Cloud Foundry while instances exist. The plans have
+been deactivated to prevent users from attempting to provision new instances of
+these plans. The broker should continue to support bind, unbind, and delete for
+existing instances; if these operations fail contact your broker provider.
+</pre>
+
+You can see how many instances of each plan are allocated by running this SQL as the `admin` user:
+
+<pre class="terminal">
+SELECT max_storage_mb AS plan_size,
+	   COUNT(db_name) AS total_instances_allocated
+FROM mysql_broker.service_instances
+GROUP BY max_storage_mb
+ORDER BY max_storage_mb DESC;
+</pre>
+
+Once all service plan instances have been deleted, remove the plan from the Services Marketplace by following running the `broker-registrar` errand again:
+
+1. Find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
+    <pre class="terminal">bosh deployments</pre>
+1. Set the deployment:
+    <pre class="terminal">bosh deployment p-mysql-180290d67d5441ebf3c5</pre>
+1. Run:
+    <pre class="terminal">bosh run errand broker-registrar</pre>
+
+### <a id="re-adding-deleted-plans"></a>Re-adding Deleted Plans
+
+A plan name can only be reused if the old plan has been fully purged using the above instructions.
+
+If there are still service instances for a plan which has been deleted, the `broker-registrar` errand will fail with the following error:
+
+<pre class="terminal">
+Server error, status code: 502, error code: 270012, message: Service broker
+catalog is invalid: Plan names must be unique within a service. Service p-mysql
+already has a plan named <PLAN_NAME>
+</pre>
