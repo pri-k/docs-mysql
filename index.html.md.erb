@@ -5,13 +5,15 @@ owner: MySQL
 
 This is documentation for the MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF) tile.
 
+<p class='note'><strong>MySQL for PCF 1.7 is no longer supported.</strong> The support period for version 1.7 has expired. To stay up to date with the latest software and security updates, please plan to update to more recent releases of MySQL for PCF.</p>
+
 ## Product Snapshot
 
 Current MySQL for PCF Details
 <div style="line-height: 1; padding-left: 3em">
 
-- **Version**: v1.7.31
-- **Release Date**: June 22, 2017
+- **Version**: v1.7.32
+- **Release Date**: August 11, 2017
 - **Software component versions**: MariaDB v10.1.18, Galera v25.3.17
 - **Compatible Ops Manager version(s)**: v1.6.x through v1.10.x
 - **Compatible Elastic Runtime version(s)**: v1.6.x through v1.10.x
@@ -75,12 +77,12 @@ For more information, see the full [Product Compatibility Matrix](http://docs.pi
 	</tr>
 
 	<tr>
-		<td>v1.7.0 – v1.7.30</td>
+		<td>v1.7.0 – v1.7.32</td>
 	</tr>
 
 	<tr>
-	  <td>v1.7.0 – v1.7.29<sup>*</sup></td>
-		<td>Next v1.7.x release – v1.7.30</td>
+	  <td>v1.7.0 – v1.7.31<sup>*</sup></td>
+		<td>Next v1.7.x release – v1.7.32</td>
 	</tr>
 
 </tr>
@@ -126,8 +128,8 @@ Two configurations are supported:
 ## <a id="limitations"></a>Limitations ##
 
 - Single and three-node clusters are the only supported topologies. Ops Manager will allow the Operator to set the number of instances to other values, only one and three are advised. For more information, see [Avoid an even number of nodes](cluster-behavior.html#even-number) in the Cluster Scaling, Node Failure, and Quorum topic.
-- Although two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](#proxy) section, as well as the entry in [Known Issues](known-issues.html).
-- Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Attempted use of other storage engines (including MyISAM) may result in data loss.
+- Although two Proxy instances are deployed by default, there is no automation to direct clients from one to the other. To address this, configure a load balancer as described in the [Proxy](#proxy) section.
+- Only the InnoDB storage engine is supported; it is the default storage engine for new tables. Use of other storage engines (including MyISAM) may result in data loss.
 - All databases are managed by shared, multi-tenant server processes. Although data is securely isolated between tenants using unique credentials, application performance may be impacted by noisy neighbors.
 - Round-trip latency between database nodes must be less than five seconds; if the latency is higher than this, nodes will become partitioned. If more than half of cluster nodes are partitioned, the cluster will lose quorum and become unusable until manually bootstrapped.
 - See also the list of [Known Limitations](https://mariadb.com/kb/en/mariadb/mariadb-galera-cluster-known-limitations/) in MariaDB cluster.
