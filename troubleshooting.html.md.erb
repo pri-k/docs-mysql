@@ -16,9 +16,27 @@ owner: MySQL
 
 This topic describes how to check the status of your MySQL cluster and if necessary bootstrap it to restore its health.
 
-## <a id="techniques"></a> Techniques ##
+## <a id="diagnosing"></a> Diagnosing
 
-### <a id="when-to-bootstrap"></a> When to Bootstrap ##
+If your cluster is experiencing downtime or is in a degraded state, Pivotal suggests the following workflow
+for gathering information to diagnose the type of failure it's experiencing.
+
+1. Use the [mysql-diag](mysql-diag.html) tool to gather a summary of the network, disk, and replication state of each cluster node.
+1. Run [download-logs](https://discuss.pivotal.io/hc/en-us/articles/221504408-Script-to-download-logs-from-MYSQL-server-tile-for-further-troubleshooting) against each node in your MySQL cluster,
+   the MySQL proxies, and the MySQL backup-prepare node.
+   It's important to do this before attempting recovery,
+   because any failures in the recovery procedure can result in logs being lost or made inaccessible.
+1. Depending on the reported state from `mysql-diag`, the [techniques](#techniques) listed below might allow you to recover your cluster.
+1. If you are uncertain about the recovery steps to take, submit a ticket through [Pivotal Support](https://support.pivotal.io/)
+   with the following information:
+  - Logs fetched by running the `download-logs` script
+  - Output from `mysql-diag`
+  - Type of environment the MySQL deployment is running in (Elastic Runtime, MySQL for PCF, or other?)
+  - Versions of the installed Ops Manager, Elastic Runtime, and MySQL for PCF
+
+## <a id="techniques"></a> Techniques
+
+### <a id="when-to-bootstrap"></a> When to Bootstrap
 
 Bootstrapping is only required when the cluster has lost quorum.
 
@@ -47,8 +65,8 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
 
 #### <a id="bootstrapping"></a> Re-bootstrapping the cluster after quorum is lost
 
-  - The start script will currently bootstrap node 0 only on initial deploy. If bootstrapping is necessary at a later date, it must be done manually. For more information about manually bootstrapping a cluster, see [Bootstrapping Galera](bootstrapping.html).
-  - If the single node is bootstrapped, it will create a new one-node cluster that other nodes can join.
+  - The start script bootstraps node 0 only on initial deploy. If bootstrapping is necessary at a later date, it must be done manually. For more information about manually bootstrapping a cluster, see [Bootstrapping Galera](bootstrapping.html).
+  - If the single node is bootstrapped, it creates a new one-node cluster that other nodes can join.
 
 ### <a id="check-replication"></a>Check Replication Status
 
@@ -130,7 +148,7 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
     ```
     iptables -F
     ```
-    
+
 ### <a id="check-state"></a> Check Cluster State
 
 Connect to each MySQL node using a MySQL client and check its status.
@@ -309,9 +327,9 @@ The Interruptor sends an email through the Elastic Runtime notification service 
 You can confirm that the Interruptor has activated by examining `/var/vcap/sys/log/mysql/mysql.err.log` on the failing node. The log contains the following message:
 
 <pre class="terminal">
-WSREP_SST: [ERROR] ############################################################################## (20160610 04:33:21.338)
-WSREP_SST: [ERROR] SST disabled due to danger of data loss. Verify data and bootstrap the cluster (20160610 04:33:21.340)
-WSREP_SST: [ERROR] ############################################################################## (20160610 04:33:21.341)</pre>
+WSREP_SST: [ERROR] ##################################################################################### (20160610 04:33:21.338)
+WSREP_SST: [ERROR] SST disabled due to danger of data loss. Verify data and run the rejoin-unsafe errand (20160610 04:33:21.340)
+WSREP_SST: [ERROR] ##################################################################################### (20160610 04:33:21.341)</pre>
 
 ### <a id="force-rejoin"></a>Override the Interruptor
 
@@ -346,4 +364,3 @@ The Interruptor is enabled by default. To disable the Interruptor:
 In the **Advanced Options** section, under **Enable optional protections**, un-check  **Prevent node auto re-join**.
 
   ![Prevent node](prevent-node.png)
-

@@ -49,43 +49,136 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 
 ![Configure MySQL Server Configuration](config-servers.png)
 
-- **Disable Reverse DNS lookups**
+You can change the following options to suit your environment. Since these changes affect all service instances, exercise caution when making changes.
 
-    This feature is enabled by default, and improves performance. Clearing this option causes the MySQL servers to perform a reverse DNS lookup on each new connection, for example to restrict access by hostname. typical MySQL for PCF installations do not need reverse DNS lookups.
+For more information about how MySQL for PCF is configured, see the [architecture documentation](architecture.html).
+
+- <a id="innodb-strict-mode"></a>**Enable InnoDB Strict Mode**
+
+    Default: Enabled
+
+    See the [architecture documentation](architecture.html#innodb-strict-mode) for information on this setting.
+
+- <a id="local-infile"></a>**Allow Clients to Send Files**
+
+    Default: Enabled
+
+    See the [architecture documentation](architecture.html#local-infile) for information on this setting.
+
+- <a id="command-history"></a>**Allow Command History**
+
+    Default: Enabled
+
+    See the [architecture documentation](architecture.html#command-history) for information on this setting.
+
+- <a id="reverse-dns-lookups"></a>**Disable Reverse DNS lookups**
+
+    Default: Enabled
+
+    See the [architecture documentation](architecture.html#reverse-dns-lookups) for information on this setting.
+
+- <a id="remote-admin"></a>**Allow Remote Admin Access**
+
+    Default: Disabled
+
+    See the [architecture documentation](architecture.html#remote-admin) for information on how to configure this setting.
 
 - **Read-Only User Password**
+
+    Default: Disabled
 
     Activates a special user, `roadmin`, a read-only administrator. Supply a special password for administrators who require the ability to view all of the data maintained by the MySQL for PCF installation. Leaving this field blank de-activates the read-only user.
 
 - **MySQL Start Timeout**
 
-    The maximum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process has failed to start properly, and will appear as failing in Ops Manager and BOSH output. Depending on the data stored by the database, and the time represented in logs, you may need to increase this above the default of 60 seconds.
+    Default: 60 seconds
 
-- **New Cluster Probe Timeout**
+    The maximum amount of time necessary for the MySQL process to start, in seconds. When restarting the MySQL server processes, there are conditions under which the process takes longer than expected to appear as running. This can cause parts of the system automation to assume that the process failed to start properly, and appear as failing in Ops Manager and BOSH output. Depending on the data stored by the database, and the time represented in logs, you may need to increase this above the default of 60 seconds.
 
-    There is special logic to detect if a starting node is the first node of a new installation, or if it is part of an existing cluster.
-Part of this logic is to probe if the other nodes of the cluster have already been deployed. 
-This is set to 30 s by default.
-However due to high latency, this timeout period may be too long.
-When these probes take too long to respond, it's possible that the **MySQL Start Timeout** might fail the deployment.
-To account for this, either increase the **MySQL Start Timeout** or lower the **New Cluster Probe Timeout** 
-so that a new node doesn't spend too long performing this test.
+- <a id="cluster-probe-timeout"></a>**New Cluster Probe Timeout**
+
+    Default: 10 seconds
+
+    There is special logic to detect if a starting node is the first node of a new installation, or if it is part of an existing cluster. Part of this logic is to probe if the other nodes of the cluster have already been deployed. In cases of high latency, this timeout period may be too long. When these probes take too long to respond, it's possible that the **MySQL Start Timeout** might fail the deployment. To account for this, either increase the **MySQL Start Timeout** or lower the **New Cluster Probe Timeout** so that a new node doesn't spend too long performing this test.
+
+- **Enable Large Indices**
+
+    Default: Enabled
+
+    See the [architecture documentation](architecture.html#innnodb-large-prefix) for information on this setting.
 
 - **Enable replication debug logging**
 
-    By default, the MySQL for PCF service logs replication error events. Disable this option only if error logging is straining your logging systems.
+    Default: Enabled
+
+    Directs MySQL for PCF service to log replication error events. Disable this option only if error logging is overloading your logging systems' capacity.
 
 - **Server Activity Logging**
 
     The MySQL service includes the [MariaDB Audit plugin](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/) to log server activity. You can disable this plugin, or configure which [events](https://mariadb.com/kb/en/mariadb/about-the-mariadb-audit-plugin/#logging-events) are recorded. The log can be found at `/var/vcap/store/mysql_audit_logs/mysql_server_audit.log` on each VM. When server logging is enabled, the file is rotated every 100 megabytes, and the 30 most recent files are retained.
 
+    - Event types
+
+        Default: `connect,query`
+
+    - Exclude users
+
+        Supply a comma-separated list of additional database users that should not be included in the activity log. Note that these users are always excluded form audit logging:
+        - `repcanary`
+        - `mysql-metrics`
+        - `cluster-health-logger`
+        - `galera-healthcheck`
+        - `quota-enforcer`
+
     <p class="note"><strong>Note</strong>: Due to the sensitive nature of these logs, they are not transmitted to the syslog server.</p>
+
+- **Maximum Temporary Table Memory Size**
+
+    Default: 33554432 bytes (32 MB)
+
+    The maximum size (in bytes) of internal in-memory temporary tables. See the [architecture documentation](architecture.html#temp-tables) for information on this setting.
+
+- **Table Open Cache Size**
+
+    Default: 2000 tables
+
+    The number of table handles to keep open. See the [architecture documentation](architecture.html#table-open-cache-size) for information on this setting.
+
+- **Table Definition Cache Size**
+
+    Default: 8192 tables
+
+    Set this to a number relative to the number of tables the server will manage. See the [architecture documentation](architecture.html#table-definition-cache-size) for information on this setting.
+
+- **InnoDB Buffer Pool Size**
+
+    Default: 50 percent of instance RAM
+
+    Choose Percent to configure the percent of system RAM allocated to the memory buffer used by InnoDB. Choose Bytes to configure the size in bytes, instead. See the [architecture documentation](architecture.html#innodb-buffer-pool-size) for information on this setting.
+
+- **Maximum Server Connections**
+
+    Default: 1500
+
+    The maximum number of simultaneous client connections for the entire deployment, regardless of service instance.
+
+- **Binary Log Retention Time**
+
+    Default: 7 days
+
+    Time in days to store binary logs before purging. These logs are not used by MySQL for PCF. They are stored only for diagnostic purposes.
 
 ## <a id="backups"></a>Backups
 
 ![Configure Backups](config-backups.png)
 
-See the [Backups](./backup.html) topic for instructions on configuring backups.
+The **Backups** pane configures automated database backups. To configure backups:
+
+1. Choose **Disable Backups** or **Enable Backups**.  If you enable automated backups, follow the instructions in the [Backups](./backup.html) topic to configure the backups.
+
+2. Ensure that the **Instances** setting for **Backup Prepare Node** in the **Resource Config** pane matches your automated backups enable or disable choice:
+  - **Disable Backups** selected: set **Backup Prepare Node** > **Instances** to `0`.
+  - **Enable Backups** selected: set **Backup Prepare Node** > **Instances** to `1`.
 
 ## <a id="advanced"></a>Advanced Options
 
@@ -102,11 +195,23 @@ The **Advanced Options** pane lets you configure the following features:
     By default, the Quota Enforcer polls for violators and reformers every 30 seconds. This setting, in seconds, changes how long the quota enforcer pauses between checks.
     Quota Enforcer polling draws minimal resources, but if you want to reduce this load, increase this interval. Be aware, however, that a long Quota Enforcer interval may cause apps to write more data than their pre-determined limit allows.
 
+- <a id="cluster-name"></a>**Cluster Name**
+
+    Default: `cf-mariadb-galera-cluster`
+
+    Set a unique name for the cluster. When examining the state or making manual changes to a Pivotal MySQL cluster, it's useful to check the name of the cluster. You can see the name of the cluster by running the query, `select @@wsrep_cluster_name`.
+
+    <p class="note"><strong>Important:</strong> may only be set during initial deployment. Changing this field after the cluster has been deployed causes <strong>Apply Changes</strong> to fail.</p>
+
+    Please contact Pivotal Support for help in changing the name of a cluster that has already been deployed.
+
 ## <a id="errands"></a>Errands
 
 Two post-deploy errands run by default: the **broker registrar** and the **smoke test**. The broker registrar errand registers the broker with the Cloud Controller and makes the service plan public. The smoke test errand runs basic tests to validate that service instances can be created and deleted, and that apps pushed to Elastic Runtime can be bound and write to MySQL service instances. You can turn both errands on or off in the **Errands** pane under the **Settings** tab.
 
-<p class="note"><strong>Note</strong>: The <strong>Errands</strong> pane also shows a <b>broker-deregistrar</b> pre-delete errand. Do not run this errand unless instructed to do so by Support. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data.</p>
+<p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. Do not reconfigure errands in your deployment without instruction from Pivotal Support.
+
+Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. Running <code>bosh run errand broker-registrar</code> under any other circumstances deletes user data. Do not run this errand unless instructed to do so by Pivotal Support.</p>
 
 ## <a id="resource-config"></a>Resource Config
 
@@ -114,7 +219,9 @@ Two post-deploy errands run by default: the **broker registrar** and the **smoke
 
 This pane configures the number, persistent disk capacity, and VM type for all component VMs that run the MySQL for PCF service.
 
-Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases. The MariaDB cluster nodes are configured by default with 100GB of persistent disk. The deployment will fail if this is less than 3GB; we recommend allocating 10GB minimum.
+Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases. The MariaDB cluster nodes are configured by default with 100GB of persistent disk. The deployment fails if this is less than 3GB; we recommend allocating 10GB minimum.
+
+If **Enable Backups** is selected in the **Backups** pane, set **Backup Prepare Node** > **Instances** to `1`.
 
 ### <a id="switch-topologies"></a> Switch Between Single and HA Topologies
 
@@ -133,7 +240,7 @@ Single and three-node clusters are the only supported topologies. Ops Manager  a
 
 If you scale up to three MySQL nodes, Pivotal recommends spreading them across different Availability Zones to maximize cluster availability. An Availability Zone (AZ) is a network-distinct section of a region. For more information about Amazon AZs, see [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
 
-When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it will update the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes will cause all connections to that node to be dropped while the node restarts.
+When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it updates the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes causes all connections to that node to be dropped while the node restarts.
 
 ## <a id="stemcell"></a>Stemcell
 

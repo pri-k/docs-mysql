@@ -20,7 +20,7 @@ This topic explains how a developer on PCF can start using MySQL with their apps
 - Max size of a DDL or DML is [limted to 2GB](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size)
 - Defining whether the node splits large `Load Data` commands into more [maneageable units] (http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-load-data-splitting)
 
-## <a id="Checking-for-Limitations"></a>How to Check Your App for Limitations ##
+### <a id="Checking-for-Limitations"></a>Check Your App for Limitations ##
 
 Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
 
@@ -42,31 +42,66 @@ To help application developers get started with MySQL for PCF, we have provided 
 
 [example-app]:mysql-example-app.tgz
 
-## <a id="dashboard"></a>Service Instance Dashboard ##
+## <a id="dev-tools"></a>MySQL for PCF Tools ##
 
-Cloud Foundry users can access a dashboard for each MySQL service instances via SSO from Apps Manager. The dashboard displays current storage utilization of the database and the plan quota for storage. On the Space page in Apps Manager, users with the Space Developer role will find a **Manage** link next to the instance. Clicking this link will log users into the service dashboard via SSO.
+The following tools let developers check the usage of their MySQL for PCF service instances, and access their databases directly.
 
-Additionally, the dashboard URL can be discovered via the CLI, using `cf service [instance name]`. For example:
+### <a id="dashboard"></a>Service Instance Dashboard ##
+
+Developers can check their current storage usage and service plan quota in the service instance dashboard. You can access this dashboard by either navigating to it from Apps Manager or obtaining its URL from the Cloud Foundry Command-Line Interface (cf CLI):
+
+* **From Apps Manager**
+  1. Select the space that the service instance runs in.
+  1.  Select the **Services** tab.
+  1.  Under **Services** click the service instance to check.
+  1.  Click **Manage** at top right to open the service instance dashboard.
+* **From the cf CLI**
+  1.  Log into the space that the service instance runs in.
+  1.  Run `cf service INSTANCE-NAME`:  
+  <pre class="terminal">
+  $ cf service acceptDB
+  Service instance: acceptDB
+  Service: p-mysql
+  Plan: 100mb-dev
+  Description: MySQL service for application development and testing
+  Documentation url:
+  Dashboard: https<span>:</span>//p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
+</pre>
+  1. Navigate to the URL listed in the output as `Dashboard`. In the example above, the instance dashboard URL is `https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`.
+
+The MySQL for PCF service instance dashboard shows how much storage the instance currently uses and the maximum usage allowed by its service plan. It does not show or manage database contents. You can think of it as a gas gauge, while the [Pivotal MySQL Database Management App](#mysqlweb) provides an interface through which you can drive.
+
+<p class="note"><strong>Note</strong>: The service instance dashboard is distinct from the <a href="./proxy.html#proxy-dashboard">proxy dashboard</a> that PCF operators can access to check the proxy instances handling queries for all MySQL for PCF service instances in a PCF deployment.</p>
+
+### <a id="mysqlweb"></a>Pivotal MySQLWeb Database Management App ##
+
+The Pivotal MySQLWeb app provides a web-based UI for managing MySQL for PCF databases. The free app lets you view and operate on tables, indexes, constraints, and other database structures, and directly execute SQL commands.
+
+![Pivotal MySQLWeb](mysqlweb.png)
+
+You can run the Pivotal MySQLWeb app in two ways:
+
+* Standalone on your own machine
+* Deployed to PCF
+
+If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically bind to a specific service instance.
+
+For how to install and run Pivotal MySQLWeb,
+see the Pivotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLWeb) and [demo video](https://drive.google.com/file/d/0B2wmRcJj8XF-SXloNFNNaGJXbFk/view).
+
+### <a id="plugin"></a>Command-Line Interface MySQL Plugin ##
+
+To connect to your MySQL for PCF databases from a command line, use the Cloud Foundry Command-Line Interface (cf CLI) MySQL plugin. The plugin lets you:
+
+* Inspect databases for debugging. 
+* Manually adjust database schema or contents in development environments.
+* Dump and restore databases. 
+
+To install the cf CLI MySQL plugin, run the following:
 
 <pre class="terminal">
-$ cf service acceptDB
-
-Service instance: acceptDB
-Service: p-mysql
-Plan: 100mb-dev
-Description: MySQL service for application development and testing
-Documentation url:
-Dashboard: https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
+$ cf install-plugin -r "CF-Community" mysql-plugin
 </pre>
 
-In this example, the URL to the instance dashboard is `https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`
+For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.
 
-## <a id="plugin"></a>Connect to your Database with the MySQL Plugin ##
-
-You can use the Cloud Foundry Command Line Interface (cf CLI) MySQL plugin to connect to the MySQL databases used by your Cloud Foundry apps. The plugin supports the following actions:
-
-* Inspecting databases for debugging purposes. 
-* Manually adjusting database schema or contents in development environments.
-* Dumping and restoring databases. 
-
-For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.  

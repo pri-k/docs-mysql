@@ -5,6 +5,9 @@ owner: MySQL
 
 This is documentation for the MySQL for Pivotal Cloud Foundry (PCF) service tile. The tile can be downloaded from [Pivotal Network](https://network.pivotal.io/products/p-mysql/).
 
+<p class="note"><strong>Note</strong>:
+This documents MySQL for PCF v1.9, a pre-provisioned service that supports single-node or high-availability cluster architectures. For the on-demand service that creates dedicated service instances dynamically, see the v.2.0 documentation <a href="http://docs.pivotal.io/p-mysql/2-0">here</a> or select <strong>v2.0</strong> from the version dropdown at the top of this page.</p>
+
 ## <a id="about-mysql"></a>About MySQL##
 
 MySQL is a powerful open-source relational database used by apps since the mid-90s. Developers have relied on MySQL as a first step to storing, processing and sharing data. As its user community has grown, MySQL has become a robust system capable of handling a wide variety of use cases and very significant workloads. Unlike other traditional databases which centralize and consolidate data, MySQL lends itself to dedicated deployment supporting the "shared nothing" context of building apps in the cloud.
@@ -26,27 +29,27 @@ The following table provides version and version-support information about MySQL
     <th>Details</th>
     <tr>
         <td>Version</td>
-        <td>v1.9.4</td>
+        <td>v1.10.0</td>
     </tr>
     <tr>
         <td>Release date</td>
-        <td>June 2, 2017</td>
+        <td>August 11, 2017</td>
     </tr>
     <tr>
         <td>Software component version</td>
-        <td>MariaDB v10.1.20, Galera v25.3.19</td>
+        <td>MariaDB v10.1.24, Galera v25.3.20</td>
     </tr>
     <tr>
         <td>Compatible Ops Manager version(s)</td>
-        <td>v1.9.x, v1.10.x</td>
+        <td>v1.10.x, v1.11.x</td>
     </tr>
     <tr>
         <td>Compatible Elastic Runtime version(s)</td>
-        <td>v1.9.x, v1.10.x</td>
+        <td>v1.10.x, v1.11.x</td>
     </tr>
     <tr>
         <td>IaaS support</td>
-        <td>AWS, Azure, OpenStack, and vSphere</td>
+        <td>AWS, GCP, Azure, OpenStack, and vSphere</td>
     </tr>
     <tr>
         <td>IPsec support</td>
@@ -59,22 +62,39 @@ The following table provides version and version-support information about MySQL
 
 Before upgrading to the latest version of MySQL for PCF, do the following:
 
-1. Confirm that you are on Ops Manager v1.9 or later and are on MySQL for PCF v1.8 or later.
+1. Confirm that you are on Ops Manager v1.10 or later and are on MySQL for PCF v1.9 or later.
 
     <table border="1" class="nice">
-	<tr>
-		<th rowspan="2">Ops Manager Version</th>
-		<th colspan="2">Supported Upgrades from Imported MySQL Installation</th>
-	</tr>
-	  <tr>
-	  	<th>From</th>
-	  	<th>To</th>
-	  <tr>
-	<tr>
-	  <th rowspan="6">v1.9.x, v1.10.x</th>
-    <tr><td>v1.8.x</td><td>v1.9.x</td></tr>
-	</tr>
-  </table><br>
+    <tr>
+    	<th rowspan="2">Ops Manager Version</th>
+    	<th colspan="2">Supported Upgrades from Imported MySQL Installation</th>
+    </tr>
+      <tr>
+      	<th>From</th>
+      	<th>To</th>
+      <tr>
+    <tr>
+      <th rowspan="4">v1.9.x</th>
+      <tr><td rowspan="2">v1.8.x</td><td>Next v1.8.x</td></tr>
+          <tr><td>v1.9.x</td></tr>
+      <tr><td>v1.9.x</td><td>Next v1.9.x</td></tr>
+    </tr>
+    <tr>
+      <th rowspan="6">v1.10.x</th>
+      <tr><td rowspan="2">v1.8.x</td><td>Next v1.8.x</td></tr>
+          <tr><td>v1.9.x</td></tr>
+      <tr><td rowspan="2">v1.9.x</td><td>Next v1.9.x</td></tr>
+          <tr><td>v1.10.x</td></tr>
+      <tr><td>v1.10.x</td><td>Next v1.10.x</td></tr>
+    </tr>
+    <tr>
+      <th rowspan="5">v1.11.x</th>
+      <tr><td>v1.8.x</td><td>**Not supported**</td></tr>
+      <tr><td rowspan="2">v1.9.x</td><td>**Do not use next** v1.9.x</td></tr>
+        <tr><td>v1.10.x</td></tr>
+      <tr><td>v1.10.x</td><td>Next v1.10.x</td></tr>
+    </tr>
+    </table><br>
 
     For more information about upgrade versions, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
@@ -91,19 +111,9 @@ with more than 767 bytes, then create or alter the apps to use `ROW_FORMAT DYNAM
 A workaround for failures due to strict mode is to use the `IGNORE` keyword: this converts the error to a warning. <br>
 For more information about these changes, see [MySQL Server Tuning and Defaults](release-notes.html#tuning).
 
-## <a id="deprecation-lock-tables"></a>Deprecation of Table Locks in MySQL for PCF v1.10
+## <a id="deprecation-lock-tables"></a>Deferred: Deprecation of Table Locks
 
-In MySQL for PCF v1.8 and v1.9, new service bindings are not able to lock tables.
-In MySQL for PCF v1.10, the privilege to lock tables will also be removed from **existing service instances**.
-<p class="note warning"><strong>WARNING</strong>: As of <strong>v1.10</strong>, MySQL for PCF will disallow LOCK TABLES for all applications.</p>
-
-In MySQL for PCF v1.10, apps will see an error when they attempt to lock tables.
-
-When running in clustered mode, table-level locks are not distributed across the cluster.
-In the current version of MySQL for PCF apps are allowed apps to attain a table lock,
-even though it only exists on the current master.
-Apps and app developers are not aware that they do not exclusively have a lock across all nodes.
-This can lead to deadlocks when writes happen on different masters.
+In previous releases, we've advertised the intent to deprecate table locks for all service bindings. This has been deferred to a later release.
 
 ## <a id="configurations"></a>Enterprise Readiness by Topology ##
 

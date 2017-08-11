@@ -17,45 +17,31 @@ If you deploy the MySQL service on a different network than Elastic Runtime, con
 
 | Type | Listening service | TCP Port |
 | ---- | ---- | ---- |
-| Inbound/TCP | Service broker | 8081 |
+| Inbound/HTTP | Service broker | 8081 |
+| Inbound/TCP | Proxy health check | 1936 |
+| Inbound/HTTP | Proxy health check | 1936 |
 | Inbound/TCP | SQL proxy | 3306 |
-| Inbound/TCP | Proxy health check | 1936 |
 | Inbound/TCP | Proxy API | 8080 |
-| Inbound/TCP | Proxy health check | 1936 |
 | Outbound/TCP | NATS | 4222 |
 | Internal/TCP | MySQL server | 3306 |
 | Internal/TCP | Galera | 4567 |
-| Internal/TCP | Galera health check | 9200 |
+| Internal/HTTP | Galera health check | 9200 |
 
 ### <a id="load-balancer"></a> Configure a Load Balancer
 
 For high availability, Pivotal recommends using a load balancer in front of the proxies:
 
-* **Configure your load balancer for failover-only mode.** Failover-only mode sends all traffic to one proxy instance at a time, and redirects to the other proxy only if the first proxy fails. This behavior prevents deadlocks when different proxies send queries to update the same database row. This can happen during brief server node failures, when the active server node changes.  
+* **Configure your load balancer for failover-only mode.** Failover-only mode sends all traffic to one proxy instance at a time, and redirects to the other proxy only if the first proxy fails. This behavior prevents deadlocks when different proxies send queries to update the same database row. This can happen during brief server node failures, when the active server node changes.
 Amazon ELB does not support this mode; see [AWS Route 53](#route-53) for the alternative configuration.
 
-* **Make your idle time out long enough to not interrupt long-running queries.** When queries take a long time, the load balancer can time out and interrupt the query.  
+* **Make your idle time out long enough to not interrupt long-running queries.** When queries take a long time, the load balancer can time out and interrupt the query.
 For example, [AWS's Elastic Load Balancer](http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/config-idle-timeout.html) has a default idle timeout of 60 seconds, so if a query takes longer than this duration then the MySQL connection will be severed and an error will be returned.
 
 * **Configure  a healthcheck or monitor, using TCP against port 1936**. This defaults to TCP port `1936`, to maintain backwards compatibility with previous releases. This port is not configurable. Unauthenticated healthchecks against port 3306 may cause the service to become unavailable and require manual intervention to fix.
 
-* **Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306**. 
+* **Configure the load balancer to route traffic for TCP port 3306 to the IPs of all proxy instances on TCP port 3306**.
 
 After you install MySQL for PCF, you [assign IPs to the proxy instances](./configuring.html#proxy) in Ops Manager.
-
-#### <a id="route-53"></a>AWS Route 53 ###
-
-Use AWS Route 53 to set up Round Robin DNS across multiple proxy IPs as follows:
-
-1. Log in to AWS.
-2. Click **Route 53**.
-3. Click **Hosted Zones**.
-4. Select the hosted zone that contains the domain name to apply round robin routing to.
-5. Click **Go to Record Sets**.
-6. Select the record set containing the desired domain name.
-7. In the value input, enter the IP addresses of each proxy VM, separated by a newline.
-
-Finally, update the manifest property `properties.mysql_node.host` for the cf-mysql-broker job, as described above.
 
 #### <a id="add-lb"></a> Add a Load Balancer to an Existing Installation
 

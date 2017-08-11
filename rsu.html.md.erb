@@ -11,7 +11,7 @@ We suggest seeking help to perform a DDL via RSU in the event that you are doing
 
 **Note:** If you have a DDL of >2GB, you must use RSU as it will always fail under TOI.
 
-## <a id="Performing-RSU"></a>Steps for Performing an RSU DDL 
+## <a id="Performing-RSU"></a>Steps for Performing an RSU DDL
 
 The following steps assume that you are using import sql file to perform the data imports. In the event you choose to execute a DDL manually with the mysql client, run the following steps using the client in order.
 
@@ -22,8 +22,8 @@ The following steps assume that you are using import sql file to perform the dat
 2. Do the following for each node as the admin user:
 	1. Enable global read_only and verify that the node is unhealthy via the proxies by doing the following:
 		1. `$ mysql -u<USER> -p -h<MYSQL HOST> -e “set global read_only=on;”`
-		2. Find the values of `cf_mysql.proxy.api_username` and `cf_mysql.proxy.api_password` 
-		3. Visit proxy-0-p-mysql.SYSTEM_DOMAIN and login with the above credentials
+		2. Find the values of `cf_mysql.proxy.api_username` and `cf_mysql.proxy.api_password`
+		3. Visit 0-proxy-p-mysql.SYSTEM_DOMAIN and login with the above credentials
 		4. One of the backends should show up as a red bar that says “unhealthy”
 	2. Add `set wsrep_osu_method=rsu;` to the top of the import file containing the constraints and indexes
 	3. Add `set global wsrep_desync=on;` to the top of the constraints and indexes file. Add `set global wsrep_desync=off;` to the bottom of the constraints and indexes file.
@@ -37,9 +37,8 @@ The following steps assume that you are using import sql file to perform the dat
 	`$ mysql -u<USER> -p -h<MYSQL HOST> -D<DATABASE_NAME> < path/to/constraint_and_index_file.sql`
 	6. Disable global read_only and verify that all nodes are healthy via the proxies
 		1. `$ mysql -uUSER -p -h<MYSQL HOST> -e “set global read_only=off;”`
-		2. Visit proxy-0-p-mysql.SYSTEM_DOMAIN and login with the above credentials
+		2. Visit 0-proxy-p-mysql.SYSTEM_DOMAIN and login with the above credentials
 		3. All of the backends should show up with a green bar that say healthy
 	7. Repeat for the remaining nodes
 
 3. At this point your cluster should be stable and running with the new schema
-
