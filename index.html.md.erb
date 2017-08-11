@@ -29,11 +29,11 @@ The following table provides version and version-support information about MySQL
     <th>Details</th>
     <tr>
         <td>Version</td>
-        <td>v1.9.6</td>
+        <td>v1.9.7</td>
     </tr>
     <tr>
         <td>Release date</td>
-        <td>July 28, 2017</td>
+        <td>August 11, 2017</td>
     </tr>
     <tr>
         <td>Software component version</td>
@@ -79,9 +79,10 @@ Before upgrading to the latest version of MySQL for PCF, do the following:
       <tr><td>v1.9.x</tr>
     </tr>
     <tr>
-      <th rowspan="2">v1.11.x</th>
+      <th rowspan="3">v1.11.x</th>
       <td>v1.8.x</td><td>Not supported</td></tr>
-      <tr><td>v1.9.x</td><td>latest v1.9.x</td></tr>
+      <tr><td rowspan="2">v1.9.x</td><td>Not supported</td></tr>
+      <tr><td>latest v1.10.x</td></tr>
     </tr>
     </table><br>
 
@@ -128,14 +129,14 @@ The table below shows the enterprise-readiness of each MySQL for PCF topology. C
 </table>
 </center>
 
-(\*) vSphere and AWS (1.8.0-edge.15 and later)<br>
+(\*) vSphere and AWS (1.8.0 and later)<br>
 (&#x271D;) Requires IPSEC BOSH plug-in
 
 ## <a id="limitations"></a>High Availability Limitations ##
 
 When deployed in HA topology, MySQL for PCF runs three master nodes. This cluster arrangement imposes some limitations that you should be aware of, which do not apply to single-node MySQL database servers.
 
-- Although two proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](proxy.html) section, as well as the entry in [Known Issues](known-issues.html).
+- Although two proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](proxy.html) section. To address this, configure a load balancer as described in the [Proxy](#proxy) section.
 - MySQL for PCF only supports the InnoDB storage engine; it is the default storage engine for new tables. Pre-existing tables that are not InnoDB are at risk because they are not replicated within a cluster.
 - The database servers are shared, managed by multi-tenant processes to serve apps across the PCF deployment. Although data is securely isolated between tenants using unique credentials, app performance may be impacted by noisy neighbors.
 - Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and become unusable until manually bootstrapped.
