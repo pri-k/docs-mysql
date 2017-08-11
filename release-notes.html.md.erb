@@ -14,7 +14,25 @@ owner: MySQL
      }
 </style>
 
-<p class="note"><strong>Note</strong>: MySQL for PCF v1.9 is certified to work with PCF v1.9 and v1.10.</p>
+<p class="note"><strong>Note</strong>: MySQL for PCF v1.9 is certified to work with PCF v1.9 and v1.10. For PCF 1.11, please upgrade to MySQL for PCF v1.10.</p>
+
+## <a id="1-9-7"></a>v1.9.7
+
+Release Date: 11, August, 2017
+
+- **Change the Interruptor's default setting to OFF.**
+
+    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](troubleshooting.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if rejoining may delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
+
+    In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual Operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
+
+    If you wish to continue using the Interruptor, make sure that "Prevent node auto re-join" is checked in the "Advanced Options" configuration pane, then hit **Apply Changes.**
+- Small improvements to the `mysql-diag` tool, now including a warning when available disk space is low.
+- Upgrades several dependencies including `nokogiri 1.8.0`, `golang 1.8.3`, `xtrabackup 2.4.5`, `boost 1.59.0`, and `python 2.7.13`
+- Updated stemcell to 3312.32. This security upgrade resolves the following:
+  - [USN-3265-2](http://www.ubuntu.com/usn/USN-3265-2/)
+
+  For more information, see [pivotal.io/security](https://pivotal.io/security).
 
 ## <a id="1-9-6"></a>v1.9.6
 
