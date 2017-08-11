@@ -1,0 +1,29 @@
+---
+title: Customizing MySQL for PCF
+owner: MySQL
+---
+
+This topic provides instructions for developers customizing their MySQL for PCF service instances.
+
+These procedures use the Cloud Foundry Command Line Interface (cf CLI). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to perform the same tasks using a graphical UI.
+
+For general information about using MySQL for PCF, see [Using MySQL for PCF](/p-mysql/2-1/use.html).
+
+## <a id="Configuring"></a>Configuring
+
+MySQL for PCF service instances are configured by default with industry best practices. For more
+specific use cases, MySQL for PCF service instances can be more customized via the cf CLI.
+
+#### <a id='optional-param'></a> Provide Optional Parameters
+
+You can create service instance by passing optional parameters to `cf create-service` using the `-c` flag.
+The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
+provided either in-line or in a file.
+
+The MySQL service broker supports the following parameters:
+
+| Key | Type | Default | Description |
+| ---- | ---- | ---- | ---- |
+| `enable_lower_case_table_names` | Boolean | false | When set to true, sets MySQL's `lower_case_table_names` property to `1`. For more information, consult the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names). May only be set when creating a service instance. |
+
+If you encounter an error using optional parameters, see [Troubleshooting Instances](/p-mysql/2-1/troubleshoot-instances.html)

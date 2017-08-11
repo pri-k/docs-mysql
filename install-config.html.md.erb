@@ -210,6 +210,28 @@ and to set the total number of service instances allowed across all plans.
 
 1. Click **Save**.
 
+###<a id="mysql"></a> Configure MySQL
+
+Follow the steps below to set MySQL defaults and enable developers to customize their instances:
+
+1. Click **Mysql Configuration**
+
+    ![mysql-config](mysql-config.png)
+
+1. Configure the fields as follows:
+
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><td><strong>Enable Lower Case Table Names</strong></td>
+        <td>Select this checkbox to set `lower_case_table_names` to 1 on all MySQL for PCF instances. For more information read
+         the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
+         </td></tr>
+    <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
+        <td>Select this checkbox to allow developers to override the default Lower Case Table Names value set above. By default, all service instances
+        will be created with the value based on "Enable Lower Case Table Names" above. Checking this box allows developers to modify it
+        using the cf CLI.</td></tr>
+  </table>
+
 ###<a id="monitoring"></a> Configure Monitoring
 
 Follow the steps below to enable different types of monitoring and logging available in the MySQL service.
