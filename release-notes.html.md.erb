@@ -22,12 +22,14 @@ Release Date:
 
 - **Change the Interruptor's default setting to OFF.**
 
-    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](troubleshooting.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if rejoining may delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
+    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](troubleshooting.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if doing so may delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
 
     In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual Operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
 
     If you wish to continue using the Interruptor, make sure that "Prevent node auto re-join" is checked in the "Advanced Options" configuration pane, then hit **Apply Changes.**
 - Resolves an issue in which MySQL for PCF does not emit metrics on PCF 1.11.
+- Small improvements to the `mysql-diag` tool, now including a warning when available disk space is low.
+- Upgrades several dependencies including `nokogiri 1.8.0`, `golang 1.8.3`, `xtrabackup 2.4.5`, `boost 1.59.0`, and `python 2.7.13`
 - Updated stemcell to 3363.29. This security upgrade resolves the following:
   - [USN-3265-2](http://www.ubuntu.com/usn/USN-3265-2/)
 
