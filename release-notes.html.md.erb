@@ -7,11 +7,11 @@ owner: MySQL
 
 Release Date:
 
-<p class='note'><strong>This is the last planned release of MySQL for PCF 1.8.</strong> The support period for version 1.8 has expired. To stay up to date with the latest software and security updates, please plan to update to more recent releases of MySQL for PCF.</p>
+<p class='note'><strong>This is the last planned release of MySQL for PCF 1.8.</strong> The support period for version 1.8 has expired. To stay up to date with the latest software and security updates, please plan to upgrade to MySQL for PCF version 1.9 or greater.</p>
 
 - **Change the Interruptor's default setting to OFF.**
 
-    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](troubleshooting.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if rejoining may delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
+    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](monitoring-mysql.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if doing so may delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
 
     In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual Operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
 
