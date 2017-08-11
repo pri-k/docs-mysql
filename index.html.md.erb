@@ -5,6 +5,8 @@ owner: MySQL
 
 This is documentation for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF).
 
+<p class='note'><strong>MySQL for PCF 1.8 is no longer supported.</strong> The support period for version 1.8 has expired. To stay up to date with the latest software and security updates, please plan to update to MySQL for PCF version 1.9 or greater.</p>
+
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
 The following table provides version and version-support information about MySQL for PCF:
@@ -14,15 +16,15 @@ The following table provides version and version-support information about MySQL
     <th>Details</th>
     <tr>
         <td>Version</td>
-        <td>v1.8.10</td>
+        <td>v1.8.11</td>
     </tr>
     <tr>
         <td>Release date</td>
-        <td>June 22, 2017</td>
+        <td>August 11, 2017</td>
     </tr>
     <tr>
         <td>Software component version</td>
-        <td>MariaDB v10.1.18, Galera v25.3.17</td>
+        <td>MariaDB v10.1.18, Galera v25.3.18</td>
     </tr>
     <tr>
         <td>Compatible Ops Manager version(s)</td>
@@ -63,15 +65,15 @@ For more information, refer to the full [Product Compatibility Matrix](https://d
       <td rowspan="3">v1.6.1 – v1.6.25</td><td>Next v1.6.x release – v1.6.26</td>
 		</tr>
 		<tr>
-		  <td>v1.7.0 – v1.7.30</td>
+		  <td>v1.7.0 – v1.7.32</td>
 		</tr>
 		<tr>
-			<td>v1.8.9</td>
+			<td>v1.8.11</td>
 		</tr>
 		<tr>
-			<td rowspan=2>v1.7.0 – v1.7.29</td><td>Next v1.7.x release – v1.7.30</td>
-	                                   <tr><td>v1.8.9</td></tr>
-    <tr><td>v1.8.0 – v1.8.8</td><td>v1.8.9</td></tr>
+			<td rowspan=2>v1.7.0 – v1.7.31</td><td>Next v1.7.x release – v1.7.32</td>
+	                                   <tr><td>v1.8.11</td></tr>
+    <tr><td>v1.8.0 – v1.8.9</td><td>v1.8.11</td></tr>
 	</tr>
 
 </table>
@@ -353,7 +355,7 @@ Developers can check their current storage usage and service plan quota in the s
   1.  Click **Manage** at top right to open the service instance dashboard.
 * **From the cf CLI**
   1.  Log into the space that the service instance runs in.
-  1.  Run `cf service INSTANCE-NAME`:  
+  1.  Run `cf service INSTANCE-NAME`:
   <pre class="terminal">
   $ cf service acceptDB
   Service instance: acceptDB
@@ -389,9 +391,9 @@ see the Pivotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLW
 
 To connect to your MySQL for PCF databases from a command line, use the Cloud Foundry Command-Line Interface (cf CLI) MySQL plugin. The plugin lets you:
 
-* Inspect databases for debugging. 
+* Inspect databases for debugging.
 * Manually adjust database schema or contents in development environments.
-* Dump and restore databases. 
+* Dump and restore databases.
 
 To install the cf CLI MySQL plugin, run the following:
 
