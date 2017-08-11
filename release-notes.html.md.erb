@@ -27,7 +27,7 @@ Release Date: 11 August, 2017
     In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual Operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
 
     If you wish to continue using the Interruptor, make sure that "Prevent node auto re-join" is checked in the "Advanced Options" configuration pane, then hit **Apply Changes.**
-- Resolves an issue in which MySQL for PCF does not emit metrics on PCF 1.11.
+- Resolves an issue in which MySQL for PCF v1.9 does not emit metrics on PCF v1.11.
 - Small improvements to the `mysql-diag` tool, now including a warning when available disk space is low.
 - Upgrades several dependencies including `nokogiri 1.8.0`, `golang 1.8.3`, `xtrabackup 2.4.5`, `boost 1.59.0`, and `python 2.7.13`
 - Updated stemcell to 3363.29. This security upgrade resolves the following:
