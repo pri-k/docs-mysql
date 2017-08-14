@@ -160,9 +160,11 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
 </table>
 
-### <a id="bosh"></a> BOSH System Metrics
+### <a id="bosh"></a> BOSH System Health Metrics
 
-All BOSH-deployed components generate the following system metrics; these system metrics also serve as KPIs for the MySQL for PCF service.
+<%= partial '../../mysql/odb/bosh_health_metrics' %>
+
+All BOSH-deployed components generate the following system health metrics; these metrics also serve as KPIs for the MySQL for PCF service.
 
 #### <a id="persistent-disk"></a> Persistent Disk
 
