@@ -18,7 +18,7 @@ owner: MySQL
 
 ## <a id="1-10-1"></a>v1.10.1
 
-Release Date: 16 August, 2017
+Release Date: August 16, 2017
 
 - Updates stemcell to 3363.30. This security upgrade resolves the following:
   - [USN-3385-2](https://usn.ubuntu.com/usn/usn-3385-2/)
@@ -27,15 +27,15 @@ Release Date: 16 August, 2017
 
 ## <a id="1-10-0"></a>v1.10.0
 
-Release Date: 11 August, 2017
+Release Date: August 11, 2017
 
-- **Change the Interruptor's default setting to OFF.**
+- **Change the Interruptor default setting to OFF.**
 
-    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](troubleshooting.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if doing so may delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
+    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included [the Interruptor](troubleshooting.html#interruptor). It's a protective mechanism which stops a node from automatically rejoining the cluster if doing so might delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
 
     In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual Operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
 
-    If you wish to continue using the Interruptor, make sure that "Prevent node auto re-join" is checked in the "Advanced Options" configuration pane, then hit **Apply Changes.**
+    If you want to continue using the Interruptor, make sure that "Prevent node auto re-join" is checked in the "Advanced Options" configuration pane, then hit **Apply Changes.**
 - Resolves an issue in which MySQL for PCF v1.9 does not emit metrics on PCF v1.11.
 - Small improvements to the `mysql-diag` tool, now including a warning when available disk space is low.
 - Upgrades several dependencies including `nokogiri 1.8.0`, `golang 1.8.3`, `xtrabackup 2.4.5`, `boost 1.59.0`, and `python 2.7.13`
