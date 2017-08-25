@@ -1,0 +1,59 @@
+---
+title: Managing Service Plans
+owner: MySQL
+---
+
+This topic provides information to enable operators to control access and consumption of the MySQL for PCF v2
+service in a more fine grained manner.
+
+## <a id="quotas"></a> Quotas
+
+MySQL for PCF v2 offers two types of quotas that can be optionally configured:
+
+1. A service broker maximum limits the total number of service instance VMs that can be deployed by MySQL for PCF v2.
+1. Service Plan quotas can be configured on any active service plan and limits the number of instances of that plan.
+
+For more information on how to configure a service broker maximum limit and plan quotas, see
+[Configure Global Quotas](/p-mysql/2-0/install-config.html#global) and
+[Configure Active Service Plans](/p-mysql/2-0/install-config.html#active), respectively.
+
+Configuring quotas allows you to limit the number of instances that can be deployed, thereby ensuring that resource consumption
+stays within the desired limits. By default, MySQL for PCF v2 ships with a maximum limit of 50 service instances,
+meaning the service broker will never deploy more than 50 instances. This number can be set lower if desired,
+but may not be set above 50.
+
+Additionally, there is often a need for a service plan to be configured to use a significant amount of resources, such as RAM or
+disk. In this case, you may want to limit the number of this plan that can be configured. Setting a service plan quota on
+the more expensive plan will ensure that resource consumption does not exceed an acceptable amount.
+
+## <a id="service-plan-access"></a> Controlling Service Plan Access
+
+MySQL for PCF v2 optionally allows you to manually control which CF organizations are able to access specific service plans.
+By default, active service plans are visible to all organizations. Manually controlling which organizations have access
+to a specific service plan, allows you to ensure that the more resource consuming service plans are only available to the
+organizations that explicitly need them.
+
+To configure MySQL for PCF v2 to control service plan access manually, do the following:
+
+1. Set the **Service Plan Access** field to **Manual** on any active service plan. For more information on this, see
+[Configure Active Service Plans](/p-mysql/2-0/install-config.html#active).
+
+After installing MySQL for PCF v2 with the changes, granting access to the service plan can be done via the CF CLI. To
+enable an organization to use a manually controlled service plan, do the following:
+
+1. Log in to the CF CLI as an admin user.
+ <pre class="terminal">
+    $ cf login
+ </pre>
+
+1. Enable service access to the organization:
+ <pre class="terminal">
+    $ cf enable-service-access p.mysql -p PLAN -o ORGANIZATION
+ </pre>
+  * `PLAN` is the name of the specific plan that should be enabled, configured in MySQL for PCF.
+  * `ORGANIZATION` is the name of the organization that should receive access to `PLAN`
+
+At this point, the organization is now able to use the custom MySQL for PCF v2 plan.
+
+For more information on modifying and viewing service plan access, see the
+[Access Control](https://docs.pivotal.io/pivotalcf/1-11/services/access-control.html) documentation.
