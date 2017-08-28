@@ -436,6 +436,11 @@ These instructions assume you have a backup downloaded. To restore the backup to
     $ sudo su
  </pre>
 
+1. Create the directory structure the tooling expects by creating a `restore-artifact` directory
+ <pre class="terminal">
+    $ mkdir /var/vcap/store/restore-artifact/
+ </pre>
+
 1. Move the backup artifact to the script's expected location.
  <pre class="terminal">
     $ mv /tmp/mysql-backup-1498863859-0.tar.gpg /var/vcap/store/restore-artifact/
