@@ -360,7 +360,7 @@ If you are using one of the other backup options, steps [6](#six) and [8](#eight
 
 1. Run `cf service` to determine the GUID associated with the service instance that you want to restore.
  <pre class="terminal">
-  $ cf service my-instance --guid
+  $ cf service MY_INSTANCE_NAME --guid
   12345678-90ab-cdef-1234-567890abcdef
  </pre>
 
@@ -371,60 +371,80 @@ If you are using one of the other backup options, steps [6](#six) and [8](#eight
    $ bosh download manifest service-instance_12345678-90ab-cdef-1234-567890abcdef ./manifest.yml
   </pre>
 
-1. Inspect the downloaded manifest and record the `properties.cf-mysql-backup.symmetric_key` and backup destination bucket. You will use this later to decrypt the backup.
+1. Inspect the downloaded manifest and record the following properties for later:
+  * `properties.cf-mysql-backup.symmetric_key` also referred to as an encryption key - this will be used later to decrypt the backup artifact.
+  * `properties.service-backup.destinations[0].config.bucket_name` which is the bucket that the backups are uploaded to.
+  * `properties.service-backup.destinations[0].config.bucket_path` the path within the bucket above.
 
-1. Install and log in to the [AWS CLI](https://aws.amazon.com/cli/).
+1. If necessary, install and log in to the [AWS CLI](https://aws.amazon.com/cli/).
 
-1. <a id="six"></a>List the available backups for the instance.
+1. List the available backups for the instance, replacing `BUCKET_NAME` and `BUCKET_PATH` with values from above.
+  The artifacts will be sorted by time.
  <pre class="terminal">
-  $ aws s3 ls --recursive s3://BUCKET\_NAME/service-instance\_12345678-90ab-cdef-1234-567890abcdef
+  $ aws s3 ls --recursive s3://BUCKET\_NAME/BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
  </pre>
 
 1. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
 
-1. <a id="eight"></a>Download the selected backup.
+1. Download the selected backup.
  <pre class="terminal">
-  $ aws s3 cp s3://$BUCKET\_NAME/$BUCKET\_PATH/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
+  $ aws s3 cp s3://$BUCKET\_NAME/$BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
  </pre>
 
     <p class="note"><strong>Note</strong>: You can also log in to AWS and download S3 backups from a browser.</p>
 
 ###<a id="restore"></a> Restore the Service Instance
 
-These instructions assume you have a backup downloaded. To restore the backup to a new service instance:
+These instructions assume you have a backup downloaded. Because restoring a service instance is destructive, it is recommended
+to restore to a new and unused service instance. To restore the backup to a new service instance:
 
-1. [Create a new service instance](./use.html#create) to restore to.
+1. Determine the service plan associated with the old service instance.
+ <pre class="terminal">
+  $ cf service OLD\_INSTANCE\_NAME
+ </pre>
+
+1. [Create a new service instance](./use.html#create) using the same service plan to restore to.
  <pre class="terminal">
   $ cf create-service p.mysql db-small NEW\_SERVICE\_INSTANCE
  </pre>
 
+1. Monitor the status of the service instance creation; it may take several minutes as the VM is created.
+ <pre class="terminal">
+  $ cf service NEW\_SERVICE\_INSTANCE
+ </pre>
 
 1. Determine the GUID associated with your service instance:
  <pre class="terminal">
     $ cf service NEW\_SERVICE\_INSTANCE --guid
  </pre>
 
-1. Download the manifest for the service instance deployment using the GUID from above.
+1. Download the Bosh manifest for the service instance using the GUID from above.
  <pre class="terminal">
     $ bosh download manifest service-instance_GUID ./manifest.yml
  </pre>
 
-1. Determine and record the admin password
+1. Determine and record the MySQL admin password
  <pre class="terminal">
   $ cat ./manifest | grep admin_password
  </pre>
 
-1. Set the BOSH deployment to new downloaded manifest.
+1. Set the BOSH deployment to the newly downloaded manifest.
  <pre class="terminal">
      $ bosh deployment ./manifest.yml
+ </pre>
+
+1. Find and record the MySQL instance name and GUID from Bosh
+ <pre class="terminal">
+     $ bosh instances
  </pre>
 
 1. Copy the downloaded backup to the new service instance.
  <pre class="terminal">
    $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
  </pre>
-   - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
-   - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
+   - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`, determined from the previous step. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+   - `DESTINATION-PATH` is the location to copy the backup artifact to on the BOSH VM. For example, `/tmp/`.
+   <p class="note"><strong>Note</strong>: You may see `stderr` output. This is normal.</p>
 
 1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
  <pre class="terminal">
@@ -446,25 +466,34 @@ These instructions assume you have a backup downloaded. To restore the backup to
     $ mv /tmp/mysql-backup-1498863859-0.tar.gpg /var/vcap/store/restore-artifact/
  </pre>
 
-1. Run the restore utility to restore the backup artifact into the data directory.
- <pre class="terminal">
-  $ /var/vcap/packages/mysql-restore/bin/restore --encryption-key ENCRYPTION-KEY --mysql-username admin --mysql-password ADMINPASSWORD
- </pre>
- * This process will delete any existing data, decrypt and untar the backup artifact, and restore it into the mysql data directory.
+1. Run the restore utility to restore the backup artifact into the data directory. This process will delete any existing data, decrypt and untar the backup artifact, and restore it into the mysql data directory.
  <p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
+ <pre class="terminal">
+  $ /var/vcap/packages/mysql-restore/bin/restore --encryption-key ENCRYPTION\_KKEY --mysql-username admin --mysql-password ADMIN\_PASSWORD
+ </pre>
+  * `ENCRYPTION_KEY` is the `symmetric-key` value from above
+  * `ADMIN_PASSWORD` is the `admin_password` value from above
 
 1. Exit the MySQL VM.
 
-1. Update your CF app to bind to the new service instance.
+1. Determine if the application is currently bound to a MySQL service instance
  <pre class="terminal">
-   $ cf bind-service my-app NEW\_SERVICE\_INSTANCE
+   $ cf services
  </pre>
 
-1. Start your CF app.
+1. If the previous step shows that the app is currently bound to a MySQL instance, unbind it:
  <pre class="terminal">
-   $ cf start my-app
+   $ cf unbind-service MY\_APP OLD\_SERVICE\_INSTANCE
+ </pre>
+
+1. Update your CF app to bind to the new service instance.
+ <pre class="terminal">
+   $ cf bind-service MY\_APP  NEW\_SERVICE\_INSTANCE
+ </pre>
+
+1. Restage your CF app to make the changes take effect.
+ <pre class="terminal">
+   $ cf restage MY\_APP 
  </pre>
 
 1. Your app should be running and able to access the restored data.
-
-1. Restore the backup to the new service instance:
