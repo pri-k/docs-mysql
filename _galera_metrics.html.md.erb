@@ -1,9 +1,9 @@
 | **Data Source** | **Description** | **Metric Unit** |
 | --- | --- | --- |
-| `/p-mysql/galera/wsrep_ready` | Shows whether the node can accept queries. | boolean |
-| `/p-mysql/galera/wsrep_cluster_size` | The current number of nodes in the Galera cluster. | node |
-| `/p-mysql/galera/wsrep_cluster_status` | Shows the primary status of the cluster component that the node is in. | State ID.<br /> Values are Primary = 1, Non-primary = 0, Disconnected = -1 (See: [https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/)](https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/ ) |
-| `/p-mysql/galera/wsrep_local_recv_queue_avg` | Shows the average size of the local received queue since the last status query. | float |
-| `/p-mysql/galera/wsrep_local_send_queue_avg` | Shows the average size of the local sent queue since the last status query. | float |
-| `/p-mysql/galera/wsrep_local_index` | This node index in the cluster (base 0). | int |
-| `/p-mysql/galera/wsrep_local_state` | This is the node's local state | int |
+| `<%= vars.mysql_metrics_origin %>/galera/wsrep_ready` | Shows whether the node can accept queries. | boolean |
+| `<%= vars.mysql_metrics_origin %>/galera/wsrep_cluster_size` | The current number of nodes in the Galera cluster. | node |
+| `<%= vars.mysql_metrics_origin %>/galera/wsrep_cluster_status` | Shows the primary status of the cluster component that the node is in. | State ID.<br /> Values are Primary = 1, Non-primary = 0, Disconnected = -1 (See: [https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/)](https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/ ) |
+| `<%= vars.mysql_metrics_origin %>/galera/wsrep_local_recv_queue_avg` | Shows the average size of the local received queue since the last status query. | float |
+| `<%= vars.mysql_metrics_origin %>/galera/wsrep_local_send_queue_avg` | Shows the average size of the local sent queue since the last status query. | float |
+| `<%= vars.mysql_metrics_origin %>/galera/wsrep_local_index` | This node index in the cluster (base 0). | int |
+| `<%= vars.mysql_metrics_origin %>/galera/wsrep_local_state` | This is the node's local state | int |
