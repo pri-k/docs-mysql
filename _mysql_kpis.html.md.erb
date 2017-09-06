@@ -1,0 +1,125 @@
+#### <a id="server-heartbeat"></a> Server Availability
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin %>/available<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>MySQL Server is currently responding to requests, which indicates if the component is available.<br><br>
+
+      <strong>Use</strong>: If the server does not emit heartbeats, it is offline.
+      <br><br>
+      <strong>Origin</strong>: Doppler/Firehose<br>
+      <strong>Type</strong>: boolean<br>
+      <strong>Frequency</strong>: 30 s
+   </tr>
+   <tr>
+      <th>Recommended measurement</th>
+      <td>Average over last 5 minutes</td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td><strong>Yellow warning</strong>: N/A<br>
+      <strong>Red critical</strong>: &lt; 1</td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>
+         Check the MySQL Server logs for errors.
+         You can find the instance by targeting your MySQL deployment with BOSH and inspecting logs for the instance.
+         For more information, see <a href="./troubleshoot.html#failing-jobs">Failing Jobs and Unhealthy Instances</a>.
+      </td>
+   </tr>
+</table>
+
+#### <a id="connections"></a> Connections
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin %>/net/connections<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>The rate of connections to the server, shown as connections per second.<br><br>
+
+      <strong>Use</strong>: If the number of connections drastically changes or if apps are unable to connect, there might be  a network or app issue.</p>
+      <strong>Origin</strong>: Doppler/Firehose<br>
+      <strong>Type</strong>: count<br>
+      <strong>Frequency</strong>: 30 s<br>
+   </tr>
+   <tr>
+      <th>Recommended measurement</th>
+      <td>(Number of connections / Max connections) over last 1 minute</td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td><strong>Yellow warning</strong>: &gt; 80 <br>
+      <strong>Red critical</strong>: &gt; 90</td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>When approaching 100% of max connections, apps may be experiencing times when they cannot connect to the database.
+          The connections/second for a service instance vary based on application instances and app utilization.
+          If this metric is met or exceeded for an extended period of time, 
+          monitor app usage to ensure everything is behaving as expected.
+      </td>
+   </tr>
+</table>
+
+#### <a id="open-files"></a> Questions
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin %>/performance/questions<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>The rate of statements executed by the server, shown as queries per second.<br><br>
+
+      <strong>Use</strong>: The server should always be processing some queries, if just as part of the internal automation.
+      <br><br>
+      <strong>Origin</strong>: Doppler/Firehose<br>
+      <strong>Type</strong>: count<br>
+      <strong>Frequency</strong>: 30 s
+   </tr>
+   <tr>
+      <th>Recommended measurement</th>
+      <td>Average over last 2 minutes</td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td><strong>Yellow warning</strong>: 0 for 90 s<br>
+      <strong>Red critical</strong>: 0 for 120 s</td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>Investigate the MySQL server logs, such as the audit log, to understand why query rate changed and determine appropriate action.</td>
+   </tr>
+</table>
+
+#### <a id="user-time"></a> Busy Time
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin %>/performance/busy_time<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>Percentage of CPU time spent by MySQL on user activity, executing user code, as opposed to kernel activity, executing system functions.<br><br>
+
+      <strong>Use</strong>: This closely reflects the amount of server activity dedicated to app queries.
+      <br><br>
+      <strong>Origin</strong>: Doppler/Firehose<br>
+      <strong>Type</strong>: percentage<br>
+      <strong>Frequency</strong>: 30 s
+   </tr>
+   <tr>
+      <th>Recommended measurement</th>
+      <td>Average over last 2 minutes</td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td><strong>Yellow warning</strong>: &gt; 80% <br>
+      <strong>Red critical</strong>: &gt; 90% </td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>If this metric meets or exceeds the recommended thresholds for extended periods of time,
+          run `SHOW PROCESSLIST` and identify which queries are using so much CPU.
+          Optionally scale to a larger service plan with more CPU capacity.
+      </td>
+   </tr>
+</table>
