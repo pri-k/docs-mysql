@@ -173,9 +173,9 @@ This option allows clients to send files to the server. Disabling ensures that c
 When enabled, `mysql` clients are allowed to connect as administrator from remote hosts. When disabled, administrators must `bosh ssh` into each MySQL VM to connect as the MySQL super user. This is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
 
 This setting affects the admin and roadmin accounts.
- **Note:** Some errands, notably `verify-cluster-schemas`, require administrator access. Some errands may fail when remote admin access is disabled.
+
 <p class="note"><strong>Note</strong>: Some errands, notably <code>verify-cluster-schemas</code>, require administrator access.
-Some errands may fail when remote admin access is disabled.</p>
+Some errands fail when remote admin access is disabled.</p>
 
 #### <a id="command-history"></a>Allow Command History
 
