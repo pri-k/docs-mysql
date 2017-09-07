@@ -3,7 +3,18 @@ title: Backing Up and Restoring On-Demand MySQL for PCF
 owner: MySQL
 ---
 
-This topic describes how to enable and configure automated backups for the MySQL for Pivotal Cloud Foundry (PCF) service
+<style>
+.note.warning {
+  background-color: #fdd;
+  border-color: #fbb
+}
+.note.warning:before {
+  color: #f99;
+}
+</style>
+
+
+This topic describes how to configure automated backups for MySQL for Pivotal Cloud Foundry (PCF),
 and how to manually restore a MySQL service instance from a backup.
 
 ## <a id="overview"></a>About Automated Backups
@@ -15,7 +26,7 @@ Automated backups do the following:
 - Include a metadata file that contains the critical details of the backup, including the calendar time of the backup.
 - Encrypt backups within the MySQL for PCF VM; unencrypted data is never transported outside the MySQL for PCF deployment.
 
-## <a id="understanding-metadata"></a>About Backup Files and Metadata
+### <a id="understanding-metadata"></a> Backup Files and Metadata
 
 When MySQL for PCF runs a backup, it uploads two files with Unix epoch-timestamped filenames of the form `mysql-backup-TIMESTAMP`:
 
@@ -53,21 +64,21 @@ The backup process does not interrupt MySQL service, but backups only reflect tr
 <p class="note"><strong>Note</strong>: Although both <code>compressed</code> and <code>encrypted</code> show as <code>N</code> in this file,
 the backup uploaded by MySQL for PCF is both compressed and encrypted. This is a known issue.</p>
 
-## <a id="enable-backups"></a>About Enabling Automated Backups
+### <a id="enable-backups"></a> Enabling Automated Backups
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
-* **How and where**: There are four options for how automated backups transfer backup data and where the data saves to:
-  - [Option 1](#scp): MySQL for PCF runs an SCP command that secure-copies backups to a VM or physical machine operating outside of PCF.
+* **How and where**---There are four options for how automated backups transfer backup data and where the data saves to:
+  - [Option 1: Back up with SCP](#scp)---MySQL for PCF runs an SCP command that secure-copies backups to a VM or physical machine operating outside of PCF.
    The operator provisions the backup machine separately from their PCF installation. This is the fastest option.
-  - [Option 2](#ceph-or-s3): MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an S3 bucket,
+  - [Option 2: Back up to Ceph or S3](#ceph-or-s3)---MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an S3 bucket,
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
-  - [Option 3](#gcs): MySQL for PCF runs an [GCS](https://cloud.google.com/storage/) SDK that saves backups to an Google Cloud Storage bucket.
-  - [Option 4](#azure): MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/) SDK that saves backups to an Azure storage account.
+  - [Option 3: Back up to GCS](#gcs)---MySQL for PCF runs an [GCS](https://cloud.google.com/storage/) SDK that saves backups to an Google Cloud Storage bucket.
+  - [Option 4: Back up to Azure Storage](#azure)---MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/) SDK that saves backups to an Azure storage account.
 
-* **When**: Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
+* **When**---Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
 
-* **What**: Each MySQL instance backs up its entire MySQL data directory, consistent to a specific point in time.
+* **What is backed up**---Each MySQL instance backs up its entire MySQL data directory, consistent to a specific point in time.
 
 To enable and configure automated backups, follow the procedures below according to the option you choose for external storage.
 
@@ -84,7 +95,7 @@ To back up your database using SCP, complete the following procedures:
 
 MySQL for PCF accesses a remote host as a user with a private key for authentication. Pivotal recommends that this user and key pair be solely for MySQL for PCF.
 
-1. Determine the remote host that you will be using to store backups for MySQL for PCF. Ensure that the MySQL service instances will be able to access
+1. Determine the remote host that you will be using to store backups for MySQL for PCF. Ensure that the MySQL service instances can access
    the remote host.
 
     <p class="note"><strong>Note</strong>: Pivotal recommends using a VM outside the PCF deployment for the destination of SCP backups. As a result you may need to enable public IPs for the MySQL VMs. </p>
@@ -97,36 +108,28 @@ MySQL for PCF accesses a remote host as a user with a private key for authentica
 
 Use Ops Manager to configure MySQL for PCF to backup using SCP.
 
-1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
 1. Select the **SCP** radio button.
     ![SCP Backup Configuration Form](scp-backups.png)
 
-1. Fill in the fields as follows:
-
-  * **Username**
-      Enter the user that you created above.
-  * **Private Key**
-      Enter the private key that you created above. The public key should be stored for ssh and scp access on the destination VM.
-  * **Hostname**
-      Enter the IP or DNS entry that should be used to access the destination VM.
-  * **Destination Directory**
-      Enter the directory in which MySQL for PCF should upload backups.
-  * **Cron Schedule**
-          Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
-  * **Fingerprint**
-          Enter the fingerprint of the destination VMs public key. This helps to detect any changes to the destination VM.
-  * **Enable Email Alerts**
-          Select to receive email notifications when a backup failure occurs.
-          Also verify that you done the following:
-          <ul><li>Added all users who need to be notified about failed backups to System org and System space</li>
-          <li>Configured Email Notifications in Elastic Runtime,
+1. Fill in the fields as follows:<br><br>
+    * **Username**---Enter the user that you created above.
+    * **Private Key**---Enter the private key that you created above. The public key should be stored for ssh and scp access on the destination VM.
+    * **Hostname**---Enter the IP or DNS entry that should be used to access the destination VM.
+    * **Destination Directory**---Enter the directory in which MySQL for PCF should upload backups.
+    * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
+    * **Fingerprint**---Enter the fingerprint of the destination VM's public key. This helps to detect any changes to the destination VM.
+    * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
+          Also verify that you have done the following:
+          - Added all users who need to be notified about failed backups to System org and System space</li>
+          - Configured Email Notifications in Elastic Runtime,
           see <em>Configure Email Notifications</em> for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.</li></ul>
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="ceph-or-s3"></a> Option 2: Back Up to Ceph or S3
 
@@ -137,10 +140,15 @@ To back up your database on Ceph or Amazon S3, complete the following procedures
 
 ### <a id="access-key-aws"></a> Create a Policy and Access Key
 
-MySQL for PCF accesses your S3 store through a user account. Pivotal recommends that this account be solely for MySQL for PCF. You need to apply a minimal policy that lets the user account upload backups to your S3 store.
+MySQL for PCF accesses your S3 store through a user account. Pivotal recommends that this account be solely for MySQL for PCF. You must apply a minimal policy that lets the user account upload backups to your S3 store.
 
-1. Create a policy for your MySQL for PCF user account. Policy creation varies across S3 providers, but MySQL for PCF needs permission to list and upload to buckets. To use buckets that do not already exist, it additionally needs permission to create buckets.  
-For example, in AWS create a new custom policy (**IAM** > **Policies** > **Create Policy** > **Create Your Own Policy**) and paste in the following permissions:  
+1. Create a policy for your MySQL for PCF user account. 
+
+    <br>Policy creation varies depending on the S3 provider. Follow the relevant procedure to give MySQL for PCF the following permissions:<br><br>
+      * List and upload to buckets
+      * (Optional) Create buckets in order to use buckets that do not already exist  
+
+    For example, in AWS, to create a new custom policy, go to **IAM** > **Policies** > **Create Policy** > **Create Your Own Policy** and paste in the following permissions:  
      <pre class="highlight json">
 {
   "Version": "2012-10-17",
@@ -172,38 +180,29 @@ For example, in AWS create a new custom policy (**IAM** > **Policies** > **Creat
 
 Use Ops Manager to connect MySQL for PCF to your S3 account.
 
-1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
 1. Select the **Ceph or Amazon S3** radio button.  
     ![S3 Backup Configuration Form](S3-backups.png)
 
-1. Fill in the fields as follows:
-
-  * **Access Key ID** and **Secret Access Key** 
-      Enter the S3 Access Key ID and Secret Access Key from above.
-  * **Endpoint URL**
-      Enter the S3 compatible endpoint URL for uploading backups. URL must start with `http://` or `https://`. The default is https://s3.amazonaws.com
-  * **Region**
-      Choose the region in which your bucket is located. If you are not using S3 leave it as "V2 Signature - N/A"
-  * **S3 Signature Version**
-      If your bucket's region support v4 signatures, select "V4 Signature"
-  * **Bucket Name**
-      Enter the bucket name in which to upload.
-  * **Bucket Path**
-      Enter the path in the bucket to store backups.
-  * **Cron Schedule**
-          Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
-  * **Enable Email Alerts**
-          Select to receive email notifications when a backup failure occurs.
+1. Fill in the fields as follows:<br><br>
+      * **Access Key ID** and **Secret Access Key**---Enter the S3 Access Key ID and Secret Access Key from above.
+      * **Endpoint URL**---Enter the S3 compatible endpoint URL for uploading backups. URL must start with `http://` or `https://`. The default is https://s3.amazonaws.com
+      * **Region**---Choose the region in which your bucket is located. If you are not using S3 leave it as "V2 Signature - N/A"
+      * **S3 Signature Version**---If your bucket's region support v4 signatures, select "V4 Signature"
+      * **Bucket Name**---Enter the bucket name in which to upload.
+      * **Bucket Path**---Enter the path in the bucket to store backups.
+      * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
+      * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you done the following:
-          <ul><li>Added all users who need to be notified about failed backups to System org and System space</li>
-          <li>Configured Email Notifications in Elastic Runtime,
+          * Added all users who need to be notified about failed backups to System org and System space</li>
+          * Configured Email Notifications in Elastic Runtime,
           see <em>Configure Email Notifications</em> for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.</li></ul>
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="gcs"></a> Option 3: Back Up to GCS
 
@@ -214,10 +213,14 @@ To back up your database on Google Cloud Storage (GCS), complete the following p
 
 ### <a id="access-key"></a> Create a Policy and Access Key
 
-MySQL for PCF accesses your GCS store through a service account. Pivotal recommends that this account be solely for MySQL for PCF. You need to apply a minimal policy that lets the user account upload backups to your GCS store.
+MySQL for PCF accesses your GCS store through a service account. Pivotal recommends that this account be solely for MySQL for PCF. You must apply a minimal policy that lets the user account upload backups to your GCS store.
 
-1. Create a service account for MySQL for PCF. MySQL for PCF needs permission to list and upload to buckets. To use buckets that do not already exist, it additionally needs permission to create buckets.
-In the GCS console, create a new service account (**IAM and Admin** > **Service Accounts** > **Create Service Account**).
+1. In the GCS console, create a new service account for MySQL for PCF: **IAM and Admin** > **Service Accounts** > **Create Service Account**.<br><br>
+
+      MySQL for PCF needs the following permissions for this account:
+      * List and upload to buckets
+      * (Optional) Create buckets in order to use buckets that do not already exist  
+
 
 1. Enter a unique name in the **Service account name** field, such as `MySQL-for-PCF`.
 
@@ -231,73 +234,59 @@ In the GCS console, create a new service account (**IAM and Admin** > **Service 
 
 Use Ops Manager to connect MySQL for PCF to your GCS account.
 
-1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
 1. Select the **GCS** radio button.
     ![GCS Backup Configuration Form](gcs-backups.png)
 
-1. Fill in the fields as follows:
-
-  * **Project ID**
-      Enter the Project ID for the Google Cloud project that you are using.
-  * **Bucket Name**
-      Enter the bucket name in which to upload.
-  * **Service Account JSON**
-      Enter the contents of the service account json file that you downloaded when creating a service account above.
-  * **Cron Schedule**
-          Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
-  * **Enable Email Alerts**
-          Select to receive email notifications when a backup failure occurs.
+1. Fill in the fields as follows:<br><br>
+    * **Project ID**---Enter the Project ID for the Google Cloud project that you are using.
+    * **Bucket Name**---Enter the bucket name in which to upload.
+    * **Service Account JSON**---Enter the contents of the service account json file that you downloaded when creating a service account above.
+    * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
+    * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you done the following:
-          <ul><li>Added all users who need to be notified about failed backups to System org and System space</li>
-          <li>Configured Email Notifications in Elastic Runtime,
+          * Added all users who need to be notified about failed backups to System org and System space</li>
+          * Configured Email Notifications in Elastic Runtime,
           see <em>Configure Email Notifications</em> for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.</li></ul>
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="azure"></a> Option 4: Back Up to Azure Storage
 
 Complete the following steps to back up your database to your Azure Storage account.
 
-1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
 1. Select the **Azure** radio button.
     ![Azure Backup Configuration Form](azure-backups.png)
 
-1. Fill in the fields as follows:
-
-  * **Account**
-      Enter the Account name for the Microsoft Azure account that you are using.
-  * **Azure Storage Access Key**
-      Enter one of the storage access keys that can be used to access the Azure Storage account.
-  * **Container Name**
-      Enter the container name that backups should be uploaded to.
-  * **Destination Directory**
-      Enter the directory in which backups should be uploaded to inside of the Container.
-  * **Blob Store Base URL**
-      By default, backups are sent to the public Azure blob store. To use an on-premise blob store, enter the hostname of the blob store.
-  * **Cron Schedule**
-          Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
-  * **Enable Email Alerts**
-          Select to receive email notifications when a backup failure occurs.
+1. Fill in the fields as follows:<br><br>
+    * **Account**---Enter the Account name for the Microsoft Azure account that you are using.
+    * **Azure Storage Access Key**---Enter one of the storage access keys that can be used to access the Azure Storage account.
+    * **Container Name**---Enter the container name that backups should be uploaded to.
+    * **Destination Directory**---Enter the directory in which backups should be uploaded to inside of the Container.
+    * **Blob Store Base URL**---By default, backups are sent to the public Azure blob store. To use an on-premise blob store, enter the hostname of the blob store.
+    * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
+    * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you done the following:
-          <ul><li>Added all users who need to be notified about failed backups to System org and System space</li>
-          <li>Configured Email Notifications in Elastic Runtime,
+          * Added all users who need to be notified about failed backups to System org and System space</li>
+          * Configured Email Notifications in Elastic Runtime,
           see <em>Configure Email Notifications</em> for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.</li></ul>
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="disable-backups"></a>Disable Automated Backups
 
 To disable MySQL for PCF automated backups:
 
-1. In Ops Manager, open the MySQL for PCF tile > **Backups** pane.
+1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
 1. Select **Disable Backups**.  
 ![Disable Backups](disable-backups.png)
@@ -311,19 +300,19 @@ To disable MySQL for PCF automated backups:
 Back up your data manually with [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html). This backup
 acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
 
-Perform the following steps to backup a MySQL for PCF service instance VM:
+Follow these steps to backup a MySQL for PCF service instance VM:
 
 1. Determine the GUID associated with your service instance:
  <pre class="terminal">
   $ cf service SERVICE_INSTANCE --guid
  </pre>
 
-1. Download the manifest for the service instance deployment using the GUID from above.
+1. Download the manifest for the service instance deployment using the GUID from above:
  <pre class="terminal">
   $ bosh download manifest service-instance_GUID ./manifest.yml
  </pre>
 
-1. Set the BOSH deployment to the downloaded manifest.
+1. Set the BOSH deployment to the downloaded manifest:
  <pre class="terminal">
   $ bosh deployment ./manifest.yml
  </pre>
@@ -351,14 +340,14 @@ Restoring a MySQL for PCF service instance replaces all of its data and running 
 To restore a MySQL for PCF instance from an offsite backup, download the backup and restore to a new instance by following these procedures:
 
 + [Download the Backup Artifact](#download)
-+ [Restore the Service Instance](#restore)
++ [Restore the Service Instance](#restoreinstance)
 
 ###<a id="download"></a> Download the Backup Artifact
 
 These instructions assume that you are using S3 as your backup destination.
-If you are using one of the other backup options, steps [6](#six) and [8](#eight) are different.
+If you are using one of the other backup options, steps 6 and 8 are different.
 
-1. Run `cf service` to determine the GUID associated with the service instance that you want to restore.
+1. Run `cf service` to determine the GUID associated with the service instance that you want to restore:
  <pre class="terminal">
   $ cf service MY_INSTANCE_NAME --guid
   12345678-90ab-cdef-1234-567890abcdef
@@ -366,12 +355,12 @@ If you are using one of the other backup options, steps [6](#six) and [8](#eight
 
 1. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI.
 
-1. Download the manifest for the service instance deployment using the GUID from above.
+1. Download the manifest for the service instance deployment using the GUID from above:
   <pre class="terminal">
    $ bosh download manifest service-instance_12345678-90ab-cdef-1234-567890abcdef ./manifest.yml
   </pre>
 
-1. Inspect the downloaded manifest and record the following properties for later:
+1. Inspect the downloaded manifest and record the following properties for later:<br><br>
   * `properties.cf-mysql-backup.symmetric_key` also referred to as an encryption key - this will be used later to decrypt the backup artifact.
   * `properties.service-backup.destinations[0].config.bucket_name` which is the bucket that the backups are uploaded to.
   * `properties.service-backup.destinations[0].config.bucket_path` the path within the bucket above.
@@ -379,31 +368,39 @@ If you are using one of the other backup options, steps [6](#six) and [8](#eight
 1. If necessary, install and log in to the [AWS CLI](https://aws.amazon.com/cli/).
 
 1. List the available backups for the instance, replacing `BUCKET_NAME` and `BUCKET_PATH` with values from above.
-  The artifacts will be sorted by time.
+  The artifacts are sorted by time. 
  <pre class="terminal">
   $ aws s3 ls --recursive s3://BUCKET\_NAME/BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
  </pre>
 
 1. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
 
-1. Download the selected backup.
+1. Download the selected backup:
  <pre class="terminal">
   $ aws s3 cp s3://$BUCKET\_NAME/$BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
  </pre>
 
     <p class="note"><strong>Note</strong>: You can also log in to AWS and download S3 backups from a browser.</p>
 
-###<a id="restore"></a> Restore the Service Instance
+###<a id="restoreinstance"></a> Restore the Service Instance
 
-These instructions assume you have a backup downloaded. Because restoring a service instance is destructive, it is recommended
-to restore to a new and unused service instance. To restore the backup to a new service instance:
+Because restoring a service instance is destructive, Pivotal recommends that you restore to a new and unused service instance. 
 
-1. Determine the service plan associated with the old service instance.
+These instructions assume you have a backup downloaded. 
+
+To restore the backup to a new service instance, follow these procedures:
+
+* [Create and Prepare a New Service Instance for Restore](#prepare)<br>
+* [Run the Restore Utility](#runrestore)
+
+#### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
+
+1. Determine the service plan associated with the old service instance:
  <pre class="terminal">
   $ cf service OLD\_INSTANCE\_NAME
  </pre>
 
-1. [Create a new service instance](./use.html#create) using the same service plan to restore to.
+1. [Create a new service instance](./use.html#create) using the same service plan to restore to:
  <pre class="terminal">
   $ cf create-service p.mysql db-small NEW\_SERVICE\_INSTANCE
  </pre>
@@ -418,65 +415,73 @@ to restore to a new and unused service instance. To restore the backup to a new 
     $ cf service NEW\_SERVICE\_INSTANCE --guid
  </pre>
 
-1. Download the Bosh manifest for the service instance using the GUID from above.
+1. Download the BOSH manifest for the service instance using the GUID from above:
  <pre class="terminal">
     $ bosh download manifest service-instance_GUID ./manifest.yml
  </pre>
 
-1. Determine and record the MySQL admin password
+1. Determine and record the MySQL admin password:
  <pre class="terminal">
   $ cat ./manifest | grep admin_password
  </pre>
 
-1. Set the BOSH deployment to the newly downloaded manifest.
+1. Set the BOSH deployment to the newly downloaded manifest:
  <pre class="terminal">
      $ bosh deployment ./manifest.yml
  </pre>
 
-1. Find and record the MySQL instance name and GUID from Bosh
+1. Find and record the MySQL instance name and GUID from BOSH:
  <pre class="terminal">
      $ bosh instances
  </pre>
 
-1. Copy the downloaded backup to the new service instance.
+1. Copy the downloaded backup to the new service instance:
  <pre class="terminal">
    $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
  </pre>
+   where:<br><br>
    - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`, determined from the previous step. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
    - `DESTINATION-PATH` is the location to copy the backup artifact to on the BOSH VM. For example, `/tmp/`.
    <p class="note"><strong>Note</strong>: You may see `stderr` output. This is normal.</p>
 
-1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
+1. Use the BOSH CLI to [`ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance:
  <pre class="terminal">
     $ bosh ssh mysql
  </pre>
 
-1. After securely logging into MySQL, run `sudo su` to become root.
+1. After securely logging into MySQL, run `sudo su` to become root:
  <pre class="terminal">
     $ sudo su
  </pre>
 
-1. Create the directory structure the tooling expects by creating a `restore-artifact` directory
+1. Create the directory structure the tooling expects by creating a `restore-artifact` directory:
  <pre class="terminal">
     $ mkdir /var/vcap/store/restore-artifact/
  </pre>
 
-1. Move the backup artifact to the script's expected location.
+1. Move the backup artifact to the script's expected location:
  <pre class="terminal">
     $ mv /tmp/mysql-backup-1498863859-0.tar.gpg /var/vcap/store/restore-artifact/
  </pre>
 
-1. Run the restore utility to restore the backup artifact into the data directory. This process will delete any existing data, decrypt and untar the backup artifact, and restore it into the mysql data directory.
- <p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
+#### <a id="runrestore"></a> Run the Restore Utility
+
+<p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
+
+1. Run the restore utility to restore the backup artifact into the data directory. This process:<br><br> 
+    * deletes any existing data
+    * decrypts and untars the backup artifact
+    * restores the backup artifact into the mysql data directory
  <pre class="terminal">
   $ /var/vcap/packages/mysql-restore/bin/restore --encryption-key ENCRYPTION\_KKEY --mysql-username admin --mysql-password ADMIN\_PASSWORD
  </pre>
+  where:<br><br>
   * `ENCRYPTION_KEY` is the `symmetric-key` value from above
   * `ADMIN_PASSWORD` is the `admin_password` value from above
 
 1. Exit the MySQL VM.
 
-1. Determine if the application is currently bound to a MySQL service instance
+1. Determine if the application is currently bound to a MySQL service instance:
  <pre class="terminal">
    $ cf services
  </pre>
@@ -486,14 +491,14 @@ to restore to a new and unused service instance. To restore the backup to a new 
    $ cf unbind-service MY\_APP OLD\_SERVICE\_INSTANCE
  </pre>
 
-1. Update your CF app to bind to the new service instance.
+1. Update your CF app to bind to the new service instance:
  <pre class="terminal">
    $ cf bind-service MY\_APP  NEW\_SERVICE\_INSTANCE
  </pre>
 
-1. Restage your CF app to make the changes take effect.
+1. Restage your CF app to make the changes take effect:
  <pre class="terminal">
    $ cf restage MY\_APP 
  </pre>
 
-1. Your app should be running and able to access the restored data.
+Your app should be running and able to access the restored data.
