@@ -4,8 +4,8 @@ owner: MySQL
 ---
 
 This topic tells operators how to control resource use, that is number and size of VMs used by MySQL for PCF,
-by setting a maximium number of VMs
-and by only allowing certain org to use some service plans. 
+by setting a maximum number of VMs
+and by only allowing certain orgs to use some service plans. 
 
 **Example 1: Limit the Number of VMs**
 
@@ -19,10 +19,10 @@ can exist at a time:
 
 **Example 2: Limit Plan Access**
 
-You have a service plan called db-huge  which uses large MySQL VMs, and it's in an expensive availability zone, too. 
+You have a service plan called db-large  which uses large MySQL VMs, and it's in an expensive availability zone, too. 
 You want this plan used only for your flagship production app. 
 To prevent your development team from using VMs in this plan, specify that only members of the production org
-can access the db-huge plan.   
+can access the db-large plan.   
 
 ## <a id="quotas"></a> Quotas
 
@@ -91,7 +91,9 @@ To configure MySQL for PCF v2 to control service-plan access, do the following:
         For example,
  
         <pre class="terminal">
-        $ cf enable-service-access p.mysql -p db-huge -o prod-team
+        $ cf enable-service-access p.mysql -o prodteam -p db-large
+        Enabling access to plan db-large of service p.mysql for org prodteam as admin...
+        OK
         </pre>
 
 The org is now able to use the plan.
