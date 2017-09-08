@@ -345,7 +345,7 @@ To restore a MySQL for PCF instance from an offsite backup, download the backup 
 ###<a id="download"></a> Download the Backup Artifact
 
 These instructions assume that you are using S3 as your backup destination.
-If you are using one of the other backup options, steps 6 and 8 are different.
+If you are using one of the other backup options, steps 5, 6, and 8 are different.
 
 1. Run `cf service` to determine the GUID associated with the service instance that you want to restore:
  <pre class="terminal">
@@ -353,29 +353,30 @@ If you are using one of the other backup options, steps 6 and 8 are different.
   12345678-90ab-cdef-1234-567890abcdef
  </pre>
 
-1. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI.
+2. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI.
 
-1. Download the manifest for the service instance deployment using the GUID from above:
+3. Download the manifest for the service instance deployment using the GUID from above:
   <pre class="terminal">
    $ bosh download manifest service-instance_12345678-90ab-cdef-1234-567890abcdef ./manifest.yml
   </pre>
 
-1. Inspect the downloaded manifest and record the following properties for later:<br><br>
+4. Inspect the downloaded manifest and record the following properties for later:<br><br>
   * `properties.cf-mysql-backup.symmetric_key` also referred to as an encryption key - this will be used later to decrypt the backup artifact.
   * `properties.service-backup.destinations[0].config.bucket_name` which is the bucket that the backups are uploaded to.
   * `properties.service-backup.destinations[0].config.bucket_path` the path within the bucket above.
 
-1. If necessary, install and log in to the [AWS CLI](https://aws.amazon.com/cli/).
+5. Log in to the AWS CLI.
+   For information and to download the CLI, see [AWS Command Line Interface](https://aws.amazon.com/cli/).
 
-1. List the available backups for the instance, replacing `BUCKET_NAME` and `BUCKET_PATH` with values from above.
+6. List the available backups for the instance, replacing `BUCKET_NAME` and `BUCKET_PATH` with values from above.
   The artifacts are sorted by time. 
  <pre class="terminal">
   $ aws s3 ls --recursive s3://BUCKET\_NAME/BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
  </pre>
 
-1. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
+7. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
 
-1. Download the selected backup:
+8. Download the selected backup:
  <pre class="terminal">
   $ aws s3 cp s3://$BUCKET\_NAME/$BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
  </pre>
