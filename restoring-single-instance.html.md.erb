@@ -1,0 +1,37 @@
+---
+title: Restoring a Single Service Instance
+owner: MySQL
+---
+
+This topic describes how to restore a single service instance of MySQL for Pivotal Cloud Foundry (PCF).
+
+## <a id='overview'></a>Overview
+
+Because automated backups for MySQL for PCF back up the entire cluster, each backup artifact contains all of the service instances. For more information about automated backups, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
+
+Backups of the entire cluster are useful for operators dealing with a disaster recovery scenario. But in cases where user error invalidates a single service instance, the operator may want to restore the data for only one instance.
+
+## <a id='restore'></a>Restore Your Service Instance
+
+Perform the following procedures to restore a single service instance:
+
+1. Deploy a [MariaDB](https://mariadb.org/) server in a different environment than the one that contains your MySQL for PCF cluster. Pivotal recommends deploying MariaDB in a Docker container. For more information, see the [MariaDB documentation](https://mariadb.com/kb/en/the-mariadb-library/installing-and-using-mariadb-via-docker/).
+
+1. SSH into your MariaDB instance.
+
+1. Locate your backup artifact. The location of your backup artifact depends on how you configured your automated backups. For more information, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
+
+1. Move the backup artifact to the MariaDB instance using `scp`. 
+1. Decrypt and expand the file using `gpg`, sending the output to `tar`:
+	<pre class="terminal">
+	$ gpg --decrypt mysql-backup.tar.gpg | tar -C /var/vcap/store/mysql -xvf -
+	</pre>
+1. Change the owner of the data directory, because MySQL expects the data directory to be owned by a particular user:
+	<pre class="terminal">
+	$ chown -R vcap:vcap /var/vcap/store/mysql
+	</pre>
+1. To back up the database that contains the service instance, specify the database name:
+ 	<pre class="terminal">
+	$ mysqldump -u admin -p -h localhost $DB_NAME --single-transaction > user_databases.sql
+ 	</pre>
+1. Restore the new backup artifact to your MySQL for PCF cluster by performing the steps in the [Restore a Backup Artifact](backup.html#restoring) section of the <em>Backups</em> topic. This replaces the existing data in the MySQL for PCF cluster with the content of the backup artifact, without affecting the data of any other service instances. Coordinate this procedure with the service instance owner, because it will affect any running apps accessing the data.
