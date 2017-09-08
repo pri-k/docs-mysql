@@ -1,0 +1,100 @@
+---
+title: Controlling Resource Use
+owner: MySQL
+---
+
+This topic tells operators how to control resource use, that is number and size of VMs used by MySQL for PCF,
+by setting a maximium number of VMs
+and by only allowing certain org to use some service plans. 
+
+**Example 1: Limit the Number of VMs**
+
+Resource costs have been increasing. 
+Employees don't decommission their apps after tests.
+To enforce decommissioning before they create more VMs, set quotas for the number of MySQL VMs that
+can exist at a time: 
+
+* Set a _global_ quota for the total number of MySQL VMs.
+* Set a _per-plan_ quota for the service-plan with the most expensive VMs.
+
+**Example 2: Limit Plan Access**
+
+You have a service plan called db-huge  which uses large MySQL VMs, and it's in an expensive availability zone, too. 
+You want this plan used only for your flagship production app. 
+To prevent your development team from using VMs in this plan, specify that only members of the production org
+can access the db-huge plan.   
+
+## <a id="quotas"></a> Quotas
+
+MySQL for PCF v2 offers two types of quotas:
+
+* [Service-broker maximum quota](#max-quota)
+* [Service-plan quotas](#plan-quota)
+
+###<a id="max-quota"></a>Service-Broker Maximum Quota 
+
+A service-broker maximum quota limits the _total_ number of service instance VMs that can be deployed by MySQL for PCF v2.
+
+Configuring quotas allows you to limit the number of instances that can be deployed, thereby ensuring that resource consumption
+stays within limits. By default, MySQL for PCF v2 ships with a maximum limit of 50 service instances:
+this means that the service broker never deploys more than 50 instances.
+You can set this quota to lower than 50 but never to greater than 50.
+
+To configure a service-broker maximum quota, see [Configure Global Quotas](/p-mysql/2-0/install-config.html#global).
+
+###<a id="plan-quota"></a>Service-Plan Quotas 
+
+A service-plan quota limits the number of instances for _one plan_.
+
+In the case where a service plan is configured to use a lot of resources, RAM or disk space, 
+you might want to limit the number of instances of this plan that can be configured.
+Setting a service plan quota on the more expensive plan ensures that resource consumption does not exceed an acceptable amount.
+
+To configure a service-plan quota, see [Configure Active Service Plans](/p-mysql/2-0/install-config.html#active).
+
+
+## <a id="service-plan-access"></a> Control Access to Service Plan by Orgs
+
+MySQL for PCF v2 allows you to control which CF orgs are able to access specific service plans.
+By default, active service plans are visible to all orgs.
+Controlling which orgs have access to a specific service plan allows
+you to ensure that the resource-intensive service plans are only available to the
+orgs that explicitly need them.
+
+To configure MySQL for PCF v2 to control service-plan access, do the following:
+
+1. Set the **Service Plan Access** field to **Manual** on any active service plan.
+
+    For more information, see
+[Configure Active Service Plans](/p-mysql/2-0/install-config.html#active).
+
+1. Click **Save**.
+
+1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
+
+1. For each org that you want to use the service plan, do the following:
+
+    1.  Log in to the Cloud Foundry Command Line Interface (cf CLI) as an admin user:
+
+        <code>cf login</code>
+
+    1.  Enable service access to the org:
+
+        <code>cf enable-service-access p.mysql -p PLAN -o ORGANIZATION</code>
+  
+        Where:
+      
+        `PLAN`: The name of the specific plan to enable, set to manual in step 1 above. 
+
+        `ORGANIZATION`: The name of the org that needs access to `PLAN`
+
+        For example,
+ 
+        <pre class="terminal">
+        $ cf enable-service-access p.mysql -p db-huge -o prod-team
+        </pre>
+
+The org is now able to use the plan.
+
+For information on modifying and viewing service-plan access, see 
+[Access Control](https://docs.pivotal.io/pivotalcf/1-11/services/access-control.html).
