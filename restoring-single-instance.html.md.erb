@@ -7,7 +7,7 @@ This topic describes how to restore a single service instance of MySQL for Pivot
 
 ## <a id='overview'></a>Overview
 
-Because automated backups for MySQL for PCF back up the entire cluster, each backup artifact contains all of the service instances. For more information about automated backups, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
+Because automated backups for MySQL for PCF back up all data stored by the cluster, each backup artifact contains all of the service instances. For more information about automated backups, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
 
 Backups of the entire cluster are useful for operators dealing with a disaster recovery scenario. But in cases where user error invalidates a single service instance, the operator may want to restore the data for only one instance.
 
@@ -15,23 +15,27 @@ Backups of the entire cluster are useful for operators dealing with a disaster r
 
 Perform the following procedures to restore a single service instance:
 
-1. Deploy a [MariaDB](https://mariadb.org/) server in a different environment than the one that contains your MySQL for PCF cluster. Pivotal recommends deploying MariaDB in a Docker container. For more information, see the [MariaDB documentation](https://mariadb.com/kb/en/the-mariadb-library/installing-and-using-mariadb-via-docker/).
-
-1. SSH into your MariaDB instance.
+1. Deploy a [MariaDB](https://mariadb.org/) server in a different environment than the one that contains your MySQL for PCF cluster. Pivotal recommends deploying the MySQL for PCF tile to a non-production PCF environment, or deploying the official Docker image of MariaDB to a Docker container. For more information about deploying MySQL for PCF, see [Installing MySQL for PCF](installing.html). For more information about deploying MariaDB with Docker, see the [MariaDB documentation](https://mariadb.com/kb/en/the-mariadb-library/installing-and-using-mariadb-via-docker/).
 
 1. Locate your backup artifact. The location of your backup artifact depends on how you configured your automated backups. For more information, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
 
-1. Move the backup artifact to the MariaDB instance using `scp`. 
+1. Transfer the backup artifact to the temporary MariaDB instance. 
+1. Delete the existing MySQL data that is stored on disk:
+	<pre class="terminal">
+	$ rm -rf PATH-TO-MARIADB-DATA-DIRECTORY/*
+	</pre>
+	If you are using MySQL for PCF, the path to your temporary MariaDB data directory is `/var/vcap/store/mysql`. 
 1. Decrypt and expand the file using `gpg`, sending the output to `tar`:
 	<pre class="terminal">
-	$ gpg --decrypt mysql-backup.tar.gpg | tar -C /var/vcap/store/mysql -xvf -
+	$ gpg --decrypt mysql-backup.tar.gpg | tar -C PATH-TO-MARIADB-DATA-DIRECTORY -xvf -
 	</pre>
 1. Change the owner of the data directory, because MySQL expects the data directory to be owned by a particular user:
 	<pre class="terminal">
-	$ chown -R vcap:vcap /var/vcap/store/mysql
+	$ chown -R vcap:vcap PATH-TO-MARIADB-DATA-DIRECTORY
 	</pre>
+1. Restart MariaDB using the method you used to deploy the temporary MariaDB server.
 1. To back up the database that contains the service instance, specify the database name:
  	<pre class="terminal">
-	$ mysqldump -u admin -p -h localhost $DB_NAME --single-transaction > user_databases.sql
+	$ mysqldump -u admin -p -h localhost DB-NAME --single-transaction > user_databases.sql
  	</pre>
 1. Restore the new backup artifact to your MySQL for PCF cluster by performing the steps in the [Restore a Backup Artifact](backup.html#restoring) section of the <em>Backups</em> topic. This replaces the existing data in the MySQL for PCF cluster with the content of the backup artifact, without affecting the data of any other service instances. Coordinate this procedure with the service instance owner, because it will affect any running apps accessing the data.
