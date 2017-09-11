@@ -34,7 +34,7 @@ Perform the following procedures to restore a single service instance:
 	$ chown -R vcap:vcap PATH-TO-MARIADB-DATA-DIRECTORY
 	</pre>
 1. Restart MariaDB using the method you used to deploy the temporary MariaDB server.
-1. To back up the database that contains the service instance, specify the database name:
+1. To back up the database that contains the service instance, use `mysqldump` and specify the database name:
  	<pre class="terminal">
 	$ mysqldump -u admin -p -h localhost DB-NAME --single-transaction > user_databases.sql
  	</pre>
