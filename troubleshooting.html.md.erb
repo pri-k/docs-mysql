@@ -76,9 +76,9 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
   1. Record the IP addresses for all instances of the **MySQL Server** job.
 
 1. Obtain the admin credentials for your MySQL server by performing the following steps:
-
-  1. Run the following command: `GET /api/v0/deployed/products/ERT-DEP/credentials/mysql_admin_credentials`. Replace `ERT-DEP` with your Elastic Runtime deployment ID, which begins with `cf-`. For more information, see the _Access the API_ section of the [Using the Ops Manager API](http://docs.pivotal.io/pivotalcf/customizing/ops-man-api.html#access-api) topic.
-  1. Record the values for `identity` and `password`.
+  1. From the MySQL for PCF tile, click the Credentials tab.
+  1. Locate the Mysql Admin Password entry in the MySQL Server section and click Link to Credential.
+  1. Record the values for identity and password.
 
 1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, review the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) section of the Advanced Troubleshooting with the BOSH CLI topic for specific instructions.
 
