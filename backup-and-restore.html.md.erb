@@ -188,8 +188,7 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
 1. Fill in the fields as follows:<br><br>
       * **Access Key ID** and **Secret Access Key**---Enter the S3 Access Key ID and Secret Access Key from above.
       * **Endpoint URL**---Enter the S3 compatible endpoint URL for uploading backups. URL must start with `http://` or `https://`. The default is https://s3.amazonaws.com
-      * **Region**---Choose the region in which your bucket is located. If you are not using S3 leave it as "V2 Signature - N/A"
-      * **S3 Signature Version**---If your bucket's region support v4 signatures, select "V4 Signature"
+      * **Region**---Enter the region in which your bucket is located.
       * **Bucket Name**---Enter the bucket name in which to upload.
       * **Bucket Path**---Enter the path in the bucket to store backups.
       * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
