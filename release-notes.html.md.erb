@@ -10,76 +10,23 @@ upgrade to the latest v1.7.x version before upgrading to the latest v1.8.x versi
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-## <a id="20x"></a>v2.0.x
+## <a id="21x"></a>v2.1.x
 
-### v2.0.5
+### v2.1.0
 
-**Release Date:  July 31, 2017**
+**Release Date:  September 29, 2017**
 
-* Fixes known issues in prior patch releases of v2.0.x.
+* Provides a new restore utility on each service instance to make restoring from a backup artifact easier.
+See the [restore instructions](/p-mysql/2-1/backup-and-restore.html#restoreinstance) for more information.
+* Adds the ability to enable or disable `lower_case_table_names` for all MySQL service instances or only specific service instances.
+This helps when migrating from legacy systems that need case insensitivity. See [configure MySQL](/p-mysql/2-1/install-config.html#mysql)
+for more information.
+* Changes several MySQL server default configurations to provide better consistency and expected behavior when migrating
+from the MySQL for PCF v1 series. 
 
-### v2.0.4
-
-**Do not use**
-
-**Release Date:  July 26, 2017**
-
-* Fixes an issue in v2.0.3 where the tile would fail to install. See the v2.0.3 release notes below for more information.
-
-### v2.0.3
-
-**Do not use.**
-
-**Release Date:  July 17, 2017**
-
-* Uses the system provided OpenSSL library for compiling Percona Server.
-* Updates several releases to use Golang 1.8 for long-term support: On Demand Services SDK, Service Metrics, and Service Backup.
-
-### v2.0.2
-
-**Release Date:  June 28, 2017**
-
-* Fixes a bug where the **Upgrade all On-Demand MySQL Service Instances** errand exited with `0` even if it failed to update a service instance.
-
-### v2.0.1
-
-**Release Date:  June 22, 2017**
-
-* Requires stemcell 3263.26
-* Changes order of Post-Deploy Errands so that **Smoke Tests** are run before **Upgrade all On-Demand MySQL Service Instances**
-* Fixes a bug where the tile could not be installed if the BOSH director was configured with a hostname.
-
-**Known Issues**
-
-* The **Upgrade all On-Demand MySQL Service Instances** errand exits with 0 even if it failed to update a service instance.
-
-### v2.0.0
-
-**Release Date:  June 15, 2017**
-
-* Requires stemcell 3263.25
-* This version of the tile can only be installed in an Ops Manager v1.10 (or later) environment
-
-Packages:
-
-* Percona Server 5.7.18-14
-
-Features included in this release:
-
-* MySQL for PCF as an on-demand service.
-* Metrics from service instances
-* Metrics from service broker
-* Backups to S3 compatible blobstores, via SCP, GCS, or Azure
-* Optional audit and userstat logging
-
-## <a id="19x"></a>v1.9.x
-
-For v1.9.x versions of MySQL for PCF, see the [release notes](http://docs.pivotal.io/p-mysql/1-9/release-notes.html) in the v1.9 version of this documentation.
-
-## <a id="18x"></a>v1.8.x
-
-For v1.8.x versions of MySQL for PCF, see the [release notes](http://docs.pivotal.io/p-mysql/1-8/release-notes.html) in the v1.8 version of this documentation.
-
-## <a id="17x"></a>v1.7.x
-
-For v1.7.x and prior versions of MySQL for PCF, see the [release notes](http://docs.pivotal.io/p-mysql/1-7/release-notes.html) in the v1.7 version of this documentation.
+* Upgrades several dependencies including: `golang 1.9.0` and `xtrabackup 2.4.5`
+* The origin for all MySQL metrics is now `p.mysql` rather than `p-mysql` to better reflect the service name.
+* Requires stemcell 3421.20
+* This version of the tile can only be installed in an Ops Manager v1.11 (or later) environment
+* Fixes a known issue in the 2.0 series where smoke tests would fail if port 80 
+was blocked for internal traffic. All traffic from the smoke-tests errand now goes through port 443.
