@@ -30,25 +30,25 @@ Perform the following procedures to restore a single service instance:
 1. Locate your backup artifact.
    The location of your backup artifact depends on how you configured your automated backups.
    For more information, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
-
 1. Transfer the backup artifact to the temporary MariaDB instance. 
-1. Delete the existing MySQL data that is stored on disk:
+1. SSH into the temporary MariaDB instance.
+1. Delete the existing MySQL data that is stored on the temporary MariaDB instance by running `rm -rf PATH-TO-MARIADB-DATA-DIRECTORY/*`. For example,
 	<pre class="terminal">
-	$ rm -rf PATH-TO-MARIADB-DATA-DIRECTORY/*
+	$ rm -rf /mysql/*
 	</pre>
-	If you are using MySQL for PCF, the path to your temporary MariaDB data directory is `/var/vcap/store/mysql`. 
-1. Decrypt and expand the file using `gpg`, sending the output to `tar`:
+	If you are using MySQL for PCF, the path to your MariaDB data directory is `/var/vcap/store/mysql`. 
+1. Decrypt and expand the backup artifact into the MariaDB data directory. For example,
 	<pre class="terminal">
-	$ gpg --decrypt mysql-backup.tar.gpg | tar -C PATH-TO-MARIADB-DATA-DIRECTORY -xvf -
+	$ gpg --decrypt mysql-backup.tar.gpg | tar -C /mysql -xvf -
 	</pre>
-1. Change the owner of the data directory, because MySQL expects the data directory to be owned by a particular user:
+1. Change the owner of the MariaDB data directory, because MySQL expects the data directory to be owned by a particular user. For example,
 	<pre class="terminal">
-	$ chown -R vcap:vcap PATH-TO-MARIADB-DATA-DIRECTORY
+	$ chown -R vcap:vcap /mysql
 	</pre>
 1. Restart MariaDB using the method you used to deploy the temporary MariaDB server.
-1. To back up the database that contains the service instance, use `mysqldump` and specify the database name:
+1. To back up the database that contains the service instance, use `mysqldump` and specify the database name. For example,
  	<pre class="terminal">
-	$ mysqldump -u admin -p -h localhost DB-NAME --single-transaction > user_databases.sql
+	$ mysqldump -u admin -p -h localhost my-database --single-transaction > user_databases.sql
  	</pre>
 1. Restore the new backup artifact to your MySQL for PCF cluster by performing the steps
    in the [Restore a Backup Artifact](backup.html#restoring) section of the <em>Backups</em> topic.
