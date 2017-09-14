@@ -16,6 +16,13 @@ owner: MySQL
 
 <p class="note"><strong>Note</strong>: MySQL for PCF v1.9 is certified to work with PCF v1.9 and v1.10. For PCF 1.11, upgrade to MySQL for PCF v1.10.</p>
 
+## <a id="1-9-9"></a>v1.9.10
+
+Release Date: September 14, 2017
+
+- Re-names package dependencies to avoid installation conflicts.
+- Updates stemcell to 3363.35, which addresses a minor logrotate issue.
+
 ## <a id="1-9-9"></a>v1.9.9
 
 Release Date: August 21, 2017
@@ -53,7 +60,10 @@ Release Date: August 11, 2017
 
 Release Date: July 28, 2017
 
-- MySQL for PCF 1.9 has been updated with several security and performance tuning enhancements. See the [architecture](architecture.html) and [configuration](configuring.html) documentation for more details.
+- MySQL for PCF 1.9 has been updated with several security and performance tuning enhancements. See the [architecture](architecture.html) and [configuration](configuring.html) documentation for more details. Some important highlights:
+  - **Note**: Changes [default to restrict administrator access](architecture.html#remote-admin) to localhost only. If you access the `admin` or `roadmin` accounts from outside of the server VMs, you must configure this option to allow access.
+  - Preventions from allowing clients from accessing the server's file system.
+  - Tuning features of InnoDB [buffer pool size](architecture.html#innodb-buffer-pool-size), [strict mode](architecture.html#innodb-strict-mode), [flush method](architecture.html#innnodb-flush-method) and [large prefix](architecture.html#innnodb-large-prefix) settings.
 - The URL for the proxy has changed. The old scheme for each proxy dashboard was:
 
         proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN
