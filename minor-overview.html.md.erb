@@ -1,25 +1,25 @@
 ---
-title: Overview of MySQL for PCF v2.0
+title: Overview of MySQL for PCF v2.1
 owner: London Services
 ---
 
-This topic describes the significant new features in MySQL for PCF v2.0.
+This topic describes the significant new features in MySQL for PCF v2.1.
 This topic also presents a checklist that you can use to decide if MySQL for PCF is ready to meet your business requirements.
 
 ##<a id="intro"></a> Introduction
 
-MySQL for PCF v2.0 introduces the On-Demand Service, which provides dedicated instances of
+MySQL for PCF v2 introduces the On-Demand Service, which provides dedicated instances of
 MySQL that App Developers can provision on-demand from the command line.
 The MySQL for PCF On-Demand service is designed to improve the flexibility in how and when
 instances are provisioned and allows for more efficient and seamless resource use for both Operator and App Developer.
 Additionally, both Operator and App Developer can configure essential MySQL settings.
-MySQL for PCF v2.0 can be installed alongside the earlier MySQL for PCF v1.x tiles.
+MySQL for PCF v2 can be installed alongside the earlier MySQL for PCF v1.x tiles.
 
 MySQL for PCF's On-Demand Service leverages the [on-demand service broker](https://docs.pivotal.io/svc-sdk/odb/0-15/).
 
 ## <a id="features"></a>New in This Release
 
-The following features are new in MySQL for PCF v2.0:
+The following features are new in MySQL for PCF v2:
 
 + <strong>Operator enabled plans</strong> — Operators can enable and configure five service plans for dynamically provisioned instances with different memory and disk sizes.
 + <strong>Operator configured backups</strong> — Operators can enable and configure backups of dynamically provisioned instances to a variety of remote storage destinations.
@@ -41,7 +41,7 @@ Operators should not downsize the VMs or disk size as this can cause data loss i
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
-Review the following table to determine if MySQL for PCF v2.0 has the features needed to support your enterprise.
+Review the following table to determine if MySQL for PCF v2 has the features needed to support your enterprise.
 
 <table border="1" class="nice">
 <tr><th colspan=2>Plans and Instances</th><th>More Information</th></tr>
@@ -56,9 +56,9 @@ Review the following table to determine if MySQL for PCF v2.0 has the features n
     <td></td></tr>
 
 <tr><th colspan=2>Maintenance and Backups</th><th>More Information</th></tr>
-<tr><td>Operational Monitoring and Logging</td><td>MySQL for PCF v2.0 provides metrics for monitoring On-Demand plan usage and quotas, as well as MySQL system metrics. Additionally, MySQL for PCF provides syslog redirection to external log ingestors.</td>
+<tr><td>Operational Monitoring and Logging</td><td>MySQL for PCF v2 provides metrics for monitoring On-Demand plan usage and quotas, as well as MySQL system metrics. Additionally, MySQL for PCF provides syslog redirection to external log ingestors.</td>
     <td><a href="/p-mysql/2-1/monitor.html">Monitoring MySQL for PCF</a></td></tr>
-<tr><td>Backup and Restore</td><td>MySQL for PCF v2.0 includes automatic backups on a configurable schedule to a variety of destinations, as well as a simple restore process.
+<tr><td>Backup and Restore</td><td>MySQL for PCF v2 includes automatic backups on a configurable schedule to a variety of destinations, as well as a simple restore process.
 </td><td><a href="/p-mysql/2-1/backup-and-restore.html">Manual Backup and Restore of MySQL for PCF</a></td></tr>
 
 <tr><th colspan=2>Scale and Availability</th><th>More Information</th></tr>
@@ -75,9 +75,9 @@ Review the following table to determine if MySQL for PCF v2.0 has the features n
 </table>
 
 
-## <a id="other-notes"></a>About Multiple AZs in MySQL for PCF v2.0
+## <a id="other-notes"></a>About Multiple AZs in MySQL for PCF v2
 
-MySQL for PCF v2.0 supports configuring multiple AZs.
+MySQL for PCF v2 supports configuring multiple AZs.
 However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
 
 + On-Demand plans can be assigned to any of the configured availability zones.
