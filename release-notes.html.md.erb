@@ -24,9 +24,9 @@ for more information.
 * Changes several MySQL server default configurations to provide better consistency and expected behavior when migrating
 from the MySQL for PCF v1 series. 
 
-* Upgrades several dependencies including: `golang 1.9.0` and `xtrabackup 2.4.5`
+* Upgrades several dependencies including, `golang 1.9.0` and `xtrabackup 2.4.5`.
 * The origin for all MySQL metrics is now `p.mysql` rather than `p-mysql` to better reflect the service name.
-* Requires stemcell 3421.20
-* This version of the tile can only be installed in an Ops Manager v1.11 (or later) environment
-* Fixes a known issue in the 2.0 series where smoke tests would fail if port 80 
+* Requires stemcell 3421.20.
+* This version of the tile can only be installed in an Ops Manager v1.11 (or later) environment.
+* Fixes a known issue in the 2.0 series where smoke tests would fail if port 80.
 was blocked for internal traffic. All traffic from the smoke-tests errand now goes through port 443.
