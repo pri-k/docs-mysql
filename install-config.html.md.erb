@@ -249,8 +249,8 @@ Follow the steps below to enable different types of monitoring and logging avail
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Metrics Polling Interval</strong></td>
-        <td>Set this field to the amount of time, in seconds, the monitor should poll for metrics. All service instances
-        emit metrics about the health and status of the MySQL server.</td></tr>
+        <td>Set this time, in seconds, to determine the frequency that the monitor polls for metrics.
+            All service instances emit metrics about the health and status of the MySQL server.</td></tr>
     <tr><td><strong>Enable User Statistics Logging</strong></td>
         <td>Select this checkbox to better understand server activity and identify sources of load on a MySQL server.
             For more information about user statistics, see <a href="https://www.percona.com/doc/percona-server/5.7/diagnostics/user_stats.html">
@@ -261,8 +261,9 @@ Follow the steps below to enable different types of monitoring and logging avail
             For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a>.
            </td></tr>
     <tr><td><strong>Enable Read Only Admin User</strong></td>
-        <td>Check this box to create a read-only admin user, `roadmin`, on each service instance. This user can be used for auditing and monitoring without risking
-        mutating or changing any data.</td></tr>
+        <td>Select this checkbox to create a read-only admin user, `roadmin`, on each service instance.
+            This user can be used for auditing and monitoring without risking
+            mutating or changing any data.</td></tr>
   </table>
 
 1. Click **Save**.
