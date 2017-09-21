@@ -48,7 +48,7 @@ Perform the following procedures to restore a single service instance:
 1. Restart MariaDB using the method you used to deploy the temporary MariaDB server.
 1. To back up the database that contains the service instance, use `mysqldump` and specify the database name. For example,
  	<pre class="terminal">
-	$ mysqldump -u admin -p -h localhost my-database --single-transaction > user_databases.sql
+	$ mysqldump -u admin -p -h localhost YOUR-DATABASE-NAME --single-transaction > YOUR-DATABASE-NAME.sql
  	</pre>
 1. Restore the new backup artifact to your MySQL for PCF cluster by performing the steps
    in the [Restore a Backup Artifact](backup.html#restoring) section of the <em>Backups</em> topic.
