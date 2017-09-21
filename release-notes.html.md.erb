@@ -28,5 +28,5 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 * The origin for all MySQL metrics is now `p.mysql` rather than `p-mysql` to better reflect the service name.
 * Requires stemcell 3421.20.
 * This version of the tile can only be installed in an Ops Manager v1.11 or later environment.
-* Fixes a known issue in the v2.0 series where smoke tests failed if port 80.
+* Fixes a known issue in the v2.0 series where smoke tests failed if port 80
   was blocked for internal traffic. All traffic from the smoke-tests errand now goes through port 443.
