@@ -6,14 +6,14 @@ owner: MySQL
 This guide describes setting up and using MySQL for Pivotal Cloud Foundry (PCF) as an on-demand service.
 
 <p class="note"><strong>Note</strong>:
-This documents MySQL for PCF v2.0, an on-demand service that creates dedicated, single-tenant service instances dynamically. For the older, pre-provisioned service, see the v.1.9 documentation <a href="http://docs.pivotal.io/p-mysql/1-9">here</a> or select <strong>v1.9</strong> from the dropdown above.</p>
+This documents MySQL for PCF v2.1, an on-demand service that creates dedicated, single-tenant service instances dynamically. For the older, pre-provisioned service, see the v.1.9 documentation <a href="http://docs.pivotal.io/p-mysql/1-9">here</a> or select <strong>v1.9</strong> from the dropdown above.</p>
 
 ## <a id='AboutTile'></a>About MySQL for PCF
 
 MySQL for PCF enables PCF app developers to provision and use a MySQL database with a
 single command.
 
-MySQL for PCF v2.0 introduces a new type of service, an *on-demand* service. MySQL for PCF v2.0 replaces the *pre-provisioned* service
+MySQL for PCF v2 introduces a new type of service, an *on-demand* service. MySQL for PCF v2 offers an alternative to the *pre-provisioned* service
 that was in the v1.x series.
 
 This table summarizes the main differences between the two:
@@ -26,7 +26,7 @@ This table summarizes the main differences between the two:
    <th>Metrics name prefix</th>
    </tr><tr>
    <th>On-Demand Service</th>
-   <td>New for v2.0</td>
+   <td>New for v2</td>
    <td>Dedicated VM that serves a single service instance</td>
    <td>PCF creates each VM on-demand when app developer creates service instance</td>
    <td><code>p.mysql</code> (with a dot)</td>
@@ -48,11 +48,11 @@ The following table provides version and version-support information about MySQL
     <th>Details</th>
     <tr>
         <td>Version</td>
-        <td>v2.0.5</td>
+        <td>v2.1.0</td>
     </tr>
     <tr>
         <td>Release date</td>
-        <td>July 31, 2017</td>
+        <td>September 29, 2017</td>
     </tr>
     <tr>
         <td>Software component version</td>
@@ -60,11 +60,11 @@ The following table provides version and version-support information about MySQL
     </tr>
     <tr>
         <td>Compatible Ops Manager version(s)</td>
-        <td>v1.10.x, v1.11.x</td>
+        <td>v1.11.x, v1.12.x</td>
     </tr>
     <tr>
         <td>Compatible Elastic Runtime version(s)</td>
-        <td>v1.10.11 and later, v1.11.x</td>
+        <td>v1.11 and later, v1.12</td>
     </tr>
     <tr>
         <td>IaaS support</td>
@@ -78,4 +78,4 @@ The MySQL for PCF product delivers dedicated instances on demand, "Database as a
 When installed, the tile deploys and maintains a single Service Broker that is responsible for Cloud Foundry integration.
 The service is configured with sane defaults, following the principle of least surprise for a general-use relational database service.
 
-For more information about MySQL for PCF v2.0 see the product's <a href="/p-mysql/2-1/minor-overview.html">Minor Overview</a>.
+For more information about MySQL for PCF v2.1 see the product's <a href="/p-mysql/2-1/minor-overview.html">Minor Overview</a>.
