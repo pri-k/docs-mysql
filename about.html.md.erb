@@ -5,7 +5,7 @@ owner: MySQL
 
 This topic describes the architecture for on-demand MySQL for Pivotal Cloud Foundry (PCF).
 
-For information about architecture of the older, pre-provisioned service, see the [Architecture](http://docs.pivotal.io/p-mysql/1-9/architecture.html) topic for MySQL for PCF v1.9.
+For information about architecture of the older, pre-provisioned service, see the [Architecture](http://docs.pivotal.io/p-mysql/1-9/architecture.html) topic for MySQL for PCF 1.9.
 
 ## <a id="service-network"></a>BOSH 2.0 and the Service Network
 
@@ -14,7 +14,7 @@ For information about architecture of the older, pre-provisioned service, see th
 
 ## <a id='on-demand'></a>Default Network and Service Network
 
-Like other on-demand PCF services, on-demand MySQL for PCF relies on the BOSH 2.0 ability to dynamically deploy VMs in a dedicated network. 
+Like other on-demand PCF services, on-demand MySQL for PCF relies on BOSH 2.0's ability to dynamically deploy VMs in a dedicated network. 
 The on-demand service broker uses this capability to create single-tenant service instances in a dedicated service network.
 
 <%= partial '../../mysql/odb/on_demand_architecture' %>
@@ -27,8 +27,7 @@ The on-demand service broker uses this capability to create single-tenant servic
 
 ## <a id="defaults"></a> MySQL Server Defaults
 This section describes the defaults that the MySQL for PCF tile applies to its MariaDB components.
-There are additional properties which can be customized. See the configuration documentation for more
-information.
+There are other components that can be customized as well.
 
 #### Max Connections
 
@@ -36,45 +35,36 @@ All service instances accept up to 750 connections. System processes count towar
 
 #### Max Allowed Packet: 256 MB
 
-MySQL for PCF allows blobs up to 256 MB. This size is unlikely to limit a user’s query, but may be changed in a session variable
-if necessary.
+MySQL for PCF allows blobs up to 256 MB in size. You can change this size in a session variable if necessary. 
 
 #### Table Definition Cache: 8192
 
-Read the [mysql documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache)
-on updating this variable.
+For more information on updating this variable, see the [mysql documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache).
 
 #### Reverse Name Resolution Off
 
-Disabling reverse DNS lookups improves performance. Clearing this option causes the MySQL servers to perform a reverse
-DNS lookup on each new connection. Typically, MySQL uses this to restrict access by hostname, but MySQL for PCF uses user
-credentials to authenticate access, not hostnames. Thus, most deployments do not need reverse DNS lookups.
+Disabling reverse DNS lookups improves performance. To enable reverse name resolution, clear this option. A cleared reverse name resolution causes the MySQL servers to perform a reverse DNS lookup on each new connection. Typically, MySQL restricts access by hostname, but MySQL for PCF uses user credentials, not hostnames, to authenticate access. Because of this, most deployments do not need reverse DNS lookups.
 
 #### Skip Symbolic Links
-
 MySQL for PCF is configured to prevent the use of symlinks to tables. This is a
 [recommended security setting](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html)
 which prevents users from manipulating files on the server’s file system.
 
 #### MyISAM Recover Options: BACKUP, FORCE
-This setting enables MySQL for PCF to require from most MyISAM problems without human intervention. For more information,
-see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options).
+This setting enables MySQL for PCF to require from most MyISAM problems without human intervention. For more information, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options).
 
 #### Log Bin Trust Function Creators: ON
-Relaxes certain constraints on how MySQL writes stored procedures to the binary log. See the [documentation](https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html)
-for more information.
+This setting relaxes certain constraints on how MySQL writes stored procedures to the binary log. For more information, see the [documentation](https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html).
 
 #### Event Scheduler: ON
-MySQL for PCF enables the event scheduler so users may create and utilize events in their dedicated service instances.
+MySQL for PCF enables the event scheduler so users can create and utilize events in their dedicated service instances.
 
 #### Lower Case Table Names: ON
 By default, all table names are case sensitive. This option may be modified on the
-[MySQL Configuration page](/p-mysql/2-1/install-config.html#mysql). For more information about the use for
-lower case table names, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html).
+[MySQL Configuration page](/p-mysql/2-1/install-config.html#mysql). For more information about the use for lower case table names, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html).
 
 #### Audit Log: OFF
-The mysql audit log is off by default. When enabled on the [MySQL Monitoring page](/p-mysql/2-1/install-config.html#monitoring)
-then logs are written as CSVs to `/var/vcap/sys/log/mysql/mysql_audit_log` as well as a remote syslog drain if it is enabled.
+The MySQL audit log is off by default. When enabled on the [MySQL Monitoring page](/p-mysql/2-1/install-config.html#monitoring) then logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql_audit_log</code> as well as a remote syslog drain if it is enabled.
 
 #### InnoDB Buffer Pool Size
 Dynamically configured to be 50% of the available memory on each service instance.
@@ -86,11 +76,10 @@ MySQL for PCF clusters default to a log-file size of 256 MB.
 MySQL for PCF default to 32MB to avoid excessive disk I/O when issuing large transactions.
 
 #### InnoDB Auto Increment Lock Mode: 2
-Auto Increment uses "interleaved" mode. This enables multiple statements to execute at the same time. As a result,
-there may be gaps in autoincrementing columns.
+Auto Increment uses "interleaved" mode. This enables multiple statements to execute at the same time. There may be gaps in autoincrementing columns.
 
 #### Collation Server: UTF8 General CI
-MySQL for PCF defaults the collation server to `utf8_general_ci`. This may be overridden during a session.
+MySQL for PCF defaults the collation server to <code>utf8_general_ci</code>. You can override this during a session.
 
 #### Character Set: UTF8
-MySQL for PCF defaults all character sets to `utf8`. This may be overridden during a session.
+MySQL for PCF defaults all character sets to <code>utf8</code>. You can override this during a session.
