@@ -16,7 +16,7 @@ owner: MySQL
 
 This topic describes how to enable, configure, and use backups in MySQL for Pivotal Cloud Foundry (PCF).
 
-## <a id="overview"></a>Overview ##
+## <a id="overview"></a>Overview
 
 Automated backups have the following features:
 
@@ -26,7 +26,7 @@ Automated backups have the following features:
 - Includes a metadata file that contains the critical details of the backup artifact, including the effective calendar time of the backup
 - Backup artifacts are encrypted within the MySQL for PCF cluster of VMs; unencrypted data is never transported outside of the MySQL for PCF deployment
 
-## <a id="enable-backups"></a>Enable Automated Backups ##
+## <a id="enable-backups"></a>Enable Automated Backups
 
 You can configure MySQL for PCF to automatically back up its databases to external storage.
 
@@ -73,7 +73,7 @@ To back up your database using SCP, perform the following steps:
 1. Enter the **SCP Port**. SCP runs on port 22 by default.
 1. Click **Save**.
 
-## <a id="disable-backups"></a>Disable Automated Backups ##
+## <a id="disable-backups"></a>Disable Automated Backups
 
 To disable automated backups, perform the following steps:
 
@@ -93,9 +93,62 @@ To configure automated backups for MySQL for PCF, perform the following steps:
 1. Navigate to the MySQL for Pivotal Cloud Foundry tile on the Ops Manager Installation Dashboard.
 1. Click **Backups**.
 
-## <a id="understanding-metadata"></a>Understand Backup Metadata ##
+## <a id="understand"></a>Understand Backups
 
-Along with each release, MySQL for PCF uploads a `mysql-backup-XXXXXXXXXX.txt` metadata file.
+The sections below describe the [process](#process) that MySQL for PCF component jobs follow when performing automated backups, and the format for the [metadata file](#metadata) that records information about each backup.
+
+### <a id="process"></a>Backup Process
+
+Operators use Ops Manager to [configure](./configuring.html#backups) the schedule for automated backups and the location and credentials needed to store backup artifacts.
+
+The diagram below shows the process through which MySQL for PCF jobs initiate and run automated backups.
+
+<div class="mermaid">
+sequenceDiagram
+  participant Service Backup job
+  Note over Service Backup job: Triggered by timer, following schedule configured in Ops Manager
+  Service Backup job->>Streaming Backup client:Request backup
+  Streaming Backup client->>Streaming Backup tool:Request backup
+  Streaming Backup tool->>MySQL server:Copy data
+  Note over MySQL server: Read lock
+  MySQL server->>Streaming Backup tool:Flush data tables
+  Note over MySQL server: End read lock
+  Streaming Backup tool->>Streaming Backup client:Data
+  Note over Streaming Backup client:Compress and encrypt
+  Streaming Backup client->>Service Backup job:Data
+  Service Backup job->>Blob store:Backup artifact
+  Note over Blob store:Store backup artifact, using creds configured in Ops Manager
+  Blob store-\->>Service Backup job:Artifact stored
+  Note over Service Backup job:Clean up local storage
+</div>
+
+Two MySQL for PCF component VMs host the jobs listed above as follows:
+
+<table id='job-vms' border="1" class="nice" >
+  <tr>
+    <th>Job</th>
+    <th>Job name in the<code>code</code></th>
+    <th>Host VM</th>
+  </tr><tr>
+    <td>Service Backup</td>
+    <td><code>service-backup</code></td>
+    <td rowspan=2>Backup Prepare VM</td>
+  </tr><tr>
+    <td>Streaming Backup client</td>
+    <td><code>streaming-backup-client</code></td>
+  </tr><tr>
+    <td>Streaming Backup tool</td>
+    <td><code>streaming-backup-tool</code></td>
+    <td rowspan=2>MySQL VM</td>
+  </tr><tr>
+    <td>MySQL server</td>
+    <td><code>mysql</code></td>
+  </tr>
+</table>
+
+### <a id="metadata"></a>Backup Metadata
+
+Along with each backup artifact, MySQL for PCF uploads a `mysql-backup-XXXXXXXXXX.txt` metadata file.
 
 The contents of the metadata file resemble the following:
 
@@ -125,7 +178,7 @@ Within this file, the most important items are the `start_time` and the `server_
 
 <p class="note"><strong>Note</strong>: Both <code>compressed</code> and <code>encrypted</code> show as <code>N</code> in this file, yet the artifact uploaded by MySQL for PCF is both compressed and encrypted. This is a known bug.</p>
 
-## <a id="restoring"></a>Restore a Backup Artifact ###
+## <a id="restoring"></a>Restore a Backup Artifact
 
 MySQL for PCF keeps at least two complete copies of the data. In most cases, if a cluster is still able to connect to persistent storage, you can restore a cluster to health using the [bootstrap process](bootstrapping.html). Before resorting to a database restore, contact [Pivotal Support](https://support.pivotal.io) to ensure your existing cluster is beyond help.
 
@@ -174,11 +227,11 @@ In the event of a total cluster loss, the process to restore a backup artifact t
     1. Click **Save**.
     1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
 
-## <a id="manual-process"></a>Perform Manual Backup ##
+## <a id="manual-process"></a>Perform Manual Backup
 
 If you do not want to use the automated backups included in MySQL for PCF, you can perform backups manually.
 
-### <a id="manual-ip-creds"></a>Retrieve IP Address and Credentials ###
+### <a id="manual-ip-creds"></a>Retrieve IP Address and Credentials
 
 Perform the following steps to retrieve the IP address and credentials required for a manual backup:
 
@@ -188,7 +241,7 @@ Perform the following steps to retrieve the IP address and credentials required 
     ![MySQL Server IP](mysql-server-ip.png)
 1. In the **Credentials** tab, from the **MySQL Server** job and **Mysql Admin Password** name, obtain the admin password.
 
-### <a id="manual-backup"></a>Manual Backup ###
+### <a id="manual-backup"></a>Manual Backup
 
 Back up your data manually with [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/).
   This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
@@ -203,7 +256,7 @@ To back up a single database, specify the database name:
 $ mysqldump -u admin -p -h $MYSQL\_NODE\_IP $DB\_NAME --single-transaction > user_databases.sql
 </pre>
 
-### <a id="manual-restore"></a>Manual Restore ###
+### <a id="manual-restore"></a>Manual Restore
 
 The procedure for restoring from a backup is the same whether one or multiple databases were backed up.
 Executing the SQL dump will drop, recreate, and refill the specified databases and tables.
@@ -232,6 +285,5 @@ Prepare to restore:
   $ monit stop mariadb\_ctrl
   $ monit start mariadb\_ctrl
   </pre>
-
 
 For more examples of manual backup and restore procedures, see the [MariaDB documentation](http://mariadb.com/kb/en/mariadb/mysqldump/#examples).
