@@ -5,9 +5,10 @@ owner: MySQL
 
 This topic describes how to create [Application Security Groups](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASGs) for MySQL for Pivotal Cloud Foundry (PCF).
 
-To allow smoke tests to run when you install the MySQL for PCF service, and enable applications to access the service once it is installed, you must create an appropriate ASG and bind it to the service.
+To allow smoke tests to run when you install the MySQL for PCF service and enable applications to access the service after it is installed, 
+you must create an appropriate ASG and bind it to the service.
 
-<p class="note"><strong>Note</strong>: Without an ASG, the service will not be installable or usable.</p>
+<p class="note"><strong>Note</strong>: Without an ASG, the service is not installable or usable.</p>
 
 In addition, application containers that access instances of this service require an outbound network connection to the load balancer configured for the MySQL for PCF service.
 
