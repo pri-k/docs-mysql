@@ -101,6 +101,12 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
     There is special logic to detect if a starting node is the first node of a new installation, or if it is part of an existing cluster. Part of this logic is to probe if the other nodes of the cluster have already been deployed. In cases of high latency, this timeout period may be too long. When these probes take too long to respond, it's possible that the **MySQL Start Timeout** might fail the deployment. To account for this, either increase the **MySQL Start Timeout** or lower the **New Cluster Probe Timeout** so that a new node doesn't spend too long performing this test.
 
+- <a id="allow-table-locks"></a>**Allow Table Locks**
+
+    Default: Enabled
+
+    When enabled, clients will be able to acquire table locks on the node processing the transaction. Enabled for backwards compatibility, it is recommended disabling this for all new deployments, as table locks are not replicated across cluster nodes.
+
 - **Enable Large Indices**
 
     Default: Enabled
