@@ -142,20 +142,20 @@ The diagram below shows the process through which MySQL for PCF jobs initiate an
 
 <div class="mermaid">
 sequenceDiagram
+  participant Blob store
   participant Service Backup job
   Note over Service Backup job: Triggered by timer, following schedule configured in Ops Manager
   Service Backup job->>Streaming Backup client:Request backup
   Streaming Backup client->>Streaming Backup tool:Request backup
-  Streaming Backup tool->>MySQL server:Copy data
-  Note over MySQL server: Read lock
-  MySQL server->>Streaming Backup tool:Flush data tables
-  Note over MySQL server: End read lock
+  Streaming Backup tool->>MySQL server:Request backup
+  Note over MySQL server: Flush tables with read lock
+  MySQL server->>Streaming Backup tool:Data
   Streaming Backup tool->>Streaming Backup client:Data
-  Note over Streaming Backup client:Compress and encrypt
   Streaming Backup client->>Service Backup job:Data
+  Note over Service Backup job:Compress and encrypt
   Service Backup job->>Blob store:Backup artifact
   Note over Blob store:Store backup artifact, using creds configured in Ops Manager
-  Blob store-\->>Service Backup job:Artifact stored
+  Blob store-\->>Service Backup job:Confirm artifact stored
   Note over Service Backup job:Clean up local storage
 </div>
 
