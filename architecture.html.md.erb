@@ -51,6 +51,14 @@ If the proxy detects that the primary node is [unhealthy](proxy.html#unhealthy),
 
 If the proxy detects that no healthy MariaDB nodes exist in the cluster, it rejects all connections and the cluster becomes inaccessible.
 
+#### How Apps Are Affected by Scaling Up
+
+When you scale MySQL for PCF from a single-node to a multi-node HA topology, this single node is restarted and reconfigured as a part of a cluster. During the restart, apps consuming MySQL for PCF lose their connection to the node. The apps should be able to reconnect once the MySQL node is restarted.
+
+<p class="note"><strong>Note</strong>: Apps that are not using MySQL for PCF are not affected by the scaling process when you redeploy Elastic Runtime (ERT).</p>
+
+In addition, redeploying ERT with the MySQL cluster means that the PCF API will not be available for a brief period of time. For example, you are not able to push apps or query their state during this time.
+
 ### <a id="scale-down"></a>Scaling Down from Three to One Node
 
 When you scale down from multiple MariaDB nodes to a single node, the primary node continues to survive as the sole remaining node (provided it remains healthy), and the proxy continues to route incoming connections to the node.
