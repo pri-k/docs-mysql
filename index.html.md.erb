@@ -142,7 +142,19 @@ The table below shows the enterprise-readiness of each MySQL for PCF topology. C
 (\*) vSphere and AWS (1.8.0-edge.15 and later)<br>
 (&#x271D;) Requires IPSEC BOSH plug-in
 
-## <a id="limitations"></a>High Availability Limitations ##
+## <a id="ha-topology"></a>High Availability Topology
+
+This section contains information you should know before deploying MySQL for PCF in a multi-node HA topology.
+
+### <a id="scaling-process"></a>Scaling Process
+
+When you scale MySQL for PCF from a single-node to a multi-node HA topology, this single node is restarted and reconfigured as a part of a cluster. During the restart, apps consuming MySQL for PCF lose their connection to the node. The apps should be able to reconnect once the MySQL node is restarted.
+
+<p class="note"><strong>Note</strong>: Apps that are not using MySQL for PCF are not affected by this scaling process when you redeploy Elastic Runtime (ERT).</p>
+
+In addition, redeploying ERT with the MySQL cluster means that the PCF API will not be available for a brief period of time. For example, you are not able to push apps or query their state during this time.
+
+### <a id="limitations"></a>High Availability Limitations
 
 When deployed in HA topology, MySQL for PCF runs three master nodes. This cluster arrangement imposes some limitations that you should be aware of, which do not apply to single-node MySQL database servers.
 
