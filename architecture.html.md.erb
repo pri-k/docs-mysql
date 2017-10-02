@@ -53,11 +53,16 @@ If the proxy detects that no healthy MariaDB nodes exist in the cluster, it reje
 
 #### How Apps Are Affected by Scaling Up
 
-When you scale MySQL for PCF from a single-node to a multi-node HA topology, this single node is restarted and reconfigured as a part of a cluster. During the restart, apps consuming MySQL for PCF lose their connection to the node. The apps should be able to reconnect once the MySQL node is restarted.
+When you scale MySQL for PCF from a single-node to a multi-node high availability topology,
+this single node is restarted and reconfigured as a part of a cluster.
+During the restart, apps consuming MySQL for PCF lose their connection to the node.
+The apps should be able to reconnect after the MySQL node is restarted.
 
-<p class="note"><strong>Note</strong>: Apps that are not using MySQL for PCF are not affected by the scaling process when you redeploy Elastic Runtime (ERT).</p>
+<p class="note"><strong>Note</strong>: Apps that are not using MySQL for PCF are not affected by the scaling process
+   when you redeploy Pivotal Elastic Runtime.</p>
 
-In addition, redeploying ERT with the MySQL cluster means that the PCF API will not be available for a brief period of time. For example, you are not able to push apps or query their state during this time.
+In addition, redeploying ERT with the MySQL cluster means that the PCF API will not be available for a brief period of time.
+For example, you are not able to push apps or query their state during this time.
 
 ### <a id="scale-down"></a>Scaling Down from Three to One Node
 
