@@ -20,9 +20,9 @@ owner: MySQL
 
 Release Date: September 29, 2017
 
-- **New:** Now provides a checkbox where the Operator can configure table locking behavior. See the [allow table locks](configuring.html#allow-table-locks) section of the configuration page for more information.
-- We've bumped the default size of the backup VMs from 1 GB RAM / 2 CPUs to 4GB RAM / 4 CPUs. You can customize this default in the Resource Configuration pane.
-- **Bug fix:** Pre-start phase will now log warnings, rather than time out when `mysqld` takes time to start or stop.
+- Provides a checkbox where the operator can configure table locking behavior. See the [allow table locks](configuring.html#allow-table-locks) section of the configuration page for more information.
+- Bumped the default size of the backup VMs from 1 GB RAM / 2 CPUs to 4GB RAM / 4 CPUs. You can customize this default in the Resource Configuration pane.
+- **Bug fix:** Pre-start phase logs warnings, rather than time out, when `mysqld` takes time to start or stop.
 - **Security:** Updates to rubygems 2.6.6 to address [CVE-2017-0902](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0902).
 
 ## <a id="1-10-4"></a>v1.10.4
