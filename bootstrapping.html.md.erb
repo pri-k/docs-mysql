@@ -38,7 +38,7 @@ See [Cluster Behavior](cluster-behavior.html) for more details about determining
 
 Bootstrapping requires you to run commands from the [Ops Manager Director](http://docs.pivotal.io/pivotalcf/customizing/index.html). Follow the instructions to use the [BOSH CLI](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cli) for command-line access.
 
-<p class="note"><strong>Note:</strong> The examples in these instructions reflect a three-node MySQL for Pivotal Cloud Foundry (PCF) deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
+<p class="note"><strong>Note</strong>: The examples in these instructions reflect a three-node MySQL for Pivotal Cloud Foundry (PCF) deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
 
 ### <a id="assisted-bootstrap"></a>Assisted Bootstrap ###
 
@@ -235,7 +235,7 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
         1. `bosh deploy`
         1. Validate that all mysql instances are in `running` state.
 
-        <p class="note"><strong>Note:</strong> It is critical that you run all of the steps. If you do not re-set the values in the BOSH manifest, the status of the jobs will not be reported correctly and can lead to troubles in future deploys.</p>
+        <p class="note"><strong>Note</strong>: It is critical that you run all of the steps. If you do not re-set the values in the BOSH manifest, the status of the jobs will not be reported correctly and can lead to troubles in future deploys.</p>
 
 ---
 
@@ -261,7 +261,7 @@ Bootstrapping requires you to run commands from the [Ops Manager Director](http:
 
             $ /var/vcap/packages/mariadb/bin/mysqld --wsrep-recover
 
-        **Note:** The galera state file will still say `seqno: -1` afterward.<br><br>
+        **Note**: The galera state file will still say `seqno: -1` afterward.<br><br>
 
         Scan the error log for the recovered sequence number (the last number after the group id (uuid) is the recovered seqno):
 
