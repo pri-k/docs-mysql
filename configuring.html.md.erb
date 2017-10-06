@@ -105,7 +105,9 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
     Default: Enabled
 
-    When enabled, clients will be able to acquire table locks on the node processing the transaction. Enabled for backwards compatibility, it is recommended disabling this for all new deployments, as table locks are not replicated across cluster nodes.
+    When enabled, clients can acquire table locks on the node processing the transaction.
+    This is enabled for backwards compatibility.
+    Pivotal recommends disabling this for all new deployments, because table locks are not replicated across cluster nodes.
 
 - **Enable Large Indices**
 
