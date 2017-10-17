@@ -325,12 +325,12 @@ Perform the following steps to back up your MySQL for PCF data manually with rem
 
     {
      "hostname": "10.10.10.5",
-     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=UfSVqCTC5iwI3iuE\u0026password=xFneIRH3f4ow2idn",
+     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
      "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
-     "password": "xFneIRH3f4ow2idn",
+     "password": "123456789",
      "port": 3306,
-     "uri": "mysql://UfSVqCTC5iwI3iuE:xFneIRH3f4ow2idn<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
-     "username": "UfSVqCTC5iwI3iuE"
+     "uri": "mysql://abcdefghijklm:123456789<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+     "username": "abcdefghijklm"
     }
     </pre>
 1. Examine the output and record the following values:
@@ -348,8 +348,8 @@ Perform the following steps to back up your MySQL for PCF data manually with rem
 
     For example:
     <pre class="terminal">
-    $ mysqldump -u UfSVqCTC5iwI3iuE \
-    -p xFneIRH3f4ow2idn \
+    $ mysqldump -u abcdefghijklm \
+    -p 123456789 \
     -h 10.10.10.8 \
     --all-databases \
     --single-transaction > spring-db-backup.sql</pre>
@@ -372,7 +372,7 @@ Where:
 * `BACKUP_NAME`: Enter a name for the backup file.
 
 For example:
-<pre class="terminal">$ mysqldump -u admin -p xFneIRH3f4ow2idn \
+<pre class="terminal">$ mysqldump -u admin -p 123456789 \
   -h 10.10.10.8 --all-databases \
   --single-transaction > user_databases.sql</pre>
 
@@ -390,7 +390,7 @@ Where:
 
 For example:
 <pre class="terminal">
-$ mysqldump -u admin -p xFneIRH3f4ow2idn \
+$ mysqldump -u admin -p 123456789 \
 -h MYSQL\_NODE\_IP DB\_NAME \
 --single-transaction > user_databases.sql
 </pre>
@@ -424,8 +424,8 @@ Perform the following steps to restore your MySQL data from a manual backup with
 
     For example:
     <pre class="terminal">
-    $ mysql -u UfSVqCTC5iwI3iuE \
-    -p xFneIRH3f4ow2idn \ 
+    $ mysql -u abcdefghijklm \
+    -p 123456789 \ 
     -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine=NULL"</pre>
 
 1. Use the MySQL client to restore the MySQL database or databases. Run the following command:
@@ -440,8 +440,8 @@ Perform the following steps to restore your MySQL data from a manual backup with
 
     For example:
     <pre class="terminal">
-    $ mysql -u UfSVqCTC5iwI3iuE \
-    -p xFneIRH3f4ow2idn \ 
+    $ mysql -u abcdefghijklm \
+    -p 123456789 \ 
     -h 10.10.10.8 -e < user_databases.sql</pre>
 
 1. Use the MySQL client to restore the original storage engine restriction. Run the following command:
@@ -455,8 +455,8 @@ Perform the following steps to restore your MySQL data from a manual backup with
 
     For example:
     <pre class="terminal">
-    $ mysql -u UfSVqCTC5iwI3iuE \
-    -p xFneIRH3f4ow2idn \ 
+    $ mysql -u abcdefghijklm \
+    -p 123456789 \ 
     -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine='InnoDB'"</pre>
 
 1. If you are running in HA mode, re-configure MySQL for PCF to run using three nodes by following the procedures in the [Restore a Backup Artifact](#restoring) section above.
@@ -476,13 +476,13 @@ Perform the following steps to restore your MySQL data from a manual backup with
     `mysql -u admin -p PASSWORD -h MYSQL_NODE_IP -e "SET GLOBAL enforce_storage_engine=NULL"`
     <br><br>
     Where:
-    * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL_PROXY_IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+    * `MYSQL_NODE_IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
 
     For example:
     <pre class="terminal">
-    $ mysql -u UfSVqCTC5iwI3iuE \
-    -p xFneIRH3f4ow2idn \ 
+    $ mysql -u abcdefghijklm \
+    -p 123456789 \ 
     -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine=NULL"</pre>
 
 1. Use the MySQL password and IP address to enable the creation of tables using any storage engine. Run the following command:
@@ -504,7 +504,7 @@ Perform the following steps to restore your MySQL data from a manual backup with
     For example:
     <pre class="terminal">
     $ mysql -u admin \
-    -p xFneIRH3f4ow2idn \ 
+    -p 123456789 \ 
     -h 10.10.10.8 -e < user_databases.sql</pre>
 
 1. Use the MySQL client to restore the original storage engine restriction. Run the following command:
@@ -518,7 +518,7 @@ Perform the following steps to restore your MySQL data from a manual backup with
     For example:
     <pre class="terminal">
     $ mysql -u admin \
-    -p xFneIRH3f4ow2idn \ 
+    -p 123456789 \ 
     -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine='InnoDB'"</pre>
 
 1. If you are running in HA mode, re-configure MySQL for PCF to run using three nodes by following the procedures in the [Restore a Backup Artifact](#restoring) section above.
