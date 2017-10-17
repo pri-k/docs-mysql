@@ -336,12 +336,12 @@ Perform the following steps to back up your MySQL for PCF data manually with rem
 1. Examine the output and record the following values:
     * `hostname`: The MySQL for PCF proxy IP address
     * `password`: The password for the user that can be used to perform backups of the service instance database
-    * `username`: The user name for the user that can be used to perform backups of the service instance database
+    * `username`: The username for the user that can be used to perform backups of the service instance database
 1. Use [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) to back up the data for your service instance. Run the following command:
     `mysqldump -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP --all-databases --single-transaction > BACKUP_NAME.sql`
     <br><br>
     Where:<br>
-    * `USERNAME`: Enter the user name retrieved from the output of `cf service-key`.
+    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
     * `MYSQL_PROXY_IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
     * `BACKUP_NAME`: Enter a name for the backup file.
@@ -418,7 +418,7 @@ Perform the following steps to restore your MySQL data from a manual backup with
     `mysql -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP -e "SET GLOBAL enforce_storage_engine=NULL"`
     <br><br>
     Where:
-    * `USERNAME`: Enter the user name retrieved from the output of `cf service-key`.
+    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
     * `MYSQL_PROXY_IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
 
@@ -433,7 +433,7 @@ Perform the following steps to restore your MySQL data from a manual backup with
     `mysql -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP < BACKUP_NAME.sql`
     <br><br>
     Where:
-    * `USERNAME`: Enter the user name retrieved from the output of `cf service-key`.
+    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
     * `MYSQL_PROXY_IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
     * `BACKUP_NAME`: Enter the file name of the backup artifact.
@@ -449,7 +449,7 @@ Perform the following steps to restore your MySQL data from a manual backup with
     `mysql -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP -e "SET GLOBAL enforce_storage_engine='InnoDB'"`
     <br><br>
     Where:
-    * `USERNAME`: Enter the user name retrieved from the output of `cf service-key`.
+    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
     * `MYSQL_PROXY_IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
 
