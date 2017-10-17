@@ -3,17 +3,6 @@ title: Backing Up MySQL for Pivotal Cloud Foundry
 owner: MySQL
 ---
 
-<style>
-    .note.warning {
-        background-color: #fdd;
-        border-color: #fbb
-    }
-
-    .note.warning:before {
-        color: #f99;
-     }
-</style>
-
 This topic describes how to enable, configure, and use backups in MySQL for Pivotal Cloud Foundry (PCF).
 
 ## <a id="overview"></a>Overview
@@ -292,9 +281,23 @@ To determine whether remote admin access is enabled, perform the following steps
 1. Click **MySQL Server Configuration**.
 1. Locate the **Allow remote admin access** checkbox and determine whether or not it is enabled.
 
-For more information, see [MySQL Server Configuration](./configuring.html#server).
+    For more information, see [MySQL Server Configuration](./configuring.html#server).
 
-If remote admin access is disabled, perform the procedures in the [Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section. If you have enabled remote admin access, perform the procedures in the [Remote Admin Access Enabled](#manual-backup-remote-access-enabled) section.
+4. Use the following table to determine which procedure to follow for your manual backup:
+ <table>
+        <tr>
+            <th>If remote admin access is&hellip; </th>
+            <th>Then follow&hellip;</th>
+        </tr>
+        <tr>
+            <td>disabled</td>
+            <td><a href="#manual-backup-remote-access-disabled">Remote Admin Access Disabled (Default)</a></td>
+        </tr>
+        <tr>
+            <td>enabled</td>
+            <td><a href="#manual-backup-remote-access-enabled">Remote Admin Access Enabled</a></td>
+        </tr>
+    </table>
 
 #### <a id='manual-backup-remote-access-disabled'></a>Manual Backup with Remote Admin Access Disabled (Default)
 
