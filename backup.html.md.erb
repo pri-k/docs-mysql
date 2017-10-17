@@ -284,7 +284,15 @@ Perform the following steps to retrieve the IP address and credentials required 
 
 The procedure for backing up your data manually varies depending on whether you have enabled remote admin access to MySQL databases.
 
-Starting with MySQL for PCF 1.9, remote admin access is disabled by default. To enable it, select the **Allow remote admin access** checkbox in the **MySQL Server Configuration** section when configuring the MySQL for PCF tile. For more information, see [MySQL Server Configuration](./configuring.html#server).
+In MySQL for PCF v1.9 and v1.10, remote admin access is disabled by default. However, an operator can enable remote admin access when configuring the MySQL for PCF tile.
+
+To determine whether remote admin access is enabled, perform the following steps:
+
+1. From the Ops Manager Installation Dashboard, click the MySQL for PCF tile.
+1. Click **MySQL Server Configuration**.
+1. Locate the **Allow remote admin access** checkbox and determine whether or not it is enabled.
+
+For more information, see [MySQL Server Configuration](./configuring.html#server).
 
 If remote admin access is disabled, perform the procedures in the [Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section. If you have enabled remote admin access, perform the procedures in the [Remote Admin Access Enabled](#manual-backup-remote-access-enabled) section.
 
@@ -399,7 +407,15 @@ $ mysqldump -u admin -p 123456789 \
 
 The procedure for restoring your data from a manual backup varies depending on whether you have enabled remote admin access to MySQL databases.
 
-Starting with MySQL for PCF 1.9, remote admin access is disabled by default. To enable it, select the **Allow remote admin access** checkbox in the **MySQL Server Configuration** section when configuring the MySQL for PCF tile. See the [MySQL Server Configuration](../configuring.html#server) section of the <em>Configuring MySQL for PCF</em> topic for more information.
+In MySQL for PCF v1.9 and v1.10, remote admin access is disabled by default. However, an operator can enable remote admin access when configuring the MySQL for PCF tile.
+
+To determine whether remote admin access is enabled, perform the following steps:
+
+1. From the Ops Manager Installation Dashboard, click the MySQL for PCF tile.
+1. Click **MySQL Server Configuration**.
+1. Locate the **Allow remote admin access** checkbox and determine whether or not it is enabled.
+
+For more information, see [MySQL Server Configuration](./configuring.html#server).
 
 If remote admin access is disabled, perform the procedures in the [Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled-restore) section. If you have enabled remote admin access, perform the procedures in the [Remote Admin Access Enabled](#manual-backup-remote-access-enabled-restore) section.
 
