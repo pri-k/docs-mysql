@@ -403,7 +403,7 @@ If you are using one of the other backup options, steps 5, 6, and 8 are differen
 6. List the available backups for the instance, replacing `BUCKET-NAME` and `BUCKET-PATH` with values from above.
   The artifacts are sorted by time. 
  <pre class="terminal">
-  $ aws s3 ls --recursive s3://BUCKET\_NAME/BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
+  $ aws s3 ls --recursive s3://BUCKET-NAME/BUCKET-PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
  </pre>
 
 7. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
