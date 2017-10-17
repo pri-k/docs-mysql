@@ -298,11 +298,11 @@ Perform the following steps to back up your MySQL for PCF data manually with rem
 1. Log in:
   <pre class="terminal">$ cf login</pre>
 1. Create a service key for the MySQL service instance. Run the following command:
-    `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME -c '{"permissions":"read-only"}'`
+    `cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME -c '{"permissions":"read-only"}'`
     <br><br>
     Where:<br>
-    * `SERVICE_INSTANCE_NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
-    * `SERVICE_KEY_NAME`: Choose a name for the new service key.
+    * `SERVICE-INSTANCE-NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
+    * `SERVICE-KEY-NAME`: Choose a name for the new service key.
 
     For example:
     <pre class="terminal">
@@ -312,11 +312,11 @@ Perform the following steps to back up your MySQL for PCF data manually with rem
     OK
     </pre>
 1. After creating the service key, retrieve its information. Run the following command:
-  `cf service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME`
+  `cf service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME`
     <br><br>
     Where:<br>
-    * `SERVICE_INSTANCE_NAME`: Enter the name of the MySQL service instance you created a service key for.
-    * `SERVICE_KEY_NAME`: Enter the name of the newly created service key.
+    * `SERVICE-INSTANCE-NAME`: Enter the name of the MySQL service instance you created a service key for.
+    * `SERVICE-KEY-NAME`: Enter the name of the newly created service key.
 
     For example:
     <pre class="terminal">
@@ -338,13 +338,13 @@ Perform the following steps to back up your MySQL for PCF data manually with rem
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
 1. Use [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) to back up the data for your service instance. Run the following command:
-    `mysqldump -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP --all-databases --single-transaction > BACKUP_NAME.sql`
+    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP --all-databases --single-transaction > BACKUP-NAME.sql`
     <br><br>
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL_PROXY_IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
-    * `BACKUP_NAME`: Enter a name for the backup file.
+    * `MYSQL-PROXY-IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `BACKUP-NAME`: Enter a name for the backup file.
 
     For example:
     <pre class="terminal">
@@ -362,14 +362,14 @@ If remote admin access is enabled, use [mysqldump](https://mariadb.com/kb/en/mar
 
 To back up all databases in the MySQL deployment, run the following command:
 ```
-mysqldump -u admin -p PASSWORD -h MYSQL_NODE_IP --all-databases --single-transaction > BACKUP_NAME.sql
+mysqldump -u admin -p PASSWORD -h MYSQL-NODE-IP --all-databases --single-transaction > BACKUP-NAME.sql
 ```
 
 Where:
 
 * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-* `MYSQL_NODE_IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-* `BACKUP_NAME`: Enter a name for the backup file.
+* `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+* `BACKUP-NAME`: Enter a name for the backup file.
 
 For example:
 <pre class="terminal">$ mysqldump -u admin -p 123456789 \
@@ -378,20 +378,20 @@ For example:
 
 To back up a single database, run the following command:
 ```
-mysqldump -u admin -p PASSWORD -h MYSQL_NODE_IP DB_NAME --single-transaction > BACKUP_NAME.sql
+mysqldump -u admin -p PASSWORD -h MYSQL-NODE-IP DB-NAME --single-transaction > BACKUP-NAME.sql
 ```
 
 Where:
 
 * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-* `MYSQL_NODE_IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-* `DB_NAME`: Enter the name of the database you want to back up.
-* `BACKUP_NAME`: Enter a name for the backup file.
+* `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+* `DB-NAME`: Enter the name of the database you want to back up.
+* `BACKUP-NAME`: Enter a name for the backup file.
 
 For example:
 <pre class="terminal">
 $ mysqldump -u admin -p 123456789 \
--h MYSQL\_NODE\_IP DB\_NAME \
+-h MYSQL-NODE-IP DB-NAME \
 --single-transaction > user_databases.sql
 </pre>
 
@@ -415,12 +415,12 @@ Perform the following steps to restore your MySQL data from a manual backup with
 1. If running in HA configuration, reduce the size of the MySQL for PCF cluster to a single node, following the procedures in the [Restore a Backup Artifact](#restoring) section above.
 1. Perform steps 1 through 5 of the [Manual Backup with Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section above.
 1. Use the MySQL client to enable the creation of tables using any storage engine. Run the following command:
-    `mysql -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP -e "SET GLOBAL enforce_storage_engine=NULL"`
+    `mysql -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP -e "SET GLOBAL enforce_storage_engine=NULL"`
     <br><br>
     Where:
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL_PROXY_IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `MYSQL-PROXY-IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
 
     For example:
     <pre class="terminal">
@@ -430,13 +430,13 @@ Perform the following steps to restore your MySQL data from a manual backup with
 
 1. Use the MySQL client to restore the MySQL database or databases. Run the following command:
 
-    `mysql -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP < BACKUP_NAME.sql`
+    `mysql -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP < BACKUP-NAME.sql`
     <br><br>
     Where:
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL_PROXY_IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
-    * `BACKUP_NAME`: Enter the file name of the backup artifact.
+    * `MYSQL-PROXY-IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `BACKUP-NAME`: Enter the file name of the backup artifact.
 
     For example:
     <pre class="terminal">
@@ -446,12 +446,12 @@ Perform the following steps to restore your MySQL data from a manual backup with
 
 1. Use the MySQL client to restore the original storage engine restriction. Run the following command:
 
-    `mysql -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP -e "SET GLOBAL enforce_storage_engine='InnoDB'"`
+    `mysql -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP -e "SET GLOBAL enforce_storage_engine='InnoDB'"`
     <br><br>
     Where:
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL_PROXY_IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `MYSQL-PROXY-IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
 
     For example:
     <pre class="terminal">
@@ -473,11 +473,11 @@ For more examples of manual backup and restore procedures, see the [MariaDB docu
 Perform the following steps to restore your MySQL data from a manual backup with remote admin access enabled:
 
 1. Use the MySQL client to enable the creation of tables using any storage engine. Run the following command:
-    `mysql -u admin -p PASSWORD -h MYSQL_NODE_IP -e "SET GLOBAL enforce_storage_engine=NULL"`
+    `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP -e "SET GLOBAL enforce_storage_engine=NULL"`
     <br><br>
     Where:
     * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `MYSQL_NODE_IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+    * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
 
     For example:
     <pre class="terminal">
@@ -486,20 +486,20 @@ Perform the following steps to restore your MySQL data from a manual backup with
     -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine=NULL"</pre>
 
 1. Use the MySQL password and IP address to enable the creation of tables using any storage engine. Run the following command:
-  `mysql -u admin -p PASSWORD -h MYSQL_NODE_IP -e "SET GLOBAL enforce_storage_engine=NULL"`
+  `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP -e "SET GLOBAL enforce_storage_engine=NULL"`
   <br><br>
   Where:
   * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-  * `MYSQL_NODE_IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+  * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
 
 1. Use the MySQL client to restore the MySQL database or databases. Run the following command:
 
-    `mysql -u admin -p PASSWORD -h MYSQL_NODE_IP < BACKUP_NAME.sql`
+    `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP < BACKUP-NAME.sql`
     <br><br>
     Where:
     * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `MYSQL_NODE_IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `BACKUP_NAME`: Enter the file name of the backup artifact.
+    * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+    * `BACKUP-NAME`: Enter the file name of the backup artifact.
 
     For example:
     <pre class="terminal">
@@ -509,11 +509,11 @@ Perform the following steps to restore your MySQL data from a manual backup with
 
 1. Use the MySQL client to restore the original storage engine restriction. Run the following command:
 
-    `mysql -u admin -p PASSWORD -h MYSQL_NODE_IP -e "SET GLOBAL enforce_storage_engine='InnoDB'"`
+    `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP -e "SET GLOBAL enforce_storage_engine='InnoDB'"`
     <br><br>
     Where:
     * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `MYSQL_NODE_IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+    * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
 
     For example:
     <pre class="terminal">
