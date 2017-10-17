@@ -322,11 +322,11 @@ Perform the following steps to back up your MySQL for PCF data manually:
     OK
     </pre>
 1. After creating the service key, retrieve its information. Run the following command:
-  `cf service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME`
+  `cf service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME`
     <br><br>
     Where:<br>
-    * `SERVICE_INSTANCE_NAME`: Enter the name of the MySQL service instance you created a service key for.
-    * `SERVICE_KEY_NAME`: Enter the name of the newly created service key.
+    * `SERVICE-INSTANCE-NAME`: Enter the name of the MySQL service instance you created a service key for.
+    * `SERVICE-KEY-NAME`: Enter the name of the newly created service key.
 
     For example:
     <pre class="terminal">
@@ -348,13 +348,13 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
 1. Use [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) to back up the data for your service instance. Run the following command:
-    `mysqldump -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP --all-databases --single-transaction > BACKUP_NAME.sql`
+    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP --all-databases --single-transaction > BACKUP-NAME.sql`
     <br><br>
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL_PROXY_IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
-    * `BACKUP_NAME`: Enter a name for the backup file.
+    * `MYSQL-PROXY-IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `BACKUP-NAME`: Enter a name for the backup file.
 
     For example:
     <pre class="terminal">
@@ -381,7 +381,7 @@ If you are using one of the other backup options, steps 5, 6, and 8 are differen
 
 1. Run `cf service` to determine the GUID associated with the service instance that you want to restore:
  <pre class="terminal">
-  $ cf service MY_INSTANCE_NAME --guid
+  $ cf service MY-INSTANCE-NAME --guid
   12345678-90ab-cdef-1234-567890abcdef
  </pre>
 
@@ -400,7 +400,7 @@ If you are using one of the other backup options, steps 5, 6, and 8 are differen
 5. Log in to the AWS CLI.
    For information and to download the CLI, see [AWS Command Line Interface](https://aws.amazon.com/cli/).
 
-6. List the available backups for the instance, replacing `BUCKET_NAME` and `BUCKET_PATH` with values from above.
+6. List the available backups for the instance, replacing `BUCKET-NAME` and `BUCKET-PATH` with values from above.
   The artifacts are sorted by time. 
  <pre class="terminal">
   $ aws s3 ls --recursive s3://BUCKET\_NAME/BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
@@ -410,7 +410,7 @@ If you are using one of the other backup options, steps 5, 6, and 8 are differen
 
 8. Download the selected backup:
  <pre class="terminal">
-  $ aws s3 cp s3://$BUCKET\_NAME/$BUCKET\_PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
+  $ aws s3 cp s3://BUCKET-NAME/BUCKET-PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/YEAR/MONTH/DATE/mysql-backup-1489168980-0.tar.gpg ./a-local-path/mysql-backup-1489168980-0.tar.gpg
  </pre>
 
     <p class="note"><strong>Note</strong>: You can also log in to AWS and download S3 backups from a browser.</p>
@@ -430,22 +430,22 @@ To restore the backup to a new service instance, follow these procedures:
 
 1. Determine the service plan associated with the old service instance:
  <pre class="terminal">
-  $ cf service OLD\_INSTANCE\_NAME
+  $ cf service OLD-INSTANCE-NAME
  </pre>
 
 1. [Create a new service instance](./use.html#create) using the same service plan to restore to:
  <pre class="terminal">
-  $ cf create-service p.mysql db-small NEW\_SERVICE\_INSTANCE
+  $ cf create-service p.mysql db-small NEW-SERVICE-INSTANCE
  </pre>
 
 1. Monitor the status of the service instance creation; it may take several minutes as the VM is created.
  <pre class="terminal">
-  $ cf service NEW\_SERVICE\_INSTANCE
+  $ cf service NEW-SERVICE-INSTANCE
  </pre>
 
 1. Determine the GUID associated with your service instance:
  <pre class="terminal">
-    $ cf service NEW\_SERVICE\_INSTANCE --guid
+    $ cf service NEW-SERVICE-INSTANCE --guid
  </pre>
 
 1. Download the BOSH manifest for the service instance using the GUID from above:
@@ -506,11 +506,11 @@ To restore the backup to a new service instance, follow these procedures:
     * decrypts and untars the backup artifact
     * restores the backup artifact into the mysql data directory
  <pre class="terminal">
-  $ /var/vcap/packages/mysql-restore/bin/restore --encryption-key ENCRYPTION\_KKEY --mysql-username admin --mysql-password ADMIN\_PASSWORD
+  $ /var/vcap/packages/mysql-restore/bin/restore --encryption-key ENCRYPTION-KEY --mysql-username admin --mysql-password ADMIN-PASSWORD
  </pre>
   where:<br><br>
-  * `ENCRYPTION_KEY` is the `symmetric-key` value from above
-  * `ADMIN_PASSWORD` is the `admin_password` value from above
+  * `ENCRYPTION-KEY` is the `symmetric-key` value from above
+  * `ADMIN-PASSWORD` is the `admin_password` value from above
 
 1. Exit the MySQL VM.
 
@@ -521,17 +521,17 @@ To restore the backup to a new service instance, follow these procedures:
 
 1. If the previous step shows that the app is currently bound to a MySQL instance, unbind it:
  <pre class="terminal">
-   $ cf unbind-service MY\_APP OLD\_SERVICE\_INSTANCE
+   $ cf unbind-service MY-APP OLD-SERVICE-INSTANCE
  </pre>
 
 1. Update your CF app to bind to the new service instance:
  <pre class="terminal">
-   $ cf bind-service MY\_APP  NEW\_SERVICE\_INSTANCE
+   $ cf bind-service MY-APP  NEW-SERVICE-INSTANCE
  </pre>
 
 1. Restage your CF app to make the changes take effect:
  <pre class="terminal">
-   $ cf restage MY\_APP 
+   $ cf restage MY-APP 
  </pre>
 
 Your app should be running and able to access the restored data.
