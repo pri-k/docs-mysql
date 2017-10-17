@@ -335,12 +335,12 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     {
      "hostname": "10.10.10.5",
-     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=UfSVqCTC5iwI3iuE\u0026password=xFneIRH3f4ow2idn",
+     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
      "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
-     "password": "xFneIRH3f4ow2idn",
+     "password": "123456789",
      "port": 3306,
-     "uri": "mysql://UfSVqCTC5iwI3iuE:xFneIRH3f4ow2idn<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
-     "username": "UfSVqCTC5iwI3iuE"
+     "uri": "mysql://abcdefghijklm:123456789<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+     "username": "abcdefghijklm"
     }
     </pre>
 1. Examine the output and record the following values:
@@ -358,8 +358,8 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ mysqldump -u UfSVqCTC5iwI3iuE \
-    -p xFneIRH3f4ow2idn \
+    $ mysqldump -u abcdefghijklm \
+    -p 123456789 \
     -h 10.10.10.8 \
     --all-databases \
     --single-transaction > spring-db-backup.sql</pre>
