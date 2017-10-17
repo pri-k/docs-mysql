@@ -320,11 +320,11 @@ Perform the following steps to back up your MySQL for PCF data manually:
 1. Log in:
   <pre class="terminal">$ cf login</pre>
 1. Create a service key for the MySQL service instance. Run the following command:
-    `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME -c '{"permissions":"read-only"}'`
+    `cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME -c '{"permissions":"read-only"}'`
     <br><br>
     Where:<br>
-    * `SERVICE_INSTANCE_NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
-    * `SERVICE_KEY_NAME`: Choose a name for the new service key.
+    * `SERVICE-INSTANCE-NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
+    * `SERVICE-KEY-NAME`: Choose a name for the new service key.
 
     For example:
     <pre class="terminal">
@@ -334,11 +334,11 @@ Perform the following steps to back up your MySQL for PCF data manually:
     OK
     </pre>
 1. After creating the service key, retrieve its information. Run the following command:
-  `cf service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME`
+  `cf service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME`
     <br><br>
     Where:<br>
-    * `SERVICE_INSTANCE_NAME`: Enter the name of the MySQL service instance you created a service key for.
-    * `SERVICE_KEY_NAME`: Enter the name of the newly created service key.
+    * `SERVICE-INSTANCE-NAME`: Enter the name of the MySQL service instance you created a service key for.
+    * `SERVICE-KEY-NAME`: Enter the name of the newly created service key.
 
     For example:
     <pre class="terminal">
@@ -360,13 +360,13 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
 1. Use [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) to back up the data for your service instance. Run the following command:
-    `mysqldump -u USERNAME -p PASSWORD -h MYSQL_PROXY_IP --all-databases --single-transaction > BACKUP_NAME.sql`
+    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP --all-databases --single-transaction > BACKUP-NAME.sql`
     <br><br>
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL_PROXY_IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
-    * `BACKUP_NAME`: Enter a name for the backup file.
+    * `MYSQL-PROXY-IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `BACKUP-NAME`: Enter a name for the backup file.
 
     For example:
     <pre class="terminal">
@@ -410,7 +410,7 @@ If you are using one of the other backup options, steps [6](#six) and [8](#eight
 
 1. <a id="six"></a>List the available backups for the instance.
  <pre class="terminal">
-  $ aws s3 ls --recursive s3://BUCKET\_NAME/service-instance\_12345678-90ab-cdef-1234-567890abcdef
+  $ aws s3 ls --recursive s3://$BUCKET\_NAME/service-instance\_12345678-90ab-cdef-1234-567890abcdef
  </pre>
 
 1. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
@@ -428,13 +428,13 @@ These instructions assume you have a backup downloaded. To restore the backup to
 
 1. [Create a new service instance](./use.html#create) to restore to.
  <pre class="terminal">
-  $ cf create-service p.mysql db-small NEW\_SERVICE\_INSTANCE
+  $ cf create-service p.mysql db-small NEW-SERVICE-INSTANCE
  </pre>
 
 1. Prepare the service instance for restoration.
   1. Determine the GUID associated with your service instance:
  <pre class="terminal">
-    $ cf service NEW\_SERVICE\_INSTANCE --guid
+    $ cf service NEW-SERVICE-INSTANCE --guid
  </pre>
 
   1. Download the manifest for the service instance deployment using the GUID from above.
@@ -544,7 +544,7 @@ These instructions assume you have a backup downloaded. To restore the backup to
 
 1. Update your CF app to bind to the new service instance.
  <pre class="terminal">
-   $ cf bind-service my-app NEW\_SERVICE\_INSTANCE
+   $ cf bind-service my-app NEW-SERVICE-INSTANCE
  </pre>
 
 1. Start your CF app.
