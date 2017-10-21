@@ -43,7 +43,7 @@
 | **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
 | **Recommended response** | - Run [`mysql-diag`](http://docs.pivotal.io/p-mysql/1-9/mysql-diag.html) and check the MySQL Server logs for errors.<br> - When approaching 100% of max connections, Apps may be experiencing times when they cannot connect to the database. The connections per second for the cluster vary based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
 
-#### <a id="open-files"></a> Query Rate
+#### <a id="questions"></a> Query Rate
 
 || **<%= vars.mysql_metrics_origin %>/performance/questions** |
 | --- | --- |
