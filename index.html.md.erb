@@ -101,9 +101,9 @@ with more than 767 bytes, then create or alter the apps to use `ROW_FORMAT DYNAM
 A workaround for failures due to strict mode is to use the `IGNORE` keyword: this converts the error to a warning. <br>
 For more information about these changes, see [MySQL Server Tuning and Defaults](release-notes.html#tuning).
 
-## <a id="deprecation-lock-tables"></a>Deferred: Deprecation of Table Locks
+## <a id="deprecation-lock-tables"></a>Table Locks: Now Configurable
 
-In previous releases, we've advertised the intent to deprecate table locks for all service bindings. This has been deferred to a later release.
+In previous releases, we've advertised the intent to deprecate table locks for all service bindings. We've decided to leave this choice up to the Operator, see [configuring table locks](configuring.html#allow-table-locks) for more information.
 
 ## <a id="configurations"></a>Enterprise Readiness by Topology ##
 
