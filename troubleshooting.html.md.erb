@@ -67,34 +67,6 @@ An article from [Percona](https://www.percona.com/blog/2014/07/21/a-schema-chang
 
 Disregard the replication errors as a normal behavior. If you see the "ALTER TABLE" error, fix the user error that produced it.
 
-### <a id="connection-blocked"></a>MySQL Blacklisted its Own Proxy
-
-#### Symptom
-
-You receive an error message that says MySQL has blacklisted its own proxies. The error message resembles the following:
-
-<pre class="terminal">
-OUT 07:44:02.070 [paasEnv=MYPASS orgName=MYORG spaceName=MYSPACE appName=dc-routing appId=0123456789] [http-nio-8080-exec-5] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Host '192.0.2.15' is blocked because of many connection errors; unblock with 'mysqladmin flush-hosts'
-</pre>
-
-#### Explanation
-
-Occasionally, MySQL blacklists its own proxies.
-
-This is an artifact of an automatic polling-protection [feature](https://mariadb.com/kb/en/mariadb/server-system-variables/#max_connect_errors) built into MySQL and MariaDB. It is a historical feature intended to block Denial of Service attacks, and is usually triggered by a load balancer or system monitoring software performing empty "port checks" against the MySQL proxies.
-
-<p class="note"><strong>Note</strong>: This issue has been disabled as of MySQL for PCF v1.8.0-edge.4.</p>
-
-#### Solution
-
-You can solve this by running the following on any of the MySQL job VMS:
-
-<pre class="terminal">
-/var/vcap/jobs/mysql/packages/mariadb/bin/mysqladmin flush-hosts
-</pre>
-
-Ensure that you have configured your load balancers to perform TCP checks against the proxy health-check port, which is 1936 by default. Repeated port checks against 3306 will cause an outage for all MySQL for PCF users.
-
 ### <a id="service-plan-deletion"></a> Accidental Deletion of Service Plan ##
 
 #### Symptom
