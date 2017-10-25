@@ -1,5 +1,5 @@
 ---
-title: Troubleshooting
+title: Troubleshooting and Diagnostics
 owner: MySQL
 ---
 
@@ -14,11 +14,11 @@ owner: MySQL
      }
 </style>
 
-This topic describes how to check the status of your MySQL cluster and if necessary bootstrap it to restore its health.
+This topic describes how to diagnose and troubleshoot problems with MySQL for Pivotal Cloud Foundry (PCF).
 
-## <a id="diagnosing"></a> Diagnosing
+## <a id="diagnosing"></a> Diagnose Problems
 
-If your cluster is experiencing downtime or is in a degraded state, Pivotal suggests the following workflow
+If your cluster is experiencing downtime or is in a degraded state, Pivotal recommends the following workflow
 for gathering information to diagnose the type of failure it's experiencing.
 
 1. Use the [mysql-diag](mysql-diag.html) tool to gather a summary of the network, disk, and replication state of each cluster node.
@@ -31,8 +31,164 @@ for gathering information to diagnose the type of failure it's experiencing.
    with the following information:
   - Logs fetched by running the `download-logs` script
   - Output from `mysql-diag`
-  - Type of environment the MySQL deployment is running in (Elastic Runtime, MySQL for PCF, or other?)
+  - Type of environment the MySQL deployment is running in (Elastic Runtime, MySQL for PCF, or other)
   - Versions of the installed Ops Manager, Elastic Runtime, and MySQL for PCF
+
+## <a id='troubleshooting'></a>Troubleshoot Problems
+
+### <a id="replication-errors"></a> Many Replication Errors in Logs
+
+#### Symptom
+
+You see many replication errors in the MySQL logs.
+
+#### Explanation
+
+Unless the GRA files show a clear execution error, such as running out of disk space, seeing many replication errors in your logs is a normal behavior. The MySQL for PCF team is developing a more advanced monitoring solution to detect the failure case and alert operators in the future.
+
+Occasionally, replication errors in the MySQL logs resemble the following:
+
+<pre class="terminal">
+160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
+160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
+160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
+</pre>
+
+This error occurs when an app issues an `ALTER TABLE` command that fails to apply to the current schema. This is typically the result of user error.
+
+The MySQL node that receives the request processes it normally. If it fails, the node sends the failure to the app, and the app must determine the next step. 
+In a Galera cluster, however, all DDL is replicated, and all replication failures are logged. Therefore, the bad `ALTER TABLE` command will be run by both slave nodes. If it fails, the slave nodes will log it as a "replication failure" since they cannot tell the difference.
+
+Cases where a valid DDL works on some nodes yet fails on others are rare. Usually those cases are limited to problems with running out of disk space or working memory. 
+
+An article from [Percona](https://www.percona.com/blog/2014/07/21/a-schema-change-inconsistency-with-galera-cluster-for-mysql/) suggests that the schemata can get out of sync. However, the author had to deliberately switch a node to RSU, which MySQL for PCF never does except during SST. The article offers a demonstration of what is possible, but does not explain how a customer may actually experience this issue in production.
+
+#### Solution
+
+Disregard the replication errors as a normal behavior. If you see the "ALTER TABLE" error, fix the user error that produced it.
+
+### <a id="connection-blocked"></a>MySQL Blacklisted its Own Proxy
+
+#### Symptom
+
+You receive an error message that says MySQL has blacklisted its own proxies. The error message resembles the following:
+
+<pre class="terminal">
+OUT 07:44:02.070 [paasEnv=MYPASS orgName=MYORG spaceName=MYSPACE appName=dc-routing appId=0123456789] [http-nio-8080-exec-5] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Host '192.0.2.15' is blocked because of many connection errors; unblock with 'mysqladmin flush-hosts'
+</pre>
+
+#### Explanation
+
+Occasionally, MySQL blacklists its own proxies.
+
+This is an artifact of an automatic polling-protection [feature](https://mariadb.com/kb/en/mariadb/server-system-variables/#max_connect_errors) built into MySQL and MariaDB. It is a historical feature intended to block Denial of Service attacks, and is usually triggered by a load balancer or system monitoring software performing empty "port checks" against the MySQL proxies.
+
+<p class="note"><strong>Note</strong>: This issue has been disabled as of MySQL for PCF v1.8.0-edge.4.</p>
+
+#### Solution
+
+You can solve this by running the following on any of the MySQL job VMS:
+
+<pre class="terminal">
+/var/vcap/jobs/mysql/packages/mariadb/bin/mysqladmin flush-hosts
+</pre>
+
+Ensure that you have configured your load balancers to perform TCP checks against the proxy health-check port, which is 1936 by default. Repeated port checks against 3306 will cause an outage for all MySQL for PCF users.
+
+### <a id="service-plan-deletion"></a> Accidental Deletion of Service Plan ##
+
+#### Symptom
+
+You have deleted a service plan accidentally.
+
+#### Explanation
+
+A service plan is only unrecoverable if you perform all of the following steps in sequence:
+
+1. Click the trash-can icon in the **Service Plan** section of the MySQL for PCF configuration.
+1. Create a plan with the same name.
+1. Click **Save**.
+1. Return to the Ops Manager Installation Dashboard, and click **Apply Changes**.
+
+The deploy will eventually fail with the following error:
+
+<pre class="terminal">
+Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
+</pre>
+
+#### Solution
+
+Once you has deployed with **Apply Changes**, the original plan cannot be recovered. For as long as service instances of that plan exist, you may not enter a new plan of the same name. At this point, the only workaround is to create a new plan with the same specifications, but specify a different name. Existing instances will continue to appear under the old plan name, but new instances will need to be created using the new plan name.
+
+If you have performed steps 1 and 2 in the above sequence, do not click **Save**. Return to the Ops Manager Installation Dashboard. Any accidental changes will be discarded.
+
+If you have performed steps 1, 2 and 3 in the above sequence, do not click **Apply Changes.** Return to the **Ops Manager Installation Dashboard** and click the **Revert** button. Any accidental changes will be discarded.
+
+### <a id="no-space"></a> No Space Left
+
+#### Symptom
+
+You receive an error that reports MySQL has no space left.
+
+#### Explanation
+
+If a server simultaneously processes multiple large queries that require [temporary tables](./architecture.html#temp-tables), they may use more disk space than allocated to the MySQL nodes. Queries may return `no space left` errors. 
+
+Users can see if a query is using a temporary table by using the `EXPLAIN` command and looking for `Using temporary` in the output.
+
+#### Solution
+
+Redeploy with more persistent disk to avoid these issues.
+
+### <a id="wont-rejoin"></a> Node Unable to Rejoin
+
+#### Symptom
+
+A MySQL node is unable to rejoin a cluster.
+
+#### Explanation
+
+Existing server nodes restarted with `monit` should automatically join the cluster. If a detached existing node fails to join the cluster, it may be because its sequence number (`seqno`) is higher than those of the nodes with quorum.
+
+A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks. Check this by looking at the node's error log at `/var/vcap/sys/log/mysql/mysql.err.log`.
+
+#### Solution
+
+If the detached node has a higher sequence number than the primary component, perform one of the following procedures to restore the cluster:
+
+  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data. See the [bootstrapping](bootstrapping.html) topic for more details.
+  - Abandon the unsynchronized data on the detached node. To do this, follow the manual process to [force the node to rejoin](#manual-rejoin).
+
+It may also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone.
+
+### <a id="unresponsive"></a> Unresponsive Node(s)
+
+#### Symptom
+
+A MySQL node has become unresponsive.
+
+#### Explanation
+
+A node can become unresponsive for a number of reasons:
+
+- network latency
+- MySQL process failure
+- firewall rule changes
+- VM failure
+- the [Interruptor](#interruptor) has prevented a node from starting
+
+Unresponsive nodes will stop responding to queries and, after timing out, leave the cluster.
+
+Nodes will be marked as unresponsive or inactive under either of the following circumstances:
+
+- If they fail to respond to one node within 15 seconds
+- If they fail to respond to all other nodes within 5 seconds
+
+Unresponsive nodes that become responsive again will rejoin the cluster, as long as they are on the same IP which is pre-configured in the `gcomm` address on all of the other running nodes and a quorum is held by the remaining nodes.
+
+All nodes suspend writes once they notice a problem with the cluster. After a timeout period of 5 seconds, requests to non-quorum nodes will fail. Most clients return the error: `WSREP has not yet prepared this node for application use`. Some clients may instead return `unknown error`. Nodes who have reached quorum will continue fulfilling write requests.
+
+If deployed using a proxy, a continually inactive node will cause the proxy to fail over, selecting a different MySQL node to route new queries to.
 
 ## <a id="techniques"></a> Techniques
 
@@ -192,108 +348,6 @@ This procedure removes all the data from a server node, forces it to join the cl
   1. Run `rm -rf /var/vcap/store/mysql`
   1. Run `/var/vcap/jobs/mysql/bin/pre-start`
   1. Run `monit start mariadb_ctrl`
-
-## <a id="errors"></a> Errors ##
-
-### <a id="replication-errors"></a> Many replication errors in the logs
-
-Unless the GRA files show a clear execution error (e.g., out of disk space) seeing many replication errors in your logs is a normal behavior. We will be working on more advanced monitoring to detect the failure case and alert Operators in the future.
-
-Occasionally, replication errors in the MySQL logs will resemble the following:
-
-<pre class="terminal">
-160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
-160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
-160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
-</pre>
-
-What this is saying is that someone (probably an app) issued an "ALTER TABLE" command that failed to apply to the current schema. More often than not, this is user error.
-
-The node that receives the request processes it as any MySQL server will, if it fails, it just spits that failure back to the app, and the app needs to decide what to do next. That part is normal. HOWEVER, in a Galera cluster, all DDL is replicated, and all replication failures are logged. So in this case, the bad ALTER TABLE command will be run by both slave nodes, and if it fails, those slave nodes will log it as a "replication failure" since they can't tell the difference.
-
-It's really hard to get a valid DDL to work on some nodes, yet fail on others. Usually those cases are limited to out of disk space or working memory. We haven't duplicated that yet.
-
-#### But I found a blog article that suggests that the schemata can get out of sync?
-
-> https://www.percona.com/blog/2014/07/21/a-schema-change-inconsistency-with-galera-cluster-for-mysql/
-
-The key thing about this post is that he had to deliberately switch a node to RSU, which MySQL for Pivotal Cloud Foundry (PCF) never does except during SST. So this is a demonstration of what is possible, but does not explain how a customer may actually experience this in production.
-
-### <a id="connection-blocked"></a>MySQL has blacklisted its own proxy
-
-What does the error, `blocked because of many connection errors` mean?
-
-There are times when MySQL will blacklist its own proxies:
-
-<pre class="terminal">
-OUT 07:44:02.070 [paasEnv=MYPASS orgName=MYORG spaceName=MYSPACE appName=dc-routing appId=0123456789] [http-nio-8080-exec-5] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Host '192.0.2.15' is blocked because of many connection errors; unblock with 'mysqladmin flush-hosts'
-</pre>
-
-You can solve this by running the following on any of the MySQL job VMS:
-
-<pre class="terminal">
-/var/vcap/jobs/mysql/packages/mariadb/bin/mysqladmin flush-hosts
-</pre>
-
-This is an artifact of an automatic polling-protection [feature](https://mariadb.com/kb/en/mariadb/server-system-variables/#max_connect_errors) built into MySQL and MariaDB. It is a historical feature intended to block Denial of Service attacks. It is usually triggered by a Load Balancer or System Monitoring software performing empty "port checks" against the MySQL proxies. This is why it is important to configure any Load Balancer to perform TCP checks against the proxy health-check port, default **1936**. Repeated port checks against **3306** will cause an outage for all MySQL for PCF users.
-
-* Note: This issue has been disabled as of MySQL for PCF v1.8.0-edge.4.
-
-### <a id="service-plan-deletion"></a> Accidental Deletion of a Service Plan ##
-
-If and only if the Operator does all of the following steps in sequence, a plan will become "unrecoverable":
-
-1. Click the trash-can icon in the Service Plan screen.
-1. Enter a plan with the exact same name.
-1. Click the 'Save' button on the same screen.
-1. Return to the Ops Manager top-level, and click 'Apply Changes'.
-
-After clicking 'Apply Changes', the deploy will eventually fail with the following error:
-
-<pre class="terminal">
-Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
-</pre>
-
-This unfortunate situation is unavoidable; once the Operator has committed via 'Apply Changes', the original plan cannot be recovered. For as long as service instances of that plan exist, you may not enter a new plan of the same name. At this point, the only workaround is to create a new plan with the same specifications, but specify a different name. Existing instances will continue to appear under the old plan name, but new instances will need to be created using the new plan name.
-
-If you have committed steps 1 and 2, but not 4, no problem. Do not hit the 'Save' button. Simply return to the Installation Dashboard. Any accidental changes will be discarded.
-
-If you have committed steps 1, 2 and 3, do not click 'Apply Changes.' Instead, return to the Installation Dashboard and click the '**Revert**' button. Any accidental changes will be discarded.
-
-### <a id="no-space"></a> No Space Left
-
-If a server simultaneously processes multiple large queries that require [temporary tables](./architecture.html#temp-tables), they may use more disk space than allocated to the MySQL nodes. Queries may return `no space left` errors. Redeploy with more persistent disk to avoid these issues.
-
-Users can see if a query is using a temporary table by using the `EXPLAIN` command and looking for `Using temporary` in the output.
-
-### <a id="wont-rejoin"></a> Node Unable to Rejoin
-
-Existing server nodes restarted with `monit` should automatically join the cluster. If a detached existing node fails to join the cluster, it may be because its sequence number (`seqno`) is higher than that of the nodes with quorum.
-
-A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks. Check this by looking at the node's error log `/var/vcap/sys/log/mysql/mysql.err.log`.
-
-If the detached node has a higher sequence number than the primary component, do one of the following to restore the cluster:
-
-  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data. See the [bootstrapping](bootstrapping.html) topic for more details.
-  - Abandon the unsynchronized data on the detached node. To do this, follow the manual process to [force the node to rejoin](#manual-rejoin).
-
-It may also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone and beyond the scope of this document.
-
-### <a id="unresponsive"></a> Unresponsive node(s)
-
-  - A node can become unresponsive for a number of reasons:
-    - network latency
-    - MySQL process failure
-    - firewall rule changes
-    - VM failure
-    - the [Interruptor](#interruptor) has prevented a node from starting
-  - Unresponsive nodes will stop responding to queries and, after timeout, leave the cluster.
-  - Nodes will be marked as unresponsive/inactive under eith of the following circumstances:
-    - If they fail to respond to one node within 15 seconds
-    - If they fail to respond to all other nodes within 5 seconds
-  - Unresponsive nodes that become responsive again will rejoin the cluster, as long as they are on the same IP which is pre-configured in the gcomm address on all the other running nodes and a quorum was held by the remaining nodes.
-  - All nodes suspend writes once they notice something is wrong with the cluster (write requests hang). After a timeout period of 5 seconds, requests to non-quorum nodes will fail. Most clients return the error: `WSREP has not yet prepared this node for application use`. Some clients may instead return `unknown error`. Nodes who have reached quorum will continue fulfilling write requests.
-  - If deployed using a proxy, a continually inactive node will cause the proxy to fail over, selecting a different MySQL node to route new queries to.
 
 ## <a id="interruptor"></a>Interruptor
 
