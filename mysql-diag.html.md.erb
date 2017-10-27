@@ -8,7 +8,10 @@ This topic discusses how to use the `mysql-diag` tool in  MySQL for Pivotal Clou
 In MySQL for PCF 1.9.0 and later, the `mysql-diag` tool is automatically installed and configured. If you are on a prior version, select the documentation for your version of MySQL for PCF.
 
 ## <a id="run"></a> Run mysql-diag ##
-1. If this is your first time using `mysql-diag`, follow the instructions within the [Prepare to Use the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) topic. If you have completed this step in a prior use of `mysql-diag`, move directly to Step 2.
+Depending on the BOSH CLI version you are using, follow the procedure for [BOSH CLI v1](#bosh-v1) or [BOSH CLI v2](#bosh-v2):
+
+#### <a id="bosh-v1"></a>BOSH CLI v1
+1. If this is your first time using `mysql-diag`, follow the instructions within the [Prepare to Use the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare) topic. If you have completed this step in a prior use of `mysql-diag`, move directly to Step 2.
 
 1. Select either Elastic Runtime or MySQL for PCF as your deployment to troubleshoot. Perform the steps detailed in the [Select a Product Deployment to Troubleshoot](http://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#product) topic.
 
@@ -17,6 +20,8 @@ In MySQL for PCF 1.9.0 and later, the `mysql-diag` tool is automatically install
 
 1. Once on the `mysql-monitor` VM type the following command to run `mysql-diag`:
 <pre class="terminal">$ mysql-diag</pre>
+
+#### <a id='bosh-v2'></a>BOSH CLI v2
 
 
 ## <a id="diag-agent"></a> mysql-diag-agent ##

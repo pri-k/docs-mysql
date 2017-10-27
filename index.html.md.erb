@@ -20,6 +20,12 @@ With MySQL for PCF installed, developers can attach a database to their apps in 
 
 You can deploy MySQL for PCF in either single-node or high availability (HA) topology. The HA topology has three MySQL servers, two proxies, and two service brokers, and you need to supply a load balancer.
 
+For developers using BOSH CLI, there are a few things to keep in mind:
+
+- When using PCF v1.10, BOSH CLI v1 is used.
+- When using PCF v1.11, you can use either BOSH CLI v1 or BOSH CLI v2, but we recommend using the BOSH CLI v2 (as v1 will be deprecated in the future)
+- In PCF v1.12, you must use the BOSH CLI v2.
+
 ## <a id="product-snapshot"></a>Product Snapshot ##
 
 The following table provides version and version-support information about MySQL for PCF:

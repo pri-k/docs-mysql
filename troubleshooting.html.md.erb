@@ -208,7 +208,7 @@ If quorum has *not* been lost, individual unhealthy nodes should automatically r
   1. Locate the **Mysql Admin Password** entry in the **MySQL Server** section and click **Link to Credential**.
   1. Record the values for `identity` and `password`.
 
-1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, review the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) section of the Advanced Troubleshooting with the BOSH CLI topic for specific instructions.
+1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, please see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a> for more information.
 
 1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved from the initial step and `YOUR-IDENTITY` with the `identity` value obtained from the second step. When prompted for a password, provide the `password` value obtained from the second step.
   1. Create a dummy database in the first node:
@@ -361,7 +361,13 @@ WSREP_SST: [ERROR] #############################################################
 
 In general, if the Interruptor has activated but the Replication Canary has not triggered, it is safe for the node to rejoin the cluster. You can check the health of the remaining nodes in the cluster by following the [Check Replication Status](troubleshooting.html#check-replication) instructions used before scaling from clustered to single-node mode.
 
-<p class='note'><strong>Note</strong>: This topic requires you to run commands from the <a href="http://docs.pivotal.io/pivotalcf/customizing/index.html">Ops Manager Director</a> using the BOSH CLI. Refer to the <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a> topic for more information.</p>
+Before running the BOSH CLI commands below, you must SSH into the Ops Manager VM and log in to the BOSH Director. For more information, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a>.
+
+If you are using PCF 1.10, follow the <a href="#bosh-v1">BOSH CLI v1</a> procedures to force a node to rejoin the cluster.
+
+If you are using PCF 1.11 or later, follow the <a href="#bosh-v2">BOSH CLI v2</a> procedures to force a node to rejoin the cluster.
+
+#### <a id="bosh-v1"></a>BOSH CLI v1
 
 1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
 
@@ -369,6 +375,27 @@ In general, if the Interruptor has activated but the Replication Canary has not 
 
     <pre class="terminal">
     $ bosh run errand rejoin-unsafe
+    [...]
+    [stdout]
+    Started rejoin-unsafe errand ...
+    Successfully repaired cluster
+    rejoin-unsafe errand completed
+
+    [stderr]
+    None
+
+    Errand `rejoin-unsafe' completed successfully (exit code 0)
+    </pre>
+
+If the `rejoin-unsafe` errand is not able to cause a node to join the cluster, log into each node which has tripped the Interruptor and follow the [manual rejoin](#manual-rejoin) instructions.
+
+#### <a id='bosh-v2'></a>BOSH CLI v2
+1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
+
+1. Run `bosh run-errand rejoin-unsafe` to force a node to rejoin the cluster:
+
+    <pre class="terminal">
+    $ bosh run-errand rejoin-unsafe
     [...]
     [stdout]
     Started rejoin-unsafe errand ...
