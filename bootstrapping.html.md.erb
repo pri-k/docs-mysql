@@ -45,7 +45,7 @@ Before running the bootstrapping procedures below, you must SSH into the Ops Man
 
 ### <a id="assisted-bootstrap"></a>Assisted Bootstrap ###
 
-MySQL for PCF versions 1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. It is still necessary to manually initiate the bootstrap process, but using this errand reduces the number of manual steps necessary to complete the process.
+MySQL for PCF v1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. It is still necessary to manually initiate the bootstrap process, but using this errand reduces the number of manual steps necessary to complete the process.
 
 In most cases, running the errand is sufficient, however there are some conditions which require additional steps.
 
@@ -59,9 +59,9 @@ In this scenario, the nodes are up and running, but the cluster has been disrupt
 
 To determine whether the cluster has been disrupted, use the BOSH CLI to list the jobs and see if they are `failing`. 
 
-If you are using PCF 1.10, use the BOSH CLI v1 command `bosh vms`.
+If you are using PCF v1.10, use the BOSH CLI v1 command `bosh vms`.
 
-If you are using PCF 1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`.
+If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`.
 
 The output will resemble the following:
 
@@ -83,8 +83,8 @@ In this situation, run the bootstrap errand:
 
 1. Log in to the BOSH director.
 1. Select the correct deployment.
-1. If you are using PCF 1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
-</br></br> If you are using PCF 1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
+1. If you are using PCF v1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
+</br></br> If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
 
 
 You will see many lines of output, eventually followed by:
@@ -110,9 +110,9 @@ There are times when this won't work immediately. Unfortunately, sometimes it is
 
 In more severe circumstances, such as power failure, it's possible that all of your VMs have been lost. They'll need to be recreated before you can begin to recover the cluster. In this scenario, you'll see the nodes appear as `unknown/unknown` in the BOSH output.
 
-If you are using PCF 1.10, use the BOSH CLI v1 command `bosh vms`.
+If you are using PCF v1.10, use the BOSH CLI v1 command `bosh vms`.
 
-If you are using PCF 1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`.
+If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`.
 
 The output will resemble the following:
 
@@ -140,8 +140,8 @@ To recover your VMs, perform the following steps:
 
 1. If you use the [VM Resurrector](http://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling), disable it.
 1. Run the BOSH Cloud Check interactive command.
-</br>If you are using PCF 1.10, use the BOSH CLI v1 command `bosh cck`.
-</br>If you are using PCF 1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV -d YOUR-DEP cck`.
+</br>If you are using PCF v1.10, use the BOSH CLI v1 command `bosh cck`.
+</br>If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV -d YOUR-DEP cck`.
 
 When prompted, select **Recreate VM**. If this option fails, select **Delete VM reference**.
 
@@ -225,8 +225,8 @@ If you are using PCF v1.11 or later, use the the [BOSH CLI v2](#bosh-v2) process
 
 
 #### <a id="run-the-errand"></a>Run the Bootstrap Errand ####
-1. If you are using PCF 1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
-If you are using PCF 1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
+1. If you are using PCF v1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
+If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
 
 1. Validate that the errand completes successfully.
     - Some instances may still appear as `failing`. It's OK to proceed to the next step.
