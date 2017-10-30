@@ -7,32 +7,35 @@ This topic describes how to bootstrap your MySQL cluster in the event of a clust
 
 ## <a id="when-to-bootstrap"></a> When to Bootstrap ##
 
-Bootstrapping is only required when the cluster has lost quorum. See the [Troubleshooting](troubleshooting.html#check-state) topic for how to check the state of your cluster.
+To determine whether you need to bootstrap your cluster, you must check whether the cluster has lost quorum. Bootstrapping is only required when the cluster has lost quorum. See [Check Cluster State](#check-state) for more information about checking the state of your cluster.
 
-Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its database is in a good state, and it reports itself as ```synced```.
+Quorum is lost when less than half of the nodes can communicate with each other for longer than the configured grace period. In Galera terminology, if a node can communicate with the rest of the cluster, its database is in a good state, and it reports itself as ```synced```.
 
-If quorum has *not* been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired (error resolved, node restarted, or connectivity restored).
+If quorum has not been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired, which means the error is resolved, the node is restarted, or connectivity is restored.
 
-<a id="lost-quorum"></a>
+To check whether your cluster has lost quorum, look for the following symptoms:
 
-- Symptoms of Lost Quorum
+- All nodes appear "Unhealthy" on the proxy dashboard, as in the following screenshot:
+![3 out of 3 nodes are unhealthy.](quorum-lost.png)
+- All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary` in the MySQL client.
 
-    - All nodes appear "Unhealthy" on the proxy dashboard:
-    ![3 out of 3 nodes are unhealthy.](quorum-lost.png)
-    - All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary`.
+        mysql> SHOW STATUS LIKE 'wsrep_cluster_status';
+        +----------------------+-------------+
+        | Variable_name        | Value       |
+        +----------------------+-------------+
+        | wsrep_cluster_status | non-Primary |
+        +----------------------+-------------+
+- All responsive nodes respond with `ERROR 1047` when using most statement types in the MySQL client:
 
-            mysql> SHOW STATUS LIKE 'wsrep_cluster_status';
-            +----------------------+-------------+
-            | Variable_name        | Value       |
-            +----------------------+-------------+
-            | wsrep_cluster_status | non-Primary |
-            +----------------------+-------------+
-    - All responsive nodes respond with `ERROR 1047` when using most statement types:
+        mysql> select * from mysql.user;
+        ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
 
-            mysql> select * from mysql.user;
-            ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
+If your cluster has lost quorum, see the [Bootstrapping](bootstrapping.html) topic for information about manually bootstrapping a cluster.
 
-See [Cluster Behavior](architecture.html#behavior) for more details about determining cluster state.
+Keep in mind the following:
+
+- The start script bootstraps node 0 only on initial deploy. If bootstrapping is necessary at a later date, it must be done manually. 
+- If the single node is bootstrapped, it creates a new one-node cluster that other nodes can join.
 
 ## <a id="bootstrapping"></a>Bootstrapping ##
 
