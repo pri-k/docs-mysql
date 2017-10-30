@@ -104,32 +104,6 @@ Perform the following steps to check the replication status:
 
 1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment. If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
 
-#### <a id="simulating-node-failure"></a> Simulate Node Failure
-
-To simulate a temporary single node failure, use `kill -9` on the pid of the MySQL process. This will only temporarily disable the node because the process is being monitored by monit, which will restart the process if it is not running.
-
-To more permanently disable the process, execute `monit unmonitor mariadb_ctrl` before `kill -9`.
-
-To simulate multi-node failure without killing a node process, communication can be severed by changing the iptables config to disallow communication:
-
-<pre class="terminal">
-iptables -F && # optional - flush existing rules \
-iptables -A INPUT -p tcp --destination-port 4567 -j DROP && \
-iptables -A INPUT -p tcp --destination-port 4568 -j DROP && \
-iptables -A INPUT -p tcp --destination-port 4444 -j DROP && \
-iptables -A INPUT -p tcp --destination-port 3306 && \
-iptables -A OUTPUT -p tcp --destination-port 4567 -j DROP && \
-iptables -A OUTPUT -p tcp --destination-port 4568 -j DROP && \
-iptables -A OUTPUT -p tcp --destination-port 4444 -j DROP && \
-iptables -A OUTPUT -p tcp --destination-port 3306
-</pre>
-
-To recover from this, drop the partition by flushing all rules:
-
-<pre class="terminal">
-iptables -F
-</pre>
-
 #### <a id="check-state"></a> Check Cluster State
 
 To check the cluster state, connect to each MySQL node using a MySQL client and check its status.
