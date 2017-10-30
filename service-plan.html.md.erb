@@ -90,11 +90,11 @@ ORDER BY max_storage_mb DESC;
 
 Once all service plan instances have been deleted, remove the plan from the Services Marketplace by running the `broker-registrar` errand again.
 
-If you are using PCF v1.10, follow the [BOSH CLI v1](#bosh-v1) procedures to run the `broker-registrar` errand. 
+If you are using PCF v1.10, follow the procedure under [Running the `broker-registrar` errand using BOSH CLI v1](#bosh-v1).
 
-If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#bosh-v2) procedures to run the `broker-registrar` errand.
+If you are using PCF v1.11 or later, follow the procedure under [Running the `broker-registrar` errand using BOSH CLI v2](#bosh-v2).
 
-#### <a id="bosh-v1"></a>BOSH CLI v1
+#### <a id="bosh-v1"></a>Running the `broker-registrar` errand using BOSH CLI v1
 
 1. Find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
     <pre class="terminal">$ bosh deployments</pre>
@@ -103,12 +103,12 @@ If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#bosh-v2) procedur
 1. Run the errand:
     <pre class="terminal">$ bosh run errand broker-registrar</pre>
 
-#### <a id='bosh-v2'></a>BOSH CLI v2
+#### <a id='bosh-v2'></a>Running the `broker-registrar` errand using BOSH CLI v2
 
 1. Find the full name of the MySQL for PCF deployment. For example, `p-mysql-180290d67d5441ebf3c5`.
-    <pre class="terminal">$ bosh deployments</pre>
+    <pre class="terminal">$ bosh2 deployments</pre>
 1. Set the deployment and run the errand:
-    <pre class="terminal">$ bosh -d p-mysql-180290d67d5441ebf3c5 run-errand broker-registrar</pre>
+    <pre class="terminal">$ bosh2 -d p-mysql-180290d67d5441ebf3c5 run-errand broker-registrar</pre>
 
 ### <a id="re-adding-deleted-plans"></a>Re-adding Deleted Plans
 

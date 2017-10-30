@@ -220,13 +220,13 @@ Two post-deploy errands run by default: the **broker registrar** and the **smoke
 <p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. <strong>Do not</strong> reconfigure errands in your deployment without instruction from Pivotal Support.
 
 Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile. 
-</br></br>Depending on your Pivotal Cloud Foundry (PCF) version, use the appropriate command for either BOSH CLI 1.0 or BOSH CLI 2.0. Running the following command under any other circumstances deletes user data. <strong>Do not</strong> run this errand unless instructed to do so by Pivotal Support:
+</br></br>Depending on your Pivotal Cloud Foundry (PCF) version, use the appropriate command for either BOSH CLI v1 or BOSH CLI v2. Running the following command under any other circumstances deletes user data. <strong>Do not</strong> run this errand unless instructed to do so by Pivotal Support:
 
 </br></br>On PCF v1.10, run the BOSH CLI v1 command:
 </br><code>bosh run errand broker-registrar</code>
 
 </br>On PCF v1.11 or later, run the BOSH CLI v2 command:
-</br><code>bosh run-errand broker-registrar</code>
+</br><code>bosh2 run-errand broker-registrar</code>
 </p>
 
 ## <a id="resource-config"></a>Resource Config
