@@ -30,7 +30,7 @@ To check whether your cluster has lost quorum, look for the following symptoms:
         mysql> select * from mysql.user;
         ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
 
-If your cluster has lost quorum, see the [Bootstrapping](bootstrapping.html) topic for information about manually bootstrapping a cluster.
+If your cluster has lost quorum, see the [Manual Bootstrapping](#manual-bootstrap) topic for information about manually bootstrapping a cluster.
 
 Keep in mind the following:
 
@@ -237,7 +237,7 @@ To restore your BOSH configuration to it's previous state, follow the previous s
 
 ---
 
-## <a id="manual-bootstrap"></a>Manual Bootstrap ##
+## <a id="manual-bootstrap"></a>Manual Bootstrapping ##
 
 1. If the bootstrap errand is not able to automatically recover the cluster, you may need to perform the steps manually. The following steps are prone to user-error and can result in lost data if followed incorrectly. Please follow the [assisted boostrap](#assisted-bootstrap) instructions above first, and only resort to the manual process if the errand fails to repair the cluster.
 
