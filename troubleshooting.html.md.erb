@@ -307,7 +307,8 @@ In general, if the Interruptor has activated but the Replication Canary has not 
 Before running the BOSH CLI commands below, you must SSH into the Ops Manager VM and log in to the BOSH Director. For more information, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a>.
 
 #### <a id="bosh-v1"></a>Force a Node to Rejoin a Cluster Using BOSH CLI v1
-If you are using PCF v1.10, follow the procedure below. If you are using PCF v1.11 or later, see [Force a Node to Rejoin a Cluster Using BOSH CLI v2](#bosh-v2).
+If you are using PCF v1.10, follow the procedure below.<br>
+If you are using PCF v1.11 or later, see [Force a Node to Rejoin a Cluster Using BOSH CLI v2](#bosh-v2).
 
 1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
 
@@ -330,7 +331,8 @@ If you are using PCF v1.10, follow the procedure below. If you are using PCF v1.
 If the `rejoin-unsafe` errand is not able to cause a node to join the cluster, log into each node which has tripped the Interruptor and follow the [manual rejoin](#manual-rejoin) instructions.
 
 #### <a id='bosh-v2'></a>Force a Node to Rejoin a Cluster Using BOSH CLI v2
-If you are using PCF v1.11 or later, follow the procedure below. If you are using PCF v1.10, see [Force a Node to Rejoin a Cluster Using BOSH CLI v1](#bosh-v1).
+If you are using PCF v1.11 or later, follow the procedure below.<br>
+If you are using PCF v1.10, see [Force a Node to Rejoin a Cluster Using BOSH CLI v1](#bosh-v1).
 
 1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
 
