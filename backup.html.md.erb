@@ -229,11 +229,11 @@ In the event of a total cluster loss, the process to restore a backup artifact t
     1. Retrieve the IP address for the MySQL server by navigating to the **MySQL for PCF** tile and clicking the **Status** tab.
     1. Retrieve the VM credentials for the MySQL server by navigating to the **MySQL for PCF** tile and clicking the **Credentials** tab.
     1. From the Ops Manager Director VM, use the BOSH CLI to log in to the BOSH Director:
-      1. If you are using PCF 1.10, follow the BOSH CLI v1 procedures in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh1-access">Log in to the BOSH Director</a>.
-      1. If you are using PCF 1.11 or later, follow the BOSH CLI v2 procedures in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh2-access">Log in to the BOSH Director</a>.
+      1. If you are using PCF v1.10, follow the BOSH CLI v1 procedure in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh1-access">Log in to the BOSH Director</a>.
+      1. If you are using PCF v1.11 or later, follow the BOSH CLI v2 procedure in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh2-access">Log in to the BOSH Director</a>.
     1. From the Ops Manager Director VM, use the BOSH CLI to SSH into the first MySQL job:
-      1. If you are using PCF 1.10, follow the BOSH CLI v1 procedures in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh-v1">BOSH SSH</a>.
-      1. If you are using PCF 1.10, follow the BOSH CLI v2 procedures in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh-v2">BOSH SSH</a>.
+      1. If you are using PCF v1.10, follow the BOSH CLI v1 procedure in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh-v1">BOSH SSH</a>.
+      1. If you are using PCF v1.11 or later, follow the BOSH CLI v2 procedure in <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh-v2">BOSH SSH</a>.
     1. On the MySQL server VM, become super user:
       <pre class="terminal">$ sudo su</pre>
     1. Pause the local database server:

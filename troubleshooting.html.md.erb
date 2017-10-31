@@ -19,20 +19,122 @@ This topic describes how to diagnose and troubleshoot problems with MySQL for Pi
 ## <a id="diagnosing"></a> Diagnose Problems
 
 If your cluster is experiencing downtime or is in a degraded state, Pivotal recommends the following workflow
-for gathering information to diagnose the type of failure it's experiencing.
+for gathering information to diagnose the type of failure the cluster is experiencing.
 
 1. Use the [mysql-diag](mysql-diag.html) tool to gather a summary of the network, disk, and replication state of each cluster node.
 1. Run [download-logs](https://discuss.pivotal.io/hc/en-us/articles/221504408-Script-to-download-logs-from-MYSQL-server-tile-for-further-troubleshooting) against each node in your MySQL cluster,
    the MySQL proxies, and the MySQL backup-prepare node.
    It's important to do this before attempting recovery,
    because any failures in the recovery procedure can result in logs being lost or made inaccessible.
-1. Depending on the reported state from `mysql-diag`, the [techniques](#techniques) listed below might allow you to recover your cluster.
+1. Depending on the reported state from `mysql-diag`, the troubleshooting [techniques](#troubleshooting) listed below might allow you to recover your cluster.
 1. If you are uncertain about the recovery steps to take, submit a ticket through [Pivotal Support](https://support.pivotal.io/)
    with the following information:
   - Logs fetched by running the `download-logs` script
   - Output from `mysql-diag`
   - Type of environment the MySQL deployment is running in (Elastic Runtime, MySQL for PCF, or other)
   - Versions of the installed Ops Manager, Elastic Runtime, and MySQL for PCF
+
+For more diagnostic techniques, see the following section.
+
+### <a id="diagnostic-techniques"></a> Diagnostic Techniques
+
+#### <a id="check-quorum"></a> Check for Lost Quorum
+
+If your cluster has lost quorum, you must bootstrap it.
+
+To determine whether you need to bootstrap your cluster, check whether the cluster has lost quorum. See the [Bootstrapping](bootstrapping.html#when-to-bootstrap) topic for more information.
+
+#### <a id="check-replication"></a>Check Replication Status
+
+Perform the following steps to check the replication status:
+
+1. Obtain the IP addresses of your MySQL server by performing the following steps:
+  1. From the Pivotal Cloud Foundry (PCF) **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
+  1. Click the **Status** tab.
+  1. Record the IP addresses for all instances of the **MySQL Server** job.
+
+1. Obtain the admin credentials for your MySQL server by performing the following steps:
+  1. From the **MySQL for PCF** tile, click the **Credentials** tab.
+  1. Locate the **Mysql Admin Password** entry in the **MySQL Server** section and click **Link to Credential**.
+  1. Record the values for `identity` and `password`.
+
+1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a> for more information.
+
+1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved from the initial step and `YOUR-IDENTITY` with the `identity` value obtained from the second step. When prompted for a password, provide the `password` value obtained from the second step.
+  1. Create a dummy database in the first node:
+    <pre class="terminal">
+    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"
+    </pre>
+  1. Create a dummy table in the dummy database:
+    <pre class="terminal">
+    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "create table dummy_table (id int not null primary key auto\_increment, info text) engine='InnoDB';"
+    </pre>
+  1. Insert some data into the dummy table:
+    <pre class="terminal">
+    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"
+    </pre>
+  1. Query the table and verify that the three rows of dummy data exist on the first node:
+    <pre class="terminal">
+    mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
+    Enter password:
+    +----+----------------------+
+    | id | info                 |
+    +----+----------------------+
+    |  4 | dummy data           |
+    |  7 | more dummy data      |
+    | 10 | even more dummy data |
+    +----+----------------------+
+  </pre>
+
+1. Verify that the other nodes contain the same dummy data by performing the following steps for each of the remaining MySQL server IP addresses obtained above:
+  1. Query the dummy table, replacing `NEXT-NODE-IP-ADDRESS` with the IP address of the MySQL server instance and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
+    <pre class="terminal">
+    $ mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
+    </pre>
+  1. Examine the output of the `mysql` command and verify that the node contains the same three rows of dummy data as the other nodes.
+    <pre class="terminal">
+    +----+----------------------+
+    | id | info                 |
+    +----+----------------------+
+    |  4 | dummy data           |
+    |  7 | more dummy data      |
+    | 10 | even more dummy data |
+    +----+----------------------+
+    </pre>
+
+1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment. If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
+
+#### <a id="check-state"></a> Check Cluster State
+
+To check the cluster state, connect to each MySQL node using a MySQL client and check its status.
+
+<pre class="terminal">
+$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'
++----------------------+---------+
+| Variable_name        | Value   |
++----------------------+---------+
+| wsrep_cluster_status | Primary |
++----------------------+---------+
+</pre>
+
+If all nodes are in the `Primary` component, you have a healthy cluster. If some nodes are in a `Non-primary` component, those nodes are not able to join the cluster.
+
+To check how many nodes are in the cluster, perform the following command:
+
+<pre class="terminal">
+$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
++--------------------+-------+
+| Variable_name      | Value |
++--------------------+-------+
+| wsrep_cluster_size | 3     |
++--------------------+-------+
+</pre>
+
+If the value of `wsrep_cluster_size` is equal to the expected number of nodes, then all nodes have joined the cluster. Otherwise, check network connectivity between nodes and use `monit status` to identify any issues preventing nodes from starting.
+
+For more information, see the official Galera documentation for [Checking Cluster Integrity](http://galeracluster.com/documentation-webpages/monitoringthecluster.html#checking-cluster-integrity).
+
+To restart your cluster, see the [Bootstrapping](bootstrapping.html) topic.
 
 ## <a id='troubleshooting'></a>Troubleshoot Problems
 
@@ -128,7 +230,7 @@ A higher `seqno` on the detached node indicates that it has recent changes to th
 
 If the detached node has a higher sequence number than the primary component, perform one of the following procedures to restore the cluster:
 
-  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data. See the [bootstrapping](bootstrapping.html) topic for more details.
+  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data. See the [Bootstrapping](bootstrapping.html) topic for more details.
   - Abandon the unsynchronized data on the detached node. To do this, follow the manual process to [force the node to rejoin](#manual-rejoin).
 
 It may also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone.
@@ -161,165 +263,6 @@ Unresponsive nodes that become responsive again will rejoin the cluster, as long
 All nodes suspend writes once they notice a problem with the cluster. After a timeout period of 5 seconds, requests to non-quorum nodes will fail. Most clients return the error: `WSREP has not yet prepared this node for application use`. Some clients may instead return `unknown error`. Nodes who have reached quorum will continue fulfilling write requests.
 
 If deployed using a proxy, a continually inactive node will cause the proxy to fail over, selecting a different MySQL node to route new queries to.
-
-## <a id="techniques"></a> Techniques
-
-### <a id="when-to-bootstrap"></a> When to Bootstrap
-
-Bootstrapping is only required when the cluster has lost quorum.
-
-Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its database is in a good state, and it reports itself as ```synced```.
-
-If quorum has *not* been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired (error resolved, node restarted, or connectivity restored).
-
-<a id="lost-quorum"></a>
-
-- Symptoms of Lost Quorum
-
-    - All nodes appear "Unhealthy" on the proxy dashboard:
-    ![3 out of 3 nodes are unhealthy.](quorum-lost.png)
-    - All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary`.
-
-            mysql> SHOW STATUS LIKE 'wsrep_cluster_status';
-            +----------------------+-------------+
-            | Variable_name        | Value       |
-            +----------------------+-------------+
-            | wsrep_cluster_status | non-Primary |
-            +----------------------+-------------+
-    - All responsive nodes respond with `ERROR 1047` when using most statement types:
-
-            mysql> select * from mysql.user;
-            ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
-
-#### <a id="bootstrapping"></a> Re-bootstrapping the cluster after quorum is lost
-
-  - The start script bootstraps node 0 only on initial deploy. If bootstrapping is necessary at a later date, it must be done manually. For more information about manually bootstrapping a cluster, see [Bootstrapping Galera](bootstrapping.html).
-  - If the single node is bootstrapped, it creates a new one-node cluster that other nodes can join.
-
-### <a id="check-replication"></a>Check Replication Status
-
-1. Obtain the IP addresses of your MySQL server by performing the following steps:
-  1. From the Pivotal Cloud Foundry (PCF) **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
-  1. Click the **Status** tab.
-  1. Record the IP addresses for all instances of the **MySQL Server** job.
-
-1. Obtain the admin credentials for your MySQL server by performing the following steps:
-  1. From the **MySQL for PCF** tile, click the **Credentials** tab.
-  1. Locate the **Mysql Admin Password** entry in the **MySQL Server** section and click **Link to Credential**.
-  1. Record the values for `identity` and `password`.
-
-1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, please see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a> for more information.
-
-1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved from the initial step and `YOUR-IDENTITY` with the `identity` value obtained from the second step. When prompted for a password, provide the `password` value obtained from the second step.
-  1. Create a dummy database in the first node:
-    <pre class="terminal">
-    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"
-    </pre>
-  1. Create a dummy table in the dummy database:
-    <pre class="terminal">
-    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "create table dummy_table (id int not null primary key auto\_increment, info text) engine='InnoDB';"
-    </pre>
-  1. Insert some data into the dummy table:
-    <pre class="terminal">
-    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"
-    </pre>
-  1. Query the table and verify that the three rows of dummy data exist on the first node:
-    <pre class="terminal">
-    mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
-    Enter password:
-    +----+----------------------+
-    | id | info                 |
-    +----+----------------------+
-    |  4 | dummy data           |
-    |  7 | more dummy data      |
-    | 10 | even more dummy data |
-    +----+----------------------+
-  </pre>
-
-1. Verify that the other nodes contain the same dummy data by performing the following steps for each of the remaining MySQL server IP addresses obtained above:
-  1. Query the dummy table, replacing `NEXT-NODE-IP-ADDRESS` with the IP address of the MySQL server instance and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
-    <pre class="terminal">
-    $ mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
-    </pre>
-  1. Examine the output of the `mysql` command and verify that the node contains the same three rows of dummy data as the other nodes.
-    <pre class="terminal">
-    +----+----------------------+
-    | id | info                 |
-    +----+----------------------+
-    |  4 | dummy data           |
-    |  7 | more dummy data      |
-    | 10 | even more dummy data |
-    +----+----------------------+
-    </pre>
-
-1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment. If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node by performing the steps in the following section.
-
-### <a id="simulating-node-failure"></a> Simulate Node Failure
-
-  - To simulate a temporary single node failure, use `kill -9` on the pid of the MySQL process. This will only temporarily disable the node because the process is being monitored by monit, which will restart the process if it is not running.
-  - To more permanently disable the process, execute `monit unmonitor mariadb_ctrl` before `kill -9`.
-  - To simulate multi-node failure without killing a node process, communication can be severed by changing the iptables config to disallow communication:
-
-    ```
-    iptables -F && # optional - flush existing rules \
-    iptables -A INPUT -p tcp --destination-port 4567 -j DROP && \
-    iptables -A INPUT -p tcp --destination-port 4568 -j DROP && \
-    iptables -A INPUT -p tcp --destination-port 4444 -j DROP && \
-    iptables -A INPUT -p tcp --destination-port 3306 && \
-    iptables -A OUTPUT -p tcp --destination-port 4567 -j DROP && \
-    iptables -A OUTPUT -p tcp --destination-port 4568 -j DROP && \
-    iptables -A OUTPUT -p tcp --destination-port 4444 -j DROP && \
-    iptables -A OUTPUT -p tcp --destination-port 3306
-    ```
-
-    To recover from this, drop the partition by flushing all rules:
-    ```
-    iptables -F
-    ```
-
-### <a id="check-state"></a> Check Cluster State
-
-Connect to each MySQL node using a MySQL client and check its status.
-
-<pre class="terminal">
-$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'
-+----------------------+---------+
-| Variable_name        | Value   |
-+----------------------+---------+
-| wsrep_cluster_status | Primary |
-+----------------------+---------+
-</pre>
-
-If all nodes are in the `Primary` component, you have a healthy cluster. If some nodes are in a `Non-primary` component, those nodes are not able to join the cluster.
-
-To check how many nodes are in the cluster perform the following command:
-
-<pre class="terminal">
-$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
-+--------------------+-------+
-| Variable_name      | Value |
-+--------------------+-------+
-| wsrep_cluster_size | 3     |
-+--------------------+-------+
-</pre>
-
-If the value of `wsrep_cluster_size` is equal to the expected number of nodes, then all nodes have joined the cluster. Otherwise, check network connectivity between nodes and use `monit status` to identify any issues preventing nodes from starting.
-
-For more information, see the official Galera documentation for [Checking Cluster Integrity](http://galeracluster.com/documentation-webpages/monitoringthecluster.html#checking-cluster-integrity).
-
-Bootstrapping is the process of (re)starting a Galera cluster.
-
-### <a id="manual-rejoin"></a> Manually Force a Node to Rejoin
-
-<p class='note warning'><strong>Note</strong>: Do not do this if there is any data on the local node that you need to preserve.</p>
-
-This procedure removes all the data from a server node, forces it to join the cluster, and creates a new copy of the cluster data on the node.
-
-  1. Log into the node as root.
-  1. Run `monit stop mariadb_ctrl`
-  1. Run `rm -rf /var/vcap/store/mysql`
-  1. Run `/var/vcap/jobs/mysql/bin/pre-start`
-  1. Run `monit start mariadb_ctrl`
 
 ## <a id="interruptor"></a>Interruptor
 
@@ -363,11 +306,9 @@ In general, if the Interruptor has activated but the Replication Canary has not 
 
 Before running the BOSH CLI commands below, you must SSH into the Ops Manager VM and log in to the BOSH Director. For more information, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a>.
 
-If you are using PCF 1.10, follow the <a href="#bosh-v1">BOSH CLI v1</a> procedures to force a node to rejoin the cluster.
-
-If you are using PCF 1.11 or later, follow the <a href="#bosh-v2">BOSH CLI v2</a> procedures to force a node to rejoin the cluster.
-
-#### <a id="bosh-v1"></a>BOSH CLI v1
+#### <a id="bosh-v1"></a>Force a Node to Rejoin a Cluster Using BOSH CLI v1
+If you are using PCF v1.10, follow the procedure below.<br>
+If you are using PCF v1.11 or later, see [Force a Node to Rejoin a Cluster Using BOSH CLI v2](#bosh-v2).
 
 1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
 
@@ -389,13 +330,16 @@ If you are using PCF 1.11 or later, follow the <a href="#bosh-v2">BOSH CLI v2</a
 
 If the `rejoin-unsafe` errand is not able to cause a node to join the cluster, log into each node which has tripped the Interruptor and follow the [manual rejoin](#manual-rejoin) instructions.
 
-#### <a id='bosh-v2'></a>BOSH CLI v2
+#### <a id='bosh-v2'></a>Force a Node to Rejoin a Cluster Using BOSH CLI v2
+If you are using PCF v1.11 or later, follow the procedure below.<br>
+If you are using PCF v1.10, see [Force a Node to Rejoin a Cluster Using BOSH CLI v1](#bosh-v1).
+
 1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
 
-1. Run `bosh run-errand rejoin-unsafe` to force a node to rejoin the cluster:
+1. Run `bosh2 run-errand rejoin-unsafe` to force a node to rejoin the cluster:
 
     <pre class="terminal">
-    $ bosh run-errand rejoin-unsafe
+    $ bosh2 run-errand rejoin-unsafe
     [...]
     [stdout]
     Started rejoin-unsafe errand ...
