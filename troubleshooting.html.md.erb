@@ -3,17 +3,6 @@ title: Troubleshooting and Diagnostics
 owner: MySQL
 ---
 
-<style>
-    .note.warning {
-        background-color: #fdd;
-        border-color: #fbb
-    }
-
-    .note.warning:before {
-        color: #f99;
-     }
-</style>
-
 This topic describes how to diagnose and troubleshoot problems with MySQL for Pivotal Cloud Foundry (PCF).
 
 ## <a id="diagnosing"></a> Diagnose Problems
@@ -42,14 +31,15 @@ For more diagnostic techniques, see the following section.
 
 If your cluster has lost quorum, you must bootstrap it.
 
-To determine whether you need to bootstrap your cluster, check whether the cluster has lost quorum. See the [Bootstrapping](bootstrapping.html#when-to-bootstrap) topic for more information.
+To determine whether you need to bootstrap your cluster, check whether the cluster has lost quorum.
+For more information, see [Bootstrapping](bootstrapping.html#when-to-bootstrap) for more information.
 
 #### <a id="check-replication"></a>Check Replication Status
 
 Perform the following steps to check the replication status:
 
 1. Obtain the IP addresses of your MySQL server by performing the following steps:
-  1. From the Pivotal Cloud Foundry (PCF) **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
+  1. From the PCF **Installation Dashboard**, click the **MySQL for Pivotal Cloud Foundry** tile.
   1. Click the **Status** tab.
   1. Record the IP addresses for all instances of the **MySQL Server** job.
 
@@ -58,9 +48,11 @@ Perform the following steps to check the replication status:
   1. Locate the **Mysql Admin Password** entry in the **MySQL Server** section and click **Link to Credential**.
   1. Record the values for `identity` and `password`.
 
-1. SSH into the Ops Manager VM. Because the procedures vary by IaaS, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a> for more information.
+1. SSH into the Ops Manager VM.
+   Because the procedures vary by IaaS, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a> for more information.
 
-1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved from the initial step and `YOUR-IDENTITY` with the `identity` value obtained from the second step. When prompted for a password, provide the `password` value obtained from the second step.
+1. From the Ops Manager VM, place some data in the first node by performing the following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the first node retrieved from the initial step and `YOUR-IDENTITY` with the `identity` value obtained from the second step.
+   When prompted for a password, provide the `password` value obtained from the second step.
   1. Create a dummy database in the first node:
     <pre class="terminal">
     $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"
@@ -102,7 +94,8 @@ Perform the following steps to check the replication status:
     +----+----------------------+
     </pre>
 
-1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment. If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
+1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment.
+   If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
 
 #### <a id="check-state"></a> Check Cluster State
 
@@ -117,7 +110,8 @@ $ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status
 +----------------------+---------+
 </pre>
 
-If all nodes are in the `Primary` component, you have a healthy cluster. If some nodes are in a `Non-primary` component, those nodes are not able to join the cluster.
+If all nodes are in the `Primary` component, you have a healthy cluster.
+If some nodes are in a `Non-primary` component, those nodes are not able to join the cluster.
 
 To check how many nodes are in the cluster, perform the following command:
 
@@ -130,13 +124,22 @@ $ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";
 +--------------------+-------+
 </pre>
 
-If the value of `wsrep_cluster_size` is equal to the expected number of nodes, then all nodes have joined the cluster. Otherwise, check network connectivity between nodes and use `monit status` to identify any issues preventing nodes from starting.
+If the value of `wsrep_cluster_size` is equal to the expected number of nodes, then all nodes have joined the cluster.
+Otherwise, check network connectivity between nodes and use `monit status` to identify any issues preventing nodes from starting.
 
 For more information, see the official Galera documentation for [Checking Cluster Integrity](http://galeracluster.com/documentation-webpages/monitoringthecluster.html#checking-cluster-integrity).
 
-To restart your cluster, see the [Bootstrapping](bootstrapping.html) topic.
+To restart your cluster, see [Bootstrapping](bootstrapping.html).
 
 ## <a id='troubleshooting'></a>Troubleshoot Problems
+
+This section lists symptoms, solutions, and explanations for the following common problems:
+
++ [Many Replication Errors in Logs](#replication-errors)
++ [Accidental Deletion of Service Plan](#service-plan-deletion)
++ [No Space Left](#no-space)
++ [Node Unable to Rejoin](#wont-rejoin)
++ [Unresponsive Node(s)](#unresponsive)
 
 ### <a id="replication-errors"></a> Many Replication Errors in Logs
 
@@ -146,7 +149,8 @@ You see many replication errors in the MySQL logs.
 
 #### Explanation
 
-Unless the GRA files show a clear execution error, such as running out of disk space, seeing many replication errors in your logs is a normal behavior. The MySQL for PCF team is developing a more advanced monitoring solution to detect the failure case and alert operators in the future.
+Unless the GRA files show a clear execution error, such as running out of disk space, seeing many replication errors in your logs is a normal behavior.
+The MySQL for PCF team is developing a more advanced monitoring solution to detect the failure case and alert operators in the future.
 
 Occasionally, replication errors in the MySQL logs resemble the following:
 
@@ -156,18 +160,26 @@ Occasionally, replication errors in the MySQL logs resemble the following:
 160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
 </pre>
 
-This error occurs when an app issues an `ALTER TABLE` command that fails to apply to the current schema. This is typically the result of user error.
+This error occurs when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
+This is typically the result of user error.
 
-The MySQL node that receives the request processes it normally. If it fails, the node sends the failure to the app, and the app must determine the next step. 
-In a Galera cluster, however, all DDL is replicated, and all replication failures are logged. Therefore, the bad `ALTER TABLE` command will be run by both slave nodes. If it fails, the slave nodes will log it as a "replication failure" since they cannot tell the difference.
+The MySQL node that receives the request processes it normally.
+If it fails, the node sends the failure to the app and the app must determine the next step. 
+In a Galera cluster, however, all DDL is replicated and all replication failures are logged.
+Therefore, the bad `ALTER TABLE` command is run by both slave nodes.
+If it fails, the slave nodes log it as a "replication failure" because they cannot tell the difference.
 
-Cases where a valid DDL works on some nodes yet fails on others are rare. Usually those cases are limited to problems with running out of disk space or working memory. 
+Cases where a valid DDL works on some nodes yet fails on others are rare.
+Usually those cases are limited to problems with running out of disk space or working memory. 
 
-An article from [Percona](https://www.percona.com/blog/2014/07/21/a-schema-change-inconsistency-with-galera-cluster-for-mysql/) suggests that the schemata can get out of sync. However, the author had to deliberately switch a node to RSU, which MySQL for PCF never does except during SST. The article offers a demonstration of what is possible, but does not explain how a customer may actually experience this issue in production.
+An article from [Percona](https://www.percona.com/blog/2014/07/21/a-schema-change-inconsistency-with-galera-cluster-for-mysql/) suggests that the schemata can get out of sync.
+However, the author had to deliberately switch a node to RSU, which MySQL for PCF never does except during SST.
+The article offers a demonstration of what is possible, but does not explain how a customer may actually experience this issue in production.
 
 #### Solution
 
-Disregard the replication errors as a normal behavior. If you see the "ALTER TABLE" error, fix the user error that produced it.
+Disregard the replication errors as a normal behavior.
+If you see the "ALTER TABLE" error, fix the user error that produced it.
 
 ### <a id="service-plan-deletion"></a> Accidental Deletion of Service Plan ##
 
@@ -184,7 +196,7 @@ A service plan is only unrecoverable if you perform all of the following steps i
 1. Click **Save**.
 1. Return to the Ops Manager Installation Dashboard, and click **Apply Changes**.
 
-The deploy will eventually fail with the following error:
+The deploy eventually fails with the following error:
 
 <pre class="terminal">
 Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service
@@ -192,11 +204,18 @@ Server error, status code: 502, error code: 270012, message: Service broker cata
 
 #### Solution
 
-Once you has deployed with **Apply Changes**, the original plan cannot be recovered. For as long as service instances of that plan exist, you may not enter a new plan of the same name. At this point, the only workaround is to create a new plan with the same specifications, but specify a different name. Existing instances will continue to appear under the old plan name, but new instances will need to be created using the new plan name.
+After you have deployed with **Apply Changes**, the original plan cannot be recovered.
+For as long as service instances of that plan exist, you may not enter a new plan of the same name.
+At this point, the only workaround is to create a new plan with the same specifications, but specify a different name.
+Existing instances continue to appear under the old plan name, but new instances need to be created using the new plan name.
 
-If you have performed steps 1 and 2 in the above sequence, do not click **Save**. Return to the Ops Manager Installation Dashboard. Any accidental changes will be discarded.
+If you have performed steps 1 and 2 in the above sequence, do not click **Save**.
+Return to the Ops Manager Installation Dashboard.
+Any accidental changes are discarded.
 
-If you have performed steps 1, 2 and 3 in the above sequence, do not click **Apply Changes.** Return to the **Ops Manager Installation Dashboard** and click the **Revert** button. Any accidental changes will be discarded.
+If you have performed steps 1, 2, and 3 in the above sequence, do not click **Apply Changes.**
+Return to the **Ops Manager Installation Dashboard** and click the **Revert** button.
+Any accidental changes are discarded.
 
 ### <a id="no-space"></a> No Space Left
 
@@ -206,7 +225,9 @@ You receive an error that reports MySQL has no space left.
 
 #### Explanation
 
-If a server simultaneously processes multiple large queries that require [temporary tables](./architecture.html#temp-tables), they may use more disk space than allocated to the MySQL nodes. Queries may return `no space left` errors. 
+If a server simultaneously processes multiple large queries that require [temporary tables](./architecture.html#temp-tables),
+they may use more disk space than allocated to the MySQL nodes.
+Queries might return `no space left` errors. 
 
 Users can see if a query is using a temporary table by using the `EXPLAIN` command and looking for `Using temporary` in the output.
 
@@ -222,18 +243,22 @@ A MySQL node is unable to rejoin a cluster.
 
 #### Explanation
 
-Existing server nodes restarted with `monit` should automatically join the cluster. If a detached existing node fails to join the cluster, it may be because its sequence number (`seqno`) is higher than those of the nodes with quorum.
+Existing server nodes restarted with `monit` should automatically join the cluster.
+If a detached existing node fails to join the cluster, it might be because its sequence number (`seqno`) is higher than those of the nodes with quorum.
 
-A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks. Check this by looking at the node's error log at `/var/vcap/sys/log/mysql/mysql.err.log`.
+A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks.
+Check this by looking at the node's error log at `/var/vcap/sys/log/mysql/mysql.err.log`.
 
 #### Solution
 
 If the detached node has a higher sequence number than the primary component, perform one of the following procedures to restore the cluster:
 
-  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data. See the [Bootstrapping](bootstrapping.html) topic for more details.
-  - Abandon the unsynchronized data on the detached node. To do this, follow the manual process to [force the node to rejoin](#manual-rejoin).
+  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data.
+    See [Bootstrapping](bootstrapping.html) for more details.
+  - Abandon the unsynchronized data on the detached node.
+    To do this, follow the manual process to [force the node to rejoin](#manual-rejoin).
 
-It may also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone.
+It might also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone.
 
 ### <a id="unresponsive"></a> Unresponsive Node(s)
 
@@ -251,38 +276,55 @@ A node can become unresponsive for a number of reasons:
 - VM failure
 - the [Interruptor](#interruptor) has prevented a node from starting
 
-Unresponsive nodes will stop responding to queries and, after timing out, leave the cluster.
+Unresponsive nodes stop responding to queries and, after timing out, leave the cluster.
 
-Nodes will be marked as unresponsive or inactive under either of the following circumstances:
+Nodes are marked as unresponsive or inactive under either of the following circumstances:
 
 - If they fail to respond to one node within 15 seconds
 - If they fail to respond to all other nodes within 5 seconds
 
-Unresponsive nodes that become responsive again will rejoin the cluster, as long as they are on the same IP which is pre-configured in the `gcomm` address on all of the other running nodes and a quorum is held by the remaining nodes.
+Unresponsive nodes that become responsive again will rejoin the cluster,
+as long as they are on the same IP which is pre-configured in the `gcomm` address on all of the other running nodes and a quorum is held by the remaining nodes.
 
-All nodes suspend writes once they notice a problem with the cluster. After a timeout period of 5 seconds, requests to non-quorum nodes will fail. Most clients return the error: `WSREP has not yet prepared this node for application use`. Some clients may instead return `unknown error`. Nodes who have reached quorum will continue fulfilling write requests.
+All nodes suspend writes once they notice a problem with the cluster.
+After a timeout period of 5 seconds, requests to non-quorum nodes fail.
+Most clients return the error: `WSREP has not yet prepared this node for application use`.
+Some clients may instead return `unknown error`.
+Nodes who have reached quorum continue fulfilling write requests.
 
-If deployed using a proxy, a continually inactive node will cause the proxy to fail over, selecting a different MySQL node to route new queries to.
+If deployed using a proxy, a continually inactive node causes the proxy to fail over, selecting a different MySQL node to route new queries to.
 
 ## <a id="interruptor"></a>Interruptor
 
-There are rare cases in which a MySQL node silently falls out of sync with the other nodes of the cluster. The [Replication Canary](#repcanary) closely monitors the cluster for this condition. However, if the Replication Canary does not detect the failure, the Interruptor provides a solution for preventing data loss.
+There are rare cases in which a MySQL node silently falls out of sync with the other nodes of the cluster.
+The [Replication Canary](#repcanary) closely monitors the cluster for this condition.
+However, if the Replication Canary does not detect the failure, the Interruptor provides a solution for preventing data loss.
 
 ### <a id="overview-interuptor"></a>How it Works
 
 
-If the node receiving traffic from the proxy falls out of sync with the cluster, it generates a dataset that the other nodes do not have. If the same node later receives a transaction that is not compatible with the datasets of the other nodes, it discards its local dataset and adopts the datasets of the other nodes. This is generally desired behavior, unless data replication is not functioning across the cluster. The node could destroy valid data by discarding its local dataset. When enabled, the Interruptor prevents the node from destroying its local dataset if there is a risk of losing valid data.
+If the node receiving traffic from the proxy falls out of sync with the cluster, it generates a dataset that the other nodes do not have.
+If the same node later receives a transaction that is not compatible with the datasets of the other nodes,
+it discards its local dataset and adopts the datasets of the other nodes.
+This is generally desired behavior, unless data replication is not functioning across the cluster.
+The node could destroy valid data by discarding its local dataset.
+When enabled, the Interruptor prevents the node from destroying its local dataset if there is a risk of losing valid data.
 
   <p class='note'><strong>Note</strong>: If you receive a notification that the Interruptor has activated, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the failure, and provide guidance regarding a solution.</p>
 
 An out-of-sync node employs one of two [two modes](http://galeracluster.com/documentation-webpages/statetransfer.html) to catch up with the cluster:
 
-* **Incremental State Transfer (IST)**: If a node has been out of the cluster for a relatively short period of time, such as a reboot, the node invokes IST. This is not a dangerous operation, and the Interruptor does not interfere.
-* **State Snapshot Transfer (SST)**: If a node has been unavailable for an extended amount of time, such as a hardware failure that requires physical repair, the node may invoke SST. In cases of failed replication, SST can cause data loss. When enabled, the Interruptor prevents this method of recovery.
+* **Incremental State Transfer (IST)**: If a node has been out of the cluster for a relatively short period of time, such as a reboot, the node invokes IST.
+  This is not a dangerous operation, and the Interruptor does not interfere.
+* **State Snapshot Transfer (SST)**: If a node has been unavailable for an extended amount of time,
+  such as a hardware failure that requires physical repair, the node might invoke SST.
+  In cases of failed replication, SST can cause data loss.
+  When enabled, the Interruptor prevents this method of recovery.
 
 ### <a id="sample-interruptor"></a>Sample Notification E-mail
 
-The Interruptor sends an email through the Elastic Runtime notification service when it prevents a node from rejoining a cluster. See the following example:
+The Interruptor sends an email through the Elastic Runtime notification service when it prevents a node from rejoining a cluster.
+See the following example:
 
     Subject: CF Notification: p-mysql alert 100
 
@@ -293,7 +335,8 @@ The Interruptor sends an email through the Elastic Runtime notification service 
 
 ### <a id="logs"></a>Interruptor Logs
 
-You can confirm that the Interruptor has activated by examining `/var/vcap/sys/log/mysql/mysql.err.log` on the failing node. The log contains the following message:
+You can confirm that the Interruptor has activated by examining `/var/vcap/sys/log/mysql/mysql.err.log` on the failing node.
+The log contains the following message:
 
 <pre class="terminal">
 WSREP_SST: [ERROR] ##################################################################################### (20160610 04:33:21.338)
@@ -302,9 +345,11 @@ WSREP_SST: [ERROR] #############################################################
 
 ### <a id="force-rejoin"></a>Override the Interruptor
 
-In general, if the Interruptor has activated but the Replication Canary has not triggered, it is safe for the node to rejoin the cluster. You can check the health of the remaining nodes in the cluster by following the [Check Replication Status](troubleshooting.html#check-replication) instructions used before scaling from clustered to single-node mode.
+In general, if the Interruptor has activated but the Replication Canary has not triggered, it is safe for the node to rejoin the cluster.
+You can check the health of the remaining nodes in the cluster by following the [Check Replication Status](troubleshooting.html#check-replication) instructions used before scaling from clustered to single-node mode.
 
-Before running the BOSH CLI commands below, you must SSH into the Ops Manager VM and log in to the BOSH Director. For more information, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a>.
+Before running the BOSH CLI commands below, you must SSH into the Ops Manager VM and log in to the BOSH Director.
+For more information, see <a href="http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare">Advanced Troubleshooting with the BOSH CLI</a>.
 
 #### <a id="bosh-v1"></a>Force a Node to Rejoin a Cluster Using BOSH CLI v1
 If you are using PCF v1.10, follow the procedure below.<br>
@@ -356,7 +401,8 @@ If the `rejoin-unsafe` errand is not able to cause a node to join the cluster, l
 
 ### <a id="disable-interruptor"></a>Disable the Interruptor
 
-The Interruptor is enabled by default. To disable the Interruptor:
+The Interruptor is enabled by default.
+To disable the Interruptor:
 
 In the **Advanced Options** section, under **Enable optional protections**, un-check  **Prevent node auto re-join**.
 
