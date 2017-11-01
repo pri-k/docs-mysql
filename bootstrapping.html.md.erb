@@ -303,7 +303,9 @@ To restore your BOSH configuration to it's previous state, follow the previous s
 
             $ monit start mariadb_ctrl
 
-        If the node is prevented from starting by the Interruptor, use the [manual steps](monitoring-mysql.html#manual-rejoin) to force an SST.
+        If the node is prevented from starting by the Interruptor, perform the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
+
+        <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
 
     1. Verify that the new nodes have successfully joined the cluster. The following command outputs the total number of nodes in the cluster:
 
