@@ -32,7 +32,7 @@ For more diagnostic techniques, see the following section.
 If your cluster has lost quorum, you must bootstrap it.
 
 To determine whether you need to bootstrap your cluster, check whether the cluster has lost quorum.
-For more information, see [Bootstrapping](bootstrapping.html#when-to-bootstrap) for more information.
+For more information, see [Bootstrapping](bootstrapping.html) for more information.
 
 #### <a id="check-replication"></a>Check Replication Status
 
@@ -225,7 +225,7 @@ You receive an error that reports MySQL has no space left.
 
 #### Explanation
 
-If a server simultaneously processes multiple large queries that require [temporary tables](./architecture.html#temp-tables),
+If a server simultaneously processes multiple large queries that require [Temporary Tables](./architecture.html#temp-tables),
 they may use more disk space than allocated to the MySQL nodes.
 Queries might return `no space left` errors. 
 
@@ -298,7 +298,7 @@ If deployed using a proxy, a continually inactive node causes the proxy to fail 
 ## <a id="interruptor"></a>Interruptor
 
 There are rare cases in which a MySQL node silently falls out of sync with the other nodes of the cluster.
-The [Replication Canary](#repcanary) closely monitors the cluster for this condition.
+The [Replication Canary](./monitoring-mysql.html#repcanary) closely monitors the cluster for this condition.
 However, if the Replication Canary does not detect the failure, the Interruptor provides a solution for preventing data loss.
 
 ### <a id="overview-interuptor"></a>How it Works
@@ -313,7 +313,7 @@ When enabled, the Interruptor prevents the node from destroying its local datase
 
   <p class='note'><strong>Note</strong>: If you receive a notification that the Interruptor has activated, it is critical that you contact Pivotal support immediately.</strong> Support will work with you to determine the nature of the failure, and provide guidance regarding a solution.</p>
 
-An out-of-sync node employs one of two [two modes](http://galeracluster.com/documentation-webpages/statetransfer.html) to catch up with the cluster:
+An out-of-sync node employs one of two modes to catch up with the cluster:
 
 * **Incremental State Transfer (IST)**: If a node has been out of the cluster for a relatively short period of time, such as a reboot, the node invokes IST.
   This is not a dangerous operation, and the Interruptor does not interfere.
@@ -321,6 +321,9 @@ An out-of-sync node employs one of two [two modes](http://galeracluster.com/docu
   such as a hardware failure that requires physical repair, the node might invoke SST.
   In cases of failed replication, SST can cause data loss.
   When enabled, the Interruptor prevents this method of recovery.
+
+For more information about these modes,
+see [State Transfers](http://galeracluster.com/documentation-webpages/statetransfer.html) in the Galera documentation.
 
 ### <a id="sample-interruptor"></a>Sample Notification E-mail
 
@@ -358,7 +361,7 @@ If you are using PCF v1.11 or later, follow the <a href="#bosh-v2">BOSH CLI v2</
 
 #### <a id="bosh-v1"></a>BOSH CLI v1
 
-1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html#manifest) with the BOSH CLI.
+1. Follow these instructions to [choose the p-mysql manifest](bootstrapping.html) with the BOSH CLI.
 
 1. Run `bosh run errand rejoin-unsafe` to force a node to rejoin the cluster:
 
