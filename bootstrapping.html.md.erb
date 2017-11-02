@@ -7,163 +7,189 @@ This topic describes how to bootstrap your MySQL cluster in the event of a clust
 
 ## <a id="when-to-bootstrap"></a> When to Bootstrap ##
 
-Bootstrapping is only required when the cluster has lost quorum. See the [Troubleshooting](troubleshooting.html#check-state) topic for how to check the state of your cluster.
+To determine whether you need to bootstrap your cluster, you must check whether the cluster has lost quorum. Bootstrapping is only required when the cluster has lost quorum. See [Check Cluster State](#check-state) for more information about checking the state of your cluster.
 
-Quorum is lost when less than half of the nodes can communicate with each other (for longer than the configured grace period). In Galera terminology, if a node can communicate with the rest of the cluster, its database is in a good state, and it reports itself as ```synced```.
+Quorum is lost when less than half of the nodes can communicate with each other for longer than the configured grace period. In Galera terminology, if a node can communicate with the rest of the cluster, its database is in a good state, and it reports itself as ```synced```.
 
-If quorum has *not* been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired (error resolved, node restarted, or connectivity restored).
+If quorum has not been lost, individual unhealthy nodes should automatically rejoin the cluster once repaired, which means the error is resolved, the node is restarted, or connectivity is restored.
 
-<a id="lost-quorum"></a>
+To check whether your cluster has lost quorum, look for the following symptoms:
 
-- Symptoms of Lost Quorum
+- All nodes appear "Unhealthy" on the proxy dashboard, as in the following screenshot:
+![3 out of 3 nodes are unhealthy.](quorum-lost.png)
+- All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary` in the MySQL client.
 
-    - All nodes appear "Unhealthy" on the proxy dashboard:
-    ![3 out of 3 nodes are unhealthy.](quorum-lost.png)
-    - All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary`.
+        mysql> SHOW STATUS LIKE 'wsrep_cluster_status';
+        +----------------------+-------------+
+        | Variable_name        | Value       |
+        +----------------------+-------------+
+        | wsrep_cluster_status | non-Primary |
+        +----------------------+-------------+
+- All responsive nodes respond with `ERROR 1047` when using most statement types in the MySQL client:
 
-            mysql> SHOW STATUS LIKE 'wsrep_cluster_status';
-            +----------------------+-------------+
-            | Variable_name        | Value       |
-            +----------------------+-------------+
-            | wsrep_cluster_status | non-Primary |
-            +----------------------+-------------+
-    - All responsive nodes respond with `ERROR 1047` when using most statement types:
+        mysql> select * from mysql.user;
+        ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
 
-            mysql> select * from mysql.user;
-            ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
+If your cluster has lost quorum, see the [Bootstrapping](bootstrapping.html) topic for information about manually bootstrapping a cluster.
 
-See [Cluster Behavior](architecture.html#behavior) for more details about determining cluster state.
+Keep in mind the following:
+
+- The start script bootstraps node 0 only on initial deploy. If bootstrapping is necessary at a later date, it must be done manually. 
+- If the single node is bootstrapped, it creates a new one-node cluster that other nodes can join.
 
 ## <a id="bootstrapping"></a>Bootstrapping ##
 
-Bootstrapping requires you to run commands from the [Ops Manager Director](http://docs.pivotal.io/pivotalcf/customizing/index.html). Follow the instructions to use the [BOSH CLI](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cli) for command-line access.
+Before running the bootstrapping procedures below, you must SSH into the Ops Manager VM and log in to the BOSH Director. For more information, see [Prepare to Use the BOSH CLI](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare).
 
 <p class="note"><strong>Note:</strong> The examples in these instructions reflect a three-node MySQL for Pivotal Cloud Foundry (PCF) deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
 
 ### <a id="assisted-bootstrap"></a>Assisted Bootstrap ###
 
-MySQL for PCF versions 1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. It is still necessary to manually initiate the bootstrap process, but using this errand reduces the number of manual steps necessary to complete the process.
+MySQL for PCF v1.8.0 and later include a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. It is still necessary to manually initiate the bootstrap process, but using this errand reduces the number of manual steps necessary to complete the process.
 
 In most cases, running the errand is sufficient, however there are some conditions which require additional steps.
 
-#### <a id="how-it-works"></a>How it works ####
+#### <a id="how-it-works"></a>How It Works ####
 
 The bootstrap errand simply automates the steps in the manual bootstrapping process documented below. It finds the node with the highest transaction sequence number, and asks it to start up by itself (i.e. in bootstrap mode), then asks the remaining nodes to join the cluster.
 
-### <a id="cluster-disrupted"></a>Scenario 1: Virtual Machines running, Cluster Disrupted ###
+### <a id="cluster-disrupted"></a>Scenario 1: Virtual Machines Running, Cluster Disrupted ###
 
-If the nodes are up and running, but the cluster has been disrupted, the jobs will appear as `failing.` The output of `bosh instances` will look like this:
+In this scenario, the nodes are up and running, but the cluster has been disrupted.
 
-    $ bosh instances
-    [...]
-    +--------------------------------------------------+---------+------------------------------------------------+------------+
-    | Instance                                         | State   | Resource Pool                                  | IPs        |
-    +--------------------------------------------------+---------+------------------------------------------------+------------+
-    | cf-mysql-broker-partition-a813339fde9330e9b905/0 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 192.0.2.61 |
-    | cf-mysql-broker-partition-a813339fde9330e9b905/1 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 192.0.2.62 |
-    | mysql-partition-a813339fde9330e9b905/0           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.55 |
-    | mysql-partition-a813339fde9330e9b905/1           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.56 |
-    | mysql-partition-a813339fde9330e9b905/2           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.57 |
-    | proxy-partition-a813339fde9330e9b905/0           | running | proxy-partition-a813339fde9330e9b905           | 192.0.2.59 |
-    | proxy-partition-a813339fde9330e9b905/1           | running | proxy-partition-a813339fde9330e9b905           | 192.0.2.60 |
-    +--------------------------------------------------+---------+------------------------------------------------+------------+
-    
-In this situation, it is OK to immediately try the bootstrap errand:
+To determine whether the cluster has been disrupted, use the BOSH CLI to list the jobs and see if they are `failing`. 
+
+If you are using PCF v1.10, use the BOSH CLI v1 command `bosh vms`.
+
+If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`.
+
+The output will resemble the following:
+
+<pre class="terminal">
++--------------------------------------------------+---------+------------------------------------------------+------------+
+| Instance                                         | State   | Resource Pool                                  | IPs        |
++--------------------------------------------------+---------+------------------------------------------------+------------+
+| cf-mysql-broker-partition-a813339fde9330e9b905/0 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 192.0.2.61 |
+| cf-mysql-broker-partition-a813339fde9330e9b905/1 | running | cf-mysql-broker-partition-a813339fde9330e9b905 | 192.0.2.62 |
+| mysql-partition-a813339fde9330e9b905/0           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.55 |
+| mysql-partition-a813339fde9330e9b905/1           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.56 |
+| mysql-partition-a813339fde9330e9b905/2           | failing | mysql-partition-a813339fde9330e9b905           | 192.0.2.57 |
+| proxy-partition-a813339fde9330e9b905/0           | running | proxy-partition-a813339fde9330e9b905           | 192.0.2.59 |
+| proxy-partition-a813339fde9330e9b905/1           | running | proxy-partition-a813339fde9330e9b905           | 192.0.2.60 |
++--------------------------------------------------+---------+------------------------------------------------+------------+
+</pre>
+
+In this situation, run the bootstrap errand:
 
 1. Log in to the BOSH director.
 1. Select the correct deployment.
-1. Run `bosh run errand bootstrap`.
+1. If you are using PCF v1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
+</br></br> If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
+
 
 You will see many lines of output, eventually followed by:
 
-    Bootstrap errand completed
+<pre class="terminal">
+Bootstrap errand completed
 
-    [stderr]
-    + echo 'Started bootstrap errand ...'
-    + JOB_DIR=/var/vcap/jobs/bootstrap
-    + CONFIG_PATH=/var/vcap/jobs/bootstrap/config/config.yml
-    + /var/vcap/packages/bootstrap/bin/cf-mysql-bootstrap -configPath=/var/vcap/jobs/bootstrap/config/config.yml
-    + echo 'Bootstrap errand completed'
-    + exit 0
+[stderr]
++ echo 'Started bootstrap errand ...'
++ JOB_DIR=/var/vcap/jobs/bootstrap
++ CONFIG_PATH=/var/vcap/jobs/bootstrap/config/config.yml
++ /var/vcap/packages/bootstrap/bin/cf-mysql-bootstrap -configPath=/var/vcap/jobs/bootstrap/config/config.yml
++ echo 'Bootstrap errand completed'
++ exit 0
 
-    Errand `bootstrap' completed successfully (exit code 0)
+Errand `bootstrap' completed successfully (exit code 0)
+</pre>
         
 There are times when this won't work immediately. Unfortunately, sometimes it is best to wait and try again a few minutes later.
 
 
 ### <a id="vms-terminated"></a>Scenario 2: Virtual Machines Terminated or Lost ###
 
-In more severe circumstances, such as power failure, it's possible that all of your VMs have been lost. They'll need to be recreated before you can begin to recover the cluster. In this case, you'll see the nodes appear as `unknown/unknown` in the BOSH output.
+In more severe circumstances, such as power failure, it's possible that all of your VMs have been lost. They'll need to be recreated before you can begin to recover the cluster. In this scenario, you'll see the nodes appear as `unknown/unknown` in the BOSH output.
 
-    $ bosh instances
-    +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-    | Instance                                         | State              | Resource Pool                                  | IPs        |
-    +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-    | unknown/unknown                                  | unresponsive agent |                                                |            |
-    +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-    | unknown/unknown                                  | unresponsive agent |                                                |            |
-    +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-    | unknown/unknown                                  | unresponsive agent |                                                |            |
-    +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-    | cf-mysql-broker-partition-e97dae91e44681e0b543/0 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 192.0.2.65 |
-    | cf-mysql-broker-partition-e97dae91e44681e0b543/1 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 192.0.2.66 |
-    +--------------------------------------------------+--------------------+------------------------------------------------+------------+
-    | proxy-partition-e97dae91e44681e0b543/0           | running            | proxy-partition-e97dae91e44681e0b543           | 192.0.2.63 |
-    | proxy-partition-e97dae91e44681e0b543/1           | running            | proxy-partition-e97dae91e44681e0b543           | 192.0.2.64 |
-    +--------------------------------------------------+--------------------+------------------------------------------------+------------+
+If you are using PCF v1.10, use the BOSH CLI v1 command `bosh vms`.
+
+If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`.
+
+The output will resemble the following:
+
+<pre class="terminal">
++--------------------------------------------------+--------------------+------------------------------------------------+------------+
+| Instance                                         | State              | Resource Pool                                  | IPs        |
++--------------------------------------------------+--------------------+------------------------------------------------+------------+
+| unknown/unknown                                  | unresponsive agent |                                                |            |
++--------------------------------------------------+--------------------+------------------------------------------------+------------+
+| unknown/unknown                                  | unresponsive agent |                                                |            |
++--------------------------------------------------+--------------------+------------------------------------------------+------------+
+| unknown/unknown                                  | unresponsive agent |                                                |            |
++--------------------------------------------------+--------------------+------------------------------------------------+------------+
+| cf-mysql-broker-partition-e97dae91e44681e0b543/0 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 192.0.2.65 |
+| cf-mysql-broker-partition-e97dae91e44681e0b543/1 | running            | cf-mysql-broker-partition-e97dae91e44681e0b543 | 192.0.2.66 |
++--------------------------------------------------+--------------------+------------------------------------------------+------------+
+| proxy-partition-e97dae91e44681e0b543/0           | running            | proxy-partition-e97dae91e44681e0b543           | 192.0.2.63 |
+| proxy-partition-e97dae91e44681e0b543/1           | running            | proxy-partition-e97dae91e44681e0b543           | 192.0.2.64 |
++--------------------------------------------------+--------------------+------------------------------------------------+------------+
+</pre>
 
 #### <a id="vm-recovery"></a>Recover Terminated or Lost VMs ####
 
 To recover your VMs, perform the following steps:
 
-1. If you use the VM [Resurrector](http://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling), disable it.
-1. Run the BOSH Cloud Check interactive command. When prompted, select **Recreate VM**. If this option fails, select **Delete VM reference**.
+1. If you use the [VM Resurrector](http://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling), disable it.
+1. Run the BOSH Cloud Check interactive command.
+</br>If you are using PCF v1.10, use the BOSH CLI v1 command `bosh cck`.
+</br>If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV -d YOUR-DEP cck`.
+
+When prompted, select **Recreate VM**. If this option fails, select **Delete VM reference**.
+
+The output will resemble the following:
     
-    ```
-    $ bosh cck
+<pre class="terminal">
+Acting as user 'director' on deployment 'cf-e82cbf44613594d8a155' on 'p-bosh-30c19bdd43c55c627d70'
+Performing cloud check...
 
-      Acting as user 'director' on deployment 'cf-e82cbf44613594d8a155' on 'p-bosh-30c19bdd43c55c627d70'
-    Performing cloud check...
+Director task 34
+Started scanning 22 vms
+Started scanning 22 vms > Checking VM states. Done (00:00:10)
+Started scanning 22 vms > 19 OK, 0 unresponsive, 3 missing, 0 unbound, 0 out of sync. Done (00:00:00)
+Done scanning 22 vms (00:00:10)
 
-    Director task 34
-      Started scanning 22 vms
-      Started scanning 22 vms > Checking VM states. Done (00:00:10)
-      Started scanning 22 vms > 19 OK, 0 unresponsive, 3 missing, 0 unbound, 0 out of sync. Done (00:00:00)
-         Done scanning 22 vms (00:00:10)
+Started scanning 10 persistent disks
+Started scanning 10 persistent disks > Looking for inactive disks. Done (00:00:02)
+Started scanning 10 persistent disks > 10 OK, 0 missing, 0 inactive, 0 mount-info mismatch. Done (00:00:00)
+Done scanning 10 persistent disks (00:00:02)
 
-      Started scanning 10 persistent disks
-      Started scanning 10 persistent disks > Looking for inactive disks. Done (00:00:02)
-      Started scanning 10 persistent disks > 10 OK, 0 missing, 0 inactive, 0 mount-info mismatch. Done (00:00:00)
-         Done scanning 10 persistent disks (00:00:02)
+Task 34 done
 
-    Task 34 done
+Started   2015-11-26 01:42:42 UTC
+Finished  2015-11-26 01:42:54 UTC
+Duration  00:00:12
 
-    Started   2015-11-26 01:42:42 UTC
-    Finished  2015-11-26 01:42:54 UTC
-    Duration  00:00:12
+Scan is complete, checking if any problems found.
 
-    Scan is complete, checking if any problems found.
+Found 3 problems
 
-    Found 3 problems
+Problem 1 of 3: VM with cloud ID `i-afe2801f' missing.
+1. Skip for now
+2. Recreate VM
+3. Delete VM reference
+Please choose a resolution [1 - 3]: 2
 
-    Problem 1 of 3: VM with cloud ID `i-afe2801f' missing.
-        1. Skip for now
-        2. Recreate VM
-        3. Delete VM reference
-    Please choose a resolution [1 - 3]: 2
+Problem 2 of 3: VM with cloud ID `i-36741a86' missing.
+1. Skip for now
+2. Recreate VM
+3. Delete VM reference
+Please choose a resolution [1 - 3]: 2
 
-    Problem 2 of 3: VM with cloud ID `i-36741a86' missing.
-        1. Skip for now
-        2. Recreate VM
-        3. Delete VM reference
-    Please choose a resolution [1 - 3]: 2
-
-    Problem 3 of 3: VM with cloud ID `i-ce751b7e' missing.
-        1. Skip for now
-        2. Recreate VM
-        3. Delete VM reference
-    Please choose a resolution [1 - 3]: 2
-    ```
+Problem 3 of 3: VM with cloud ID `i-ce751b7e' missing.
+1. Skip for now
+2. Recreate VM
+3. Delete VM reference
+Please choose a resolution [1 - 3]: 2
+</pre>
 
 1. Re-enable the VM Resurrector if you want to continue to use it.
 
@@ -171,28 +197,49 @@ Do not proceed to the next step until all three VMs are in the `starting` or `fa
 
 #### <a id="updating-manifest"></a>Update the BOSH Configuration ####
 
-In standard deployment, BOSH is configured to manage the cluster in a specific manner. You must change that configuration in order for the bootstrap errand to perform its work. Follow this process to make it possible for the bootstrap errand to succeed.
+In standard deployment, BOSH is configured to manage the cluster in a specific manner. You must change that configuration in order for the bootstrap errand to perform its work.
 
-1. Log in to the BOSH director.
+If you are using PCF v1.10, use the the [BOSH CLI v1](#bosh-v1) process below to make it possible for the bootstrap errand to succeed.
+
+If you are using PCF v1.11 or later, use the the [BOSH CLI v2](#bosh-v2) process below to make it possible for the bootstrap errand to succeed.
+
+<a id="bosh-v1"></a>BOSH CLI v1
+
+1. Log in to the BOSH Director.
 1. Target the correct deployment.
 1. Run `bosh edit deployment`:
-    * Search for the jobs section: `jobs`.
-    * Search for the mysql-partition: `mysql-partition`.
-    * Search for the update section: `update`.
-    * Change max\_in\_flight to `3`.
+    * Locate the `jobs.mysql-partition.update` section.
+    * Change `max_in_flight` to `3`.
     * Below the `max_in_flight` line, add a line: `canaries: 0`.
 1. Run `bosh deploy`.
 
+<a id="bosh-v2"></a>BOSH CLI v2
+
+1. Log in to the BOSH Director.
+1. Download the current manifest using `bosh2 -e MY-ENV -d MY-DEP > /tmp/manifest.yml`
+1. Open this manifest to edit the following:
+    * Locate the `jobs.mysql-partition.update` section.
+    * Change `max_in_flight` to `3`.
+    * Below the `max_in_flight` line, add a line: `canaries: 0`.
+1. Run `bosh2 -e MY-ENV -d MY-DEP deploy /tmp/manifest.yml` to update the manifest.
+
+
 #### <a id="run-the-errand"></a>Run the Bootstrap Errand ####
-1. Run `bosh run errand bootstrap`.
+1. If you are using PCF v1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
+If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
+
 1. Validate that the errand completes successfully.
     - Some instances may still appear as `failing`. It's OK to proceed to the next step.
 
 #### <a id="reset-deployment"></a>Restore the BOSH Configuration ####
-1. Run `bosh edit deployment`.
-1. Re-set `canaries` to 1, `max_in_flight` to 1, and `serial` to true in the same manner as above.
-1. Run `bosh deploy`.
-1. Validate that all mysql instances are in `running` state.
+To restore your BOSH configuration to it's previous state, follow the previous steps from [Update the BOSH Configuration](#updating-manifest) and use the following values:
+
+* Set `canaries` to `1`.
+* Set `max_in_flight` to `1`.
+* Set `serial` to `true` in the same manner as above.
+
+1. Redeploy your BOSH Director.
+1. Validate that all `mysql` instances are in `running` state.
 
 <p class="note"><strong>Note:</strong> It is critical that you run all of the steps. If you do not re-set the values in the BOSH manifest, the status of the jobs will not be reported correctly and can lead to troubles in future deploys.</p>
 
@@ -202,7 +249,7 @@ In standard deployment, BOSH is configured to manage the cluster in a specific m
 
 1. If the bootstrap errand is not able to automatically recover the cluster, you may need to perform the steps manually. The following steps are prone to user-error and can result in lost data if followed incorrectly. Please follow the [assisted boostrap](#assisted-bootstrap) instructions above first, and only resort to the manual process if the errand fails to repair the cluster.
 
-    1. SSH to each node in the cluster and, as root, shut down the `mariadb` process. To SSH into BOSH-deployed VMs, see the [Advanced Troubleshooting with the BOSH CLI](http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html) topic.
+    1. SSH to each node in the cluster and, as root, shut down the `mariadb` process. To SSH into BOSH-deployed VMs, see the [Advanced Troubleshooting with the BOSH CLI](http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html) topic.
 
             $ monit stop mariadb_ctrl
 
@@ -256,7 +303,9 @@ In standard deployment, BOSH is configured to manage the cluster in a specific m
 
             $ monit start mariadb_ctrl
 
-        If the node is prevented from starting by the Interruptor, use the [manual steps](monitoring-mysql.html#manual-rejoin) to force an SST.
+        If the node is prevented from starting by the Interruptor, perform the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
+
+        <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
 
     1. Verify that the new nodes have successfully joined the cluster. The following command outputs the total number of nodes in the cluster:
 
