@@ -397,13 +397,18 @@ If you are using one of the other backup options, steps [6](#six) and [8](#eight
   12345678-90ab-cdef-1234-567890abcdef
  </pre>
 
-1. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI.
+1. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI. 
 
-1. Download the manifest for the service instance deployment using the GUID from above.
+1. From the Ops Manager VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest.  
+  * If you are using PCF v1.10, use the BOSH CLI v1 command. For example: 
   <pre class="terminal">
    $ bosh download manifest service-instance_12345678-90ab-cdef-1234-567890abcdef ./manifest.yml
   </pre>
-
+  * If you are using PCF v1.11, use the BOSH CLI v2 command. For example:
+  <pre class="terminal">
+   $ bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef manifest > ./manifest.yml
+  </pre>
+  
 1. Inspect the downloaded manifest and record the `properties.cf-mysql-backup.symmetric_key` and backup destination bucket. You will use this later to decrypt the backup.
 
 1. Install and log in to the [AWS CLI](https://aws.amazon.com/cli/).
@@ -431,26 +436,23 @@ These instructions assume you have a backup downloaded. To restore the backup to
   $ cf create-service p.mysql db-small NEW-SERVICE-INSTANCE
  </pre>
 
-1. Prepare the service instance for restoration.
+1. Perform the following steps to prepare the service instance for restoration:
   1. Determine the GUID associated with your service instance:
  <pre class="terminal">
     $ cf service NEW-SERVICE-INSTANCE --guid
  </pre>
 
-  1. Download the manifest for the service instance deployment using the GUID from above.
- <pre class="terminal">
-    $ bosh download manifest service-instance_GUID ./manifest.yml
- </pre>
+  1. Download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest. 
+    * If you are using PCF v1.10, use the BOSH CLI v1 command. For example: 
+    <pre class="terminal">
+     $ bosh download manifest service-instance_12345678-90ab-cdef-1234-567890abcdef ./manifest.yml
+    </pre>
+    * If you are using PCF v1.11, use the BOSH CLI v2 command. For example:
+    <pre class="terminal">
+     $ bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef manifest > ./manifest.yml
+    </pre>
 
-  1. Set the BOSH deployment to new downloaded manifest.
- <pre class="terminal">
-     $ bosh deployment ./manifest.yml
- </pre>
-
-  1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
- <pre class="terminal">
-    $ bosh ssh mysql
- </pre>
+  1. Set the BOSH deployment to the new downloaded manifest and SSH into the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh-ssh). If you are using PCF v1.10, use the BOSH CLI v1. If you are using PCF v1.11, use the BOSH CLI v2. 
 
   1. After securely logging into MySQL, run `sudo su` to become root.
  <pre class="terminal">
@@ -476,17 +478,21 @@ These instructions assume you have a backup downloaded. To restore the backup to
   1. Exit the MySQL VM.
 
 1. Restore the backup to the new service instance:
-  1. Copy the downloaded backup to the new service instance.
-    <pre class="terminal">
-     $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
-    </pre>
+  1. Copy the downloaded backup to the new service instance:
+    * If you are using PCF v1.10, use the BOSH CLI v1 command:
+      <pre class="terminal">
+      $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+      </pre>
+      - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+      - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
+    * If you using PCF v1.11, use the BOSH CLI v2 command:
+      <pre class="terminal">
+      $ bosh2 -e my-env -d my-dep scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+      </pre>
       - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
       - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
-  1. Use the [BOSH CLI to `ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance.
- <pre class="terminal">
-     $ bosh ssh mysql
- </pre>
+  1. Use the BOSH CLI to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh-ssh). If you are using PCF v1.10, use the BOSH CLI v1. If you are using PCF v1.11, use the BOSH CLI v2. 
 
   1. After securely logging into MySQL, run `sudo su` to become root.
  <pre class="terminal">
