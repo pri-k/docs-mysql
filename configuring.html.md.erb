@@ -164,6 +164,14 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
     Choose Percent to configure the percent of system RAM allocated to the memory buffer used by InnoDB. Choose Bytes to configure the size in bytes, instead. See the [architecture documentation](architecture.html#innodb-buffer-pool-size) for information on this setting.
 
+- **InnoDB Log Flush Timing**
+
+    Default: 2. InnoDB log buffer is written to the log file at each commit; the log file is flushed to disk once per second.
+
+    This setting improves cluster performance. The MariaDB default is to flush the log to disk at every commit (1).
+
+    **Note:** The most recent second's transactions will not be flushed to disk *only* if all nodes crash simultaneously. All other cluster lifecycle events do not affect data retention. To eliminate this risk, set Log Flush Timing to 1, which leads to poor performance in heavily active clusters.
+
 - **Maximum Server Connections**
 
     Default: 1500
