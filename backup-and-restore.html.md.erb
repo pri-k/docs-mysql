@@ -385,11 +385,11 @@ If you are using one of the other backup options, steps 5, 6, and 8 are differen
   12345678-90ab-cdef-1234-567890abcdef
  </pre>
 
-2. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI.
+2. Follow the [Advanced Troubleshooting](http://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html) instructions to log into the Ops Manager VM, where you can run the BOSH CLI v2.
 
-3. Download the manifest for the service instance deployment using the GUID from above:
+3. From the Ops Manager VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest. For example:
   <pre class="terminal">
-   $ bosh download manifest service-instance_12345678-90ab-cdef-1234-567890abcdef ./manifest.yml
+   $ bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef manifest > ./manifest.yml
   </pre>
 
 4. Inspect the downloaded manifest and record the following properties for later:<br><br>
@@ -448,39 +448,29 @@ To restore the backup to a new service instance, follow these procedures:
     $ cf service NEW-SERVICE-INSTANCE --guid
  </pre>
 
-1. Download the BOSH manifest for the service instance using the GUID from above:
- <pre class="terminal">
-    $ bosh download manifest service-instance_GUID ./manifest.yml
- </pre>
+3. From the Ops Manager VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest. For example:
+  <pre class="terminal">
+   $ bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef manifest > ./manifest.yml
+  </pre>
 
 1. Determine and record the MySQL admin password:
  <pre class="terminal">
   $ cat ./manifest | grep admin_password
  </pre>
 
-1. Set the BOSH deployment to the newly downloaded manifest:
- <pre class="terminal">
-     $ bosh deployment ./manifest.yml
- </pre>
-
 1. Find and record the MySQL instance name and GUID from BOSH:
- <pre class="terminal">
-     $ bosh instances
- </pre>
+   <pre class="terminal">
+   $ bosh2 -e my-env -d my-dep instances
+   </pre>
 
 1. Copy the downloaded backup to the new service instance:
- <pre class="terminal">
-   $ bosh scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
- </pre>
-   where:<br><br>
-   - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`, determined from the previous step. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
-   - `DESTINATION-PATH` is the location to copy the backup artifact to on the BOSH VM. For example, `/tmp/`.
-   <p class="note"><strong>Note</strong>: You may see `stderr` output. This is normal.</p>
+  <pre class="terminal">
+  $ bosh2 -e my-env -d my-dep scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+  </pre>
+  - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+  - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
-1. Use the BOSH CLI to [`ssh`](http://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) in to the newly created MySQL service instance:
- <pre class="terminal">
-    $ bosh ssh mysql
- </pre>
+1. Use the BOSH CLI v2 to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html#bosh-ssh). 
 
 1. After securely logging into MySQL, run `sudo su` to become root:
  <pre class="terminal">
