@@ -452,7 +452,11 @@ These instructions assume you have a backup downloaded. To restore the backup to
      $ bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef manifest > ./manifest.yml
     </pre>
 
-  1. Set the BOSH deployment to the new downloaded manifest and SSH into the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh-ssh). If you are using PCF v1.10, use the BOSH CLI v1. If you are using PCF v1.11, use the BOSH CLI v2. 
+  1. If you are using PCF v1.10, use the BOSH CLI v1 to set the BOSH deployment to the new downloaded manifest. For example:
+    <pre class="terminal">$ bosh deployment ./manifest.yml</pre>
+    If you are using PCF v1.11, you specify the deployment with the `-d` flag. For more information, see the [BOSH documentation](https://bosh.io/docs/cli-v2.html#deployment-mgmt).
+
+  1. SSH into the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh-ssh). If you are using PCF v1.10, use the BOSH CLI v1. If you are using PCF v1.11, use the BOSH CLI v2. 
 
   1. After securely logging into MySQL, run `sudo su` to become root.
  <pre class="terminal">
