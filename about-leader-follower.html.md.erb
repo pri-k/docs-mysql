@@ -6,25 +6,28 @@ owner: MySQL
 This topic outlines what you need to know about leader-follower availability for MySQL for Pivotal Cloud Foundry (PCF). 
 Read this topic to decide if you should enable leader-follower availability for your MySQL databases.
 
-## <a id="topology-"></a>Increasing Availability with Leader Follower
+## <a id="topology"></a>Increasing Availability with Leader-Follower
 
-MySQL for PCF enables developers to dynamically create leader-follower databases; the term leader-follower is analogous
-to "master-slave". This deployment topology can be used to increase the availability of your database in the event of an unexpected outage of
-the leader, by failing over to the follower. Failovers are manually triggered using the documented steps in the [Maintaining Availability with Leader Follower](./maintain-leader-follower.html)
+MySQL for PCF enables developers to dynamically create leader-follower databases; 
+the term leader-follower is analogous to "master-slave".
+This deployment topology can be used to increase the availability of your database
+in the event of an unexpected outage of the leader, by failing over to the follower.
+Failovers are manually triggered using the documented steps in the [Maintaining Availability with Leader Follower](./maintain-leader-follower.html)
 page.
 
-When a developer creates a leader-follower service instance, the on-demand broker will deploy two MySQL VMs to two separate
-availability zones. Any data that is written to the leader is asynchronously replicated to the follower; MySQL for PCF
-emits metrics for monitoring replication lag.
+When a developer creates a leader-follower service instance,
+the on-demand broker will deploy two MySQL VMs to two separate availability zones.
+Any data that is written to the leader is asynchronously replicated to the follower;
+MySQL for PCF emits metrics for monitoring replication lag.
 
-Additionally, the follower instance is provided solely for increasing availability and is not exposed to developers to increase
-read throughput. Increasing read throughput can be achieved using developer configured workload profiles in the
-[Customizing](./customize.html) page.
+Additionally, the follower instance is provided solely for increasing availability
+and is not exposed to developers to increase read throughput.
+Increasing read throughput can be achieved using developer-configured workload profiles in the [Customizing](./customize.html) page.
 
 ## <a id="rules-"></a>Required Networking Rules for Leader-Follower Deployments
 
-In addition to the [standard networking rules](./about.html#rules) needed for MySQL for PCF, the operator must ensure leader-follower
-specific network rules are also set up appropriately.
+In addition to the [standard networking rules](./about.html#rules) needed for MySQL for PCF,
+the operator must ensure leader-follower specific network rules are also set up appropriately.
 
 - Leader-follower instances need to bidirectionally communicate with each other over port 8008 for orchestration.
 - Leader-follower instances need to bidirectionally communicate with each other over port 3306 for replication.
