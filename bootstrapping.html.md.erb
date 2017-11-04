@@ -30,13 +30,6 @@ To check whether your cluster has lost quorum, look for the following symptoms:
         mysql> select * from mysql.user;
         ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
 
-If your cluster has lost quorum, see the [Manual Bootstrapping](#manual-bootstrap) topic for information about manually bootstrapping a cluster.
-
-Keep in mind the following:
-
-- The start script bootstraps node 0 only on initial deploy. If bootstrapping is necessary at a later date, it must be done manually. 
-- If the single node is bootstrapped, it creates a new one-node cluster that other nodes can join.
-
 ## <a id="bootstrapping"></a>Prerequisites for Bootstrapping ##
 
 Before running the bootstrapping procedures below, you must SSH into the Ops Manager VM and log in to the BOSH Director. For more information, see [Prepare to Use the BOSH CLI](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare).
@@ -295,7 +288,7 @@ To restore your BOSH configuration to it's previous state, follow the previous s
 
             $ monit start mariadb_ctrl
 
-        If the node is prevented from starting by the Interruptor, perform the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
+        If the node is prevented from starting by the [Interruptor](interruptor.html), perform the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
 
         <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
 
