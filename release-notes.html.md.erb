@@ -10,9 +10,9 @@ owner: MySQL
 
 Release Date: Noveber 3, 2017
 
-- **New:** Changed the default of <a href="architecture.html#innodb-flush-log-at-trx-commit">innodb\_flush\_log\_at\_trx\_commit</a> to `2`. This is considered safe when using Galera in clustered mode. Please read the documentation; single node and very conservative cluster deployments may wish to re-set to the former default, `1`.
-- Update to MariaDB [10.1.26](https://mariadb.com/kb/en/library/mariadb-10126-release-notes/).
-- Upgraded nokogiri to 1.8.1, rubygems to 2.6.13 to address recent CVEs.
+- **New:** Changed the default of `innodb_flush_log_at_trx_commit` to `2`. This is considered safe when using Galera in clustered mode. Single node and very conservative cluster deployments may wish to reset to the former default, `1`. For details, see [InnoDB Flush Log policy: 2](architecture.html#innodb-flush-log-at-trx-commit).
+- Update to MariaDB [10.1.26](https://mariadb.com/kb/en/library/mariadb-10126-release-notes/)
+- Upgrade nokogiri to 1.8.1, and rubygems to 2.6.13, to address recent Common Vulnerabilities and Exposures (CVEs)
 - Update to stemcell 3421.31 to address low and medium stemcell vulnerabilities.
 - **Bug fix:** smoke tests do not run if there are no public plans.
 
