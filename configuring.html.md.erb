@@ -81,7 +81,9 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
     Default: Disabled
 
-    See the [architecture documentation](architecture.html#remote-admin) for information on how to configure this setting. Enabling this checkbox will affect how you back up and restore your MySQL data manually. See [Perform Manual Backup](backup.html#manual-process).
+    See the [architecture documentation](architecture.html#remote-admin) for information on how to configure this setting.
+    Enabling this checkbox affects how you back up and restore your MySQL data manually.
+    See [Perform Manual Backup](backup.html#manual-process).
 
 - **Read-Only User Password**
 
@@ -166,11 +168,20 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
 - <a id="innodb-flush-log-at-trx-commit"></a>**InnoDB Log Flush Timing**
 
-    Default: 2. 
+    Default: 2 
 
-    InnoDB log buffer is written to the log file at each commit; the log file is flushed to disk once per second. Set to `1` when running in non-HA mode. This default improves cluster performance. For more information, see the [InnoDB Flush Method](architecture.html#innodb-flush-method). The MariaDB default, `1`, is to flush the log to disk at every commit, which is required for ACID compliance.
+    InnoDB log buffer is written to the log file at each commit;
+    the log file is flushed to disk once per second.
+    Set to `1` when running in non-HA mode.
+    This default improves cluster performance.
+    For more information, see the [InnoDB Flush Method](architecture.html#innodb-flush-method).
+    The MariaDB default, `1`, is to flush the log to disk at every commit,
+    which is required for ACID compliance.
 
-    <p class="note"><strong>Note</strong>: The most recent second's transactions is flushed to disk <i>only</i> if all nodes crash simultaneously. All other cluster lifecycle events do not affect data retention. To eliminate this risk, set Log Flush Timing to <code>1</code>, which improves the performance of heavily active clusters.</p>
+    <p class="note"><strong>Note</strong>: The most recent second's transactions is flushed to disk <i>only</i> if all nodes crash simultaneously.
+       All other cluster lifecycle events do not affect data retention.
+       To eliminate this risk, set Log Flush Timing to <code>1</code>,
+       which improves the performance of heavily active clusters.</p>
 
 - **Maximum Server Connections**
 
@@ -227,7 +238,8 @@ Two post-deploy errands run by default: the **broker registrar** and the **smoke
 
 <p class="note"><strong>Note</strong>: Disabling errands can result in unexpected side effects. <strong>Do not</strong> reconfigure errands in your deployment without instruction from Pivotal Support.
 
-Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand. Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile.
+Additionally, the <strong>Errands</strong> pane also shows a <strong>broker-deregistrar</strong> pre-delete errand.
+Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a tile.
 </br></br>Depending on your Pivotal Cloud Foundry (PCF) version, use the appropriate command for either BOSH CLI v1 or BOSH CLI v2. Running the following command under any other circumstances deletes user data. <strong>Do not</strong> run this errand unless instructed to do so by Pivotal Support:
 
 </br></br>On PCF v1.10, run the BOSH CLI v1 command:
