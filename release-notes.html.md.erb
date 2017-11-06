@@ -7,7 +7,7 @@ owner: MySQL
 
 ## <a id="1-10-6"></a>v1.10.6
 
-Release Date: Noveber 3, 2017
+Release Date: November 3, 2017
 
 - **New:** Changed the default of `innodb_flush_log_at_trx_commit` to `2`. This is considered safe when using Galera in clustered mode. Single node and very conservative cluster deployments may wish to reset to the former default, `1`. For details, see [InnoDB Flush Log policy: 2](architecture.html#innodb-flush-log-at-trx-commit).
 - Update to MariaDB [10.1.26](https://mariadb.com/kb/en/library/mariadb-10126-release-notes/)
