@@ -8,13 +8,16 @@ owner: MySQL
 
 ## <a id="1-9-13"></a>v1.9.13
 
-Release Date: Noveber 3, 2017
+Release Date: November 3, 2017
 
-- **New:** Changed the default of `innodb_flush_log_at_trx_commit` to `2`. This is considered safe when using Galera in clustered mode. Single node and very conservative cluster deployments may wish to reset to the former default, `1`. For details, see [InnoDB Flush Log policy: 2](architecture.html#innodb-flush-log-at-trx-commit).
+- **New:** Changed the default of `innodb_flush_log_at_trx_commit` to `2`.
+    This is considered safe when using Galera in clustered mode.
+    Single node and very conservative cluster deployments might want to reset to the former default, `1`.
+    For details, see [InnoDB Flush Log policy: 2](architecture.html#innodb-flush-log-at-trx-commit).
 - Update to MariaDB [10.1.26](https://mariadb.com/kb/en/library/mariadb-10126-release-notes/)
 - Upgrade nokogiri to 1.8.1, and rubygems to 2.6.13, to address recent Common Vulnerabilities and Exposures (CVEs)
 - Update to stemcell 3421.31 to address low and medium stemcell vulnerabilities.
-- **Bug fix:** smoke tests do not run if there are no public plans.
+- **Bug fix:** Smoke tests do not run if there are no public plans.
 
 ## <a id="1-9-12"></a>v1.9.12
 
@@ -67,7 +70,7 @@ Release Date: August 11, 2017
 
     For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included the [Interruptor](interruptor.html). It's a protective mechanism that stops a node from automatically rejoining the cluster if doing so might delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
 
-    In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual Operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
+    In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
 
     If you want to continue using the Interruptor, make sure that "Prevent node auto re-join" is checked in the "Advanced Options" configuration pane, then hit **Apply Changes.**
 - Small improvements to the `mysql-diag` tool, now including a warning when available disk space is low.

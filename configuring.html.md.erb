@@ -166,11 +166,20 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
 - <a id="innodb-flush-log-at-trx-commit"></a>**InnoDB Log Flush Timing**
 
-    Default: 2. 
+    Default: 2 
 
-    InnoDB log buffer is written to the log file at each commit; the log file is flushed to disk once per second. Set to `1` when running in non-HA mode. This default improves cluster performance. For more information, see the [InnoDB Flush Method](architecture.html#innodb-flush-method). The MariaDB default, `1`, is to flush the log to disk at every commit, which is required for ACID compliance.
+    InnoDB log buffer is written to the log file at each commit;
+    the log file is flushed to disk once per second.
+    Set to `1` when running in non-HA mode.
+    This default improves cluster performance.
+    For more information, see the [InnoDB Flush Method](architecture.html#innodb-flush-method).
+    The MariaDB default, `1`, is to flush the log to disk at every commit,
+    which is required for ACID compliance.
 
-    <p class="note"><strong>Note</strong>: The most recent second's transactions is flushed to disk <i>only</i> if all nodes crash simultaneously. All other cluster lifecycle events do not affect data retention. To eliminate this risk, set Log Flush Timing to <code>1</code>, which improves the performance of heavily active clusters.</p>
+    <p class="note"><strong>Note</strong>: The most recent second's transactions is flushed to disk <i>only</i> if all nodes crash simultaneously.
+       All other cluster lifecycle events do not affect data retention.
+       To eliminate this risk, set Log Flush Timing to <code>1</code>,
+       which improves the performance of heavily active clusters.</p>
 
 - **Maximum Server Connections**
 
