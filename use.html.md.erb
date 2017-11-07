@@ -173,6 +173,26 @@ To delete a service instance, run `cf delete-service`.
 
 You cannot delete a service instance that an app is bound to.
 
+## <a id="read-only"></a>Read Only Access ##
+
+For users that need read-only access to the database, MySQL for PCF enables space developers to create a read-only credentials that
+can be given to the appropriate users. Credentials can be created by using the `cf` cli to create a new [service key](https://docs.pivotal.io/pivotalcf/1-12/devguide/services/service-keys.html).
+
+To create and find read-only credentials for an existing service instance use the following steps.
+
+ 1. Create a new service key for a service-instance, specifying it to be read-only with config parameters.
+    <pre class="terminal">
+    cf create-service-key SERVICE\_INSTANCE KEY\_NAME -c '{ "read-only": true }'
+    Creating service key KEY\_NAME for service instance SERVICE\_INSTANCE as admin...
+    OK</pre>
+
+ 1. Retrieve the read-only credentials from the service key with
+    <pre class="terminal">
+    cf service-key SERVICE\_INSTANCE KEY\_NAME</pre>
+
+<p class="note"><strong>Note</strong>: Any user with access to create a service key may provision themselves a full privileged
+service key.</p>
+
 ## <a id="example-app"></a>Example Application ##
 
 To help application developers get started with MySQL for PCF, we have provided an example application, which can be [downloaded here][example-app]. Instructions can be found in the included README.
