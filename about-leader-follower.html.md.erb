@@ -1,5 +1,5 @@
 ---
-title: Planning for Leader-Follower Availability	
+title: About Leader-Follower
 owner: MySQL
 ---
 
@@ -8,24 +8,41 @@ Read this topic to decide if you should enable leader-follower availability for 
 
 ## <a id="topology"></a>Increasing Availability with Leader-Follower
 
-MySQL for PCF enables developers to dynamically create leader-follower databases; 
-the term leader-follower is analogous to "master-slave".
-This deployment topology can be used to increase the availability of your database
-in the event of an unexpected outage of the leader, by failing over to the follower.
-If the leader fails, the operator manually triggers the failover.
-For instructions on how to trigger a failover, see [Maintaining Availability with Leader Follower](./maintain-leader-follower.html).
+A leader-follower database is used to increase the availability of your database, by enabling operators to
+[failover](#failover) and send application traffic to the follower. The term leader-follower
+is analogous to "master-slave".
 
 When a developer creates a leader-follower service instance,
-the on-demand broker deploys two MySQL VMs to two separate availability zones.
-Any data that is written to the leader is asynchronously replicated to the follower;
-MySQL for PCF emits metrics for monitoring replication lag.
+the on-demand broker deploys two MySQL VMs in two separate availability zones.
+Any data that is written to the leader is asynchronously replicated to the follower.
 
 The follower VM is only for increasing availability
 and is not exposed to developers to increase read throughput.
 Increasing read throughput can be achieved using developer-configured workload profiles.
 For more information, see [Customizing](./customize.html).
 
-## <a id="rules-"></a>Required Networking Rules for Leader-Follower Deployments
+## <a id="failover"></a>Understanding Failover
+
+MySQL for PCF is focuses on data consistency above all else and relies on operators
+to trigger a failover; MySQL for PCF will never automatically failover to the follower.
+When an operator performs a failover, application traffic is sent to the standby follower.
+
+Along with simple steps for failover, MySQL offers a set of metrics that can be used to monitor
+leader-follower instances and determine when a failover should be performed. For instructions on
+how to trigger a failover, see [Maintaining Availability with Leader Follower](./maintain-leader-follower.html).
+
+## <a id="iaas"></a> Infrastructure Requirements for Leader-Follower Deployments
+
+Leader-Follower instances have additional infrastructure requirements than previous singleton instances, as described in
+the following section.
+
+### Capacity Planning
+
+When calculating IaaS usage, as described in the [Resource Usage Planning](./recommended.html#resources)
+section, you must take into account that each leader follower instance requires two VMs. Thus, the "plan resources"
+for a leader-follower enabled plan should be doubled.
+
+### Networking Rules
 
 In addition to the standard networking rules needed for MySQL for PCF,
 the operator must ensure leader-follower specific network rules are also set up as follows:
