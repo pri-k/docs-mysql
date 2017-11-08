@@ -42,6 +42,12 @@ When calculating IaaS usage, as described in the [Resource Usage Planning](./rec
 section, you must take into account that each leader follower instance requires two VMs. Thus, the "plan resources"
 for a leader-follower enabled plan should be doubled.
 
+### Availability Zones
+
+To minimize impact of an availability zone outage, and to remove single points of failure, Pivotal recommends that you
+provision three availability zones if using leader-follower deployments. With three availability zones, the MySQL VMs
+can be deployed to two AZs and the broker to a third.
+
 ### Networking Rules
 
 In addition to the standard networking rules needed for MySQL for PCF,
