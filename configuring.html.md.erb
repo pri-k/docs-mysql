@@ -263,16 +263,18 @@ If **Enable Backups** is selected in the **Backups** pane, set **Backup Prepare 
 
 #### Monitor Available Disk Space
 
-<p class="note"><strong>Important:</strong> MySQL does not gracefully handle the condition where there is no available free space on either ephemeral or persistent disks. Therefore, you must closely monitor free disk space. </p>
+<p class="note"><strong>Important:</strong> MySQL does not gracefully handle the condition where there is no available free space on either ephemeral or persistent disks.
+   Therefore, you must closely monitor free disk space. </p>
 
-There are two circumstances in which you may need to redeploy with larger persistent disks:
+There are two circumstances in which you might need to redeploy with larger persistent disks:
 
-1. There is an amount of data stored on the disk such that there is very little free space remaining.
-2. The Service Broker allocated an amount of service plans such that there is insufficient reserved space to allocate to new service instances.
+1. So much data is stored on the disk that very little free space remains. 
+2. The Service Broker allocated so many service plans that there is insufficient reserved space to allocate to new service instances.
 
 #### Redeploy with Larger Persistent Disks
 
-If your [persistent disk](./monitoring-mysql.html#persistent-disk) metric is over 75% full (warning), or over 90% full (critical), you can redeploy the MySQL for PCF tile with larger persistent disks.
+If the [Persistent Disk](./monitoring-mysql.html#persistent-disk) metric is over 75% full (warning) or over 90% full (critical),
+you should redeploy the MySQL for PCF tile with larger persistent disks.
 
 To redeploy with larger persistent disks, do the following:
 
@@ -282,7 +284,10 @@ To redeploy with larger persistent disks, do the following:
 1. Click **Save**.
 1. Return to the Ops Manager dashboard and click **Apply Changes**.
 
-Note that during redeployment, BOSH takes time to copy data from the old disk configuration to the new one. When running in single-node mode, the service is not available during this time. When running in clustered mode, if `max_in_flight` is set to 1 (the default), the service remains available as long as there is sufficient disk space for normal operation.
+During redeployment, BOSH takes time to copy data from the old disk configuration to the new one.
+When running in single-node mode, the service is not available during this time.
+When running in clustered mode, if `max_in_flight` is set to 1 (the default),
+the service remains available as long as there is sufficient disk space for normal operation.
 
 #### Recovering from Issues with Persistent Disk(s)
 
@@ -293,20 +298,26 @@ Problems with persistent disks are typically caused by:
 
 The MariaDB nodes store their data on the persistent disk, so when recovering from a disk issue you must either reattach or recreate the disk before restarting the node.
 
-In order to determine what type of recovery is required, first determine the state of the Galera cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
+To determine what type of recovery is required, determine the state of the Galera cluster.
+For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
 
 **If the Cluster has Failed**
 
-If the cluster has lost quorum, that is, less than half of the nodes can communicate, the rest of the nodes automatically shut down. In this case:
+If the cluster has lost quorum, that is, less than half of the nodes can communicate, the rest of the nodes automatically shut down.
+In this case:
 
-1. Repair or replace any corrupted or lost persistent disks. See [Recover a Disk](#recoverdisk) below. 
-1. Bootstrap the cluster to restart it. For more information, see [Bootstrapping](./bootstrapping.html).
+1. Repair or replace any corrupted or lost persistent disks.
+   See [Recover a Disk](#recoverdisk) below. 
+1. Bootstrap the cluster to restart it.
+   For more information, see [Bootstrapping](./bootstrapping.html).
 
 **If the Cluster is Still Running**
 
-If clustering has quorum, that is, at least half of the nodes can communicate, an administrator must only recover the failing nodes. In this case:
+If clustering has quorum, that is, at least half of the nodes can communicate, an administrator must only recover the failing nodes.
+In this case:
 
-1. Repair or replace any corrupted or lost persistent disks. See [Recover a Disk](#recoverdisk) below.
+1. Repair or replace any corrupted or lost persistent disks.
+   See [Recover a Disk](#recoverdisk) below.
 2. Restart recovered nodes.
 
 The recovered node automatically rejoins the cluster and is updated with the current data.
@@ -316,13 +327,15 @@ The recovered node automatically rejoins the cluster and is updated with the cur
 
 The steps to recover disks depend on the the nature of the disk failure, described in scenarios A and B below.
 
-**A---When Persistent Disk is Detached and can be Reattached**
+**A---When Persistent Disk Is Detached and Can Be Reattached**
 
-When the disk is detached, monit considers the process stopped and BOSH considers the job as failing. BOSH cloud check does not recognize the disk is unattached. 
+When the disk is detached, monit considers the process stopped and BOSH considers the job as failing.
+BOSH cloud check does not recognize the disk is unattached. 
 
 To recover a disk in this scenario, do the following:
 
-1. Attempt to recreate the broken node using BOSH. This alerts BOSH to the missing disk.
+1. Attempt to recreate the broken node using BOSH.
+   This alerts BOSH to the missing disk.
   <pre class="terminal">
   $ bosh recreate mysql_AZ INDEX
   </pre>
@@ -340,12 +353,13 @@ To recover a disk in this scenario, do the following:
   $ bosh cck
   </pre>
   When prompted, choose `3. Reattach disk and reboot instance`.
-1. Restart the node. When the node is restarted, it joins the cluster.
+1. Restart the node.
+   When the node is restarted, it joins the cluster.
   <pre class="terminal">
   $ bosh restart mysql_AZ INDEX
   </pre>
 
-<br>**B---When Persistent Disk is Lost and Must be Recreated**
+<br>**B---When Persistent Disk Is Lost and Must Be Recreated**
 
 If you attempt to use BOSH cloud check to reattach the disk and you see the following error, then you know the disk is lost.
 <pre class="terminal">
@@ -356,11 +370,13 @@ Failed: File []/vmfs/volumes/volume-id/datastore-id/disk-id.vmdk was not found
 
 To recover a disk in this scenario, do the following:
 
-1. SSH into cf-mysql-broker instances and stop the processes. This prevents creation and deletion of instances attempting to recreate the broken node to get its disk ID.
+1. SSH into cf-mysql-broker instances and stop the processes.
+   This prevents creation and deletion of instances attempting to recreate the broken node to get its disk ID.
   <pre class="terminal">
   $ sudo monit stop all
   </pre>
-1. SSH into proxy instances and stop the processes. This prevents data from changing on the broken node when attempting to recreate it to get its disk ID.
+1. SSH into proxy instances and stop the processes.
+   This prevents data from changing on the broken node when attempting to recreate it to get its disk ID.
   <pre class="terminal">
   $ sudo monit stop all
   </pre>
@@ -388,8 +404,10 @@ To recover a disk in this scenario, do the following:
   DELETE 1
   </pre>
 
-    This deletes the reference to the lost disk, and causes BOSH to recreate a fresh disk for this VM on the next deploy.
-1. Through your infrastructure interface (for example, vCenter client or AWS console), power off and delete the VM corresponding to `mysql_AZ/INDEX`.
+    This deletes the reference to the lost disk
+    and causes BOSH to recreate a fresh disk for this VM on the next deploy.
+1. Through your infrastructure interface (for example, vCenter client or AWS console),
+   power off and delete the VM corresponding to `mysql_AZ/INDEX`.
 1. Use BOSH cloud check to remove reference to the VM.
   <pre class="terminal">
   $ bosh cck
@@ -401,7 +419,7 @@ To recover a disk in this scenario, do the following:
   $ bosh deploy
   </pre>
 1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
-1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for cf-mysql-broker and proxy back to 1, and restore the static IP for proxy. 
+1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for cf-mysql-broker and proxy back to 1 and restore the static IP for proxy. 
 1. Deploy the release.
   <pre class="terminal">
   $ bosh deploy
