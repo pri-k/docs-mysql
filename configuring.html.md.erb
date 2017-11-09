@@ -306,8 +306,10 @@ For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
 If the cluster has lost quorum, that is, less than half of the nodes can communicate, the rest of the nodes automatically shut down.
 In this case:
 
-1. Repair or replace any corrupted or lost persistent disks.
-   See [Recover a Disk](#recoverdisk) below. 
+1. Repair or replace any corrupted or lost persistent disks:
+   * If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#recoverdisk-cli2) procedures to recover a disk. 
+   * If you are using PCF v1.10, follow the [BOSH CLI v1](#recoverdisk-cli1) procedures to recover a disk. 
+
 1. Bootstrap the cluster to restart it.
    For more information, see [Bootstrapping](./bootstrapping.html).
 
@@ -316,14 +318,119 @@ In this case:
 If clustering has quorum, that is, at least half of the nodes can communicate, an administrator must only recover the failing nodes.
 In this case:
 
-1. Repair or replace any corrupted or lost persistent disks.
-   See [Recover a Disk](#recoverdisk) below.
+1. Repair or replace any corrupted or lost persistent disks:
+   * If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#recoverdisk-cli2) procedures to recover a disk. 
+   * If you are using PCF v1.10, follow the [BOSH CLI v1](#recoverdisk-cli1) procedures to recover a disk. 
+
 2. Restart recovered nodes.
 
 The recovered node automatically rejoins the cluster and is updated with the current data.
 
+#### <a id="recoverdisk-cli2"></a> Recover a Disk with the BOSH CLI v2
 
-#### <a id="recoverdisk"></a> Recover a Disk
+The steps to recover disks depend on the the nature of the disk failure, described in scenarios A and B below.
+
+**A---When Persistent Disk Is Detached and Can Be Reattached**
+
+When the disk is detached, monit considers the process stopped and BOSH considers the job as failing.
+BOSH cloud check does not recognize the disk is unattached. 
+
+To recover a disk in this scenario, do the following:
+
+1. List all VMs managed by the BOSH Director in your MySQL deployment. For example:
+    <pre class="terminal">
+    $ bosh2 -e my-env -d my-dep vms
+    </pre>
+1. From the above output, identify the name of the broken node. The name follows the format `mysql_AZ/INDEX`, such as `mysql_z1/0`.
+1. Attempt to recreate the broken node using BOSH. This alerts BOSH to the missing disk. For example:
+    <pre class="terminal">$ bosh2 -e my-env -d my-dep recreate mysql\_z1/0</pre>
+    You should see an error that looks like this:
+    <pre class="terminal">
+    Error 100: Disk (YOUR\_DISK\_ID) is not attached to VM (vm-fc4ab74e-61ed-4d12-aa93-a1bbb389723f)
+    </pre>
+    If the recreate command fails with the following error, wait until monit times out and all jobs are stopped, and then try again.
+    <pre class="terminal">
+    Failed updating job mysql\_AZ: mysql\_AZ/INDEX (canary) (00:00:22): Action Failed get_task: Task 8ace0778-c5aa-4a2f-55a0-42443452adb1 result: Stopping Monitored Services: Stopping service gra-log-purger-executable: Stopping Monit service gra-log-purger-executable: Request failed with 503 Service Unavailable:
+    </pre>
+
+1. Use BOSH cloud check to reattach the disk. For example:
+  <pre class="terminal">
+  $ bosh2 -e my-env -d my-dep cck
+  </pre>
+  When prompted, choose `3. Reattach disk and reboot instance`.
+1. Restart the node.
+   When the node is restarted, it joins the cluster. For example:
+  <pre class="terminal">
+  $ bosh2 -e my-env -d my-dep restart mysql_z1/0
+  </pre>
+
+<br>**B---When Persistent Disk Is Lost and Must Be Recreated**
+
+If you attempt to use BOSH cloud check to reattach the disk and you see the following error, then you know the disk is lost.
+<pre class="terminal">
+$ bosh2 -e my-env -d my-dep cck
+...
+Failed: File []/vmfs/volumes/volume-id/datastore-id/disk-id.vmdk was not found
+</pre>
+
+To recover a disk in this scenario, do the following:
+
+1. SSH into `cf-mysql-broker` instances and stop the processes.
+   This prevents creation and deletion of instances attempting to recreate the broken node to get its disk ID.
+  <pre class="terminal">
+  $ sudo monit stop all
+  </pre>
+1. SSH into proxy instances and stop the processes.
+   This prevents data from changing on the broken node when attempting to recreate it to get its disk ID.
+  <pre class="terminal">
+  $ sudo monit stop all
+  </pre>
+1. Attempt to recreate the node using BOSH in order to obtain the disk ID. For example:
+  <pre class="terminal">
+  $ bosh2 -e my-env -d my-dep recreate mysql_z1/0
+  </pre>
+
+    You should see an error that looks like this:
+  <pre class="terminal">
+  Error 100: Disk (YOUR\_DISK\_ID) is not attached to VM (vm-fc4ab74e-61ed-4d12-aa93-a1bbb389723f)
+  </pre>
+
+    Make a note of the value of `YOUR_DISK_ID` in order to use it in the next step.
+
+1. Connect to the BOSH Director Postgres database and remove references to the disk.
+  On a microbosh the database is local.
+  <pre class="terminal">
+  $ /var/vcap/packages/postgres/bin/psql -U postgres --password bosh
+  psql (9.0.3)
+  Type "help" for help.
+  bosh=> DELETE FROM persistent\_disks WHERE disk\_cid = 'YOUR\_DISK\_ID';
+  DELETE 1
+  bosh=> DELETE FROM vsphere\_disk WHERE uuid = 'YOUR\_DISK\_ID';
+  DELETE 1
+  </pre>
+
+    This deletes the reference to the lost disk
+    and causes BOSH to recreate a fresh disk for this VM on the next deploy.
+1. Through your infrastructure interface (for example, vCenter client or AWS console),
+   power off and delete the VM corresponding to `mysql_AZ/INDEX`.
+1. Use BOSH cloud check to remove reference to the VM. For example:
+  <pre class="terminal">
+  $ bosh2 -e my-env -d my-dep cck
+  </pre>
+  When prompted, choose `3. Delete VM reference (DANGEROUS!)`.
+1. Edit the deployment manifest and reduce the number of instances of both `cf-mysql-broker` and `proxy` to 0, and remove the static IP for `proxy`. This prevents new connections from being made to the node after it is recreated but before it joins the cluster.
+1. Deploy the release to recreate the node and remove the broker and proxy, specifying the name of the manifest file. For example:
+  <pre class="terminal">
+  $ bosh2 -e my-env -d my-dep deploy manifest.yml
+  </pre>
+1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
+1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`. 
+1. Redeploy the release. For example:
+  <pre class="terminal">
+  $ bosh2 -e my-env -d my-dep deploy manifest.yml
+  </pre>
+
+#### <a id="recoverdisk-cli1"></a> Recover a Disk with the BOSH CLI v1
 
 The steps to recover disks depend on the the nature of the disk failure, described in scenarios A and B below.
 
@@ -370,7 +477,7 @@ Failed: File []/vmfs/volumes/volume-id/datastore-id/disk-id.vmdk was not found
 
 To recover a disk in this scenario, do the following:
 
-1. SSH into cf-mysql-broker instances and stop the processes.
+1. SSH into `cf-mysql-broker` instances and stop the processes.
    This prevents creation and deletion of instances attempting to recreate the broken node to get its disk ID.
   <pre class="terminal">
   $ sudo monit stop all
@@ -392,7 +499,7 @@ To recover a disk in this scenario, do the following:
 
     Make a note of the value of `YOUR_DISK_ID` in order to use it in the next step.
 
-1. Connect to the BOSH director postgres database and remove references to the disk.
+1. Connect to the BOSH Director Postgres database and remove references to the disk.
   On a microbosh the database is local.
   <pre class="terminal">
   $ /var/vcap/packages/postgres/bin/psql -U postgres --password bosh
@@ -413,18 +520,17 @@ To recover a disk in this scenario, do the following:
   $ bosh cck
   </pre>
   When prompted, choose `3. Delete VM reference (DANGEROUS!)`.
-1. Edit the deployment manifest and reduce the number of instances of both cf-mysql-broker and proxy to 0, and remove the static IP for proxy. This prevents new connections from being made to the node after it is recreated but before it joins the cluster.
+1. Edit the deployment manifest and reduce the number of instances of both `cf-mysql-broker` and `proxy` to 0, and remove the static IP for `proxy`. This prevents new connections from being made to the node after it is recreated but before it joins the cluster.
 1. Deploy the release to recreate the node and remove the broker and proxy.
   <pre class="terminal">
   $ bosh deploy
   </pre>
 1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
-1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for cf-mysql-broker and proxy back to 1 and restore the static IP for proxy. 
-1. Deploy the release.
+1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`. 
+1. Redeploy the release.
   <pre class="terminal">
   $ bosh deploy
   </pre>
-
 
 ### <a id="switch-topologies"></a> Switch Between Single and HA Topologies
 
