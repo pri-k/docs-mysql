@@ -10,23 +10,18 @@ upgrade to the latest v1.7.x version before upgrading to the latest v1.8.x versi
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-## <a id="21x"></a>v2.2.x
+## <a id="22x"></a>v2.2.x
 
 ### v2.2.0
 
 **Release Date:**  December XX, 2017
 
-* Provides a new restore utility on each service instance to make restoring from a backup artifact easier.
+* Updates the mysql-restore utility to make restoring from a backup artifact easier.
   For more information, see [Restore the Service Instance](./backup-and-restore.html#restoreinstance).
-* Adds the ability to enable or disable `lower_case_table_names` for all MySQL service instances or only specific service instances.
-  This helps when migrating from legacy systems that need case insensitivity.
-  For more informatation, see [configure MySQL](./install-config.html#mysql).
-* Changes several MySQL server default configurations to provide better consistency and expected behavior when migrating
-  from the MySQL for PCF v1 series. 
-
-* Upgrades several dependencies including, `golang 1.9.0` and `xtrabackup 2.4.5`.
-* The origin for all MySQL metrics is now `p.mysql` rather than `p-mysql` to better reflect the service name.
+* Adds the ability to enable create service binding and service keys with custom usernames.
+  For more information, see [Customizing MySQL for PCF](./customize.html).
+* Enables developers to use workload profiles for best practices in server configuration.
+  For more information, see [Customizing MySQL for PCF](./customize.html).
+* Upgrades several dependencies including, `golang 1.9.1`.
 * Requires stemcell 3421.20.
-* This version of the tile can only be installed in an Ops Manager v1.11 or later environment.
-* Fixes a known issue in the v2.0 series where smoke tests failed if port 80
-  was blocked for internal traffic. All traffic from the smoke-tests errand now goes through port 443.
+* This version of the MySQL for PCF can only be installed in an Ops Manager v1.12 or later environment.

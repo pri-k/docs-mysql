@@ -45,7 +45,9 @@ To calculate the current IaaS cost/ usage across On-Demand plans:
 
 ##<a id="azs"></a> Availability Using Multiple AZs
 
-MySQL for PCF v2 supports configuring multiple availability zones but this configuration does not provide high availability.
+MySQL for PCF v2 supports configuring multiple availability zones. At a minimum, Pivotal recommends using two availability
+zones, one for the broker and one for the MySQL VMs. If you plan to configure leader follower, Pivotal recommends three availability zones as described in the
+[About Leader Follower](./about-leader-follower.html) page.
 
 ##<a id="downtime"></a> Downtime During Redeploys
 
