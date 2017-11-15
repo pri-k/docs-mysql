@@ -308,7 +308,8 @@ To disable MySQL for PCF automated backups:
 
 ## <a id="manual-backup"></a> Manual Backup
 
-MySQL for PCF v2.0 disables remote admin access to MySQL databases. To access your MySQL database to perform a manual backup, you must create a service key for each service instance you want to back up.
+MySQL for PCF v2.0 disables remote admin access to MySQL databases.
+To access your MySQL database to perform a manual backup, you must create a service key for each service instance you want to back up.
 
 This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
 
@@ -320,7 +321,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
 1. Log in:
   <pre class="terminal">$ cf login</pre>
 1. Create a service key for the MySQL service instance. Run the following command:
-    `cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME -c '{"permissions":"read-only"}'`
+    `cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME`
     <br><br>
     Where:<br>
     * `SERVICE-INSTANCE-NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
@@ -328,8 +329,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ cf create-service-key mysql-spring spring-key \
-    -c '{"permissions":"read-write"}'
+    $ cf create-service-key mysql-spring spring-key 
     Creating service key spring-key for service instance mysql-spring as admin...
     OK
     </pre>
@@ -359,13 +359,14 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `hostname`: The MySQL for PCF proxy IP address
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
-1. Use [mysqldump](https://mariadb.com/kb/en/mariadb/mysqldump/) to back up the data for your service instance. Run the following command:
-    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP --all-databases --single-transaction > BACKUP-NAME.sql`
+1. Use [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) to back up the data for your service instance.
+   Run the following command:
+    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-IP --all-databases --single-transaction > BACKUP-NAME.sql`
     <br><br>
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL-PROXY-IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `MYSQL-IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
     * `BACKUP-NAME`: Enter a name for the backup file.
 
     For example:
