@@ -143,6 +143,9 @@ Follow the steps below for each plan that you want to be active and used in your
 1. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><td><strong>Multi-node deployment</strong></td>
+        <td>Check the box to configure a leader-follower plan. Leave unchecked to configure each instance as a singleton.
+            For more information, see the [About Leader Follower](./about-leader-follower.html) page.</td></tr>
     <tr><td><strong>Service Plan Access</strong></td>
         <td>Accept the default to enable access to all organizations in your PCF deployment.
             Select **Disable** to disable creating new services instances of this plan for all organizations.
@@ -164,9 +167,12 @@ Follow the steps below for each plan that you want to be active and used in your
                 that is three times as large as you intend to provide to developers.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
-    <tr><td><strong>MySQL Availability Zone</strong></td>
-        <td>Select one AZ for the single node.
-            The plan creates all service instance VMs in this AZ. Choose a different AZ than the one that the broker is in.</td></tr>
+    <tr><td><strong>MySQL Availability Zone(s)</strong></td>
+        <td>If you checked the **Multi-node deployment** box above, select two AZs. If you left the box unchecked, select one AZ.
+            Choose different AZ(s) than the one that the broker is in.
+            <p class="note"><strong>Note</strong>:Using only one AZ for a **Multi-node deployment** greatly reduces the ability
+            to recover from an outage and benefit from such a deployment.</p>
+            </td></tr>
   </table>
 1. Click **Save**.
 
