@@ -309,7 +309,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
 1. Log in:
   <pre class="terminal">$ cf login</pre>
 1. Create a service key for the MySQL service instance. Run the following command:
-    `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME -c '{"read-only":true}'`
+    `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME`
     <br><br>
     Where:<br>
     * `SERVICE_INSTANCE_NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
@@ -317,8 +317,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ cf create-service-key mysql-spring spring-key \
-    -c '{"read-only":true}'
+    $ cf create-service-key mysql-spring spring-key
     Creating service key spring-key for service instance mysql-spring as admin...
     OK
     </pre>
