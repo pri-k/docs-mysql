@@ -38,3 +38,32 @@ To create and find read-only credentials for an existing service instance use th
 
 <p class="note"><strong>Note</strong>: Any user with access to create a service key may provision themselves a full privileged
 service key.</p>
+
+## <a id="username"></a>Custom Username##
+
+For users that want to access the database with a specific username, MySQL for PCF enables space developers to create custom
+usernames for service keys or service bindings. Credentials can be created by using the `cf` cli to create a new [service key](https://docs.pivotal.io/pivotalcf/1-12/devguide/services/service-keys.html).
+
+To create and find custom username credentials for an existing service instance use the following steps.
+
+ 1. Create a new service key for a service-instance, specifying it to be read-only with config parameters.
+    <pre class="terminal">
+    cf create-service-key SERVICE\_INSTANCE KEY\_NAME -c '{ "username": "my\_unique\_name" }'
+    Creating service key KEY\_NAME for service instance SERVICE\_INSTANCE as admin...
+    OK</pre>
+
+ 1. Retrieve the read-only credentials from the service key with
+    <pre class="terminal">
+    cf service-key SERVICE\_INSTANCE KEY\_NAME</br>
+    {
+     "hostname": "10.10.10.5",
+     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=my\_unique\_name\u0026password=123456789",
+     "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
+     "password": "123456789",
+     "port": 3306,
+     "uri": "mysql://my\_unique\_name:123456789<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+     "username": "my\_unique\_name"
+    }</pre>
+
+<p class="note"><strong>Note</strong>: Any user with access to create a service key may provision themselves a full privileged
+service key.</p>
