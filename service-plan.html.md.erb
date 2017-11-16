@@ -64,13 +64,13 @@ The following rules apply when updating a service instance's plan:
 1. Click **Save**.
 1. Click **Apply Changes** from the Installation Dashboard.
 
-  The plan no longer appears in the Marketplace for non-admin users.
-  Existing service instances continue to exist until deleted.
+The plan will no longer appear in the Services Marketplace for non-admin users. Existing service instances will continue to exist until deleted.
 
-### <a id="leftover-plan-instances"></a>Instances Leftover after Plan Deletion
+<p class="note"><strong>Note</strong>: If you want to recover a service plan that you deleted accidentally, see <a href="troubleshooting.html#service-plan-deletion">Accidental Deletion of Service Plan</a>.</p>
 
-When deleting a plan, the **Apply Changes** step runs the `broker-registrar` errand.
-If there are still services instances that were created under that plan, the errand shows this warning:
+### <a id="leftover-plan-instances"></a>Instances Left Over After Plan Deletion
+
+When deleting a plan, the **Apply Changes** step will run the `broker-registrar` errand. If there are still services instances that were created under that plan, the errand will show this warning:
 
 <pre class="terminal">
 Warning: Service plans are missing from the broker's catalog (BROKER_CATALOG_URL)
