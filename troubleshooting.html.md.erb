@@ -34,7 +34,44 @@ If your cluster has lost quorum, you must bootstrap it.
 To determine whether you need to bootstrap your cluster, check whether the cluster has lost quorum.
 For more information, see [Bootstrapping](bootstrapping.html) for more information.
 
+#### <a id="check-state"></a> Check Cluster State
+
+To check the cluster state, connect to each MySQL node using a MySQL client and check its status.
+
+<pre class="terminal">
+$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'
++----------------------+---------+
+| Variable_name        | Value   |
++----------------------+---------+
+| wsrep_cluster_status | Primary |
++----------------------+---------+
+</pre>
+
+If all nodes are in the `Primary` component, you have a healthy cluster.
+If some nodes are in a `Non-primary` component, those nodes are not able to join the cluster.
+
+To check how many nodes are in the cluster, perform the following command:
+
+<pre class="terminal">
+$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
++--------------------+-------+
+| Variable_name      | Value |
++--------------------+-------+
+| wsrep_cluster_size | 3     |
++--------------------+-------+
+</pre>
+
+If the value of `wsrep_cluster_size` is equal to the expected number of nodes, then all nodes have joined the cluster.
+Otherwise, check network connectivity between nodes and use `monit status` to identify any issues preventing nodes from starting.
+
+For more information, see the official Galera documentation for [Checking Cluster Integrity](http://galeracluster.com/documentation-webpages/monitoringthecluster.html#checking-cluster-integrity).
+
+To restart your cluster, see [Bootstrapping](bootstrapping.html).
+
 #### <a id="check-replication"></a>Check Replication Status
+
+If you see stale data in your cluster, check whether replication is 
+functioning normally. 
 
 Perform the following steps to check the replication status:
 
@@ -97,49 +134,17 @@ Perform the following steps to check the replication status:
 1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment.
    If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
 
-#### <a id="check-state"></a> Check Cluster State
-
-To check the cluster state, connect to each MySQL node using a MySQL client and check its status.
-
-<pre class="terminal">
-$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'
-+----------------------+---------+
-| Variable_name        | Value   |
-+----------------------+---------+
-| wsrep_cluster_status | Primary |
-+----------------------+---------+
-</pre>
-
-If all nodes are in the `Primary` component, you have a healthy cluster.
-If some nodes are in a `Non-primary` component, those nodes are not able to join the cluster.
-
-To check how many nodes are in the cluster, perform the following command:
-
-<pre class="terminal">
-$ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
-+--------------------+-------+
-| Variable_name      | Value |
-+--------------------+-------+
-| wsrep_cluster_size | 3     |
-+--------------------+-------+
-</pre>
-
-If the value of `wsrep_cluster_size` is equal to the expected number of nodes, then all nodes have joined the cluster.
-Otherwise, check network connectivity between nodes and use `monit status` to identify any issues preventing nodes from starting.
-
-For more information, see the official Galera documentation for [Checking Cluster Integrity](http://galeracluster.com/documentation-webpages/monitoringthecluster.html#checking-cluster-integrity).
-
-To restart your cluster, see [Bootstrapping](bootstrapping.html).
-
 ## <a id='troubleshooting'></a>Troubleshoot Problems
 
 This section lists symptoms, solutions, and explanations for the following common problems:
 
-+ [Many Replication Errors in Logs](#replication-errors)
-+ [Accidental Deletion of Service Plan](#service-plan-deletion)
-+ [No Space Left](#no-space)
-+ [Node Unable to Rejoin](#wont-rejoin)
-+ [Unresponsive Node(s)](#unresponsive)
+* Cluster errors:
+  + [Many Replication Errors in Logs](#replication-errors)
+  + [No Space Left](#no-space)
+  + [Node Unable to Rejoin](#wont-rejoin)
+  + [Unresponsive Node(s)](#unresponsive)
+* User errors:
+  + [Accidental Deletion of Service Plan](#service-plan-deletion)
 
 ### <a id="replication-errors"></a> Many Replication Errors in Logs
 
@@ -181,6 +186,147 @@ The article offers a demonstration of what is possible, but does not explain how
 Disregard the replication errors as a normal behavior.
 If you see the "ALTER TABLE" error, fix the user error that produced it.
 
+### <a id="no-space"></a> No Space Left
+
+#### Symptom
+
+You may encounter one or more of the following symptoms when MySQL has run out of space: 
+
+* MySQL gives an error that reports it is out of space
+* Queries start failing
+* Apps are unable to connect
+* You are unable to SSH into a node
+
+#### Explanation
+
+When MySQL runs out of space, it stops functioning normally.
+
+#### Solution
+
+1. Use the [mysql-diag](mysql-diag.html) tool to determine how much space you have left. If the disk is too full, the `mysql-diag` won't work.
+1. Redeploy with more persistent disk.
+1. After redeploying, you may encounter further errors. To troubleshoot these errors, see the other sections in [Troubleshoot Problems](#troubleshooting).
+
+### <a id="wont-rejoin"></a> Node Unable to Rejoin
+
+#### Symptom
+
+A MySQL node is unable to rejoin a cluster.
+
+#### Explanation
+
+Existing server nodes restarted with `monit` should automatically join the cluster.
+If a detached existing node fails to join the cluster, it might be because its sequence number (`seqno`) is higher than those of the nodes with quorum.
+
+A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks.
+Check this by looking at the node's error log at `/var/vcap/sys/log/mysql/mysql.err.log`.
+
+#### Solution
+
+If the detached node has a higher sequence number than the primary component, perform one of the following procedures to restore the cluster:
+
+  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data.
+    See [Bootstrapping](bootstrapping.html) for more details.
+  - Abandon the unsynchronized data on the detached node by performing the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
+
+    <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+
+It might also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone.
+
+### <a id="unresponsive"></a> Unresponsive Node(s)
+
+#### Symptom
+
+A MySQL node has become unresponsive.
+
+#### Explanation
+
+##### Overview
+
+Unresponsive nodes stop responding to queries and, after timing out, leave the cluster.
+
+Nodes are marked as unresponsive or inactive under either of the following circumstances:
+
+- If they fail to respond to one node within 15 seconds
+- If they fail to respond to all other nodes within 5 seconds
+
+Unresponsive nodes that become responsive again will rejoin the cluster,
+as long as they are on the same IP which is pre-configured in the `gcomm` address on all of the other running nodes and a quorum is held by the remaining nodes.
+
+All nodes suspend writes once they notice a problem with the cluster.
+After a timeout period of 5 seconds, requests to non-quorum nodes fail.
+Most clients return the error: `WSREP has not yet prepared this node for application use`.
+Some clients may instead return `unknown error`.
+Nodes who have reached quorum continue fulfilling write requests.
+
+If deployed using a proxy, a continually inactive node causes the proxy to fail over, selecting a different MySQL node to route new queries to.
+
+##### Reasons for Unresponsive Node
+
+A node can become unresponsive for a number of reasons. Each reason corresponds to a different solution. Consult the following list:
+
+- [Network Latency](#network-latency)
+- [MySQL Process Failure](#mysql-process-failure)
+- [Firewall Rule Change](#firewall-rule-change)
+- [VM Failure](#vm-failure)
+- [The Interruptor](#interruptor) 
+
+#### Solutions
+
+##### <a id='network-latency'></a>Network Latency
+
+If network latency causes a node to become unresponsive, the node drops but eventually rejoins.
+
+The node will only rejoin automatically if only one node has left the cluster.
+
+Consult your IaaS network settings to reduce your network latency.
+
+##### <a id='mysql-process-failure'></a>MySQL Process Failure
+
+If the MySQL process crashes, monit and BOSH will bring the process back. No further action is necessary.
+
+##### <a id='firewall-rule-change'></a>Firewall Rule Change
+
+If firewall rules change, it may prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.  
+
+In this scenario, the logs show the node leaving the cluster but do not show network latency errors.
+
+To confirm that the node is unresponsive due to a firewall rule change, try to SSH from a responsive node to the unresponsive node. If you can't connect, the node is unresponsive due to a firewall rule change.
+
+Change the firewall rules to enable the unresponsive node to rejoin the cluster.
+
+##### <a id='vm-failure'></a>VM Failure
+
+If you cannot SSH onto a node, and you are not detecting either network 
+latency or firewall issues, your node may be down due to VM failure.
+
+To confirm that VM failure has caused the node to become unresponsive, perform the following steps:
+
+1. SSH into the Ops Manager Director. For more information, see the [SSH into Ops Manager](http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh) section in <em>Advanced Troubleshooting with the BOSH CLI</em>.
+1. Retrieve the IP address for the MySQL server by navigating to the **MySQL for PCF** tile and clicking the **Status** tab.
+1. Retrieve the VM credentials for the MySQL server by navigating to the **MySQL for PCF** tile and clicking the **Credentials** tab.
+1. From the Ops Manager Director VM, use the BOSH CLI to log in to the BOSH Director:
+  * If you are using PCF v1.10, follow the BOSH CLI v1 procedure in [Log in to the BOSH Director](http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh1-access).
+  * If you are using PCF v1.11 or later, follow the BOSH CLI v2 procedure in [Log in to the BOSH Director](http://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#bosh2-access).
+1. From the Ops Manager VM, use the BOSH CLI to run `bosh cloudcheck`. Follow the procedure in [BOSH Cloudcheck](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#cck). If you are using PCF v1.10, use the BOSH CLI v1 commands. If you are using PCF v1.11 or later, use the BOSH CLI v2 commands.
+1. In `bosh cloudcheck`, identify the unresponsive node and recreate it.
+  <p class="note warning"><strong>WARNING</strong>: Recreating a node will clear its logs. Ensure the node is completely down before recreating it.</p>
+  <p class="note warning"><strong>WARNING</strong>: Only recreate one node. Do not recreate the entire cluster. If more than one node is down, contact [Pivotal Support](https://support.pivotal.io).</p>
+
+##### <a id='interruptor'></a>The Interruptor
+
+If you have enabled the Interruptor, it may be preventing a node from starting. 
+
+You can confirm that the Interruptor has activated by examining `/var/vcap/sys/log/mysql/mysql.err.log` on the failing node. The log contains the following message:
+
+```
+WSREP_SST: [ERROR] ##################################################################################### (20160610 04:33:21.338)
+WSREP_SST: [ERROR] SST disabled due to danger of data loss. Verify data and run the rejoin-unsafe errand (20160610 04:33:21.340)
+WSREP_SST: [ERROR] ##################################################################################### (20160610 04:33:21.341)
+```
+
+Perform the procedure in the [Override the Interruptor](interruptor.html#force-rejoin) section of <em>Using the Interruptor</em> to force the node to rejoin the cluster.
+
 ### <a id="service-plan-deletion"></a> Accidental Deletion of Service Plan ##
 
 #### Symptom
@@ -217,80 +363,3 @@ If you have performed steps 1, 2, and 3 in the above sequence, do not click **Ap
 Return to the **Ops Manager Installation Dashboard** and click the **Revert** button.
 Any accidental changes are discarded.
 
-### <a id="no-space"></a> No Space Left
-
-#### Symptom
-
-You receive an error that reports MySQL has no space left.
-
-#### Explanation
-
-If a server simultaneously processes multiple large queries that require [Temporary Tables](./architecture.html#temp-tables),
-they may use more disk space than allocated to the MySQL nodes.
-Queries might return `no space left` errors. 
-
-Users can see if a query is using a temporary table by using the `EXPLAIN` command and looking for `Using temporary` in the output.
-
-#### Solution
-
-Redeploy with more persistent disk to avoid these issues.
-
-### <a id="wont-rejoin"></a> Node Unable to Rejoin
-
-#### Symptom
-
-A MySQL node is unable to rejoin a cluster.
-
-#### Explanation
-
-Existing server nodes restarted with `monit` should automatically join the cluster.
-If a detached existing node fails to join the cluster, it might be because its sequence number (`seqno`) is higher than those of the nodes with quorum.
-
-A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks.
-Check this by looking at the node's error log at `/var/vcap/sys/log/mysql/mysql.err.log`.
-
-#### Solution
-
-If the detached node has a higher sequence number than the primary component, perform one of the following procedures to restore the cluster:
-
-  - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data.
-    See [Bootstrapping](bootstrapping.html) for more details.
-  - Abandon the unsynchronized data on the detached node by performing the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
-
-    <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
-
-It might also be possible to manually dump recent transactions from the detached node and apply them to the running cluster, but this process is error-prone.
-
-### <a id="unresponsive"></a> Unresponsive Node(s)
-
-#### Symptom
-
-A MySQL node has become unresponsive.
-
-#### Explanation
-
-A node can become unresponsive for a number of reasons:
-
-- Network latency
-- MySQL process failure
-- Firewall rule changes
-- VM failure
-- The [Interruptor](interruptor.html) has prevented a node from starting
-
-Unresponsive nodes stop responding to queries and, after timing out, leave the cluster.
-
-Nodes are marked as unresponsive or inactive under either of the following circumstances:
-
-- If they fail to respond to one node within 15 seconds
-- If they fail to respond to all other nodes within 5 seconds
-
-Unresponsive nodes that become responsive again will rejoin the cluster,
-as long as they are on the same IP which is pre-configured in the `gcomm` address on all of the other running nodes and a quorum is held by the remaining nodes.
-
-All nodes suspend writes once they notice a problem with the cluster.
-After a timeout period of 5 seconds, requests to non-quorum nodes fail.
-Most clients return the error: `WSREP has not yet prepared this node for application use`.
-Some clients may instead return `unknown error`.
-Nodes who have reached quorum continue fulfilling write requests.
-
-If deployed using a proxy, a continually inactive node causes the proxy to fail over, selecting a different MySQL node to route new queries to.
