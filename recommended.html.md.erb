@@ -3,13 +3,11 @@ title: MySQL for PCF Recommended Usage and Limitations
 owner: MySQL
 ---
 
-##<a id="usecases"></a> Recommended Use Cases
+## <a id="usecases"></a> Recommended Use Cases
 
 MySQL is a powerful open-source relational database used by apps since the mid-90s. Developers have relied on MySQL as a first step to storing, processing and sharing data. As its user community has grown, MySQL has become a robust system capable of handling a wide variety of use cases and very significant workloads. Unlike other traditional databases which centralize and consolidate data, MySQL lends itself to dedicated deployment supporting the “shared nothing” context of building apps in the cloud.
 
-##<a id="serviceplan"></a> Service Plan Recommended Usage and Limitations
-
-###<a id="ondemand"></a> On-Demand Plans
+##<a id="ondemand"></a> About On-Demand Plans
 * Each on-demand plan instance is deployed to its own VM and is suitable for production workloads.
 * The maximum-number of on-demand plan instances available to developers is set by the operator and enforced on both a global and per-plan level quota. The global quota cannot exceed 50.
 * Operators can update the plan settings, including the VM size and disk size after the plans have been created. **Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.**
@@ -17,31 +15,9 @@ MySQL is a powerful open-source relational database used by apps since the mid-9
 * Cannot scale down the size of VMs on the plan once deployed (this protects against data loss).
 * The default maximum number of connections is set at 750.
 
-###<a id="resources"></a> Resource Usage Planning for On-Demand Plans
+## <a id="resources"></a> Resource Usage Planning for On-Demand Plans
 
-<p class="note">
-MySQL On-Demand plans use dedicated VM and disks, which will consume IaaS resources. Operators can limit resource usage with Plan Quotas and a Global Quota, but resource usage will vary based on number of On-Demand instances provisioned.
-</p>
-
-If the number of on-demand instances is greater than or equal to the Global Quota set on the 'On Demand Service Settings' page, no new instances can be provisioned.
-
-To calculate the maximum cost/ usage for each plan:
-
-<pre>max_plan_resources = plan_quota x plan_resources</pre>
-
-To calculate the maximum cost across plans, add together the cost/ usage for each plan, while the quotas sum to less than the global quota.
-
-<pre>
-While (plan_1_quota + plan_2_quota) ≤ global_quota:
-max_resources = (plan_1_quota x plan_1_resources) + ( plan_2_quota x plan_2_resources)
-</pre>
-
-To calculate the current IaaS cost/ usage across On-Demand plans:
-
-1. Current instances provisioned for all plans can be found by referencing the `total_instance` metric.
-1. Multiple the `total_instance` for each plan by that plan's resources. Sum all plans that are active to get your total current usage
-
-<pre>current_usage = (plan_1_total_instances x plan_1_resources) + (plan_2_total_instances x plan_2_resources)</pre>
+For information on setting limits and calculating costs for on-demand service instances, see [Setting Limits for On-Demand Service Instances](./set-quotas.html).
 
 ##<a id="azs"></a> Availability Using Multiple AZs
 
@@ -53,9 +29,9 @@ zones, one for the broker and one for the MySQL VMs. If you plan to configure le
 
 Redeploying MySQL for PCF for configuration changes or upgrades will result in MySQL being inaccessible to apps for a brief period of time.
 
-##<a id="persistent"></a> MySQL Persistent Disk Utilization
+##<a id="persistent"></a> MySQL Persistent Disk Usage
 
-MySQL backups are taken on the VM and temporarily stored and encrypted on the VM. This results in increased disk utilization while backups are being taken.
+MySQL backups are taken on the VM and temporarily stored and encrypted on the VM. This results in increased disk usage while backups are being taken.
 When enabling backups, we recommend choosing persistent disk sizes that are three times larger than you intend to be available to app developers using the service.
 
 Backups require two to three times as much disk space as the server needs. The first is for the actual data, the second is the copied backup, and the third is for the encrypted backup.
