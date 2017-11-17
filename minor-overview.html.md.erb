@@ -80,6 +80,7 @@ Review the following table to determine if MySQL for PCF v2 has the features nee
 MySQL for PCF v2 supports configuring multiple AZs.
 However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
 
-+ On-Demand plans can be assigned to any of the configured availability zones. You can select 2 AZs
-for the Multi-Node configured plans to increase the availability. Choosing 3 AZs for "Multi-Node" or 2 AZs for single node
-plans will not increase the number of AZs used past 2 or 1 respectively.
+* On-Demand plans can be assigned to any of the configured availability zones. 
+* You can select 2 AZs
+for the multi-node plans to increase the availability. Choosing 3 AZs for multi-node plans does not increase the number of AZs assigned to 3.
+* You can select 1 AZ for the single-node plan. Choosing 2 AZs for the single-node plan does not increase the number of AZs assigned to 2.
