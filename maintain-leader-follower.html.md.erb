@@ -7,13 +7,13 @@ This topic explains how to maintain availability of your MySQL databases by keep
 one on a leader (master) instance and a second one on a follower (slave) instance. 
 
 The procedures in this topic assume that you have enabled Leader-Follower for your database instances. 
-For more information, see Some paragraphs in the Overview and Somewhere in the Planning Guide.
+For more information, see [About Leader-Follower](./about-leader-follower.html).
 
 ## <a id="pre-reqs"></a>Any Prerequisites?
 
 Such as you must have set up Leader-Follower ... cross reference some instructions for set up in the Installing and Configuring topic.
 
-## <a id="something1"></a>Imperative Verb + Adjective + Noun
+## <a id="communication"></a>Set up Leader-Follower Communication
 
 Introduction to procedure... To do X, follow the steps below:
 
@@ -30,3 +30,12 @@ Only use a warning if loss of data will happen if the warning is not heeded.
 
 <p class="note warning">
 <strong>WARNING</strong>:Warnings are formatted like this.</p>
+
+## <a id="monitor"></a> Monitor Leader-Follower Instances
+
+In order to decide if a failover is needed, you must monitor leader-follower instances.
+
+## <a id="failover"></a> Trigger a Failover
+
+What happens when you failover? Do you now need to designate a new leader? Or is this automatic?
+
