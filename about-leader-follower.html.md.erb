@@ -12,7 +12,7 @@ A leader-follower database is used to increase the availability of your database
 is analogous to master-slave.
 
 When a developer creates a leader-follower service instance,
-the on-demand broker deploys two MySQL VMs in two separate availability zones.
+the on-demand broker deploys two MySQL VMs in two separate availability zones (AZs).
 Any data that is written to the leader is asynchronously replicated to the follower.
 
 The follower VM is only for increasing availability
@@ -22,7 +22,7 @@ For more information, see [Provide Optional Parameters](./change-default.html#op
 
 ## <a id="failover"></a>Understanding Failover
 
-MySQL for PCF focuses on data consistency above all else, and relies on operators
+MySQL for PCF focuses on data consistency above all else and relies on operators
 to trigger a failover. MySQL for PCF does not automatically failover to the follower.
 When an operator triggers a failover, application traffic is sent to the standby follower.
 
@@ -32,17 +32,18 @@ how to trigger a failover, see [Trigger a Failover](./maintain-leader-follower.h
 
 ## <a id="iaas"></a> Infrastructure Requirements for Leader-Follower Deployments
 
-Leader-Follower instances have additional infrastructure requirements than previous singleton instances, as described below.
+Leader-follower instances have additional infrastructure requirements to previous singleton instances, as described below.
 
 ### Capacity Planning
 
-When calculating IaaS usage, you must take into account that each leader follower instance requires two VMs. Therefore, the resources used
-for a leader-follower-enabled plan must be doubled. For more information, [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
+When calculating IaaS usage, you must take into account that each leader-follower instance requires two VMs. Therefore, the resources used
+for a leader-follower-enabled plan must be doubled.
+For more information, [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
 
 ### Availability Zones
 
-To minimize impact of an availability zone outage, and to remove single points of failure, Pivotal recommends that you
-provision three availability zones if using leader-follower deployments. With three availability zones, the MySQL VMs
+To minimize impact of an AZ outage and to remove single points of failure, Pivotal recommends that you
+provision three AZs if using leader-follower deployments. With three AZs, the MySQL VMs
 are deployed to two AZs, and the broker is deployed to a third.
 
 ### Networking Rules
