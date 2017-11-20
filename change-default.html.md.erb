@@ -3,87 +3,104 @@ title: Changing MySQL Server Defaults
 owner: MySQL
 ---
 
-This topic provides instructions for developers customizing their MySQL for Pivotal Cloud Foundry (PCF) service instances.
+This topic provides instructions for developers to set optional parameters to change the MySQL for Pivotal Cloud Foundry (PCF) server defaults.  
 
-These procedures use the Cloud Foundry Command Line Interface (cf CLI). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to perform the same tasks using a graphical UI.
+These procedures use the Cloud Foundry Command Line Interface ([cf CLI](https://docs.pivotal.io/pivotalcf/1-12/devguide/services/managing-services.html)). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to perform the same tasks using a graphical UI.
 
 For general information about using MySQL for PCF, see [Using MySQL for PCF](./use.html).
 
-## <a id="Configuring"></a>Configure Service Instances
+## <a id="configuring"></a>Optional Parameters for the MySQL for PCF Service Instances
 
 MySQL for PCF service instances are configured by default with industry best practices. For more
-specific use cases, you can customize MySQL for PCF service instances with the cf CLI.
-
-### <a id='optional-param'></a> Provide Optional Parameters
-
-You can change the default configuration of a service instance by passing optional parameters to `cf create-service`
-using the `-c` flag. The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
-provided either in-line or in a file.
-
-The MySQL service broker supports the following parameters:
+specific use cases, you can customize the following parameters:
 
 | Key | Type | Default | Description |
 | ---- | ---- | ---- | ---- |
-| `workload` | String | `mixed`| You can set this property to `read-heavy`, `mixed`, or `write-heavy`, depending on the expected application profile. For more information, see the [Understanding Workload Types](#workload) section below. |
-| `enable_lower_case_table_names` | Boolean | `false` | If you set this property to `true`, it sets MySQL's `lower_case_table_names` property to `1`. For more information, consult the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names). You can only set this property when creating a service instance. |
+| `workload` | String | `mixed`| You can set this to `read-heavy`, `mixed`, or `write-heavy`. For more information, see [Understanding Workload Types](#workload). |
+| `enable_lower_case_table_names` | Boolean | `false` | You can only set this when creating a service instance. If you set this to `true`, table names are stored in lowercase. For more information, see [Understanding Lowercase Table Names](#lowercase).  |
+
+## <a id="parameters"></a> Use Optional Parameters
+
+You can change these default configuration parameters using the cf CLI as follows:
+
+* `workload`---When creating a new instance, or updating an existing one
+* `enable_lower_case_table_names`---When creating a new instance 
+
+### <a id="creating"></a> Change Default Parameters when Creating a Service Instance
+
+To create a service instance using optional parameters use the following command:
+
+`cf create-service SERVICE SERVICE-PLAN SERVICE-INSTANCE -c '{ "PARAMETER": "PARAMETER-VALUE" }'`
 
 
-If you encounter an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
+The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
+provided either in-line or in a file.
 
-#### <a id='workload'></a> Understand Workload Types
 
-MySQL for PCF offers three workload profiles that developers can use to configure MySQL to best support application traffic
-dependent on the type or characteristics of the application traffic. By offering workload profiles, developers can use industry
-best practices without needing to know how to configure and tune a MySQL database.
-
-##### Mixed Workload
-
-By default, each MySQL service instance will be configured for a "mixed" workload. The configuration for this profile
-is described in detail in [MySQL Server Defaults](./server-defaults.html).
-
-To change an existing service instance to use the `mixed` workload profile, or to create a new service instance with the `mixed` workload profile, use
-a `update-service` or `create-service` command with `workload` set to `mixed` as a parameter. For example:
-
+For example:
 <pre class="terminal">
 $ cf create-service p.mysql db-small myDB -c '{ "workload": "mixed" }'
 Creating service instance myDB in org system / space system as admin...
 OK<br />
 Create in progress. Use 'cf services' or 'cf service myDB' to check operation status.</pre>
 
-##### Read-Heavy Workload
 
-For applications that have a large number of reads, the service instance can be configured for a "read-heavy" workload.
-In addition to the default configuration described in [MySQL Server Defaults](./server-defaults.html), the read-heavy
-workload profile updates two properties:
+If you get an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-- `innodb_buffer_pool_sizd` is increased to 75% of the MySQL VM's memory
-- `innodb_flush_methdo` is set to `O_DIRECT`
+### <a id="updating"></a> Change Default Parameters on an Existing Service Instance
 
-To change an existing service instance to use the `read-heavy` workload profile, or to create a new service instance with the `read-heavy` workload profile, use
-a `update-service` or `create-service` command with `workload` set to `read-heavy` as a parameter. For example:
+To change the default parameters of an existing instance use the following command:
 
-<pre class="terminal">
-$ cf create-service p.mysql db-small myDB -c '{ "workload": "read-heavy" }'
-Creating service instance myDB in org system / space system as admin...
-OK<br />
-Create in progress. Use 'cf services' or 'cf service myDB' to check operation status.</pre>
+`cf update-service SERVICE SERVICE-PLAN SERVICE-INSTANCE -c '{ "PARAMETER": "PARAMETER-VALUE" }'`
 
-##### Write-Heavy Workload
 
-For applications that write to the database a lot, the service instance can be configured for a "write-heavy" workload.
-In addition to the default configuration described in [MySQL Server Defaults](./server-defaults.html), the write-heavy
-workload profile updates four properties:
+The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
+provided either in-line or in a file.
 
-- `innodb_buffer_pool_sizd` is increased to 75% of the MySQL VM's memory
-- `innodb_flush_methdo` is set to `O_DIRECT`
-- `innodb_log_file_size` is increased to 1GB
-- `max_allowed_packets` is increased to 1GB
-
-To change an existing service instance to use the `write-heavy` workload profile, or to create a new service instance with the `write-heavy` workload profile, use
-a `update-service` or `create-service` command with `workload` set to `write-heavy` as a parameter. For example:
+For example:
 
 <pre class="terminal">
-$ cf create-service p.mysql db-small myDB -c '{ "workload": "write-heavy" }'
-Creating service instance myDB in org system / space system as admin...
-OK<br />
-Create in progress. Use 'cf services' or 'cf service myDB' to check operation status.</pre>
+$ cf update-service p.mysql db-small myDB -c '{ "workload": "mixed" }'
+</pre>
+
+
+If you get an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
+
+## <a id='workload'></a> Understanding Workload Types
+
+MySQL for PCF offers three workload profiles that developers can use to configure MySQL instances based on their specific application workloads. For instructions on changing configuration options, see [Use Optional Parameters](#parameters).
+
+<table class="nice">
+	<th>Profile</th><th>Description</th>
+	<tr>
+		<td>Mixed Workload</td>
+		<td>By default, each MySQL service instance is configured for a mixed workload, that is, a  workload that is equally heavy on reads and writes. The configuration for this profile is described in detail in <a href="./server-defaults.html">MySQL Server Defaults</a>.</td>
+	</tr>
+	<tr>
+		<td>Read-Heavy Workload</td>
+		<td>For applications that have a large number of reads, the service instance can be configured for a read-heavy workload. The read-heavy profile changes these two properties from the <a href="./server-defaults.html">MySQL Server Defaults</a>:
+
+<ul>
+<li><code>innodb_buffer_pool_sizd</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
+<li><code>innodb_flush_methdo</code> is set to <code>O_DIRECT</code></li>
+</ul>
+
+	<tr>
+		<td>Write-Heavy Workload</td>
+		<td>For applications that write to the database a lot, the service instance can be configured for a write-heavy workload. The write-heavy profile changes these four properties from the <a href="./server-defaults.html">MySQL Server Defaults</a>:
+<ul>
+<li><code>innodb_buffer_pool_sizd</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
+<li><code>innodb_flush_methdo</code> is set to <code>O_DIRECT</code></li>
+<li><code>innodb_log_file_size</code> is increased to <code>1GB</code></li>
+<li><code>max_allowed_packets</code> is increased to <code>1GB</code></li>
+</ul>
+</table> 
+
+## <a id="lowercase"></a> Understanding Lowercase Table Names
+
+If you are migrating a database from a system that was case insensitive, that is, where `TableName` is the same as `TABLEname`, then forcing lowercase turns both into `tablename`. In this way both names are interpreted as the same table. 
+
+For more information, see the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
+
+
+
