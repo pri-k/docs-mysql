@@ -23,18 +23,20 @@ for gathering information to diagnose the type of failure the cluster is experie
   - Type of environment the MySQL deployment is running in (Elastic Runtime, MySQL for PCF, or other)
   - Versions of the installed Ops Manager, Elastic Runtime, and MySQL for PCF
 
-For more diagnostic techniques, see the following section.
+For more diagnostic techniques, see the following [section](#diagnostic-techniques).
+  
+## <a id="diagnostic-techniques"></a> Diagnostic Techniques
 
-### <a id="diagnostic-techniques"></a> Diagnostic Techniques
+After performing the procedure in the previous [section](#diagnosing), consult the following additional diagnostic techniques to learn more about your cluster.
 
-#### <a id="check-quorum"></a> Check for Lost Quorum
+### <a id="check-quorum"></a> Check for Lost Quorum
 
 If your cluster has lost quorum, you must bootstrap it.
 
 To determine whether you need to bootstrap your cluster, check whether the cluster has lost quorum.
 For more information, see [Bootstrapping](bootstrapping.html) for more information.
 
-#### <a id="check-state"></a> Check Cluster State
+### <a id="check-state"></a> Check Cluster State
 
 To check the cluster state, connect to each MySQL node using a MySQL client and check its status.
 
@@ -68,7 +70,7 @@ For more information, see the official Galera documentation for [Checking Cluste
 
 To restart your cluster, see [Bootstrapping](bootstrapping.html).
 
-#### <a id="check-replication"></a>Check Replication Status
+### <a id="check-replication"></a>Check Replication Status
 
 If you see stale data in your cluster, check whether replication is 
 functioning normally. 
