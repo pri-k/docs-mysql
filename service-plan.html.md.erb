@@ -1,59 +1,11 @@
 ---
-title: Controlling Resource Use
+title: Controlling Access to Service Plans by Org
 owner: MySQL
 ---
 
-This topic tells operators how to control resource use, that is number and size of service instances used by
-MySQL for Pivotal Cloud Foundry (PCF) v2, by setting a maximum number of service instances
-and by only allowing certain orgs to use some service plans. 
-
-**Example 1: Limit the Number of Service Instances**
-
-Resource costs have been increasing. 
-Employees don't delete their databases after tests.
-To stop employees wasting so many resources,
-you set quotas for the number of services instances that can exist at a time: 
-
-* Set a _global_ quota for the total number of service instances used by MySQL for PCF.
-* Set a _per-plan_ quota for the service-plan with the most expensive service instances, that is, VM types.
-
-**Example 2: Limit Plan Access**
-
-You have a service plan called db-large which uses large service instances,
-and it's in an expensive availability zone, too. 
-You want this MySQL for PCF plan used only for your flagship production app. 
-To prevent your development team from creating service instances in this plan,
-specify that only members of the production org can access the db-large plan.   
-
-## <a id="quotas"></a> Quotas
-
-MySQL for PCF v2 offers two types of quotas:
-
-* [Global quota](#max-quota)
-* [Service-plan quotas](#plan-quota)
-
-###<a id="max-quota"></a>Global Quota
-
-The global quota limits the _total_ number of service instances that can be deployed by MySQL for PCF.
-
-Configuring quotas allows you to limit the number of service instances that can be deployed,
-thereby ensuring that resource consumption stays within limits.
-By default, MySQL for PCF ships with a maximum limit of 50 service instances:
-this means that the MySQL for PCF service broker never deploys more than 50 service instances.
-You can set this quota to less than 50, but never to more than 50.
-
-To configure a global quota, see [Configure Global Quotas](./install-config.html#global).
-
-###<a id="plan-quota"></a>Service-Plan Quotas 
-
-A service-plan quota limits the number of service instances for _one plan_.
-
-In the case where a service plan is configured to use a lot of resources, RAM or disk space, 
-you might want to limit the number of service instances of this plan that can be configured.
-Setting a service plan quota on the more expensive plan ensures that resource consumption does not exceed an acceptable amount.
-
-To configure a service-plan quota, see [Configure Active Service Plans](./install-config.html#active).
-
+This topic gives instructions for controlling access to service plans by org. 
+You can also set limits for the number of service intances globally and per plan. 
+For more information, see [Setting Limits for On-Demand Instances](./set-quotas.html).
 
 ## <a id="service-plan-access"></a> Control Access to Service Plan by Orgs
 
