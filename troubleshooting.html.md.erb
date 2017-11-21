@@ -23,11 +23,11 @@ for gathering information to diagnose the type of failure the cluster is experie
   - Type of environment the MySQL deployment is running in (Elastic Runtime, MySQL for PCF, or other)
   - Versions of the installed Ops Manager, Elastic Runtime, and MySQL for PCF
 
-For more diagnostic techniques, see the following [section](#diagnostic-techniques).
+For more diagnostic techniques, see [Diagnostic Techniques](#diagnostic-techniques).
   
 ## <a id="diagnostic-techniques"></a> Diagnostic Techniques
 
-After performing the procedure in the previous [section](#diagnosing), consult the following additional diagnostic techniques to learn more about your cluster.
+After performing the procedure in [Diagnose Problems](#diagnosing), consult the following additional diagnostic techniques to learn more about your cluster.
 
 ### <a id="check-quorum"></a> Check for Lost Quorum
 
@@ -243,8 +243,6 @@ A MySQL node has become unresponsive.
 
 #### Explanation
 
-##### Overview
-
 Unresponsive nodes stop responding to queries and, after timing out, leave the cluster.
 
 Nodes are marked as unresponsive or inactive under either of the following circumstances:
@@ -263,7 +261,7 @@ Nodes who have reached quorum continue fulfilling write requests.
 
 If deployed using a proxy, a continually inactive node causes the proxy to fail over, selecting a different MySQL node to route new queries to.
 
-##### Reasons for Unresponsive Node
+#### Solutions
 
 A node can become unresponsive for a number of reasons. Each reason corresponds to a different solution. Consult the following list:
 
@@ -272,8 +270,6 @@ A node can become unresponsive for a number of reasons. Each reason corresponds 
 - [Firewall Rule Change](#firewall-rule-change)
 - [VM Failure](#vm-failure)
 - [The Interruptor](#interruptor) 
-
-#### Solutions
 
 ##### <a id='network-latency'></a>Network Latency
 
