@@ -271,7 +271,7 @@ A node can become unresponsive for a number of reasons. Each reason corresponds 
 - [VM Failure](#vm-failure)
 - [The Interruptor](#interruptor) 
 
-##### <a id='network-latency'></a>Network Latency
+#### <a id='network-latency'></a>Network Latency
 
 If network latency causes a node to become unresponsive, the node drops but eventually rejoins.
 
@@ -279,11 +279,11 @@ The node will only rejoin automatically if only one node has left the cluster.
 
 Consult your IaaS network settings to reduce your network latency.
 
-##### <a id='mysql-process-failure'></a>MySQL Process Failure
+#### <a id='mysql-process-failure'></a>MySQL Process Failure
 
 If the MySQL process crashes, monit and BOSH will bring the process back. No further action is necessary.
 
-##### <a id='firewall-rule-change'></a>Firewall Rule Change
+#### <a id='firewall-rule-change'></a>Firewall Rule Change
 
 If firewall rules change, it may prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.  
 
@@ -293,7 +293,7 @@ To confirm that the node is unresponsive due to a firewall rule change, try to S
 
 Change the firewall rules to enable the unresponsive node to rejoin the cluster.
 
-##### <a id='vm-failure'></a>VM Failure
+#### <a id='vm-failure'></a>VM Failure
 
 If you cannot SSH onto a node, and you are not detecting either network 
 latency or firewall issues, your node may be down due to VM failure.
@@ -311,7 +311,7 @@ To confirm that VM failure has caused the node to become unresponsive, perform t
   <p class="note warning"><strong>WARNING</strong>: Recreating a node will clear its logs. Ensure the node is completely down before recreating it.</p>
   <p class="note warning"><strong>WARNING</strong>: Only recreate one node. Do not recreate the entire cluster. If more than one node is down, contact [Pivotal Support](https://support.pivotal.io).</p>
 
-##### <a id='interruptor'></a>The Interruptor
+#### <a id='interruptor'></a>The Interruptor
 
 If you have enabled the Interruptor, it may be preventing a node from starting. 
 
