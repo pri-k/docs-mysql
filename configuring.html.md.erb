@@ -31,9 +31,15 @@ Service plans offer developers different versions of the MySQL service. An examp
 
 The proxy tier routes connections from apps to healthy MariaDB cluster nodes, even in the event of node failure.
 
-- In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances. These IP addresses must be in the CIDR range configured in the Director tile and not be currently allocated to another VM. Look at the **Status** pages of other tiles to see what IP addresses are in use.
+- In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances.  
+    * These IP addresses must be in the CIDR range configured in the Director tile and not be currently allocated to another VM. 
+    * Look at the **Status** pages of other tiles to see what IP addresses are in use.  
+    * You must make the **Proxy** instance count in the [Resource Config tab](#resource-config) the same as the number of IP addresses you enter in this field.
+    * For high availability, you must also ensure you increase the number of **MySQL Server** instances from one to three in the [Resource Config tab](#resource-config). For more information on high availability, see [Switch Between Single and HA Topologies](#switch-topologies).
 
-- In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service. This hostname or IP address should resolve to your load balancer and be considered long-lived. When this field is modified, applications must be rebound to receive updated credentials.
+- In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service. 
+    * This hostname or IP address should resolve to your load balancer and be considered long-lived. 
+    * When this field is modified, applications must be rebound to receive updated credentials.
 
 To enable their PCF apps to use a MySQL database, developers bind their apps to instances of the MySQL for PCF service. For more information, see [Application Binding](http://docs.pivotal.io/pivotalcf/devguide/services/index.html#application-binding). By default, the MySQL service provides bound apps with the IP address of the first instance in the proxy tier, even with multiple proxy instances deployed. This makes the first proxy instance a single point of failure unless you deploy a load balancer.
 
@@ -253,11 +259,16 @@ Ops Manager runs the broker-deregistrar errand to clean up when it uninstalls a 
 
 ![Configure Resources](config-resources.png)
 
-This pane configures the number, persistent disk capacity, and VM type for all component VMs that run the MySQL for PCF service.
+This pane configures the number of instances, persistent disk capacity, and VM type for all component VMs that run the MySQL for PCF service.
 
 Make sure to provision ample resources for your **MySQL Server** nodes. MariaDB servers require sufficient CPU, RAM, and IOPS to promptly respond to client requests. Also note that the MySQL for PCF reserves about 2-3 GB of each instance's persistent disk for service operations use. The rest of the capacity is available for the databases. The MariaDB cluster nodes are configured by default with 100GB of persistent disk. The deployment fails if this is less than 3GB; we recommend allocating 10GB minimum.
 
 If **Enable Backups** is selected in the **Backups** pane, set **Backup Prepare Node** > **Instances** to `1`.
+
+The following topics describe common scenarios where you may want to edit the **Resource Config** tab:
+
+- [Redeploying with Larger Persistent Disks](#disk) 
+- [Switch Between Single and HA Topologies](#switch-topologies)
 
 ### <a id="disk"></a> Redeploying with Larger Persistent Disks
 
@@ -534,7 +545,9 @@ To recover a disk in this scenario, do the following:
 
 ### <a id="switch-topologies"></a> Switch Between Single and HA Topologies
 
-To switch your MySQL for PCF service between single-node and high availability (HA) topologies, navigate to the **Resource Config** pane and change the **Instances** settings for the **MySQL Server**, **Proxy**, and **Service Broker** components as shown in this table:
+To switch your MySQL for PCF service between single-node and high availability (HA) topologies, navigate to the **Resource Config** pane and change the **Instances** settings for the **MySQL Server**, **Proxy**, and **Service Broker** components as shown in the table below.
+
+For information on proxy settings to use with load balancers, see [Proxy](#proxy).
 
 <table>
 <tr><th>Resource</th><th>Single-Node</th><th>High Availability (HA)</th></tr>
@@ -545,11 +558,12 @@ To switch your MySQL for PCF service between single-node and high availability (
 
 <sup>*</sup>Routine database operations do not require two service brokers.
 
+
 Single and three-node clusters are the only supported topologies. Ops Manager  allows you to set the number of **MySQL Server** instances to other values, but Pivotal recommends only one or three.
 
 If you scale up to three MySQL nodes, Pivotal recommends spreading them across different Availability Zones to maximize cluster availability. An Availability Zone (AZ) is a network-distinct section of a region. For more information about Amazon AZs, see [Amazon's documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
 
-When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it updates the configuration and restart all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes causes all connections to that node to be dropped while the node restarts.
+When you change the instance counts for a MySQL service, a top-level property is updated with the new nodes' IP addresses. As BOSH deploys, it updates the configuration and restarts all of the MySQL nodes **and** the proxy nodes (to inform them of the new IP addresses as well). Restarting the nodes causes all connections to that node to be dropped while the node restarts.
 
 ## <a id="stemcell"></a>Stemcell
 
