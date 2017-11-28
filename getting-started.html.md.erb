@@ -42,6 +42,12 @@ To help application developers get started with MySQL for PCF, we have provided 
 
 [example-app]:mysql-example-app.tgz
 
+## <a id="ha"></a>High Availability with Data-Sensitive Apps
+
+When in High Availability mode, for example when you have a MySQL cluster with three nodes, queries are normally sent to the same back end. In some cases, such as during a network partition, an app's reads and writes may be sent to different MySQL back ends so that a query is given stale data.
+
+If you have a data-sensitive app, you may want to reduce this risk by using Galera's [wsrep-sync-wait](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-sync-wait) session variable on your critical read statements. This session variable enables causality checks, blocking incoming queries until all nodes in the cluster are synced.
+
 ## <a id="dev-tools"></a>MySQL for PCF Tools ##
 
 The following tools let developers check the usage of their MySQL for PCF service instances, and access their databases directly.
