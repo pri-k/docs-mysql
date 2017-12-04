@@ -51,7 +51,7 @@ Perform the following procedures to restore a single service instance:
 	$ mysqldump -u admin -p -h localhost YOUR-DATABASE-NAME --single-transaction > YOUR-DATABASE-NAME.sql
  	</pre>
 1. Restore the new backup artifact to your MySQL for PCF cluster by performing the steps
-   in the [Manual Restore](backup.html#manual-restore) section of the <em>Backups</em> topic.
+   in [Manual Restore](backup.html#manual-restore).
    This replaces the existing data in the MySQL for PCF cluster with the content of the backup artifact,
    without affecting the data of any other service instances.
   <p class="note"><strong>Note: </strong> During the restore process, all apps bound to this service instance should be down, or in read only mode. This is because the data will be inconsistent during this process.</p>
