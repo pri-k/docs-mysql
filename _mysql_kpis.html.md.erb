@@ -44,7 +44,7 @@
 | **Description** | Connections per second made to the server.<br><br> **Use:** If the number of connections drastically changes or if apps are unable to connect, there might be a network or app issue.<br><br> **Origin:** Doppler/Firehose<br> **Type:** count<br> **Frequency:** 30 s (default) |
 | **Recommended measurement** | Sum of `connections` for all nodes / `max connections`, over last 1 minute |
 | **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
-| **Recommended response** | When connections per second approaches 100% of `max connections`, Apps may be experiencing times when they cannot connect to the database. The number of connections per second for the cluster varies based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
+| **Recommended response** | When connections per second approaches `max connections`, apps might experience times when they cannot connect to the database. The number of connections per second for the cluster varies based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
 
 
 #### <a id="questions"></a> Questions
