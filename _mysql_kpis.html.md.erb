@@ -32,7 +32,7 @@
 || **<%= vars.mysql_metrics_origin %>/galera/wsrep\_cluster\_status** |
 | --- | --- |
 | **Description** | Shows the primary status of the cluster component that the node is in.<br>Values are:<br> - Primary = 1<br> - Non-primary = 0<br> - Disconnected = -1<br> See: [https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/](https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/ ) <br><br> **Use:** Any value other than "Primary" indicates that the node is part of a nonoperational component. This occurs in cases of multiple membership changes that result in a loss of quorum.<br><br>**Origin:** Doppler/Firehose<br> **Type:** integer (see above)<br>**Frequency:** 30 s (default) |
-| **Recommended measurement** | Sun of each of the nodes, over the last 5 minutes |
+| **Recommended measurement** | Sum of each of the nodes, over the last 5 minutes |
 | **Recommended alert thresholds** | **Yellow warning:** < 3 <br> **Red critical:** < 1  |
 | **Recommended response** | - Check node status to ensure that they are all in working order and able to receive write-sets.<br> - Run `mysql-diag` and check the MySQL Server logs for errors.  |
 
@@ -42,9 +42,9 @@
 || **<%= vars.mysql_metrics_origin %>/net/connections** |
 | --- | --- |
 | **Description** | Connections per second made to the server.<br><br> **Use:** If the number of connections drastically changes or if apps are unable to connect, there might be a network or app issue.<br><br> **Origin:** Doppler/Firehose<br> **Type:** count<br> **Frequency:** 30 s (default) |
-| **Recommended measurement** | (Average of all nodes / max connections), over last 1 minute |
+| **Recommended measurement** | Sum of `connections` for all nodes / `max connections`, over last 1 minute |
 | **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
-| **Recommended response** | When approaching 100% of max connections, Apps may be experiencing times when they cannot connect to the database. The connections per second for the cluster vary based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
+| **Recommended response** | When connections per second approaches 100% of `max connections`, Apps may be experiencing times when they cannot connect to the database. The number of connections per second for the cluster varies based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
 
 
 #### <a id="questions"></a> Questions
