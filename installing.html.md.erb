@@ -13,7 +13,8 @@ MySQL for PCF supports deployment to multiple availability zones (AZs) on vSpher
 
 To optimize uptime, deploy a load balancer in front of the SQL Proxy nodes. Configure the load balancer to route client connections to all proxy IPs, and configure the MySQL service to give bound applications a hostname or IP address that resolves to the load balancer. This eliminates the first proxy instance as a single point of failure. See [Configure a Load Balancer](#load-balancer) below for load balancer configuration recommendations.
 
-If you deploy the MySQL service on a different network than Elastic Runtime, configure the firewall rules as follows to allow traffic between Elastic Runtime and the MySQL service.
+If you deploy the MySQL service on a different network than Pivotal Application Service (PAS) or Elastic Runtime,
+configure the firewall rules as follows to allow traffic between PAS (or Elastic Runtime) and the MySQL service.
 
 | Type | Listening service | TCP Port |
 | ---- | ---- | ---- |

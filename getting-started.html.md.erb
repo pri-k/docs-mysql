@@ -3,7 +3,8 @@ title: Getting Started with PCF MySQL Galera
 owner: MySQL
 ---
 
-This topic explains how a developer on PCF can start using MySQL with their apps. It is important to note that MySQL for PCF v1 is different than standard MySQL and has some limitations that you must be aware of.
+This topic explains how a developer on Pivotal Cloud Foundry (PCF) can start using MySQL with their apps.
+It is important to note that MySQL for PCF v1 is different than standard MySQL and has some limitations that you must be aware of.
 
 ## <a id="PCF-MySQL-Galera-Limitations"></a>MySQL for PCF v1 Limitations ##
 
@@ -26,7 +27,10 @@ Certain types of queries may cause deadlocks. For example, transactions like `UP
 
 ## <a id="provision-and-bind"></a>Provisioning and Binding via Cloud Foundry ##
 
-As part of installation the product is automatically registered with [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) Elastic Runtime (see [Lifecycle Errands](#lifecycle-errands)). On successful installation, the MySQL service is available to application developers in the Services Marketplace, via the web-based Developer Console or `cf marketplace`. Developers can then provision instances of the service and bind them to their applications:
+As part of installation, MySQL for PCF is automatically registered with PCF.
+After installation, the MySQL service is available to appdevelopers in the Marketplace,
+via the web-based Developer Console or `cf marketplace`.
+Developers can then provision instances of the service and bind them to their apps:
 
 <pre class="terminal">
 $ cf create-service p-mysql 100mb-dev mydb
