@@ -37,6 +37,24 @@
 | **Recommended response** | - Check node status to ensure that they are all in working order and able to receive write-sets.<br> - Run `mysql-diag` and check the MySQL Server logs for errors.  |
 
 
+#### <a id="disk-free"></a> Persistent and Ephemeral Disk Free
+
+|| **<%= vars.mysql_metrics_origin %>/system/persistent\_disk\_free** and **<%= vars.mysql_metrics_origin %>/system/ephemeral\_disk\_free** |
+| --- | --- |
+| **Description** | The number of megabytes that are available on the file systems. <br><br> **Use:** MySQL cannot function correctly if there isn't sufficient free space on the file systems. Use these metrics to ensure that your drives have disks large enough for your user base.<br><br>**Origin:** Doppler/Firehose<br> **Type:** Megabytes<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | The minimum disk free of all of the nodes / persistent disk size |
+| **Recommended alert thresholds** | **Yellow warning:** < 80% <br> **Red critical:** < 90%  |
+| **Recommended response** | - Audit plan allocation by your users, recommend deletion of unused service instances.<br> - Redeploy with larger disks. |
+
+#### <a id="broker-plans-allocated"></a> Service Plans Allocated
+
+|| **<%= vars.mysql_metrics_origin %>/broker/disk_allocated_service_plans** |
+| --- | --- |
+| **Description** |  The number of megabytes allocated by the broker for all service plans, current and allocated. <br><br> **Use:** The service broker will not allow new service instances to be created if there isn't sufficient unreserved space remaining on the persistent disk. <br><br>**Origin:** Doppler/Firehose<br> **Type:** Megabytes<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | disk allocated / persistent disk size  |
+| **Recommended alert thresholds** | **Yellow warning:** < 80% <br> **Red critical:** < 90%  |
+| **Recommended response** | - Audit plan allocation by your users, recommend deletion of unused service instances.<br> - Redeploy with larger persistent disks |
+
 #### <a id="connections"></a> Connections
 
 || **<%= vars.mysql_metrics_origin %>/net/connections** |
