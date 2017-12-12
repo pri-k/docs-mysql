@@ -55,3 +55,29 @@ the operator must ensure leader-follower-specific network rules are also set up 
 - Leader-follower VMs bidirectionally communicate with each other over port 3306 for replication.
 
 For information about how to set leader-follower communication, see [Set up Leader-Follower Communication](./maintain-leader-follower.html#communication).
+
+## <a id="errands"></a> Leader Follower Orchestration
+MySQL for PCF automates orchestrating the standard lifecycle of creating, updating, and deleting leader-follower service
+instances. However, there are times where an operator may need to intervene and change the topology, such as an unexpected
+outage.
+
+For such events, MySQL for PCF provides operates with several discrete building blocks that can be used to orchestrate failovers. The
+building blocks are designed so a PCF operator can easily control the lifecycle of a service instance without being an
+expert at MySQL.
+
+The building blocks are provided as errands on each leader follower service instance.
+
+- **configure-leader-follower**
+  This errand configures replication on the follower and ensures the leader is writable.
+  It runs after every create or update of a leader follower instance.
+  The errand will fail and alert operators, via bosh errand output, if the service instance is in bad state.
+- **make-leader**
+  This errand is used to promote a follower VM to a leader. It removes replication configuration from a follower VM,
+  waits for all transactions to be applied to the VM, and sets the VM as writable. The errand will fail if the original
+  leader is still accessible to protect against data divergence.
+- **make-read-only**
+  This errand is used to [fence the leader](https://en.wikipedia.org/wiki/Fencing_(computing)) if it is still accessible.
+  It sets the VM to read only, ensures that if the follower is accessible, all transactions have been relayed to the follower.
+
+Using the errands above, an operator can create failover scripts as described in the
+[Maintaining Availability with Leader-Follower](./maintain-leader-follower.html) page.
