@@ -53,9 +53,9 @@ The backup process does not interrupt MySQL service, but backups only reflect tr
 <p class="note"><strong>Note</strong>: Although both <code>compressed</code> and <code>encrypted</code> show as <code>N</code> in this file,
 the backup uploaded by MySQL for PCF is both compressed and encrypted. This is a known issue.</p>
 
-### <a id="enable-backups"></a> Enabling Automated Backups
+### <a id="enable-backups"></a> Configuring Automated Backups
 
-You can configure MySQL for PCF to automatically back up its databases to external storage.
+MySQL for PCF  automatically backs up databases to external storage.
 
 * **How and where**---There are four options for how automated backups transfer backup data and where the data saves to:
   - [Option 1: Back up with SCP](#scp)---MySQL for PCF runs an SCP command that secure-copies backups to a VM or physical machine operating outside of PCF.
@@ -69,7 +69,7 @@ You can configure MySQL for PCF to automatically back up its databases to extern
 
 * **What is backed up**---Each MySQL instance backs up its entire MySQL data directory, consistent to a specific point in time.
 
-To enable and configure automated backups, follow the procedures below according to the option you choose for external storage.
+To configure automated backups, follow the procedures below according to the option you choose for external storage.
 
 ## <a id="scp"></a> Option 1: Back Up with SCP
 
@@ -269,19 +269,6 @@ Complete the following steps to back up your database to your Azure Storage acco
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
            <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
-
-## <a id="disable-backups"></a>Disable Automated Backups
-
-To disable MySQL for PCF automated backups:
-
-1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
-
-1. Select **Disable Backups**.  
-![Disable Backups](disable-backups.png)
-
-1. Click **Save**.
-
-1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
 
 ## <a id="manual-backup"></a> Manual Backup
 
