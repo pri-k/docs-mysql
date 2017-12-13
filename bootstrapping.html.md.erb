@@ -50,13 +50,15 @@ The bootstrap errand simply automates the steps in the manual bootstrapping proc
 
 In this scenario, the nodes are up and running, but the cluster has been disrupted.
 
-To determine whether the cluster has been disrupted, use the BOSH CLI to list the jobs and see if they are `failing`.
+To determine whether the cluster has been disrupted, use the BOSH CLI to list the jobs and see if they are `failing`. Use one of these commands depending on your Ops Manager version:<br>
 
-If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`. 
+<ul>
+    <li><strong>Ops Manager v1.11 or later:</strong> <code>bosh2 -e YOUR-ENV instances</code> </li>
+    <li><strong>Ops Manager v1.10:</strong> <code>bosh vms</code></li>
+</ul>
 
-If you are using PCF v1.10, use the BOSH CLI v1 command `bosh vms`.
 
-The output will resemble the following:
+<a id="vms"></a>The output resembles the following:
 
 <pre class="terminal">
 Instance                                                             Process State  AZ             IPs
@@ -80,11 +82,14 @@ In this situation, run the bootstrap errand:
 
 1. Log in to the BOSH director.
 1. Select the correct deployment.
-1. If you are using PCF v1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
-</br></br> If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
+1. Run one of the following commands depending on your Ops Manager version:<br><br>
+    <ul>
+        <li><strong>Ops Manager v1.11 or later:</strong> <code>bosh2 run-errand bootstrap</code> </li>
+        <li><strong>Ops Manager v1.10:</strong> <code>bosh run errand bootstrap</code></li>
+    </ul>
 
 
-You will see many lines of output, eventually followed by:
+The above returns many lines of output, eventually followed by:
 
 <pre class="terminal">
 Bootstrap errand completed
@@ -100,78 +105,85 @@ Bootstrap errand completed
 Errand `bootstrap' completed successfully (exit code 0)
 </pre>
         
-There are times when this won't work immediately. Unfortunately, sometimes it is best to wait and try again a few minutes later.
+Sometimes this does not work immediately. If so, wait and try again a few minutes later.
 
 
 ## <a id="vms-terminated"></a>Scenario 2: Virtual Machines Terminated or Lost ##
 
-In more severe circumstances, such as power failure, it's possible that all of your VMs have been lost. They'll need to be recreated before you can begin to recover the cluster. In this scenario, the process state for the `mysql` jobs will show as `-`.
+In severe circumstances, such as a power failure, it is possible to lose all your VMs. You must recreate them before you can begin recovering the cluster. 
 
-If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 -e YOUR-ENV instances`.
+To determine the state of your VMs, run one of the following commands depending on your Ops Manager version:
 
-If you are using PCF v1.10, use the BOSH CLI v1 command `bosh vms`.
+<ul>
+    <li><strong>Ops Manager v1.11 or later:</strong> <code>bosh2 -e YOUR-ENV instances</code> </li>
+    <li><strong>Ops Manager v1.10:</strong> <code>bosh vms</code></li>
+</ul>
 
+The output resembles [this](#vms). If the VM is terminated or lost, the Process State for the `mysql` jobs is shown as `-`.
 
-### <a id="vm-recovery"></a>Recover Terminated or Lost VMs ###
+### <a id="vm-recovery"></a>Recover Terminated or Lost VMs
 
-The MySQL VMs will fail when started naturally if there is no active cluster for them to join. BOSH should be allowed to create the
-VMs, install the software on them, and attempt to start the jobs (which will fail) before we can run the bootstrap errand.
+There are three steps to recover terminated or lost VMs:
 
-This must be done for all the missing MySQL VMs. Because BOSH starts the VMs sequentially, we must instruct BOSH to 
+1. [Recreate the Missing VMs](#recreate)
+1. [Run the Bootstrap Errand](#run-the-errand)
+1. [Restore the BOSH Configuration](#reset-deployment)
+
+#### <a id="recreate"></a> Recreate the Missing VMs
+
+In this procedure, you let BOSH create the
+VMs, install the software on them, and attempt to start the jobs. These jobs will fail because the MySQL VMs fail when started if there is no active cluster for them to join. Therefore this procedure instructs BOSH to 
 ignore the failing state of each VM to allow the software to be deployed to all VMs.
 
-#### <a id="bosh-v2"></a>Recreate the Missing VMs Using BOSH CLI v2 ####
+Choose one of the following procedures depending on your Ops Manager version.
 
-If you are using PCF v1.11 or later, follow this procedure to make it possible for the bootstrap errand to succeed.<br>
-If you are using PCF v1.10, see [Recreate the Missing VMs Using BOSH CLI v1](#bosh-v1) below.<br>
+**With Ops Manager v1.11 or Later**
 
 1. Log in to the BOSH Director.
-1. Download the current manifest using `bosh2 -e MY-ENV -d MY-DEP > /tmp/manifest.yml`
-1. Run `bosh2 -e MY-ENV -d MY-DEP deploy /tmp/manifest.yml`.
-1. The deploy will fail to start the first MySQL VM. 
-1. Issue a `bosh2 -e MY-ENV -d MY-DEP ignore mysql/<instance-guid>` command.
-1. Repeat the previous 3 steps until all instances have attempted to start.
+1. Download the current manifest by running `bosh2 -e MY-ENV -d MY-DEP > /tmp/manifest.yml`.
+1. Run `bosh2 -e MY-ENV -d MY-DEP deploy /tmp/manifest.yml`. The deploy will fail to start the first MySQL VM. 
+1. Run the command `bosh2 -e MY-ENV -d MY-DEP ignore mysql/INSTANCE_GUID`.
+1. Repeat the Steps 3 and 4 until all instances have attempted to start.
 
-#### <a id="bosh-v1"></a>Recreate the Missing VMs Using BOSH CLI v1 ####
-
-If you are using PCF v1.10, follow this procedure to make it possible for the bootstrap errand to succeed.<br>
-If you are using PCF v1.11 or later, see [Recreate the Missing VMs Using BOSH CLI v2](#bosh-v2) above.<br>
+**With Ops Manager v1.10**
 
 1. Log in to the BOSH Director.
 1. Target the correct deployment.
-1. Run `bosh deploy` so that BOSH attempts to start one instance.
-1. The deploy will fail to start the first MySQL VM. 
-1. Issue a `bosh ignore instance mysql/<instance-guid>` command.
-1. Repeat the previous 3 steps until all instances have attempted to start.
+1. Run `bosh deploy` so that BOSH attempts to start one instance. The deploy will fail to start the first MySQL VM. 
+1. Issue a `bosh ignore instance mysql/INSTANCE_GUID` command.
+1. Repeat Steps 3 and 4 until all instances have attempted to start.
 
-#### <a id="run-the-errand"></a>Run the Bootstrap Errand ####
-All instances should now have a `failing` process state, but should also have the MySQL code installed on them.
-In this state, the bootstrap process should be able to recover the cluster.
+#### <a id="run-the-errand"></a>Run the Bootstrap Errand 
 
-1. If you are using PCF v1.11 or later, use the BOSH CLI v2 command `bosh2 run-errand bootstrap`.
-If you are using PCF v1.10, use the BOSH CLI v1 command `bosh run errand bootstrap`.
+All instances now have a `failing` Process State, but also have the MySQL code installed on them.
+In this state, the bootstrap process recovers the cluster.
 
-1. Validate that the errand completes successfully.
-    - Some instances may still appear as `failing`. It's OK to proceed to the next step.
+1. Run one of the following commands depending on your Ops Manager version:<br><br>
+    * **Ops Manager v1.11 or later:** `bosh2 run-errand bootstrap`
+    * **Ops Manager v1.10:** `bosh run errand bootstrap`
 
-#### <a id="reset-deployment"></a>Restore the BOSH Configuration ####
-To restore your BOSH configuration to its previous state we must unignore each instance that was previously ignored:
+1. Validate that the errand completes successfully.<br><br>
+    - Some instances may still appear as `failing`. Ignore this and proceed to the next steps below.
 
-If you are using PCF v1.11 or later:<br>
-* Run `bosh2 -e MY-ENV -d MY-DEP unignore mysql/<instance-guid>` for each instance guid.
+#### <a id="reset-deployment"></a>Restore the BOSH Configuration 
 
-If you are using PCF v1.10:<br>
-* Run `bosh unignore instance mysql/<instance-guid>` for each instance guid.
+<p class="note warning"><strong>Important:</strong> It is critical that you run the steps below. If you do not <i>unignore</i> all ignored 
+instances, they are not updated in future deploys.</p>
 
-1. Rerun `bosh deploy`.
+To restore your BOSH configuration to its previous state, this procedure *unignores* each instance that was previously ignored:
+
+1. For each ignored instance, run one of the following commands depending on your Ops Manager version:<br><br>
+    * **Ops Manager v1.11 or later:** `bosh2 -e MY-ENV -d MY-DEP unignore mysql/INSTANCE_GUID`
+    * **Ops Manager v1.10:** `bosh unignore instance mysql/INSTANCE_GUID`
+
+1. Rerun one of these commands:<br><br>
+    * **Ops Manager v1.11 or later:** `bosh2 -e MY-ENV deploy`
+    * **Ops Manager v1.10:** `bosh deploy`
+
 1. Validate that all `mysql` instances are in `running` state.
 
-<p class="note"><strong>Note:</strong> It is critical that you run all of the steps. If you do not unignore each ignored 
-instance they will not be updated in future deploys.</p>
 
----
-
-## <a id="manual-bootstrap"></a>Manual Bootstrapping ##
+## <a id="manual-bootstrap"></a>Manual Bootstrapping 
 
 1. If the bootstrap errand is not able to automatically recover the cluster, you may need to perform the steps manually. The following steps are prone to user-error and can result in lost data if followed incorrectly. Please follow the [assisted boostrap](#assisted-bootstrap) instructions above first, and only resort to the manual process if the errand fails to repair the cluster.
 
