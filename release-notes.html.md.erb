@@ -10,27 +10,32 @@ owner: MySQL
 
 Release Date: December 8, 2017
 
-MySQL for PCF v1.10.7 resolves several bugs, updates dependencies to maintain security, and includes changes that improve syslog and metrics.
+MySQL for PCF v1.10.7 resolves several bugs, updates dependencies to maintain security,
+and includes changes that improve syslog and metrics.
 
 - **Syslog Format Change**
-  - The components of MySQL for PCF, MySQL, Proxy, MySQL, Backups and Monitoring have been configured to observe RFC5242 message format when sending logs to syslog.
+  - The components of MySQL for PCF, MySQL, Proxy, MySQL, Backups and Monitoring have been configured
+    to observe RFC 5424 message format when sending logs to syslog.
 
 - **New Disk Usage Metrics**
 
-  - MySQL for PCF now produces disk space metrics and how much space has been reserved for service instances. Check the [disk space free](monitoring-mysql.html#disk-free) and [service plans allocated](monitoring-mysql.html#broker-plans-allocated) KPI documentation for more information.
+  - MySQL for PCF now produces disk space metrics and how much space has been reserved for service instances.
+    For more information, see [Persistent and Ephemeral Disk Free](monitoring-mysql.html#disk-free)
+    and [Service Plans Allocated](monitoring-mysql.html#broker-plans-allocated) in the KPI documentation.
 
 - **Dependency Updates**
   - Updated to stemcell 3445.17 to address low and medium vulnerabilities.
   - Updated versions of Ruby and associated libraries, and socat to avoid known vulnerabilities.
 
 - **Bug Fixes**
-  - **Bug fix:** Fixed a rare bug which would leave hanging backup processes on the MySQL nodes if a client disconnects unexpectedly.
+  - **Bug fix:** Fixed a rare bug which left hanging backup processes on the MySQL nodes if a client disconnects unexpectedly.
   - **Bug fix:** streaming-mysql-backup-tool was running as `root`, now it runs user `vcap`.
-  - **Bug fix:** Fixed a rare bug in which the replication canary may write to a node which is not a member of the cluster, which can cause a cluster to be in an inconsistent state.
+  - **Bug fix:** Fixed a rare bug in which the replication canary could write to a node which was not a member of the cluster,
+                 causing the cluster to be in an inconsistent state.
 
-- **IPSec**
-  - **Bug fix:** MySQL fails to start if the node once had IPSec installed but IPSec is no longer installed.
-  - **Bug fix:** IPsec causes mariadb_ctrl to be left in an `Execution Failed` state when taking time to start.
+- **IPsec**
+  - **Bug fix:** MySQL failed to start if the node once had IPsec installed but IPsec is no longer installed.
+  - **Bug fix:** IPsec caused mariadb_ctrl to be left in an `Execution Failed` state when taking time to start.
 
 ## <a id="1-10-6"></a>v1.10.6
 
