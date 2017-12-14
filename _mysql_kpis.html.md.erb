@@ -42,8 +42,8 @@
 || **<%= vars.mysql_metrics_origin %>/system/persistent\_disk\_free** and **<%= vars.mysql_metrics_origin %>/system/ephemeral\_disk\_free** |
 | --- | --- |
 | **Description** | The number of megabytes that are available on the file systems. <br><br> **Use:** MySQL cannot function correctly if there isn't sufficient free space on the file systems. Use these metrics to ensure that your drives have disks large enough for your user base.<br><br>**Origin:** Doppler/Firehose<br> **Type:** Megabytes<br>**Frequency:** 30 s (default) |
-| **Recommended measurement** | The minimum disk free of all of the nodes / persistent disk size |
-| **Recommended alert thresholds** | **Yellow warning:** < 80% <br> **Red critical:** < 90%  |
+| **Recommended measurement** | The (minimum persistent disk free of all of the nodes) / (persistent disk size) <br>and<br>the (minimum ephemeral disk free of all of the nodes) / (ephemeral disk size) |
+| **Recommended alert thresholds** | **Yellow warning:** > 80% <br> **Red critical:** > 90%  |
 | **Recommended response** | - Audit plan allocation by your users, recommend deletion of unused service instances.<br> - Redeploy with larger disks. |
 
 #### <a id="broker-plans-allocated"></a> Service Plans Allocated
@@ -79,7 +79,7 @@
 
 || **<%= vars.mysql_metrics_origin %>/performance/busy_time** |
 | --- | --- |
-| **Description** | Percentage of CPU time spent by MySQL on user activity, executing user code, as opposed to kernel activity processing system calls.<br><br> **Use:** This closely reflects the amount of server activity dedicated to app queries.<br><br>**Origin:** Doppler/Firehose<br> **Type:** percentage<br> **Frequency:** 30 s (default) |
+| **Description** | Percentage of CPU time spent by MySQL on executing user code, as opposed to kernel activity processing system calls.<br><br> **Use:** This closely reflects the amount of server activity dedicated to app queries.<br><br>**Origin:** Doppler/Firehose<br> **Type:** percentage<br> **Frequency:** 30 s (default) |
 | **Recommended measurement** | Average over last 2 minutes |
 | **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
 | **Recommended response** | If this metric meets or exceeds the recommended thresholds for extended periods of time, run `SHOW PROCESSLIST` and identify which queries or apps are using so much CPU. Optionally redeploy the MySQL jobs using VMs with more CPU capacity. |
