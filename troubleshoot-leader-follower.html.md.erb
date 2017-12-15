@@ -3,9 +3,11 @@ title: Troubleshooting Leader-Follower Instances
 owner: MySQL
 ---
 
-This topic contains information to help you diagnose and resolve problems specific to leader follower instances.
+This topic contains information to help you diagnose and resolve problems specific to leader-follower instances.
 
-## <a id="unable-to-determine"></a>Configure-Leader-Follower Errand Unable to Determine VM Roles
+## <a id="unable-to-determine"></a>Unable to Determine Leader and Follower (Errand Error)
+
+This problem happens when the `configure-leader-follower` errand fails because it cannot determine the VM roles.
 
 ### Symptom
 The `configure-leader-follower` errand exits with `1` and the errand logs contain the following:
@@ -31,7 +33,7 @@ This example shows one outcome that the `inspect` errand can return:
       Exit Code  0
       Stdout     -
       Stderr     2017/12/11 18:25:54 Started executing command: inspect
-                 2017/12/11 18:25:54 Started GET https://127.0.0.1:8443/status
+                 2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
                  2017/12/11 18:25:54
                  Has Data: false
                  Read Only: true
@@ -41,7 +43,7 @@ This example shows one outcome that the `inspect` errand can return:
       Exit Code  0
       Stdout     -
       Stderr     2017/12/11 18:25:54 Started executing command: inspect
-                 2017/12/11 18:25:54 Started GET https://127.0.0.1:8443/status
+                 2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
                  2017/12/11 18:25:54
                  Has Data: true
                  Read Only: true
@@ -67,7 +69,10 @@ This example shows one outcome that the `inspect` errand can return:
   </pre>
 
 
-## <a id="both-writable"></a>Both Leader and Follower Instances Are Writable
+## <a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)
+
+This problem happens when the `configure-leader-follower` errand fails because both VMs are writable 
+and the VMs might hold differing data.
 
 ### Symptom
 
@@ -76,7 +81,8 @@ The `configure–leader-follower` errand exits with `1` and the errand logs cont
 
 ### Explanation
 
-MySQL for PCF tries to ensure that there is only one writable instance of the leader follower pair at any given time. However, in certain situations, such as
+MySQL for PCF tries to ensure that there is only one writable instance of the leader-follower pair at any given time.
+However, in certain situations, such as
 network partitions, or manual intervention outside of the provided bosh errands, it is possible for both instances
 to be writable.
 
@@ -93,7 +99,7 @@ promoted and reduce the potential for data divergence.
       Exit Code  0
       Stdout     -
       Stderr     2017/12/11 18:25:54 Started executing command: inspect
-                 2017/12/11 18:25:54 Started GET https://127.0.0.1:8443/status
+                 2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
                  2017/12/11 18:25:54
                  Has Data: true
                  Read Only: true
@@ -103,7 +109,7 @@ promoted and reduce the potential for data divergence.
       Exit Code  0
       Stdout     -
       Stderr     2017/12/11 18:25:54 Started executing command: inspect
-                 2017/12/11 18:25:54 Started GET https://127.0.0.1:8443/status
+                 2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
                  2017/12/11 18:25:54
                  Has Data: true
                  Read Only: true
@@ -115,19 +121,20 @@ promoted and reduce the potential for data divergence.
 
     If the GTID Executed sets for both instances are the same, continue to Step 2. If they are different, continue to Step 4.
 
-1. Look at the value of GTID Executed for both instances.
+2. Look at the value of GTID Executed for both instances.
     - If the range after the GUID is equivalent, either instance can be made read-only, as described in Step 3.
     - If one instance has a range that is a subset of the other, the instance with the subset should be made read-only, as
       described in Step 3.
 
-1. Based on the information you gathered in the step above, run the `make-read-only` errand to make the appropriate instance read-only:
+3. Based on the information you gathered in the step above, run the `make-read-only` errand to make the appropriate instance read-only:
     <pre class="terminal">
       $ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL\_SUBSET\_INSTANCE
       [...]
       Succeeded
     </pre>
 
-1. If the GTID Executed sets are neither equivalent nor subsets, data has diverged and you must determine what data has diverged as part of the procedure below:
+4. If the GTID Executed sets are neither equivalent nor subsets, 
+   data has diverged and you must determine what data has diverged as part of the procedure below:
   1. Use the `make-read-only` errand to set both instances to read-only to prevent further data divergence.
     <pre class="terminal">
       $ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL\_SUBSET\_INSTANCE
