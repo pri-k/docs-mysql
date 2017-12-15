@@ -508,13 +508,6 @@ Perform the following steps to restore your MySQL data from a manual backup with
     -p 123456789 \ 
     -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine=NULL"</pre>
 
-1. Use the MySQL password and IP address to enable the creation of tables using any storage engine. Run the following command:
-  `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP -e "SET GLOBAL enforce_storage_engine=NULL"`
-  <br><br>
-  Where:
-  * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-  * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-
 1. Use the MySQL client to restore the MySQL database or databases. Run the following command:
 
     `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP < BACKUP-NAME.sql`
