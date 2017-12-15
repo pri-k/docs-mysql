@@ -5,24 +5,24 @@ owner: MySQL
 
 This topic contains information to help you diagnose and resolve problems specific to leader follower instances.
 
-## <a id="troubleshoot"></a> Troubleshoot Leader-Follower Problems
+## <a id="unable-to-determine"></a>Configure-Leader-Follower Errand Unable to Determine VM Roles
 
-This section lists symptoms, solutions, and explanations for common problems:
+### Symptom
+The `configure-leader-follower` errand exits with `1` and the errand logs contain the following:
 
-- [Both instances are writable](#both-writable)
-- [Configure-Leader-Follower Errand Unable to Determine VM Roles](#roles)
-
-### <a id="unable-to-determine"></a>Configure-Leader-Follower Errand Unable to Determine VM Roles
-
-#### Symptom
-The `configure-leader-follower` errand exits 1 and the errand logs contain the following:
 `Unable to determine leader and follower based on transaction history.`
 
-#### Explanation
+### Explanation
 Something has happened to the instances, such as a failure or manual intervention. As a result, there is not enough
-information available to deterministically the proper state that and topology without an operator to make the decisions.
+information available to determine the correct state and topology without operator intervention to resolve the issue.
 
-#### Solution
+### Solution
+
+Use the `inspect` errand to determine which instance should be the leader. Then, using the [orchestration](./about-leader-follower.html#errands) errands and backup/restore, you can
+put the service instance into a safe topology, and then rerun the `configure-leader-follower` errand. This is shown in the example below.
+
+This example shows one outcome that the `inspect` errand can return: 
+
 1. Use the `inspect` errand to retrieve relevant information about the two VMs:
     <pre class="terminal">
       $ bosh2 -e my-env -d my-dep run-errand inspect
@@ -51,42 +51,41 @@ information available to deterministically the proper state that and topology wi
       Succeeded
     </pre>
 
-- In the above scenario, the first instance is missing data but does not have replication configured. The second instance
-has data, and also has replication configured. The instructions below resolve this by copying data to the first instance,
-and resuming replication with the following steps:
+    In the above scenario, the first instance is missing data but does not have replication configured. The second instance
+    has data, and also has replication configured. The instructions below resolve this by copying data to the first instance,
+    and resuming replication.
 
 1. Take a backup of the first instance using the [Manual Backup](./backup-and-restore.html#manual-backup) steps.
 
-1. Restore the backup artifact to the first instance using the [Manual Restore](./backup-and-restore.html#restore) steps.
+1. Restore the backup artifact to the first instance using the [Manual Restore](./backup-and-restore.html#restore) steps.<br><br>
 
-1. At this point, the instances should have equivalent data and the `configure-leader-follower` errand will run successfully.
-Use the errand to reconfigure replication:
-    <pre class="terminal">
-      $ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysql/INDEX_OF_LEADER
-    </pre>
+    At this point, the instances have equivalent data.
 
-The above example is one outcome that the `inspect` errand can return. At a high level, based on the information available,
-you should use the errand to determine which instance should be the leader, and why the `configure-leader-follower`
-errand is not able to determine that. Then, using the orchestration errands and backup/restore instructions, you can
-put the service instance into a safe topology and rerun the `configure-leader-follower` errand.
+1. Run the `configure-leader-follower` errand to reconfigure replication:
+  <pre class="terminal">
+    $ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysql/INDEX\_OF\_LEADER
+  </pre>
 
-### <a id="both-writable"></a>Both Instances Are Writable
 
-#### Symptom
-The `configure–leader-follower` errand exits 1 and the errand logs contain the following:
+## <a id="both-writable"></a>Both Leader and Follower Instances Are Writable
+
+### Symptom
+
+The `configure–leader-follower` errand exits with `1` and the errand logs contain the following:<br><br>
 `Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.`
 
-#### Explanation
-MySQL for PCF tries to ensure that there is only ever 1 writable instance. However, in certain situations, such as
+### Explanation
+
+MySQL for PCF tries to ensure that there is only one writable instance of the leader follower pair at any given time. However, in certain situations, such as
 network partitions, or manual intervention outside of the provided bosh errands, it is possible for both instances
 to be writable.
 
-The service instance will remain in this state until an operator resolves the issue to ensure that the correct instance is
+The service instances remain in this state until an operator resolves the issue to ensure that the correct instance is
 promoted and reduce the potential for data divergence.
 
-#### Solution
+### Solution
 
-1. Use the `inspect` errand to retrieve the GTID executed set for each VM.
+1. Use the `inspect` errand to retrieve the GTID Executed set for each VM:
     <pre class="terminal">
       $ bosh2 -e my-env -d my-dep run-errand inspect
       [...]
@@ -114,47 +113,47 @@ promoted and reduce the potential for data divergence.
       Succeeded
     </pre>
 
-    If the GTID Executed sets for both instances are the same, continue to step 2. If they are different, continue to step 4.
+    If the GTID Executed sets for both instances are the same, continue to Step 2. If they are different, continue to Step 4.
 
 1. Look at the value of GTID Executed for both instances.
-    - If the range, after the GUID is equivalent, either instance can be made read-only, as described below.
-    - If one instance has a range that is a superset of the other, the instance with the subset should be demoted, as
-      described below.
+    - If the range after the GUID is equivalent, either instance can be made read-only, as described in Step 3.
+    - If one instance has a range that is a subset of the other, the instance with the subset should be made read-only, as
+      described in Step 3.
 
-1. Based on the information you gathered in the step above, make the appropriate instance read-only,
-via the `make-read-only` errand:
+1. Based on the information you gathered in the step above, run the `make-read-only` errand to make the appropriate instance read-only:
     <pre class="terminal">
-      $ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL_SUBSET_INSTANCE
+      $ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL\_SUBSET\_INSTANCE
       [...]
       Succeeded
     </pre>
 
-1. If the GTID Executed sets are not equivalent nor subsets, data has diverged and you will need to determine what data has diverged.
-  1. Use the `make-read-only` errand to set both instances to read-only and prevent further data divergence.
+1. If the GTID Executed sets are neither equivalent nor subsets, data has diverged and you must determine what data has diverged as part of the procedure below:
+  1. Use the `make-read-only` errand to set both instances to read-only to prevent further data divergence.
     <pre class="terminal">
-      $ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL_SUBSET_INSTANCE
+      $ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL\_SUBSET\_INSTANCE
       [...]
       Succeeded
     </pre>
 
-  1. Take a backup of both instances using the [Manual Backup](./backup-and-restore.html#manual-backup) steps.
+  1. Take a backup of both instances using the [Manual Backup](./backup-and-restore.html#manual-backup) steps.<br><br>
 
-  1. Manually inspect the data on each instance to determine the discrepancies and put the data onto the instance that is
-   further ahead. The further ahead instance has the higher GTID Executed set. Migrate all appropriate data to the instance
-   that will be the leader.
+  1. Manually inspect the data on each instance to determine the discrepancies and put the data on the instance that is
+   further ahead---this instance has the higher GTID Executed set, and will be the new leader.<br>   
 
-  1. After putting all data on th leader, ssh onto the follower
+  1. Migrate all appropriate data to the new leader instance.<br><br>
+
+  1. After putting all data on the leader, ssh onto the follower:
   <pre class="terminal">
-    $ bosh2 -e my-env -d my-dep ssh mysql/INDEX_OF_FOLLOWER
+    $ bosh2 -e my-env -d my-dep ssh mysql/INDEX\_OF\_FOLLOWER
   </pre>
 
-  1. Become root with `sudo su`
+  1. Become root with the command `sudo su`.<br><br>
 
-  1. Stop the mysql process with `monit stop mysql`
+  1. Stop the mysql process with the command `monit stop mysql`.<br><br>
 
-  1. Delete the data directory of the follower with `rm -rf /var/vcap/store/mysql`
+  1. Delete the data directory of the follower with the command `rm -rf /var/vcap/store/mysql`.<br><br>
 
-  1. Use the `configure-leader-follower` to copy the leader's data to the follower and resume replication.
+  1. Use the `configure-leader-follower` errand to copy the leader's data to the follower and resume replication:
     <pre class="terminal">
-      $ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysql/INDEX_OF_LEADER
+      $ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysql/INDEX\_OF\_LEADER
     </pre>
