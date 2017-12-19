@@ -13,7 +13,8 @@ Any data that is written to the leader is asynchronously replicated to the follo
 <p class="note"><strong>Note</strong>: The term leader-follower is analogous to master-slave.</p>
 
 A leader-follower database enables operators to initiate a
-[failover](#failover) and send application traffic to the follower if the leader fails. This ensures that the application bound to the MySQL database continues to function normally.
+[failover](#failover) and send app traffic to the follower if the leader fails.
+This ensures that the app bound to the MySQL database continues to function normally.
 
 ### <a id="iaas"></a> Infrastructure Requirements for Leader-Follower Deployments
 
@@ -21,8 +22,8 @@ Leader-follower instances have additional infrastructure requirements to singlet
 
 #### Capacity Planning
 
-When calculating IaaS usage, you must take into account that each leader-follower instance requires two VMs. Therefore, the resources used
-for a leader-follower-enabled plan must be doubled.
+When calculating IaaS usage, you must take into account that each leader-follower instance requires two VMs.
+Therefore, the resources used for a leader-follower-enabled plan must be doubled.
 For more information, see [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
 
 #### Availability Zones
@@ -41,12 +42,16 @@ the operator must ensure leader-follower-specific network rules are also set up 
 
 ## <a id='enable-use-lf'></a>Enabling and Using Leader-Follower
 
-An operator enables leader-follower per service plan when configuring the MySQL for PCF tile. For more information, see [Configure Active Service Plans](install-config.html#active) in <em>Installing and Configuring MySQL for PCF</em>.
+An operator enables leader-follower per service plan when configuring the MySQL for PCF tile.
+For more information, see [Configure Active Service Plans](install-config.html#active) in
+<em>Installing and Configuring MySQL for PCF</em>.
 
 A developer can create leader-follower service instances from a service plan that has leader-follower enabled. 
 For more information about creating service instances, see [Using](use.html).
 
-When a developer creates a leader-follower service instance, the on-demand broker deploys a leader VM in one AZ, and a follower VM in another AZ. The follower VM is only for increasing availability
+When a developer creates a leader-follower service instance, the on-demand broker deploys a leader VM in one AZ,
+and a follower VM in another AZ.
+The follower VM is only for increasing availability
 and is not exposed to developers to increase read throughput.
 Developers can increase read throughput by configuring `workload` profiles.
 For more information, see [Provide Optional Parameters](./change-default.html#optional-param).
@@ -56,7 +61,7 @@ For more information, see [Provide Optional Parameters](./change-default.html#op
 MySQL for PCF focuses on data consistency and relies on operators
 to trigger a failover. 
 MySQL for PCF does not automatically failover to the follower.
-When an operator triggers a failover, application traffic is sent to the standby follower.
+When an operator triggers a failover, app traffic is sent to the standby follower.
 
 For instructions on
 how to trigger a failover, see [Initiating a Leader-Follower Failover](./maintain-leader-follower.html).
@@ -84,6 +89,8 @@ The building blocks are provided as errands on each leader-follower service inst
 
 - **make-read-only**: This errand is used to fence the leader if it is still accessible.
   It sets the VM to read only and ensures that, if the follower is accessible, all transactions have been relayed to the follower.
-  For general information about fencing a leader, see the Wikipedia article [Fencing (computing)](https://en.wikipedia.org/wiki/Fencing_(computing)).
+  For general information about fencing a leader,
+  see the Wikipedia article [Fencing (computing)](https://en.wikipedia.org/wiki/Fencing_(computing)).
 
-Using the errands above, an operator can create failover scripts. For more information, see [Initiating a Leader-Follower Failover](./maintain-leader-follower.html).
+Using the errands above, an operator can create failover scripts.
+For more information, see [Initiating a Leader-Follower Failover](./maintain-leader-follower.html).
