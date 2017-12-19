@@ -495,6 +495,7 @@ For more examples of manual backup and restore procedures, see the [MariaDB docu
 
 Perform the following steps to restore your MySQL data from a manual backup with remote admin access enabled:
 
+1. If running in HA configuration, reduce the size of the MySQL for PCF cluster to a single node, following the procedures in the [Restore a Backup Artifact](#restoring) section above.
 1. Use the MySQL client to enable the creation of tables using any storage engine. Run the following command:
     `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP -e "SET GLOBAL enforce_storage_engine=NULL"`
     <br><br>
