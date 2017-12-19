@@ -145,8 +145,8 @@ Follow the steps below for each plan that you want to be active and used in your
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Multi-node deployment</strong></td>
-        <td>Check the box to configure a leader-follower plan. Leave unchecked to configure each instance as a singleton.
-            For more information, see the [About Leader-Follower](./about-leader-follower.html) page.</td></tr>
+        <td>Check the box to configure a leader-follower plan, and see the **MySQL Availability Zone(s)** section below for more information about how to configure AZs. Leave unchecked to configure each instance as a singleton.
+            For more information about leader-follower topologies, see the [About Leader-Follower](./about-leader-follower.html) page.</td></tr>
     <tr><td><strong>Service Plan Access</strong></td>
         <td>Accept the default to enable access to all organizations in your PCF deployment.
             Select **Disable** to disable creating new services instances of this plan for all organizations.
@@ -169,11 +169,13 @@ Follow the steps below for each plan that you want to be active and used in your
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
-        <td>If you checked the **Multi-node deployment** box above, select two AZs. If you left the box unchecked, select one AZ.
-            Choose different AZs than the one that the broker is in.
-            <p class="note"><strong>Note</strong>: Using only one AZ for a **Multi-node deployment** greatly reduces the ability
-            to recover from an outage and benefit from such a deployment.</p>
-            </td></tr>
+        <td>If you checked the **Multi-node deployment** box above to enable a leader-follower plan, choose one of the following:
+        <ul>
+            <li>To leverage the full HA advantages of leader-follower, select two AZs. You must choose different AZs than the broker is in.</li>
+            <li>To leverage some HA advantages, select one AZ. 
+            Using only one AZ for a **Multi-node deployment** greatly reduces the ability to recover from an outage and benefit from such a deployment.</li>
+        </ul>If you left the **Multi-node deployment** box unchecked, select one AZ.
+        </td></tr>
   </table>
 1. Click **Save**.
 
