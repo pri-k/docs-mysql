@@ -49,20 +49,20 @@ Service instances can also become temporarily inaccessible during upgrades and V
 
 <%= partial '../../mysql/odb/tshoot-err-missing-logs' %>
 
-### <a id="unable-to-determine"></a>Unable to Determine Leader and Follower (Errand Error)
+<h3><a id="unable-to-determine"></a>Unable to Determine Leader and Follower (Errand Error)</h3>
 
 This problem happens when the `configure-leader-follower` errand fails because it cannot determine the VM roles.
 
-#### Symptom
+<h4>Symptom</h4>
 The `configure-leader-follower` errand exits with `1` and the errand logs contain the following:
 
 `Unable to determine leader and follower based on transaction history.`
 
-#### Explanation
+<h4>Explanation</h4>
 Something has happened to the instances, such as a failure or manual intervention. As a result, there is not enough
 information available to determine the correct state and topology without operator intervention to resolve the issue.
 
-#### Solution
+<h4>Solution</h4>
 
 Use the `inspect` errand to determine which instance should be the leader. Then, using the [orchestration](./about-leader-follower.html#errands) errands and backup/restore, you can
 put the service instance into a safe topology, and then rerun the `configure-leader-follower` errand. This is shown in the example below.
@@ -112,17 +112,17 @@ This example shows one outcome that the `inspect` errand can return:
     $ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysql/INDEX\_OF\_LEADER
   </pre>
 
-### <a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)
+<h3><a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)</h3>
 
 This problem happens when the `configure-leader-follower` errand fails because both VMs are writable 
 and the VMs might hold differing data.
 
-#### Symptom
+<h4>Symptom</h4>
 
 The `configure–leader-follower` errand exits with `1` and the errand logs contain the following:<br><br>
 `Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.`
 
-#### Explanation
+<h4>Explanation</h4>
 
 MySQL for PCF tries to ensure that there is only one writable instance of the leader-follower pair at any given time.
 However, in certain situations, such as
@@ -132,7 +132,7 @@ to be writable.
 The service instances remain in this state until an operator resolves the issue to ensure that the correct instance is
 promoted and reduce the potential for data divergence.
 
-#### Solution
+<h4>Solution</h4>
 
 1. Use the `inspect` errand to retrieve the GTID Executed set for each VM:
     <pre class="terminal">
