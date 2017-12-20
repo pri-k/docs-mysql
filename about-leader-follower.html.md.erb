@@ -13,7 +13,7 @@ Any data that is written to the leader is asynchronously replicated to the follo
 <p class="note"><strong>Note</strong>: The term leader-follower is analogous to master-slave.</p>
 
 A leader-follower database enables operators to initiate a
-[failover](#failover) and send app traffic to the follower if the leader fails.
+failover and send app traffic to the follower if the leader fails.
 This ensures that the app bound to the MySQL database continues to function normally.
 
 ### <a id="iaas"></a> Infrastructure Requirements for Leader-Follower Deployments
@@ -34,11 +34,14 @@ are deployed to two AZs, and the broker is deployed to a third.
 
 #### Networking Rules
 
-In addition to the [standard networking rules](./about.html#rules) needed for MySQL for PCF,
+In addition to the standard networking rules needed for MySQL for PCF,
 the operator must ensure leader-follower-specific network rules are also set up as follows:
 
 - Leader-follower VMs bidirectionally communicate with each other over port 8008 for orchestration.
 - Leader-follower VMs bidirectionally communicate with each other over port 3306 for replication.
+
+For information about the standard networking rules,
+see [Required Networking Rules for On-Demand Services](./about.html#rules).
 
 ## <a id='enable-use-lf'></a>Enabling and Using Leader-Follower
 
@@ -47,14 +50,14 @@ For more information, see [Configure Active Service Plans](install-config.html#a
 <em>Installing and Configuring MySQL for PCF</em>.
 
 A developer can create leader-follower service instances from a service plan that has leader-follower enabled. 
-For more information about creating service instances, see [Using](use.html).
+For more information about creating service instances, see [Using MySQL for PCF](use.html).
 
 When a developer creates a leader-follower service instance, the on-demand broker deploys a leader VM in one AZ,
 and a follower VM in another AZ.
 The follower VM is only for increasing availability
 and is not exposed to developers to increase read throughput.
-Developers can increase read throughput by configuring `workload` profiles.
-For more information, see [Provide Optional Parameters](./change-default.html#optional-param).
+Developers who want increased read throughput can do this by configuring `workload` profiles.
+For information, see [Understanding Workload Types](./change-default.html#workload).
 
 ## <a id="failover"></a>Understanding Failover
 
