@@ -178,26 +178,20 @@ Succeeded
    data has diverged and you must determine what data has diverged as part of the procedure below:
    <ol>
 	<li>Use the <code>make-read-only</code> errand to set both instances to read-only to prevent further data divergence.
-    <pre class="terminal">
-    $ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL\_SUBSET\_INSTANCE
+    <pre class="terminal">$ bosh2 -e my-env -d my-dep run-errand make-read-only --instance=mysql/MYSQL\_SUBSET\_INSTANCE
     [...]
-    Succeeded
-    </pre></li>
+    Succeeded</pre></li>
 	<li>Take a backup of both instances using the <a href="backup-and-restore.html#manual-backup">Manual Backup</a> steps.</li>
 	<li>Manually inspect the data on each instance to determine the discrepancies and put the data on the instance that is
     further ahead---this instance has the higher GTID Executed set, and will be the new leader.</li>   
 	<li>Migrate all appropriate data to the new leader instance.</li>
 	<li>After putting all data on the leader, ssh onto the follower:
-    <pre class="terminal">
-    $ bosh2 -e my-env -d my-dep ssh mysql/INDEX\_OF\_FOLLOWER
-    </pre></li>
+    <pre class="terminal">$ bosh2 -e my-env -d my-dep ssh mysql/INDEX\_OF\_FOLLOWER</pre></li>
 	<li>Become root with the command <code>sudo su</code>.<br><br></li>
 	<li>Stop the mysql process with the command <code>monit stop mysql</code>.</li>
 	<li>Delete the data directory of the follower with the command <code>rm -rf /var/vcap/store/mysql</code>.</li>
 	Use the <code>configure-leader-follower</code> errand to copy the leader's data to the follower and resume replication:
-    <pre class="terminal">
-    $ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysql/INDEX\_OF\_LEADER
-    </pre></li>
+    <pre class="terminal">$ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysql/INDEX\_OF\_LEADER</pre></li>
 </ol>
 </li>
 </ol>
