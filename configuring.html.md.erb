@@ -415,12 +415,12 @@ To recover a disk in this scenario, do the following:
 1. Connect to the BOSH Director Postgres database and remove references to the disk.
   On a microbosh the database is local.
   <pre class="terminal">
-  $ /var/vcap/packages/postgres/bin/psql -U postgres --password bosh
+  $ /var/vcap/packages/postgres/bin/psql -U postgres --password bosh2
   psql (9.0.3)
   Type "help" for help.
-  bosh=> DELETE FROM persistent\_disks WHERE disk\_cid = 'YOUR\_DISK\_ID';
+  bosh2=> DELETE FROM persistent\_disks WHERE disk\_cid = 'YOUR\_DISK\_ID';
   DELETE 1
-  bosh=> DELETE FROM vsphere\_disk WHERE uuid = 'YOUR\_DISK\_ID';
+  bosh2=> DELETE FROM vsphere\_disk WHERE uuid = 'YOUR\_DISK\_ID';
   DELETE 1
   </pre>
 
