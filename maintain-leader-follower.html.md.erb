@@ -1,5 +1,5 @@
 ---
-title: Using Leader-Follower For Availability
+title: Using Leader-Follower Topology For Availability
 owner: MySQL
 ---
 
@@ -11,43 +11,41 @@ For more information, see:
 * [About Leader-Follower](./about-leader-follower.html) 
 * [Events that Interrupt Service](./interruptions.html)
 
-## Leader-Follower Setup and Failover Process
+## <a id="process"></a> Leader-Follower Setup and Failover Process
 
-The following are the high-level steps for setting up and using leader-follower failover:
+The following are the high-level steps for setting up and using the leader-follower topology:
 
-1. The operator makes a new Leader-Follower plan available in the marketplace.
+1. The operator configures a leader-follower plan. This plan is available in the marketplace.
 
-1. Developers create an instance from the Leader-Follower plan. Doing this automatically deploys two MySQL VMs in a leader-follower topology.
+1. Developers create an instance from the leader-follower plan. Doing this automatically deploys two MySQL VMs in a leader-follower topology.
 
-1. Developers bind apps to the leader in leader-follower instance, using the leader's IP address. Data is written to the leader, and asynchronously replicated on the follower.
+1. Developers bind apps to the leader in leader-follower plan instance, using the leader's IP address. Data is written to the leader, and asynchronously replicated on the follower.
 
-1. If the leader instance fails, the operator triggers a failover. The working instance (follower) becomes the new leader.
+1. If the leader instance fails, the operator manually triggers a failover, so the working instance (follower) becomes the new leader.
 
-1. Apps bound to the leader-follower instance are automatically bound to the new leader.
+1. Apps bound to the leader-follower plan instance are automatically bound to the new leader after failover.
 
 
 ## <a id="pre-reqs"></a>Prerequisites
 
 
-## Configure Leader-Follower 
+## <a id="config-plan"></a> Configure a Leader-Follower Service Plan
 
-### Configure a Leader-Follower Service Plan
+You can configure up to five leader-follower service plans in a MySQL for PCF tile deployment.
 
-1. Click the tab for one of the available plans, Plan 1 - Plan 5.
-1. Select the **Multi-node deployment** checkbox.
-1. Select a **MySQL VM Type** and a **MySQL Persistent Disk**
-1. Select two **MySQL Availability Zones** to use for the MySQL VMs.
+Once you configure the leader-follower plan, it is available in the marketplace. When a developer creates a leader-follower service instance, a leader VM is automatically deployed in one AZ, and a follower VM is deployed in another AZ.
 
-### Configure Who's Leader and Who's Follower
+To configure a leader-follower service plan, do the following:
 
+1. Follow the steps for [configuring an active service plan](install-config.html#active), and do the following specifically for the leader-follower plan:
+	1. Click the tab for any of the five available service plans: Plan 1 to Plan 5.
+	1. Select the **Multi-node deployment** checkbox.
+		![multi node checkbox](multi-node-box.png)
+	1. Select a **MySQL VM Type** and a **MySQL Persistent Disk**.
+	1. Select two **MySQL Availability Zones** to use for the MySQL VMs.
+	1. Click **Save**.
+1. In the Ops Manager Installation Dashboard, click **Apply Changes**.
 
-### Leader-Follower Errands
-
-These errands are available to manage the leader-follower configuration:
-
-`configure-leader-follower`
-`make-leader`
-`make-read-only`
 
 
 ## <a id="monitor"></a> Monitor Leader-Follower Instances
@@ -57,14 +55,32 @@ In order to decide if a failover is needed, you must monitor leader-follower ins
 
 ## <a id="failover"></a> Trigger a Failover
 
+You may want to trigger a failover to the follower VM if the leader fails or its performance degrades, or if you want to take the leader down to do planned maintenance. 
 
-This section describes two scenarios for failover:
+To trigger a failover do the following:
 
-* You can access AZ1
-* You cannot access AZ1
+1. For each app bound to the
 
-Let's say one VM in your leader-follower pair is down or you intend to take it down for planned maintenace.
+## <a id="validate"></a> Validate the New Follower Configuration After Failover
 
-1. For each app using bound to the
+## <a id="errands"></a> Leader-Follower Errands
 
+MySQL for PCF provides errands that a PCF operator can use to easily control the lifecycle of a leader-follower service instance without being an
+expert at MySQL. These errands are:
+
+- **configure-leader-follower**---Configures replication on the follower and ensures the leader is writable.
+  This errand runs after every create or update of a leader-follower instance.
+  The errand fails and alerts operators, via BOSH errand output, if the service instance is in bad state.
+
+- **make-leader**---Used to promote a follower VM to a leader.
+  This errand removes replication configuration from a follower VM,
+  waits for all transactions to be applied to the VM, and sets the VM as writable. The errand fails if the original
+  leader is still accessible to protect against data divergence.
+
+- **make-read-only**---Used to fence the leader if it is still accessible.
+  This errand sets the VM to read only and ensures that, if the follower is accessible, all transactions have been relayed to the follower.
+  For general information about fencing a leader,
+  see the Wikipedia article [Fencing (computing)](https://en.wikipedia.org/wiki/Fencing_(computing)).
+
+Using the errands above, an operator can create failover scripts.
 
