@@ -151,11 +151,10 @@ You see many replication errors in the MySQL logs.
 
 #### Explanation
 
-Seeing many replication errors in your MySQL logs can be part of normal behavior.
-However, replication errors in your MySQL logs can also correspond to execution errors in replication logs (`GRA_*.log`) during problems such as running out of disk space.
-The MySQL for PCF team is developing a more advanced monitoring solution to detect the failure case and alert operators in the future.
+Replication errors in your MySQL logs can also correspond to execution errors in replication logs (`GRA_*.log`) during problems such as running out of disk space.
 
-MySQL logs can also show replication errors when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
+Seeing many replication errors in your MySQL logs can also be part of normal behavior.
+For example, MySQL logs can show replication errors when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
 This is typically the result of user error.
 Resulting MySQL log lines can resemble the following:
 
@@ -166,17 +165,13 @@ Resulting MySQL log lines can resemble the following:
 </pre>
 
 The MySQL node that receives the request processes it normally.
-If it fails, the node sends the failure to the app and the app must determine the next step. 
+If it fails to apply, the statement returns an error. 
 In a Galera cluster, however, all DDL is replicated and all replication failures are logged.
-Therefore, the bad `ALTER TABLE` command is run by both slave nodes.
-If it fails, the slave nodes log it as a "replication failure" because they cannot tell the difference.
+Therefore, the bad `ALTER TABLE` command is run by all nodes.
+If it fails, the slave nodes log it as a "replication failure".
 
 Cases where a valid DDL works on some nodes yet fails on others are rare.
 Usually those cases are limited to problems with running out of disk space or working memory. 
-
-An article from [Percona](https://www.percona.com/blog/2014/07/21/a-schema-change-inconsistency-with-galera-cluster-for-mysql/) suggests that the schemata can get out of sync.
-However, the author had to deliberately switch a node to RSU, which MySQL for PCF never does except during SST.
-The article offers a demonstration of what is possible, but does not explain how a customer may actually experience this issue in production.
 
 #### Solution
 
@@ -234,29 +229,13 @@ It might also be possible to manually dump recent transactions from the detached
 
 #### Symptom
 
-A MySQL node has become unresponsive.
+A client connected to a MySQL cluster node reports: `WSREP has not yet prepared this node for application use`.
+Some clients may instead return `unknown error`.
 
 #### Explanation
 
-Unresponsive nodes stop responding to queries and, after timing out, leave the cluster.
-
-Nodes are marked as unresponsive or inactive under either of the following circumstances:
-
-- If they fail to respond to one node within 15 seconds
-- If they fail to respond to all other nodes within 5 seconds
-
-Unresponsive nodes that become responsive again will rejoin the cluster,
-as long as they are on the same IP which is pre-configured in the `gcomm` address on all of the other running nodes and a quorum is held by the remaining nodes.
-
-All nodes suspend writes once they notice a problem with the cluster.
-After a timeout period of 5 seconds, requests to non-quorum nodes fail.
-Most clients return the error: `WSREP has not yet prepared this node for application use`.
-Some clients may instead return `unknown error`.
-Nodes who have reached quorum continue fulfilling write requests.
-
-If deployed using a proxy, a continually inactive node causes the proxy to fail over, selecting a different MySQL node to route new queries to.
-
-#### Solutions
+If the client is connected to a MySQL cluster node that loses connection to the rest of the cluster (becomes non-Primary), it will stop accepting writes.
+If the connection to this node is made through the proxy, the proxy should re-route further connections to a different node.
 
 A node can become unresponsive for a number of reasons. Each reason corresponds to a different solution. Consult the following list:
 
