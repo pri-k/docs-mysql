@@ -26,6 +26,10 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 * Enables developers to use workload profiles for best practices in server configuration.
   For more information, see [Changing MySQL Server Defaults](./change-default.html).
 
+* The MySQL for PCF tile no longer includes individual errand VMs. Instead, the errand jobs are colocated on other VMs in the deployment. Colocated errands run faster than traditional errands and use fewer resources, including disk and IP address space. 
+
+* The MySQL for PCF tile no longer includes the option to disable automated backups. You must configure automated backups. For more information, see [Backing Up and Restoring On-Demand MySQL for PCF](backup-and-restore.html). 
+
 * Upgrades several dependencies including, `golang 1.9.1`.
 
 * Upgrades Percona Server to v5.7.19–17.
