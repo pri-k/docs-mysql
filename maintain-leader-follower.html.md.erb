@@ -25,10 +25,6 @@ The following are the high-level steps for setting up and using the leader-follo
 
 1. Apps bound to the leader-follower plan instance are automatically bound to the new leader after failover.
 
-
-## <a id="pre-reqs"></a>Prerequisites
-
-
 ## <a id="config-plan"></a> Configure a Leader-Follower Service Plan
 
 You can configure up to five leader-follower service plans in a MySQL for PCF tile deployment.
@@ -68,8 +64,8 @@ You may want to trigger a failover to the follower VM in the following scenarios
 
 There are two different workflows for triggering a failover:
 
-1. **Workflow 1**: You no longer have access to the follower VM.
-2. **Workflow 2**: You still have access to the follower VM.
+* **Workflow 1**: You no longer have access to the follower VM.
+* **Workflow 2**: You still have access to the follower VM.
 
 To trigger a failover using **Workflow 1**, perform the following steps, omitting those marked **Workflow 2**. To trigger a failover using **Workflow 2**, perform all of the following steps.
 
@@ -78,14 +74,11 @@ To trigger a failover using **Workflow 1**, perform the following steps, omittin
 1. Log in:
   <pre class="terminal">$ cf login</pre>
 1. Enter the org and space where the leader-follower service instance is located.
-1. Retrieve the GUID of the service instance by running the following command: 
-  ```
-  cf service SERVICE-INSTANCE --guid
-
-  ```
+1. Retrieve the GUID of the service instance by running the following command:
+  <pre><code>cf service SERVICE-INSTANCE --guid</code></pre>
   <br>
   Where `SERVICE-INSTANCE` is the name of the leader-follower service instance. 
-  <br>
+  <br><br>
   For example:
   <pre class="terminal">$ cf service my-lf-instance --guid
   82ddc607-710a-404e-b1b8-a7e3ea7ec063
@@ -95,15 +88,13 @@ To trigger a failover using **Workflow 1**, perform the following steps, omittin
 ](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Ops Manager VM.
 1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI v2. See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in <em>Advanced Troubleshooting with the BOSH CLI</em>.
 1. Use the BOSH CLI v2 to run the `inspect` errand with the following command:
-  ```
-  bosh2 -d service-instance_GUID run-errand inspect
-  ```
+  <pre><code>bosh2 -d service-instance\_GUID run-errand inspect</code></pre>
   <br>
   Where `GUID` is the GUID of the leader-follower service instance retrieved above.
-  <br>
+  <br><br>
   For example:
   <pre class="terminal">
-  $ bosh2 -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand inspect
+  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand inspect
   </pre>
 1. Examine the output and locate the information about the leader-follower MySQL VMs:
   <pre class="terminal">
@@ -111,58 +102,49 @@ To trigger a failover using **Workflow 1**, perform the following steps, omittin
   Exit Code  0
   Stdout     -
   Stderr     2017/12/13 22:26:56 Started executing command: inspect
-             2017/12/13 22:26:56 Started GET https://127.0.0.1:8443/status
+             2017/12/13 22:26:56 Started GET http<span>s:</span>//127.0.0.1:8443/status
              2017/12/13 22:26:56
              Has Data: true
              Read Only: true
              GTID Executed: 524c4be4-d540-11e7-a1d2-42010a000805:1-85297
              Replication Configured: true
-
-
   Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
   Exit Code  0
   Stdout     -
   Stderr     2017/12/13 22:26:56 Started executing command: inspect
-             2017/12/13 22:26:56 Started GET https://127.0.0.1:8443/status
+             2017/12/13 22:26:56 Started GET http<span>s:</span>//127.0.0.1:8443/status
              2017/12/13 22:26:57
              Has Data: true
              Read Only: false
              GTID Executed: 524c4be4-d540-11e7-a1d2-42010a000805:1-85298
              Replication Configured: false
-
   </pre>
 1. Identify the instance marked `Read Only: false`. This is the leader VM. Record the index, which is the value for `Instance` after `mysql/`. In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
 1. **Workflow 2** Use the BOSH CLI v2 to determine if the leader VM is in the AZ you want to take offline. For example:
-  <pre class="terminal">$ bosh2 -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
+  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
   Examine the output to determine if the leader VM you identified in the previous step is in the AZ you want to take offline. 
 1. **Workflow 2** Stop any data from being written to the leader VM by setting it to read only. Run the following command:
-  ```
-  bosh -d service-instance_GUID run-errand make-read-only --instance=mysql/INDEX
-  ```
-  <br><br>
+  <pre><code>bosh -d service-instance\_GUID run-errand make-read-only --instance=mysql/INDEX</code></pre>
+  <br>
   Where:
-  * `GUID`: This is the GUID of the leader-follower service instance retrieved above.
-  * `INDEX`: This is the index of the MySQL leader VM retrieved above.
-  <br><br>
+  <ul><li>`GUID`: This is the GUID of the leader-follower service instance retrieved above.</li>
+  <li>`INDEX`: This is the index of the MySQL leader VM retrieved above.</li></ul>
   For example:
   <pre class="terminal">
-  $ bosh -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-read-only --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+  $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-read-only --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
   </pre>
 1. Stop the leader VM, using the same values as above. For example:
-  <pre class="terminal">$ bosh -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+  <pre class="terminal">$ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
 1. Set the follower VM as writable, using the same values as above. For example:
-  <pre class="terminal">$ bosh -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+  <pre class="terminal">$ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
   </pre>
   If this command returns an error, re-run it until the follower VM has completed applying the transactions. 
 1. Unbind the app from the leader-follower service instance. Run the following command:
-  ```
-  cf unbind-service APP SERVICE-INSTANCE 
-  ```
-  <br><br>
+  <pre><code>cf unbind-service APP SERVICE-INSTANCE</code></pre>
+  <br>
   Where:
-  * `APP`: This is the name of the app bound to the leader-follower service instance.
-  * `SERVICE-INSTANCE`: This is the name of the leader-follower service instance.
-  <br><br>
+  <ul><li>`APP`: This is the name of the app bound to the leader-follower service instance.</li>
+  <li>`SERVICE-INSTANCE`: This is the name of the leader-follower service instance.</li></ul>
   For example:
   <pre class="terminal">
   $ cf unbind-service my-app my-lf-instance
@@ -178,9 +160,8 @@ To trigger a failover using **Workflow 1**, perform the following steps, omittin
 1. **Workflow 2** Power down the former leader VM in AZ1 and perform maintenance. 
 1. **Workflow 2** After finishing maintenance, re-add and power on the VM. BOSH will restart it in read-only mode in AZ1.
 1. **Workflow 2** Use the BOSH CLI v2 to set the former leader VM as a follower, using the same values as above. For example:
-  <pre class="terminal">$ bosh -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand configure-leader-follower --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+  <pre class="terminal">$ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand configure-leader-follower --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
   Replication and HA are resumed.
-1. **Workflow 2**
 
 ## <a id="errands"></a> Leader-Follower Errands
 
