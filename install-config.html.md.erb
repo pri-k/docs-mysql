@@ -103,7 +103,7 @@ By default, MySQL for PCF has three active plans. The fourth and fifth plans are
 
 ###<a id="azs"></a> Configure AZs and Networks
 
-Follow the steps below to choose an Availability Zone (AZ) to run the service broker and to select networks.
+Follow the steps below to choose an availability zone (AZ) to run the service broker and to select networks.
 
 1. Click **Assign AZs and Networks**.
 
@@ -146,14 +146,14 @@ Follow the steps below for each plan that you want to be active and used in your
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Multi-node deployment</strong></td>
         <td>Check the box to configure a leader-follower plan. Leave unchecked to configure each instance as a singleton.
-            For more information, see [Configure a Leader-Follower Service Plan](./maintain-leader-follower.html#config-plan) page.</td></tr>
+            For more information, see [Configure a Leader-Follower Service Plan](./maintain-leader-follower.html#config-plan).</td></tr>
     <tr><td><strong>Service Plan Access</strong></td>
         <td>Accept the default to enable access to all organizations in your PCF deployment.
             Select **Disable** to disable creating new services instances of this plan for all organizations.
             Select **Manual** to manually control service access with the cf CLI.</td></tr>
     <tr><td><strong>Plan Name</strong></td>
         <td>Accept the default or enter a name. 
-            This is the name that appears in the PCF Marketplace for developers.</td></tr>
+            This is the name that appears in the Marketplace for developers.</td></tr>
     <tr><td><strong>Plan Description</strong></td>
         <td>Accept the default or enter a description to help developers understand plan features. 
             Pivotal recommends adding VM type details and disk size to this field.
@@ -165,7 +165,7 @@ Follow the steps below for each plan that you want to be active and used in your
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL messages.
             <p class="note"><strong>Note</strong>: If you intend to enable backups, choose a persistent disk type 
-                that is three times as large as you intend to provide to developers.
+                that is three times larger than the disk you intend to provide to developers.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
