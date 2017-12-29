@@ -4,7 +4,9 @@ owner: MySQL
 ---
 
 You can maintain availability of your MySQL databases by keeping two copies of your database,
-one on a leader (master) instance, and another on a follower (slave) instance. If the leader instance fails due to hardware or software issues, or during a period of planned maintenance, you can initiate a failover to the follower instance, so that the apps that bind to your MySQL databases experience no downtime.
+one on a leader (master) instance and another on a follower (slave) instance.
+If the leader instance fails due to hardware or software issues or during a period of planned maintenance,
+you can initiate a failover to the follower instance, so that the apps that bind to your MySQL databases experience no downtime.
 
 For more information, see:
 
@@ -15,11 +17,14 @@ For more information, see:
 
 The following are the high-level steps for setting up and using the leader-follower topology:
 
-1. The operator configures a leader-follower plan. This plan is available in the marketplace.
+1. The operator configures a leader-follower plan.
+   This plan is available in the Marketplace.
 
-1. Developers create an instance from the leader-follower plan. Doing this automatically deploys two MySQL VMs in a leader-follower topology.
+1. Developers create an instance from the leader-follower plan.
+   Doing this automatically deploys two MySQL VMs in a leader-follower topology.
 
-1. Developers bind apps to the leader in leader-follower plan instance, using the leader's IP address. Data is written to the leader, and asynchronously replicated on the follower.
+1. Developers bind apps to the leader in leader-follower plan instance, using the leader's IP address.
+   Data is written to the leader and asynchronously replicated on the follower.
 
 1. If the leader instance fails, the operator manually triggers a failover, so the working instance (follower) becomes the new leader.
 
@@ -27,13 +32,16 @@ The following are the high-level steps for setting up and using the leader-follo
 
 ## <a id="config-plan"></a> Configure a Leader-Follower Service Plan
 
-You can configure up to five leader-follower service plans in a MySQL for PCF tile deployment.
+You can configure up to five leader-follower service plans.
 
-Once you configure the leader-follower plan, it is available in the marketplace. When a developer creates a leader-follower service instance, a leader VM is automatically deployed in one AZ, and a follower VM is deployed in another AZ.
+After you configure the leader-follower plan, it is available in the Marketplace.
+When a developer creates a leader-follower service instance, a leader VM is automatically deployed in one availability zone (AZ),
+and a follower VM is deployed in another AZ.
 
 To configure a leader-follower service plan, do the following:
 
-1. Follow the steps for [configuring an active service plan](install-config.html#active), and do the following specifically for the leader-follower plan:
+1. Follow the steps for [configuring an active service plan](install-config.html#active),
+   and do the following specifically for the leader-follower plan:
 	1. Click the tab for any of the five available service plans: Plan 1 to Plan 5.
 	1. Select the **Multi-node deployment** checkbox.
 		![multi node checkbox](multi-node-box.png)
@@ -46,17 +54,22 @@ To configure a leader-follower service plan, do the following:
 
 In order to decide if a failover is needed, you must monitor leader-follower instances.
 
-In monitoring the leader-follower VMs, operators should pay attention to the following metrics:
+In monitoring the leader-follower VMs, pay attention to the following metrics:
 
-* `/p-mysql/available`: This metric records whether the leader and follower VMs are emitting heartbeats. For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
+* `/p-mysql/available`: This metric records whether the leader and follower VMs are emitting heartbeats.
+  For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
 
-* `/p-mysql/follower_seconds_since_leader_heartbeat`: Whenever the leader VM emits a heartbeat, the heartbeat is written to the leader database, and replicated to the follower. This metric measures the number of seconds that elapses between the leader heartbeat and the replication of the heartbeat in the follower database, so operators can determine how far behind the follower is from the leader. 
+* `/p-mysql/follower_seconds_since_leader_heartbeat`: Whenever the leader VM emits a heartbeat,
+  the heartbeat is written to the leader database and replicated to the follower.
+  This metric measures the number of seconds that elapses between the leader heartbeat and the replication of the heartbeat in the follower database,
+  so operators can determine how far behind the follower is from the leader. 
 
-* `/p-mysql/follower_seconds_behind_master`: This metric measures how far behind the follower VM is in applying the database writes that it has copied from the leader VM. Operators can use this metric to determine how asynchronous the asynchronous replication is between leader and follower. 
+* `/p-mysql/follower_seconds_behind_master`: This metric measures how far behind the follower VM is in applying the database writes that it has copied from the leader VM.
+  Operators can use this metric to determine how asynchronous the asynchronous replication is between leader and follower. 
 
 ## <a id="failover"></a> Trigger a Failover
 
-You may want to trigger a failover to the follower VM in the following scenarios:
+You might want to trigger a failover to the follower VM in the following scenarios:
 
 * The leader VM fails
 * The performance of the leader VM degrades
@@ -64,29 +77,32 @@ You may want to trigger a failover to the follower VM in the following scenarios
 
 There are two different workflows for triggering a failover:
 
-* **Workflow 1**: You no longer have access to the follower VM.
-* **Workflow 2**: You still have access to the follower VM.
+* **Workflow 1**: You no longer have access to the leader VM.
+* **Workflow 2**: You still have access to the leader VM.
 
-To trigger a failover using **Workflow 1**, perform the following steps, omitting those marked **Workflow 2**. To trigger a failover using **Workflow 2**, perform all of the following steps.
+To trigger a failover using **Workflow 1**, perform the following steps, omitting those marked **Workflow 2**.
+To trigger a failover using **Workflow 2**, perform all of the following steps.
 
-1. Target the Cloud Controller of your PCF deployment with the Cloud Foundry Command Line Interface (cf CLI). For example:
+1. Target the Cloud Controller of your PCF deployment with the Cloud Foundry Command Line Interface (cf CLI).
+   For example:
   <pre class="terminal">$ cf api api.pcf.example.com</pre>
 1. Log in:
-  <pre class="terminal">$ cf login</pre>
+  <pre><code>cf login</code></pre>
 1. Enter the org and space where the leader-follower service instance is located.
 1. Retrieve the GUID of the service instance by running the following command:
-  <pre><code>cf service SERVICE-INSTANCE --guid</code></pre>
-  <br>
-  Where `SERVICE-INSTANCE` is the name of the leader-follower service instance. 
+    <pre><code>cf service SERVICE-INSTANCE --guid</code></pre>
+    <br>
+    Where `SERVICE-INSTANCE` is the name of the leader-follower service instance. 
   <br><br>
   For example:
   <pre class="terminal">$ cf service my-lf-instance --guid
   82ddc607-710a-404e-b1b8-a7e3ea7ec063
   </pre>
-  If you do not know the name of the service instance, you can list all service instances in the space with `cf services`.
+  If you do not know the name of the service instance, you can list service instances in the space with `cf services`.
 1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather) and [SSH into Ops Manager
 ](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Ops Manager VM.
-1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI v2. See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in <em>Advanced Troubleshooting with the BOSH CLI</em>.
+1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI v2.
+   See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in <em>Advanced Troubleshooting with the BOSH CLI</em>.
 1. Use the BOSH CLI v2 to run the `inspect` errand with the following command:
   <pre><code>bosh2 -d service-instance\_GUID run-errand inspect</code></pre>
   <br>
@@ -119,54 +135,67 @@ To trigger a failover using **Workflow 1**, perform the following steps, omittin
              GTID Executed: 524c4be4-d540-11e7-a1d2-42010a000805:1-85298
              Replication Configured: false
   </pre>
-1. Identify the instance marked `Read Only: false`. This is the leader VM. Record the index, which is the value for `Instance` after `mysql/`. In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
-1. **Workflow 2** Use the BOSH CLI v2 to determine if the leader VM is in the AZ you want to take offline. For example:
-  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
-  Examine the output to determine if the leader VM you identified in the previous step is in the AZ you want to take offline. 
-1. **Workflow 2** Stop any data from being written to the leader VM by setting it to read only. Run the following command:
-  <pre><code>bosh2 -d service-instance\_GUID run-errand make-read-only --instance=mysql/INDEX</code></pre>
-  <br>
-  Where:
-  <ul><li>`GUID`: This is the GUID of the leader-follower service instance retrieved above.</li>
-  <li>`INDEX`: This is the index of the MySQL leader VM retrieved above.</li></ul>
-  For example:
-  <pre class="terminal">
-  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-read-only --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-  </pre>
-1. Stop the leader VM, using the same values as above. For example:
-  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
-1. Set the follower VM as writable, using the same values as above. For example:
-  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-  </pre>
-  If this command returns an error, re-run it until the follower VM has completed applying the transactions. 
-1. Unbind the app from the leader-follower service instance. Run the following command:
-  <pre><code>cf unbind-service APP SERVICE-INSTANCE</code></pre>
-  <br>
-  Where:
-  <ul><li>`APP`: This is the name of the app bound to the leader-follower service instance.</li>
-  <li>`SERVICE-INSTANCE`: This is the name of the leader-follower service instance.</li></ul>
-  For example:
-  <pre class="terminal">
-  $ cf unbind-service my-app my-lf-instance
-  </pre>
-1. Rebind the app to the leader-follower service instance, using the same values as above. For example:
-  <pre class="terminal">
-  $ cf unbind-service my-app my-lf-instance
-  </pre>
-1. Restage the app. For example:
-  <pre class="terminal">
-  $ cf restage my-app
-  </pre>
-1. **Workflow 2** Power down the former leader VM in AZ1 and perform maintenance. 
-1. **Workflow 2** After finishing maintenance, re-add and power on the VM. BOSH will restart it in read-only mode in AZ1.
-1. **Workflow 2** Use the BOSH CLI v2 to set the former leader VM as a follower, using the same values as above. For example:
-  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand configure-leader-follower --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
-  Replication and HA are resumed.
+1. Identify the instance marked `Read Only: false`.
+   This is the leader VM.
+   Record the index, which is the value for `Instance` after `mysql/`.
+   In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
+1. **Workflow 2**: Use the BOSH CLI v2 to determine if the leader VM is in the AZ you want to take offline.
+   For example:
+   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
+   Examine the output to determine if the leader VM you identified in the previous step is in the AZ you want to take offline. 
+1. **Workflow 2**: Stop any data from being written to the leader VM by setting it to read only.
+   Run the following command:
+   <pre><code>bosh2 -d service-instance\_GUID run-errand make-read-only --instance=mysql/INDEX</code></pre>
+   <br>
+   Where:
+   <ul><li>`GUID`: This is the GUID of the leader-follower service instance retrieved above.</li>
+   <li>`INDEX`: This is the index of the leader VM retrieved above.</li></ul>
+   For example:
+   <pre class="terminal">
+   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-read-only --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+   </pre>
+1. Stop the leader VM, using the same values as above.
+   For example:
+   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+1. Set the follower VM as writable, using the same values as above.
+   For example:
+   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+   </pre>
+   If this command returns an error, re-run it until the follower VM has completed applying the transactions. 
+1. Unbind the app from the leader-follower service instance.
+   Run the following command:
+   <pre><code>cf unbind-service APP SERVICE-INSTANCE</code></pre>
+   <br>
+   Where:
+   <ul><li>`APP`: This is the name of the app bound to the leader-follower service instance.</li>
+   <li>`SERVICE-INSTANCE`: This is the name of the leader-follower service instance.</li></ul>
+   For example:
+   <pre class="terminal">
+   $ cf unbind-service my-app my-lf-instance
+   </pre>
+1. Rebind the app to the leader-follower service instance, using the same values as above.
+   For example:
+   <pre class="terminal">
+   $ cf unbind-service my-app my-lf-instance
+   </pre>
+1. Restage the app.
+   For example:
+   <pre class="terminal">
+   $ cf restage my-app
+   </pre>
+1. **Workflow 2**: Power down the former leader VM in AZ1 and perform maintenance. 
+1. **Workflow 2**: After finishing maintenance, re-add and power on the VM.
+   BOSH restarts it in read-only mode in AZ1.
+1. **Workflow 2**: Use the BOSH CLI v2 to set the former leader VM as a follower, using the same values as above.
+   For example:
+   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand configure-leader-follower --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+   Replication and HA are resumed.
 
 ## <a id="errands"></a> Leader-Follower Errands
 
-MySQL for PCF provides errands that a PCF operator can use to easily control the lifecycle of a leader-follower service instance without being an
-expert at MySQL. These errands are:
+MySQL for PCF provides errands that a operator can use to control the lifecycle of a leader-follower service instance without being an
+expert at MySQL.
+These errands are:
 
 - **configure-leader-follower**---Configures replication on the follower and ensures the leader is writable.
   This errand runs after every create or update of a leader-follower instance.
@@ -174,7 +203,8 @@ expert at MySQL. These errands are:
 
 - **make-leader**---Used to promote a follower VM to a leader.
   This errand removes replication configuration from a follower VM,
-  waits for all transactions to be applied to the VM, and sets the VM as writable. The errand fails if the original
+  waits for all transactions to be applied to the VM, and sets the VM as writable.
+  The errand fails if the original
   leader is still accessible to protect against data divergence.
 
 - **make-read-only**---Used to fence the leader if it is still accessible.
