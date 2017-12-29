@@ -3,12 +3,15 @@ title: About Leader-Follower
 owner: MySQL
 ---
 
-This topic describes how the leader-follower topology works in MySQL for Pivotal Cloud Foundry (PCF), and contains information to help users decide whether to enable or use leader-follower.
+This topic describes how the leader-follower topology works in MySQL for Pivotal Cloud Foundry (PCF)
+and contains information to help users decide whether to enable or use leader-follower.
 
 ## <a id='understand-lf'></a> Understanding Leader-Follower
 
-The leader-follower topology increases the availability of a MySQL database by deploying two MySQL VMs in two separate availability zones (AZs). When a developer creates a leader-follower service instance, the on-demand broker deploys a leader VM in one AZ,
-and a follower VM in another AZ. Any data that is written to the leader is asynchronously replicated to the follower.
+The leader-follower topology increases the availability of a MySQL database by deploying two MySQL VMs in two separate availability zones (AZs).
+When a developer creates a leader-follower service instance, the on-demand broker deploys a leader VM in one AZ,
+and a follower VM in another AZ.
+Any data that is written to the leader is asynchronously replicated to the follower.
 
 A leader-follower topology enables operators to initiate a
 failover and send app traffic to the follower if the leader fails.
@@ -63,15 +66,15 @@ to trigger a failover.
 MySQL for PCF does not automatically failover to the follower.
 When an operator triggers a failover, app traffic is sent to the standby follower.
 
-For more information, see [Trigger a Failover
-](./maintain-leader-follower.html#failover).
+For more information, see [Trigger a Failover](./maintain-leader-follower.html#failover).
 
 ## <a id="errands"></a>Understanding Leader-Follower Errands
 
 MySQL for PCF automates orchestrating the standard lifecycle of creating, updating, and deleting leader-follower service
 instances. 
 
-In addition, MySQL for PCF provides three leader-follower errands. A PCF operator can use them to easily control the lifecycle of a leader-follower service instance, and manually intervene when necessary, without being an
-expert at MySQL. 
+In addition, MySQL for PCF provides three leader-follower errands.
+An operator can use them to control the lifecycle of a leader-follower service instance
+and manually intervene, when necessary, without being an expert at MySQL. 
 
 For more information, see [Leader-Follower Errands](./maintain-leader-follower.html#errands).
