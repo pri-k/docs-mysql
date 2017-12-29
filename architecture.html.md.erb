@@ -198,7 +198,9 @@ This option allows clients to send files to the server. Disabling ensures that c
 
 #### <a id="remote-admin"></a>Allow Remote Admin Access
 
-When enabled, `mysql` clients are allowed to connect as administrator from remote hosts. When disabled, administrators must `bosh2 ssh` into each MySQL VM to connect as the MySQL super user. This is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
+When enabled, `mysql` clients are allowed to connect as administrator from remote hosts. 
+When disabled, administrators must BOSH SSH into each MySQL VM to connect as the MySQL super user.
+This is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
 
 This setting affects the admin and roadmin accounts.
 
@@ -207,7 +209,11 @@ Some errands fail when remote admin access is disabled.</p>
 
 #### <a id="command-history"></a>Allow Command History
 
-When disabled, this prohibits the creation of command line history files on the MySQL nodes. If administrators frequently `ssh` into the MySQL VMs without using `bosh2 ssh`, the default setting of Enabled automatically creates history files of their interactions with the server. These files may contain sensitive information. Disable this option to ensure that no trace files are left on the file system.
+When disabled, this prohibits the creation of command line history files on the MySQL nodes.
+If administrators frequently `ssh` into the MySQL VMs without using BOSH SSH, 
+the default setting of Enabled automatically creates history files of their interactions with the server.
+These files may contain sensitive information.
+Disable this option to ensure that no trace files are left on the file system.
 
 ## <a id="galeradefaults"></a> MySQL Server Defaults for Galera Components
 
