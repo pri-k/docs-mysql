@@ -5,7 +5,7 @@ owner: MySQL
 
 This topic describes how to diagnose and troubleshoot problems with MySQL for Pivotal Cloud Foundry (PCF).
 
-## <a id="diagnosing"></a> Diagnose Problems
+## <a id="diagnosing"></a> Diagnostic Workflow
 
 If your cluster is experiencing downtime or is in a degraded state, Pivotal recommends the following workflow
 for gathering information to diagnose the type of failure the cluster is experiencing.
@@ -14,31 +14,24 @@ for gathering information to diagnose the type of failure the cluster is experie
 1. Run [download-logs](https://discuss.pivotal.io/hc/en-us/articles/221504408-Script-to-download-logs-from-MYSQL-server-tile-for-further-troubleshooting) against each node in your MySQL cluster,
    the MySQL proxies, and the MySQL backup-prepare node.
    It's important to do this before attempting recovery,
-   because any failures in the recovery procedure can result in logs being lost or made inaccessible.
-1. Depending on the reported state from `mysql-diag`, the troubleshooting [techniques](#troubleshooting) listed below might allow you to recover your cluster.
+   because any failures in the recovery procedure can result in logs being lost or made inaccessible. 
+   It's recommended that you use the `-X` flag to get the complete set of available logs.
+   However, if your cluster processes a high volume of transactions, the complete set may be too large and you can omit this flag to fetch the essential set of logs.
+1. Depending on the reported state from `mysql-diag`, the troubleshooting techniques listed in the [Common Problems](#common-problems) section below might allow you to recover your cluster.
 1. If you are uncertain about the recovery steps to take, submit a ticket through [Pivotal Support](https://support.pivotal.io/)
    with the following information:
   - Logs fetched by running the `download-logs` script
   - Output from `mysql-diag`
   - Type of environment the MySQL deployment is running in (Pivotal Application Service (PAS), Elastic Runtime, MySQL for PCF, or other)
   - Versions of the installed Ops Manager, PAS or Elastic Runtime, and MySQL for PCF
-
-For more diagnostic techniques, see [Diagnostic Techniques](#diagnostic-techniques).
   
 ## <a id="diagnostic-techniques"></a> Diagnostic Techniques
 
-After performing the procedure in [Diagnose Problems](#diagnosing), consult the following additional diagnostic techniques to learn more about your cluster.
-
-### <a id="check-quorum"></a> Check for Lost Quorum
-
-If your cluster has lost quorum, you must bootstrap it.
-
-To determine whether you need to bootstrap your cluster, check whether the cluster has lost quorum.
-For more information, see [Bootstrapping](bootstrapping.html) for more information.
+After performing the procedure in [Diagnostic Workflow](#diagnosing), consult the following additional diagnostic techniques to learn more about your cluster.
 
 ### <a id="check-state"></a> Check Cluster State
 
-To check the cluster state, connect to each MySQL node using a MySQL client and check its status.
+`mysql_diag` will report the cluster's state; however, you may check it manually by connecting to each MySQL node using a MySQL client and checking its status:
 
 <pre class="terminal">
 $ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'
@@ -68,7 +61,9 @@ Otherwise, check network connectivity between nodes and use `monit status` to id
 
 For more information, see the official Galera documentation for [Checking Cluster Integrity](http://galeracluster.com/documentation-webpages/monitoringthecluster.html#checking-cluster-integrity).
 
-To restart your cluster, see [Bootstrapping](bootstrapping.html).
+If none of your nodes are in the `Primary` component, then your cluster has lost quorum; the cluster will need to be bootstrapped.
+
+For more information, see [Bootstrapping](bootstrapping.html) for more information.
 
 ### <a id="check-replication"></a>Check Replication Status
 
@@ -136,7 +131,7 @@ Perform the following steps to check the replication status:
 1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment.
    If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
 
-## <a id='troubleshooting'></a>Troubleshoot Problems
+## <a id='common-problems'></a>Common Problems
 
 This section lists symptoms, solutions, and explanations for the following common problems:
 
@@ -156,10 +151,12 @@ You see many replication errors in the MySQL logs.
 
 #### Explanation
 
-Unless the GRA files show a clear execution error, such as running out of disk space, seeing many replication errors in your logs is a normal behavior.
-The MySQL for PCF team is developing a more advanced monitoring solution to detect the failure case and alert operators in the future.
+Replication errors in your MySQL logs can also correspond to execution errors in replication logs (`GRA_*.log`) during problems such as running out of disk space.
 
-Occasionally, replication errors in the MySQL logs resemble the following:
+Seeing many replication errors in your MySQL logs can also be part of normal behavior.
+For example, MySQL logs can show replication errors when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
+This is typically the result of user error.
+Resulting MySQL log lines can resemble the following:
 
 <pre class="terminal">
 160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
@@ -167,21 +164,14 @@ Occasionally, replication errors in the MySQL logs resemble the following:
 160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
 </pre>
 
-This error occurs when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
-This is typically the result of user error.
-
 The MySQL node that receives the request processes it normally.
-If it fails, the node sends the failure to the app and the app must determine the next step. 
+If it fails to apply, the statement returns an error. 
 In a Galera cluster, however, all DDL is replicated and all replication failures are logged.
-Therefore, the bad `ALTER TABLE` command is run by both slave nodes.
-If it fails, the slave nodes log it as a "replication failure" because they cannot tell the difference.
+Therefore, the bad `ALTER TABLE` command is run by all nodes.
+If it fails, the slave nodes log it as a "replication failure".
 
 Cases where a valid DDL works on some nodes yet fails on others are rare.
 Usually those cases are limited to problems with running out of disk space or working memory. 
-
-An article from [Percona](https://www.percona.com/blog/2014/07/21/a-schema-change-inconsistency-with-galera-cluster-for-mysql/) suggests that the schemata can get out of sync.
-However, the author had to deliberately switch a node to RSU, which MySQL for PCF never does except during SST.
-The article offers a demonstration of what is possible, but does not explain how a customer may actually experience this issue in production.
 
 #### Solution
 
@@ -207,7 +197,7 @@ When MySQL runs out of space, it stops functioning normally.
 
 1. Use the [mysql-diag](mysql-diag.html) tool to determine how much space you have left. If the disk is too full, the `mysql-diag` won't work.
 1. Redeploy with more persistent disk.
-1. After redeploying, you may encounter further errors. To troubleshoot these errors, see the other sections in [Troubleshoot Problems](#troubleshooting).
+1. After redeploying, you may encounter further errors. To troubleshoot these errors, see the other sections in [Common Problems](#common-problems).
 
 ### <a id="wont-rejoin"></a> Node Unable to Rejoin
 
@@ -239,29 +229,13 @@ It might also be possible to manually dump recent transactions from the detached
 
 #### Symptom
 
-A MySQL node has become unresponsive.
+A client connected to a MySQL cluster node reports: `WSREP has not yet prepared this node for application use`.
+Some clients may instead return `unknown error`.
 
 #### Explanation
 
-Unresponsive nodes stop responding to queries and, after timing out, leave the cluster.
-
-Nodes are marked as unresponsive or inactive under either of the following circumstances:
-
-- If they fail to respond to one node within 15 seconds
-- If they fail to respond to all other nodes within 5 seconds
-
-Unresponsive nodes that become responsive again will rejoin the cluster,
-as long as they are on the same IP which is pre-configured in the `gcomm` address on all of the other running nodes and a quorum is held by the remaining nodes.
-
-All nodes suspend writes once they notice a problem with the cluster.
-After a timeout period of 5 seconds, requests to non-quorum nodes fail.
-Most clients return the error: `WSREP has not yet prepared this node for application use`.
-Some clients may instead return `unknown error`.
-Nodes who have reached quorum continue fulfilling write requests.
-
-If deployed using a proxy, a continually inactive node causes the proxy to fail over, selecting a different MySQL node to route new queries to.
-
-#### Solutions
+If the client is connected to a MySQL cluster node that loses connection to the rest of the cluster (becomes non-Primary), it will stop accepting writes.
+If the connection to this node is made through the proxy, the proxy should re-route further connections to a different node.
 
 A node can become unresponsive for a number of reasons. Each reason corresponds to a different solution. Consult the following list:
 
