@@ -235,8 +235,8 @@ Some clients may instead return `unknown error`.
 
 #### Explanation
 
-If the client is connected to a MySQL cluster node that loses connection to the rest of the cluster (becomes non-Primary), the node stops accepting writes.
-If the connection to this node is made through the proxy, the proxy should re-route further connections to a different node.
+If the client is connected to a MySQL cluster node that loses connection to the rest of the cluster (that is, becomes non-Primary), the node stops accepting writes.
+If the connection to this node is made through the proxy, the proxy automatically re-routes further connections to a different node.
 
 A node can become unresponsive for a number of reasons. Each reason corresponds to a different solution. Consult the following list:
 
