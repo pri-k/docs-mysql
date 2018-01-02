@@ -54,9 +54,7 @@ This problem happens when the <code>configure-leader-follower</code> errand fail
 <h4>Symptom</h4>
 The <code>configure-leader-follower</code> errand exits with <code>1</code> and the errand logs contain the following:
 
-<pre><code>
-Unable to determine leader and follower based on transaction history.
-</code></pre>
+<pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
 
 <h4>Explanation</h4>
 Something has happened to the instances, such as a failure or manual intervention. As a result, there is not enough
@@ -117,9 +115,9 @@ and the VMs might hold differing data.
 
 The <code>configure–leader-follower</code> errand exits with <code>1</code> and the errand logs contain the following:<br><br>
 
-<pre><code>
-Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.
-</code></pre>
+
+<pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
+
 
 <h4>Explanation</h4>
 
