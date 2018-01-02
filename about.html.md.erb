@@ -85,9 +85,9 @@ Regardless of the specific network layout, the operator must ensure network rule
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td><strong>Deployed service instances</strong>
+		<td><strong>MySQL service instances</strong>
 		</td>
-		<td>Specific to the service (such as RabbitMQ for PCF). May be one or more ports.</td>
+		<td>3306</td>
 		<td>One-way</td>
 		<td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
 	</tr>
@@ -141,7 +141,7 @@ Regardless of the specific network layout, the operator must ensure network rule
 		</td>
 		<td>8080</td>
 		<td>One-way</td>
-		<td>This port may be different for individual services. This port may also be configurable by the operator if allowed by the tile developer.</td>
+		<td>This port allows Elastic Runtime to communicate with the ODB component.</td>
 	</tr>
 </table>
 
