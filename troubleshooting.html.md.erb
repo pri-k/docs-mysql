@@ -13,26 +13,29 @@ for gathering information to diagnose the type of failure the cluster is experie
 1. Use the [mysql-diag](mysql-diag.html) tool to gather a summary of the network, disk, and replication state of each cluster node.
 1. Run [download-logs](https://discuss.pivotal.io/hc/en-us/articles/221504408-Script-to-download-logs-from-MYSQL-server-tile-for-further-troubleshooting) against each node in your MySQL cluster,
    the MySQL proxies, and the MySQL backup-prepare node.
-   It is important to do this before attempting recovery,
+   Do this before attempting recovery,
    because any failures in the recovery procedure can result in logs being lost or made inaccessible.<br><br> 
 
-    It is recommended that you use the `-X` flag to get the complete set of available logs.
-   However, if your cluster processes a high volume of transactions, the complete set may be too large and you can omit this flag to fetch the essential set of logs.
-1. Depending on the reported state from `mysql-diag`, the troubleshooting techniques listed in the [Common Problems](#common-problems) section below might allow you to recover your cluster.
+    Pivotal recommends that you use the `-X` flag to get the complete set of available logs.
+    However, if your cluster processes a high volume of transactions, the complete set might be too large and you can omit this flag to fetch the essential set of logs.
+1. Depending on the reported state from `mysql-diag`, the troubleshooting techniques listed in [Troubleshoot Common Problems](#common-problems) below
+   might allow you to recover your cluster.
 1. If you are uncertain about the recovery steps to take, submit a ticket through [Pivotal Support](https://support.pivotal.io/)
    with the following information:
   - Logs fetched by running the `download-logs` script
   - Output from `mysql-diag`
-  - Type of environment the MySQL deployment is running in (Pivotal Application Service (PAS), Elastic Runtime, MySQL for PCF, or other)
+  - Type of environment the MySQL deployment is running in, for example, Pivotal Application Service (PAS), Elastic Runtime, or MySQL for PCF
   - Versions of the installed Ops Manager, PAS or Elastic Runtime, and MySQL for PCF
   
 ## <a id="diagnostic-techniques"></a> Diagnostic Techniques
 
-After performing the procedure in [Diagnose Problems](#diagnosing), consult the following additional diagnostic techniques to learn more about your cluster.
+After performing the procedure in [Diagnose Problems](#diagnosing),
+onsult the following additional diagnostic techniques to learn more about your cluster.
 
 ### <a id="check-state"></a> Check Cluster State
 
-`mysql_diag` reports the cluster's state. However, you can check the state manually by connecting to each MySQL node using a MySQL client and checking its status:
+`mysql_diag` reports the cluster's state.
+However, you can check the state manually by connecting to each MySQL node using a MySQL client and checking its status:
 
 <pre class="terminal">
 $ mysql -h NODE_IP -u root -pPASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'
@@ -152,7 +155,8 @@ You see many replication errors in the MySQL logs.
 
 #### Explanation
 
-Replication errors in your MySQL logs can also correspond to execution errors in replication logs (`GRA_*.log` files) during problems such as running out of disk space.
+Replication errors in your MySQL logs can also correspond to execution errors
+in replication logs (`GRA_*.log` files) during problems such as running out of disk space.
 
 Seeing many replication errors in your MySQL logs can also be part of normal behavior.
 For example, MySQL logs can show replication errors when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
@@ -198,7 +202,8 @@ When MySQL runs out of space, it stops functioning normally.
 
 1. Use the [mysql-diag](mysql-diag.html) tool to determine how much space you have left. If the disk is too full, the `mysql-diag` won't work.
 1. Redeploy with more persistent disk.
-1. After redeploying, you may encounter further errors. To troubleshoot these errors, see the other sections in [Troubleshoot Common Problems](#common-problems).
+1. After redeploying, you might encounter further errors.
+   To troubleshoot these errors, see the other sections in [Troubleshoot Common Problems](#common-problems).
 
 ### <a id="wont-rejoin"></a> Node Unable to Rejoin
 
@@ -235,8 +240,10 @@ Some clients may instead return `unknown error`.
 
 #### Explanation
 
-If the client is connected to a MySQL cluster node that loses connection to the rest of the cluster (that is, becomes non-Primary), the node stops accepting writes.
-If the connection to this node is made through the proxy, the proxy automatically re-routes further connections to a different node.
+If the client is connected to a MySQL cluster node that loses connection to the rest of the cluster (that is, becomes non-Primary),
+the node stops accepting writes.
+If the connection to this node is made through the proxy,
+the proxy automatically re-routes further connections to a different node.
 
 A node can become unresponsive for a number of reasons. Each reason corresponds to a different solution. Consult the following list:
 
