@@ -91,35 +91,3 @@
       <td>Investigate the MySQL server logs, such as the audit log, to understand why query rate changed and determine appropriate action.</td>
    </tr>
 </table>
-
-#### <a id="user-time"></a> Busy Time
-
-<table>
-   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin %>/performance/busy_time<br><br></th></tr>
-   <tr>
-      <th width="25%">Description</th>
-      <td>Percentage of CPU time spent by MySQL on user activity, executing user code, as opposed to kernel activity, executing system functions.<br><br>
-
-      <strong>Use</strong>: This closely reflects the amount of server activity dedicated to app queries.
-      <br><br>
-      <strong>Origin</strong>: Doppler/Firehose<br>
-      <strong>Type</strong>: percentage<br>
-      <strong>Frequency</strong>: 30 s
-   </tr>
-   <tr>
-      <th>Recommended measurement</th>
-      <td>Average over last 2 minutes</td>
-   </tr>
-   <tr>
-      <th>Recommended alert thresholds</th>
-      <td><strong>Yellow warning</strong>: &gt; 80% <br>
-      <strong>Red critical</strong>: &gt; 90% </td>
-   </tr>
-   <tr>
-      <th>Recommended response</th>
-      <td>If this metric meets or exceeds the recommended thresholds for extended periods of time,
-          run `SHOW PROCESSLIST` and identify which queries are using so much CPU.
-          Optionally scale to a larger service plan with more CPU capacity.
-      </td>
-   </tr>
-</table>
