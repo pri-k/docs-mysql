@@ -14,31 +14,31 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 **Release Date:**  January XX, 2018
 
-* This version of the MySQL for PCF can only be installed in an Ops Manager v1.12 or later environment.
+* Can only be installed in an Ops Manager v1.12 or later environment.
 
-* MySQL for PCF v2.2.0 offers the ability to create multi-AZ leader-follower instances. Operators can monitor leader-follower
+* Offers the ability to create multi-AZ leader-follower instances. Operators can monitor leader-follower
   instances with replication metrics.
   For more information, see [About Leader-Follower](./about-leader-follower.html).
 
-* The MySQL for PCF tile no longer includes the option to disable automated backups. 
+* No longer includes the option to disable automated backups. 
   You must configure automated backups. 
   For more information, see [Backing Up and Restoring On-Demand MySQL for PCF](backup-and-restore.html). 
 
-* MySQL for PCF v2.2.0 updates the mysql-restore utility to make restoring from a backup artifact easier.
+* Updates the mysql-restore utility to make restoring from a backup artifact easier.
   For more information, see [Restore the Service Instance](./backup-and-restore.html#restoreinstance).
 
-* MySQL for PCF v2.2.0 adds the ability to enable create service binding and service keys with custom usernames.
+* Adds the ability to enable create service binding and service keys with custom usernames.
   For more information, see [Customizing Database Credentials](./customize-access.html).
 
-* MySQL for PCF v2.2.0 enables developers to use workload profiles for best practices in server configuration.
+* Enables developers to use workload profiles for best practices in server configuration.
   For more information, see [Changing MySQL Server Defaults](./change-default.html).
 
-* MySQL for PCF no longer includes individual errand VMs. 
+* No longer includes individual errand VMs. 
   Instead, errands are run on the MySQL VMs. 
-  Errands now run faster and use fewer resources. 
+  These colocated errands run faster and use fewer resources. 
 
-* MySQL for PCF v2.2.0 upgrades several dependencies including, `golang 1.9.1`.
+* Upgrades several dependencies including, `golang 1.9.1`.
 
-* MySQL for PCF v2.2.0 upgrades Percona Server to v5.7.19–17.
+* Upgrades Percona Server to v5.7.19–17.
 
-* MySQL for PCF v2.2.0 requires stemcell 3445.19.
+* Requires stemcell 3445.19.
