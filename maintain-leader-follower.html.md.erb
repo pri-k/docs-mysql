@@ -93,6 +93,10 @@ There are two different scenarios for triggering a failover:
 
 Follow these steps to trigger a failover:
 
+### <a id='retrieve'></a> Step 1: Retrieve Information
+
+Perform the following steps to retrieve the information necessary for the procedure: 
+
 1. Target the Cloud Controller of your PCF deployment with the Cloud Foundry Command Line Interface (cf CLI).
    For example:
   <pre class="terminal">$ cf api api.pcf.example.com</pre>
@@ -155,6 +159,11 @@ Follow these steps to trigger a failover:
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
    Examine the output to determine if the leader VM you identified in the previous step is in the AZ you want to take offline. 
+
+### <a id='promote'></a> Step 2: Promote the Follower
+
+Perform the following steps to stop the leader VM and promote the follower VM to the new leader:
+
 1. **Scenario 2**: Stop any data from being written to the leader VM by setting it to read only.
    Run the following command:
    <pre><code>bosh2 -d service-instance\_GUID run-errand make-read-only --instance=mysql/INDEX</code></pre>
@@ -195,10 +204,15 @@ Follow these steps to trigger a failover:
    <pre class="terminal">
    $ cf restage my-app
    </pre>
-1. **Scenario 2**: Disable resurrection, specifying the same deployment as above.
+
+### <a id='clean-up'></a>(Scenario 2 Only) Step 3: Clean Up Former Leader VM
+
+If you are following the procedure for **Scenario 2**, perform the following steps to clean up the former leader VM:
+
+1. Disable resurrection, specifying the same deployment as above.
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 update-resurrection off</pre>
-1. **Scenario 2**: Use the BOSH CLI v2 to retrieve the CID of the failing former leader VM. 
+1. Use the BOSH CLI v2 to retrieve the CID of the failing former leader VM. 
    For example: 
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
    --details 
@@ -206,7 +220,7 @@ Follow these steps to trigger a failover:
    --column=”VM CID”
    --json
    </pre>
-1. **Scenario 2**: Use the BOSH CLI v2 to retrieve the disk CID of the failing former leader VM. 
+1. Use the BOSH CLI v2 to retrieve the disk CID of the failing former leader VM. 
    For example: 
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
    --details 
@@ -214,7 +228,7 @@ Follow these steps to trigger a failover:
    --column=”Disk CIDs”
    --json
    </pre>
-1. **Scenario 2**: Delete the failing former leader VM. 
+1. Delete the failing former leader VM. 
    Run the following command:
    <pre><code>bosh2 -d service-instance\_GUID delete-vm vm-CID</code></pre>
    <br>
@@ -226,7 +240,7 @@ Follow these steps to trigger a failover:
    <pre class="terminal">
    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 delete-vm i-1db9ede6
    </pre>
-1. **Scenario 2**: Delete the disk of the failing former leader VM.
+1. Delete the disk of the failing former leader VM.
    Run the following commands:
    <pre><code>bosh2 -d service-instance\_GUID delete-disk DISK-CID
    bosh2 -d service-instance\_GUID orphan-disk DISK-CID</code></pre>
@@ -240,12 +254,11 @@ Follow these steps to trigger a failover:
    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 delete-disk b-1db9ede6
    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 orphan-disk b-1db9ede6
    </pre>
-1. **Scenario 2**: Download the manifest of the leader-follower deployment. For example:
+1. Download the manifest of the leader-follower deployment. For example:
   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 manifest > mysql-manifest.yml</pre>
-1. **Scenario 2**: Redeploy to create the missing VM and disk in a fresh state. For example:
+1. Redeploy to create the missing VM and disk in a fresh state. For example:
   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 deploy mysql-manifest.yml</pre>
-1. **Scenario 2**: Use the `configure-leader-follower` errand set the former leader VM as a follower,
-   using the same values as above.
+1. Use the `configure-leader-follower` errand set the former leader VM as a follower, using the same values as above.
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand configure-leader-follower --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
    Replication and high availability are resumed. The deployment should be in its original, working state. You may turn resurrection back on if desired.
