@@ -91,11 +91,16 @@ There are two different scenarios for triggering a failover:
 * **Scenario 2**: You still have access to the leader VM.  
   To trigger a failover when you can access the leader VM, perform all of the following steps.
 
-Follow these steps to trigger a failover:
+Follow these procedures to trigger a failover:
 
-### <a id='retrieve'></a> Step 1: Retrieve Information
++ [Retrieve Information](#retrieve)
++ [Promote the Follower](#promote) 
++ [Scenario 2 Only: Clean Up Former Leader VM](#clean-up)
 
-Perform the following steps to retrieve the information necessary for the procedure: 
+### <a id='retrieve'></a> Retrieve Information
+
+Perform the following steps to retrieve the information necessary
+for the promoting the follower and stopping the former leader: 
 
 1. Target the Cloud Controller of your PCF deployment with the Cloud Foundry Command Line Interface (cf CLI).
    For example:
@@ -160,7 +165,7 @@ Perform the following steps to retrieve the information necessary for the proced
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
    Examine the output to determine if the leader VM you identified in the previous step is in the AZ you want to take offline. 
 
-### <a id='promote'></a> Step 2: Promote the Follower
+### <a id='promote'></a> Promote the Follower
 
 Perform the following steps to stop the leader VM and promote the follower VM to the new leader:
 
@@ -205,9 +210,9 @@ Perform the following steps to stop the leader VM and promote the follower VM to
    $ cf restage my-app
    </pre>
 
-### <a id='clean-up'></a>(Scenario 2 Only) Step 3: Clean Up Former Leader VM
+### <a id='clean-up'></a>Scenario 2 Only: Clean Up Former Leader VM
 
-If you are following the procedure for **Scenario 2**, perform the following steps to clean up the former leader VM:
+If you still have access to the former leader VM, **Scenario 2**, perform these steps to clean up that VM:
 
 1. Disable resurrection, specifying the same deployment as above.
    For example:
