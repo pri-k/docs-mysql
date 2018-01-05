@@ -176,7 +176,7 @@ To trigger a failover using **Workflow 2**, perform all of the following steps.
 1. Rebind the app to the leader-follower service instance, using the same values as above.
    For example:
    <pre class="terminal">
-   $ cf unbind-service my-app my-lf-instance
+   $ cf bind-service my-app my-lf-instance
    </pre>
 1. Restage the app.
    For example:
