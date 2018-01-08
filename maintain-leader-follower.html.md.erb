@@ -30,7 +30,7 @@ The following are the high-level steps for setting up and using the leader-follo
 1. If the leader instance fails, the operator manually triggers a failover,
    so the working instance (follower) becomes the new leader.
 
-1. Apps bound to the leader-follower plan instance are automatically bound to the new leader after failover.
+1. The operator unbinds the app from the leader-follower plan and then rebinds it in order to use the new leader.
 
 ## <a id="config-plan"></a> Configure a Leader-Follower Service Plan
 
