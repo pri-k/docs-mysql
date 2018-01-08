@@ -23,7 +23,7 @@ Start here if you're responding to a specific errors or error messages.
 
 <%= partial '../../mysql/odb/tshoot-err-timeouts' %>
 
-### <a id="cannot-bind"></a>Cannot Bind to or Unbind from Service Instances<br>
+### <a id="cannot-bind"></a>Cannot Bind to or Unbind from Service Instances
 
 #### <a id="instance-not-exist"></a>Instance Does Not Exist
 
@@ -47,13 +47,13 @@ Service instances can also become temporarily inaccessible during upgrades and V
 
 <%= partial '../../mysql/odb/tshoot-err-missing-logs' %>
 
-## <a id="components"></a>Troubleshooting Components<br>
+## <a id="components"></a>Troubleshooting Components
 
-Guidance on checking for and fixing issues in on-demand service components.<br>
+Guidance on checking for and fixing issues in on-demand service components.
 
-### <a id="bosh"></a>BOSH problems<br>
+### <a id="bosh"></a>BOSH problems
 
-#### <a id="no-bosh-uuid"></a>Missing BOSH Director UUID<br>
+#### <a id="no-bosh-uuid"></a>Missing BOSH Director UUID
 
 <%= partial '../../mysql/odb/tshoot-comp-no-bosh-uuid' %>
 
@@ -61,13 +61,13 @@ Guidance on checking for and fixing issues in on-demand service components.<br>
 
 <%= partial '../../mysql/odb/tshoot-comp-large-queue' %>
 
-### <a id="bosh-config"></a>Configuration<br>
+### <a id="bosh-config"></a>Configuration
 
 #### <a id="bosh-instance-fail"></a>Service instances in failing state
 
 <%= partial '../../mysql/odb/tshoot-comp-bosh-instance-fail' %>
 
-### <a id="auth"></a>Authentication<br>
+### <a id="auth"></a>Authentication
 
 #### <a id="uaa-change"></a>UAA Changes
 
@@ -85,7 +85,7 @@ Guidance on checking for and fixing issues in on-demand service components.<br>
 
 <%= partial '../../mysql/odb/tshoot-comp-app-to-instances' %>
 
-### <a id="quotas"></a>Quotas<br>
+### <a id="quotas"></a>Quotas
 
 #### <a id="plan-quotas"></a>Plan Quota issues
 
@@ -99,13 +99,13 @@ Guidance on checking for and fixing issues in on-demand service components.<br>
 
 <%= partial '../../mysql/odb/tshoot-comp-failing-jobs' %>
 
-A failing process or failing VM might come back automatically after a temporary service outage. See [VM Process Failure](./upgrade.html#process-fail) and [VM Failure](./upgrade.html#vm-fail).<br>
+A failing process or failing VM might come back automatically after a temporary service outage. See [VM Process Failure](./upgrade.html#process-fail) and [VM Failure](./upgrade.html#vm-fail).
 
-### <a id="az-region-fail"></a>AZ or Region Failure<br>
+### <a id="az-region-fail"></a>AZ or Region Failure
 
 Failures at the IaaS level, such as Availability Zone (AZ) or region  failures, can interrupt service and require manual restoration. See [AZ Failure](./upgrade.html#az-fail) and [Region Failure](./upgrade.html#region-fail)
 
-## <a id="techniques"></a>Techniques for Troubleshooting<br>
+## <a id="techniques"></a>Techniques for Troubleshooting
 
 Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
 
