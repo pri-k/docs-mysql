@@ -160,6 +160,8 @@ for the promoting the follower and stopping the former leader:
    This is the leader VM.
    Record the index, which is the value for `Instance` after `mysql/`.
    In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
+1. Record the index of the other instance, which is the follower VM.
+   In the above output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
 1. **Scenario 2**: Use the BOSH CLI v2 to determine if the leader VM is in the AZ you want to take offline.
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
@@ -183,9 +185,9 @@ Perform the following steps to stop the leader VM and promote the follower VM to
 1. Stop the leader VM, using the same values as above.
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
-1. Set the follower VM as writable, using the same values as above.
+1. Set the follower VM as writable, using the index of the follower VM retrieved above.
    For example:
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
    </pre>
    If this command returns an error, re-run it until the follower VM has completed applying the transactions. 
 1. Unbind the app from the leader-follower service instance.
