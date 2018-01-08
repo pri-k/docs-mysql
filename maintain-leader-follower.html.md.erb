@@ -59,16 +59,16 @@ In order to decide if a failover is needed, you must monitor leader-follower ins
 
 In monitoring the leader-follower VMs, pay attention to the following metrics:
 
-* `/p-mysql/available`: This metric records whether the MySQL VMs are responding to requests.
+* `/p.mysql/available`: This metric records whether the MySQL VMs are responding to requests.
   For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
 
-* `/p-mysql/follower_seconds_since_leader_heartbeat`: Whenever the leader VM emits a heartbeat,
+* `/p.mysql/follower_seconds_since_leader_heartbeat`: Whenever the leader VM emits a heartbeat,
   the heartbeat is written to the leader database and replicated to the follower.
   This metric measures the number of seconds that elapses between the leader heartbeat
   and the replication of the heartbeat in the follower database,
   so you can determine how far behind the follower is from the leader. 
 
-* `/p-mysql/follower_seconds_behind_master`: The follower VM copies database writes from the leader VM,
+* `/p.mysql/follower_seconds_behind_master`: The follower VM copies database writes from the leader VM,
   but takes time to apply them to its own database. 
   This metric measures how far behind the follower VM is in applying these writes. 
   For example, a follower VM may have copied writes from the leader VM that are timestamped up to 4:00pm,
