@@ -61,10 +61,10 @@ For information on enabling and using leader-follower, see [Using Leader-Followe
 
 ## <a id="failover"></a>Understanding Failover
 
-MySQL for PCF focuses on data consistency and relies on operators
-to trigger a failover. 
-MySQL for PCF does not automatically failover to the follower.
-When an operator triggers a failover, app traffic is sent to the standby follower.
+MySQL for PCF focuses on data consistency rather than availability. 
+Therefore, it does not trigger failover automatically, 
+but relies on operators to trigger a failover. 
+When an operator triggers a failover, app traffic is sent to the follower.
 
 For more information, see [Trigger a Failover](./maintain-leader-follower.html#failover).
 
