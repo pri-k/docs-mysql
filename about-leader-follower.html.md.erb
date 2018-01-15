@@ -27,23 +27,23 @@ For high-level information on the leader-follower process, see [Leader-Follower 
 <p class="note"><strong>Note</strong>: The term leader-follower is analogous to master-slave.</p>
 
 
-### <a id="iaas"></a> Infrastructure Requirements for Leader-Follower Deployments
+## <a id="iaas"></a> Infrastructure Requirements for Leader-Follower Deployments
 
 Leader-follower instances have additional infrastructure requirements to singleton instances, as described below.
 
-#### Capacity Planning
+### <a id="capacity"></a> Capacity Planning
 
 When calculating IaaS usage, you must take into account that each leader-follower instance requires two VMs.
 Therefore, the resources used for a leader-follower-enabled plan must be doubled.
 For more information, see [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
 
-#### Availability Zones
+### <a id="availability"></a> Availability Zones
 
 To minimize impact of an AZ outage and to remove single points of failure, Pivotal recommends that you
 provision three AZs if using leader-follower deployments. With three AZs, the MySQL VMs
 are deployed to two AZs, and the broker is deployed to a third.
 
-#### Networking Rules
+### <a id="networking"></a> Networking Rules
 
 In addition to the standard networking rules needed for MySQL for PCF,
 the operator must ensure leader-follower-specific network rules are also set up as follows:
