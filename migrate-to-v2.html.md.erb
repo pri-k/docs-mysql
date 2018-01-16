@@ -14,11 +14,11 @@ This page provides instructions on how to migrate your MySQL for PCF v1.x databa
 
 To minimize downtime while migrating, preemptively create a new service instance.
 
-* The application source code can use `p.mysql` as a valid key for [accessing the database](./use.html#call).
+* The app source code can use `p.mysql` as a valid key for [accessing the database](./use.html#call).
 * Create a new service instance of `p.mysql` with a persistent disk large enough for the data. If you do not have 
   an instance, follow the instructions to [create a new service instance](./use.html#create) in the same space as your existing service instance.
 
-	<p class="note">Do not bind the new service instance to your application. We’ll do that later.</p>
+	<p class="note">Do not bind the new service instance to your app. We’ll do that later.</p>
 
 ## <a id='backup'></a>Back Up Your Current Database
 
@@ -26,22 +26,22 @@ If you are migrating from a MySQL for PCF v1.x database, please refer to the ins
 
 ### Back Up Your MySQL for PCF v1.x Instance
 
-1. Stop any traffic to your existing database by stopping the application:
+1. Stop any traffic to your existing database by stopping the app:
  <pre class="terminal">
   $ cf stop my-app
     Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
     OK
  </pre>
   
-1. Unbind your application from the old service instance:
+1. Unbind your app from the old service instance:
   <pre class="terminal">
    $ cf unbind-service my-app my-old-instance
     Unbinding app my-app from service my-old-instance in org my-org / space my-space as user<span>@</span>example.com...
     OK
   </pre>
 
-1. Use a [cf application to create an ssh tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to connect to your old service instance. The tunnel may appear as though it is hanging.
-   <p class="note">Since your application is now stopped, you’ll need another application for the ssh tunnel. If you don’t have a running app, you can clone and cf push this [sample app](https://github.com/cloudfoundry-samples/test-app) for tunneling. You can use any running app in the same Org/Space</p>
+1. Use a [cf app to create an ssh tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to connect to your old service instance. The tunnel may appear as though it is hanging.
+   <p class="note">Since your app is now stopped, you’ll need another appl for the ssh tunnel. If you don’t have a running app, you can clone and cf push this [sample app](https://github.com/cloudfoundry-samples/test-app) for tunneling. You can use any running app in the same Org/Space</p>
    - An ssh tunnel is necessary as the MySQL service is only accessible within the Cloud Foundry network. 
 
 1. Take a backup of the existing database in a separate shell:
@@ -78,7 +78,7 @@ This section provides steps to restore your backup to a new service instance of 
   * You will be prompted for a password after entering the previous command which is the “password” property from your service-key
 
 1. Exit the mysql shell and kill the ssh tunnel
-1. Bind the application to the new service instance
+1. Bind the app to the new service instance
  <pre class="terminal">
  $ cf bind-service my-app my-new-instance
  Binding service my-new-instance to app my-app in org my-org / space my-space as user<span>@</span>example.com...
@@ -94,4 +94,4 @@ This section provides steps to restore your backup to a new service instance of 
  </pre>
 
 
-1. Your application is now using your new MySQL for Pivotal Cloud Foundry v2 database and should be operational again.
+1. Your app is now using your new MySQL for Pivotal Cloud Foundry v2 database and should be operational again.
