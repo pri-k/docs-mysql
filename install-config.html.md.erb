@@ -97,7 +97,7 @@ see [Using Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/customizin
 Follow the steps below to configure the MySQL for PCF service. 
 MySQL for PCF v2.1 has five service plans that deploy dedicated MySQL service instances on demand.
 
-By default, MySQL for PCF has three active plans. The fourth and fifth plans are not active by default.
+By default, plans 1-3 are active and plans 4 and 5 are inactive. The procedures below describe how to change these defaults.
 
 <p class="note"><strong>Important:</strong>In order to re-define plans later, you must leave <code>broker de-registrar</code> checked.</p>
 
@@ -130,13 +130,18 @@ Follow the steps below to choose an Availability Zone (AZ) to run the service br
 
 1. Click **Save**.
 
-###<a id="active"></a> Configure Active Service Plans
+###<a id="active"></a> Configure Service Plans
 
-Follow the steps below for each plan that you want to be active and used in your PCF deployment:
+MySQL for PCF enables you to configure as many as five service plans. 
+Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
-1. Click a plan side-tab, for example, **Plan 1**.
+By default, the first three plans are active and the fourth and fifth plans are inactive.
 
-1. Click **Active**.
+Perform the following steps for each plan that you want to use in your PCF deployment:
+
+1. Click the section for the plan. For example, **Plan 1**.
+
+1. Ensure that **Active** is selected.
 
     ![plan-1-tab-v2.1.0](service-plan-configuration.png)
 
@@ -170,19 +175,21 @@ Follow the steps below for each plan that you want to be active and used in your
   </table>
 1. Click **Save**.
 
-###<a id="inactive"></a> Configure Inactive Service Plans
+###<a id="inactive"></a> (Optional) Deactivate Service Plan
 
-Follow the steps below for each plan that you want to be inactive:
+Follow the steps below to deactivate a service plan: 
 
-1. Click a plan side-tab, for example, **Plan 2**.
-
+1. If the service plan has existing service instances, perform the following steps:
+    1. Click the section for the plan. For example, **Plan 2**.
+    1. Under **Service Plan Access**, select **Disable**.
+    1. Click **Save**.
+    1. Return to the Ops Manager Installation Dashboard and click **Apply Changes** to redeploy.
+    1. When the PCF deployment has redeployed, use the cf CLI or Apps Manager to delete all existing service instances on the service plan.
+    1. Return to the MySQL for PCF tile configuration.
+1. Click the section for the plan. For example, **Plan 2**.
 1. Click **Inactive**.
 
     ![plan-inactive-tab-v2.1.0](service-plan-inactive.png)
-
-     <p class="note"><strong>IMPORTANT</strong>: You cannot inactivate a plan that currently has existing service instances.
-        Disable the plan and delete existing service instances before deactivating.</p>
-
 1. Click **Save**.
 
 ###<a id="global"></a> Configure Global Settings
