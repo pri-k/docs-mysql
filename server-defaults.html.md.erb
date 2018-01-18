@@ -13,86 +13,96 @@ There are other components that can be customized as well.
     <th>Default</th>
     <th>Notes</th>
     <tr>
-    	<td>Max Connections</td>
+    	<td><strong>Max Connections</strong></td>
         <td><code>max\_connections</code></td>
         <td>750 connections</td>
         <td>All service instances accept up to 750 connections.
-System processes count towards this limit.</td>
+            System processes count towards this limit.
+        </td>
     </tr>
     <tr>
-    	<td>Max Allowed Packet</td>
+    	<td><strong>Max Allowed Packet</strong></td>
         <td><code>max\_allowed\_packet</code></td>
         <td>256&nbsp;MB</td>
-        <td>MySQL for PCF allows blobs up to 256&nbsp;MB in size.
-You can change this size in a session variable if necessary. </td>
+        <td>You can change this size in a session variable if necessary. </td>
     </tr>
      <tr>
-    	<td>Table Definition Cache</td>
+    	<td><strong>Table Definition Cache</strong></td>
         <td><code>table\_definition\_cache</code></td>
         <td>8192</td>
         <td>For more information about updating this variable,
-see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache).
-</td>
+            see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache).
+        </td>
     </tr>
      <tr>
-    	<td>Reverse Name Resolution</td>
+    	<td><strong>Reverse Name Resolution</strong></td>
         <td><code></code></td>
         <td>OFF</td>
-        <td>Disabling reverse DNS lookups improves performance.
-To enable reverse name resolution, clear this option.
-A cleared reverse name resolution causes the MySQL servers to perform a reverse DNS lookup on each new connection.
-Typically, MySQL restricts access by hostname, but MySQL for PCF uses user credentials, not hostnames, to authenticate access.
-Because of this, most deployments do not need reverse DNS lookups.</td>
+        <td>
+            Disabling reverse DNS lookups improves performance.
+            MySQL for PCF uses user credentials, not hostnames, to authenticate access.
+            Therefore, most deployments do not need reverse DNS lookups.<br>
+            To enable reverse name resolution, clear this option.
+        </td>
     </tr>
     <tr>
-    	<td>Skip Symbolic Links</td>
+    	<td><strong>Skip Symbolic Links</strong></td>
         <td><code></code></td>
         <td></td>
-        <td>MySQL for PCF is configured to prevent the use of symlinks to tables. This 
-[recommended security setting](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html)
-prevents users from manipulating files on the server’s file system.
-</td>
+        <td>
+            MySQL for PCF is configured to prevent the use of symlinks to tables. 
+            This recommended security setting prevents users from manipulating files on the server’s file system. 
+            For more information, see [Making MySQL Secure Against Attackers](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html)
+        </td>
     </tr>
     <tr>
-    	<td>MyISAM Recover Options</td>
+    	<td><strong>MyISAM Recover Options</strong></td>
         <td><code>myisam\_recover\_options</code></td>
         <td>BACKUP, FORCE</td>
-        <td>This setting enables MySQL for PCF to recover from most MyISAM problems without human intervention.
-For more information, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options).
-</td>
+        <td>
+            This setting enables MySQL for PCF to recover from most MyISAM problems without human intervention.
+            For more information, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options).
+        </td>
     </tr>
     <tr>
-    	<td>Log Bin Trust Function Creators</td>
+    	<td><strong>Log Bin Trust Function Creators</strong></td>
         <td><code>log\_bin\_trust\_function\_creators</code></td>
         <td>ON</td>
-        <td>This setting relaxes certain constraints on how MySQL writes stored procedures to the binary log.
-For more information, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html).
-</td>
+        <td>
+            This setting relaxes constraints on how MySQL writes stored procedures to the binary log.
+            For more information, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html).
+        </td>
     </tr>
     <tr>
     	<td>Event Scheduler</td>
         <td><code>event\_scheduler</code></td>
         <td>ON</td>
-        <td>MySQL for PCF enables the event scheduler so users can create and utilize events in their dedicated service instances.
-</td>
+        <td>
+            MySQL for PCF enables the event scheduler so users can create and use 
+            events in their dedicated service instances.
+        </td>
     </tr>
     <tr>
     	<td>Lower Case Table Names</td>
         <td><code>lower\_case\_table\_names</code></td>
         <td>ON</td>
-        <td>By default, all table names are case sensitive.
-This option may be modified on the [MySQL Configuration page](./install-config.html#mysql).
-For more information about the use for lowercase table names,
-see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html).
-</td>
+        <td>
+            By default, all table names are case sensitive.
+            This option can be modified on the [MySQL Configuration pane](./install-config.html#mysql).
+            For more information about the use for lowercase table names,
+            see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html).
+        </td>
     </tr>
     <tr>
     	<td>Audit Log</td>
         <td><code></code></td>
         <td>OFF</td>
-        <td>The MySQL audit log is off by default.
-When enabled on the [MySQL Monitoring page](./install-config.html#monitoring),
-logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql\_audit\_log</code> as well as a remote syslog drain if it is enabled.</td>
+        <td>
+            The MySQL audit log is off by default.
+            When enabled on the [MySQL Monitoring pane](./install-config.html#monitoring),
+            logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql\_audit\_log</code> 
+            as well as a remote syslog drain if it is enabled.
+        </td>
     </tr>
     <tr>
     	<td>InnoDB Buffer Pool Size</td>
@@ -116,21 +126,22 @@ logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql\_audit\_log</cod
     	<td>InnoDB Auto Increment Lock Mode</td>
         <td><code>innodb\_autoinc\_lock\_mode</code></td>
         <td>2</td>
-        <td>Auto Increment uses "interleaved" mode. This enables multiple statements to execute at the same time.
-There may be gaps in auto-incrementing columns.</td>
+        <td>
+            Auto Increment uses "interleaved" mode. 
+            This enables multiple statements to execute at the same time.
+            There may be gaps in auto-incrementing columns.
+        </td>
     </tr>
     <tr>
     	<td>Collation Server</td>
         <td><code>collation\_server</code></td>
         <td><code>utf8\_general\_ci</code></td>
-        <td>MySQL for PCF defaults the collation server to <code>utf8\_general\_ci</code>.
-You can override this during a session.</td>
+        <td>You can override this during a session.</td>
     </tr>
     <tr>
     	<td>Character Set</td>
         <td><code></code></td>
         <td><code>utf8</code></td>
-        <td>MySQL for PCF defaults all character sets to <code>utf8</code>.
-You can override this during a session.</td>
+        <td>Defaults all character sets. You can override this during a session.</td>
     </tr>  
   </table>
