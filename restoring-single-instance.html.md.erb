@@ -32,16 +32,16 @@ Perform the following procedures to restore a single service instance:
    For more information, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
 1. Transfer the backup artifact to the temporary MariaDB instance. 
 1. SSH into the temporary MariaDB instance.
-1. Delete the existing MySQL data that is stored on the temporary MariaDB instance by running `rm -rf PATH-TO-MARIADB-DATA-DIRECTORY/*`. For example,
+1. Delete the existing MySQL data that is stored on the temporary MariaDB instance by running `rm -rf PATH-TO-MARIADB-DATA-DIRECTORY/*`. For example:
 	<pre class="terminal">
 	$ rm -rf /mysql/*
 	</pre>
 	If you are using MySQL for PCF, the path to your MariaDB data directory is `/var/vcap/store/mysql`. 
-1. Decrypt and expand the backup artifact into the MariaDB data directory. For example,
+1. Decrypt and expand the backup artifact into the MariaDB data directory. For example:
 	<pre class="terminal">
 	$ gpg --decrypt mysql-backup.tar.gpg | tar -C /mysql -xvf -
 	</pre>
-1. Change the owner of the MariaDB data directory, because MySQL expects the data directory to be owned by a particular user. For example,
+1. Change the owner of the MariaDB data directory, because MySQL expects the data directory to be owned by a particular user. For example:
 	<pre class="terminal">
 	$ chown -R vcap:vcap /mysql
 	</pre>
@@ -50,8 +50,25 @@ Perform the following procedures to restore a single service instance:
  	<pre class="terminal">
 	$ mysqldump -u admin -p -h localhost YOUR-DATABASE-NAME --single-transaction > YOUR-DATABASE-NAME.sql
  	</pre>
-1. Restore the new backup artifact to your MySQL for PCF cluster by performing the steps
-   in [Manual Restore](backup.html#manual-restore).
-   This replaces the existing data in the MySQL for PCF cluster with the content of the backup artifact,
-   without affecting the data of any other service instances.
-  <p class="note"><strong>Note: </strong> During the restore process, all apps bound to this service instance should be down, or in read only mode. This is because the data will be inconsistent during this process.</p>
+1. Perform steps 1 through 5 of [Manual Backup with Remote Admin Access Disabled (Default)](backup.html#manual-backup-remote-access-disabled) in *Backups**.
+1. Use the MySQL client to restore the MySQL database or databases. Run the following command:
+
+    `mysql -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP < BACKUP-NAME.sql`
+    <br><br>
+    Where:
+    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
+    * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
+    * `MYSQL-PROXY-IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `BACKUP-NAME`: Enter the file name of the backup artifact created above with `mysqldump.
+    <br><br>
+	<p class="note"><strong>Note: </strong> During the restore process, all apps bound to the service instance should be down, or in read-only mode. This is because the data will be inconsistent during this process.</p>
+	<br><br>
+    For example:
+    <pre class="terminal">
+    $ mysql -u abcdefghijklm \
+    -p 123456789 \ 
+    -h 10.10.10.8 -e < user_database.sql</pre>
+    <br>
+	This replaces the existing data in the MySQL for PCF cluster with the content of the backup artifact,
+	without affecting the data of any other service instances.
+
