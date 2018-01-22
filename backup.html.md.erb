@@ -418,29 +418,34 @@ To determine whether remote admin access is enabled, perform the following steps
 1. From the Ops Manager Installation Dashboard, click the MySQL for PCF tile.
 1. Click **MySQL Server Configuration**.
 1. Locate the **Allow remote admin access** checkbox and determine whether or not it is enabled.
+  <br><br>For more information, see [MySQL Server Configuration](./configuring.html#server).
 
-For more information, see [MySQL Server Configuration](./configuring.html#server).
+Keep in mind the following:
 
-If remote admin access is disabled, perform the procedures in the [Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled-restore) section. If you have enabled remote admin access, perform the procedures in the [Remote Admin Access Enabled](#manual-backup-remote-access-enabled-restore) section.
-
-The procedure for restoring your MySQL data from a manual backup is the same for restoring a backup of one or multiple databases.
-Executing the SQL dump will drop, recreate, and refill the specified databases and tables.
+* If you want to restore an entire database, then you must log in as admin.
+* The command for restoring your MySQL data from a manual backup is the same for restoring a backup of one or multiple databases. Executing the SQL dump will drop, recreate, and refill the specified databases and tables.
 
   <p class="note warning"><strong>WARNING</strong>: Restoring a database deletes all data that existed in the database before the restore. Restoring a database using a full backup artifact, produced by <code>mysqldump --all-databases</code> for example, replaces all data and user permissions.</p>
 
-#### <a id='manual-restore-remote-access-disabled'></a>Manual Restore with Remote Admin Access Disabled (Default)
+#### <a id="manual-restore-procedure"></a>Restore MySQL Data From a Manual Backup
 
-Perform the following steps to restore your MySQL data from a manual backup with remote admin access disabled:
+Perform the following steps to restore your MySQL data from a manual backup:
 
 1. If running in HA configuration, reduce the size of the MySQL for PCF cluster to a single node, following the procedures in the [Restore a Backup Artifact](#restoring) section above.
-1. Perform steps 1 through 5 of the [Manual Backup with Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section above.
+1. If remote admin access is disabled, perform steps 1 through 5 of the [Manual Backup with Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section above.
 1. Use the MySQL client to enable the creation of tables using any storage engine. Run the following command:
     `mysql -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP -e "SET GLOBAL enforce_storage_engine=NULL"`
     <br><br>
     Where:
-    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
-    * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL-PROXY-IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `USERNAME`: 
+      * If remote admin access is disabled, enter the username you retrieved from the output of `cf service-key` in the [Manual Backup with Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section. 
+      * If remote admin access is enabled, enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+    * `PASSWORD`: 
+      * If remote admin access is disabled, enter the password you retrieved from the output of `cf service-key` in the [Manual Backup with Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section.  
+      * If remote admin access is enabled, enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
+    * `MYSQL-PROXY-IP`: 
+      * If remote admin access is disabled, enter the value of `hostname` you retrieved from the output of `cf service-key` in the [Manual Backup with Remote Admin Access Disabled (Default)](#manual-backup-remote-access-disabled) section. 
+      * If remote admin access is enabled, enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
 
     For example:
     <pre class="terminal">
@@ -453,9 +458,9 @@ Perform the following steps to restore your MySQL data from a manual backup with
     `mysql -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP < BACKUP-NAME.sql`
     <br><br>
     Where:
-    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
-    * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL-PROXY-IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `USERNAME`: Enter the same value as above.
+    * `PASSWORD`: Enter the same value as above.
+    * `MYSQL-PROXY-IP`: Enter the same value as above.
     * `BACKUP-NAME`: Enter the file name of the backup artifact.
 
     For example:
@@ -469,69 +474,13 @@ Perform the following steps to restore your MySQL data from a manual backup with
     `mysql -u USERNAME -p PASSWORD -h MYSQL-PROXY-IP -e "SET GLOBAL enforce_storage_engine='InnoDB'"`
     <br><br>
     Where:
-    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
-    * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL-PROXY-IP`. Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `USERNAME`: Enter the same value as above.
+    * `PASSWORD`: Enter the same value as above.
+    * `MYSQL-PROXY-IP`: Enter the same value as above.
 
     For example:
     <pre class="terminal">
     $ mysql -u abcdefghijklm \
-    -p 123456789 \ 
-    -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine='InnoDB'"</pre>
-
-1. If you are running in HA mode, re-configure MySQL for PCF to run using three nodes by following the procedures in the [Restore a Backup Artifact](#restoring) section above.
-  <br><br>If you are not running HA mode, restart the database server. This step is not necessary if scaling back to three MySQL nodes. Run the following commands:
-  <pre class="terminal">
-  $ monit stop mariadb\_ctrl
-  $ monit start mariadb\_ctrl
-  </pre>
-
-For more examples of manual backup and restore procedures, see the [MariaDB documentation](http://mariadb.com/kb/en/mariadb/mysqldump/#examples).
-
-#### <a id='manual-restore-remote-access-enabled'></a>Manual Restore with Remote Admin Access Enabled
-
-Perform the following steps to restore your MySQL data from a manual backup with remote admin access enabled:
-
-1. If running in HA configuration, reduce the size of the MySQL for PCF cluster to a single node, following the procedures in the [Restore a Backup Artifact](#restoring) section above.
-1. Use the MySQL client to enable the creation of tables using any storage engine. Run the following command:
-    `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP -e "SET GLOBAL enforce_storage_engine=NULL"`
-    <br><br>
-    Where:
-    * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-
-    For example:
-    <pre class="terminal">
-    $ mysql -u abcdefghijklm \
-    -p 123456789 \ 
-    -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine=NULL"</pre>
-
-1. Use the MySQL client to restore the MySQL database or databases. Run the following command:
-
-    `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP < BACKUP-NAME.sql`
-    <br><br>
-    Where:
-    * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `BACKUP-NAME`: Enter the file name of the backup artifact.
-
-    For example:
-    <pre class="terminal">
-    $ mysql -u admin \
-    -p 123456789 \ 
-    -h 10.10.10.8 -e < user_databases.sql</pre>
-
-1. Use the MySQL client to restore the original storage engine restriction. Run the following command:
-
-    `mysql -u admin -p PASSWORD -h MYSQL-NODE-IP -e "SET GLOBAL enforce_storage_engine='InnoDB'"`
-    <br><br>
-    Where:
-    * `PASSWORD`: Enter the admin password you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-    * `MYSQL-NODE-IP`: Enter the MySQL node IP address you retrieved in the [Retrieve IP Address and Credentials](#manual-ip-creds) section.
-
-    For example:
-    <pre class="terminal">
-    $ mysql -u admin \
     -p 123456789 \ 
     -h 10.10.10.8 -e "SET GLOBAL enforce\_storage\_engine='InnoDB'"</pre>
 
