@@ -170,10 +170,11 @@ Perform the following steps for each plan that you want to use in your PCF deplo
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
     <tr><td><strong>MySQL Availability Zone</strong></td>
-        <td>Select one AZ for the single node.
-            The plan creates all service instance VMs in this AZ. Choose a different AZ than the one that the broker is in.
-            To protect against accidentally orphaning a disk, service instances may only only be migrated to a different plan
-            if the plan is in the same AZ.</td></tr>
+        <td>Select an AZ for the node. 
+            This AZ should be different than the AZ that the broker is in.
+            The plan creates all service instance VMs in this AZ. 
+            To prevent orphaning a disk, only migrate service instances to a 
+            different plan if the plan is in the same AZ.</td></tr>
   </table>
 1. Click **Save**.
 
