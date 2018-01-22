@@ -9,7 +9,7 @@ There are other components that can be customized as well.
 
 <table>
     <th>Name</th>
-    <th>Variable Name</th> 
+    <th width="500">Variable Name</th> 
     <th>Default</th>
     <th>Notes</th>
     <tr>
@@ -39,7 +39,7 @@ There are other components that can be customized as well.
         <td><code>skip-name-resolve</code></td>
         <td>ON</td>
         <td>
-            Disabling reverse DNS lookups improves performance.
+            This disables reverse DNS lookups, which improves performance.
             MySQL for PCF uses user credentials, not hostnames, to authenticate access.
             Therefore, most deployments do not need reverse DNS lookups.<br>
             To enable reverse name resolution, clear this option.
@@ -98,8 +98,7 @@ There are other components that can be customized as well.
     	<td>Audit Log</td>
         <td><code>audit-log</code></td>
         <td>OFF</td>
-        <td>
-            The MySQL audit log is off by default. 
+        <td> 
             When enabled on the [MySQL Monitoring pane](./install-config.html#monitoring),
             logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql-audit-log</code> 
             as well as a remote syslog drain if it is enabled.
