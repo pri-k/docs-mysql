@@ -181,9 +181,8 @@ Perform the following steps for each plan that you want to use in your PCF deplo
             Using only one AZ for a **Multi-node deployment** greatly reduces the ability to recover from an outage and benefit from such a deployment.</li>
         </ul>
       If you leave the **Multi-node deployment** box unchecked, select one AZ.
-      <p class="note"><strong>Note</strong>: To avoid orphaning a disk, 
-        you should only migrate service instances to a different plan if they
-        have overlapping AZs.</p>
+      <p class="note"><strong>Note</strong>: To prevent orphaning a disk, only 
+        migrate service instances to a different plan if the plans have overlapping AZs.</p>
         </td></tr>
   </table>
 1. Click **Save**.
