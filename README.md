@@ -10,7 +10,8 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 | Branch name | Use for… |
 |-------------| ------|
 | master      | NOT IN USE|
-| 2.2         | "edge" build | 
+| 2.3         | "edge" build | 
+| 2.2         | v2.2.x | 
 | 2.1         | v2.1.x | 
 | 2.0         | v2.0.x |
 | 1.11        | There are no plans for a v1.11. However, because it publishes to the edge branch, you could use it to stage big changes for the v1.10.x without worrying they'll go to production prematurely. |
