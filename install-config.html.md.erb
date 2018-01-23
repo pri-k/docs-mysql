@@ -174,15 +174,16 @@ Perform the following steps for each plan that you want to use in your PCF deplo
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
-        <td>If you checked the **Multi-node deployment** box above to enable a leader-follower plan, choose one of the following:
+        <td>If you check the **Multi-node deployment** box above to enable a leader-follower plan, choose one of the following:
         <ul>
             <li>To leverage the full HA advantages of leader-follower, select two AZs. You must choose AZs different from the one the broker is in.</li>
             <li>To leverage some HA advantages, select one AZ. 
             Using only one AZ for a **Multi-node deployment** greatly reduces the ability to recover from an outage and benefit from such a deployment.</li>
         </ul>
-      If you leave the **Multi-node deployment** box unchecked, select one AZ.
+      If you do not check **Multi-node deployment**, select one AZ.
       <p class="note"><strong>Note</strong>: To prevent orphaning a disk, only 
-        migrate service instances to a different plan if the plans have overlapping AZs.</p>
+        migrate service instances to a different plan if the new plan includes 
+        all of the AZs in the existing plan.</p>
         </td></tr>
   </table>
 1. Click **Save**.
