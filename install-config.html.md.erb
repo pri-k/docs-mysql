@@ -244,13 +244,15 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Enable Lower Case Table Names</strong></td>
-        <td>Select this checkbox to set `lower_case_table_names` to 1 on all MySQL for PCF instances. For more information read
+        <td>Select this checkbox to store all table names in lowercase. 
+            Selecting this sets the MySQL server system variable `lower_case_table_names` to 1 on all MySQL for PCF instances
+        by default. To allow developers to override this default, see the checkbox below.
+            For more information, see
          the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
-        <td>Select this checkbox to allow developers to override the default Lower Case Table Names value set above. By default, all service instances
-        will be created with the value based on "Enable Lower Case Table Names" above. Checking this box allows developers to modify it
-        using the cf CLI.</td></tr>
+        <td>Select this checkbox to allow developers to override the default <strong>Enable Lower Case Table Names</strong> value set above, when they are creating a new service instance. 
+            For more information, see <a href="./change-default.html#configuring">Optional Parameters for the MySQL for PCF Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
         <td>Select this checkbox to enable data downloading from the client's local file system.
             For more information about local data loading capability,
