@@ -134,24 +134,34 @@ There are three steps to recover terminated or lost VMs:
 In this procedure, you let BOSH create the
 VMs, install the software on them, and attempt to start the jobs. These jobs will fail because the MySQL VMs fail when started if there is no active cluster for them to join. Therefore this procedure instructs BOSH to 
 ignore the failing state of each VM to allow the software to be deployed to all VMs.
+BOSH resurrection must be disabled during this process.
 
 Choose one of the following procedures depending on your Ops Manager version.
 
 **With Ops Manager v1.11 or Later**
 
 1. Log in to the BOSH Director.
+1. If BOSH resurrection is enabled, disable it by running 
+`bosh2 -e MY-ENV update-resurrection off`.
 1. Download the current manifest by running `bosh2 -e MY-ENV -d MY-DEP > /tmp/manifest.yml`.
-1. Run `bosh2 -e MY-ENV -d MY-DEP deploy /tmp/manifest.yml`. The deploy will fail to start the first MySQL VM. 
+1. Run `bosh2 -e MY-ENV -d MY-DEP deploy /tmp/manifest.yml`. 
+The deploy will fail to start the first MySQL VM. 
 1. Run the command `bosh2 -e MY-ENV -d MY-DEP ignore mysql/INSTANCE_GUID`.
-1. Repeat the Steps 3 and 4 until all instances have attempted to start.
+1. Repeat the Steps 4 and 5 until all instances have attempted to start.
+1. If you disabled BOSH resurrection in step 2, enable it by running 
+`bosh2 -e MY-ENV update-resurrection on`.
 
 **With Ops Manager v1.10**
 
 1. Log in to the BOSH Director.
+1. If BOSH resurrection is enabled, disable it by running `bosh vm resurrection off`.
 1. Target the correct deployment.
-1. Run `bosh deploy` so that BOSH attempts to start one instance. The deploy will fail to start the first MySQL VM. 
+1. Run `bosh deploy` so that BOSH attempts to start one instance. 
+The deploy will fail to start the first MySQL VM. 
 1. Issue a `bosh ignore instance mysql/INSTANCE_GUID` command.
-1. Repeat Steps 3 and 4 until all instances have attempted to start.
+1. Repeat Steps 4 and 5 until all instances have attempted to start.
+1. If you disabled BOSH resurrection in step 2, enable it by running 
+`bosh vm resurrection on`.
 
 #### <a id="run-the-errand"></a>Run the Bootstrap Errand 
 
