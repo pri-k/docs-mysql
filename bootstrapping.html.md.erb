@@ -134,7 +134,7 @@ There are three steps to recover terminated or lost VMs:
 In this procedure, you let BOSH create the
 VMs, install the software on them, and attempt to start the jobs. These jobs will fail because the MySQL VMs fail when started if there is no active cluster for them to join. Therefore this procedure instructs BOSH to 
 ignore the failing state of each VM to allow the software to be deployed to all VMs.
-BOSH resurrection must be disabled during this process.
+BOSH resurrection must be disabled during this procedure.
 
 Choose one of the following procedures depending on your Ops Manager version.
 
