@@ -15,8 +15,8 @@ There are other components that can be customized as well.
     <tr>
     	<td><strong>Max Connections</strong></td>
         <td><code>max-connections</code></td>
-        <td>750 connections</td>
-        <td>All service instances accept up to 750 connections.
+        <td>750 connections per service instance</td>
+        <td>
             System processes count towards this limit.
         </td>
     </tr>
@@ -53,7 +53,7 @@ There are other components that can be customized as well.
             MySQL for PCF is configured to prevent the use of symlinks to tables. 
             This recommended security setting prevents users from manipulating 
             files on the server’s file system. For more information, see 
-            [Making MySQL Secure Against Attackers](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html)
+            [Making MySQL Secure Against Attackers](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html).
         </td>
     </tr>
     <tr>
@@ -75,7 +75,7 @@ There are other components that can be customized as well.
         </td>
     </tr>
     <tr>
-    	<td>Event Scheduler</td>
+    	<td><strong>Event Scheduler</strong></td>
         <td><code>event-scheduler</code></td>
         <td>ON</td>
         <td>
@@ -84,18 +84,20 @@ There are other components that can be customized as well.
         </td>
     </tr>
     <tr>
-    	<td>Lower Case Table Names</td>
+    	<td><strong>Lower Case Table Names</strong></td>
         <td><code>lower-case-table-names</code></td>
         <td>0</td>
         <td>
             By default, all table names are case sensitive. 
-            This option can be modified on the [MySQL Configuration pane](./install-config.html#mysql). 
+            Operators can change this default on the 
+            [MySQL Configuration page](./install-config.html#mysql), 
+            and may allow developers to override the default when creating a service instance. 
             For more information about the use for lowercase table names, see the 
             [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html).
         </td>
     </tr>
     <tr>
-    	<td>Audit Log</td>
+    	<td><strong>Audit Log</strong></td>
         <td><code>audit-log</code></td>
         <td>OFF</td>
         <td> 
@@ -105,25 +107,25 @@ There are other components that can be customized as well.
         </td>
     </tr>
     <tr>
-    	<td>InnoDB Buffer Pool Size</td>
+    	<td><strong>InnoDB Buffer Pool Size</strong></td>
         <td><code>innodb-buffer-pool-size</code></td>
-        <td>50% of the available memory</td>
+        <td>50% of the available memory on each service instance</td>
         <td>Dynamically configured to be 50% of the available memory on each service instance.</td>
     </tr>  
      <tr>
-    	<td>InnoDB Log File Size</td>
+    	<td><strong>InnoDB Log File Size</strong></td>
         <td><code>innodb-log-file-size</code></td>
         <td>256&nbsp;MB</td>
         <td>MySQL for PCF clusters default to a log-file size of 256&nbsp;MB.</td>
     </tr> 
      <tr>
-    	<td>InnoDB Log Buffer Size</td>
+    	<td><strong>InnoDB Log Buffer Size</strong></td>
         <td><code>innodb-log-buffer-size</code></td>
         <td>32&nbsp;MB</td>
         <td>MySQL for PCF defaults to 32&nbsp;MB to avoid excessive disk I/O when issuing large transactions.</td>
     </tr> 
     <tr>
-    	<td>InnoDB Auto Increment Lock Mode</td>
+    	<td><strong>InnoDB Auto Increment Lock Mode</strong></td>
         <td><code>innodb-autoinc-lock-mode</code></td>
         <td>2</td>
         <td>
@@ -133,13 +135,13 @@ There are other components that can be customized as well.
         </td>
     </tr>
     <tr>
-    	<td>Collation Server</td>
+    	<td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
         <td><code>utf8-general-ci</code></td>
         <td>You can override this during a session.</td>
     </tr>
     <tr>
-    	<td>Character Set</td>
+    	<td><strong>Character Set</strong></td>
         <td><code>character-set-server</code></td>
         <td><code>utf8</code></td>
         <td>Defaults all character sets. You can override this during a session.</td>
