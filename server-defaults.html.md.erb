@@ -31,7 +31,9 @@ There are other components that can be customized as well.
         <td><code>table-definition-cache</code></td>
         <td>8192</td>
         <td>For more information about updating this variable,
-            see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache).
+            see the 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache">
+                MySQL documentation</a>.
         </td>
     </tr>
      <tr>
@@ -53,7 +55,8 @@ There are other components that can be customized as well.
             MySQL for PCF is configured to prevent the use of symlinks to tables. 
             This recommended security setting prevents users from manipulating 
             files on the server’s file system. For more information, see 
-            [Making MySQL Secure Against Attackers](https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html).
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html">
+                Making MySQL Secure Against Attackers</a>.
         </td>
     </tr>
     <tr>
@@ -62,7 +65,9 @@ There are other components that can be customized as well.
         <td>BACKUP, FORCE</td>
         <td>
             This setting enables MySQL for PCF to recover from most MyISAM problems without human intervention.
-            For more information, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options).
+            For more information, see the 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
+                MySQL documentation</a>.
         </td>
     </tr>
     <tr>
@@ -71,7 +76,9 @@ There are other components that can be customized as well.
         <td>ON</td>
         <td>
             This setting relaxes constraints on how MySQL writes stored procedures to the binary log.
-            For more information, see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html).
+            For more information, see the 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html">
+                MySQL documentation</a>.
         </td>
     </tr>
     <tr>
@@ -90,10 +97,11 @@ There are other components that can be customized as well.
         <td>
             By default, all table names are case sensitive. 
             Operators can change this default on the 
-            [MySQL Configuration page](./install-config.html#mysql), 
+            <a href="./install-config.html#mysql">MySQL Configuration page</a>, 
             and may allow developers to override the default when creating a service instance. 
             For more information about the use for lowercase table names, see the 
-            [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html).
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">
+                MySQL documentation</a>.
         </td>
     </tr>
     <tr>
@@ -101,7 +109,8 @@ There are other components that can be customized as well.
         <td><code>audit-log</code></td>
         <td>OFF</td>
         <td> 
-            When enabled on the [MySQL Monitoring pane](./install-config.html#monitoring),
+            When enabled on the <a href="./install-config.html#monitoring">
+            MySQL Monitoring pane</a>,
             logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql-audit-log</code> 
             as well as a remote syslog drain if it is enabled.
         </td>
