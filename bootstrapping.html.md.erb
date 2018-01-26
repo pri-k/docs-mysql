@@ -216,7 +216,7 @@ If you are using PCF v1.11 or later, use the the [BOSH CLI v2](#bosh-v2) process
 <a id="bosh-v2"></a>BOSH CLI v2
 
 1. Log in to the BOSH Director.
-1. Download the current manifest using `bosh2 -e MY-ENV -d MY-DEP > /tmp/manifest.yml`
+1. Download the current manifest using `bosh2 -e MY-ENV -d MY-DEP manifest > /tmp/manifest.yml`
 1. Open this manifest to edit the following:
     * Locate the `jobs.mysql-partition.update` section.
     * Change `max_in_flight` to `3`.
