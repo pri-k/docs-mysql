@@ -143,7 +143,7 @@ Choose one of the following procedures depending on your Ops Manager version.
 1. Log in to the BOSH Director.
 1. If BOSH resurrection is enabled, disable it by running 
 `bosh2 -e MY-ENV update-resurrection off`.
-1. Download the current manifest by running `bosh2 -e MY-ENV -d MY-DEP > /tmp/manifest.yml`.
+1. Download the current manifest by running `bosh2 -e MY-ENV -d MY-DEP manifest > /tmp/manifest.yml`.
 1. Run `bosh2 -e MY-ENV -d MY-DEP deploy /tmp/manifest.yml`. 
 The deploy will fail to start the first MySQL VM. 
 1. Run the command `bosh2 -e MY-ENV -d MY-DEP ignore mysql/INSTANCE_GUID`.
