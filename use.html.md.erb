@@ -24,24 +24,36 @@ in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
    - a shell
    - the [Cloud Foundry Command-Line Interface](http://docs.pivotal.io/pivotalcf/cf-cli/install-go-cli.html) (cf CLI)
    - the Linux [watch](http://www.linfo.org/watch.html) command
-* To [log into](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
+* To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
 
 
 ## <a id='process'></a>The Process for Using MySQL for PCF in Your App
 
 To use MySQL in a PCF app:
 
-1. Check the service availability in the Marketplace, and see if there is an existing instance of MySQL for PCF in your space. 
-See [Confirm the MySQL for PCF v2 Service Availability](#marketplace).
+1. Check the service availability in the Marketplace,
+   and see if there is an existing instance of MySQL for PCF in your space. 
 
-2. If there is no existing instance, or you want to use a different one, create an instance of the MySQL for PCF service in the same space as the app.
-   See [Create a Service Instance](#create).
+    See [Confirm the MySQL for PCF v2 Service Availability](#marketplace), below.
 
-3. Push your app into the same space as the MySQL for PCF service instance, using [`cf push`](http://docs.pivotal.io/pivotalcf/2-0/cf-cli/getting-started.html#push).
+2. If there is no existing instance or you want to use a different one,
+   create an instance of the MySQL for PCF service in the same space as the app.
 
-4. [Bind](#bind) the app to the MySQL for PCF service instance, to enable the app to use MySQL. 
+    See [Create a Service Instance](#create), below.
 
-5. Call the MySQL for PCF service in your app code, and then re-push your app into the space. See [Use the MySQL Service in Your App](#call).
+3. Push your app into the same space as the MySQL for PCF service instance,
+   using `cf push`.
+ 
+    For information about `cf push`,
+   see [Push](http://docs.pivotal.io/pivotalcf/2-0/cf-cli/getting-started.html#push).
+
+4. Bind the app to the MySQL for PCF service instance, to enable the app to use MySQL. 
+  
+    See [Bind a Service Instance to Your App](#bind), below.
+
+5. Call the MySQL for PCF service in your app code, and then re-push your app into the space.
+  
+    See [Use the MySQL Service in Your App](#call), below.
 
 
 
@@ -77,7 +89,7 @@ To find out if a MySQL for PCF v2 service is available in the Marketplace, do th
 To confirm that a MySQL for PCF v2 instance is running in the space, do the following:
     
 1. Use the [cf CLI](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) or 
-[Apps Manager](http://docs.pivotal.io/pivotalcf/customizing/console-login.html) to log into the org and space that contains the app.
+[Apps Manager](http://docs.pivotal.io/pivotalcf/customizing/console-login.html) to log in to the org and space that contains the app.
 1. Enter `cf services`.
 1. Any `p.mysql` listings in the `service` column are service instances of MySQL for PCF v2 in the space.
 
@@ -90,9 +102,7 @@ To confirm that a MySQL for PCF v2 instance is running in the space, do the foll
     </pre>
     You can [bind](#bind) your app to an existing instance or [create](#create) a new instance to bind to your app.
 
-## <a id='manage-instances'></a>Create, Bind, and Use Service Instances
-
-### <a id='create'></a>Create a Service Instance
+## <a id='create'></a>Create a Service Instance
 
 Unlike pre-provisioned services, on-demand services are created asynchronously, not immediately. 
 The `watch` command shows you when your service instance is ready to bind and use.
@@ -121,7 +131,7 @@ To create an instance of the MySQL for PCF v2 service, do the following:
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-### <a id="bind"></a>Bind a Service Instance to Your App
+## <a id="bind"></a>Bind a Service Instance to Your App
 
 For an app to use a service, you must bind the app to a service instance. Do this after you push or re-push the app using `cf push`.
 
@@ -138,7 +148,7 @@ OK
 TIP: Use 'cf push' to ensure your env variable changes take effect
 </pre>
 
-### <a id="call"></a>Use the MySQL Service in Your App
+## <a id="call"></a>Use the MySQL Service in Your App
 
 To access the MySQL service from your app:
 
@@ -150,6 +160,12 @@ To access the MySQL service from your app:
 
 
 ## <a id="manage"></a> Manage Service Instances
+
+This section describes tasks you do over the life cycle of your apps and data:
+
++ Moving your data to a different plan.
++ Removing an app's access to a service it no longer needs.
++ Deleting a service instance that is not used.
 
 ### <a id="update"></a>Update a Service Instance to a Larger Plan
 
