@@ -25,7 +25,7 @@ To check whether your cluster has lost quorum, look for the following symptoms:
         +----------------------+-------------+
         | wsrep_cluster_status | non-Primary |
         +----------------------+-------------+
-- All responsive nodes respond with `ERROR 1047` when using most statement types in the MySQL client:
+- All unresponsive nodes respond with `ERROR 1047` when using most statement types in the MySQL client:
 
         mysql> select * from mysql.user;
         ERROR 1047 (08S01) at line 1: WSREP has not yet prepared node for application use
