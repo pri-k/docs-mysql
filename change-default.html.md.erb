@@ -244,14 +244,14 @@ specific app workloads. For instructions on changing configuration options, see 
     <tr>
         <td>Mixed Workload</td>
         <td>By default, each MySQL service instance is configured for a mixed workload, 
-            that is, a  workload that is equally heavy on reads and writes. 
-            The configuration for this profile is described in detail in <a href="./server-defaults.html">MySQL Server Defaults</a>.</td>
+            that is, a workload that is equally heavy on reads and writes. 
+            The configuration for this profile is described in detail in <a href="#defaults">MySQL Server Defaults</a>.</td>
     </tr>
     <tr>
         <td>Read-Heavy Workload</td>
         <td>For apps that have a large number of reads, the service instance can be configured for a read-heavy workload. 
             The read-heavy profile changes these two properties from 
-            the <a href="./server-defaults.html">MySQL Server Defaults</a>:
+            the <a href="#defaults">MySQL Server Defaults</a>:
 
 <ul>
 <li><code>innodb_buffer_pool_size</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
@@ -262,7 +262,7 @@ specific app workloads. For instructions on changing configuration options, see 
         <td>Write-Heavy Workload</td>
         <td>For apps that write to the database a lot, the service instance can be configured for 
             a write-heavy workload. The write-heavy profile changes these four properties from 
-            the <a href="./server-defaults.html">MySQL Server Defaults</a>:
+            the <a href="#defaults">MySQL Server Defaults</a>:
 <ul>
 <li><code>innodb_buffer_pool_size</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
 <li><code>innodb_flush_method</code> is set to <code>O_DIRECT</code></li>
