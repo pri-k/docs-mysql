@@ -1,11 +1,11 @@
 ---
-title: MySQL for PCF Server Defaults
+title: MySQL Server Defaults
 owner: MySQL
 ---
 
-This topic describes the defaults that MySQL for Pivotal Cloud Foundry (PCF) 
-applies to its Percona Server components. This topic also provides instructions
-for how to use optional parameters to change certain server defaults.
+This topic provides information about the defaults that MySQL for Pivotal Cloud 
+Foundry (PCF) applies to its Percona Server components. This topic also provides 
+instructions for how to use optional parameters to change certain server defaults.
 
 ## <a id="defaults"></a> Server Defaults
 
@@ -68,8 +68,8 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>myisam-recover-options</code></td>
         <td>BACKUP, FORCE</td>
         <td>
-            This setting enables MySQL for PCF to recover from most MyISAM problems without human intervention.
-            For more information, see the 
+            This setting enables MySQL for PCF to recover from most MyISAM problems 
+            without human intervention. For more information, see the 
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
         </td>
@@ -79,8 +79,8 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>log-bin-trust-function-creators</code></td>
         <td>ON</td>
         <td>
-            This setting relaxes constraints on how MySQL writes stored procedures to the binary log.
-            For more information, see the 
+            This setting relaxes constraints on how MySQL writes stored procedures 
+            to the binary log. For more information, see the 
             <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html">
                 MySQL documentation</a>.
         </td>
@@ -102,8 +102,9 @@ The following table lists the MySQL for PCF server defaults.
             By default, all table names are case sensitive. 
             Operators can change this default on the 
             <a href="./install-config.html#mysql">MySQL Configuration page</a>, 
-            and may allow developers to override the default when creating a service instance. 
-            For more information about the use for lowercase table names, see the 
+            and may allow developers to override the default when creating a 
+            service instance. For more information about the use for lowercase 
+            table names, see the 
             <a href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">
                 MySQL documentation</a>.
         </td>
@@ -123,7 +124,8 @@ The following table lists the MySQL for PCF server defaults.
         <td><strong>InnoDB Buffer Pool Size</strong></td>
         <td><code>innodb-buffer-pool-size</code></td>
         <td>50% of the available memory on each service instance</td>
-        <td>Dynamically configured to be 50% of the available memory on each service instance.</td>
+        <td>Dynamically configured to be 50% of the available memory on each 
+            service instance.</td>
     </tr>  
      <tr>
         <td><strong>InnoDB Log File Size</strong></td>
@@ -135,7 +137,8 @@ The following table lists the MySQL for PCF server defaults.
         <td><strong>InnoDB Log Buffer Size</strong></td>
         <td><code>innodb-log-buffer-size</code></td>
         <td>32&nbsp;MB</td>
-        <td>MySQL for PCF defaults to 32&nbsp;MB to avoid excessive disk I/O when issuing large transactions.</td>
+        <td>MySQL for PCF defaults to 32&nbsp;MB to avoid excessive disk I/O when 
+            issuing large transactions.</td>
     </tr> 
     <tr>
         <td><strong>InnoDB Auto Increment Lock Mode</strong></td>
