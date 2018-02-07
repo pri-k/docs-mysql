@@ -6,13 +6,20 @@ owner: MySQL
 <p class="note"><strong>Note</strong>: MySQL for PCF v1.9 is certified to work with PCF v1.9 and v1.10.
    For PCF v1.11, upgrade to MySQL for PCF v1.10.</p>
 
+## <a id="1.9.18"></a>v1.9.18
+
+Release Date: Feb 7, 2018
+
+- **Bug fix:** mysql-diag should fail quickly when VMs in the cluster aren't available
+- **Bug fix:** replication-canary causes high CPU spikes because it overwrites logs files rather than appends
+
 ## <a id="1-9-17"></a>v1.9.17
 
 Release Date: January 24, 2018
 
 - Update to stemcell 3421.38 to address:
   - [USN-3540-2](http://www.ubuntu.com/usn/usn-3540-2/)
-  
+
 ## <a id="1-9-16"></a>v1.9.16
 
 Release Date: January 19, 2018
