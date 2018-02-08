@@ -1,5 +1,5 @@
 ---
-title: MySQL Libraries Release Notes
+title: MySQL Monitoring Release Notes
 owner: MySQL
 ---
 
@@ -7,3 +7,16 @@ owner: MySQL
 
 - **Bug fix:** mysql-diag should fail quickly when VMs in the cluster aren't available
 - **Bug fix:** replication-canary causes high CPU spikes because it overwrites logs files rather than appends
+
+## <a id="monitoring-8.13.0"></a>mysql-monitoring v8.13.0
+
+- **New:** Added metrics that represent disk usage as percentages. This makes it easier to alert on disk usage without knowing the deployment's disk size. See the [disk monitoring documentation](monitoring-mysql.html#disk-free) for more information.
+  - /p-mysql/system/persistent\_disk\_used\_percent
+  - /p-mysql/system/ephemeral\_disk\_used\_percent
+  - /p-mysql/system/persistent\_disk\_inodes\_used\_percent
+  - /p-mysql/system/ephemeral\_disk\_inodes\_used\_percent
+
+## <a id="monitoring-8.12.0"></a>mysql-monitoring v8.12.0
+
+- **New:** Several new metrics which report disk space usage.
+- **Bug fix:** Addresses an issue where leader/follower replication lag was computed incorrectly.
