@@ -37,12 +37,12 @@
 | **Recommended response** | - Check node status to ensure that they are all in working order and able to receive write-sets.<br> - Run `mysql-diag` and check the MySQL Server logs for errors.  |
 
 
-#### <a id="disk-free"></a> Persistent and Ephemeral Disk Free
+#### <a id="disk-free"></a> Persistent and Ephemeral Disk Used
 
-|| **<%= vars.mysql_metrics_origin %>/system/persistent\_disk\_free** and **<%= vars.mysql_metrics_origin %>/system/ephemeral\_disk\_free** |
+|| **<%= vars.mysql_metrics_origin %>/system/persistent\_disk\_used\_percent**<br>**<%= vars.mysql_metrics_origin %>/system/ephemeral\_disk\_used\_percent** |
 | --- | --- |
-| **Description** | The number of megabytes that are available on the file systems. <br><br> **Use:** MySQL cannot function correctly if there isn't sufficient free space on the file systems. Use these metrics to ensure that your drives have disks large enough for your user base.<br><br>**Origin:** Doppler/Firehose<br> **Type:** Megabytes<br>**Frequency:** 30 s (default) |
-| **Recommended measurement** | The (minimum persistent disk free of all of the nodes) / (persistent disk size) <br>and<br>the (minimum ephemeral disk free of all of the nodes) / (ephemeral disk size) |
+| **Description** | The percentage of disk used on the persistent and ephemeral file systems. <br><br> **Use:** MySQL cannot function correctly if there isn't sufficient free space on the file systems. Use these metrics to ensure that you have disks large enough for your user base.<br><br>**Origin:** Doppler/Firehose<br> **Type:** Percent<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | Max of persistent disk used of all of nodes<br>and<br>Maximum ephemeral disk used of all nodes |
 | **Recommended alert thresholds** | **Yellow warning:** > 80% <br> **Red critical:** > 90%  |
 | **Recommended response** | - Audit plan allocation by your users, recommend deletion of unused service instances.<br> - Redeploy with larger disks. |
 
