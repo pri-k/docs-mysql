@@ -2,12 +2,16 @@
 | --- | --- | --- |
 | `<%= vars.mysql_metrics_origin %>/available` | Indicates if the local database server is available and responding. | boolean |
 | `<%= vars.mysql_metrics_origin %>/system/persistent_disk_used` | The number of KB used on the persistent disk. | KB |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_used_percent` | The percentage of persistent disk used by both the system and user applications. | percent |
 | `<%= vars.mysql_metrics_origin %>/system/persistent_disk_free` | The number of KB available on the persistent disk. | KB |
 | `<%= vars.mysql_metrics_origin %>/system/persistent_disk_inodes_used` | The number of inodes used on the persistent disk. | count |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_inodes_used_percent` | The percentage of persistent disk inodes used by both the system and user applications. | percent |
 | `<%= vars.mysql_metrics_origin %>/system/persistent_disk_inodes_free` | The number of inodes available on the persistent disk. | count |
 | `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_used` | The number of KB used on the ephemeral disk. | KB |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_used_percent` | The percentage of ephemeral disk used by both the system and user applications. | percent |
 | `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_free` | The number of KB available on the ephemeral disk. | KB |
 | `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_inodes_used` | The number of inodes used on the ephemeral disk. | count |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_inodes_used_percent` | The percentage of ephemeral disk inodes used by both the system and user applications. | percent |
 | `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_inodes_free` | The number of inodes available on the ephemeral disk. | count |
 | `<%= vars.mysql_metrics_origin %>/broker/disk_allocated_service_plans` | The number of MB allocated by the broker for all service plans, current and allocated. | MB |
 | `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_free` | The number of free pages in the InnoDB Buffer Pool. | pages |

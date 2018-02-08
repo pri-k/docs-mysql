@@ -10,7 +10,12 @@ owner: MySQL
 
 Release Date: February 7, 2018
 
-- **Bug fix:** mysql-diag should fail quickly when VMs in the cluster aren't available
+- **New:** Added metrics that represent disk usage as percentages. This makes it easier to alert on disk usage without knowing the deployment's disk size. See the [disk monitoring documentation](monitoring-mysql.html#disk-free) for more information.
+  - /p-mysql/system/persistent\_disk\_used\_percent
+  - /p-mysql/system/ephemeral\_disk\_used\_percent
+  - /p-mysql/system/persistent\_disk\_inodes\_used\_percent
+  - /p-mysql/system/ephemeral\_disk\_inodes\_used\_percent
+- **Bug fix:** `mysql-diag` now fails quickly when VMs in the cluster aren't available
 - **Bug fix:** replication-canary causes high CPU spikes because it overwrites logs files rather than appends
 
 ## <a id="1-10-10"></a>v1.10.10
