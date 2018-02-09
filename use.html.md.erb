@@ -99,11 +99,11 @@ The `watch` command shows you when your service instance is ready to bind and us
 
 To create an instance of the MySQL for PCF v2 service, do the following: 
 
-1. Run the command `cf create-service p.mysql PLAN SERVICE_INSTANCE`<br><br>
+1. Run the command `cf create-service p.mysql PLAN SERVICE-INSTANCE`<br><br>
 
     Where:<br>
     - `PLAN` is the name of the MySQL for PCF v2 plan you want to use.
-    - `SERVICE_INSTANCE` is a name you choose to identify the service instance. 
+    - `SERVICE-INSTANCE` is a name you choose to identify the service instance. 
     This name appears under `service` in output from `cf services`.
 
 1. Enter `watch cf services` and wait for the `last operation` for your instance to show as `create succeeded`. 
@@ -125,11 +125,11 @@ To create an instance of the MySQL for PCF v2 service, do the following:
 
 For an app to use a service, you must bind the app to a service instance. Do this after you push or re-push the app using `cf push`.
 
-To bind an app to a MySQL for PCF instance run the command `cf bind-service APP SERVICE_INSTANCE`
+To bind an app to a MySQL for PCF instance run the command `cf bind-service APP SERVICE-INSTANCE`
 
 Where:<br>
 `APP` is the app you want to use the MySQL service instance.<br>
-`SERVICE_INSTANCE` is the name you supplied when you ran `cf create-service`.
+`SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
 <pre class="terminal">
 $ cf bind-service my-app my-instance<br>
@@ -142,7 +142,7 @@ TIP: Use 'cf push' to ensure your env variable changes take effect
 
 To access the MySQL service from your app:
 
-1. Run `cf env APP_NAME` with the name of the app bound to the MySQL for PCF instance.
+1. Run `cf env APP-NAME` with the name of the app bound to the MySQL for PCF instance.
 
 1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app.
 
@@ -157,13 +157,13 @@ As apps and their databases grow, it may be necessary to update the service inst
 This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
 the database will be unavailable for several minutes.
 
-To update a service instance to a larger plan, run the commannd `cf update-service -p PLAN`
+To update a service instance to a larger plan, run the commannd `cf update-service SERVICE-INSTANCE -p PLAN`
 
   Where:<br> 
   `PLAN` is the plan you want to upgrade the service instance to.
 
 <pre class="terminal">
-$ cf update-service -p db-large
+$ cf update-service my-instance -p db-large
 </pre>
 
 
@@ -171,11 +171,11 @@ $ cf update-service -p db-large
 
 To stop an app from using a service it no longer needs, run the following command to unbind the app from the service:
 
-`cf unbind-service APP SERVICE_INSTANCE`
+`cf unbind-service APP SERVICE-INSTANCE`
 
   Where:<br>
   `APP` is the app you want to stop using the MySQL service instance. <br>
-  `SERVICE_INSTANCE` is the name you supplied when you ran `cf create-service`.
+  `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
 <pre class="terminal">
 $ cf unbind-service my-app my-instance<br>
@@ -189,10 +189,10 @@ You cannot delete a service instance that an app is bound to.
 
 To delete a service instance, do the following:
 
-1. Run the command `cf delete-service SERVICE_INSTANCE`
+1. Run the command `cf delete-service SERVICE-INSTANCE`
 
     Where:<br>
-    `SERVICE_INSTANCE` is the name of the service to delete.
+    `SERVICE-INSTANCE` is the name of the service to delete.
 
     <pre class="terminal">
     $ cf delete-service my-instance<br>
@@ -201,7 +201,7 @@ To delete a service instance, do the following:
     OK
     </pre>
 
-1. Enter `watch cf service SERVICE_INSTANCE` and wait for a `Service instance not found` error indicating that the instance no longer exists.
+1. Enter `watch cf service SERVICE-INSTANCE` and wait for a `Service instance not found` error indicating that the instance no longer exists.
 
 
 ## <a id="dev-tools"></a>MySQL for PCF Tools 
