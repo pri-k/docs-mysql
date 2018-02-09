@@ -134,7 +134,7 @@ As apps and their databases grow, it may be necessary to update the service inst
     Where `PLAN` is the plan you want to upgrade the service instance to.
 
     <pre class="terminal">
-   $ cf update-service -p db-large
+   $ cf update-service my-instance -p db-large
 </pre>
 
 This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
