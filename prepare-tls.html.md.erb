@@ -43,8 +43,9 @@ Use the IP address for the BOSH Director you retrieved earlier, and specify port
 
 1. Add a UAA client for CredHub with the correct grants. Enter the following command:
     <pre class="terminal">
-    $ uaac client add --authorized\_grant\_types \
-    client\_credentials --authorities credhub.read,credhub.write
+    $ uaac client add \
+    	--authorized\_grant\_types client\_credentials \
+    	--authorities credhub.read,credhub.write
     </pre>
 
 1. When prompted for Client ID, enter `credhub`.
@@ -71,22 +72,27 @@ Use the IP address for the BOSH Director you retrieved earlier, and specify port
 
 1. Log in to CredHub, specifying `credhub` for the client name and the client secret you set earlier. For example:
     <pre class="terminal">
-    $ credhub login --client-name=credhub --client-secret=abcdefghijklm123456789
+    $ credhub login \
+    	--client-name=credhub \
+    	--client-secret=abcdefghijklm123456789
     </pre>
 
 1. Create a CA certificate at the path `/services/tls_ca`: 
 	* If you already have a CA certificate, create a new file called `root.pem` with the contents of the certificate, and then enter the following command:
-		<pre class="terminal">$ credhub set \
-		--name "/services/tls_ca" \
-		--type "certificate" \
-		--is-ca --common-name="rootCA"
-		--root ./root.pem
+		<pre class="terminal">
+		$ credhub set \
+			--name "/services/tls_ca" \
+			--type "certificate" \
+			--is-ca --common-name="rootCA"
+			--root ./root.pem
 		</pre>
 	* If you do not have a CA certificate, use the CredHub CLI to generate one. Enter the following command:
-		<pre class="terminal">$ credhub generate \
-		--name "/services/tls_ca" \
-		--type "certificate" \
-		--is-ca --common-name="rootCA"</pre>
+		<pre class="terminal">
+		$ credhub generate \
+			--name "/services/tls_ca" \
+			--type "certificate" \
+			--is-ca --common-name="rootCA"
+		</pre>
 
 1. From the output, copy the `certificate` portion.
 1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
@@ -94,9 +100,9 @@ Use the IP address for the BOSH Director you retrieved earlier, and specify port
 1. Paste the contents of the root certificate into **Trusted Certificates** and click **Save**.
 1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**. This will roll all the VMs in your PCF deployment, and apply your root certificate.
 
-##<a id="furnish-pcf-2-0"></a> Furnish a CA Certificate in PCF v2.0
+##<a id="furnish-pcf-2-0"></a> Furnish a CA Certificate in PCF v2.x
 
-If you are using PCF v2.0, perform the following steps to furnish a CA certificate to CredHub:
+If you are using PCF v2.x, perform the following steps to furnish a CA certificate to CredHub:
 
 1. Retrieve your CredHub admin credentials.
 1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
@@ -109,21 +115,26 @@ If you are using PCF v2.0, perform the following steps to furnish a CA certifica
     </pre>
 1. Log in to CredHub, entering the CredHub admin credentials you retrieved earlier. For example:
     <pre class="terminal">
-    $ credhub login --client-name=credhub --client-secret=abcdefghijklm123456789
+    $ credhub login \
+    	--client-name=credhub \
+    	--client-secret=abcdefghijklm123456789
     </pre>
 1. Create a CA certificate at the path `/services/tls_ca`: 
 	* If you already have a CA certificate, create a new file called `root.pem` with the contents of the certificate, and then enter the following command:
-		<pre class="terminal">$ credhub set \
-		--name "/services/tls_ca" \
-		--type "certificate" \
-		--is-ca --common-name="rootCA"
-		--root ./root.pem
+		<pre class="terminal">
+		$ credhub set \
+			--name "/services/tls_ca" \
+			--type "certificate" \
+			--is-ca --common-name="rootCA"
+			--root ./root.pem
 		</pre>
 	* If you do not have a CA certificate, use the CredHub CLI to generate one. Enter the following command:
-		<pre class="terminal">$ credhub generate \
-		--name "/services/tls_ca" \
-		--type "certificate" \
-		--is-ca --common-name="rootCA"</pre>
+		<pre class="terminal">
+		$ credhub generate \
+			--name "/services/tls_ca" \
+			--type "certificate" \
+			--is-ca --common-name="rootCA"
+		</pre>
 
 1. From the output, copy the `certificate` portion.
 1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
