@@ -77,9 +77,9 @@ Unlike pre-provisioned services, on-demand services are created asynchronously, 
 
 To create an instance of the MySQL for PCF v2 service, run `cf create-service`:
 
-1. Enter `cf create-service p.mysql db-small SERVICE_INSTANCE`
+1. Enter `cf create-service p.mysql db-small SERVICE-INSTANCE`
 
-    Where `SERVICE_INSTANCE` is a name you choose to identify the service instance. This name will appear under `service` \[sic\] in output from `cf services`.
+    Where `SERVICE-INSTANCE` is a name you choose to identify the service instance. This name will appear under `service` \[sic\] in output from `cf services`.
 
 1. Enter `watch cf services` and wait for the `last operation` for your instance to show as `create succeeded`. 
 
@@ -102,9 +102,9 @@ For an app to use a service, you must bind it to a service instance. Do this aft
 
 To bind an app to a MySQL instance run `$ cf bind-service`.
 
-1. Enter `cf bind-service APP SERVICE_INSTANCE`
+1. Enter `cf bind-service APP SERVICE-INSTANCE`
 
-    Where `APP` is the app you want to use the MySQL service instance and `SERVICE_INSTANCE` is the name you supplied when you ran `cf create-service`.
+    Where `APP` is the app you want to use the MySQL service instance and `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
     <pre class="terminal">
    $ cf bind-service my-app my-instance<br>
@@ -117,7 +117,7 @@ To bind an app to a MySQL instance run `$ cf bind-service`.
 
 To access the MySQL service from your app:
 
-1. Run `cf env APP_NAME` with the name of the app bound to the MySQL for PCF instance.
+1. Run `cf env APP-NAME` with the name of the app bound to the MySQL for PCF instance.
 
 1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app.
 
@@ -129,7 +129,7 @@ For how to code your app to use MySQL messaging, see **About Using Pivotal MySQL
 
 As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
 
-1. Enter `cf update-service -p PLAN`
+1. Enter `cf update-service SERVICE-INSTANCE -p PLAN`
 
     Where `PLAN` is the plan you want to upgrade the service instance to.
 
@@ -144,9 +144,9 @@ the database will be unavailable for several minutes.
 
 To stop an app from using a service it no longer needs, unbind it from the service instance using `cf unbind-service`.
 
-1. Enter `cf unbind-service APP SERVICE_INSTANCE`
+1. Enter `cf unbind-service APP SERVICE-INSTANCE`
 
-    Where `APP` is the app you want to stop using the MySQL service instance and `SERVICE_INSTANCE` is the name you supplied when you ran `cf create-service`.
+    Where `APP` is the app you want to stop using the MySQL service instance and `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
     <pre class="terminal">
    $ cf unbind-service my-app my-instance<br>
@@ -158,9 +158,9 @@ To stop an app from using a service it no longer needs, unbind it from the servi
 
 To delete a service instance, run `cf delete-service`.
 
-1. Enter `cf delete-service SERVICE_INSTANCE`
+1. Enter `cf delete-service SERVICE-INSTANCE`
 
-    Where `SERVICE_INSTANCE` is the name of the service to delete.
+    Where `SERVICE-INSTANCE` is the name of the service to delete.
 
     <pre class="terminal">
    $ cf delete-service my-instance<br>
@@ -169,7 +169,7 @@ To delete a service instance, run `cf delete-service`.
     OK
 </pre>
 
-1. Enter `watch cf service SERVICE_INSTANCE` and wait for a `Service instance not found` error indicating that the instance no longer exists.
+1. Enter `watch cf service SERVICE-INSTANCE` and wait for a `Service instance not found` error indicating that the instance no longer exists.
 
 You cannot delete a service instance that an app is bound to.
 
