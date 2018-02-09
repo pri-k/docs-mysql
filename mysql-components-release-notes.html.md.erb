@@ -3,6 +3,19 @@ title: MySQL Monitoring Release Notes
 owner: MySQL
 ---
 
+## <a id="backup-2.1.0"></a>mysql-backup v2.1.0
+
+**Note:** We bumped the major version of mysql-backup-release to **v2** in recognition of the fact that v1.38.0 required TLS, which should have been a major version change.
+
+- Improvements to make backups more time efficient  [[#153953405](https://www.pivotaltracker.com/story/show/153953405)]
+  - In our test environment, we shaved nearly 50% off backup times.
+- Produce error output if any backup fails **so that** Operator can alarm on failing backups [[#153613707](https://www.pivotaltracker.com/story/show/153613707)]
+- mysql-backup no longer relies on `innobackupex`, which is deprecated [[#136521881](https://www.pivotaltracker.com/story/show/136521881)]
+- **Bug fix:** `wsrep_sst_xtrabackup-v2` now logs errors to mysql stderr log [[#142287703](https://www.pivotaltracker.com/story/show/142287703)]
+- **Bug fix:** Now makes sure to properly shut all processes down, to avoid orphan processes after an upgrade, etc. [[#153616729](https://www.pivotaltracker.com/story/show/153616729)]
+- **Bug fix:** streaming-mysql-backup-tool job fails if backup-prepare is scaled to 0 [[#153863821](https://www.pivotaltracker.com/story/show/153863821)]
+
+
 ## <a id="monitoring-8.14.0"></a>mysql-monitoring v8.14.0
 
 - **Bug fix:** `mysql-diag` now fails quickly when VMs in the cluster aren't available
@@ -22,3 +35,9 @@ owner: MySQL
 
 - **New:** Several new metrics which report disk space usage.
 - **Bug fix:** Addresses an issue where leader/follower replication lag was computed incorrectly.
+
+## <a id="backup-1.38.0"></a>mysql-backup v1.38.0
+
+- `streaming-mysql-backup-client` can be consumed as a library which would allow me to connect to a backup service and retrieve a backup artifact [[#153272120](https://www.pivotaltracker.com/story/show/153272120)] [[#153293970](https://www.pivotaltracker.com/story/show/153293970)]
+- Sally would like the channel between streaming-backup-tool and client to be encrypted **so that** backup artifacts aren't transmitted cleartext [[#152686562](https://www.pivotaltracker.com/story/show/152686562)]
+- **Bug fix:** `streaming-mysql-backup-client` should exit with non-zero status on failure  [[#150648415](https://www.pivotaltracker.com/story/show/150648415)]
