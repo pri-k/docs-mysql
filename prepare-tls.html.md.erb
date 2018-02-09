@@ -1,0 +1,133 @@
+---
+title: Preparing for TLS
+owner: MySQL
+---
+
+This topic describes how to prepare your environment for TLS. 
+
+If you want to enable TLS for MySQL for PCF, you must furnish a CA certificate to CredHub before installing and configuring MySQL for PCF.
+
+CredHub is a component designed for centralized credential management in PCF, colocated on the BOSH Director.
+
+Depending on your PCF version, perform the procedure below for [PCF v1.12](#furnish-pcf-1-12) or [PCF v2.0 and later](#furnish-pcf-2-0). 
+
+##<a id="furnish-pcf-1-12"></a> Furnish a CA Certificate in PCF v1.12
+
+If you are using PCF v1.12, perform the following steps to furnish a CA certificate to CredHub.
+
+###<a id='uaa'></a> Step 1: Create UAA Client
+
+1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
+
+1. Click the **Status** tab.
+
+1. Retrieve the IP address. This is the IP address of the BOSH Director VM, where both the UAA and CredHub servers are colocated.
+
+1. SSH into the Ops Manager VM. Perform the steps in [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html#ssh).
+
+1. From the Ops Manager VM, use the UAAC to target the UAA server on the BOSH Director VM. 
+Use the IP address for the BOSH Director you retrieved earlier, and specify port 8443. For example:
+    <pre class="terminal">$ uaac target 10.0.0.5:8443</pre>
+
+1. In the Ops Manager Director tile, click the **Credentials** tab. 
+
+1. Retrieve the **Uaa Login Client Credentials** and record the contents.
+
+1. Retrieve the **Uaa Login Admin Credentials** and record the `identity` and `password` values.
+
+1. From the Ops Manager VM, use the UAAC to get a token, setting the secret to the **Uaa Login Client Credentials** you retrieved. For example:
+    <pre class="terminal">$ uaac token owner get \
+    login --secret=abcdefghijklm123456789</pre> 
+
+1. When prompted for a user name and password, enter the values for `identity` and `password` you retrieved from the **Uaa Login Admin credentials**.
+
+1. Add a UAA client for CredHub with the correct grants. Enter the following command:
+    <pre class="terminal">
+    $ uaac client add --authorized\_grant\_types \
+    client\_credentials --authorities credhub.read,credhub.write
+    </pre>
+
+1. When prompted for Client ID, enter `credhub`.
+
+1. When prompted for `New client secret`, enter a client secret of your choice.
+
+###<a id='credhub-cli'></a> Step 2: Furnish the CA Certificate
+
+1. Download the CredHub CLI onto the Ops Manager VM. Enter the following command:
+    <pre class="terminal">$ wget https<span>:</span>//github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.5.3/credhub-linux-1.5.3.tgz</pre>
+
+1. Untar the file, make it executable, and move it to your $PATH. Enter the following commands:
+    <pre class="terminal">
+    $ tar -xzvf credhub-linux-1.5.3.tgz
+    $ chmod +x credhub
+    $ sudo mv credhub /usr/local/bin
+    </pre>
+    <p class="note"><strong>Note</strong>: For more information about using the CredHub CLI, consult the <a href="https://credhub-api.cfapps.io">CredHub API documentation</a>.</p>
+
+1. Set the CredHub server to the IP address of your BOSH Director VM, specifying port 8844. For example:
+    <pre class="terminal">
+    $ credhub api 10.0.0.5:8844
+    </pre>
+
+1. Log in to CredHub, specifying `credhub` for the client name and the client secret you set earlier. For example:
+    <pre class="terminal">
+    $ credhub login --client-name=credhub --client-secret=abcdefghijklm123456789
+    </pre>
+
+1. Create a CA certificate at the path `/services/tls_ca`: 
+	* If you already have a CA certificate, create a new file called `root.pem` with the contents of the certificate, and then enter the following command:
+		<pre class="terminal">$ credhub set \
+		--name "/services/tls_ca" \
+		--type "certificate" \
+		--is-ca --common-name="rootCA"
+		--root ./root.pem
+		</pre>
+	* If you do not have a CA certificate, use the CredHub CLI to generate one. Enter the following command:
+		<pre class="terminal">$ credhub generate \
+		--name "/services/tls_ca" \
+		--type "certificate" \
+		--is-ca --common-name="rootCA"</pre>
+
+1. From the output, copy the `certificate` portion.
+1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
+1. Click **Security**.
+1. Paste the contents of the root certificate into **Trusted Certificates** and click **Save**.
+1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**. This will roll all the VMs in your PCF deployment, and apply your root certificate.
+
+##<a id="furnish-pcf-2-0"></a> Furnish a CA Certificate in PCF v2.0
+
+If you are using PCF v2.0, perform the following steps to furnish a CA certificate to CredHub:
+
+1. Retrieve your CredHub admin credentials.
+1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
+1. Click the **Status** tab.
+1. Retrieve the IP address. This is the IP address of the BOSH Director VM, where the CredHub server is colocated.
+1. SSH into the Ops Manager VM. Perform the steps in [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#ssh).
+1. Set the CredHub server to the IP address of your BOSH Director VM, specifying port 8844. For example:
+    <pre class="terminal">
+    $ credhub api 10.0.0.5:8844
+    </pre>
+1. Log in to CredHub, entering the CredHub admin credentials you retrieved earlier. For example:
+    <pre class="terminal">
+    $ credhub login --client-name=credhub --client-secret=abcdefghijklm123456789
+    </pre>
+1. Create a CA certificate at the path `/services/tls_ca`: 
+	* If you already have a CA certificate, create a new file called `root.pem` with the contents of the certificate, and then enter the following command:
+		<pre class="terminal">$ credhub set \
+		--name "/services/tls_ca" \
+		--type "certificate" \
+		--is-ca --common-name="rootCA"
+		--root ./root.pem
+		</pre>
+	* If you do not have a CA certificate, use the CredHub CLI to generate one. Enter the following command:
+		<pre class="terminal">$ credhub generate \
+		--name "/services/tls_ca" \
+		--type "certificate" \
+		--is-ca --common-name="rootCA"</pre>
+
+1. From the output, copy the `certificate` portion.
+1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
+1. Click **Security**.
+1. Paste the contents of the root certificate into **Trusted Certificates** and click **Save**.
+1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**. This will roll all the VMs in your PCF deployment, and apply your root certificate.
+
