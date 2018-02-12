@@ -9,9 +9,13 @@ If you want to enable TLS for MySQL for PCF, you must provide a CA certificate t
 
 CredHub is a component designed for centralized credential management in PCF, colocated on the BOSH Director. For more information, see the [CredHub documentation](https://docs.pivotal.io/pivotalcf/2-0/credhub/).
 
-Depending on your PCF version, perform the procedure below for [PCF v1.12](#provide-pcf-1-12) or [PCF v2.0 and later](#provide-pcf-2-0). 
+##<a id='overview'></a> Overview
+
+Depending on your PCF version, perform the procedure below to provide a CA certificate to CredHub in [PCF v1.12](#provide-pcf-1-12) or [PCF v2.0 and later](#provide-pcf-2-0). 
 
 After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF. For more information, see [Installing and Configuring MySQL for PCF](install-config.html).
+
+If you need to rotate your CA certificate, see [Rotating CA Certificates](rotating-ca.html).
 
 ##<a id="provide-pcf-1-12"></a> Provide a CA Certificate in PCF v1.12
 
@@ -25,7 +29,7 @@ If you are using PCF v1.12, perform the following steps to provide a CA certific
 
 1. Retrieve the IP address. This is the IP address of the BOSH Director VM, where both the UAA and CredHub servers are colocated.
 
-1. SSH into the Ops Manager VM. Perform the steps in [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html#ssh).
+1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html) and [SSH into Ops Manager of Advanced Troubleshooting with the BOSH CLI](https://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html) to SSH into the Ops Manager VM.
 
 1. From the Ops Manager VM, use the UAAC to target the UAA server on the BOSH Director VM. 
 Use the IP address for the BOSH Director you retrieved earlier, and specify port 8443. For example:
@@ -112,7 +116,7 @@ If you are using PCF v2.x, perform the following steps to provide a CA certifica
 1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
 1. Click the **Status** tab.
 1. Retrieve the IP address. This is the IP address of the BOSH Director VM, where the CredHub server is colocated.
-1. SSH into the Ops Manager VM. Perform the steps in [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#ssh).
+1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html) and [SSH into Ops Manager of Advanced Troubleshooting with the BOSH CLI](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html) to SSH into the Ops Manager VM.
 1. Set the CredHub server to the IP address of your BOSH Director VM, specifying port 8844. For example:
     <pre class="terminal">
     $ credhub api 10.0.0.5:8844
