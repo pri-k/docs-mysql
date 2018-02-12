@@ -57,7 +57,7 @@ Perform the following steps to regenerate your certificates and redeploy your se
 	$ bosh2 -d p-mysql run-errand upgrade-all-service-instances
 	</pre>
 	<p class="note"><strong>Note</strong>: If you do not know the name of your MySQL for PCF deployment, run <code>bosh2 -e my-env deployments</code> to list deployments.</p>
-1. All bound apps that do not validate server certificates using the trusted store must be re-bound to the MySQL for PCF service in order to receive the updated CA public key. Until these apps have been re-bound, they will not be able to reconnect to the MySQL for PCF service.
+1. All bound apps that do not validate server certificates using the trusted store must be re-bound to the MySQL for PCF service in order to receive the updated CA public key. This includes all apps that are neither Java nor Spring. Until these apps have been re-bound, they will not be able to reconnect to the MySQL for PCF service.
 
 ##<a id='remove-old-ca'></a> Step 3: Remove Old CA Certificate
 
