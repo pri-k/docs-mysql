@@ -50,7 +50,19 @@ Perform the following steps to regenerate your certificates and redeploy your se
     	--client-name=credhub \
     	--client-secret=abcdefghijklm123456789
     </pre>
-1. Use the CredHub CLI to bulk regenerate all certificates signed by the old CA certificate.
+1. Use `curl` to make a call to the CredHub API to bulk regenerate all certificates signed by the old CA certificate.
+ Specify the IP address of your BOSH Director VM, which you retrieved in [Preparing for TLS](prepare-tls.html). 
+ For example:
+	<pre class="terminal">
+	curl "https://10.0.0.5/api/v1/bulk-regenerate" \
+    -X POST \
+    -d '{
+      "signed_by": "/services/tls_ca"
+     }' \
+    -H "authorization: bearer $(credhub --token)" \
+    -H 'content-type: application/json'
+	</pre>
+
 1. Perform the steps in [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#log-in) to log in to the BOSH Director from the Ops Manager VM.
 1. Run the `upgrade-all-service-instances` errand on the MySQL for PCF deployment to redeploy all service instances with the new certificates. Enter the following command, specifying the name of the BOSH deployment for MySQL for PCF: 
 	<pre class="terminal">
