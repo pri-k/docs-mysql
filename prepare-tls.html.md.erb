@@ -5,15 +5,17 @@ owner: MySQL
 
 This topic describes how to prepare your environment for TLS. 
 
-If you want to enable TLS for MySQL for PCF, you must furnish a CA certificate to CredHub before installing and configuring MySQL for PCF.
+If you want to enable TLS for MySQL for PCF, you must provide a CA certificate to CredHub before installing and configuring MySQL for PCF.
 
-CredHub is a component designed for centralized credential management in PCF, colocated on the BOSH Director.
+CredHub is a component designed for centralized credential management in PCF, colocated on the BOSH Director. For more information, see the [CredHub documentation](https://docs.pivotal.io/pivotalcf/2-0/credhub/).
 
-Depending on your PCF version, perform the procedure below for [PCF v1.12](#furnish-pcf-1-12) or [PCF v2.0 and later](#furnish-pcf-2-0). 
+Depending on your PCF version, perform the procedure below for [PCF v1.12](#provide-pcf-1-12) or [PCF v2.0 and later](#provide-pcf-2-0). 
 
-##<a id="furnish-pcf-1-12"></a> Furnish a CA Certificate in PCF v1.12
+After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF. For more information, see [Installing and Configuring MySQL for PCF](install-config.html).
 
-If you are using PCF v1.12, perform the following steps to furnish a CA certificate to CredHub.
+##<a id="provide-pcf-1-12"></a> Provide a CA Certificate in PCF v1.12
+
+If you are using PCF v1.12, perform the following steps to provide a CA certificate to CredHub.
 
 ###<a id='uaa'></a> Step 1: Create UAA Client
 
@@ -52,7 +54,7 @@ Use the IP address for the BOSH Director you retrieved earlier, and specify port
 
 1. When prompted for `New client secret`, enter a client secret of your choice.
 
-###<a id='credhub-cli'></a> Step 2: Furnish the CA Certificate
+###<a id='credhub-cli'></a> Step 2: Provide the CA Certificate
 
 1. Download the CredHub CLI onto the Ops Manager VM. Enter the following command:
     <pre class="terminal">$ wget https<span>:</span>//github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.5.3/credhub-linux-1.5.3.tgz</pre>
@@ -83,7 +85,7 @@ Use the IP address for the BOSH Director you retrieved earlier, and specify port
 		$ credhub set \
 			--name "/services/tls_ca" \
 			--type "certificate" \
-			--is-ca --common-name="rootCA"
+			--is-ca --common-name="rootCA" \
 			--root ./root.pem
 		</pre>
 	* If you do not have a CA certificate, use the CredHub CLI to generate one. Enter the following command:
@@ -100,9 +102,11 @@ Use the IP address for the BOSH Director you retrieved earlier, and specify port
 1. Paste the contents of the root certificate into **Trusted Certificates** and click **Save**.
 1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**. This will roll all the VMs in your PCF deployment, and apply your root certificate.
 
-##<a id="furnish-pcf-2-0"></a> Furnish a CA Certificate in PCF v2.x
+After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF. For more information, see [Installing and Configuring MySQL for PCF](install-config.html).
 
-If you are using PCF v2.x, perform the following steps to furnish a CA certificate to CredHub:
+##<a id="provide-pcf-2-0"></a> Provide a CA Certificate in PCF v2.x
+
+If you are using PCF v2.x, perform the following steps to provide a CA certificate to CredHub:
 
 1. Retrieve your CredHub admin credentials.
 1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
@@ -125,7 +129,7 @@ If you are using PCF v2.x, perform the following steps to furnish a CA certifica
 		$ credhub set \
 			--name "/services/tls_ca" \
 			--type "certificate" \
-			--is-ca --common-name="rootCA"
+			--is-ca --common-name="rootCA" \
 			--root ./root.pem
 		</pre>
 	* If you do not have a CA certificate, use the CredHub CLI to generate one. Enter the following command:
@@ -141,4 +145,7 @@ If you are using PCF v2.x, perform the following steps to furnish a CA certifica
 1. Click **Security**.
 1. Paste the contents of the root certificate into **Trusted Certificates** and click **Save**.
 1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**. This will roll all the VMs in your PCF deployment, and apply your root certificate.
+
+After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF. For more information, see [Installing and Configuring MySQL for PCF](install-config.html).
+
 
