@@ -54,13 +54,13 @@ Perform the following steps to regenerate your certificates and redeploy your se
  Specify the IP address of your BOSH Director VM, which you retrieved in [Preparing for TLS](prepare-tls.html). 
  For example:
 	<pre class="terminal">
-	curl "https://10.0.0.5/api/v1/bulk-regenerate" \
-    -X POST \
-    -d '{
-      "signed_by": "/services/tls_ca"
-     }' \
-    -H "authorization: bearer $(credhub --token)" \
-    -H 'content-type: application/json'
+	$ curl "http<span>s:</span>//10.0.0.5/api/v1/bulk-regenerate" \
+	    -X POST \
+	    -d '{
+	      "signed_by": "/services/tls_ca"
+	     }' \
+	    -H "authorization: bearer $(credhub --token)" \
+	    -H 'content-type: application/json'
 	</pre>
 
 1. Perform the steps in [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#log-in) to log in to the BOSH Director from the Ops Manager VM.
