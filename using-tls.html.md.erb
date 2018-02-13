@@ -79,22 +79,24 @@ Perform the following steps:
 1. Copy the contents of the CA certificate under `tls.cert.ca` and paste it into a file:
 	<pre class="terminal">pbpaste > root.pem</pre>
 
-1. Record the values for `username` and `password`.
+1. Record the values for `username`, `password`, and `hostname`.
 
 1. Use `mysql` to stablish a TLS connection to the MySQL instance. 
 Run the following command:
 	<br><br>
 	```
-	mysql --user=USERNAME --password=PASSWORD --ssl-ca=root.pem --ssl-verify-server-cert
+	mysql --host=HOSTNAME --user=USERNAME --password=PASSWORD --ssl-ca=root.pem --ssl-verify-server-cert
 	```
 	<br><br>
 	Where:
+	* `HOSTNAME` is the value for `hostname` retrieved above.
 	* `USERNAME` is the value for `username` retrieved above.
 	* `PASSWORD` is the value for `password` retrieved above.
 	<br><br>
 	For example: 
 	<pre class="terminal">
-	$ mysql --user=6bf07ae455a14064a9073cec8696366c \
+	$ mysql --hostname=10.1.16.5 \
+		--user=6bf07ae455a14064a9073cec8696366c \
 		--password=a22aaa2a2a2aaaaa \
 		--ssl-ca=root.pem \
 		--ssl-verify-server-cert
