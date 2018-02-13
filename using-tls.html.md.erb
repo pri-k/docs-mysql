@@ -48,6 +48,7 @@ Run the following command:
 	$ cf update-service my-service-instance \
 		-c '{"enable_tls": "10.1.16.3"}'
 	</pre>
+	You may receive the following error message: `TLS has not been enabled in the service offering. Speak with your Operator to make this available.` If you receive this message, the operator has not enabled TLS. See the procedures in [Preparing for TLS](prepare-tls.html) and [Installing and Configuring MySQL for PCF](install-config.html).
 
 You have now enabled TLS for the service instance.
 
@@ -81,7 +82,7 @@ Perform the following steps:
 
 1. Record the values for `username`, `password`, and `hostname`.
 
-1. Use `mysql` to stablish a TLS connection to the MySQL instance. 
+1. Use `mysql` to establish a TLS connection to the MySQL instance. 
 Run the following command:
 	<br><br>
 	```
@@ -203,6 +204,8 @@ function MySQLConnect() {
 }
 ```
 
-After modifying your app, repush it with `cf push`. If you enabled encryption after creating the service instance, you must rebind the app, following the procedure in the [Java and Spring Apps](#java-spring) section.
+After modifying your app, repush it with `cf push`. 
+
+<p class="note warning"><strong>WARNING</strong>: If you enabled encryption after creating the service instance, you must rebind the app, following the procedure in the <a href="#java-spring">Java and Spring Apps</a> section.</p>
 
 
