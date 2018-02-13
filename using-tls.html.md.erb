@@ -1,0 +1,206 @@
+---
+title: Using TLS
+owner: MySQL
+---
+
+This topic describes how developers can use TLS to secure the communication between their apps and the MySQL for Pivotal Cloud Foundry (PCF) v2 service.
+
+To use TLS with your apps, the PCF operator must have completed the procedures in [Preparing for TLS](preparing-tls.html) and enabled TLS in the tile configuration when performing the steps in [Installing and Configuring MySQL for PCF](install-config.html).
+
+The procedures below describe how to [enable TLS](#enable-tls) for your service instances, how to [establish a TLS connection](#establish-tls) to a MySQL instance, and how to [modify your apps](#modify-apps) to use TLS. 
+
+##<a id='enable-tls'></a> Enable TLS
+
+You cannot automatically configure encryption for a service instance when creating the instance. 
+Instead, you must enable encryption for the instance after creating it.
+
+Perform the following steps to enable TLS for an existing service instance:
+
+1. Create a service key, specifying the name of your service instance and a name for the service key. 
+Run the following command:
+	<br><br>
+	```
+	cf create-service-key SERVICE-INSTANCE SERVICE-KEY
+	```
+	<br><br>
+	Where:
+	* `SERVICE-INSTANCE` is the name of the existing service instance that you want to secure communication to and from.
+	* `SERVICE-KEY` is a name for the service key you are creating.
+	<br><br>
+	For example:
+	<pre class="terminal">$ cf create-service-key my-service-instance my-service-key</pre>
+
+1. Retrieve the service key credentials. For example:
+	<pre class="terminal">$ cf service-key my-service-instance my-service-key
+	{
+ 	"hostname": "10.1.16.3",
+ 	"jdbcUrl":    "jdbc:mysql<span>:</span>//10.1.16.3:3306/service\_instance\_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026",
+ 	"name": "service\_instance\_db",
+ 	"password": "a22aaa2a2a2aaaaa",
+ 	"port": 3306,
+ 	"uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>10.244.16.3:3306/service\_instance\_db?reconnect=true",
+ 	"username": "6bf07ae455a14064a9073cec8696366c"
+	}
+	</pre>
+1. In the output, record the value for `hostname`.
+1. Update the existing service instance to enable TLS by providing configuration parameters, specifying the hostname retrieved above. For example:
+	<pre class="terminal">
+	$ cf update-service my-service-instance \
+		-c '{"enable_tls": "10.1.16.3"}'
+	</pre>
+
+You have now enabled TLS for the service instance.
+
+##<a id='establish-tls'></a> Establish a TLS Connection to MySQL Instance
+
+You can use `mysql` to establish a TLS connection to a MySQL instance that has TLS enabled.
+
+Perform the following steps:
+
+1. Create a new service key for the service instance with TLS enabled. For example:
+
+	<pre class="terminal">$ cf create-service-key my-service-instance my-service-key2
+	{
+	 "hostname": "10.1.16.5",
+	 "jdbcUrl": "jdbc:mysql<span>://</span>10.244.16.3:3306/service_instance_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026=true",
+	 "name": "service_instance_db",
+	 "password": "a22aaa2a2a2aaaaa",
+	 "port": 3306,
+	 "tls": {
+	  "cert": {
+	   "ca": "-----BEGIN CERTIFICATE-----\...n-----END CERTIFICATE-----\n"
+	  }
+	 },
+	 "uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>10.244.16.3:3306/service_instance_db?reconnect=true",
+	 "username": "6bf07ae455a14064a9073cec8696366c"
+	}
+	</pre>
+
+1. Copy the contents of the CA certificate under `tls.cert.ca` and paste it into a file:
+	<pre class="terminal">pbpaste > root.pem</pre>
+
+1. Record the values for `username` and `password`.
+
+1. Use `mysql` to stablish a TLS connection to the MySQL instance. 
+Run the following command:
+	<br><br>
+	```
+	mysql --user=USERNAME --password=PASSWORD --ssl-ca=root.pem --ssl-verify-server-cert
+	```
+	<br><br>
+	Where:
+	* `USERNAME` is the value for `username` retrieved above.
+	* `PASSWORD` is the value for `password` retrieved above.
+	<br><br>
+	For example: 
+	<pre class="terminal">
+	$ mysql --user=6bf07ae455a14064a9073cec8696366c \
+		--password=a22aaa2a2a2aaaaa \
+		--ssl-ca=root.pem \
+		--ssl-verify-server-cert
+	</pre>
+
+##<a id='modify-apps'></a> Modify Apps for TLS
+
+In order for your apps to use TLS, you must update them to request encrypted communications when connecting to the MySQL data service. 
+
+The procedure for updating your apps differs for Java and Spring apps, and apps written in other languages and frameworks.
+
+###<a id='java-spring'></a> Java and Spring Apps
+
+Java and Spring apps will automatically detect if a service instance has TLS enabled. 
+
+In order to activate TLS for Java and Spring apps, you must stop and rebind the app to the service instance after enabling TLS on the instance. 
+Perform the following steps:
+
+1. Stop the app. For example:
+	<pre class="terminal">$ cf stop my-app</pre>
+1. Unbind the app from the service instance. For example:
+	<pre class="terminal">$ cf unbind-service my-app my-service-instance</pre>
+1. Re-bind the app to the service instance. For example:
+	<pre class="terminal">$ cf bind-service my-app my-service-instance</pre>
+1. Restage the app. For example:
+	<pre class="terminal">$ cf restage my-app</pre>
+
+Your app should now communicate securely with the MySQL service instance.
+
+###<a id='other-apps'></a> Other Apps
+
+In order to activate TLS for apps not written in Java or Spring, you must modify them to discover the CA certificate in `VCAP_SERVICES` and specify that CA component when initiating the connection to the data service.
+
+`VCAP_SERVICES` is an environment variable that exists within every container. It contains runtime-specific information about the app, including metadata supplied by each of the services that have been bound to that app. The metadata includes the information necessary to connect to the service, such as hostnames, usernames and passwords.
+
+For example, the following Node.js code loads the information from `VCAP_SERVICES` necessary for establishing a TLS connection with the MySQL service, including the CA certificate.
+
+```js
+// Variables
+var data = "" ;
+var activateState = Boolean(false) ;
+mysql_data_service = undefined ;
+var mysql_creds = {} ;
+var vcap_services = undefined ;
+var dbClient = undefined ;
+var dbConnectState = Boolean(false) ;
+var dbConnectTimer = undefined ;
+var riakcs_credentials = undefined ;
+var riakcsClient = undefined ;
+var riakcsConnectionState = Boolean(false) ;
+
+// Setup based on Environment Variables
+if (process.env.VCAP_SERVICES) {
+    vcap_services = JSON.parse(process.env.VCAP_SERVICES) ;
+    if (vcap_services['p.mysql']) {
+        mysql_data_service = "p.mysql" ;
+    }
+    if (vcap_services["p-mysql"]) {
+        mysql_data_service = "p-mysql" ;
+    }
+    if (mysql_data_service) {
+        mysql_creds["host"] = vcap_services[mysql_data_service][0]["credentials"]["hostname"] ;
+        mysql_creds["user"] = vcap_services[mysql_data_service][0]["credentials"]["username"] ;
+        mysql_creds["password"] = vcap_services[mysql_data_service][0]["credentials"]["password"] ;
+        mysql_creds["port"] = vcap_services[mysql_data_service][0]["credentials"]["port"] ;
+        mysql_creds["user"] = vcap_services[mysql_data_service][0]["credentials"]["username"] ;
+        mysql_creds["database"] = vcap_services[mysql_data_service][0]["credentials"]["name"] ;
+        if (vcap_services[mysql_data_service][0]["credentials"]["ca_certificate"]) {
+            mysql_creds["ca_certificate"] = vcap_services[mysql_data_service][0]["credentials"]["ca_certificate"] ;
+        } else {
+            mysql_creds["ca_certificate"] = undefined ;
+        }
+        pm_uri = vcap_services[mysql_data_service][0]["credentials"]["uri"] ;
+        util.log("Got access credentials to " + mysql_data_service + " database") ;
+        activateState="mysql" ;
+    }
+} else if (process.env.LOCAL_MODE) {
+    // pm_uri = "http://root:password@127.0.0.1/csaccept" ;
+    util.log("Local mode set to true, configuring myself to use local MySQL.") ;
+    activateState="mysql" ;
+}
+```
+
+The following Node.js function establishes a TLS connection with the MySQL service, using the CA certificate.
+
+```js
+function MySQLConnect() {
+    if (activateState) {
+        clientConfig = {
+            host : mysql_creds["host"],
+            user : mysql_creds["user"],
+            password : mysql_creds["password"],
+            port : mysql_creds["port"],
+            database : mysql_creds["database"]
+        } ;
+        if (mysql_creds["ca_certificate"]) {
+            clientConfig["ssl"] = { ca : mysql_creds["ca_certificate"] } ;
+        }
+        dbClient = mysql.createConnection( clientConfig ) ;
+        dbClient.connect(handleDBConnect) ;
+    } else {
+        dbClient = undefined ;
+    }
+}
+```
+
+After modifying your app, repush it with `cf push`. If you enabled encryption after creating the service instance, you must rebind the app, following the procedure in the [Java and Spring Apps](#java-spring) section.
+
+
