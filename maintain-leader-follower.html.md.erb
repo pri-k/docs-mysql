@@ -86,20 +86,25 @@ You might want to trigger a failover to the follower VM in the following scenari
 
 There are two different scenarios for triggering a failover:
 
-* **Scenario 1**: You no longer have access to the leader VM.   
-  To trigger a failover if you cannot access the leader VM,
-  perform the following steps, omitting those marked **Scenario 2**.
-
-* **Scenario 2**: You still have access to the leader VM.  
-  To trigger a failover when you can access the leader VM, perform all of the following steps.
-
-Follow these procedures to trigger a failover:
+[**Scenario 1**](#no-access): You no longer have access to the leader VM.   
+  To trigger a failover if you cannot access the leader VM, follow these procedures:
 
 + [Retrieve Information](#retrieve)
 + [Promote the Follower](#promote) 
-+ [Scenario 2 Only: Clean Up Former Leader VM](#clean-up)
 
-### <a id='retrieve'></a> Retrieve Information
+
+[**Scenario 2**](#access): You still have access to the leader VM.  
+  To trigger a failover when you can access the leader VM, follow these procedures:
+
++ [Retrieve Information](#retrieve-2)
++ [Promote the Follower](#promote-2) 
++ [Clean Up Former Leader VM](#clean-up)
+
+### <a id="no-access"></a> Scenario 1: You No Longer Have Access to the Leader VM
+
+If you cannot access the leader VM, do the following procedures to trigger a failover.
+
+#### <a id='retrieve'></a> Retrieve Information
 
 Perform the following steps to retrieve the information necessary
 for stopping the leader and promoting the follower: 
@@ -164,16 +169,121 @@ for stopping the leader and promoting the follower:
    In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
 1. Record the index of the other instance, which is the follower VM.
    In the above output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
-1. **Scenario 2**: Use the BOSH CLI v2 to determine if the leader VM is in the AZ you want to take offline.
+
+
+#### <a id='promote'></a> Promote the Follower
+
+Perform the following steps to stop the leader VM and promote the follower VM to the new leader:
+
+1. Stop the leader VM, using the same values as above.
+   For example:
+   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+1. Set the follower VM as writable, using the index of the follower VM retrieved above.
+   For example:
+   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+   </pre>
+   If this command returns an error, re-run it until the follower VM has completed applying the transactions. 
+1. Unbind the app from the leader-follower service instance.
+   Run the following command:
+   <pre><code>cf unbind-service APP SERVICE-INSTANCE</code></pre>
+   <br>
+   Where:
+   <ul><li>`APP`: This is the name of the app bound to the leader-follower service instance.</li>
+   <li>`SERVICE-INSTANCE`: This is the name of the leader-follower service instance.</li></ul>
+   For example:
+   <pre class="terminal">
+   $ cf unbind-service my-app my-lf-instance
+   </pre>
+1. Rebind the app to the leader-follower service instance, using the same values as above.
+   For example:
+   <pre class="terminal">
+   $ cf bind-service my-app my-lf-instance
+   </pre>
+1. Restage the app.
+   For example:
+   <pre class="terminal">
+   $ cf restage my-app
+   </pre>
+
+### <a id="access"></a> Scenario 2: You Still Have Access to the Leader VM
+
+If you can access the leader VM, do the following procedures to trigger a failover.
+
+#### <a id='retrieve-2'></a> Retrieve Information
+
+Perform the following steps to retrieve the information necessary
+for stopping the leader and promoting the follower: 
+
+1. Target the Cloud Controller of your PCF deployment with the Cloud Foundry Command Line Interface (cf CLI).
+   For example:
+  <pre class="terminal">$ cf api api.pcf.example.com</pre>
+1. Log in:
+  <pre><code>cf login</code></pre>
+1. Enter the org and space where the leader-follower service instance is located.
+1. Retrieve the GUID of the service instance by running the following command:
+    <pre><code>cf service SERVICE-INSTANCE --guid</code></pre>
+    <br>
+    Where `SERVICE-INSTANCE` is the name of the leader-follower service instance. 
+  <br><br>
+  For example:
+  <pre class="terminal">$ cf service my-lf-instance --guid
+  82ddc607-710a-404e-b1b8-a7e3ea7ec063
+  </pre>
+  If you do not know the name of the service instance, you can list service instances in the space with `cf services`.
+1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
+   and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of
+   <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Ops Manager VM.
+1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI v2.
+   See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in
+   <em>Advanced Troubleshooting with the BOSH CLI</em>.
+1. Use the BOSH CLI v2 to run the `inspect` errand with the following command:
+  <pre><code>bosh2 -d service-instance\_GUID run-errand inspect</code></pre>
+  <br>
+  Where `GUID` is the GUID of the leader-follower service instance retrieved above.
+  <br><br>
+  For example:
+  <pre class="terminal">
+  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand inspect
+  </pre>
+1. Examine the output and locate the information about the leader-follower MySQL VMs:
+  <pre class="terminal">
+  Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/13 22:26:56 Started executing command: inspect
+             2017/12/13 22:26:56 Started GET http<span>s:</span>//127.0.0.1:8443/status
+             2017/12/13 22:26:56
+             Has Data: true
+             Read Only: true
+             GTID Executed: 524c4be4-d540-11e7-a1d2-42010a000805:1-85297
+             Replication Configured: true
+  Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/13 22:26:56 Started executing command: inspect
+             2017/12/13 22:26:56 Started GET http<span>s:</span>//127.0.0.1:8443/status
+             2017/12/13 22:26:57
+             Has Data: true
+             Read Only: false
+             GTID Executed: 524c4be4-d540-11e7-a1d2-42010a000805:1-85298
+             Replication Configured: false
+  </pre>
+1. Identify the instance marked `Read Only: false`.
+   This is the leader VM.
+   Record the index, which is the value for `Instance` after `mysql/`.
+   In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
+1. Record the index of the other instance, which is the follower VM.
+   In the above output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
+1. Use the BOSH CLI v2 to determine if the leader VM is in the AZ you want to take offline.
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances</pre>
    Examine the output to determine if the leader VM you identified in the previous step is in the AZ you want to take offline. 
 
-### <a id='promote'></a> Promote the Follower
+#### <a id='promote-2'></a> Promote the Follower
 
 Perform the following steps to stop the leader VM and promote the follower VM to the new leader:
 
-1. **Scenario 2**: Stop any data from being written to the leader VM by setting it to read only.
+1. Stop any data from being written to the leader VM by setting it to read only.
    Run the following command:
    <pre><code>bosh2 -d service-instance\_GUID run-errand make-read-only --instance=mysql/INDEX</code></pre>
    <br>
@@ -214,7 +324,7 @@ Perform the following steps to stop the leader VM and promote the follower VM to
    $ cf restage my-app
    </pre>
 
-### <a id='clean-up'></a>Scenario 2 Only: Clean Up Former Leader VM
+#### <a id='clean-up'></a>Clean Up Former Leader VM
 
 If you still have access to the former leader VM, **Scenario 2**, perform these steps to clean up that VM:
 
