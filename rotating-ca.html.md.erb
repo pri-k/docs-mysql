@@ -15,14 +15,14 @@ Perform the following steps to add a new CA certificate to CredHub:
 
 1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html) and [SSH into Ops Manager of Advanced Troubleshooting with the BOSH CLI](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html) to SSH into the Ops Manager VM.
 1. Create a new CA certificate at the path `/services/tls_ca_new`: 
-	* If you already have a CA certificate, create a new file called `root.pem` with the contents of the certificate, and then enter the following command:
-		<pre class="terminal">
-		$ credhub set \
-			--name "/services/tls_ca_new" \
-			--type "certificate" \
-			--is-ca --common-name="rootCA"
-			--root ./root.pem
-		</pre>
+    * If you already have a CA certificate, create a new file called `root.pem` with the contents of the certificate. Then enter the following command, specifying the path to `root.pem` and the private key for the certificate:
+        <pre class="terminal">
+        $ credhub set \
+            --name="/services/tls_ca" \
+            --type="certificate" \
+            --certificate=./root.pem \
+            --private=ERKSOSMFF...
+        </pre>
 	* If you do not have a CA certificate, use the CredHub CLI to generate one. Enter the following command:
 		<pre class="terminal">
 		$ credhub generate \
