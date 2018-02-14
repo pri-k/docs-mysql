@@ -294,7 +294,7 @@ Perform the following steps to stop the leader VM and promote the follower VM to
    <pre class="terminal">
    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-read-only --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
    </pre>
-1. **Scenario 2**: Stop the leader VM, using the same values as above.
+1. Stop the leader VM, using the same values as above.
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
 1. Set the follower VM as writable, using the index of the follower VM retrieved above.
@@ -326,7 +326,7 @@ Perform the following steps to stop the leader VM and promote the follower VM to
 
 #### <a id='clean-up'></a>Clean Up Former Leader VM
 
-If you still have access to the former leader VM, **Scenario 2**, perform these steps to clean up that VM:
+If you still have access to the former leader VM, perform these steps to clean up that VM:
 
 1. Disable resurrection, specifying the same deployment as above.
    For example:
