@@ -246,19 +246,45 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Enable Lower Case Table Names</strong></td>
-        <td>Select this checkbox to set `lower_case_table_names` to 1 on all MySQL for PCF instances. For more information read
-         the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
+        <td>Select this checkbox to store all table names in lowercase. 
+            Selecting this sets the MySQL server system variable `lower_case_table_names` to 1 on all MySQL for PCF instances
+        by default. To allow developers to override this default, see the checkbox below.
+            For more information, see
+          [lower_case_table_names](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names)
+          in the MySQL documentation.
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
-        <td>Select this checkbox to allow developers to override the default Lower Case Table Names value set above. By default, all service instances
-        will be created with the value based on "Enable Lower Case Table Names" above. Checking this box allows developers to modify it
-        using the cf CLI.</td></tr>
+        <td>Select this checkbox to allow developers to override the default <strong>Enable Lower Case Table Names</strong> value set above, when they are creating a new service instance. 
+            For more information, see <a href="./change-default.html#configuring">Optional Parameters for the MySQL for PCF Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
         <td>Select this checkbox to enable data downloading from the client's local file system.
             For more information about local data loading capability,
             see [Security Issues with LOAD DATA LOCAL](https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html) in the MySQL 5.7 Reference Manual.
     </td></tr>
   </table>
+
+###<a id="backups"></a> Configure Backups
+
+Follow the steps below to configure automated backups:
+
+1. Click **Backups**.
+
+    ![backups](backups.png)
+
+1. Consult [About Automated Backups](backup-and-restore.html#overview) in <em>Backing Up and Restoring</em> to learn about how automated backups work.
+
+1. Select a **Backup configuration** and perform the steps in the appropriate section of <em>Backing Up and Restoring</em>: 
+  - [Option 1: Back up with SCP](backup-and-restore.html#scp)---MySQL for PCF runs an SCP command that secure-copies backups to a VM
+    or physical machine operating outside of PCF.
+    The operator provisions the backup machine separately from their PCF installation.
+    This is the fastest option.
+  - [Option 2: Back up to Ceph or S3](backup-and-restore.html#ceph-or-s3)---MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
+    that saves backups to an S3 bucket,
+    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
+  - [Option 3: Back up to GCS](backup-and-restore.html#gcs)---MySQL for PCF runs an [GCS](https://cloud.google.com/storage/) SDK
+    that saves backups to an Google Cloud Storage bucket.
+  - [Option 4: Back up to Azure Storage](backup-and-restore.html#azure)---MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
+    SDK that saves backups to an Azure storage account.
 
 ###<a id="monitoring"></a> Configure Monitoring
 

@@ -10,6 +10,14 @@ upgrade to the latest v2.0.x version before upgrading to the latest v2.1.x versi
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
+## <a id="222"></a>v2.2.2
+
+**Release Date:**  February 8, 2018
+
+* When configuring backups to an S3-compatible endpoint, **region** is no longer a required property.
+
+* Requires stemcell 3445.24.
+
 ## <a id="221"></a>v2.2.1
 
 **Release Date:**  January 23, 2018
@@ -41,7 +49,7 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
   For more information, see [Customizing Database Credentials](./customize-access.html).
 
 * Enables developers to use workload profiles for best practices in server configuration.
-  For more information, see [Changing MySQL Server Defaults](./change-default.html).
+  For more information, see [Changing MySQL Server Defaults](./change-default.html#changes).
 
 * No longer includes individual errand VMs. 
   Instead, errands are run on the MySQL VMs. 

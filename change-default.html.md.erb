@@ -1,35 +1,200 @@
 ---
-title: Changing MySQL Server Defaults
+title: MySQL Server Defaults
 owner: MySQL
 ---
 
-This topic provides instructions for developers to set optional parameters to change the MySQL for Pivotal Cloud Foundry (PCF) 
-server defaults. Use this topic if your apps have a read-heavy or write-heavy workload or if you need to use lowercase table names. 
+This topic provides information about the defaults that MySQL for Pivotal Cloud 
+Foundry (PCF) applies to its Percona Server components. This topic also provides 
+instructions for how to use optional parameters to change certain server defaults.
 
-These procedures use the Cloud Foundry Command Line Interface 
+## <a id="defaults"></a> Server Defaults
+
+The following table lists the MySQL for PCF server defaults.
+
+<table>
+    <th>Name</th>
+    <th width="500">Variable Name</th> 
+    <th>Default</th>
+    <th>Notes</th>
+    <tr>
+        <td><strong>Max Connections</strong></td>
+        <td><code>max-connections</code></td>
+        <td>750 connections per service instance</td>
+        <td>
+            System processes count towards this limit.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Max Allowed Packet</strong></td>
+        <td><code>max-allowed-packet</code></td>
+        <td>256&nbsp;MB</td>
+        <td>You can change this size in a session variable if necessary. </td>
+    </tr>
+     <tr>
+        <td><strong>Table Definition Cache</strong></td>
+        <td><code>table-definition-cache</code></td>
+        <td>8192</td>
+        <td>For more information about updating this variable,
+            see the 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache">
+                MySQL documentation</a>.
+        </td>
+    </tr>
+     <tr>
+        <td><strong>Reverse Name Resolution</strong></td>
+        <td><code>skip-name-resolve</code></td>
+        <td>ON</td>
+        <td>
+            This disables reverse DNS lookups, which improves performance.
+            MySQL for PCF uses user credentials, not hostnames, to authenticate access.
+            Therefore, most deployments do not need reverse DNS lookups.<br>
+            To enable reverse name resolution, clear this option.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Skip Symbolic Links</strong></td>
+        <td><code>symbolic-links</code></td>
+        <td>OFF</td>
+        <td>
+            MySQL for PCF is configured to prevent the use of symlinks to tables. 
+            This recommended security setting prevents users from manipulating 
+            files on the server’s file system. For more information, see 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html">
+                Making MySQL Secure Against Attackers</a>.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>MyISAM Recover Options</strong></td>
+        <td><code>myisam-recover-options</code></td>
+        <td>BACKUP, FORCE</td>
+        <td>
+            This setting enables MySQL for PCF to recover from most MyISAM problems 
+            without human intervention. For more information, see the 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
+                MySQL documentation</a>.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Log Bin Trust Function Creators</strong></td>
+        <td><code>log-bin-trust-function-creators</code></td>
+        <td>ON</td>
+        <td>
+            This setting relaxes constraints on how MySQL writes stored procedures 
+            to the binary log. For more information, see the 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html">
+                MySQL documentation</a>.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Event Scheduler</strong></td>
+        <td><code>event-scheduler</code></td>
+        <td>ON</td>
+        <td>
+            MySQL for PCF enables the event scheduler so users can create and use 
+            events in their dedicated service instances.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Lower Case Table Names</strong></td>
+        <td><code>lower-case-table-names</code></td>
+        <td>0</td>
+        <td>
+            By default, all table names are case sensitive. 
+            Operators can change this default on the 
+            <a href="./install-config.html#mysql">MySQL Configuration page</a>, 
+            and may allow developers to override the default when creating a 
+            service instance. For more information about the use for lowercase 
+            table names, see the 
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">
+                MySQL documentation</a>.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Audit Log</strong></td>
+        <td><code>audit-log</code></td>
+        <td>OFF</td>
+        <td> 
+            When enabled on the <a href="./install-config.html#monitoring">
+            MySQL Monitoring pane</a>,
+            logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql-audit-log</code> 
+            as well as a remote syslog drain if it is enabled.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>InnoDB Buffer Pool Size</strong></td>
+        <td><code>innodb-buffer-pool-size</code></td>
+        <td>50% of the available memory on each service instance</td>
+        <td>Dynamically configured to be 50% of the available memory on each 
+            service instance.</td>
+    </tr>  
+     <tr>
+        <td><strong>InnoDB Log File Size</strong></td>
+        <td><code>innodb-log-file-size</code></td>
+        <td>256&nbsp;MB</td>
+        <td>MySQL for PCF clusters default to a log-file size of 256&nbsp;MB.</td>
+    </tr> 
+     <tr>
+        <td><strong>InnoDB Log Buffer Size</strong></td>
+        <td><code>innodb-log-buffer-size</code></td>
+        <td>32&nbsp;MB</td>
+        <td>MySQL for PCF defaults to 32&nbsp;MB to avoid excessive disk I/O when 
+            issuing large transactions.</td>
+    </tr> 
+    <tr>
+        <td><strong>InnoDB Auto Increment Lock Mode</strong></td>
+        <td><code>innodb-autoinc-lock-mode</code></td>
+        <td>2</td>
+        <td>
+            Auto Increment uses "interleaved" mode. 
+            This enables multiple statements to execute at the same time.
+            There may be gaps in auto-incrementing columns.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Collation Server</strong></td>
+        <td><code>collation-server</code></td>
+        <td><code>utf8-general-ci</code></td>
+        <td>You can override this during a session.</td>
+    </tr>
+    <tr>
+        <td><strong>Character Set</strong></td>
+        <td><code>character-set-server</code></td>
+        <td><code>utf8</code></td>
+        <td>Defaults all character sets. You can override this during a session.</td>
+    </tr>  
+</table>
+
+## <a id="changes"></a>Changing MySQL Server Defaults
+
+You can set optional parameters to change the MySQL for PCF server defaults to 
+accommodate apps with a read-heavy or write-heavy workload, or if you need to use 
+lowercase table names.
+
+The procedures in this section use the Cloud Foundry Command Line Interface 
 ([cf CLI](https://docs.pivotal.io/pivotalcf/1-12/devguide/services/managing-services.html)). 
-You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to perform the same tasks using a graphical UI.
+You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) 
+to perform the same tasks using a graphical UI.
 
 For general information about using MySQL for PCF, see [Using MySQL for PCF](./use.html).
 
-## <a id="configuring"></a>Optional Parameters for the MySQL for PCF Service Instances
+### <a id="configuring"></a>Optional Parameters for the MySQL for PCF Service Instances
 
-MySQL for PCF service instances are configured by default with industry best practices. For more
-specific use cases, you can customize the following parameters:
+MySQL for PCF service instances are configured by default with industry best practices. 
+For more specific use cases, you can customize the following parameters:
 
 | Key | Type | Default | Description |
 | ---- | ---- | ---- | ---- |
 | `workload` | String | `mixed`| You can set this to `read-heavy`, `mixed`, or `write-heavy`. For more information, see [Understanding Workload Types](#workload). |
-| `enable_lower_case_table_names` | Boolean | `false` | You can only set this when creating a service instance. If you set this to `true`, table names are stored in lowercase. For more information, see [Understanding Lowercase Table Names](#lowercase).  |
+| `enable_lower_case_table_names` | Boolean | Set by the operator | The operator sets a default for this parameter, and may allow you to override the default. If allowed, you can only set this when creating a service instance. If you set this to `true`, table names are stored in lowercase. For more information, see [Understanding Lowercase Table Names](#lowercase).  |
 
-## <a id="parameters"></a> Use Optional Parameters
+### <a id="parameters"></a> Use Optional Parameters
 
 You can change these default configuration parameters using the cf CLI as follows:
 
 * `workload`---When creating a new instance, or updating an existing one
 * `enable_lower_case_table_names`---When creating a new instance 
 
-### <a id="creating"></a> Change Default Parameters when Creating a Service Instance
+#### <a id="creating"></a> Change Default Parameters when Creating a Service Instance
 
 To create a service instance using optional parameters use the following command:
 
@@ -50,7 +215,7 @@ Create in progress. Use 'cf services' or 'cf service myDB' to check operation st
 
 If you get an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-### <a id="updating"></a> Change Default Parameters on an Existing Service Instance
+#### <a id="updating"></a> Change Default Parameters on an Existing Service Instance
 
 To change the default parameters of an existing instance use the following command:
 
@@ -69,50 +234,49 @@ $ cf update-service p.mysql db-small myDB -c '{ "workload": "mixed" }'
 
 If you get an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-## <a id='workload'></a> Understanding Workload Types
+### <a id='workload'></a> Understanding Workload Types
 
 MySQL for PCF offers three workload profiles that developers can use to configure MySQL instances based on their 
 specific app workloads. For instructions on changing configuration options, see [Use Optional Parameters](#parameters).
 
 <table class="nice">
-	<th>Profile</th><th>Description</th>
-	<tr>
-		<td>Mixed Workload</td>
-		<td>By default, each MySQL service instance is configured for a mixed workload, 
-			that is, a  workload that is equally heavy on reads and writes. 
-			The configuration for this profile is described in detail in <a href="./server-defaults.html">MySQL Server Defaults</a>.</td>
-	</tr>
-	<tr>
-		<td>Read-Heavy Workload</td>
-		<td>For apps that have a large number of reads, the service instance can be configured for a read-heavy workload. 
-			The read-heavy profile changes these two properties from 
-			the <a href="./server-defaults.html">MySQL Server Defaults</a>:
+    <th>Profile</th><th>Description</th>
+    <tr>
+        <td>Mixed Workload</td>
+        <td>By default, each MySQL service instance is configured for a mixed workload, 
+            that is, a workload that is equally heavy on reads and writes. 
+            The configuration for this profile is described in detail in <a href="#defaults">MySQL Server Defaults</a>.</td>
+    </tr>
+    <tr>
+        <td>Read-Heavy Workload</td>
+        <td>For apps that have a large number of reads, the service instance can be configured for a read-heavy workload. 
+            The read-heavy profile changes these two properties from 
+            the <a href="#defaults">MySQL Server Defaults</a>:
 
 <ul>
-<li><code>innodb_buffer_pool_sizd</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
-<li><code>innodb_flush_methdo</code> is set to <code>O_DIRECT</code></li>
+<li><code>innodb_buffer_pool_size</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
+<li><code>innodb_flush_method</code> is set to <code>O_DIRECT</code></li>
 </ul>
 
-	<tr>
-		<td>Write-Heavy Workload</td>
-		<td>For apps that write to the database a lot, the service instance can be configured for 
-			a write-heavy workload. The write-heavy profile changes these four properties from 
-			the <a href="./server-defaults.html">MySQL Server Defaults</a>:
+    <tr>
+        <td>Write-Heavy Workload</td>
+        <td>For apps that write to the database a lot, the service instance can be configured for 
+            a write-heavy workload. The write-heavy profile changes these four properties from 
+            the <a href="#defaults">MySQL Server Defaults</a>:
 <ul>
-<li><code>innodb_buffer_pool_sizd</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
-<li><code>innodb_flush_methdo</code> is set to <code>O_DIRECT</code></li>
+<li><code>innodb_buffer_pool_size</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
+<li><code>innodb_flush_method</code> is set to <code>O_DIRECT</code></li>
 <li><code>innodb_log_file_size</code> is increased to <code>1GB</code></li>
 <li><code>max_allowed_packets</code> is increased to <code>1GB</code></li>
 </ul>
 </table> 
 
-## <a id="lowercase"></a> Understanding Lowercase Table Names
+### <a id="lowercase"></a> Understanding Lowercase Table Names
 
 If you are migrating a database from a system that was case insensitive, 
-			that is, where `TableName` is the same as `TABLEname`, then forcing lowercase turns both into `tablename`. 
-			In this way both names are interpreted as the same table. 
+            that is, where `TableName` is the same as `TABLEname`, then forcing lowercase turns both into `tablename`. 
+            In this way both names are interpreted as the same table. 
 
 For more information, see the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
-
 
 
