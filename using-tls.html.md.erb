@@ -3,11 +3,13 @@ title: Using TLS
 owner: MySQL
 ---
 
-This topic describes how developers can use TLS to secure the communication between their apps and the MySQL for Pivotal Cloud Foundry (PCF) v2 service.
+This topic describes how developers can use TLS to secure the communication
+between their apps and the MySQL for Pivotal Cloud Foundry (PCF) v2 service.
 
 To use TLS with your apps, the PCF operator must have completed the procedures in [Preparing for TLS](prepare-tls.html) and enabled TLS in the tile configuration when performing the steps in [Installing and Configuring MySQL for PCF](install-config.html).
 
-The procedures below describe how to [enable TLS](#enable-tls) for your service instances, and how to [modify your apps](#modify-apps) to use TLS. 
+The procedures below describe how to [enable TLS](#enable-tls) for your service instances,
+and how to [modify your apps](#modify-apps) to use TLS. 
 
 If you want to use the `mysql` client to establish a TLS connection to a MySQL for PCF service instance that has TLS enabled, see [Establish a TLS Connection to a Service Instance](use.html#establish-tls).
 
@@ -52,30 +54,26 @@ Perform the following steps to enable TLS for an existing service instance:
 	Run the following command:
 
 	```
-	cf update-service SERVICE-INSTANCE \
-		-c '{"enable_tls": "HOSTNAME"}'
+	cf update-service SERVICE-INSTANCE -c '{"enable_tls": "HOSTNAME"}'
 	```
 	<br>
 	Where:
 	* `SERVICE-INSTANCE` is the name of the existing service instance that you want to secure communication to and from.
 	* `HOSTNAME` is the value for `hostname` retrieved above.
-	<br><br>
+
 	For example:
 	<pre class="terminal">
-	$ cf update-service my-service-instance \
-		-c '{"enable_tls": "10.1.16.3"}'
+	$ cf update-service my-service-instance -c '{"enable_tls": "10.1.16.3"}'
 	</pre>
 	Wait until the command returns `Update succeeded`.
 	<br><br>
-	If you receive the following error message, the operator has not enabled TLS. See the procedures in [Preparing for TLS](prepare-tls.html) and [Installing and Configuring MySQL for PCF](install-config.html).
+	If you receive the following error message, the operator has not enabled TLS.
+        See the procedures in [Preparing for TLS](prepare-tls.html) and [Installing and Configuring MySQL for PCF](install-config.html).
 
-		```
-		TLS has not been enabled in the service offering. Speak with your Operator to make this available.
-		```
+	<pre class="terminal">TLS has not been enabled in the service offering. Speak with your Operator to make this available.</pre>
 1. Delete the service key. For example:
 	<pre class="terminal">
-	$ cf delete-service-key my-service-instance \
-		my-service-key
+	$ cf delete-service-key my-service-instance my-service-key
 	</pre>
 
 ##<a id='modify-apps'></a> Modify Apps for TLS
@@ -86,13 +84,17 @@ The procedure for updating your app depends on the app's language and framework.
 
 Java and Spring apps automatically detect TLS, while apps written in other languages and frameworks must be manually modified to use TLS.
 
+<<<<<<< HEAD
 <p class="note warning"><strong>WARNING</strong>: Any apps using an existing service instance must be rebound after enabling TLS for the instance.</p>
 
 ###<a id='java-spring'></a> Java and Spring Apps
+=======
+###<a id='java-spring'></a> Modify Java and Spring Apps for TLS
+>>>>>>> tiny tweaks[#155075101]
 
-Java and Spring apps will automatically detect if a service instance has TLS enabled. 
+Java and Spring apps automatically detect if a service instance has TLS enabled. 
 
-In order to activate TLS for Java and Spring apps, you must stop and rebind the app to the service instance after enabling TLS on the instance. 
+To activate TLS for Java and Spring apps, you must stop and rebind the app to the service instance after enabling TLS on the instance. 
 Perform the following steps:
 
 1. Stop the app. For example:
@@ -106,16 +108,21 @@ Perform the following steps:
 
 Your app should now communicate securely with the MySQL service instance.
 
-###<a id='other-apps'></a> Other Apps
+###<a id='other-apps'></a> Modify Other Apps for TLS
 
-In order to activate TLS for apps not written in Java or Spring, you must modify them to discover the CA certificate in `VCAP_SERVICES` and specify that CA component when initiating the connection to the data service.
+In order to activate TLS for apps not written in Java or Spring,
+you must modify them to discover the CA certificate in `VCAP_SERVICES`
+and specify that CA component when initiating the connection to the data service.
 
-`VCAP_SERVICES` is an environment variable that exists within every container. It contains runtime-specific information about the app, including metadata supplied by each of the services that have been bound to that app. The metadata includes the information necessary to connect to the service, such as hostnames, usernames and passwords.
+`VCAP_SERVICES` is an environment variable that exists within every container.
+It contains runtime-specific information about the app, including metadata supplied by each of the services that have been bound to that app.
+The metadata includes the information necessary to connect to the service, such as hostnames, usernames, and passwords.
 
 Your app must perform the following tasks:
 
-1. Retrieve the hostname, username, password, database name, and CA certificate for the bound MySQL for PCF service instance from the `VCAP_SERVICES` environment variable
-1. Use the hostname, username, password, and CA certificate to establish a secure connection with the bound MySQL for PCF service instance
+1. Retrieve the hostname, username, password, database name, and CA certificate
+   for the bound MySQL for PCF service instance from the `VCAP_SERVICES` environment variable.
+1. Use the hostname, username, password, and CA certificate to establish a secure connection with the bound MySQL for PCF service instance.
 
 For example, the following Node.js code initializes a variable named `mysql_creds`, and then populates it with the necessary information from `VCAP_SERVICES`:
 
@@ -158,3 +165,11 @@ function MySQLConnect() {
 ```
 
 After modifying your app, repush it with `cf push`. 
+<<<<<<< HEAD
+=======
+
+<p class="note warning"><strong>WARNING</strong>: If you enabled encryption after creating the service instance,
+   you must rebind the app, following the procedure in the <a href="#java-spring">Modify Java and Spring Apps for TLS</a> above.</p>
+
+
+>>>>>>> tiny tweaks[#155075101]
