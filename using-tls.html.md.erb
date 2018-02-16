@@ -9,6 +9,8 @@ To use TLS with your apps, the PCF operator must have completed the procedures i
 
 The procedures below describe how to [enable TLS](#enable-tls) for your service instances, and how to [modify your apps](#modify-apps) to use TLS. 
 
+If you want to use the `mysql` client to establish a TLS connection to a MySQL for PCF service instance that has TLS enabled, see [Establish a TLS Connection to a Service Instance](use.html#establish-tls).
+
 ##<a id='enable-tls'></a> Enable TLS
 
 You cannot automatically configure encryption for a service instance when creating the instance. 
@@ -63,6 +65,8 @@ Perform the following steps to enable TLS for an existing service instance:
 	$ cf update-service my-service-instance \
 		-c '{"enable_tls": "10.1.16.3"}'
 	</pre>
+	Wait until the command returns `Update succeeded`.
+	<br><br>
 	If you receive the following error message, the operator has not enabled TLS. See the procedures in [Preparing for TLS](prepare-tls.html) and [Installing and Configuring MySQL for PCF](install-config.html).
 
 		```
