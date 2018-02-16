@@ -68,7 +68,7 @@ Perform the following steps to enable TLS for an existing service instance:
 		```
 		TLS has not been enabled in the service offering. Speak with your Operator to make this available.
 		```
-1. Delete the service instance. For example:
+1. Delete the service key. For example:
 	<pre class="terminal">
 	$ cf delete-service-key my-service-instance \
 		my-service-key
@@ -81,6 +81,8 @@ In order for your apps to use TLS, you must update them to request encrypted com
 The procedure for updating your app depends on the app's language and framework.
 
 Java and Spring apps automatically detect TLS, while apps written in other languages and frameworks must be manually modified to use TLS.
+
+<p class="note warning"><strong>WARNING</strong>: Any apps using an existing service instance must be rebound after enabling TLS for the instance.</p>
 
 ###<a id='java-spring'></a> Java and Spring Apps
 
@@ -152,7 +154,3 @@ function MySQLConnect() {
 ```
 
 After modifying your app, repush it with `cf push`. 
-
-<p class="note warning"><strong>WARNING</strong>: If you enabled encryption after creating the service instance, you must rebind the app, following the procedure in the <a href="#java-spring">Java and Spring Apps</a> section.</p>
-
-
