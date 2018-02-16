@@ -68,6 +68,11 @@ Perform the following steps to enable TLS for an existing service instance:
 		```
 		TLS has not been enabled in the service offering. Speak with your Operator to make this available.
 		```
+1. If you don't plan on using this service key again, delete it. For example:
+	<pre class="terminal">
+	$ cf delete-service-key my-service-instance \
+		my-service-key
+	</pre>
 
 ##<a id='modify-apps'></a> Modify Apps for TLS
 
@@ -103,7 +108,7 @@ In order to activate TLS for apps not written in Java or Spring, you must modify
 
 Your app must perform the following tasks:
 
-1. Retrieve the hostname, username, password, and CA certificate for the bound MySQL for PCF service instance from the `VCAP_SERVICES` environment variable
+1. Retrieve the hostname, username, password, database name, and CA certificate for the bound MySQL for PCF service instance from the `VCAP_SERVICES` environment variable
 1. Use the hostname, username, password, and CA certificate to establish a secure connection with the bound MySQL for PCF service instance
 
 For example, the following Node.js code initializes a variable named `mysql_creds`, and then populates it with the necessary information from `VCAP_SERVICES`:
@@ -114,24 +119,15 @@ var vcap_services = undefined ;
 
 if (process.env.VCAP_SERVICES) {
     vcap_services = JSON.parse(process.env.VCAP_SERVICES) ;
-    if (vcap_services['p.mysql']) {
-        mysql_data_service = "p.mysql" ;
-    }
-    if (vcap_services["p-mysql"]) {
-        mysql_data_service = "p-mysql" ;
-    }
-    if (mysql_data_service) {
-        mysql_creds["host"] = vcap_services[mysql_data_service][0]["credentials"]["hostname"] ;
-        mysql_creds["user"] = vcap_services[mysql_data_service][0]["credentials"]["username"] ;
-        mysql_creds["password"] = vcap_services[mysql_data_service][0]["credentials"]["password"] ;
-        mysql_creds["port"] = vcap_services[mysql_data_service][0]["credentials"]["port"] ;
-        mysql_creds["user"] = vcap_services[mysql_data_service][0]["credentials"]["username"] ;
-        mysql_creds["database"] = vcap_services[mysql_data_service][0]["credentials"]["name"] ;
-        if (vcap_services[mysql_data_service][0]["credentials"]["ca_certificate"]) {
-            mysql_creds["ca_certificate"] = vcap_services[mysql_data_service][0]["credentials"]["ca_certificate"] ;
-        } else {
-            mysql_creds["ca_certificate"] = undefined ;
-        }
+    mysql_creds["host"] = vcap_services["p.mysql"][0]["credentials"]["hostname"] ;
+    mysql_creds["user"] = vcap_services["p.mysql"][0]["credentials"]["username"] ;
+    mysql_creds["password"] = vcap_services["p.mysql"][0]["credentials"]["password"] ;
+    mysql_creds["port"] = vcap_services["p.mysql"][0]["credentials"]["port"] ;
+    mysql_creds["database"] = vcap_services["p.mysql"][0]["credentials"]["name"] ;
+    if (vcap_services["p.mysql"][0]["credentials"]["tls"]) {
+        mysql_creds["ca_certificate"] = vcap_services["p.mysql"][0]["credentials"]["tls"]["cert"]["ca"];
+    } else {
+        mysql_creds["ca_certificate"] = undefined ;
     }
 }
 ```
@@ -151,10 +147,7 @@ function MySQLConnect() {
         clientConfig["ssl"] = { ca : mysql_creds["ca_certificate"] } ;
     }
     dbClient = mysql.createConnection( clientConfig ) ;
-    dbClient.connect(handleDBConnect) ;
-    } else {
-        dbClient = undefined ;
-    }
+    dbClient.connect(CALLBACK-FUNCTION) ;
 }
 ```
 
