@@ -167,7 +167,8 @@ for stopping the leader and promoting the follower:
   <br><br>
   For example:
   <pre class="terminal">
-  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand inspect
+  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      run-errand inspect
   </pre>
 1. Examine the output and locate the information about the leader-follower MySQL VMs:
   <pre class="terminal">
@@ -206,10 +207,15 @@ Perform the following steps to stop the leader VM and promote the follower VM to
 
 1. Stop the leader VM, using the same values as above.
    For example:
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
 1. Set the follower VM as writable, using the index of the follower VM retrieved above.
    For example:
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      run-errand make-leader \
+      --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
    </pre>
    If this command returns an error, re-run it until the follower VM has completed applying the transactions. 
 1. Unbind the app from the leader-follower service instance.
@@ -272,7 +278,8 @@ for stopping the leader and promoting the follower:
   <br><br>
   For example:
   <pre class="terminal">
-  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand inspect
+  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      run-errand inspect
   </pre>
 1. Examine the output and locate the information about the leader-follower MySQL VMs:
   <pre class="terminal">
@@ -321,14 +328,21 @@ Perform the following steps to stop the leader VM and promote the follower VM to
    <li>`INDEX`: This is the index of the leader VM retrieved above.</li></ul>
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-read-only --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      run-errand make-read-only \
+      --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
    </pre>
 1. Stop the leader VM, using the same values as above.
    For example:
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
 1. Set the follower VM as writable, using the index of the follower VM retrieved above.
    For example:
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand make-leader --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82dc607-710a-404e-b1b8-a7e3ea7ec063 \
+      run-errand make-leader \
+      --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
    </pre>
    If this command returns an error, re-run it until the follower VM has completed applying the transactions. 
 1. Unbind the app from the leader-follower service instance.
@@ -359,22 +373,26 @@ If you still have access to the former leader VM, perform these steps to clean u
 
 1. Disable resurrection, specifying the same deployment as above.
    For example:
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 update-resurrection off</pre>
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      update-resurrection off</pre>
 1. Use the BOSH CLI v2 to retrieve the CID of the failing former leader VM. 
    For example: 
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
-   --details 
-   --failing
-   --column=”VM CID”
-   --json
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
+      --details 
+      --failing
+      --column=”VM CID”
+      --json
    </pre>
 1. Use the BOSH CLI v2 to retrieve the disk CID of the failing former leader VM. 
    For example: 
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
-   --details 
-   --failing
-   --column=”Disk CIDs”
-   --json
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
+      --details 
+      --failing
+      --column=”Disk CIDs”
+      --json
    </pre>
 1. Delete the failing former leader VM. 
    Run the following command:
@@ -386,7 +404,8 @@ If you still have access to the former leader VM, perform these steps to clean u
    </ul>
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 delete-vm i-1db9ede6
+   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      delete-vm i-1db9ede6
    </pre>
 1. Delete the disk of the failing former leader VM.
    Run the following commands:
@@ -399,15 +418,24 @@ If you still have access to the former leader VM, perform these steps to clean u
    </ul>
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 delete-disk b-1db9ede6
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 orphan-disk b-1db9ede6
+   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      delete-disk b-1db9ede6
+   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      orphan-disk b-1db9ede6
    </pre>
 1. Download the manifest of the leader-follower deployment. For example:
-  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 manifest > mysql-manifest.yml</pre>
+  <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      manifest > mysql-manifest.yml</pre>
 1. Redeploy to create the missing VM and disk in a fresh state. For example:
-  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 deploy mysql-manifest.yml</pre>
+  <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      deploy mysql-manifest.yml</pre>
 1. Use the `configure-leader-follower` errand set the former leader VM as a follower, using the same values as above.
    For example:
-   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand configure-leader-follower --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+      run-errand configure-leader-follower \
+      --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
    Replication and high availability are resumed. The deployment should be in its original, working state. You may turn resurrection back on if desired.
 
