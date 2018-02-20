@@ -9,7 +9,7 @@ between their apps and the MySQL for Pivotal Cloud Foundry (PCF) v2 service.
 To use TLS with your apps, the PCF operator must have completed the procedures in [Preparing for TLS](prepare-tls.html) and enabled TLS in the tile configuration when performing the steps in [Installing and Configuring MySQL for PCF](install-config.html).
 
 The procedures below describe how to [enable TLS](#enable-tls) for your service instances,
-and how to [activate TLS for your apps](#activate-apps) to use TLS. 
+and how to [activate TLS for your Java and Spring apps](#activate-apps) to use TLS. If your app is not written in Java or Spring, see [Modifying Apps for TLS](modify-apps-tls.html).
 
 If you want to use the `mysql` client to establish a TLS connection to a MySQL for PCF service instance that has TLS enabled, see [Establish a TLS Connection to a Service Instance](use.html#establish-tls).
 
@@ -76,7 +76,7 @@ Perform the following steps to enable TLS for an existing service instance:
 	$ cf delete-service-key my-service-instance my-service-key
 	</pre>
 
-##<a id='activate-apps'></a> Activate TLS for Apps
+##<a id='activate-apps'></a> Activate TLS for Java and Spring Apps
 
 In order for your apps to use TLS, you must update them to request encrypted communications when connecting to the MySQL data service. 
 
@@ -84,14 +84,10 @@ The procedure for updating your app depends on the app's language and framework.
 
 Java and Spring apps automatically detect TLS, while apps written in other languages and frameworks must be manually modified to use TLS:
 
-* If your app is written in Java or Spring, see [Activate TLS for Java and Spring Apps](#java-spring) below.
+* If your app is written in Java or Spring, perform the procedure below.
 * If your app is not written in Java or Spring, see [Modifying Apps for TLS](modify-apps-tls.html).
 
 <p class="note warning"><strong>WARNING</strong>: Any apps using an existing service instance must be rebound after enabling TLS for the instance.</p>
-
-###<a id='java-spring'></a> Activate TLS for Java and Spring Apps
-
-Java and Spring apps automatically detect if a service instance has TLS enabled. 
 
 To activate TLS for Java and Spring apps, you must stop and rebind the app to the service instance after enabling TLS on the instance. 
 Perform the following steps:
