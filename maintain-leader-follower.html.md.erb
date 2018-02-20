@@ -31,6 +31,35 @@ The following are the high-level steps for setting up and using the leader-follo
 
 1. The operator unbinds the app from the leader-follower plan and then rebinds it in order to use the new leader.
 
+## <a id="errands"></a> Leader-Follower Errands
+
+MySQL for PCF provides errands that operators can use to control the lifecycle
+of a leader-follower service instance without being an expert at MySQL.
+
+These errands offer tools for managing leader-follower service instances. 
+Operators use the BOSH CLI v2 to run errands on the deployment for a particular leader-follower service instance.
+
+For an example, see the procedure in [Trigger a Failover](#failover) below, which uses errands to trigger a failover to the follower VM. 
+Operators can also use errands to create custom failover scripts.
+
+The errands are:
+
+* **make-read-only**: 
+  * Guarantees that apps do not write to a former leader VM
+  * Sets the VM to read-only and ensures that, if the follower is accessible,
+    all transactions have been relayed to the follower
+
+* **make-leader**: 
+  * Promotes a follower VM to a leader
+  * Removes replication configuration from a follower VM, waits for all transactions to be applied to the VM,
+    and sets the VM as writable
+  * Fails if the original leader is still accessible to protect against data divergence
+
+* **configure-leader-follower**: 
+  * Configures replication on the follower and ensures the leader is writable
+  * Runs after every create or update of a leader-follower instance
+  * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
+
 ## <a id="config-plan"></a> Configure a Leader-Follower Service Plan
 
 You can configure up to five leader-follower service plans.
@@ -381,28 +410,4 @@ If you still have access to the former leader VM, perform these steps to clean u
    For example:
    <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 run-errand configure-leader-follower --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
    Replication and high availability are resumed. The deployment should be in its original, working state. You may turn resurrection back on if desired.
-
-## <a id="errands"></a> Leader-Follower Errands
-
-MySQL for PCF provides errands that operators can use to control the lifecycle
-of a leader-follower service instance without being an expert at MySQL.
-These errands are:
-
-* **make-read-only**: 
-  * Guarantees that apps do not write to a former leader VM
-  * Sets the VM to read-only and ensures that, if the follower is accessible,
-    all transactions have been relayed to the follower
-
-* **make-leader**: 
-  * Promotes a follower VM to a leader
-  * Removes replication configuration from a follower VM, waits for all transactions to be applied to the VM,
-    and sets the VM as writable
-  * Fails if the original leader is still accessible to protect against data divergence
-
-* **configure-leader-follower**: 
-  * Configures replication on the follower and ensures the leader is writable
-  * Runs after every create or update of a leader-follower instance
-  * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
-
-Using the errands above, operators can create failover scripts.
 
