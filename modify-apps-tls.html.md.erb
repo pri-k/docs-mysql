@@ -7,15 +7,14 @@ This topic describes how developers can modify their apps to use TLS to secure t
 
 If your app is written in Java or Spring, see [Activate TLS for Java and Spring Apps](using-tls.html#java-spring). Otherwise, perform the procedures below.
 
-###<a id='prereqs'></a> Prerequisites
+##<a id='prereqs'></a> Prerequisites
 
 The procedures in this topic have the following prerequisites:
 
 * To use TLS with your apps, the PCF operator must have completed the procedures in [Preparing for TLS](prepare-tls.html) and enabled TLS in the tile configuration when performing the steps in [Installing and Configuring MySQL for PCF](install-config.html).
-
 * The developer must have completed the procedures in [Enable TLS](using-tls.html#enable-tls) to enable TLS for an existing service instance.
 
-###<a id='modify'></a> Modify Your App for TLS
+##<a id='modify'></a> Modify Your App for TLS
 
 In order to activate TLS for apps not written in Java or Spring,
 you must modify them to discover the CA certificate in `VCAP_SERVICES`
@@ -71,7 +70,7 @@ function MySQLConnect() {
 }
 ```
 
-###<a id='repush-rebind'></a> Repush or Rebind Your App
+##<a id='repush-rebind'></a> Repush or Rebind Your App
 
 After modifying your app, repush it with `cf push`. 
 
