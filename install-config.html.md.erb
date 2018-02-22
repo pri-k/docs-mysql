@@ -307,13 +307,23 @@ If you are using Pivotal Application Service (PAS) v2.0.x and want to store your
     1. Rebind the service instance to the app. 
     For example:
     <pre class="terminal">$ cf bind-service my-app my-service-instance</pre>
-    1. Print the `VCAP_SERVICES` environment variable to verify that the new service instance binding includes CredHub pointers. 
-    For example:
-    <pre class="terminal">$ cf env my-app</pre>
-    For more information about how to parse the output, see [VCAP_SERVICES](https://docs.pivotal.io/pivotalcf/2-0/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES).
     1. Restart the app to apply the new service instance binding. For example:
     <pre class="terminal">$ cf restart my-app</pre>
-    If you run `cf-env` again, you can see the `VCAP-SERVICES` environment variable now contains the credentials for the service instance binding.
+    1. Print the `VCAP_SERVICES` environment variable to verify that the new service instance binding includes CredHub pointers. 
+    For example:
+    <pre class="terminal">$ cf env my-app
+    Getting env variables for app my-app in org system / space example as admin...
+    OK
+    System-Provided:
+    {
+     "VCAP_SERVICES": {
+      "p.mysql": [
+       {
+        "credentials": {
+         "credhub-ref": "/c/548966e5-e333-4d65-8773-7b4e3bb6ca97/4a246b0b-83bb-46d0-b8ac-35a93374ae67/caf6e32e-7361-4869-9a57-54ab8ae67b3f/credentials"
+        },
+    [...]
+    </pre>
 
 ####<a id="security-tls"></a> Configure TLS 
 
@@ -322,6 +332,7 @@ To enable TLS for the MySQL service, perform the following steps:
 1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
 1. Under **Enable Communication Over TLS**, select **Yes**. 
 1. If you want the MySQL service to only accept secure connections, select the **Require Connections To Use TLS** checkbox.
+    <p class="note warning"><strong>WARNING</strong>: Selecting this checkbox will break any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
 1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html). 
 
