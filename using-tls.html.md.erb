@@ -6,7 +6,7 @@ owner: MySQL
 This topic describes how developers can use TLS to secure the communication
 between their apps and the MySQL for Pivotal Cloud Foundry (PCF) v2 service.
 
-To use TLS with your apps, the PCF operator must have completed the procedures in [Preparing for TLS](prepare-tls.html) and enabled TLS in the tile configuration when performing the steps in [Installing and Configuring MySQL for PCF](install-config.html).
+To use TLS with your apps, the PCF operator must have completed the procedures in [Preparing for TLS](prepare-tls.html) and enabled TLS in the tile configuration when performing the steps in [Configure Security](install-config.html#security).
 
 The procedures below describe how to [enable TLS](#enable-tls) for your service instances,
 and how to [activate TLS for your Java and Spring apps](#activate-apps) to use TLS. If your app is not written in Java or Spring, see [Modifying Apps for TLS](modify-apps-tls.html).
@@ -68,7 +68,7 @@ Perform the following steps to enable TLS for an existing service instance:
 	Wait until the command returns `Update succeeded`.
 	<br><br>
 	If you receive the following error message, the operator has not enabled TLS.
-        See the procedures in [Preparing for TLS](prepare-tls.html) and [Installing and Configuring MySQL for PCF](install-config.html).
+        See the procedures in [Preparing for TLS](prepare-tls.html) and [Configure Security](install-config.html#security).
 
 	<pre class="terminal">TLS has not been enabled in the service offering. Speak with your Operator to make this available.</pre>
 1. Delete the service key. For example:

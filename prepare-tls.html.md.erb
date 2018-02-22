@@ -53,11 +53,14 @@ Consult the following table:
     </tr>
     </table></li>   
 <li>An operator enables TLS in the tile configuration while installing MySQL for PCF.
-    See [Installing and Configuring MySQL for PCF](install-config.html).</li>
+    See [Configure Security](install-config.html#security).</li>
 <li>A developer enables TLS for an existing service instance.
     See [Enable TLS](using-tls.html#enable-tls).</li>
-<li>A developer modifies their app to communicate securely with the MySQL server.
-    See [Modify Apps for TLS](using-tls.html#modify-apps).</li>
+<li>A developer modifies their app to communicate securely with the MySQL server:
+    <ul><li>For Java and Spring apps, see [Activate TLS for Java and Spring Apps](using-tls.html#activate-apps).</li>
+    <li>For all other apps, see [Modifying Apps for TLS](modify-apps-tls.html).</li>
+</li>
+</ol>
 
 <p class="note"><strong>Note</strong>: An operator must also rotate the CA certificate if it expires or if it becomes compromised.
 For information on how to rotate your CA certificate, see <a href="rotating-ca.html">Rotating CA Certificates</a>.</p>
@@ -261,7 +264,7 @@ Click **Security**.
 This restarts all the VMs in your PCF deployment and applies your CA certificate.
 
 After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF. 
-See [Installing and Configuring MySQL for PCF](install-config.html).
+See [Configure Security](install-config.html#security).
 
 ##<a id="provide-pcf-2-0"></a> Provide a CA Certificate in PCF v2.x
 
@@ -366,4 +369,4 @@ Click **Security**.
 This restarts all the VMs in your PCF deployment, and applies your CA certificate.
 
 After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF. 
-See [Installing and Configuring MySQL for PCF](install-config.html).
+See [Configure Security](install-config.html#security).

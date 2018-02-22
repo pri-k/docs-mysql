@@ -286,6 +286,24 @@ Follow the steps below to configure automated backups:
   - [Option 4: Back up to Azure Storage](backup-and-restore.html#azure)---MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
     SDK that saves backups to an Azure storage account.
 
+###<a id="security"></a> Configure Security
+
+Follow the steps below to configure the security settings for the MySQL service, including TLS:
+
+1. Click **Security**.
+
+    ![security](security.png)
+
+1. To enable secure service instance credentials, select **Enable Secure Service Instance Credentials** checkbox.
+
+1. To enable TLS for the MySQL service, perform the following steps:
+    1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
+    1. Under **Enable Communication Over TLS**, select **Yes**. 
+    1. If you want the MySQL service to only accept secure connections, select the **Require Connections To Use TLS** checkbox.
+    1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html). 
+
+1. Click **Save**.
+
 ###<a id="monitoring"></a> Configure Monitoring
 
 Follow the steps below to enable different types of monitoring and logging available in the MySQL service.
