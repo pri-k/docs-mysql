@@ -184,10 +184,10 @@ For more specific use cases, you can customize the following parameters:
 
 | Key | Type | Default | Description | Usage |
 | ---- | ---- | ---- | ---- | ---- |
-| `workload` | String | `mixed`| You can set this to `read-heavy`, `mixed`, or `write-heavy`. For more information, see [Understanding Workload Types](#workload). | `create-service` or `update-service` |
-| `enable_lower_case_table_names` | Boolean | Set by the operator | The operator sets a default for this parameter, and may allow you to override the default. If allowed, you can only set this when creating a service instance. If you set this to `true`, table names are stored in lowercase. For more information, see [Understanding Lowercase Table Names](#lowercase). | `create-service` |
-| `default-charset` | String | `utf8` | You can set this to any MySQL 5.7 supported character set. For more information, see [Character Sets and Collations in MySQL](https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html) | `create-service` or `update-service` |
-| `default-collation` | String | `utf8-general-ci` | The `default-collation` will change based on the `default-charset`. To set the `default-collation`, you must first set the `default-charset`. For a list of available and default collations, see [Supported Character Sets and Collations](https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html). | `create-service` or `update-service` |
+| `workload` | String | `mixed`| Set this to `read-heavy`, `mixed`, or `write-heavy`. See [Understanding Workload Types](#workload) below. | `create-service` or `update-service` |
+| `enable_lower_case_table_names` | Boolean | Set by the operator | The operator sets a default for this parameter and may allow you to override the default.<br>If allowed, you can only set this when creating a service instance. If you set this to `true`, table names are stored in lowercase. See [Understanding Lowercase Table Names](#lowercase) below. | `create-service` |
+| `default-charset` | String | `utf8` | You can set this to any MySQL 5.7 supported character set. See [Character Sets and Collations in MySQL](https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html). | `create-service` or `update-service` |
+| `default-collation` | String | `utf8-general-ci` | The `default-collation` changes based on the `default-charset`. To set the `default-collation`, first set the `default-charset`. For a list of available and default collations, see [Supported Character Sets and Collations](https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html). | `create-service` or `update-service` |
 
 ### <a id="parameters"></a> Use Optional Parameters
 
