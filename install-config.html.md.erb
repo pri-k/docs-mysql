@@ -288,21 +288,42 @@ Follow the steps below to configure automated backups:
 
 ###<a id="security"></a> Configure Security
 
-Follow the steps below to configure the security settings for the MySQL service, including TLS:
+Click **Security**, and follow the steps below to configure the security settings for the MySQL service.
 
-1. Click **Security**.
+![security](security.png)
 
-    ![security](security.png)
+####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
-1. To enable secure service instance credentials, select **Enable Secure Service Instance Credentials** checkbox.
+If you are using Pivotal Application Service (PAS) v2.0.x and want to store your service instance credentials in [CredHub](https://docs.pivotal.io/pivotalcf/2-0/credhub/) instead of the Cloud Controller Database (CCDB), perform the following steps:
 
-1. To enable TLS for the MySQL service, perform the following steps:
-    1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
-    1. Under **Enable Communication Over TLS**, select **Yes**. 
-    1. If you want the MySQL service to only accept secure connections, select the **Require Connections To Use TLS** checkbox.
-    1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html). 
-
+1. Ensure that you have configured the PAS tile to support securing service instance credentials in CredHub. See [Step 1: Configure the PAS Tile](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html#pas-config).
+1. Select the **Enable Secure Service Instance Credentials** checkbox.
 1. Click **Save**.
+1. After deploying the tile, notify the developers that they must unbind and rebind any existing service instances bindings if they want to use secure service instance credentials. Perform the following steps:
+
+    1. Unbind the service instance from the app. 
+    For example:
+    <pre class="terminal">$ cf unbind-service my-app my-service-instance</pre>
+    1. Rebind the service instance to the app. 
+    For example:
+    <pre class="terminal">$ cf bind-service my-app my-service-instance</pre>
+    1. Print the `VCAP_SERVICES` environment variable to verify that the new service instance binding includes CredHub pointers. 
+    For example:
+    <pre class="terminal">$ cf env my-app</pre>
+    For more information about how to parse the output, see [VCAP_SERVICES](https://docs.pivotal.io/pivotalcf/2-0/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES).
+    1. Restart the app to apply the new service instance binding. For example:
+    <pre class="terminal">$ cf restart my-app</pre>
+    If you run `cf-env` again, you can see the `VCAP-SERVICES` environment variable now contains the credentials for the service instance binding.
+
+####<a id="security-tls"></a> Configure TLS 
+
+To enable TLS for the MySQL service, perform the following steps:
+
+1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
+1. Under **Enable Communication Over TLS**, select **Yes**. 
+1. If you want the MySQL service to only accept secure connections, select the **Require Connections To Use TLS** checkbox.
+1. Click **Save**.
+1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html). 
 
 ###<a id="monitoring"></a> Configure Monitoring
 
