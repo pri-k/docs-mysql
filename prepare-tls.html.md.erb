@@ -233,30 +233,15 @@ Perform the following steps to log in to CredHub, provide a CA certificate to th
             --private=ERKSOSMFF...
         </pre>
 
-1. Examine the output and copy the `certificate` portion.
-    For example:
-    <pre class="terminal">
-    id: 67fc3def-bbfb-4953-83f8-4ab0682ad675
-    type: certificate
-    name: /example-certificate
-    value:
-      root: |
-        -----BEGIN CERTIFICATE-----
-        ...
-        -----END CERTIFICATE-----
-      certificate: |
-        -----BEGIN CERTIFICATE-----
-        ...
-        -----END CERTIFICATE-----
-      private\_key: |
-        -----BEGIN RSA PRIVATE KEY-----
-        ...
-        -----END RSA PRIVATE KEY-----
-    version\_created\_at: 2017-01-01T04:07:18Z
-    </pre>
-
-1. Make a note of when the CA certificate expires and add it to your calendar. 
-Be sure to rotate the CA certificate before it expires by following the procedure in [Rotating CA Certificates](rotating-ca.html).
+1. Combine the CredHub CLI with `sed` to extract the `certificate` portion from the CA certificate and print it.
+    Run the following command:
+    
+    ```
+    credhub get --name=/services/tls_ca \
+    | sed '/-----BEGIN CERTIFICATE-----/,\
+    /-----END CERTIFICATE-----/s/^[ \t]*//'
+    ```
+1. Copy the output.
 1. Navigate to the Ops Manager **Installation Dashboard** and select the **Ops Manager Director** tile. 
 Click **Security**.
 1. Paste the contents of the CA certificate into **Trusted Certificates** and click **Save**.
@@ -338,30 +323,15 @@ If you are using PCF v2.x, perform the following steps to provide a CA certifica
             --private=ERKSOSMFF...
         </pre>
 
-1. Examine the output and copy the `certificate` portion.
-    For example:
-    <pre class="terminal">
-    id: 67fc3def-bbfb-4953-83f8-4ab0682ad675
-    type: certificate
-    name: /example-certificate
-    value:
-      root: |
-        -----BEGIN CERTIFICATE-----
-        ...
-        -----END CERTIFICATE-----
-      certificate: |
-        -----BEGIN CERTIFICATE-----
-        ...
-        -----END CERTIFICATE-----
-      private\_key: |
-        -----BEGIN RSA PRIVATE KEY-----
-        ...
-        -----END RSA PRIVATE KEY-----
-    version\_created\_at: 2017-01-01T04:07:18Z
-    </pre>
+1. Combine the CredHub CLI with `sed` to extract the `certificate` portion from the CA certificate and print it.
+    Run the following command:
+    
+    ```
+    credhub get --name=/services/tls_ca \
+    | sed '/-----BEGIN CERTIFICATE-----/,\
+    /-----END CERTIFICATE-----/s/^[ \t]*//'
+    ```
 
-1. Make a note of when the CA certificate expires and add it to your calendar. 
-Be sure to rotate the CA certificate before it expires by following the procedure in [Rotating CA Certificates](rotating-ca.html).
 1. Navigate to the Ops Manager **Installation Dashboard** and select the **Ops Manager Director** tile. 
 Click **Security**.
 1. Paste the contents of the CA certificate into **Trusted Certificates** and click **Save**.
