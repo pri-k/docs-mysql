@@ -274,6 +274,7 @@ Follow the steps below to configure automated backups:
 1. Select a **Backup configuration** and perform the steps in the appropriate section of <em>Backing Up and Restoring</em>: 
   - [Option 1: Back up with SCP](backup-and-restore.html#scp)---MySQL for PCF runs an SCP command that secure-copies backups to a VM
     or physical machine operating outside of PCF.
+    SCP stands for secure copy protocol, and offers a way to securely transfer files between two hosts.
     The operator provisions the backup machine separately from their PCF installation.
     This is the fastest option.
   - [Option 2: Back up to Ceph or S3](backup-and-restore.html#ceph-or-s3)---MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client

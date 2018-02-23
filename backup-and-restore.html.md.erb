@@ -60,6 +60,7 @@ MySQL for PCF automatically backs up databases to external storage.
 * **How and where**---There are four options for how automated backups transfer backup data and where the data saves to:
   - [Option 1: Back up with SCP](#scp)---MySQL for PCF runs an SCP command that secure-copies backups to a VM
     or physical machine operating outside of PCF.
+    SCP stands for secure copy protocol, and offers a way to securely transfer files between two hosts.
     The operator provisions the backup machine separately from their PCF installation.
     This is the fastest option.
   - [Option 2: Back up to Ceph or S3](#ceph-or-s3)---MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
