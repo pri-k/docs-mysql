@@ -233,13 +233,13 @@ Perform the following steps to log in to CredHub, provide a CA certificate to th
             --private=ERKSOSMFF...
         </pre>
 
-1. Combine the CredHub CLI with `sed` to extract the `certificate` portion from the CA certificate and print it.
+1. Use the BOSH CLI v2 to extract the `certificate` portion from the CA certificate and print it.
     Run the following command:
     
     ```
-    credhub get --name=/services/tls_ca \
-    | sed '/-----BEGIN CERTIFICATE-----/,\
-    /-----END CERTIFICATE-----/s/^[ \t]*//'
+    bosh2 int <(credhub get \
+    --name=/services/tls_ca) \
+    --path /value/certificate
     ```
 1. Copy the output.
 1. Navigate to the Ops Manager **Installation Dashboard** and select the **Ops Manager Director** tile. 
@@ -325,13 +325,12 @@ If you are using PCF v2.x, perform the following steps to provide a CA certifica
 
 1. Combine the CredHub CLI with `sed` to extract the `certificate` portion from the CA certificate and print it.
     Run the following command:
-    
-    ```
-    credhub get --name=/services/tls_ca \
-    | sed '/-----BEGIN CERTIFICATE-----/,\
-    /-----END CERTIFICATE-----/s/^[ \t]*//'
-    ```
 
+    ```
+    bosh2 int <(credhub get \
+    --name=/services/tls_ca) \
+    --path /value/certificate
+    ```
 1. Navigate to the Ops Manager **Installation Dashboard** and select the **Ops Manager Director** tile. 
 Click **Security**.
 1. Paste the contents of the CA certificate into **Trusted Certificates** and click **Save**.

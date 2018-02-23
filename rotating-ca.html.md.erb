@@ -41,9 +41,9 @@ Both the UAA and CredHub servers are colocated on the BOSH Director VM.
     Run the following command:
     
     ```
-    credhub get --name=/services/tls_ca \
-    | sed '/-----BEGIN CERTIFICATE-----/,\
-    /-----END CERTIFICATE-----/s/^[ \t]*//'
+    bosh2 int <(credhub get \
+    --name=/services/tls_ca) \
+    --path /value/certificate
     ```
 1. Copy the output.
 1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile. Click **Security**.
