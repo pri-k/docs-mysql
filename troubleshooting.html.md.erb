@@ -10,11 +10,13 @@ This topic describes how to diagnose and troubleshoot problems with MySQL for Pi
 If your cluster is experiencing downtime or is in a degraded state, Pivotal recommends the following workflow
 for gathering information to diagnose the type of failure the cluster is experiencing.
 
+<p class="note warning"><strong>WARNING</strong>: Do not attempt to resolve cluster issues by reconfiguring the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>, below.</p>
+
 1. Use the [mysql-diag](mysql-diag.html) tool to gather a summary of the network, disk, and replication state of each cluster node.
 1. Run [download-logs](https://discuss.pivotal.io/hc/en-us/articles/221504408-Script-to-download-logs-from-MYSQL-server-tile-for-further-troubleshooting) against each node in your MySQL cluster,
    the MySQL proxies, and the MySQL backup-prepare node.
    Do this before attempting recovery,
-   because any failures in the recovery procedure can result in logs being lost or made inaccessible.<br><br> 
+   because any failures in the recovery procedure can result in logs being lost or made inaccessible.<br><br>
 
     Pivotal recommends that you use the `-X` flag to get the complete set of available logs.
     However, if your cluster processes a high volume of transactions, the complete set might be too large and you can omit this flag to fetch the essential set of logs.
@@ -26,7 +28,7 @@ for gathering information to diagnose the type of failure the cluster is experie
   - Output from `mysql-diag`
   - Type of environment the MySQL deployment is running in, for example, Pivotal Application Service (PAS), Elastic Runtime, or MySQL for PCF
   - Versions of the installed Ops Manager, PAS or Elastic Runtime, and MySQL for PCF
-  
+
 ## <a id="diagnostic-techniques"></a> Diagnostic Techniques
 
 After performing the procedure in [Diagnose Problems](#diagnosing),
@@ -71,8 +73,8 @@ For more information, see [Bootstrapping](bootstrapping.html) for more informati
 
 ### <a id="check-replication"></a>Check Replication Status
 
-If you see stale data in your cluster, check whether replication is 
-functioning normally. 
+If you see stale data in your cluster, check whether replication is
+functioning normally.
 
 Perform the following steps to check the replication status:
 
@@ -170,13 +172,13 @@ Resulting MySQL log lines may resemble the following:
 </pre>
 
 The MySQL node that receives the request processes it normally.
-If it fails to apply, the statement returns an error. 
+If it fails to apply, the statement returns an error.
 In a Galera cluster, however, all DDL is replicated and all replication failures are logged.
 Therefore, the bad `ALTER TABLE` command is run by all nodes.
 If it fails, the slave nodes log it as a "replication failure."
 
 Cases where a valid DDL works on some nodes yet fails on others are rare.
-Usually those cases are limited to problems with running out of disk space or working memory. 
+Usually those cases are limited to problems with running out of disk space or working memory.
 
 #### Solution
 
@@ -187,7 +189,7 @@ If you see the "ALTER TABLE" error, fix the user error that produced it.
 
 #### Symptom
 
-You may encounter one or more of the following symptoms when MySQL has run out of space: 
+You may encounter one or more of the following symptoms when MySQL has run out of space:
 
 * MySQL gives an error that reports it is out of space
 * Queries start failing
@@ -225,7 +227,7 @@ If the detached node has a higher sequence number than the primary component, pe
 
   - Shut down the healthy, primary nodes and bootstrap from the detached node to preserve its data.
     See [Bootstrapping](bootstrapping.html) for more details.
-  - Abandon the unsynchronized data on the detached node by performing the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
+  - Abandon the unsynchronized data on the detached node by performing the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668).
 
     <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
 
@@ -251,7 +253,7 @@ A node can become unresponsive for a number of reasons. Each reason corresponds 
 - [MySQL Process Failure](#mysql-process-failure)
 - [Firewall Rule Change](#firewall-rule-change)
 - [VM Failure](#vm-failure)
-- [The Interruptor](#interruptor) 
+- [The Interruptor](#interruptor)
 
 #### <a id='network-latency'></a>Network Latency
 
@@ -267,7 +269,7 @@ If the MySQL process crashes, monit and BOSH will bring the process back. No fur
 
 #### <a id='firewall-rule-change'></a>Firewall Rule Change
 
-If firewall rules change, it may prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.  
+If firewall rules change, it may prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.
 
 In this scenario, the logs show the node leaving the cluster but do not show network latency errors.
 
@@ -277,7 +279,7 @@ Change the firewall rules to enable the unresponsive node to rejoin the cluster.
 
 #### <a id='vm-failure'></a>VM Failure
 
-If you cannot SSH onto a node, and you are not detecting either network 
+If you cannot SSH onto a node, and you are not detecting either network
 latency or firewall issues, your node may be down due to VM failure.
 
 To confirm that VM failure has caused the node to become unresponsive, perform the following steps:
@@ -295,7 +297,7 @@ To confirm that VM failure has caused the node to become unresponsive, perform t
 
 #### <a id='interruptor'></a>The Interruptor
 
-If you have enabled the Interruptor, it may be preventing a node from starting. 
+If you have enabled the Interruptor, it may be preventing a node from starting.
 
 You can confirm that the Interruptor has activated by examining `/var/vcap/sys/log/mysql/mysql.err.log` on the failing node. The log contains the following message:
 
@@ -342,4 +344,3 @@ Any accidental changes are discarded.
 If you have performed steps 1, 2, and 3 in the above sequence, do not click **Apply Changes.**
 Return to the **Ops Manager Installation Dashboard** and click the **Revert** button.
 Any accidental changes are discarded.
-
