@@ -10,12 +10,15 @@ This topic describes how to diagnose and troubleshoot problems with MySQL for Pi
 If your cluster is experiencing downtime or is in a degraded state, Pivotal recommends the following workflow
 for gathering information to diagnose the type of failure the cluster is experiencing.
 
-<p class="note warning"><strong>WARNING</strong>: Do not attempt to resolve cluster issues by reconfiguring the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>, below.</p>
+<p class="note warning"><strong>WARNING</strong>: Do not attempt to resolve cluster issues by reconfiguring the cluster,
+   such as changing the number of nodes or networks.
+   Only follow the diagnosis steps in this document.
+   If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
 
 1. Use the [mysql-diag](mysql-diag.html) tool to gather a summary of the network, disk, and replication state of each cluster node.
 1. Run [download-logs](https://discuss.pivotal.io/hc/en-us/articles/221504408-Script-to-download-logs-from-MYSQL-server-tile-for-further-troubleshooting) against each node in your MySQL cluster,
    the MySQL proxies, and the MySQL backup-prepare node.
-   Do this before attempting recovery,
+   Do this before attempting recovery
    because any failures in the recovery procedure can result in logs being lost or made inaccessible.<br><br>
 
     Pivotal recommends that you use the `-X` flag to get the complete set of available logs.
@@ -163,7 +166,7 @@ in replication logs (`GRA_*.log` files) during problems such as running out of d
 Seeing many replication errors in your MySQL logs can also be part of normal behavior.
 For example, MySQL logs can show replication errors when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
 This is usually the result of user error.
-Resulting MySQL log lines may resemble the following:
+Resulting MySQL log lines might resemble the following:
 
 <pre class="terminal">
 160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
@@ -189,7 +192,7 @@ If you see the "ALTER TABLE" error, fix the user error that produced it.
 
 #### Symptom
 
-You may encounter one or more of the following symptoms when MySQL has run out of space:
+You might encounter one or more of the following symptoms when MySQL has run out of space:
 
 * MySQL gives an error that reports it is out of space
 * Queries start failing
@@ -238,7 +241,7 @@ It might also be possible to manually dump recent transactions from the detached
 #### Symptom
 
 A client connected to a MySQL cluster node reports: `WSREP has not yet prepared this node for application use`.
-Some clients may instead return `unknown error`.
+Some clients might instead return `unknown error`.
 
 #### Explanation
 
@@ -269,7 +272,7 @@ If the MySQL process crashes, monit and BOSH will bring the process back. No fur
 
 #### <a id='firewall-rule-change'></a>Firewall Rule Change
 
-If firewall rules change, it may prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.
+If firewall rules change, it might prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.
 
 In this scenario, the logs show the node leaving the cluster but do not show network latency errors.
 
@@ -280,7 +283,7 @@ Change the firewall rules to enable the unresponsive node to rejoin the cluster.
 #### <a id='vm-failure'></a>VM Failure
 
 If you cannot SSH onto a node, and you are not detecting either network
-latency or firewall issues, your node may be down due to VM failure.
+latency or firewall issues, your node might be down due to VM failure.
 
 To confirm that VM failure has caused the node to become unresponsive, perform the following steps:
 
@@ -297,7 +300,7 @@ To confirm that VM failure has caused the node to become unresponsive, perform t
 
 #### <a id='interruptor'></a>The Interruptor
 
-If you have enabled the Interruptor, it may be preventing a node from starting.
+If you have enabled the Interruptor, it might be preventing a node from starting.
 
 You can confirm that the Interruptor has activated by examining `/var/vcap/sys/log/mysql/mysql.err.log` on the failing node. The log contains the following message:
 
