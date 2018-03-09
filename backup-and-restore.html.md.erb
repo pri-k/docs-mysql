@@ -189,9 +189,12 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
   * **S3 Signature Version**
       If your bucket's region supports v4 signatures, select "V4 Signature."
   * **Bucket Name**
-      Enter the bucket name in which to upload. Do not include an `s3://` prefix, a trailing `/`, or underscores. 
+      Enter the bucket name in which to upload. 
+      Do not include an `s3://` prefix, a trailing `/`, or underscores. 
+      Pivotal recommends using the naming convention `DEPLOYMENT-backups`, such as `sandbox-backups`.
   * **Bucket Path**
       Enter the path in the bucket to store backups. Do not include a trailing `/`.
+      Pivotal recommends using `mysql-v2`.
   * **Cron Schedule**
           Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
   * **Enable Email Alerts**
