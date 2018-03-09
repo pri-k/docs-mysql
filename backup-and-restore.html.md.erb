@@ -196,7 +196,8 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
       * **Endpoint URL**---Enter the S3 compatible endpoint URL for uploading backups.
           URL must start with `http://` or `https://`.
           The default is https://s3.amazonaws.com
-      * **Region**---Enter the region where your bucket is located, or the region where you want a bucket to be created. If the bucket does not already exist, it will be created automatically.
+      * **Region**---Enter the region where your bucket is located or the region where you want a bucket to be created.
+        If the bucket does not already exist, it is created automatically.
       * **Bucket Name**---Enter the name of your bucket. 
       Do not include an `s3://` prefix, a trailing `/`, or underscores. 
       Pivotal recommends using the naming convention `DEPLOYMENT-backups`, such as `sandbox-backups`.
