@@ -15,6 +15,7 @@ In this topic:
     * [Missing Logs and Metrics](#missing-logs)
     * [Unable to Determine Leader and Follower (Errand Error)](#unable-to-determine)
     * [Both Leader and Follower Instances Are Writable (Errand Error)](#both-writable)
+    * [Both Leader and Follower Instances Are Read-Only](#both-read-only)
 * [Troubleshooting Components](#components)
     * [BOSH Problems](#bosh)
     * [Configuration](#bosh-config)
@@ -230,10 +231,10 @@ Succeeded
 </li>
 </ol>
 
-<h3><a id="both-read-only"></a>Both Leader and Follower Instances Are Both Read-Only</h3>
+<h3><a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only</h3>
 
-This problem happens if the leader fails and the BOSH Resurrector is enabled. When the 
-leader is recreated it is set as read-only.
+This problem happens if the leader fails with the BOSH Resurrector enabled. 
+When the leader is recreated it is set as read-only.
 
 <h4>Symptom</h4>
 
@@ -241,7 +242,10 @@ Developers report that apps cannot write to the database.
 
 <h4>Explanation</h4>
 
-
+As part of the leader-follower topology, the leader is set to be writable and 
+the follower VM is set to read-only.
+If the leader fails with the BOSH Resurrector enabled, the leader VM is recreated as read-only. 
+This situation causes both the leader and the follower VMs to be read only, so apps cannot write to the database.
 
 <h4>Solution</h4>
 
