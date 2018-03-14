@@ -1,22 +1,27 @@
 ---
-title: Troubleshooting Instances
+title: Troubleshooting On-Demand Instances
 owner: MySQL
 ---
 
-This topic provides basic instructions for app developers troubleshooting On-Demand MySQL for PCF.
+This topic provides techniques app developers can use to begin troubleshooting on-demand instances.
 
-## <a id="outages"></a>Temporary Outages
+## <a id="inaccessible"></a>If Instances or Database are Inaccessible
 
-MySQL for PCF service instances can become temporarily inaccessible during upgrades and VM or network failures. See [Service Interruptions](./upgrade.html#interruptions) for more information.
+You may experience the following during upgrades or in a leader-follower topology.
 
-## <a id="read-only"></a>Apps Cannot Write to the Database
+### <a id="outages"></a>Temporary Outages
 
-If your apps can no longer write to the database, the leader VM may be read-only. 
+MySQL for PCF service instances can become temporarily inaccessible during upgrades and VM or network failures. 
+See [Service Interruptions](./upgrade.html#interruptions) for more information.
+
+### <a id="read-only"></a>Apps Cannot Write to the Database
+
+If you have a leader-follower topology and your apps can no longer write to the database, the leader VM may be read-only. 
 Contact your operator to check if the leader VM is read-only. 
 For more information on troubleshooting this problem, see 
-[Both Leader and Follower Instances Are Both Read-Only](./troubleshoot.html#both-read-only)
+[Both Leader and Follower Instances Are Both Read-Only](./troubleshoot.html#both-read-only).
 
-## <a id="errors"></a> Errors
+## <a id="errors"></a> Troubleshoot Errors
 
 You may see an error when using the Cloud Foundry Command-Line Interface (cf CLI) to perform basic operations on a MySQL for PCF service instance:
 
@@ -26,18 +31,21 @@ You may see an error when using the Cloud Foundry Command-Line Interface (cf CLI
 * `cf unbind`
 * `cf delete`
 
-### <a id="parse-error"></a>Parse a Cloud Foundry (CF) Error Message
+### <a id="parse-error"></a>Understand a Cloud Foundry (CF) Error Message
 
 <%= partial '../../mysql/odb/tshoot-tech-parse-error' %>
 
-### <a id="instance"></a> Retrieve Service Instance Information
+### <a id="instance"></a> Find Information About your Service Instance
+
+You may need to find the name, GUID, or other information about a service instance. To find this information, do the following:
 
 1. Log into the space containing the instance or failed instance. 
     <pre class="terminal">
     $ cf login
     </pre>
 
-1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space. The service instances are listed in the `name` column.
+1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space. 
+The service instances are listed in the `name` column.
     <pre class="terminal">
     $ cf services
     Getting services in org my-org / space my-space as user<span>@</span>example.com...
@@ -50,7 +58,7 @@ You may see an error when using the Cloud Foundry Command-Line Interface (cf CLI
 
 1. Run `cf service SERVICE-INSTANCE-NAME --guid` to retrieve the GUID of the instance, which is useful for debugging.
 
-## <a id="kb"></a>Knowledge Base (Community)
+## <a id="kb"></a>Use the Knowledge Base (Community)
 
 <%= partial '../../mysql/odb/tshoot-kb' %>
 
