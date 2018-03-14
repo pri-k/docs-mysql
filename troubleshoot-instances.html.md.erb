@@ -12,13 +12,13 @@ You might experience the following during upgrades or in a leader-follower topol
 ### <a id="outages"></a>Temporary Outages
 
 MySQL for PCF service instances can become temporarily inaccessible during upgrades and VM or network failures. 
-See [Service Interruptions](./upgrade.html#interruptions) for more information.
+For more information, see [Service Interruptions](./upgrade.html#interruptions).
 
 ### <a id="read-only"></a>Apps Cannot Write to the Database
 
 If you have a leader-follower topology and your apps can no longer write to the database, the leader VM might be read-only. 
 Contact your operator to check if the leader VM is read-only. 
-For more information on troubleshooting this problem, see 
+For more information about troubleshooting this problem, see 
 [Both Leader and Follower Instances Are Read-Only](./troubleshoot.html#both-read-only).
 
 ## <a id="errors"></a> Troubleshoot Errors
@@ -35,9 +35,10 @@ You might see an error when using the Cloud Foundry Command-Line Interface (cf C
 
 <%= partial '../../mysql/odb/tshoot-tech-parse-error' %>
 
-### <a id="instance"></a> Find Information About your Service Instance
+### <a id="instance"></a> Find Information about Your Service Instance
 
-You might need to find the name, GUID, or other information about a service instance. To find this information, do the following:
+You might need to find the name, GUID, or other information about a service instance.
+To find this information, do the following:
 
 1. Log into the space containing the instance or failed instance. 
     <pre class="terminal">
@@ -54,9 +55,11 @@ The service instances are listed in the `name` column.
     my-instance   p.mysql      db-small                  create succeeded
     </pre>
 
-1. Run `cf service SERVICE-INSTANCE-NAME` to retrieve more information about a specific instance.
+1. To retrieve more information about a specific instance, run `cf service SERVICE-INSTANCE-NAME`
 
-1. Run `cf service SERVICE-INSTANCE-NAME --guid` to retrieve the GUID of the instance, which is useful for debugging.
+1. To retrieve the GUID of the instance, run `cf service SERVICE-INSTANCE-NAME --guid`
+
+   The GUID is useful for debugging.
 
 ## <a id="kb"></a>Use the Knowledge Base (Community)
 
