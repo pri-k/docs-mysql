@@ -219,6 +219,57 @@ To delete a service instance, do the following:
 
 1. Enter `watch cf service SERVICE-INSTANCE` and wait for a `Service instance not found` error indicating that the instance no longer exists.
 
+##<a id='establish-tls'></a> Establish a TLS Connection to a Service Instance
+
+You can use `mysql` to establish a TLS connection to a MySQL for PCF service instance that has TLS enabled. For more information about how to enable TLS for a service instance, see [Using TLS](using-tls.html).
+
+Perform the following steps:
+
+1. Create a new service key for the service instance with TLS enabled. For example:
+  <pre class="terminal">$ cf create-service-key my-service-instance my-tls-service-key
+  {
+   "hostname": "10.1.16.5",
+   "jdbcUrl": "jdbc:mysql<span>://</span>10.244.16.3:3306/service\_instance\_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026=true",
+   "name": "service\_instance\_db",
+   "password": "a22aaa2a2a2aaaaa",
+   "port": 3306,
+   "tls": {
+    "cert": {
+     "ca": "-----BEGIN CERTIFICATE-----\...n-----END CERTIFICATE-----\n"
+    }
+   },
+   "uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>10.244.16.3:3306/service\_instance\_db?reconnect=true",
+   "username": "6bf07ae455a14064a9073cec8696366c"
+  }
+  </pre>
+  If the service key does not have a CA certificate under `tls.cert.ca`, the service key may be stale. Create a new one.
+
+1. Copy the contents of the CA certificate under `tls.cert.ca` and paste it into a file. For example:
+  <pre class="terminal">$ pbpaste > root.pem</pre>
+
+1. Record the values for `username`, `password`, and `hostname`.
+
+1. Use `mysql` to establish a TLS connection to the MySQL instance.
+  Run the following command:
+  <pre><code>mysql --host=HOSTNAME \
+    --user=USERNAME \
+    --password=PASSWORD \
+    --ssl-ca=root.pem \
+    --ssl-verify-server-cert</code></pre>
+  <br>
+  Where:
+    * `HOSTNAME` is the value for `hostname` retrieved above.
+    * `USERNAME` is the value for `username` retrieved above.
+    * `PASSWORD` is the value for `password` retrieved above.
+  <br><br>
+  For example: 
+    <pre class="terminal">
+    $ mysql --hostname=10.1.16.5 \
+      --user=6bf07ae455a14064a9073cec8696366c \
+      --password=a22aaa2a2a2aaaaa \
+      --ssl-ca=root.pem \
+      --ssl-verify-server-cert
+    </pre>
 
 ## <a id="dev-tools"></a>MySQL for PCF Tools 
 
