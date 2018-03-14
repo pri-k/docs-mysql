@@ -15,7 +15,6 @@ In this topic:
     * [Missing Logs and Metrics](#missing-logs)
     * [Unable to Determine Leader and Follower (Errand Error)](#unable-to-determine)
     * [Both Leader and Follower Instances Are Writable (Errand Error)](#both-writable)
-    * [Both Leader and Follower Instances Are Read-Only](#both-read-only)
 * [Troubleshooting Components](#components)
     * [BOSH Problems](#bosh)
     * [Configuration](#bosh-config)
@@ -144,14 +143,16 @@ $ bosh2 -e my-env -d my-dep run-errand configure-leader-follower --instance=mysq
 
 <h3><a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)</h3>
 
-This problem happens when the <code>configure-leader-follower</code> errand fails 
-because both VMs are writable and the VMs might hold differing data.
+This problem happens when the <code>configure-leader-follower</code> errand fails because both VMs are writable 
+and the VMs might hold differing data.
 
 <h4>Symptom</h4>
 
 The <code>configure–leader-follower</code> errand exits with <code>1</code> and the errand logs contain the following:<br><br>
 
+
 <pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
+
 
 <h4>Explanation</h4>
 
@@ -230,66 +231,6 @@ Succeeded
 </ol>
 </li>
 </ol>
-
-<h3><a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only</h3>
-
-In a leader-follower topology, the leader VM is writable and 
-the follower VM is read-only. However if both VMs are read only, apps cannot write to the database.
-
-
-<h4>Symptom</h4>
-
-Developers report that apps cannot write to the database.
-
-<h4>Explanation</h4>
-
-This problem happens if the leader VM fails and the BOSH Resurrector is enabled. 
-When the leader is resurrected it is set as read-only.
-
-
-<h4>Solution</h4>
-
-<ol>
-    <li> Use the <code>inspect</code> errand to confirm that both VMs are in a read-only state:
-        <code>
-            bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand inspect
-        </code>
-    </li>
-    <li>Examine the output and locate the information about the leader-follower MySQL VMs:
-<pre class="terminal">
-Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>999.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-23
-         Replication Configured: false<br /><br />
-Instance   mysql/e0exampleade-0114-4d49-a929-cexample8beda
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>999.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d779999-de9e-11e7-be01-42010a999914:1-25
-         Replication Configured: false<br /><br />
-2 errand(s)<br />
-Succeeded
-</pre>
-    </li>
-    <li>
-        If Read Only is set to <code>true</code> for both VMs, make the leader writeable using the following command:
-        <code>bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID</code>
-        <br><br>For example, if the first intance above is the leader:
-        <pre class="terminal">$ bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/4eexample54b-0704-47eb-8eef-eb2example724</pre>
-    </li>
-</ol>
-
-
 
 <a id="components"></a><h2>Troubleshooting Components</h2>
 
