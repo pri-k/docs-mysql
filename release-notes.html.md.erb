@@ -10,6 +10,14 @@ upgrade to the latest v2.0.x version before upgrading to the latest v2.1.x versi
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
+## <a id="214"></a>v2.1.4
+
+**Release Date:**  March 15, 2018
+
+* Upgrades Percona Server to 5.7.20-21.
+
+* Requires stemcell 3445.28.
+
 ## <a id="213"></a>v2.1.3
 
 **Release Date:**  February 8, 2018
@@ -42,7 +50,7 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
   This helps when migrating from legacy systems that need case insensitivity.
   For more informatation, see [configure MySQL](/p-mysql/2-1/install-config.html#mysql).
 * Changes several MySQL server default configurations to provide better consistency and expected behavior when migrating
-  from the MySQL for PCF v1 series. 
+  from the MySQL for PCF v1 series.
 
 * Upgrades several dependencies including, `golang 1.9.0` and `xtrabackup 2.4.5`.
 * The origin for all MySQL metrics is now `p.mysql` rather than `p-mysql` to better reflect the service name.
