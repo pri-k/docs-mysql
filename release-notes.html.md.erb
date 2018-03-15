@@ -10,6 +10,16 @@ upgrade to the latest v2.0.x version before upgrading to the latest v2.1.x versi
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
+## <a id="224"></a>v2.2.4
+
+**Release Date:**  March 15, 2018
+
+* Remove collocated errands
+
+* Upgrades Percona Server to 5.7.20-21.
+
+* Requires stemcell 3445.28.
+
 ## <a id="223"></a>v2.2.3
 
 **Release Date:**  February 16, 2018
@@ -46,9 +56,9 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
   instances with replication metrics.
   For more information, see [About Leader-Follower](./about-leader-follower.html).
 
-* No longer includes the option to disable automated backups. 
-  You must configure automated backups. 
-  For more information, see [Backing Up and Restoring On-Demand MySQL for PCF](backup-and-restore.html). 
+* No longer includes the option to disable automated backups.
+  You must configure automated backups.
+  For more information, see [Backing Up and Restoring On-Demand MySQL for PCF](backup-and-restore.html).
 
 * Updates the mysql-restore utility to make restoring from a backup artifact easier.
   For more information, see [Restore the Service Instance](./backup-and-restore.html#restoreinstance).
@@ -59,9 +69,9 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 * Enables developers to use workload profiles for best practices in server configuration.
   For more information, see [Changing MySQL Server Defaults](./change-default.html#changes).
 
-* No longer includes individual errand VMs. 
-  Instead, errands are run on the MySQL VMs. 
-  These colocated errands run faster and use fewer resources. 
+* No longer includes individual errand VMs.
+  Instead, errands are run on the MySQL VMs.
+  These colocated errands run faster and use fewer resources.
 
 * Upgrades several dependencies including, `golang 1.9.1`.
 
