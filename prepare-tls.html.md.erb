@@ -22,7 +22,7 @@ Apps and clients use the public component of the CA certificate to validate that
 Apps and clients that communicate with the MySQL server must have access to the public component of the CA certificate
 in order to validate that the server certificate can be trusted.
 
-PCF distributes the public component of the CA to apps in two ways:
+PCF distributes the public component of the CA certificate to apps in two ways:
 
 * PCF provisions a copy of the CA certificate in the trusted store of each container's operating system.
   Apps written in Java and Spring automatically discover the CA certificate in the trusted stored.
