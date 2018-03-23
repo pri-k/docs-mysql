@@ -43,3 +43,6 @@
 | `<%= vars.mysql_metrics_origin_v2 %>/performance/open_tables` | The number of tables that are open. | integer |
 | `<%= vars.mysql_metrics_origin_v2 %>/performance/opened_tables` | The number of tables that have been opened. | integer |
 | `<%= vars.mysql_metrics_origin_v2 %>/performance/opened_table_definitions` | The number of `.frm` files that have been cached. | integer |
+| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_no_tx` | The number of transactions committed without follower acknowledgement. | integer |
+| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_tx_avg_wait_time` | The average time replication has waited on a transaction to commit. | microseconds |
+| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_wait_sessions` | The current number of connections waiting on a semi-sync commit. | integer |
