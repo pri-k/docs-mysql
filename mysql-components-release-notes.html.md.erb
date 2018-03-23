@@ -10,20 +10,23 @@ For release notes for MySQL for PCF v1.10, see <a href="release-notes.html">Rele
 ## <a id="monitoring-8.16.0"></a>mysql-monitoring v8.16.0
 
 **Metrics updates**
-- Sally would like to be able to monitor the CPU utilization of MySQL nodes via the firehose **so that** when a node is in distress, it can be raised as an alert. [[#154105601](https://www.pivotaltracker.com/story/show/154105601)]
-- Sally would prefer to track app activity by monitoring the queries metric, rather than questions [[#153792436](https://www.pivotaltracker.com/story/show/153792436)]
-- Sally would like to monitor app activity of the system by graphing the change in number of queries over time [[#154105776](https://www.pivotaltracker.com/story/show/154105776)]
-- Sally does not find any value in the Busy time metric, as it is in seconds, not percentage [[#153792050](https://www.pivotaltracker.com/story/show/153792050)]
-- Sally would like to turn off the mysql-metric logs [[#154818152](https://www.pivotaltracker.com/story/show/154818152)]
+
+* Sally would like to be able to monitor the CPU utilization of MySQL nodes via the firehose **so that** when a node is in distress, it can be raised as an alert. [[#154105601](https://www.pivotaltracker.com/story/show/154105601)].
+* Sally would prefer to track app activity by monitoring the queries metric, rather than questions [[#153792436](https://www.pivotaltracker.com/story/show/153792436)].
+* Sally would like to monitor app activity of the system by graphing the change in number of queries over time [[#154105776](https://www.pivotaltracker.com/story/show/154105776)].
+* Sally does not find any value in the Busy time metric, as it is in seconds, not percentage [[#153792050](https://www.pivotaltracker.com/story/show/153792050)].
+* Sally would like to turn off the mysql-metric logs [[#154818152](https://www.pivotaltracker.com/story/show/154818152)].
 
 **Metrics for Leader/Follower**
-- Sally should see metrics for instance read_only status [[#154154855](https://www.pivotaltracker.com/story/show/154154855)]
-- Sally should see metrics for semi-sync replication [[#155790867](https://www.pivotaltracker.com/story/show/155790867)]
+
+* Sally should see metrics for instance read_only status [[#154154855](https://www.pivotaltracker.com/story/show/154154855)].
+* Sally should see metrics for semi-sync replication [[#155790867](https://www.pivotaltracker.com/story/show/155790867)].
 
 **mysql-diag updates**
-- mysql-diag should use the larger of the two partitions for reporting ephemeral disk usage [[#155752812](https://www.pivotaltracker.com/story/show/155752812)]
-- mysql-diag's download-logs suggestion shall match the syntax of v36.11's version [[#155485142](https://www.pivotaltracker.com/story/show/155485142)]
-- **Bugfix:** mysql-diag shall refer to p-mysql 1.10 documentation [[#155482371](https://www.pivotaltracker.com/story/show/155482371)]
+
+* mysql-diag should use the larger of the two partitions for reporting ephemeral disk usage [[#155752812](https://www.pivotaltracker.com/story/show/155752812)].
+* mysql-diag's download-logs suggestion shall match the syntax of v36.11's version [[#155485142](https://www.pivotaltracker.com/story/show/155485142)].
+* **Bugfix:** mysql-diag shall refer to p-mysql 1.10 documentation [[#155482371](https://www.pivotaltracker.com/story/show/155482371)].
 
 ## <a id="backup-2.1.0"></a>mysql-backup v2.1.0
 
@@ -31,17 +34,17 @@ For release notes for MySQL for PCF v1.10, see <a href="release-notes.html">Rele
 
 - Improvements to make backups more time efficient  [[#153953405](https://www.pivotaltracker.com/story/show/153953405)]
   - In our test environment, we shaved nearly 50% off backup times.
-- Produce error output if any backup fails **so that** Operator can alarm on failing backups [[#153613707](https://www.pivotaltracker.com/story/show/153613707)]
-- mysql-backup no longer relies on `innobackupex`, which is deprecated [[#136521881](https://www.pivotaltracker.com/story/show/136521881)]
-- **Bug fix:** `wsrep_sst_xtrabackup-v2` now logs errors to mysql stderr log [[#142287703](https://www.pivotaltracker.com/story/show/142287703)]
-- **Bug fix:** Now makes sure to properly shut all processes down, to avoid orphan processes after an upgrade, etc. [[#153616729](https://www.pivotaltracker.com/story/show/153616729)]
-- **Bug fix:** streaming-mysql-backup-tool job fails if backup-prepare is scaled to 0 [[#153863821](https://www.pivotaltracker.com/story/show/153863821)]
+- Produce error output if any backup fails **so that** Operator can alarm on failing backups [[#153613707](https://www.pivotaltracker.com/story/show/153613707)].
+- mysql-backup no longer relies on `innobackupex`, which is deprecated [[#136521881](https://www.pivotaltracker.com/story/show/136521881)].
+- **Bug fix:** `wsrep_sst_xtrabackup-v2` now logs errors to mysql stderr log [[#142287703](https://www.pivotaltracker.com/story/show/142287703)].
+- **Bug fix:** Product now makes sure to properly shut all processes down, to avoid orphan processes after an upgrade, etc. [[#153616729](https://www.pivotaltracker.com/story/show/153616729)].
+- **Bug fix:** streaming-mysql-backup-tool job fails if backup-prepare is scaled to 0 [[#153863821](https://www.pivotaltracker.com/story/show/153863821)].
 
 
 ## <a id="monitoring-8.14.0"></a>mysql-monitoring v8.14.0
 
-- **Bug fix:** `mysql-diag` now fails quickly when VMs in the cluster aren't available
-- **Bug fix:** replication-canary causes high memory usage because it overwrites logs files rather than appends
+- **Bug fix:** `mysql-diag` now fails quickly when VMs in the cluster aren't available.
+- **Bug fix:** replication-canary causes high memory usage because it overwrites logs files rather than appends.
 
 ## <a id="monitoring-8.13.0"></a>mysql-monitoring v8.13.0
 
@@ -60,6 +63,6 @@ For release notes for MySQL for PCF v1.10, see <a href="release-notes.html">Rele
 
 ## <a id="backup-1.38.0"></a>mysql-backup v1.38.0
 
-- `streaming-mysql-backup-client` can be consumed as a library which would allow me to connect to a backup service and retrieve a backup artifact [[#153272120](https://www.pivotaltracker.com/story/show/153272120)] [[#153293970](https://www.pivotaltracker.com/story/show/153293970)]
-- Sally would like the channel between streaming-backup-tool and client to be encrypted **so that** backup artifacts aren't transmitted cleartext [[#152686562](https://www.pivotaltracker.com/story/show/152686562)]
-- **Bug fix:** `streaming-mysql-backup-client` should exit with non-zero status on failure  [[#150648415](https://www.pivotaltracker.com/story/show/150648415)]
+- `streaming-mysql-backup-client` can be consumed as a library which would allow me to connect to a backup service and retrieve a backup artifact [[#153272120](https://www.pivotaltracker.com/story/show/153272120)] [[#153293970](https://www.pivotaltracker.com/story/show/153293970)].
+- Sally would like the channel between streaming-backup-tool and client to be encrypted **so that** backup artifacts aren't transmitted cleartext [[#152686562](https://www.pivotaltracker.com/story/show/152686562)].
+- **Bug fix:** `streaming-mysql-backup-client` should exit with non-zero status on failure  [[#150648415](https://www.pivotaltracker.com/story/show/150648415)].
