@@ -48,29 +48,41 @@ Perform the following steps to enable TLS for an existing service instance:
  	"username": "6bf07ae455a14064a9073cec8696366c"
 	}
 	</pre>
-1. In the output, record the value for `hostname`.
+1. In the output, record the value for `hostname`. If you are using a leader-follower topology, this value includes multiple IP addresses.
 1. Update the existing service instance to enable TLS by providing configuration parameters.
 	<br><br>
 	Run the following command:
 
 	```
-	cf update-service SERVICE-INSTANCE -c '{"enable_tls": "HOSTNAME"}'
+	cf update-service SERVICE-INSTANCE -c '{"enable_tls": ["HOSTNAME"]}'
 	```
 	<br>
 	Where:
 	* `SERVICE-INSTANCE` is the name of the existing service instance that you want to secure communication to and from.
-	* `HOSTNAME` is the value for `hostname` retrieved above.
+	* `HOSTNAME` is the value for `hostname` retrieved above. If you are using a leader-follower topology, enter the comma-separated list of addresses that appears under `hostname`. 
 
 	For example:
 	<pre class="terminal">
-	$ cf update-service my-service-instance -c '{"enable_tls": "10.1.16.3"}'
+	$ cf update-service my-service-instance -c '{"enable_tls": ["10.1.16.3"]}'
 	</pre>
-	Wait until the command returns `Update succeeded`.
-	<br><br>
 	If you receive the following error message, the operator has not enabled TLS.
-        See the procedures in [Preparing for TLS](prepare-tls.html) and [Configure Security](install-config.html#security).
-
+    See the procedures in [Preparing for TLS](prepare-tls.html) and [Configure Security](install-config.html#security).
 	<pre class="terminal">TLS has not been enabled in the service offering. Speak with your Operator to make this available.</pre>
+
+1. Updating the service instance takes a moment. 
+	To check the status of the operation, run `cf services` and locate your service instance. 
+	For example:
+	<br><br>
+	<pre class="terminal">
+	$ cf services
+	Getting services in org example / space development as admin...
+	OK
+	<br>
+	name                  service   plan       bound apps   last operation
+	my-service-instance   p.mysql   db-small                update in progress
+	</pre>
+	When the operation has completed, `update succeeded` appears under `last operation`.
+	<br><br>
 1. Delete the service key. For example:
 	<pre class="terminal">
 	$ cf delete-service-key my-service-instance my-service-key
