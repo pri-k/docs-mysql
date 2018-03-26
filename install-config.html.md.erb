@@ -295,10 +295,23 @@ Follow the steps below to configure automated backups:
 
 Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
 
+* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls). By default, TLS is disabled. 
 * To store your service instance credentials in CredHub on Pivotal Application Service (PAS) v2.0.x, perform the procedure in [Configure Secure Service Instance Credentials](#security-service-instance-creds).
-* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls). 
 
 ![security](security.png)
+
+####<a id="security-tls"></a> Configure TLS 
+
+To enable TLS for the MySQL service, perform the following steps:
+
+1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
+1. Click **Security**.
+1. Under **TLS Options**, select one of the following:
+    1. **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
+    1. **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
+    <p class="note warning"><strong>WARNING</strong>: Selecting <strong>Required</strong> will break any apps that are not currently connecting over TLS.</p>
+1. Click **Save**.
+1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html). 
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
@@ -333,18 +346,6 @@ If you are using PAS v2.0.x and want to store your service instance credentials 
         },
     [...]
     </pre>
-
-####<a id="security-tls"></a> Configure TLS 
-
-To enable TLS for the MySQL service, perform the following steps:
-
-1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
-1. Click **Security**.
-1. Under **Enable Communication Over TLS**, select **Yes**. 
-1. If you want the MySQL service to only accept secure connections, select the **Require Connections To Use TLS** checkbox.
-    <p class="note warning"><strong>WARNING</strong>: Selecting this checkbox will break any apps that are not currently connecting over TLS.</p>
-1. Click **Save**.
-1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html). 
 
 ###<a id="monitoring"></a> Configure Monitoring
 
