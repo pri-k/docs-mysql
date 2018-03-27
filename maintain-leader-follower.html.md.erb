@@ -6,8 +6,8 @@ owner: MySQL
 You can maintain availability of your MySQL databases by keeping two copies of your database,
 one on a leader (master) instance and another on a follower (slave) instance.
 If the leader instance fails due to hardware or software issues or during a period of planned maintenance,
-you can initiate a failover to the follower instance,
-so that the apps that bind to your MySQL databases experience no downtime.
+you can initiate a failover to the follower instance.
+This helps minimize downtime for apps that bind to your MySQL databases.
 
 For more information, see:
 
@@ -16,49 +16,25 @@ For more information, see:
 
 ## <a id="process"></a> Leader-Follower Setup and Failover Process
 
-The following are the high-level steps for setting up and using the leader-follower topology:
+The following are the high-level steps for setting up and using a leader-follower topology, and for doing a failover.
 
-1. The operator configures a leader-follower plan.
+### Leader-Follower Setup
+
+1. The operator configures a leader-follower plan. See [Configure a Leader-Follower Service Plan](#config-plan) below.
 
 1. Developers create an instance from the leader-follower plan.
    Doing this automatically deploys two MySQL VMs in a leader-follower topology.
 
-1. Developers bind apps to the leader in leader-follower plan instance, using the leader's IP address.
+1. Developers bind apps to the leader in the leader-follower plan instance, using the leader's IP address.
    Data is written to the leader and asynchronously replicated on the follower.
 
+### Failover Process 
+
 1. If the leader instance fails, the operator manually triggers a failover,
-   so the working instance (follower) becomes the new leader.
+   so the working instance (follower) becomes the new leader. See [Trigger a Failover](#failover) below.
 
-1. The operator unbinds the app from the leader-follower plan and then rebinds it in order to use the new leader.
+1. After a failover, the developer unbinds the app from the leader-follower plan and then rebinds it in order to use the new leader.
 
-## <a id="errands"></a> Leader-Follower Errands
-
-MySQL for PCF provides errands that operators can use to control the lifecycle
-of a leader-follower service instance without being an expert at MySQL.
-
-These errands offer tools for managing leader-follower service instances. 
-Operators use the BOSH CLI v2 to run errands on the deployment for a particular leader-follower service instance.
-
-For an example, see the procedure in [Trigger a Failover](#failover) below, which uses errands to trigger a failover to the follower VM. 
-Operators can also use errands to create custom failover scripts.
-
-The errands are:
-
-* **make-read-only**: 
-  * Guarantees that apps do not write to a former leader VM
-  * Sets the VM to read-only and ensures that, if the follower is accessible,
-    all transactions have been relayed to the follower
-
-* **make-leader**: 
-  * Promotes a follower VM to a leader
-  * Removes replication configuration from a follower VM, waits for all transactions to be applied to the VM,
-    and sets the VM as writable
-  * Fails if the original leader is still accessible to protect against data divergence
-
-* **configure-leader-follower**: 
-  * Configures replication on the follower and ensures the leader is writable
-  * Runs after every create or update of a leader-follower instance
-  * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
 
 ## <a id="config-plan"></a> Configure a Leader-Follower Service Plan
 
@@ -105,9 +81,34 @@ Values are either 1 (available) or 0 (not available).
 
 For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
 
+## <a id="errands"></a> Leader-Follower Errands Used in Failover
+
+This section describes the errands used in the [Trigger a Failover](#failover) procedures below. 
+You can also use errands to create custom failover scripts. 
+ 
+Operators use the BOSH CLI v2 to run the errands on the deployment for a particular leader-follower service instance.
+
+The errands used in the failover procedures are:
+
+* **make-read-only**: 
+  * Sets the VM to read-only, preparing it to be a follower. This also ensures that, if the follower is accessible,
+    all transactions have been relayed to the follower.
+  * Guarantees that apps do not write to a former leader VM
+
+* **make-leader**: 
+  * Promotes a follower VM to a leader
+  * Removes replication configuration from a follower VM, waits for all transactions to be applied to the VM,
+    and sets the VM as writable
+  * Fails if the original leader is still accessible to protect against data divergence
+
+* **configure-leader-follower**: 
+  * Configures replication on the follower and ensures the leader is writable
+  * Runs after every create or update of a leader-follower instance
+  * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
+
 ## <a id="failover"></a> Trigger a Failover
 
-You might want to trigger a failover to the follower VM in the following scenarios:
+You may want to trigger a failover to the follower VM in the following scenarios:
 
 * The leader VM fails
 * The performance of the leader VM degrades
