@@ -48,7 +48,13 @@ Perform the following steps to enable TLS for an existing service instance:
  	"username": "6bf07ae455a14064a9073cec8696366c"
 	}
 	</pre>
-1. In the output, record the value for `hostname`. If you are using a leader-follower topology, this value includes multiple IP addresses.
+	If you are using a leader-follower topology, the command displays `hostnames` and multiple IP addresses rather than `hostname` and a single IP address. For example:
+	<pre class="terminal">
+	{
+	"hostname": ["10.1.16.3", "10.1.16.4"],
+	[...]
+	</pre>
+1. In the output, record the value for `hostname` or `hostnames`. 
 1. Update the existing service instance to enable TLS by providing configuration parameters.
 	<br><br>
 	Run the following command:
@@ -59,7 +65,7 @@ Perform the following steps to enable TLS for an existing service instance:
 	<br>
 	Where:
 	* `SERVICE-INSTANCE` is the name of the existing service instance that you want to secure communication to and from.
-	* `HOSTNAME` is the value for `hostname` retrieved above. If you are using a leader-follower topology, enter the comma-separated list of addresses that appears under `hostname`. 
+	* `HOSTNAME` is the value for `hostname` or `hostnames` retrieved above. If you are using a leader-follower topology, enter the comma-separated list of IP addresses that appears under `hostnames`. 
 
 	For example:
 	<pre class="terminal">
