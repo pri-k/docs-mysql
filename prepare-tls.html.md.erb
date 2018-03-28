@@ -7,6 +7,8 @@ This topic describes how to provide an existing CA certificate to BOSH CredHub a
 If you want to enable TLS for MySQL for Pivotal Cloud Foundry (PCF),
 you must perform the procedures in this topic before installing and configuring the tile.
 
+<p class="note warning"><strong>WARNING</strong>: This procedure involves restarting all of the VMs in your PCF deployment in order to apply a CA certificate. The operation can take a long time to complete.</p>
+
 ##<a id='overview'></a> Overview
 
 Enabling TLS provisions a MySQL server with a certificate so that apps and clients can establish an encrypted connection with the data service.
@@ -229,4 +231,6 @@ Click **Security**.
 1. After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF: 
     * **Existing Installation**: If you have already installed the MySQL for PCF tile, perform the procedures in [Configure TLS](install-config.html#tls) to enable TLS in the **Security** section of the tile. Then return to the Ops Manager Installation Dashboard and click **Apply Changes**. This restarts all the VMs in your PCF deployment and applies your CA certificate.
     * **New Installation**: If you have not yet installed the MySQL for PCF tile, perform all of the procedures in [Installing and Configuring MySQL for PCF](install-config.html). When you click **Apply Changes**, this deploys MySQL for PCF, restarts all the VMs in your PCF deployment, and applies your CA certificate.
+    <p class="note warning"><strong>WARNING</strong>: Restarting all of the VMs in your PCF deployment in order to apply a CA certificate takes a long time to complete.</p>
+
 
