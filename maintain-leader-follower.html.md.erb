@@ -81,7 +81,7 @@ Values are either 1 (available) or 0 (not available).
 
 For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
 
-## <a id="errands"></a> Leader-Follower Errands Used in Failover
+## <a id="errands"></a> Errands Used in Leader-Follower Failover
 
 This section describes the errands used in the [Trigger a Failover](#failover) procedures below. 
 You can also use these errands to create custom failover scripts. 
@@ -90,21 +90,22 @@ Operators use the BOSH CLI v2 to run the errands on the deployment for a particu
 
 The errands used in the failover procedures are:
 
-* **make-read-only**: 
-  * Sets the VM to read-only, preparing it to be a follower. This also ensures that, if the follower is accessible,
-    all transactions have been relayed to the follower.
-  * Guarantees that apps do not write to a former leader VM
-
-* **make-leader**: 
-  * Promotes a follower VM to a leader
-  * Removes replication configuration from a follower VM, waits for all transactions to be applied to the VM,
-    and sets the VM as writable
-  * Fails if the original leader is still accessible to protect against data divergence
-
 * **configure-leader-follower**: 
   * Configures replication on the follower and ensures the leader is writable
   * Runs after every create or update of a leader-follower instance
   * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
+
+* **make-read-only**: 
+  * Demotes a leader VM to a follower
+  * Sets the VM to read-only, and guarantees that apps no longer write to this VM
+  * Relays all in-flight transactions on this former leader VM to the follower VM, if it is accessible.
+
+* **make-leader**: 
+  * Promotes a follower VM to a leader
+  * Removes replication configuration from the VM, waits for all transactions to be applied to the VM,
+    and sets the VM as writable
+  * Fails if the original leader is still writeable to protect against data divergence
+
 
 ## <a id="failover"></a> Trigger a Failover
 
