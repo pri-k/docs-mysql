@@ -140,7 +140,95 @@ Perform the following steps to create a UAA client for CredHub on your UAA serve
       created_by: f609e861-39ec-4a16-8aee-cba9e9b079e3
     </pre>
 
-###<a id='credhub-cli'></a> Add the CA Certificate
+###<a id='credhub-cli'></a> Download the CredHub CLI (PCF v1.12 Only)
+
+If you are using PCF v1.12, perform the steps in the sections below to install the CredHub CLI on the Ops Manager VM:
+
+* If your Ops Manager VM can access the internet, perform the steps in [Internet Access](#with-internet).
+* If your Ops Manager VM does not have access to the internet, perform the steps in [No Internet Access](#no-internet).
+
+In PCF v2.0 and later, the Ops Manager VM ships with the CredHub CLI already installed.
+
+####<a id="with-internet"></a> Internet Access
+
+Perform the following steps to install the CredHub CLI on an Ops Manager VM with internet access:
+
+1. In a browser, navigate to [Pivotal Network](https://network.pivotal.io).
+1. Click **Sign In** in the upper right corner and sign in with your Pivotal Network credentials.
+1. Click your user name in the upper right corner and select **Edit Profile**.
+1. Click **Request New API Token**.
+1. Copy the contents under **Refresh token**.
+1. From the Ops Manager VM, use your refresh token to obtain your temporary access token by making an API call to Pivotal Network.
+    Run the following command:
+
+    ```
+    curl -i -d '{"refresh_token": "REFRESH-TOKEN"}' \
+    -X POST https://network.pivotal.io/api/v2/authentication/access_tokens
+    ```
+    <br>
+    Where `REFRESH-TOKEN` is the refresh token you copied in step 5.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ curl -i -d '{"refresh\_token": "1211111a11a11001b1e3333aaaaa2231-d"}' \
+    -X POST http<span>s:</span>//network.pivotal.io/api/v2/authentication/access\_tokens
+    </pre>
+1. The request returns an `access_token`. Copy the contents of the `access_token`.
+1. Download the BOSH Assets bundle for Ops Manager v1.12.16. 
+    Run the following command:
+
+    ```
+    wget --header="Authorization: Bearer ACCESS-TOKEN" \
+    https://network.pivotal.io/api/v2/products/ops-manager/releases/75618/product_files/111472/download
+    ```
+    <br>
+    Where `ACCESS-TOKEN` is the access token you copied in step 7.
+    <br><br>
+    For example: 
+    <pre class="terminal">
+    $ wget --header="Authorization: Bearer ebAhBGciO..." \
+    http<span>s:</span>//network.pivotal.io/api/v2/products/ops-manager/releases/75618/product\_files/111472/download
+    </pre>
+    The file is 3 GB, so it may take a moment to download.
+    <p class="note"><strong>Note</strong>: If your Ops Manager VM can only access the internet through a proxy, set environment variables to configure <code>wget</code> for the proxy. For more information, see the <code>wget</code> <a href="https://www.gnu.org/software/wget/manual/html_node/Proxies.html">documentation</a>.</p>
+1. Untar the downloaded file. Run the following command:
+
+    ```
+    tar xvf pcf-assets-1.12.16.tgz
+    ```
+1. Change into the new `pcf-assets-1.12.16` directory and untar the CredHub CLI. Run the following commands:
+
+    ```
+    cd pcf-assets-1.12.16
+    tar xvf credhub-cli-linux-1.7.3.tgz
+    ```
+1. Move the CredHub CLI binary into your PATH. Run the following command:
+
+    ```
+    mv credhub /usr/local/bin
+    ```
+
+####<a id='no-internet'></a> No Internet Access
+
+Perform the following steps to install the CredHub CLI on an Ops Manager VM with no internet access:
+
+1. On an internet-connected machine, navigate to [Pivotal Network](https://network.pivotal.io) in a browser.
+1. Click **Sign In** in the upper right corner and sign in with your Pivotal Network credentials.
+1. Download the BOSH Assets bundle for [Ops Manager v1.12.16](https://network.pivotal.io/products/ops-manager#/releases/75618). 
+1. Untar the downloaded file. Run the following command:
+
+    ```
+    tar xvf pcf-assets-1.12.16.tgz
+    ```
+1. Change into the new `pcf-assets-1.12.16` directory and untar the CredHub CLI. Run the following commands:
+
+    ```
+    cd pcf-assets-1.12.16
+    tar xvf credhub-cli-linux-1.7.3.tgz
+    ```
+1. Move the CredHub CLI binary into the PATH of the Ops Manager VM by using your standard procedure for bringing files onto the Ops Manager VM.
+
+###<a id='add-ca-cert'></a> Add the CA Certificate
 
 Perform the following steps to log in to CredHub, provide or generate a CA certificate, and add the certificate to Ops Manager:
 
