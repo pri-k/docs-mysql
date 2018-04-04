@@ -1,9 +1,9 @@
 ---
-title: Overview of MySQL for PCF v2.3
+title: Overview of MySQL for PCF v2
 owner: London Services
 ---
 
-This topic describes the significant new features in MySQL for PCF v2.3.
+This topic describes the significant features in MySQL for PCF v2.
 This topic also presents a checklist that you can use to decide if MySQL for PCF is ready to meet your business requirements.
 
 ##<a id="intro"></a> Introduction
@@ -28,6 +28,18 @@ For each service plan, the operator can configure the **Multi-Node**, **Plan nam
 Operators can update certain plan settings after the plans have been created.
 If the Operator updates the VM size or disk size these settings will be implemented in all instances already created.
 Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.
+
+##<a id="tls"></a> Enabling TLS
+
+As of MySQL 2.3, you can enable TLS for MySQL for PCF v2. 
+Enabling TLS provisions a MySQL server with a certificate so 
+that apps and clients can establish an encrypted connection with the data service.
+
+For more information on TLS, and the workflow for enabling and using it, see [Preparing for TLS](./prepare-tls.html).
+
+<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF v2, 
+	you must follow the procedures in <a href="./prepare-tls.html">Preparing for TLS</a> <strong>before</strong> installing or upgrading the tile.</p>
+
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
