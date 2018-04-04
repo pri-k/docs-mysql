@@ -120,7 +120,6 @@ You might want to trigger a failover in the following scenarios:
 * The performance of the leader VM degrades.
 * The leader VM fails unexpectedly.
 * The AZ where the leader VM is located goes offline unexpectedly.
-  <p class="note"><strong>Note</strong>: You must first regain access to the AZ where the leader VM is located before completing the procedures in the sections below.</p>
 
 To trigger a failover, follow these procedures:
 
@@ -202,7 +201,7 @@ for stopping the leader and promoting the follower:
    In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
 1. Record the index of the other instance, which is the follower VM.
    In the above output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
-1. Use the BOSH CLI to determine if the leader VM is in the AZ you want to take offline.
+1. If you still have access to the AZ where the leader VM is located, use the BOSH CLI to determine if the leader VM is in the AZ you want to take offline.
   For example:
   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
     instances
@@ -236,7 +235,7 @@ Perform the following steps to stop the leader VM and promote the follower VM to
       run-errand make-read-only \
       --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
    </pre>
-1. Stop the leader VM, using the same values as above.
+1. If you still have access to the AZ where the leader VM is located, stop the leader VM, using the same values as above.
    For example:
    <pre class="terminal">
     $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
@@ -258,9 +257,12 @@ Perform the following steps to stop the leader VM and promote the follower VM to
         -c "sudo /var/vcap/jobs/make-leader/bin/run"
      </pre>
 
-At this point, a single instance is working but leader-follower replication has not yet been restored.
-If you want to fail your app over to a single instance instead of restoring leader-follower,
-skip to the <a href="#unbind-rebind-1">Unbind and Rebind the App</a> section.</a>
+At this point, a single instance is working but leader-follower replication has not yet been restored. 
+If you want to fail your app over to a single instance instead of restoring leader-follower, 
+skip to <a href="#unbind-rebind">Unbind and Rebind the App</a>. 
+
+If you are triggering a failover in response to the AZ of the leader VM going offline, you can fail your app over to a single instance by performing the steps in [Unbind and Rebind the App](#unbind-rebind). 
+But in order to restore leader-follower, you must regain access to the AZ where your leader VM is located before performing the steps in [Clean Up Former Leader VM (Optional)](#clean-up) and [Configure the New Follower](#config-follower).
 
 ### <a id='clean-up'></a>Clean Up Former Leader VM (Optional)
 
@@ -336,7 +338,7 @@ Perform the following steps to restart the former leader VM and configure it as 
    </ul>
    For example:
    <pre class="terminal">
-   $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
      recreate \
      mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd01. After finishing maintenance on the former leader VM, start it. 
 1. Use the `configure-leader-follower` errand to set the former leader VM as a follower, using the same values as above.
