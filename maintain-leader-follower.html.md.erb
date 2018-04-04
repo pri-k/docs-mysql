@@ -35,7 +35,8 @@ The following are the high-level steps for setting up and using a leader-followe
 
 ### Failover Process 
 
-1. **Promotion**: If the leader instance fails, or the operator wants to take the leader offline for maintenance, the operator promotes the follower instance to the new leader.
+1. **Promotion**: If the leader instance fails or the operator wants to take the leader offline for maintenance,
+   the operator promotes the follower instance to the new leader.
 
 1. **Failover**: After a promotion, the developer unbinds the app from the leader-follower service instance and then rebinds it in order to fail the app over to the new leader.
 
@@ -91,7 +92,7 @@ For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4My
 This section describes the errands used in the [Trigger a Failover](#failover) procedures below. 
 You can also use these errands to create custom failover scripts. 
  
-Operators use the BOSH CLI v2 to run the errands on the deployment for a particular leader-follower service instance.
+Operators use the BOSH CLI to run the errands on the deployment for a particular leader-follower service instance.
 
 The errands used in the failover procedures are:
 
@@ -113,7 +114,7 @@ The errands used in the failover procedures are:
 
 ## <a id="failover"></a> Trigger a Failover
 
-You may want to trigger a failover in the following scenarios:
+You might want to trigger a failover in the following scenarios:
 
 * You want to take the leader VM down to do planned maintenance. 
 * The performance of the leader VM degrades.
@@ -153,10 +154,10 @@ for stopping the leader and promoting the follower:
 1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
    and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of
    <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Ops Manager VM.
-1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI v2.
+1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI.
    See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in
    <em>Advanced Troubleshooting with the BOSH CLI</em>.
-1. Use the BOSH CLI v2 to run the `inspect` errand with the following command:
+1. Use the BOSH CLI to run the `inspect` errand with the following command:
   <pre><code>bosh2 -d service-instance\_GUID run-errand inspect</code></pre>
   <br>
   Where `GUID` is the GUID of the leader-follower service instance retrieved above.
@@ -201,7 +202,7 @@ for stopping the leader and promoting the follower:
    In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
 1. Record the index of the other instance, which is the follower VM.
    In the above output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
-1. Use the BOSH CLI v2 to determine if the leader VM is in the AZ you want to take offline.
+1. Use the BOSH CLI to determine if the leader VM is in the AZ you want to take offline.
   For example:
   <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
     instances
@@ -212,7 +213,7 @@ for stopping the leader and promoting the follower:
     mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8  running        us-central1-a  10.0.8.10
     2 instances
   </pre>
-  <p class="note"><strong>Note</strong>: The leader VM may not display its status as <code>failing</code> if you are performing planned maintenance.</p>
+  <p class="note"><strong>Note</strong>: The leader VM might not display its status as <code>failing</code> if you are performing planned maintenance.</p>
   Examine the output to determine if the leader VM is in the AZ you want to take offline. 
 
 ### <a id='promote'></a> Promote the Follower
@@ -248,7 +249,8 @@ Perform the following steps to stop the leader VM and promote the follower VM to
         --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
      </pre>
      If this command returns an error, re-run it until the follower VM has completed applying the transactions.
-  * If you are using PCF v1.12, use `bosh2 ssh` to run the errand, using the index of the follower VM retrieved above. For example:
+  * If you are using PCF v1.12, use `bosh2 ssh` to run the errand, using the index of the follower VM retrieved above.
+    For example:
      <pre class="terminal">
       $ bosh2 -d service-instance\_82dc607-710a-404e-b1b8-a7e3ea7ec063 \
         ssh \
@@ -256,7 +258,9 @@ Perform the following steps to stop the leader VM and promote the follower VM to
         -c "sudo /var/vcap/jobs/make-leader/bin/run"
      </pre>
 
-At this point, a single instance is working but leader-follower replication has not yet been restored. If you want to fail your app over to a single instance instead of restoring leader-follower, skip to the <a href="#unbind-rebind-1">Unbind and Rebind the App</a> section.</a>
+At this point, a single instance is working but leader-follower replication has not yet been restored.
+If you want to fail your app over to a single instance instead of restoring leader-follower,
+skip to the <a href="#unbind-rebind-1">Unbind and Rebind the App</a> section.</a>
 
 ### <a id='clean-up'></a>Clean Up Former Leader VM (Optional)
 
@@ -267,7 +271,7 @@ If you are triggering a failover in response to a failing leader VM, perform the
    <pre class="terminal">
     $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       update-resurrection off</pre>
-1. Use the BOSH CLI v2 to retrieve the CID of the failing former leader VM. 
+1. Use the BOSH CLI to retrieve the CID of the failing former leader VM. 
    For example: 
    <pre class="terminal">
     $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
@@ -276,7 +280,7 @@ If you are triggering a failover in response to a failing leader VM, perform the
       --column=”VM CID” \
       --json
    </pre>
-1. Use the BOSH CLI v2 to retrieve the disk CID of the failing former leader VM. 
+1. Use the BOSH CLI to retrieve the disk CID of the failing former leader VM. 
    For example: 
    <pre class="terminal">
     $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
@@ -312,7 +316,8 @@ If you are triggering a failover in response to a failing leader VM, perform the
    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       orphan-disk b-1db9ede6
    </pre>
-   Orphaning a disk rather than deleting it preserves it for possible recovery. After performing recovery operations, you can reattach the disk to a VM. BOSH deletes orphaned disks after five days by default.  
+   Orphaning a disk rather than deleting it preserves it for possible recovery.
+   After performing recovery operations, you can reattach the disk to a VM. BOSH deletes orphaned disks after five days by default.  
 
 ### <a id='config-follower'></a> Configure the New Follower 
 
@@ -340,13 +345,14 @@ Perform the following steps to restart the former leader VM and configure it as 
     $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       run-errand configure-leader-follower \
       --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
-1. Use the BOSH CLI v2 to run the `inspect` errand on the deployment, using the same value as above.
+1. Use the BOSH CLI to run the `inspect` errand on the deployment, using the same value as above.
    For example:
    <pre class="terminal">
    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
        run-errand inspect
    </pre>
-   If the output displays one instance marked `Role: leader` and another instance marked `Role: follower`, then leader-follower replication and high availability are resumed. 
+   If the output displays one instance marked `Role: leader` and another instance marked `Role: follower`,
+   then leader-follower replication and high availability are resumed. 
    The deployment should be in its original, working state. 
    You may turn resurrection back on if desired.
 
