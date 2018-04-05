@@ -271,8 +271,7 @@ If you are triggering a failover in response to a failing leader VM, perform the
 1. Disable resurrection, specifying the same deployment as above.
    For example:
    <pre class="terminal">
-    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
-      update-resurrection off</pre>
+    $ bosh2 update-resurrection off</pre>
 1. Use the BOSH CLI to retrieve the CID of the failing former leader VM. 
    For example: 
    <pre class="terminal">
