@@ -6,6 +6,47 @@ owner: MySQL
 <p class="note"><strong>Note</strong>: MySQL for PCF v1.10 requires PCF v1.10 and Elastic Runtime v1.10.<strong>9</strong> or later
    or PCF v2.0 or later.</p>
 
+## <a id="1.10.13"></a>v1.10.13
+
+- **New:** A Space Developer can create read-only bindings to a Service Instance.
+- **Metrics Updates**
+
+  - **New**: `/p-mysql/performance/cpu_utilization_percent`
+  - **New**: `/p-mysql/performance/queries`
+
+        We feel that this metric is better than the existing `questions` metric.
+
+  - **Removed:** `/p-mysql/performance/busy_time`
+  - **Known Issue:** The `wsrep_local_*_queue_avg` metrics do not track current state until a future patch release.
+
+     See the [monitoring documentation](monitoring-mysql.html#mysql-metrics) for more information.
+
+- **Improved:** Many small usability updates to `download-logs`, which now relies on `bosh ssh` instead of manual SSH.
+
+    You can now find `download-logs` associated with each version of the MySQL product on Pivotal Network.
+
+- **Improved:** We've made some changes to make backups run more quickly.
+
+    In our test environment, we shaved nearly 50% off backup times.
+
+- **New:** There's now an easier way to find the proxy dashboards, you can simply navigate to `https://proxy-p-mysql/SYSTEM-DOMAIN` to find links to each proxy you've deployed.
+- **Dependency Updates and Bug Fixes**
+  - Update to MariaDB 10.1.30 and xtrabackup 2.4.8.
+  - Update to stemcell 3445.30. For more information, see the stemcell [release notes](https://docs.pivotal.io/pivotalcf/2-1/stemcells/stemcell-v3445x.html#3445-30).
+  - **Bug fix:** Cluster nodes should not hang in pre-start after unclean shutdown of cluster.
+  - **Bug fix:** Duplicate logging to syslog.
+
+        In v1.10.7 we introduced a regression in which the product duplicates logs related to the `routing-release` jobs.
+
+  - **Bug fix:** Several improvements to logging when backups have errors to report.
+  - **Bug fix:** Backups avoids orphan processes during routine maintenance, such as upgrades.
+  - **Bug fix:** streaming-mysql-backup-tool job fails if backup-prepare is scaled to 0
+
+        Reduces the chance of seeing this confusing error:
+
+            - Unable to render templates for job 'streaming-mysql-backup-tool'. Errors are:
+              - Error filling in template 'streaming-mysql-backup-tool.yml.erb' (line 8: Can't find property '["cf-mysql-backup.endpoint_credentials.username"]')
+
 ## <a id="1.10.12"></a>v1.10.12
 
 Release Date: February 23, 2018
