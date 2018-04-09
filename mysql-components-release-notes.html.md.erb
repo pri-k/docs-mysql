@@ -28,17 +28,23 @@ For release notes for MySQL for PCF v1.10, see <a href="release-notes.html">Rele
 * mysql-diag's download-logs suggestion shall match the syntax of v36.11's version [[#155485142](https://www.pivotaltracker.com/story/show/155485142)].
 * **Bugfix:** mysql-diag shall refer to p-mysql 1.10 documentation [[#155482371](https://www.pivotaltracker.com/story/show/155482371)].
 
+## <a id="monitoring-8-15.0"></a>mysql-monitoring v8.15.0
+
+* **Improved:** Metrics can monitor MySQL via Unix domain Socket
+
+  Since metrics normally runs local to the MySQL node, there's no reason to use a network interface. Instead of supplying a hostname, the service author can specify connecting to MySQL over Unix domain socket by providing the file path to that socket, rather than a hostname.
+
 ## <a id="backup-2.1.0"></a>mysql-backup v2.1.0
 
 **Note:** We bumped the major version of mysql-backup-release to **v2** in recognition of the fact that v1.38.0 required TLS, which should have been a major version change.
 
 - Improvements to make backups more time efficient  [[#153953405](https://www.pivotaltracker.com/story/show/153953405)]
-  - In our test environment, we shaved nearly 50% off backup times.
-- Produce error output if any backup fails **so that** Operator can alarm on failing backups [[#153613707](https://www.pivotaltracker.com/story/show/153613707)].
-- mysql-backup no longer relies on `innobackupex`, which is deprecated [[#136521881](https://www.pivotaltracker.com/story/show/136521881)].
-- **Bug fix:** `wsrep_sst_xtrabackup-v2` now logs errors to mysql stderr log [[#142287703](https://www.pivotaltracker.com/story/show/142287703)].
-- **Bug fix:** Product now makes sure to properly shut all processes down, to avoid orphan processes after an upgrade, etc. [[#153616729](https://www.pivotaltracker.com/story/show/153616729)].
-- **Bug fix:** streaming-mysql-backup-tool job fails if backup-prepare is scaled to 0 [[#153863821](https://www.pivotaltracker.com/story/show/153863821)].
+  - In our test environment, we shaved nearly 50% off backup times
+- Produce error output if any backup fails **so that** Operator can alarm on failing backups [[#153613707](https://www.pivotaltracker.com/story/show/153613707)]
+- mysql-backup no longer relies on `innobackupex`, which is deprecated [[#136521881](https://www.pivotaltracker.com/story/show/136521881)]
+- **Bug fix:** `wsrep_sst_xtrabackup-v2` now logs errors to mysql stderr log [[#142287703](https://www.pivotaltracker.com/story/show/142287703)]
+- **Bug fix:** Product now makes sure to properly shut all processes down, to avoid orphan processes after an upgrade, etc. [[#153616729](https://www.pivotaltracker.com/story/show/153616729)]
+- **Bug fix:** streaming-mysql-backup-tool job fails if backup-prepare is scaled to 0 [[#153863821](https://www.pivotaltracker.com/story/show/153863821)]
 
 
 ## <a id="monitoring-8.14.0"></a>mysql-monitoring v8.14.0
@@ -49,8 +55,9 @@ For release notes for MySQL for PCF v1.10, see <a href="release-notes.html">Rele
 ## <a id="monitoring-8.13.0"></a>mysql-monitoring v8.13.0
 
 - **New:** Added metrics that represent disk usage as percentages.
-           This makes it easier to alert on disk usage without knowing the deployment disk size.
-           For more information, see the [Persistent and Ephemeral Disk Used](monitoring-mysql.html#disk-free).
+
+ This makes it easier to alert on disk usage without knowing the deployment disk size.
+ For more information, see the [Persistent and Ephemeral Disk Used](monitoring-mysql.html#disk-free).
   - /p-mysql/system/persistent\_disk\_used\_percent
   - /p-mysql/system/ephemeral\_disk\_used\_percent
   - /p-mysql/system/persistent\_disk\_inodes\_used\_percent
