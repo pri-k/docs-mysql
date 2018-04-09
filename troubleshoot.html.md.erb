@@ -408,7 +408,7 @@ Instructions on interacting with the on-demand service broker and on-demand serv
 
 <a id="instance-creds"></a><h3>Retrieve Admin and Read-Only Admin Credentials for a Service Instance</h3>
  
-To retrieve the admin and read-only admin credentials for a service instance, perform the following steps:
+To retrieve the admin and read-only admin credentials for a service instance from BOSH CredHub, perform the following steps:
 
 <ol>
 <li>Use the cf CLI to determine the GUID associated with the service instance for which you want to retrieve credentials. 
@@ -426,7 +426,7 @@ To retrieve the admin and read-only admin credentials for a service instance, pe
 <li>From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI. See <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a> in <em>Advanced Troubleshooting with the BOSH CLI</em>.</li>
 <li> Perform the steps in <a href="prepare-tls.html#uaa">Create UAA Client</a>.</li>
 <li> If you are using PCF v1.12, perform the steps in <a href="prepare-tls.html#credhub-cli">Download the CredHub CLI (PCF v1.12 Only)</a> to download the CredHub CLI on the Ops Manager VM.</li>
-<li>Set the API target of the CredHub CLI to your CredHub server.
+<li>Set the API target of the CredHub CLI to your BOSH CredHub server.
     <br><br>
     Run the following command:
     <pre><code>credhub api https://BOSH-DIRECTOR:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</code></pre>
@@ -436,7 +436,7 @@ To retrieve the admin and read-only admin credentials for a service instance, pe
     For example:
     <pre class="terminal">$ credhub api http<span>s:</span>//10.0.0.5:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</pre>
 </li>
-<li> Log in to CredHub.
+<li> Log in to BOSH CredHub.
     <br><br>
     Run the following command:
     <pre><code>credhub login --client-name=credhub --client-secret=CLIENT-SECRET</code></pre>
