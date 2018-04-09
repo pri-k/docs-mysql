@@ -325,7 +325,9 @@ Follow the steps below to enable different types of monitoring and logging avail
     <tr><td><strong>Enable Read Only Admin User</strong></td>
         <td>Select this checkbox to create a read-only admin user, `roadmin`, on each service instance.
             This user can be used for auditing and monitoring without risking
-            mutating or changing any data.</td></tr>
+            mutating or changing any data, because the `roadmin` user cannot make changes.
+            <br><br>
+            To retrieve the credentials for the `roadmin` user, see [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds). The read-only admin user is always `roadmin`, but the password varies by service instance.</td></tr>
   </table>
 
 1. Click **Save**.
