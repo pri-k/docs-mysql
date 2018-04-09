@@ -25,7 +25,7 @@ Release Date: April 6, 2018
 
 - **Improved:** Small usability updates to `download-logs`, which now relies on `bosh ssh` instead of manual SSH.
 
-    You can find `download-logs` with MySQl for PCF on [Pivotal Network](https://network.pivotal.io/products/p-mysql).
+    You can find `download-logs` with MySQL for PCF on [Pivotal Network](https://network.pivotal.io/products/p-mysql).
 
 - **Improved:** Backups run more quickly.
 
@@ -46,7 +46,7 @@ Release Date: April 6, 2018
   - **Bug fix:** Backups now avoid orphan processes during routine maintenance, such as upgrades.
   - **Bug fix:** The streaming-mysql-backup-tool job now fails if backup-prepare is scaled to 0.
 
-        This fix reduces the frequency of this error:
+        This fix reduces the likelihood of this error:
 
             - Unable to render templates for job 'streaming-mysql-backup-tool'. Errors are:
               - Error filling in template 'streaming-mysql-backup-tool.yml.erb' (line 8: Can't find property '["cf-mysql-backup.endpoint_credentials.username"]')
