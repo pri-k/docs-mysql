@@ -124,17 +124,19 @@ To enable semi-sync replication on a leader-follower service instance, perform t
   </pre>
   Semi-sync replication is now enabled for the leader-follower service instance.
   <p class="note"><strong>Note</strong>:
-  Service availability will be limited by the availability of the follower. If the follower becomes unavailable, you must restore it before applications can continue operation.
+  Service availability is limited by the availability of the follower.
+  If the follower becomes unavailable, you must restore it before apps can continue operation.
   </p>
 
 ### <a id='disable-sync-instance'></a>Disable Semi-Sync Replication for a Leader-Follower Instance
 
-To restore the default asynchronous replication for a leader-follower service instance, run the following command to toggle the service flag `replication_mode`:
+To restore the default asynchronous replication for a leader-follower service instance,
+run the following command to toggle the service flag `replication_mode`:
 
 <pre><code>cf update-service SERVICE-INSTANCE \
 -c '{"replication_mode": "async"}'</code></pre>
 
-Where `SERVICE-INSTANCE` is the name of the leader-follower service instance. 
+Where <code>SERVICE-INSTANCE</code> is the name of the leader-follower service instance. 
 
 For example:
 <pre class="terminal">
@@ -144,7 +146,9 @@ $ cf update-service my-lf-instance \
 
 ### <a id='set-interval-sync-instance'></a>Set Semi-Sync Timeout for a Leader-Follower Instance
 
-Semi-sync replication will fall back to asynchronous replication if a follower has not acknowledged a replicated operation within a certain timeout. By default, this timeout is set to 2<sup>63</sup> milliseconds, which is approximately 292 million years.
+Semi-sync replication falls back to asynchronous replication
+if a follower has not acknowledged a replicated operation within a certain timeout.
+By default, this timeout is set to 2<sup>63</sup> milliseconds, which is approximately 292 million years.
 
 You can manually override this timeout with a lower value. 
 Run the following command to toggle the service flag `semi_sync_ack_timeout_in_ms`:
@@ -153,9 +157,10 @@ Run the following command to toggle the service flag `semi_sync_ack_timeout_in_m
 -c '{"semi_sync_ack_timeout_in_ms": TIMEOUT}'</code></pre>
 
 Where:
-* `SERVICE-INSTANCE` is the name of the leader-follower service instance. 
-* `TIMEOUT` is the new timeout in milliseconds.
-
+<ul>
+  <li> <code>SERVICE-INSTANCE</code> is the name of the leader-follower service instance. </li>
+  <li> <code>TIMEOUT</code> is the new timeout in milliseconds.</li>
+</ul>
 For example:
 
 <pre class="terminal">
@@ -164,7 +169,8 @@ $ cf update-service my-lf-instance \
 </pre>
 
 <p class="note"><strong>Note</strong>:
-When the replication mode timeout is reached, the replication modes automatically reverts to asynchronous without any user intervention.
+When the replication mode timeout is reached,
+the replication modes automatically reverts to asynchronous without any user intervention.
 </p>
 
 ## <a id="errands"></a> Errands Used in Leader-Follower Failover
