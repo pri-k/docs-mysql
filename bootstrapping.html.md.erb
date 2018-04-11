@@ -96,7 +96,7 @@ To determine whether the cluster has been disrupted, perform the following steps
 
 ### <a id="vms-terminated"></a>Scenario 2: Virtual Machines Terminated or Lost ###
 
-In more severe circumstances, such as power failure, all of your VMs may have been lost. 
+In more severe circumstances, such as power failure, all of your VMs might have been lost. 
 You must recreate them before you can begin to recover the cluster. 
 In this scenario, the nodes appear as `unknown/unknown` in the output of `bosh vms`.
 
@@ -180,7 +180,8 @@ Do not proceed to the next step until all three VMs are in the `starting` or `fa
 
 #### <a id="updating-manifest"></a>Update the BOSH Configuration ####
 
-In a standard deployment, BOSH is configured to manage the cluster in a specific manner. You must change that configuration in order for the bootstrap errand to perform its work.
+In a standard deployment, BOSH is configured to manage the cluster in a specific manner.
+You must change that configuration in order for the bootstrap errand to perform its work.
 
 Perform the following steps:
 
@@ -196,11 +197,13 @@ Perform the following steps:
 
 1. Run the BOSH CLI command `bosh run errand bootstrap`.
 
-1. Validate that the errand completes successfully. Even if some instances still appear as `failing`, proceed to the next step.
+1. Validate that the errand completes successfully. Even if some instances still appear as `failing`,
+   proceed to the next step.
 
 #### <a id="reset-deployment"></a>Restore the BOSH Configuration ####
 
-To restore your BOSH configuration to its previous state, follow the previous steps from [Update the BOSH Configuration](#updating-manifest) and use the following values:
+To restore your BOSH configuration to its previous state, follow the previous steps
+from [Update the BOSH Configuration](#updating-manifest) and use the following values:
 
 * Set `canaries` to `1`.
 * Set `max_in_flight` to `1`.
@@ -211,15 +214,20 @@ After updating the BOSH configuration, perform the following steps:
 1. Redeploy your BOSH Director.
 1. Validate that all `mysql` instances are in `running` state.
 
-<p class="note"><strong>Note:</strong> You must run all of the steps. If you do not re-set the values in the BOSH manifest, the status of the jobs will not be reported correctly and can lead to troubles in future deploys.</p>
+<p class="note"><strong>Note:</strong> You must run all of the steps. If you do not re-set the values in the BOSH manifest,
+the status of the jobs is not reported correctly and can lead to problems with future deploys.</p>
 
 ---
 
 ## <a id="manual-bootstrap"></a>Manual Bootstrap ##
 
-If the bootstrap errand is not able to automatically recover the cluster, you may need to perform the steps manually. 
+If the bootstrap errand is not able to automatically recover the cluster,
+you might need to perform the steps manually. 
 
-<p class="note warning"><strong>WARNING</strong>: The following procedures are prone to user-error and can result in lost data if followed incorrectly. Follow the assisted bootstrap procedure in <a href="#bootstrapping">Bootstrapping</a> above first, and only resort to the manual process if the errand fails to repair the cluster.</p>
+<p class="note warning"><strong>WARNING</strong>: The following procedures are prone to user-error
+   and can result in lost data if followed incorrectly.
+   Follow the assisted bootstrap procedure in <a href="#bootstrapping">Bootstrapping</a> above first,
+   and only resort to the manual process if the errand fails to repair the cluster.</p>
 
 Perform the procedures in the sections below to manually bootstrap your cluster.
 
@@ -227,7 +235,9 @@ Perform the procedures in the sections below to manually bootstrap your cluster.
 
 Perform the following steps for each node in the cluster:
 
-1. SSH into the node. For more information about how to SSH into BOSH-deployed VMs, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh).
+1. SSH into the node.
+   For more information about how to SSH into BOSH-deployed VMs,
+   see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh).
 1. Shut down the `mariadb` process on the node. 
 Run the following command:
 
@@ -235,7 +245,7 @@ Run the following command:
     monit stop mariadb_ctrl
     ```
 
-Re-bootstrapping the cluster will not be successful unless you shut down the `mariadb` process on all nodes in the cluster.
+Re-bootstrapping the cluster is not successful unless you shut down the `mariadb` process on all nodes in the cluster.
 
 ### <a id="choose-node"></a> Choose Node to Bootstrap 
 
@@ -251,7 +261,8 @@ Perform the following steps to find the node with the highest `seqno`:
 1. If a node shut down gracefully, the `seqno` is in the Galera state file. 
 Retrieve the `seqno` and continue to [Bootstrap the First Node](#set-bootstrap-node). 
 <br><br>
-If a node crashed or was killed, the `seqno` in the Galera state file is recorded as `-1`. In this case, the `seqno` may be recoverable from the database. 
+If a node crashed or was killed, the `seqno` in the Galera state file is recorded as `-1`.
+In this case, the `seqno` might be recoverable from the database. 
 Run the following command to start up the database, log the recovered `seqno`, and then exit:
 
     ```
@@ -264,15 +275,21 @@ Run the following command to start up the database, log the recovered `seqno`, a
     $ grep "Recovered position" /var/vcap/sys/log/mysql/mysql.err.log | tail -1
     150225 18:09:42 mysqld_safe WSREP: Recovered position e93955c7-b797-11e4-9faa-9a6f0b73eb46:15
     </pre>
-    If the node never connected to the cluster before crashing, it may not even have a group id (`uuid` in `grastate.dat`). In this case there is nothing to recover. Unless all nodes crashed this way, do not choose this node for bootstrapping.
+    If the node never connected to the cluster before crashing,
+    it may not even have a group id (`uuid` in `grastate.dat`).
+    In this case, there is nothing to recover. Unless all nodes crashed this way, do not choose this node for bootstrapping.
 
-1. After determining the `seqno` for all nodes in your cluster, identify the node with the highest `seqno`. If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
+1. After determining the `seqno` for all nodes in your cluster, identify the node with the highest `seqno`.
+   If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
 
 ### <a id="set-bootstrap-node"></a>Bootstrap the First Node ###
 
 After determining the node with the highest `seqno`, perform the following steps to bootstrap the node:
 
-<p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest <code>seqno</code>. Otherwise the node with the highest <code>seqno</code> will be unable to join the new cluster unless its data is abandoned. Its <code>mariadb</code> process will exit with an error. See <a href="architecture.html">Architecture</a> for more details on intentionally abandoning data.</p>
+<p class="note"><strong>Note:</strong> Only perform these bootstrap commands on the node with the highest <code>seqno</code>.
+   Otherwise the node with the highest <code>seqno</code> is unable to join the new cluster unless its data is abandoned.
+   Its <code>mariadb</code> process will exit with an error. 
+   For more information about intentionally abandoning data, see <a href="architecture.html">Architecture</a>.</p>
 
 1. On the new bootstrap node, update the state file and restart the <code>mariadb</code> process. 
 Run the following commands:
@@ -280,7 +297,8 @@ Run the following commands:
     <pre><code>echo -n "NEEDS_BOOTSTRAP" > /var/vcap/store/mysql/state.txt
     monit start mariadb_ctrl</code></pre>
 
-1. It can take up to ten minutes for <code>monit</code> to start the <code>mariadb</code> process. To check if the <code>mariadb</code> process has started successfully, run the following command:
+1. It can take up to ten minutes for <code>monit</code> to start the <code>mariadb</code> process.
+   To check if the <code>mariadb</code> process has started successfully, run the following command:
 
     <pre><code>watch monit summary</code></pre>
 
@@ -291,11 +309,15 @@ From the bootstrap node, run the following command:
 
     <pre><code>monit start mariadb_ctrl</code></pre>
 
-    If the node is prevented from starting by the [Interruptor](interruptor.html), perform the manual procedure to force the node to rejoin the cluster, documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
+    If the node is prevented from starting by the [Interruptor](interruptor.html),
+    perform the manual procedure to force the node to rejoin the cluster,
+    documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
 
-    <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+    <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure.
+       Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
 
-1. If the `monit start` command fails, it may be because the node with the highest `seqno` is `mysql/0`. In this case, perform the following steps:
+1. If the `monit start` command fails, it might be because the node with the highest `seqno` is `mysql/0`.
+   In this case, perform the following steps:
     1. From the Ops Manager VM, run the following command to make BOSH ignore updating `mysql/0`:
 
         ```
