@@ -83,7 +83,6 @@ To determine whether the cluster has been disrupted, perform the following steps
     You will see many lines of output, eventually followed by:
     <pre class="terminal">
     Bootstrap errand completed
-
     [stderr]
     + echo 'Started bootstrap errand ...'
     + JOB_DIR=/var/vcap/jobs/bootstrap
@@ -91,7 +90,6 @@ To determine whether the cluster has been disrupted, perform the following steps
     + /var/vcap/packages/bootstrap/bin/cf-mysql-bootstrap -configPath=/var/vcap/jobs/bootstrap/config/config.yml
     + echo 'Bootstrap errand completed'
     + exit 0
-
     Errand `bootstrap' completed successfully (exit code 0)
     </pre>
     If the bootstrap errand doesn't work immediately, wait and try it again a few minutes later.
