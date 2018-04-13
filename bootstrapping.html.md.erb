@@ -161,7 +161,10 @@ VMs, install software on them, and try to start the jobs.
 The jobs will fail because the MySQL VMs fail when started if there is no active cluster for them to join. Therefore you must instruct BOSH to 
 ignore the failing state of each VM to allow the software to be deployed to all VMs.
 
-Choose one of the following procedures depending on your Ops Manager version.
+Choose one of the following procedures depending on your Ops Manager version:
+
+* [Ops Manager v1.11 or Later](#ops-manager-1-11)
+* [Ops Manager v1.10](#ops-manager-1-10)
 
 ##### <a id="ops-manager-1-11"></a>Ops Manager v1.11 or Later
 
