@@ -37,6 +37,7 @@
 | `<%= vars.mysql_metrics_origin %>/performance/com_select` | The rate of select statements. | queries/second |
 | `<%= vars.mysql_metrics_origin %>/performance/com_update` | The rate of update statements. | queries/second |
 | `<%= vars.mysql_metrics_origin %>/performance/com_update_multi` | The rate of update-multi. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/cpu_utilization_percent` | The percent of the CPU in the use by all processes on the MySQL node. | percent utilization, from 0-100 |
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_disk_tables` | The rate of internal on-disk temporary tables created by second by the server while executing statements. | table/second |
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_files` | The rate of temporary files created by second. | files/second |
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_tables` | The rate of internal temporary tables created by second by the server while executing statements. | tables/second |
@@ -56,3 +57,5 @@
 | `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/opened_tables` | The number of tables that have been opened. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/opened_table_definitions` | The number of `.frm` files that have been cached. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/queries` | The number of statements executed by the service, which resets to zero when the MySQL process is restarted. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
