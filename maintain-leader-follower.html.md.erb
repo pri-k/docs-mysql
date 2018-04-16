@@ -305,7 +305,7 @@ for stopping the leader and promoting the follower:
 
 Perform the following steps to stop the leader VM and promote the follower VM to the new leader:
 
-1. Stop any data from being written to the leader VM by setting it to read only.
+1. Stop any data from being written to the leader VM by setting it to read-only.
    Run the following command:
    <pre><code>bosh2 -d service-instance_GUID \
    run-errand make-read-only \
