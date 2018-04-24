@@ -41,7 +41,7 @@ If you are migrating from a MySQL for PCF v1.x database, please refer to the ins
   </pre>
 
 1. Use a [cf app to create an ssh tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to connect to your old service instance. The tunnel may appear as though it is hanging.
-   <p class="note">Since your app is now stopped, you’ll need another appl for the ssh tunnel. If you don’t have a running app, you can clone and cf push this [sample app](https://github.com/cloudfoundry-samples/test-app) for tunneling. You can use any running app in the same Org/Space</p>
+   <p class="note">Since your app is now stopped, you’ll need another app for the ssh tunnel. If you don’t have a running app, you can clone and cf push this [sample app](https://github.com/cloudfoundry-samples/test-app) for tunneling. You can use any running app in the same Org/Space</p>
    - An ssh tunnel is necessary as the MySQL service is only accessible within the Cloud Foundry network. 
 
 1. Take a backup of the existing database in a separate shell:
