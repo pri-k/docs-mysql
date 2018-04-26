@@ -233,25 +233,7 @@ Perform the following steps to install the CredHub CLI on an Ops Manager VM with
 
 Perform the following steps to log in to CredHub, provide or generate a CA certificate, and add the certificate to Ops Manager:
 
-1. In a browser, navigate to the [CredHub CLI releases page](https://github.com/cloudfoundry-incubator/credhub-cli/releases) on GitHub.
-
-1. Copy the link for the Linux version of the latest CredHub CLI.
-
-1. Use `wget` to download the latest CredHub CLI onto the Ops Manager VM.
-   For example:
-    <pre class="terminal">$ wget https<span>:</span>//github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.6.0/credhub-linux-1.6.0.tgz</pre>
-
-1. Untar the file, make it executable, and move it to your `$PATH`.
-   Enter the following commands:
-    <pre class="terminal">
-    $ tar -xzvf credhub-linux*.tgz
-    $ chmod +x credhub
-    $ sudo mv credhub /usr/local/bin
-    </pre>
-    <p class="note"> For more information about using the CredHub CLI,
-       see the <a href="https://credhub-api.cfapps.io">CredHub API documentation</a>.</p>
-
-1. Set the API target of the CredHub CLI to your CredHub server.
+1. From the Ops Manager VM, set the API target of the CredHub CLI to your CredHub server.
     <br><br>
     Run the following command:
 
