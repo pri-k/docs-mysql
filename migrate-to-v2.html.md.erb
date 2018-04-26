@@ -29,36 +29,38 @@ For example:
 
 1. Stop any traffic to the MySQL for PCF v1.x database by stopping any apps that are bound to the service instance.
   Run the following command for each app bound to the instance:
-  ```
-  cf stop APP
-  ```
-  <br>
-  Where APP is the name of your app.
-  <br><br>
-  For example:
- <pre class="terminal">
-  $ cf stop my-app
-    Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
-    OK
- </pre>
-  To retrieve a list of bound apps, run `cf services`.
+  
+     ```
+     cf stop APP
+     ```
+     <br>
+     Where `APP` is the name of your app.
+     <br><br>
+     For example:
+     <pre class="terminal">
+     $ cf stop my-app
+     Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
+     OK
+     </pre>
+     To retrieve a list of bound apps, run `cf services`.
   
 1. Unbind your app from the MySQL for PCF v1.x service instance.
   Run the following command for each app bound to the instance:
-  ```
-  cf unbind-service APP V1-INSTANCE
-  ```
-  <br>
-  Where:
-  * `APP` is the name of your app.
-  * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
-  <br><br>
-  For example:
-  <pre class="terminal">
-   $ cf unbind-service my-app my-instance
-    Unbinding app my-app from service my-v1-instance in org my-org / space my-space as user<span>@</span>example.com...
-    OK
-  </pre>
+  
+     ```
+     cf unbind-service APP V1-INSTANCE
+     ```
+     <br>
+     Where:
+     * `APP` is the name of your app.
+     * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
+     <br><br>
+     For example:
+     <pre class="terminal">
+     $ cf unbind-service my-app my-instance
+     Unbinding app my-app from service my-v1-instance in org my-org / space my-space as user<span>@</span>example.com...
+     OK
+     </pre>
 
 ## <a id='migrate-data'></a>Migrate Data
 
