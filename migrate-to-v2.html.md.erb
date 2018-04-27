@@ -66,10 +66,10 @@ For example:
 
 To migrate the data from the MySQL for PCF v1.x service instance to a new MySQL for PCF v2.x service instance, choose one of the following:
 
-* [Use the Migrate Option](#migrate-option): This option forms the name of the newly created MySQL for PCF v2.x service instance by appending `-new` to the name of the MySQL for PCF v1.x service instance. 
-* [Use the Replace Option](#replace-option): This option renames the MySQL for PCF v1.x service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
+* [Migrate Data to an Instance with a New Name](#migrate-option): This option forms the name of the newly created MySQL for PCF v2.x service instance by appending `-new` to the name of the MySQL for PCF v1.x service instance. 
+* [Migrate Data to a New Instance of the Same Name](#replace-option): This option renames the MySQL for PCF v1.x service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
 
-The following table illustrates the difference between migrate and replace:
+The following table illustrates the difference between the two options:
 
 <table id='mysql-odb-vs-pre' border="1" class="nice">
   <tr>
@@ -92,9 +92,9 @@ The following table illustrates the difference between migrate and replace:
   </tr>
 </table>
 
-### <a id='migrate-option'></a>Use the Migrate Option
+### <a id='migrate-option'></a> Migrate Data to an Instance with a New Name 
 
-Do the following to use the migrate option to migrate your data:
+Do the following to migrate your data to an instance with a new name:
 
 1. Install the `cf mysql-tools` plugin.
 1. Use the plugin to migrate your data.
@@ -126,9 +126,9 @@ Do the following to use the migrate option to migrate your data:
     2018/04/24 11:41:29 Cleaning up...
     </pre>
 
-### <a id='replace-option'></a>Use the Replace Option
+### <a id='replace-option'></a>Migrate Data to a New Instance of the Same Name
 
-Do the following to use the replace option to migrate your data:
+Do the following to migrate data to an instance of the same name:
 
 1. Install the `cf mysql-tools` plugin.
 1. Use the plugin to migrate your data.
