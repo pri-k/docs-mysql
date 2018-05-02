@@ -444,10 +444,11 @@ Perform the following steps to retrieve the backup encryption key:
 
 ###<a id="download"></a> Download the Backup Artifact
 
-  <p class="note"><strong>Note</strong>: These instructions assume that you are using AWS S3 as your backup destination. 
-  If you are using a different backup destination, consult the documentation for your backup provider to download the backup.</p>
+Download the backup artifact from your blob storage.
 
-Perform the following steps to download the backup artifact:
+These instructions assume that you are using AWS S3 as your backup destination. If you are using a different backup destination, consult the documentation for your backup provider to download the backup.
+
+Perform the following steps to download the backup artifact from an AWS S3 bucket:
 
 1. From the Ops Manager VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest. 
 For example:
