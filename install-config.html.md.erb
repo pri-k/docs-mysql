@@ -434,15 +434,14 @@ Follow the steps below to enable system logging for the MySQL broker and service
 
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
-1. Click **Stemcell**.
+Follow the steps below to verify your stemcell version and apply all changes:
 
-1. Verify and, if necessary, import a new stemcell version.  
-   For more information, see about importing the stemcell for your IaaS:
-   [AWS](https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#stemcell),
-   [Azure](https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#stemcell), 
-   [GCP](https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#stemcell), or
-   [vSphere](https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#stemcell).
+1. Depending on your Ops Manager version, navigate to the area where you can manage your stemcell for MySQL for PCF:
+    * If you are using Ops Manager v2.0 or earlier, click **Stemcells**.
+    * If you are using Ops Manager v2.1 or later, click **Stemcell Library** from the Ops Manager **Installation Dashboard**. 
+    For more information about using the Stemcell Library, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html). 
+        <p class="note"><strong>Note</strong>: As of Ops Manager v2.1, operators manage stemcells for all products from the Stemcell Library.</p>
 
-1. Click **Save**.
+1. Verify and, if necessary, import a new stemcell version. 
 
 1. <a name="apply-changes"></a>Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
