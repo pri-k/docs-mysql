@@ -5,58 +5,29 @@ owner: MySQL
 
 Pivotal recommends that you upgrade to the latest version of your current minor line,
 then upgrade to the latest available version of the new minor line.
-For example, if you use an older v2.0.x version,
-upgrade to the latest v2.0.x version before upgrading to the latest v2.1.x version.
+For example, if you use an older v2.2.x version,
+upgrade to the latest v2.2.x version before upgrading to the latest v2.2.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-## <a id="222"></a>v2.2.2
+## <a id="230"></a>v2.3.0
 
-**Release Date:**  February 8, 2018
+**Release Date:**  May 21, 2018
 
-* When configuring backups to an S3-compatible endpoint, **region** is no longer a required property.
+### Features
 
-* Requires stemcell 3445.24.
+* feature 1
+* feature 2
 
-## <a id="221"></a>v2.2.1
+### Security Fixes
 
-**Release Date:**  January 23, 2018
+* If no security fixes, remove this section. 
 
-* Prevents orphaning a disk when updating a service instance to a plan in a different AZ.
+### Fixed Issues
 
-* Upgrades Percona Server to v5.7.20-19.
+* If no fixes, remove this section. 
 
-* Requires stemcell 3445.23.
+### Known Issues
 
-## <a id="220"></a>v2.2.0
+There are no known issues for this release.
 
-**Release Date:**  January 23, 2018
-
-* MySQL for PCF v2.2 requires PCF v1.12 or later or PCF v2.0 or later.
-
-* Offers the ability to create multi-AZ leader-follower instances. Operators can monitor leader-follower
-  instances with replication metrics.
-  For more information, see [About Leader-Follower](./about-leader-follower.html).
-
-* No longer includes the option to disable automated backups. 
-  You must configure automated backups. 
-  For more information, see [Backing Up and Restoring On-Demand MySQL for PCF](backup-and-restore.html). 
-
-* Updates the mysql-restore utility to make restoring from a backup artifact easier.
-  For more information, see [Restore the Service Instance](./backup-and-restore.html#restoreinstance).
-
-* Adds the ability to enable create service binding and service keys with custom usernames.
-  For more information, see [Customizing Database Credentials](./customize-access.html).
-
-* Enables developers to use workload profiles for best practices in server configuration.
-  For more information, see [Changing MySQL Server Defaults](./change-default.html#changes).
-
-* No longer includes individual errand VMs. 
-  Instead, errands are run on the MySQL VMs. 
-  These colocated errands run faster and use fewer resources. 
-
-* Upgrades several dependencies including, `golang 1.9.1`.
-
-* Upgrades Percona Server to v5.7.20-18.
-
-* Requires stemcell 3445.19.
