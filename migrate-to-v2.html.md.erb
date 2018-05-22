@@ -64,78 +64,24 @@ For example:
 
 ## <a id='migrate-data'></a>Migrate Data
 
-To migrate the data from the MySQL for PCF v1.x service instance to a new MySQL for PCF v2.x service instance, choose one of the following:
+To migrate the data from the MySQL for PCF v1.x service instance to a new MySQL for PCF v2.x service instance, use the `cf mysql-tools plugin`.
 
-* [Migrate Data to an Instance with a New Name](#migrate-option): This option forms the name of the newly created MySQL for PCF v2.x service instance by appending `-new` to the name of the MySQL for PCF v1.x service instance. 
-* [Migrate Data to a New Instance of the Same Name](#replace-option): This option renames the MySQL for PCF v1.x service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
-
-The following table illustrates the difference between the two options:
-
-<table id='mysql-odb-vs-pre' border="1" class="nice">
-  <tr>
-    <th></th>
-    <th>Name of v1 Instance Before</th>
-    <th>Name of v1 Instance After</th>
-    <th>Name of v2 Instance</th>
-  </tr>
-  <tr>
-    <th>Migrate</th>
-    <td><code>my-instance</code></td>
-    <td><code>my-instance</code></td>
-    <td><code>my-instance-new</code></td>
-  </tr>
-  <tr>
-    <th>Replace</th>
-    <td><code>my-instance</code></td>
-    <td><code>my-instance-old</code></td>
-    <td><code>my-instance</code></td>
-  </tr>
-</table>
-
-### <a id='migrate-option'></a> Migrate Data to an Instance with a New Name 
-
-Do the following to migrate your data to an instance with a new name:
-
-1. Install the `cf mysql-tools` plugin.
-1. Use the plugin to migrate your data.
-  Run the following command:
-
-    ```
-    cf mysql-tools migrate V1-INSTANCE --create V2-PLAN
-    ```
-    <br>
-    Where:
-    * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
-    * `V2-PLAN` is the name of the MySQL for PCF v2.x service plan to use for the new MySQL for PCF v2.x service instance. 
-    For example, `db-small`. 
-    To view available MySQL for PCF v2.x service plans, run `cf marketplace` and locate the plans under `p.mysql`.
-    <br><br>
-    For example:
-    <pre class="terminal">
-    $ cf mysql-tools migrate my-instance --create db-small
-    2018/04/24 11:31:19 Creating new service instance "my-instance-new" for service p.mysql using plan db-small
-    2018/04/24 11:41:01 Unpacking assets for migration to /var/folders/dm/66n2j9xx02l8vs58q2whz4080000gn/T/migrate_app_101341527
-    2018/04/24 11:41:02 Started to push app
-    Done uploading
-    2018/04/24 11:41:09 Successfully pushed app
-    2018/04/24 11:41:10 Successfully bound app to v1 instance
-    2018/04/24 11:41:12 Successfully bound app to v2 instance
-    2018/04/24 11:41:12 Starting migration app
-    2018/04/24 11:41:25 Started to run migration task
-    2018/04/24 11:41:27 Migration completed successfully
-    2018/04/24 11:41:29 Cleaning up...
-    </pre>
-
-### <a id='replace-option'></a>Migrate Data to a New Instance of the Same Name
+The `migrate` command of the plugin renames the MySQL for PCF v1.x service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
 
 Do the following to migrate data to an instance of the same name:
 
 1. Install the `cf mysql-tools` plugin.
+  Run the following command:
+
+    ```
+    cf install-plugin -r CF-Community "MysqlTools"
+    ```
+
 1. Use the plugin to migrate your data.
   Run the following command:
 
     ```
-    cf mysql-tools replace V1-INSTANCE --create V2-PLAN
+    cf mysql-tools migrate V1-INSTANCE V2-PLAN
     ```
     <br>
     Where:
@@ -144,9 +90,14 @@ Do the following to migrate data to an instance of the same name:
     For example, `db-small`. 
     To view available MySQL for PCF v2.x service plans, run `cf marketplace` and locate the plans under `p.mysql`.
     <br><br>
+    For debug purposes, optionally add the `--no-cleanup` flag. 
+    This flag preserves the app that runs the migration task and the newly created service instances if the migration is not successful. 
+    Developers can SSH into the app container to examine the logs.
+    <p class="note"><strong>Note</strong>: If a migration succeeds, the migration app is cleaned up even if the <code>--no-cleanup</code> flag is provided.</p>
+    <br>
     For example:
     <pre class="terminal">
-    $ cf mysql-tools replace my-instance --create db-small
+    $ cf mysql-tools migrate my-instance db-small
     2018/04/24 11:31:19 Creating new service instance "my-instance" for service p.mysql using plan db-small
     2018/04/24 11:41:01 Unpacking assets for migration to /var/folders/dm/66n2j9xx02l8vs58q2whz4080000gn/T/migrate_app_101341527
     2018/04/24 11:41:02 Started to push app
