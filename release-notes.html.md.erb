@@ -16,9 +16,11 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
   - **Important:** You must read and follow the [TLS preparation documentation](https://docs.pivotal.io/p-mysql/prepare-tls.html) before enabling TLS. It is not necessary to follow these steps before upgrading to v2.3.0.
 
   TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
+
 - **Synchronous replication**
 
   When choosing Leader/Follower topology, Developers can now enable MySQL's "semi-synchronous" mode to ensure that transactions are replicated in **real time** to ensure availability in the case of host or AZ failure. Read more in the [synchronous replication documentation](maintain-leader-follower.html#synchronous-replication) for the leader-follower topology.
+
 - **Service Credentials in CredHub**
 
   For PAS 2.0 and greater, Operators can choose to store service credentials in CredHub. For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
@@ -43,22 +45,19 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 ### General Improvements and Bug Fixes
 
 **Developer Improvements**
-- Developers can now specify a pre-set disk size as an arbitrary parameter
 
-  **FIXME** How does this really work? (_custom disk size,p.mysql-2.3.?_) [[#154982580](https://www.pivotaltracker.com/story/show/154982580)]
 - **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance
 - **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down
 - **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance
 
 **Operator Improvements**
+
 - **Improvement:** We've made several cosmetic improvements to the `inspect` and `configure-leader-follower` errands
 - **Improvement:** We've introduced a new configuration pane, "Service Instance Upgrades" where you can control how many canary upgrades must succeed, and how many service instances may be upgraded in parallel
 - **Improvement:** Output from the broker's errands is now sent to syslog, if configured
 - **Improvement:** Logs sent to syslog are now annotated with the assigned hostname or IP
 - **Improvement:** All errands now uniformly send non-error output to stdout
-- **Improvement:** You can now configure the mysql timeout
-
-  **FIXME:** Which timeout is this? Refer to: (_p.mysql-2.3.0_) [[#155081663](https://www.pivotaltracker.com/story/show/155081663)]
+- **Improvement:** You can now control how long the service broker waits on a slow/unresponsive MySQL server before timing out.
 - **Bug fix:** We've had to stop collocating some errands for tiles that are compatible with PCF 1.12 and earlier
 - **Bug fix:** Extra whitespace in Azure backup configuration won't cause backup failures
 - **Security:** The metrics collection job now connects to the MySQL server over localhost, reducing the scope of that users' access.
@@ -68,15 +67,11 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 - Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
 - Operators no longer need to provide the admin credential when restoring a backup artifact.
-- All backup encryption keys can be stored in credhub so that she can retrieve them even if the instance is deleted the backup artifacts can be decrypted
-
-  **FIXME:** What happens on PCF 1.12 or no CredHub deployed? (_backups,p.mysql-2.3.0_) [[#154887004](https://www.pivotaltracker.com/story/show/154887004)]
-
+- For PCF 2.0 and greater, all backup encryption keys will be stored in Credhub so that backup artificats can be decrypted even after the service instance is deleted.
 
 **Smoke tests**
-- **Improvement:** The service broker smoke-tests errand now runs in a known organization and space so that you can configure your application security groups to allow the smoke-tests app to succeed.
 
-  **FIXME:** what **are** the org and space, refer to: [[#156235995](https://www.pivotaltracker.com/story/show/156235995)]
+- **Improvement:** The service broker `smoke-tests` errand now runs in the organization and space `system:pivotal-services` so that you can configure your ASGs to allow the `smoke-tests` app to succeed.
 - **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
 
 ### **Should not be tagged v2.3.0**
