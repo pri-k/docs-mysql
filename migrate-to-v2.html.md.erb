@@ -73,9 +73,9 @@ Do the following to migrate data to an instance of the same name:
 1. Install the `cf mysql-tools` plugin.
   Run the following command:
 
-  ```
-  cf install-plugin -r CF-Community "MysqlTools"
-  ```
+    ```
+    cf install-plugin -r CF-Community "MysqlTools"
+    ```
 
 1. Use the plugin to migrate your data.
   Run the following command:
@@ -94,7 +94,7 @@ Do the following to migrate data to an instance of the same name:
     This flag preserves the app that runs the migration task and the newly created service instances if the migration is not successful. 
     Developers can SSH into the app container to examine the logs.
     <p class="note"><strong>Note</strong>: If a migration succeeds, the migration app is cleaned up even if the <code>--no-cleanup</code> flag is provided.</p>
-    <br><br>
+    <br>
     For example:
     <pre class="terminal">
     $ cf mysql-tools migrate my-instance db-small
