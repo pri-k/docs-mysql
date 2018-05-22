@@ -24,9 +24,12 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
   For PAS 2.0 and greater, Operators can choose to store service credentials in CredHub. For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
 
   All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
+
+  **FIXME:** Did this make it to the docs / is it exposed? Sally would like to retrieve all broker passwords from credhub (_p.mysql-2.3.?,secure credentials via credhub,security_) [[#155094986](https://www.pivotaltracker.com/story/show/155094986)]
+
 - Developers can now create multiple DB schemas.
 
-  Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run: `create database FOO`.
+  Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run: `create database FOO`
 - Developers can now define the database charset and collation
   - See the documentation on [changing server defaults using optional parameters](change-default.html#configuring) to define these settings.
 
@@ -37,37 +40,44 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 - Updated all dependencies to golang to 1.9.6 or greater
 
 
-### Backups Changes
-
-- Sally is not required to configure a region for s3 backups [[#153460574](https://www.pivotaltracker.com/story/show/153460574)]
-- Sally does not need to provide admin creds when restoring a backup artifact (_p.mysql-2.3.0,restore,tile_) [[#153757296](https://www.pivotaltracker.com/story/show/153757296)]
-- Sally would like helper text for more of the s3 backup fields (_backups,p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#154885332](https://www.pivotaltracker.com/story/show/154885332)]
-- Sally would like all backup encryption keys to be stored in credhub so that she can retrieve them even if the instance is deleted the backup artifacts can be decrypted (_backups,p.mysql-2.3.0_) [[#154887004](https://www.pivotaltracker.com/story/show/154887004)]
-
-
 ### General Improvements and Bug Fixes
 
-- **Improvement:** We've made several cosmetic improvements to the `inspect` and `configure-leader-follower` errands.
-- **Improvement:** We've introduced a new configuration pane, "Service Instance Upgrades" where you can control how many canary upgrades must succeed, and how many service instances may be upgraded in parallel.
+**Developer Improvements**
+- Developers can now specify a pre-set disk size as an arbitrary parameter
+
+  **FIXME** How does this really work? (_custom disk size,p.mysql-2.3.?_) [[#154982580](https://www.pivotaltracker.com/story/show/154982580)]
+- **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance
+- **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down
+- **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance
+
+**Operator Improvements**
+- **Improvement:** We've made several cosmetic improvements to the `inspect` and `configure-leader-follower` errands
+- **Improvement:** We've introduced a new configuration pane, "Service Instance Upgrades" where you can control how many canary upgrades must succeed, and how many service instances may be upgraded in parallel
 - **Improvement:** Output from the broker's errands is now sent to syslog, if configured
 - **Improvement:** Logs sent to syslog are now annotated with the assigned hostname or IP
-- **Improvement:** All errands send normal output to standard out
-- **Bug fix:** You can now un-bind/re-bind an application from a leader-follower instance when the leader is down.
+- **Improvement:** All errands now uniformly send non-error output to stdout
+- **Improvement:** You can now configure the mysql timeout
+
+  **FIXME:** Which timeout is this? Refer to: (_p.mysql-2.3.0_) [[#155081663](https://www.pivotaltracker.com/story/show/155081663)]
+- **Bug fix:** We've had to stop collocating some errands for tiles that are compatible with PCF 1.12 and earlier
+- **Bug fix:** Extra whitespace in Azure backup configuration won't cause backup failures
+- **Security:** The metrics collection job now connects to the MySQL server over localhost, reducing the scope of that users' access.
 
 
-- **Bug fix:** Binky should not accidentally orphan a disk by changing plans in the tile (_az protection,p.mysql-2.1.2,p.mysql-2.1.x,p.mysql-2.2.1,p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#153717600](https://www.pivotaltracker.com/story/show/153717600)]
-- **Bug fix:** Binky should not be able to create a service instance, update a service, or create a service key if she provides invalid json parameters (_config param,p.mysql-2.3.0_) [[#154607231](https://www.pivotaltracker.com/story/show/154607231)]
-- **Bug fix:** Sally should be required to specify a VM type, disk type, and AZ  (_p.mysql-2.2.2,p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#154545540](https://www.pivotaltracker.com/story/show/154545540)]
-- [BUG] Binky should be able to bind a service with '{"":""}' as valid parameters (_p.mysql-2.3.0_) [[#155517603](https://www.pivotaltracker.com/story/show/155517603)]
-- [BUG] Binky should be able to bind a service with '{"":""}' as valid parameters [[#155521502](https://www.pivotaltracker.com/story/show/155521502)]
-- [BUG] Binky can't unbind a resurrected service instance (_leader-follower,p.mysql-2.3.0_) [[#155634487](https://www.pivotaltracker.com/story/show/155634487)]
-- **Bug fix:** Sally does not want collocated errands in MySQL 2.2 and 2.3 (_p.mysql-2.2.4,p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#155527006](https://www.pivotaltracker.com/story/show/155527006)]
-- **Bug fix:** Bump smoke test service instance create timeout to 30min (_p.mysql-2.3.0_) [[#155854477](https://www.pivotaltracker.com/story/show/155854477)]
-- **Bug fix:** Sally would like smoke-tests to run in a known org and space **so that** she can validate that her ASGs have been configured properly (_p.mysql-2.3.0,smoke-tests_) [[#156235995](https://www.pivotaltracker.com/story/show/156235995)]
-- [BUG] mysql job's drain script may hang indefinitely when MySQL crashes (_engine,p.mysql-2.1.5,p.mysql-2.2.5,p.mysql-2.2.x,p.mysql-2.3.0_) [[#156357986](https://www.pivotaltracker.com/story/show/156357986)]
-- [BUG] Binky is unable to bind/unbind her app when the broker is updated from v2.2 or earlier but the service instances have not been updated in the tile (_p.mysql-2.3.x,p.mysql-2.4.0,tile_) [[#155446132](https://www.pivotaltracker.com/story/show/155446132)]
-- **Security:** mysql-metrics should be scoped to localhost (_p.mysql-2.1.5,p.mysql-2.1.x,p.mysql-2.2.5,p.mysql-2.2.x,p.mysql-2.3.0,security_) [[#156291946](https://www.pivotaltracker.com/story/show/156291946)]
+**Backups Improvements**
 
+- Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
+- Operators no longer need to provide the admin credential when restoring a backup artifact.
+- All backup encryption keys can be stored in credhub so that she can retrieve them even if the instance is deleted the backup artifacts can be decrypted
+
+  **FIXME:** What happens on PCF 1.12 or no CredHub deployed? (_backups,p.mysql-2.3.0_) [[#154887004](https://www.pivotaltracker.com/story/show/154887004)]
+
+
+**Smoke tests**
+- **Improvement:** The service broker smoke-tests errand now runs in a known organization and space so that you can configure your application security groups to allow the smoke-tests app to succeed.
+
+  **FIXME:** what **are** the org and space, refer to: [[#156235995](https://www.pivotaltracker.com/story/show/156235995)]
+- **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
 
 ### **Should not be tagged v2.3.0**
 
@@ -79,15 +89,12 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 ### PM to review
 
+
+- **Bug fix:** Sally should be required to specify a VM type, disk type, and AZ  (_p.mysql-2.2.2,p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#154545540](https://www.pivotaltracker.com/story/show/154545540)]
+- [BUG] Binky can't unbind a resurrected service instance (_leader-follower,p.mysql-2.3.0_) [[#155634487](https://www.pivotaltracker.com/story/show/155634487)]
 - Sally would like a more aesthetically pleasing "Settings" page (_p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#154826649](https://www.pivotaltracker.com/story/show/154826649)]
-- Binky should not be able to create a service instance or service key with invalid parameters (_config param,p.mysql-2.3.0,tile_) [[#154607311](https://www.pivotaltracker.com/story/show/154607311)]
-- Sally can configure the mysql timeout (_p.mysql-2.3.0_) [[#155081663](https://www.pivotaltracker.com/story/show/155081663)]
+
+  **FIXME:** is this a cosmetic improvement worth noting? Will it be confusing if we can't remember when we made this change?
+
 - [BUG] mysql-metrics does not connect over a unix socket in the tile (_apps connect to mysql over tls,p.mysql-2.3.0_) [[#156292134](https://www.pivotaltracker.com/story/show/156292134)]
 - **Explore** As a PM, I'd like to know what we can do regarding difficulties with proper semver compliance of the tile (_p.mysql-2.3.0_) [[#156443846](https://www.pivotaltracker.com/story/show/156443846)]
-
-- [BUG] Trailing space in Azure backup configuration causes backup failures (_backups,p.mysql-2.3.x,tile_) [[#157153201](https://www.pivotaltracker.com/story/show/157153201)]
-
-- Update to latest Golang 1.9.6 ~~1.10.x~~ ~~on Master (PCF 2.2)~~ (_golang-1.10.x,p.mysql-2.3.x_) [[#157130051](https://www.pivotaltracker.com/story/show/157130051)]
-
-- Binky can specify a disk size as an arbitrary parameter (_custom disk size,p.mysql-2.3.?_) [[#154982580](https://www.pivotaltracker.com/story/show/154982580)]
-- Sally would like to retrieve all broker passwords from credhub (_p.mysql-2.3.?,secure credentials via credhub,security_) [[#155094986](https://www.pivotaltracker.com/story/show/155094986)]
