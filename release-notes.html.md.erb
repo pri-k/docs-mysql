@@ -27,8 +27,6 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
   All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
 
-  **FIXME:** Did this make it to the docs / is it exposed? Sally would like to retrieve all broker passwords from credhub (_p.mysql-2.3.?,secure credentials via credhub,security_) [[#155094986](https://www.pivotaltracker.com/story/show/155094986)]
-
 - Developers can now create multiple DB schemas.
 
   Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run: `create database FOO`
@@ -39,16 +37,17 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 - Service Instances will now run Percona Server 5.7.21-20
 - Service Instances will now be deployed using the [3541.x stemcell line](https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line)
-- Updated all dependencies to golang to 1.9.6 or greater
+- Updated all dependencies to Golang to 1.9.6 or greater
 
 
 ### General Improvements and Bug Fixes
 
 **Developer Improvements**
 
-- **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance
-- **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down
-- **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance
+- **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance.
+- **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down.
+- **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance.
+- **[PLACEHOLDER [#155446132](https://www.pivotaltracker.com/story/show/155446132)]** **Bug fix:** If the broker is upgraded but the service instances are not, developers can still un-bind/re-bind an application to an outdated service instance.
 
 **Operator Improvements**
 
@@ -60,7 +59,7 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 - **Improvement:** You can now control how long the service broker waits on a slow/unresponsive MySQL server before timing out.
 - **Bug fix:** We've had to stop collocating some errands for tiles that are compatible with PCF 1.12 and earlier
 - **Bug fix:** Extra whitespace in Azure backup configuration won't cause backup failures
-- **Security:** The metrics collection job now connects to the MySQL server over localhost, reducing the scope of that users' access.
+- **Security:** The metrics collection job now connects to the MySQL server over Unix socket, reducing the scope of that users' access.
 
 
 **Backups Improvements**
@@ -69,27 +68,7 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 - Operators no longer need to provide the admin credential when restoring a backup artifact.
 - For PCF 2.0 and greater, all backup encryption keys will be stored in Credhub so that backup artificats can be decrypted even after the service instance is deleted.
 
-**Smoke tests**
+**Smoke Tests**
 
 - **Improvement:** The service broker `smoke-tests` errand now runs in the organization and space `system:pivotal-services` so that you can configure your ASGs to allow the `smoke-tests` app to succeed.
 - **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
-
-### **Should not be tagged v2.3.0**
-
-- **Explore** Make a decision about which binaries we should use when converting to pxc-release (_p.mysql-2.3.0,v2 uses pxc-release_) [[#156281970](https://www.pivotaltracker.com/story/show/156281970)]
-- [BUG] **Interrupt** Help Cerner upgrade a db-small plan to multi-node db-large plan  (_interrupt,p.mysql-2.3.0_) [[#156334400](https://www.pivotaltracker.com/story/show/156334400)]
-- [BUG] Sally should not have alpha releases of the on-demand-service-broker in a tile release (_p.mysql-2.3.0_) [[#156334298](https://www.pivotaltracker.com/story/show/156334298)]
-- [BUG] The Leader/Follower plan included does not ID itself as L/F in Apps Manager (_p.mysql-2.3.0_) [[#156364414](https://www.pivotaltracker.com/story/show/156364414)]
-- [BUG] creating a binding with a custom username of an existing user can fail and deletes the existing user (_p.mysql-2.2.5,p.mysql-2.2.x,p.mysql-2.3.0_) [[#156292613](https://www.pivotaltracker.com/story/show/156292613)]
-
-### PM to review
-
-
-- **Bug fix:** Sally should be required to specify a VM type, disk type, and AZ  (_p.mysql-2.2.2,p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#154545540](https://www.pivotaltracker.com/story/show/154545540)]
-- [BUG] Binky can't unbind a resurrected service instance (_leader-follower,p.mysql-2.3.0_) [[#155634487](https://www.pivotaltracker.com/story/show/155634487)]
-- Sally would like a more aesthetically pleasing "Settings" page (_p.mysql-2.2.x,p.mysql-2.3.0,tile_) [[#154826649](https://www.pivotaltracker.com/story/show/154826649)]
-
-  **FIXME:** is this a cosmetic improvement worth noting? Will it be confusing if we can't remember when we made this change?
-
-- [BUG] mysql-metrics does not connect over a unix socket in the tile (_apps connect to mysql over tls,p.mysql-2.3.0_) [[#156292134](https://www.pivotaltracker.com/story/show/156292134)]
-- **Explore** As a PM, I'd like to know what we can do regarding difficulties with proper semver compliance of the tile (_p.mysql-2.3.0_) [[#156443846](https://www.pivotaltracker.com/story/show/156443846)]
