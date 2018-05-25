@@ -432,6 +432,31 @@ Follow the steps below to enable system logging for the MySQL broker and service
 
 1. Click **Save**.
 
+###<a id="service-instance-upgrades"></a> Configure Service Instance Upgrades
+
+Follow the steps below to configure service instance upgrades. 
+
+1. Click **Service Instance Upgrades**.
+
+    ![Service Instance Upgrades section](service-instance-upgrades.png)
+
+1. Configure the fields as follows:
+  <table>
+    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr>
+        <td><strong>Number of simultaneous upgrades</strong></td>
+        <td>Enter the maximum number of service instances that will be in an upgrading state at the same time.
+        The minimum value is 0 and the maximum is 1 less than the number of BOSH workers.
+        <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, navigate to the Ops Manager Director tile, click <strong>Director Config</strong> and locate the **Director Workers** field.</p>
+        </td>
+    </tr>
+    <tr><td><strong>Number of upgrade canary instances</td>
+        <td>Enter the number of service instances to upgrade first before going on to upgrade the rest of the instances.</td>
+    </tr>
+</table>
+
+1. Click **Save**.
+
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
 Follow the steps below to verify your stemcell version and apply all changes:
