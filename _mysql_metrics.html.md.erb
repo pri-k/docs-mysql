@@ -1,6 +1,8 @@
 | **Data Source** | **Description** | **Metric Unit** |
 | --- | --- | --- |
 | `<%= vars.mysql_metrics_origin_v2 %>/available` | Indicates if the local database server is available and responding. | boolean |
+| `<%= vars.mysql_metrics_origin_v2 %>/follower_seconds_behind_master` | The number of seconds the follower VM is behind in applying writes from the leader VM to its own database. | seconds |
+| `<%= vars.mysql_metrics_origin_v2 %>/follower_seconds_since_leader_heartbeat` | The number of seconds that elapses between the leader heartbeat and the replication of the heartbeat in the follower database. | seconds |
 | `<%= vars.mysql_metrics_origin_v2 %>/innodb/buffer_pool_free` | The number of free pages in the InnoDB Buffer Pool. | pages |
 | `<%= vars.mysql_metrics_origin_v2 %>/innodb/buffer_pool_total` | The total number of pages in the InnoDB Buffer Pool. | pages |
 | `<%= vars.mysql_metrics_origin_v2 %>/innodb/buffer_pool_used` | The number of used pages in the InnoDB Buffer Pool. | pages |
