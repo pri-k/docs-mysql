@@ -11,7 +11,11 @@ and contains information to help users decide whether to enable or use leader-fo
 The leader-follower topology increases the availability of a MySQL database by deploying two MySQL VMs in two separate availability zones (AZs).
 When a developer creates a leader-follower service instance, the on-demand broker deploys a leader VM in one AZ,
 and a follower VM in another AZ.
-Any data that is written to the leader is asynchronously replicated to the follower.
+
+By default, any data that is written to the leader is asynchronously replicated to the follower. 
+MySQL for PCF also supports semi-synchronous replication (“semi-sync”). 
+In semi-sync replication, data does not get committed to the leader node until the follower acknowledges the commit and can replicate it. 
+For more information about semi-sync replication and how to enable it, see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication).
 
 A leader-follower topology enables operators to initiate a
 failover and send app traffic to the follower if the leader fails.
@@ -19,8 +23,8 @@ This ensures that the app bound to the MySQL database continues to function norm
 
 The follower VM is only for increasing availability
 and is not exposed to developers to increase read throughput.
-Developers who want increased read throughput can do this by configuring `workload` profiles.
-For information, see [Understanding Workload Types](./change-default.html#workload).
+Developers who want increased read throughput can configure `workload` profiles.
+For more information, see [Understanding Workload Types](./change-default.html#workload).
 
 For high-level information on the leader-follower process, see [Leader-Follower Setup and Failover Process](./maintain-leader-follower.html#process).
 
