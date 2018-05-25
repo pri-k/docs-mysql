@@ -8,19 +8,19 @@ This topic describes how to download the CredHub CLI on the Ops Manager VM in Pi
 <p class="note"><strong>Note</strong>: Only perform the procedure in this topic if you are using PCF v1.12. 
 In PCF v2.0 and later, the Ops Manager VM ships with the CredHub CLI already installed.</p>
 
+##<a id='overview'></a> Overview
+
 You need the CredHub CLI on the Ops Manager VM to do the following:
 
 * Provide or generate a CA certificate to BOSH CredHub in order to enable TLS for MySQL for PCF. See [Preparing for TLS](prepare-tls.html).
 * Retrieve credentials for a service instance from BOSH CredHub. See [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds).
 
-##<a id='credhub-cli'></a> Download the CredHub CLI
-
 Perform the steps in the sections below to install the CredHub CLI on the Ops Manager VM:
 
-* If your Ops Manager VM can access the internet, perform the steps in [Internet Access](#with-internet).
-* If your Ops Manager VM does not have access to the internet, perform the steps in [No Internet Access](#no-internet).
+* If your Ops Manager VM can access the internet, perform the steps in [Install the CredHub CLI with Internet Access](#with-internet).
+* If your Ops Manager VM does not have access to the internet, perform the steps in [Install the CredHub CLI without Internet Access](#no-internet).
 
-###<a id="with-internet"></a> Internet Access
+##<a id="with-internet"></a> Install the CredHub CLI with Internet Access
 
 Perform the following steps to install the CredHub CLI on an Ops Manager VM with internet access:
 
@@ -79,9 +79,9 @@ Perform the following steps to install the CredHub CLI on an Ops Manager VM with
     mv credhub /usr/local/bin
     ```
 
-###<a id='no-internet'></a> No Internet Access
+##<a id='no-internet'></a> Install the CredHub CLI without Internet Access
 
-Perform the following steps to install the CredHub CLI on an Ops Manager VM with no internet access:
+Perform the following steps to install the CredHub CLI on an Ops Manager VM without internet access:
 
 1. On an internet-connected machine, navigate to [Pivotal Network](https://network.pivotal.io) in a browser.
 1. Click **Sign In** in the upper right corner and sign in with your Pivotal Network credentials.
@@ -89,9 +89,9 @@ Perform the following steps to install the CredHub CLI on an Ops Manager VM with
 1. Untar the downloaded file. Run the following command:
 
     ```
-    tar xvf pcf-assets-1.12.16.tgz
+    tar xvf download
     ```
-1. Change into the new `pcf-assets-1.12.16` directory and untar the CredHub CLI. Run the following commands:
+1. Change into the new `download` directory and untar the CredHub CLI. Run the following commands:
 
     ```
     cd pcf-assets-1.12.16
