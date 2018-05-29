@@ -5,30 +5,52 @@ owner: MySQL
 
 ## <a id="230"></a>v2.3.0
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older v2.2.x version, upgrade to the latest v2.2.x version before upgrading to the latest v2.3.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor release,
+and then upgrade to the latest available version of the new minor release.
+For example, if you use v2.2.3,
+upgrade to the latest version of 2.2 before upgrading to the latest version of 2.3.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-**Release Date:**  May 22, 2018
-
+**Release Date: May 30, 2018**
+ 
 ### Features
 
-- **Transport Layer Security:** TLS (formerly known as SSL) to Applications, Docker-based containers, and other clients.
+New features and changes in this release:
 
-  With MySQL for PCF v2.3.0, Applications can connect to MySQL over TLS (formerly known as SSL), without the need for IPSEC. **This feature requires PCF 1.12 and greater.** To use TLS, please refer to the following documentation:
-  - Developers will need to [enable TLS](using-tls.html)
-  - Developers will also need to [modify some apps](modify-apps-tls.html)
-  - **Important:** You must read and follow the [TLS preparation documentation](https://docs.pivotal.io/p-mysql/prepare-tls.html) before enabling TLS. It is not necessary to follow these steps before upgrading to v2.3.0.
+- **Transport Layer Security (TLS) :** TLS to Applications, Docker-based containers, and other clients.
 
-  TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
+    [ASK JUDY WHAT THIS MEANS] TLS was formerly known as SSL.
 
-- **Synchronous replication**
+    With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS.
+    This allows for encrypted connection without IPsec.
 
-  When choosing Leader/Follower topology, Developers can now enable MySQL's "semi-synchronous" mode to ensure that transactions are replicated in **real time** to ensure availability in the case of host or AZ failure. Read more in the [synchronous replication documentation](maintain-leader-follower.html#synchronous-replication) for the leader-follower topology.
+    To use TLS, you must use PCF v1.12 or later. 
+    For more information about using TLS with MySQL for PCF, see the following:
+
+  - [Using TLS](using-tls.html)
+  - [Modifying Apps for TLS](modify-apps-tls.html)
+  - [Preparing for TLS](prepare-tls)
+
+
+    [//]: # (ASK JUDY why this statement is necessary:)
+    "It is not necessary to follow these steps before upgrading to v2.3.0."
+ 
+    [//]: # (ASK JUDY: This is the first mention of desktop clients in MySQL. What is the purpose of this info?) 
+
+    TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
+
+- **Synchronous replication**: When choosing Leader/Follower topology, 
+    developers can enable MySQL "semi-synchronous" mode to ensure
+    that transactions are replicated in real time in case of host or AZ failure.
+    For more information about synchronous replication,
+    see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication).
 
 - **Service Credentials in CredHub**
 
-  For PAS 2.0 and greater, Operators can choose to store service credentials in CredHub. For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
+    For Pivotal Application Service (PAS) v2.0 and later,
+    operators can store service credentials in runtime CredHub.
+    For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
 
   All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
 
@@ -38,11 +60,41 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 - Developers can now define the database charset and collation
   - See the documentation on [changing server defaults using optional parameters](change-default.html#configuring) to define these settings.
 
+### Security Fixes
+
+This release includes the following security fixes:
+
+* Stemcell 1234.56 addresses the Moonraker security issue. 
+For more information about Moonraker, see [Pivotal Vulnerability Report: Moonraker Attack](http://www.example.com).
+
+* [CVE-2018-1234](http://www.example.com)
+
+* [CVE-2018-5678](http://www.example.com)
+
+### Fixed Issues
+
+This release fixes the following issue:
+
+* Special characters, such as ``[]^_!"#$%&()*+,-./\:;<=>`'``, in the admin
+password no longer lead to issues when logging in to the Widgets Management UI.
+[//]: # (fixes Known Issue in v1.2.0)
+
+### Known Issues
+
+[//]: # (all known issues were fixed so we can say...)
+There are no known issues for this release.
+
+
+
+
+**Release Date:**  May 22, 2018
+
+### Features
 ### Dependency Updates
 
 - Service Instances will now run Percona Server 5.7.21-20
 - Service Instances will now be deployed using the [3541.x stemcell line](https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line)
-- Updated all dependencies to Golang to 1.9.6 or greater
+- Updated all dependencies to Golang to 1.9.6 or later
 
 
 ### General Improvements and Bug Fixes
@@ -71,7 +123,7 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 - Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
 - Operators no longer need to provide the admin credential when restoring a backup artifact.
-- For PCF 2.0 and greater, all backup encryption keys will be stored in Credhub so that backup artificats can be decrypted even after the service instance is deleted.
+- For PCF 2.0 and later, all backup encryption keys will be stored in Credhub so that backup artificats can be decrypted even after the service instance is deleted.
 
 **Smoke Tests**
 
