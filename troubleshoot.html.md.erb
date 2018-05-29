@@ -231,7 +231,7 @@ Succeeded</pre></li>
 	<li>Stop the mysql process with the command <code>monit stop mysql</code>.</li>
 	<li>Delete the data directory of the follower with the command <code>rm -rf /var/vcap/store/mysql</code>.</li>
 	<li>Start the mysql process with the command <code>monit start mysql</code>.</li>
-	Use the <code>configure-leader-follower</code> errand to copy the leader's data to the follower and resume replication:
+	<li>Use the <code>configure-leader-follower</code> errand to copy the leader's data to the follower and resume replication:
     <code> bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/INDEX-OF-LEADER</code>
 <pre class="terminal">$ bosh2 -e my-env -d my-dep \
   run-errand configure-leader-follower \
