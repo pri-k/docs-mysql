@@ -18,28 +18,26 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 New features and changes in this release:
 
-- **Transport Layer Security (TLS) :** TLS to Applications, Docker-based containers, and other clients.
+- **Transport Layer Security (TLS)** 
 
     Communication between apps and the MySQL server is now secured using TLS.
-
-    [ASK JUDY WHAT THIS MEANS] TLS was formerly known as SSL.
-
-    With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS.
+    TLS was formerly known as SSL.
+    With MySQL for PCF v2.3.0, apps and clients can connect to MySQL over TLS.
     This allows for encrypted connection without IPsec.
 
+
     To use TLS, you must use PCF v1.12 or later. 
+
+
     For more information about using TLS with MySQL for PCF, see the following:
 
   - [Using TLS](using-tls.html)
   - [Modifying Apps for TLS](modify-apps-tls.html)
-  - [Preparing for TLS](prepare-tls)
+  - [Preparing for TLS](prepare-tls.html)
 
 
-    [//]: # (ASK JUDY: This is the first mention of desktop clients in MySQL. What is the purpose of this info?) 
-
-    MOVE THIS TO SOMEWHERE ELSE: TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
-
-- **Synchronous replication**: When choosing Leader/Follower topology, 
+- **Synchronous replication**
+    When choosing Leader/Follower topology, 
     developers can enable MySQL "semi-synchronous" mode to ensure
     that transactions are replicated in real time.
     This ensures availability in case of host or AZ failure.
@@ -51,17 +49,25 @@ New features and changes in this release:
     For Pivotal Application Service (PAS) v2.0 and later,
     operators can store service credentials in runtime CredHub.
     
-
-    For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
-i
     To ensure that credentials are stored in CredHub,
-    any apps that are currently bound to service instances must be re-bound.
- 
-- Developers can now create multiple DB schemas.
+    any apps that are currently bound to service instances must be re-bound.<br><br>
 
-  Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run: `create database FOO`
-- Developers can now define the database charset and collation
-  - See the documentation on [changing server defaults using optional parameters](change-default.html#configuring) to define these settings.
+
+    For more information, see the following:
+
+    - [Securing Services Instance Credentials with Runtime CredHub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html)
+    - [Configure Security](install-config.html#security) in _Installing and Configuring MySQL for PCF_
+
+ 
+- Developers can now create multiple database schemas.
+
+    Now developers can run `create database FOO`.
+    Database credentials that enable developers to bind apps or create service keys can now also be used to create new databases.
+
+- Developers can now define the database charset and collation.
+
+     For information about defining these parameters,
+     see [Changing MySQL Server Defaults](change-default.html##changes).
 
 ### Security Fixes
 
@@ -88,17 +94,32 @@ password no longer lead to issues when logging in to the Widgets Management UI.
 There are no known issues for this release.
 
 
+### Compatibility
 
+The following components are compatible with this release:
+This release is compatible with the following components:
 
-**Release Date:**  May 22, 2018
+<table border="1" class="nice">
+<tr>
+    <th>Component</th>
+    <th>Version</th>
+</tr>
+<tr>
+    <td>Stemcell</td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line">3541.x</a></td>
+</tr>
+<tr>
+    <td>Percona Server</td>
+    <td>5.7.21-20</td>
+</tr>
+<tr>
+    <td>golang</td>
+    <td>1.9.6<br> This is a downgrade because of an issue with golang v1.10.</td>
+</tr>
+</table>
 
-### Features
-### Dependency Updates
-
-- Service Instances will now run Percona Server 5.7.21-20
-- Service Instances will now be deployed using the [3541.x stemcell line](https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line)
-- Updated all dependencies to golang to v1.9.6 or later
-
+THIS IS THE END OF THE TEMPLATE. BELOW IS TEXT FROM THE PR THAT NEEDS TO BE MOVED UP
+AND FORMATTED
 
 ### General Improvements and Bug Fixes
 
@@ -137,3 +158,4 @@ There are no known issues for this release.
     to allow the `smoke-tests` errand to succeed.  CROSS_REF to install-config.html.md.erb
 - **Improvement:** The timeout for smoke tests is now 30 minutes. 
     This accommodates very slow infrastructures.
+
