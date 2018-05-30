@@ -20,6 +20,8 @@ New features and changes in this release:
 
 - **Transport Layer Security (TLS) :** TLS to Applications, Docker-based containers, and other clients.
 
+    Communication between apps and the MySQL server is now secured using TLS.
+
     [ASK JUDY WHAT THIS MEANS] TLS was formerly known as SSL.
 
     With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS.
@@ -33,27 +35,28 @@ New features and changes in this release:
   - [Preparing for TLS](prepare-tls)
 
 
-    [//]: # (ASK JUDY why this statement is necessary:)
-    "It is not necessary to follow these steps before upgrading to v2.3.0."
- 
     [//]: # (ASK JUDY: This is the first mention of desktop clients in MySQL. What is the purpose of this info?) 
 
-    TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
+    MOVE THIS TO SOMEWHERE ELSE: TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
 
 - **Synchronous replication**: When choosing Leader/Follower topology, 
     developers can enable MySQL "semi-synchronous" mode to ensure
-    that transactions are replicated in real time in case of host or AZ failure.
+    that transactions are replicated in real time.
+    This ensures availability in case of host or AZ failure.
     For more information about synchronous replication,
     see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication).
 
-- **Service Credentials in CredHub**
+- **Service Credentials stored securely**
 
     For Pivotal Application Service (PAS) v2.0 and later,
     operators can store service credentials in runtime CredHub.
+    
+
     For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
-
-  All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
-
+i
+    To ensure that credentials are stored in CredHub,
+    any apps that are currently bound to service instances must be re-bound.
+ 
 - Developers can now create multiple DB schemas.
 
   Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run: `create database FOO`
@@ -94,7 +97,7 @@ There are no known issues for this release.
 
 - Service Instances will now run Percona Server 5.7.21-20
 - Service Instances will now be deployed using the [3541.x stemcell line](https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line)
-- Updated all dependencies to Golang to 1.9.6 or later
+- Updated all dependencies to golang to v1.9.6 or later
 
 
 ### General Improvements and Bug Fixes
@@ -104,7 +107,7 @@ There are no known issues for this release.
 - **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance.
 - **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down.
 - **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance.
-- **[PLACEHOLDER [#155446132](https://www.pivotaltracker.com/story/show/155446132)]** **Bug fix:** If the broker is upgraded but the service instances are not, developers can still un-bind/re-bind an application to an outdated service instance.
+- **Bug fix:** If the broker is upgraded but the service instances are not, developers can still un-bind/re-bind an application to an outdated service instance.
 
 **Operator Improvements**
 
@@ -114,18 +117,23 @@ There are no known issues for this release.
 - **Improvement:** Logs sent to syslog are now annotated with the assigned hostname or IP
 - **Improvement:** All errands now uniformly send non-error output to stdout
 - **Improvement:** You can now control how long the service broker waits on a slow/unresponsive MySQL server before timing out.
-- **Bug fix:** We've had to stop collocating some errands for tiles that are compatible with PCF 1.12 and earlier
+- **Bug fix:** If you are running PCF v1.12, errands are not collocated. ADD CROSS_REF
 - **Bug fix:** Extra whitespace in Azure backup configuration won't cause backup failures
-- **Security:** The metrics collection job now connects to the MySQL server over Unix socket, reducing the scope of that users' access.
+- **Security:** The metrics collection job now connects to the MySQL server over a Unix domain socket,
+                This reduces the scope of access for the metrics collection job user.
 
 
 **Backups Improvements**
 
 - Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
 - Operators no longer need to provide the admin credential when restoring a backup artifact.
-- For PCF 2.0 and later, all backup encryption keys will be stored in Credhub so that backup artificats can be decrypted even after the service instance is deleted.
+- For PCF 2.0 and later, all backup encryption keys are stored in BOSH CredHub
+  so that backup artifacts can be decrypted even after the service instance is deleted.
 
 **Smoke Tests**
 
-- **Improvement:** The service broker `smoke-tests` errand now runs in the organization and space `system:pivotal-services` so that you can configure your ASGs to allow the `smoke-tests` app to succeed.
-- **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
+- **Improvement:** The service broker `smoke-tests` errand now runs
+    in the organization and space `system:pivotal-services` so that operators can configure ASGs
+    to allow the `smoke-tests` errand to succeed.  CROSS_REF to install-config.html.md.erb
+- **Improvement:** The timeout for smoke tests is now 30 minutes. 
+    This accommodates very slow infrastructures.
