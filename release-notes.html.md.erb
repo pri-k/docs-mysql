@@ -34,7 +34,8 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 - Developers can now create multiple DB schemas.
 
-  Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run: `create database FOO`
+  Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Starting the path to better service instance sharing, Developers can now create multiple schemas within a dedicated service instance. This means that multiple apps can co-exist on the same service instance without interfering or having access to other schemas. Previously, developers were not able to run: `create database FOO`
+  
 - Developers can now define the database charset and collation
   - See the documentation on [changing server defaults using optional parameters](change-default.html#configuring) to define these settings.
 
