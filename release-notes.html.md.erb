@@ -6,6 +6,26 @@ owner: MySQL
 <p class="note"><strong>Note</strong>: MySQL for PCF v1.10 requires PCF v1.10 and Elastic Runtime v1.10.<strong>9</strong> or later
    or PCF v2.0 or later.</p>
 
+## <a id="1.10.14"></a>v1.10.14
+
+Release Date: May 31, 2018
+
+This is a maintenance release.
+
+**New Features**
+
+FIXME: Include updates since cf-mysql v36.11, and mysql-backups v2.1.0
+
+- **New:** The `smoketests` errand now runs in a specific Organization and Space so that you may configure your Application Security Groups to run successfully when the service is deployed without any public plans.
+
+**Dependency Updates**
+- Upgraded to MariaDB 10.1.32, and Galera to 25.3.23.
+- Updated to routing v0.174.0, consul v191, and loggregator to v101.5.
+- Updated to stemcell 3445.48
+  For more information,
+  see [Stemcell Release Notes](https://docs.pivotal.io/pivotalcf/2-1/stemcells/stemcell-v3445x.html#3445-line).
+
+
 ## <a id="1.10.13"></a>v1.10.13
 
 Release Date: April 6, 2018
@@ -16,7 +36,7 @@ Release Date: April 6, 2018
   - **New**: `/p-mysql/performance/cpu_utilization_percent`
   - **New**: `/p-mysql/performance/queries`
 
-        Pivotal recommends that you use this metric instead of the older `questions` metric. 
+        Pivotal recommends that you use this metric instead of the older `questions` metric.
 
   - **Removed:** `/p-mysql/performance/busy_time`
   - **Known Issue:** The `wsrep_local_*_queue_avg` metrics do not track current state.
