@@ -14,6 +14,14 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 **Release Date: May 30, 2018**
  
+### Known Issues
+
+This release has the following issue:
+
++ After upgrading to MySQL for PCF v2.3.0, developers cannot bind to a service instance that has not also been upgraded.
+  For apps to bind and unbind successfully, developers must run `cf update-service` on their service instances
+  or operators must run the `upgrade-all-service-instances` errand.
+
 ### Features
 
 New features and changes in this release:
@@ -132,13 +140,6 @@ This release fixes the following issue that **operators** might have experienced
 
 - Extra whitespace in Azure backup configuration no longer causes backup failures.
  
-### Known Issues
-
-This release has the following issue:
-
-+ After upgrading to MySQL for PCF v2.3.0, developers cannot bind to a service instance that has not also been upgraded.
-  For apps to bind and unbind successfully, developers must run `cf update-service` on their service instances
-  or operators must run the `upgrade-all-service-instances` errand.
 
 ### Compatibility
 
