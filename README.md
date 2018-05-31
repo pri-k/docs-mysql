@@ -9,8 +9,8 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 
 | Branch name | Use for… |
 |-------------| ------|
-| master      | NOT IN USE|
-| 2.3         | "edge" build | 
+| master      | "edge" branch for 2.x|
+| 2.3         | v2.3.x | 
 | 2.2         | v2.2.x |  
 | 2.1         | v2.1.x | 
 | 2.0         | v2.0.x |
