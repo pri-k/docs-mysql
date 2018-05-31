@@ -18,7 +18,8 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 This release has the following issue:
 
-+ After upgrading to MySQL for PCF v2.3.0, developers cannot bind to a service instance that has not also been upgraded.
++ After upgrading to MySQL for PCF v2.3.0, developers cannot create new bindings
+  to a service instance that has not also been upgraded.
   For apps to bind and unbind successfully, developers must run `cf update-service` on their service instances
   or operators must run the `upgrade-all-service-instances` errand.
 
