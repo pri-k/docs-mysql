@@ -1,5 +1,5 @@
 ---
-title: Release Notes
+title: MySQL for PCF Release Notes
 owner: MySQL
 ---
 
@@ -58,46 +58,94 @@ New features and changes in this release:
     - [Securing Services Instance Credentials with Runtime CredHub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html)
     - [Configure Security](install-config.html#security) in _Installing and Configuring MySQL for PCF_
 
+- Improvements for **developers**:
  
-- Developers can now create multiple database schemas.
+    - Developers can now create multiple database schemas.
 
-    Now developers can run `create database FOO`.
-    Database credentials that enable developers to bind apps or create service keys can now also be used to create new databases.
+        Now developers can run `create database FOO`.
+        Database credentials that enable developers to bind apps or create service keys can now also be used to create new databases.
 
-- Developers can now define the database charset and collation.
+    - Developers can now define the database charset and collation.
 
-     For information about defining these parameters,
-     see [Changing MySQL Server Defaults](change-default.html##changes).
+         For information about defining these parameters,
+         see [Changing MySQL Server Defaults](change-default.html##changes).
+
+    - If developers supply invalid optional parameters when creating or updating a service instance,
+      they receive an error message.
+      For information about optional parameters, see [Use Optional Parameters](./change-default.html#parameters).  
+
+- Improvements for **operators**:
+
+    -  There is a new **Service Instance Upgrades** pane. 
+       In this pane, operators set how many canary upgrades must succeed
+       and how many service instances may be upgraded in parallel.
+       For more information, see [Configure Service Instance Upgrades](./install-config.html#service-instance-upgrades).
+
+    - The output wording for the `inspect` and `configure-leader-follower` errands is improved.
+
+    - If system logging is configured, the output from the broker errands is now sent to syslog.
+      For information about configuring, see [Configure System Logging](./install-config.html#syslog).
+
+    -  Logs sent to syslog are now annotated with the assigned hostname or IP address.
+
+    -  All errands now send non-error output to stdout.
+
+    -  Operators now control how long the service broker waits on a slow or unresponsive MySQL server before timing out.
+
+- Improvements to **backups**:
+
+    - Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
+    - Operators no longer need to provide the admin credential when restoring a backup artifact.
+    - For PCF 2.0 and later, all backup encryption keys are stored in BOSH CredHub
+      so that backup artifacts can be decrypted even after the service instance is deleted.
+
+
+- Improvements to **smoke tests**:
+
+    -  The service broker `smoke-tests` errand now runs
+       in the org and space `system:pivotal-services` so that operators can configure ASGs
+       to allow the `smoke-tests` errand to succeed.
+       For how to create an ASG,
+       see [Create an Application Security Group for MySQL for PCF](https://docs-pcf-staging.cfapps.io/p-mysql/2-3/install-config.html#asg).
+    -  The timeout for smoke tests is now 30 minutes. 
+        This accommodates very slow infrastructures.
 
 ### Security Fixes
 
-This release includes the following security fixes:
+This release includes the following security fix:
 
-* Stemcell 1234.56 addresses the Moonraker security issue. 
-For more information about Moonraker, see [Pivotal Vulnerability Report: Moonraker Attack](http://www.example.com).
-
-* [CVE-2018-1234](http://www.example.com)
-
-* [CVE-2018-5678](http://www.example.com)
+- The metrics collection job now connects to the MySQL server over a Unix domain socket.
+    This reduces the scope of access for the metrics collection job user.
 
 ### Fixed Issues
 
-This release fixes the following issue:
+This release fixes the following issues that **developers** might have experienced:
 
-* Special characters, such as ``[]^_!"#$%&()*+,-./\:;<=>`'``, in the admin
-password no longer lead to issues when logging in to the Widgets Management UI.
-[//]: # (fixes Known Issue in v1.2.0)
+- Developers cannot lose access to a persistent disk by updating the plan of a service instance.
 
+- Developers can now un-bind and re-bind an app from a leader-follower instance, even when the leader is down.
+
+- If the broker is upgraded but the service instances are not,
+  developers can now un-bind and re-bind an app to an outdated service instance.
+
+This release fixes the following issues that **operators** might have experienced:
+
+- If you are running PCF v1.12, errands are not colocated. 
+  Colocated errands run on an existing service instance group, avoiding additional resource allocation.
+
+- Extra whitespace in Azure backup configuration no longer causes backup failures.
+ 
 ### Known Issues
 
-[//]: # (all known issues were fixed so we can say...)
-There are no known issues for this release.
+This release has the following issue:
 
++ After upgrading to MySQL for PCF v2.3.0, developers cannot bind to a service instance that has not also been upgraded.
+  For apps to bind and unbind successfully, developers must run `cf update-service` on their service instances
+  or operators must run the `upgrade-all-service-instances` errand.
 
 ### Compatibility
 
-The following components are compatible with this release:
-This release is compatible with the following components:
+This release uses the following component versions:
 
 <table border="1" class="nice">
 <tr>
@@ -117,45 +165,3 @@ This release is compatible with the following components:
     <td>1.9.6<br> This is a downgrade because of an issue with golang v1.10.</td>
 </tr>
 </table>
-
-THIS IS THE END OF THE TEMPLATE. BELOW IS TEXT FROM THE PR THAT NEEDS TO BE MOVED UP
-AND FORMATTED
-
-### General Improvements and Bug Fixes
-
-**Developer Improvements**
-
-- **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance.
-- **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down.
-- **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance.
-- **Bug fix:** If the broker is upgraded but the service instances are not, developers can still un-bind/re-bind an application to an outdated service instance.
-
-**Operator Improvements**
-
-- **Improvement:** We've made several cosmetic improvements to the `inspect` and `configure-leader-follower` errands
-- **Improvement:** We've introduced a new configuration pane, "Service Instance Upgrades" where you can control how many canary upgrades must succeed, and how many service instances may be upgraded in parallel
-- **Improvement:** Output from the broker's errands is now sent to syslog, if configured
-- **Improvement:** Logs sent to syslog are now annotated with the assigned hostname or IP
-- **Improvement:** All errands now uniformly send non-error output to stdout
-- **Improvement:** You can now control how long the service broker waits on a slow/unresponsive MySQL server before timing out.
-- **Bug fix:** If you are running PCF v1.12, errands are not collocated. ADD CROSS_REF
-- **Bug fix:** Extra whitespace in Azure backup configuration won't cause backup failures
-- **Security:** The metrics collection job now connects to the MySQL server over a Unix domain socket,
-                This reduces the scope of access for the metrics collection job user.
-
-
-**Backups Improvements**
-
-- Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
-- Operators no longer need to provide the admin credential when restoring a backup artifact.
-- For PCF 2.0 and later, all backup encryption keys are stored in BOSH CredHub
-  so that backup artifacts can be decrypted even after the service instance is deleted.
-
-**Smoke Tests**
-
-- **Improvement:** The service broker `smoke-tests` errand now runs
-    in the organization and space `system:pivotal-services` so that operators can configure ASGs
-    to allow the `smoke-tests` errand to succeed.  CROSS_REF to install-config.html.md.erb
-- **Improvement:** The timeout for smoke tests is now 30 minutes. 
-    This accommodates very slow infrastructures.
-
