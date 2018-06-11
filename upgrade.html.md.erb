@@ -23,15 +23,26 @@ Your configuration settings migrate to the new version automatically. To perform
 
 1. Return to the Installation Dashboard and click **Apply Changes**.
 
-Upgrading the MySQL for PCF service and service instances can temporarily interrupt the service, as described [below](#interruptions).
+Upgrading the MySQL for PCF service and service instances can temporarily interrupt 
+the service.
+For more information, see [Service Interruptions](#interruptions) below.
 
 ## <a id="upgrade-instances"></a>Upgrade MySQL Instances
 
-After [upgrading](#upgrade-service) the MySQL for PCF service, operators can run the [upgrade-all](./troubleshoot.html#upgrade-all) 
-service broker errand to upgrade existing service instances to be in sync with the new version of the service.
+After upgrading the MySQL for PCF service, you must upgrade existing service instances 
+to be in sync with the new version of the service.
+Developers cannot create new bindings to a service instance that has not been upgraded. 
 
-Both operators and developers can upgrade existing service instances individually by running the `cf update-service` command. 
-See [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
+To upgrade existing service instances, do the one of the following:
+
+- **Operators**---run the `upgrade-all-service-instances` errand using the following command:
+
+	```
+	bosh -d DEPLOYMENT-NAME run-errand upgrade-all-service-instances
+	```
+
+- **Operators or developers**---to upgrade existing service instances individually, run the `cf update-service` command. 
+For more information about this command, see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
 
 ## <a id="interruptions"></a>Service Interruptions
 
