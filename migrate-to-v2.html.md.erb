@@ -1,97 +1,165 @@
 ---
-title: Migrating a Database to MySQL for PCF v2
+title: Migrating Data from v1 to v2
 owner: MySQL
 ---
 
-This page provides instructions on how to migrate your MySQL for PCF v1.x databases to MySQL for PCF v2. To perform the migration, you use the backup and restore process as follows:
-
-1. Preemptively create a new v2 service instance to minimize downtime.
-1. Stop traffic to the old database and take a backup.
-1. Import the backup into your new service instance.
-1. Connect your app to the new database and restart the app.
+This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foundry (PCF) v1.x service instance to a MySQL for PCF v2.x service instance.
 
 ## <a id='prepare'></a>Prerequisites
 
-To minimize downtime while migrating, preemptively create a new service instance.
+To perform the procedures in this topic, you must have the following:
 
-* The app source code can use `p.mysql` as a valid key for [accessing the database](./use.html#call).
-* Create a new service instance of `p.mysql` with a persistent disk large enough for the data. If you do not have 
-  an instance, follow the instructions to [create a new service instance](./use.html#create) in the same space as your existing service instance.
+* An existing MySQL for PCF v1.x service instance with the data you want to migrate
+* MySQL for PCF v2.x installed in the same PCF environment as your PCF v1.x service instance
+* At least one MySQL for PCF v2.x service plan available in the same space as your MySQL for PCF v1.x service instance
+  <p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>. 
+    MySQL for PCF v2.x appears as `p.mysql` and MySQL for PCF v1.x appears as `p-mysql`.</p>
 
-	<p class="note">Do not bind the new service instance to your app. We’ll do that later.</p>
+## <a id='stop-unbind'></a>Stop and Unbind Apps
 
-## <a id='backup'></a>Back Up Your Current Database
+Do the following to stop and unbind any apps that use your MySQL for PCF v1.x service instance:
 
-If you are migrating from a MySQL for PCF v1.x database, please refer to the instructions below. If you are migrating from another MySQL provider, please refer to their documentation on taking a MySQL backup.
-
-### Back Up Your MySQL for PCF v1.x Instance
-
-1. Stop any traffic to your existing database by stopping the app:
- <pre class="terminal">
-  $ cf stop my-app
-    Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
-    OK
- </pre>
-  
-1. Unbind your app from the old service instance:
+1. Use the cf CLI to target and log in to your PCF deployment. 
+For example:
   <pre class="terminal">
-   $ cf unbind-service my-app my-old-instance
-    Unbinding app my-app from service my-old-instance in org my-org / space my-space as user<span>@</span>example.com...
-    OK
+  $ cf target api.example.com
+  $ cf login
   </pre>
+  When prompted, enter your credentials and target the org and space where the MySQL for PCF v1.x is located.
 
-1. Use a [cf app to create an ssh tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to connect to your old service instance. The tunnel may appear as though it is hanging.
-   <p class="note">Since your app is now stopped, you’ll need another app for the ssh tunnel. If you don’t have a running app, you can clone and cf push this [sample app](https://github.com/cloudfoundry-samples/test-app) for tunneling. You can use any running app in the same Org/Space</p>
-   - An ssh tunnel is necessary as the MySQL service is only accessible within the Cloud Foundry network. 
+1. Stop any traffic to the MySQL for PCF v1.x database by stopping any apps that are bound to the service instance.
+  Run the following command for each app bound to the instance:
+  
+     ```
+     cf stop APP
+     ```
+     <br>
+     Where `APP` is the name of your app.
+     <br><br>
+     For example:
+     <pre class="terminal">
+     $ cf stop my-app
+     Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
+     OK
+     </pre>
+     To retrieve a list of bound apps, run `cf services`.
+  
+1. Unbind your app from the MySQL for PCF v1.x service instance.
+  Run the following command for each app bound to the instance:
+  
+     ```
+     cf unbind-service APP V1-INSTANCE
+     ```
+     <br>
+     Where:
+     * `APP` is the name of your app.
+     * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
+     <br><br>
+     For example:
+     <pre class="terminal">
+     $ cf unbind-service my-app my-instance
+     Unbinding app my-app from service my-v1-instance in org my-org / space my-space as user<span>@</span>example.com...
+     OK
+     </pre>
 
-1. Take a backup of the existing database in a separate shell:
- <pre class="terminal">
- $ mysqldump --single-transaction --add-drop-table --add-locks --create-options --disable-keys --extended-insert --quick --set-charset --routines --flush-privileges -u USERNAME -p -h 0 -P 63306 DB_NAME > backup.sql
- </pre>
-  * DB_NAME is the “name” property from your service-key
-  * USERNAME is the “username” property from your service-key
-  * 63306 is the available port you configured in the ssh tunnel on your local machine
-  * You will be prompted for a password after entering the previous command which is the “password” property from your service-key
+## <a id='migrate-data'></a>Migrate Data
 
-1. Kill the ssh tunnel
+To migrate the data from the MySQL for PCF v1.x service instance to a new MySQL for PCF v2.x service instance, use the `cf mysql-tools plugin`.
 
-## <a id='restore'></a>Restore to Your New Database
-This section provides steps to restore your backup to a new service instance of MySQL for PCF: 
+The `migrate` command of the plugin renames the MySQL for PCF v1.x service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
 
-1. Use [cf ssh to create a tunnel](https://docs.pivotal.io/pivotalcf/1-9/devguide/deploy-apps/ssh-services.html) to remotely access your new MySQL instance.  
+Do the following to migrate data to an instance of the same name:
 
-1. In another shell, restore your backup to the new service instance via the ssh tunnel:
- <pre class="terminal">
- $ mysql -u USERNAME -p -h 0 -P 63306 -D service_instance_db < backup.sql
- </pre>
-  * USERNAME is the “username” property from your service-key
-  * 63306 is the available port you configured in the ssh tunnel on your local machine
-  * backup.sql is the path to the backup on your local machine
-  * You will be prompted for a password after entering the previous command which is the “password” property from your service-key
+1. Install the `cf mysql-tools` plugin.
+  Run the following command:
 
-1. Validate that data that you expect to see has been imported into the new service instance by using the following command to enter a mysql shell.
- <pre class="terminal">
- $ mysql -u USERNAME -p -h 0 -P 63306 -D service_instance_db
- </pre>
-  * USERNAME is the “username” property from your service-key
-  * 63306 is the available port you configured in the ssh tunnel on your local machine
-  * You will be prompted for a password after entering the previous command which is the “password” property from your service-key
+    ```
+    cf install-plugin -r CF-Community "MysqlTools"
+    ```
 
-1. Exit the mysql shell and kill the ssh tunnel
-1. Bind the app to the new service instance
- <pre class="terminal">
- $ cf bind-service my-app my-new-instance
- Binding service my-new-instance to app my-app in org my-org / space my-space as user<span>@</span>example.com...
- OK
- TIP: Use 'cf restage my-app' to ensure your env variable changes take effect
- </pre>
+1. Use the plugin to migrate your data.
+  Run the following command:
+
+    ```
+    cf mysql-tools migrate V1-INSTANCE V2-PLAN
+    ```
+    <br>
+    Where:
+    * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
+    * `V2-PLAN` is the name of the MySQL for PCF v2.x service plan to use for the new MySQL for PCF v2.x service instance. 
+    For example, `db-small`. 
+    To view available MySQL for PCF v2.x service plans, run `cf marketplace` and locate the plans under `p.mysql`.
+    <br><br>
+    For debug purposes, optionally add the `--no-cleanup` flag. 
+    This flag preserves the app that runs the migration task and the newly created service instances if the migration is not successful. 
+    Developers can SSH into the app container to examine the logs.
+    <p class="note"><strong>Note</strong>: If a migration succeeds, the migration app is cleaned up even if the <code>--no-cleanup</code> flag is provided.</p>
+    <br>
+    For example:
+    <pre class="terminal">
+    $ cf mysql-tools migrate my-instance db-small
+    2018/04/24 11:31:19 Creating new service instance "my-instance" for service p.mysql using plan db-small
+    2018/04/24 11:41:01 Unpacking assets for migration to /var/folders/dm/66n2j9xx02l8vs58q2whz4080000gn/T/migrate_app_101341527
+    2018/04/24 11:41:02 Started to push app
+    Done uploading
+    2018/04/24 11:41:09 Successfully pushed app
+    2018/04/24 11:41:10 Successfully bound app to v1 instance
+    2018/04/24 11:41:12 Successfully bound app to v2 instance
+    2018/04/24 11:41:12 Starting migration app
+    2018/04/24 11:41:25 Started to run migration task
+    2018/04/24 11:41:27 Migration completed successfully
+    2018/04/24 11:41:29 Cleaning up...
+    </pre>
+
+## <a id='validate-data'></a>Validate Data
+
+After migrating your data, you must verify that the data has successfully migrated by validating the data in the new MySQL for PCF v2.x service instance. 
+You can validate the data by creating an SSH tunnel to gain direct command line access to the new MySQL for PCF v2.x service instance.
+
+Do the following to create an SSH tunnel to the instance and validate your data:
+
+1. Perform the steps in [Push Your Host App](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#push-app) to push an app that will act as the host for the SSH tunnel.
+
+1. Perform the steps in [Create Your Service Key](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#bind-app) to create a service key for your MySQL for PCF v2.x service instance.
+
+1. Perform the steps in [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#ssh-tunnel) to configure an SSH tunnel to your MySQL for PCF v2.x service instance.
+
+1. Perform the steps in [Access Your Service Instance](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#access-service) to establish direct command-line access to your MySQL for PCF v2.x service instance.
+
+1. From the MySQL shell, validate that the data that you expect to see has been imported into the MySQL for PCF v2.x service instance.
+
+1. Exit the MySQL shell and kill the SSH tunnel.
+
+## <a id='rebind-restage'></a>Rebind and Restage Apps
+
+To complete the migration, rebind and restage any apps that had been bound to the original MySQL for PCF v1.x service instance. 
+
+Do the following to rebind and restage your apps:
+
+1. Bind the app to the new service instance.
+Run the following command:
+
+    ```
+    cf bind-service APP V2-INSTANCE
+    ```
+    <br>
+    Where:
+    * `APP` is the name of your app.
+    * `V2-INSTANCE` is the name of your MySQL for PCF v2.x service instance.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ cf bind-service my-app my-instance-new
+    Binding service my-instance-new to app my-app in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    TIP: Use 'cf restage my-app' to ensure your env variable changes take effect
+    </pre>
  
-1. Restage the app to restart the app with the new changes
- <pre class="terminal">
- $ cf restage my-app
-   Restaging app my-app in org my-org / space my-space as user<span>@</span>example.com...
-   [...]
- </pre>
-
-
-1. Your app is now using your new MySQL for Pivotal Cloud Foundry v2 database and should be operational again.
+1. Restage the app.
+  For example:
+  <pre class="terminal">
+  $ cf restage my-app
+  Restaging app my-app in org my-org / space my-space as user<span>@</span>example.com...
+  [...]
+  </pre>
+  The app is now using your new MySQL for PCF v2.x service instance and should be operational again.
