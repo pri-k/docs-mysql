@@ -8,17 +8,14 @@ owner: MySQL
 
 ## <a id="1.10.14"></a>v1.10.14
 
-Release Date: May 31, 2018
+Release Date: June 12, 2018
 
-This is a maintenance release.
+Pivotal MySQL v1.10.14 is a maintenance release.
 
-**New Features**
-
-FIXME: Include updates since cf-mysql v36.11, and mysql-backups v2.1.0
-
-- **New:** The `smoketests` errand now runs in a specific Organization and Space so that you may configure your Application Security Groups to run successfully when the service is deployed without any public plans.
+- **Bug fix:** The `smoketests` errand now runs in the organization and space combination, `system:pivotal-services` so that Operators can include the space in Application Security Groups (ASGs). This allows the `smoke-tests` errand to run successfully when the service is deployed without any public plans. See the [Application Security Groups for MySQL](app-security-groups.html) topic for more details.
 
 **Dependency Updates**
+
 - Upgraded to MariaDB 10.1.32, and Galera to 25.3.23.
 - Updated to routing v0.174.0, consul v191, and loggregator to v101.5.
 - Updated to stemcell 3445.48
