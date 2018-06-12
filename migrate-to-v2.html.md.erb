@@ -118,14 +118,18 @@ You can validate the data by creating an SSH tunnel to gain direct command line 
 
 Do the following to create an SSH tunnel to the instance and validate your data:
 
-1. Perform the steps in [Push Your Host App](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#push-app) to push an app that will act as the host for the SSH tunnel.
+1. Create an SSH tunnel to your MySQL for PCF v2.x service instance. 
+To do this, perform the steps in the 
+following sections of [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html):
 
-1. Perform the steps in [Create Your Service Key](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#bind-app) to create a service key for your MySQL for PCF v2.x service instance.
+    1. Push Your Host App
 
-1. Perform the steps in [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#ssh-tunnel) to configure an SSH tunnel to your MySQL for PCF v2.x service instance.
+    1. Create Your Service Key
 
-1. Perform the steps in [Access Your Service Instance](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#access-service) to establish direct command-line access to your MySQL for PCF v2.x service instance.
+    1. Configure Your SSH Tunnel
 
+    1. Access Your Service Instance
+    
 1. From the MySQL shell, validate that the data that you expect to see has been imported into the MySQL for PCF v2.x service instance.
 
 1. Exit the MySQL shell and kill the SSH tunnel.
