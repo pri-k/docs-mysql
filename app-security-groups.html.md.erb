@@ -5,7 +5,7 @@ owner: MySQL
 
 This topic describes how to create [Application Security Groups](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) (ASGs) for MySQL for Pivotal Cloud Foundry (PCF).
 
-To allow smoke tests to run when you install the MySQL for PCF service and enable applications to access the service after it is installed, 
+To allow smoke tests to run when you install the MySQL for PCF service and enable applications to access the service after it is installed,
 you must create an appropriate ASG and bind it to the service.
 
 <p class="note"><strong>Note</strong>: Without an ASG, the service is not installable or usable.</p>
@@ -25,9 +25,9 @@ To create ASGs for the MySQL for PCF service, perform the following steps:
       }
     ]
     </pre>
-   
+
    	In the `destination` field, add the IP address, range, or CIDR of the load balancer that you configured for the MySQL for PCF service.
-   
+
 1. Log in to your PCF deployment as an administrator, and create an ASG called `p-mysql-service`.
 
 	<pre class="terminal">
@@ -35,15 +35,22 @@ To create ASGs for the MySQL for PCF service, perform the following steps:
     $ cf create-security-group p-mysql-service p-mysql-security-group.json
     </pre>
 
-1. Bind the new ASG to the `default-running` ASG set to allow all applications to access the service.
+1. If plans are to be published to all Cloud Foundry organizations:
 
-	<pre class="terminal">
-	$ cf bind-running-security-group p-mysql-service
-    </pre>
+  1. Bind the new ASG to the `default-running` ASG set to allow all applications to access the service.
 
-	If the service should only be made available to specific spaces, bind the
-ASG directly to those spaces.
+		<pre class="terminal">
+		$ cf bind-running-security-group p-mysql-service
+	    </pre>
 
-	<pre class="terminal">
-   $ cf bind-security-group p-mysql-service ORGANIZATION_NAME SPACE_NAME
-   	</pre>
+1. If the service should only be made available to specific spaces:
+  1. Bind the ASG directly to each spaces **and** the `system` org and space. This is necessary for the `smoke-tests` errand to run successfully.
+
+		  <pre class="terminal">
+		  $ cf bind-security-group p-mysql-service system pivotal-services
+		  $ cf bind-security-group p-mysql-service ORGANIZATION\_NAME SPACE\_NAME
+		  $ cf bind-security-group p-mysql-service ...
+		  </pre>
+  Where, for each line:
+	  - ORGANIZATION_NAME: The Cloud Foundry organization(s) which will have access to Pivotal MySQL. **(Required)**
+	  - SPACE_NAME: The Cloud Foundry space(s), within the organization, which will have access to Pivotal MySQL. **(Required)**
