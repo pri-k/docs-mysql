@@ -35,13 +35,13 @@ Developers cannot create new bindings to a service instance that has not been up
 
 To upgrade existing service instances, do either of the following:
 
-- **Operators**---run the `upgrade-all-service-instances` errand using the following command:
+- **Operators**: Run the `upgrade-all-service-instances` errand using the following command:
 
 	```
 	bosh -d DEPLOYMENT-NAME run-errand upgrade-all-service-instances
 	```
-
-- **Operators or developers**---to upgrade existing service instances individually, run the `cf update-service` command. 
+<br>
+- **Operators or developers**: To upgrade existing service instances individually, run the `cf update-service` command. 
 For more information about this command, see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
 
 ## <a id="interruptions"></a>Service Interruptions
