@@ -1,80 +1,164 @@
 ---
-title: Release Notes
+title: MySQL for PCF Release Notes
 owner: MySQL
 ---
 
 ## <a id="230"></a>v2.3.0
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older v2.2.x version, upgrade to the latest v2.2.x version before upgrading to the latest v2.3.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor release,
+and then upgrade to the latest available version of the new minor release.
+For example, if you use v2.2.3,
+upgrade to the latest version of 2.2 before upgrading to the latest version of 2.3.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-**Release Date:**  May 22, 2018
+**Release Date: June 1, 2018**
+
+### Known Issues
+
+This release has the following issue:
+
++ After upgrading to MySQL for PCF v2.3.0, developers cannot create new bindings
+  to a service instance that has not also been upgraded.
+  For apps to bind and unbind successfully, developers must run `cf update-service` on their service instances
+  or operators must run the `upgrade-all-service-instances` errand.
+  For more information, see [Upgrade MySQL Instances](./upgrade.html#upgrade-instances).
 
 ### Features
 
-- **Transport Layer Security:** TLS (formerly known as SSL) to Applications, Docker-based containers, and other clients.
+New features and changes in this release:
 
-  With MySQL for PCF v2.3.0, Applications can connect to MySQL over TLS (formerly known as SSL), without the need for IPSEC. **This feature requires PCF 1.12 and greater.** To use TLS, please refer to the following documentation:
-  - Developers will need to [enable TLS](using-tls.html)
-  - Developers will also need to [modify some apps](modify-apps-tls.html)
-  - **Important:** You must read and follow the [TLS preparation documentation](https://docs.pivotal.io/p-mysql/prepare-tls.html) before enabling TLS. It is not necessary to follow these steps before upgrading to v2.3.0.
+- **Transport Layer Security (TLS)**
 
-  TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
+    Communication between apps and the MySQL server is now secured using TLS.
+    TLS was formerly known as SSL.
+    With MySQL for PCF v2.3.0, apps and clients can connect to MySQL over TLS.
+    This allows for encrypted connection without IPsec.
+
+
+    To use TLS, you must use PCF v1.12 or later.
+
+
+    For more information about using TLS with MySQL for PCF, see the following:
+
+  - [Using TLS](using-tls.html)
+  - [Modifying Apps for TLS](modify-apps-tls.html)
+  - [Preparing for TLS](prepare-tls.html)
+
 
 - **Synchronous replication**
+    When choosing the leader-follower topology,
+    developers can enable MySQL "semi-synchronous" mode to ensure
+    that transactions are replicated in real time.
+    This ensures availability in case of host or AZ failure.
+    For more information about synchronous replication,
+    see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication).
 
-  When choosing Leader/Follower topology, Developers can now enable MySQL's "semi-synchronous" mode to ensure that transactions are replicated in **real time** to ensure availability in the case of host or AZ failure. Read more in the [synchronous replication documentation](maintain-leader-follower.html#synchronous-replication) for the leader-follower topology.
+- **Service Credentials stored securely**
 
-- **Service Credentials in CredHub**
+    For Pivotal Application Service (PAS) v2.0 and later,
+    operators can store service credentials in runtime CredHub.
 
-  For PAS 2.0 and greater, Operators can choose to store service credentials in CredHub. For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
-
-  All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
-
-- Developers can now create multiple DB schemas.
-
-  Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Starting the path to better service instance sharing, Developers can now create multiple schemas within a dedicated service instance. This means that multiple apps can co-exist on the same service instance without interfering or having access to other schemas. Previously, developers were not able to run: `create database FOO`
-  
-- Developers can now define the database charset and collation
-  - See the documentation on [changing server defaults using optional parameters](change-default.html#configuring) to define these settings.
-
-### Dependency Updates
-
-- Service Instances will now run Percona Server 5.7.21-20
-- Service Instances will now be deployed using the [3541.x stemcell line](https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line)
-- Updated all dependencies to Golang to 1.9.6 or greater
+    To ensure that credentials are stored in CredHub,
+    any apps that are currently bound to service instances must be re-bound.<br><br>
 
 
-### General Improvements and Bug Fixes
+    For more information, see the following:
 
-**Developer Improvements**
+    - [Securing Services Instance Credentials with Runtime CredHub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html)
+    - [Configure Security](install-config.html#security) in _Installing and Configuring MySQL for PCF_
 
-- **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance.
-- **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down.
-- **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance.
-- **[PLACEHOLDER [#155446132](https://www.pivotaltracker.com/story/show/155446132)]** **Bug fix:** If the broker is upgraded but the service instances are not, developers can still un-bind/re-bind an application to an outdated service instance.
+- Improvements for **developers**:
 
-**Operator Improvements**
+    - Developers can now **create multiple database schemas**.
 
-- **Improvement:** We've made several cosmetic improvements to the `inspect` and `configure-leader-follower` errands
-- **Improvement:** We've introduced a new configuration pane, "Service Instance Upgrades" where you can control how many canary upgrades must succeed, and how many service instances may be upgraded in parallel
-- **Improvement:** Output from the broker's errands is now sent to syslog, if configured
-- **Improvement:** Logs sent to syslog are now annotated with the assigned hostname or IP
-- **Improvement:** All errands now uniformly send non-error output to stdout
-- **Improvement:** You can now control how long the service broker waits on a slow/unresponsive MySQL server before timing out.
-- **Bug fix:** We've had to stop collocating some errands for tiles that are compatible with PCF 1.12 and earlier
-- **Bug fix:** Extra whitespace in Azure backup configuration won't cause backup failures
-- **Security:** The metrics collection job now connects to the MySQL server over Unix socket, reducing the scope of that users' access.
+        Developers can now create multiple schemas within a dedicated service instance. Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). This means that multiple apps can co-exist on the same service instance without interfering or having access to other schemas. Now, developers can run: `create database FOO`.
+
+    - Developers can now define the database charset and collation.
+
+         For information about defining these parameters,
+         see [Changing MySQL Server Defaults](change-default.html##changes).
+
+    - If developers supply invalid optional parameters when creating or updating a service instance,
+      they receive an error message.
+      For information about optional parameters, see [Use Optional Parameters](./change-default.html#parameters).
+
+- Improvements for **operators**:
+
+    -  There is a new **Service Instance Upgrades** pane.
+       In this pane, operators set how many canary upgrades must succeed
+       and how many service instances may be upgraded in parallel.
+       For more information, see [Configure Service Instance Upgrades](./install-config.html#service-instance-upgrades).
+
+    - The output wording for the `inspect` and `configure-leader-follower` errands is improved.
+
+    - If system logging is configured, the output from the broker errands is now sent to syslog.
+      For information about configuring, see [Configure System Logging](./install-config.html#syslog).
+
+    -  Logs sent to syslog are now annotated with the assigned hostname or IP address.
+
+    -  All errands now send non-error output to stdout.
+
+- Improvements to **backups**:
+
+    - Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
+    - Operators no longer need to provide the admin credential when restoring a backup artifact.
+    - For PCF 2.0 and later, all backup encryption keys are stored in BOSH CredHub
+      so that backup artifacts can be decrypted even after the service instance is deleted.
 
 
-**Backups Improvements**
+- Improvements to **smoke tests**:
 
-- Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
-- Operators no longer need to provide the admin credential when restoring a backup artifact.
-- For PCF 2.0 and greater, all backup encryption keys will be stored in Credhub so that backup artificats can be decrypted even after the service instance is deleted.
+    -  The service broker `smoke-tests` errand now runs
+       in the org and space `system:pivotal-services` so that operators can configure ASGs
+       to allow the `smoke-tests` errand to succeed.
+       For how to create an ASG,
+       see [Create an Application Security Group for MySQL for PCF](https://docs-pcf-staging.cfapps.io/p-mysql/2-3/install-config.html#asg).
+    -  The timeout for smoke tests is now 30 minutes.
+        This accommodates very slow infrastructures.
 
-**Smoke Tests**
+### Security Fixes
 
-- **Improvement:** The service broker `smoke-tests` errand now runs in the organization and space `system:pivotal-services` so that you can configure your ASGs to allow the `smoke-tests` app to succeed.
-- **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
+This release includes the following security fix:
+
+- The metrics collection job now connects to the MySQL server over a Unix domain socket.
+    This reduces the scope of access for the metrics collection job user.
+
+### Fixed Issues
+
+This release fixes the following issues that **developers** might have experienced:
+
+- Developers cannot lose access to a persistent disk by updating the plan of a service instance.
+
+- Developers can now un-bind and re-bind an app from a leader-follower instance, even when the leader is down.
+
+- If the broker is upgraded but the service instances are not,
+  developers can now un-bind and re-bind an app to an outdated service instance.
+
+This release fixes the following issue that **operators** might have experienced:
+
+- Extra whitespace in Azure backup configuration no longer causes backup failures.
+
+
+### Compatibility
+
+This release uses the following component versions:
+
+<table border="1" class="nice">
+<tr>
+    <th>Component</th>
+    <th>Version</th>
+</tr>
+<tr>
+    <td>Stemcell</td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line">3541.x</a></td>
+</tr>
+<tr>
+    <td>Percona Server</td>
+    <td>5.7.21-20</td>
+</tr>
+<tr>
+    <td>golang</td>
+    <td>1.9.6<br> This is a downgrade because of an issue with golang v1.10.</td>
+</tr>
+</table>
