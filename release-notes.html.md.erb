@@ -13,7 +13,7 @@ upgrade to the latest version of 2.2 before upgrading to the latest version of 2
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
 **Release Date: June 1, 2018**
- 
+
 ### Known Issues
 
 This release has the following issue:
@@ -28,7 +28,7 @@ This release has the following issue:
 
 New features and changes in this release:
 
-- **Transport Layer Security (TLS)** 
+- **Transport Layer Security (TLS)**
 
     Communication between apps and the MySQL server is now secured using TLS.
     TLS was formerly known as SSL.
@@ -36,7 +36,7 @@ New features and changes in this release:
     This allows for encrypted connection without IPsec.
 
 
-    To use TLS, you must use PCF v1.12 or later. 
+    To use TLS, you must use PCF v1.12 or later.
 
 
     For more information about using TLS with MySQL for PCF, see the following:
@@ -47,7 +47,7 @@ New features and changes in this release:
 
 
 - **Synchronous replication**
-    When choosing the leader-follower topology, 
+    When choosing the leader-follower topology,
     developers can enable MySQL "semi-synchronous" mode to ensure
     that transactions are replicated in real time.
     This ensures availability in case of host or AZ failure.
@@ -58,7 +58,7 @@ New features and changes in this release:
 
     For Pivotal Application Service (PAS) v2.0 and later,
     operators can store service credentials in runtime CredHub.
-    
+
     To ensure that credentials are stored in CredHub,
     any apps that are currently bound to service instances must be re-bound.<br><br>
 
@@ -69,11 +69,10 @@ New features and changes in this release:
     - [Configure Security](install-config.html#security) in _Installing and Configuring MySQL for PCF_
 
 - Improvements for **developers**:
- 
-    - Developers can now create multiple database schemas.
 
-        Now developers can run `create database FOO`.
-        Database credentials that enable developers to bind apps or create service keys can now also be used to create new databases.
+    - Developers can now **create multiple database schemas**.
+
+        Developers can now create multiple schemas within a dedicated service instance. Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). This means that multiple apps can co-exist on the same service instance without interfering or having access to other schemas. Now, developers can run: `create database FOO`.
 
     - Developers can now define the database charset and collation.
 
@@ -82,11 +81,11 @@ New features and changes in this release:
 
     - If developers supply invalid optional parameters when creating or updating a service instance,
       they receive an error message.
-      For information about optional parameters, see [Use Optional Parameters](./change-default.html#parameters).  
+      For information about optional parameters, see [Use Optional Parameters](./change-default.html#parameters).
 
 - Improvements for **operators**:
 
-    -  There is a new **Service Instance Upgrades** pane. 
+    -  There is a new **Service Instance Upgrades** pane.
        In this pane, operators set how many canary upgrades must succeed
        and how many service instances may be upgraded in parallel.
        For more information, see [Configure Service Instance Upgrades](./install-config.html#service-instance-upgrades).
@@ -115,7 +114,7 @@ New features and changes in this release:
        to allow the `smoke-tests` errand to succeed.
        For how to create an ASG,
        see [Create an Application Security Group for MySQL for PCF](https://docs-pcf-staging.cfapps.io/p-mysql/2-3/install-config.html#asg).
-    -  The timeout for smoke tests is now 30 minutes. 
+    -  The timeout for smoke tests is now 30 minutes.
         This accommodates very slow infrastructures.
 
 ### Security Fixes
@@ -139,7 +138,7 @@ This release fixes the following issues that **developers** might have experienc
 This release fixes the following issue that **operators** might have experienced:
 
 - Extra whitespace in Azure backup configuration no longer causes backup failures.
- 
+
 
 ### Compatibility
 
