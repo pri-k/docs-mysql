@@ -47,6 +47,7 @@ New features and changes in this release:
 
 
 - **Synchronous replication**
+
     When choosing the leader-follower topology,
     developers can enable MySQL "semi-synchronous" mode to ensure
     that transactions are replicated in real time.
@@ -70,9 +71,12 @@ New features and changes in this release:
 
 - Improvements for **developers**:
 
-    - Developers can now **create multiple database schemas**.
-
-        Developers can now create multiple schemas within a dedicated service instance. Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). This means that multiple apps can co-exist on the same service instance without interfering or having access to other schemas. Now, developers can run: `create database FOO`.
+    - Developers can now **create multiple database schemas** within a dedicated service instance. 
+    Database credentials created for application bindings or service keys are 
+    now able to create new MySQL databases (schemas). 
+    This means that multiple apps can co-exist on the same service instance without 
+    interfering or having access to other schemas. 
+    Now, developers can run: `create database FOO`.
 
     - Developers can now define the database charset and collation.
 
