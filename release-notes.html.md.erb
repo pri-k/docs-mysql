@@ -72,11 +72,10 @@ New features and changes in this release:
 - Improvements for **developers**:
 
     - Developers can now **create multiple database schemas** within a dedicated service instance. 
-    Database credentials created for application bindings or service keys are 
-    now able to create new MySQL databases (schemas). 
+    Database credentials created for application bindings or service keys can create new MySQL databases (schemas). 
     This means that multiple apps can co-exist on the same service instance without 
     interfering or having access to other schemas. 
-    Now, developers can run: `create database FOO`.
+    To use this feature, run: `create database NAME-OF-NEW-SCHEMA`.
 
     - Developers can now define the database charset and collation.
 
