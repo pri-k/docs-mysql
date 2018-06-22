@@ -3,8 +3,8 @@ title: MySQL for PCF Release Notes
 owner: MySQL
 ---
 
-Pivotal recommends that you upgrade to the latest version of your current minor release,
-and then upgrade to the latest available version of the new minor release.
+Pivotal recommends upgrading to the latest version of your current minor release
+before you upgrade to the latest available version of the new minor release.
 For example, if you use v2.2.3,
 upgrade to the latest version of 2.2 before upgrading to the latest version of 2.3.
 
@@ -24,7 +24,7 @@ All releases up to and including MySQL for PCF v2.3.1 have the following issue:
 
 * Fixes the known issue in MySQL for PCF v2.3.0 where apps cannot bind to/unbind from an outdated service instance.
 * Operators can now set the global limit for maximum service instances to 200.
-* Operators can now audit connections to service instances to see which are **not** using TLS. They can do this by running the `find-non-tls-bindings` BOSH errand. 
+* Operators can now audit connections to service instances to determine which instances are **not** using TLS. They can do this by running the `find-non-tls-bindings` BOSH errand. 
 
 
 ## <a id="230"></a>v2.3.0
