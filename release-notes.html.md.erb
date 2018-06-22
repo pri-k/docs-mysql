@@ -3,14 +3,31 @@ title: MySQL for PCF Release Notes
 owner: MySQL
 ---
 
-## <a id="230"></a>v2.3.0
-
 Pivotal recommends that you upgrade to the latest version of your current minor release,
 and then upgrade to the latest available version of the new minor release.
 For example, if you use v2.2.3,
 upgrade to the latest version of 2.2 before upgrading to the latest version of 2.3.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
+
+## <a id="231"></a>v2.3.1
+
+**Release Date: June 22, 2018**
+
+### Known Issues
+
+All releases up to and including v2.3.1 have the following issue:
+
+- Service instances **cannot** be upgraded individually using the `cf update-service` CLI command. In order to upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
+
+### Improvements and Bug Fixes
+
+* Fixes an issue where apps cannot bind to/unbind from an outdated service instance.
+* Operators can now set the global limit for maximum service instances to 200.
+* Operators can now audit connections to service instances to see which are **not** using TLS. They can do this by running the `find-non-tls-bindings` BOSH errand. 
+
+
+## <a id="230"></a>v2.3.0
 
 **Release Date: June 1, 2018**
 
@@ -20,8 +37,7 @@ This release has the following issue:
 
 + After upgrading to MySQL for PCF v2.3.0, developers cannot create new bindings
   to a service instance that has not also been upgraded.
-  For apps to bind and unbind successfully, developers must run `cf update-service` on their service instances
-  or operators must run the `upgrade-all-service-instances` errand.
+  For apps to bind and unbind successfully, operators must run the `upgrade-all-service-instances` errand.
   For more information, see [Upgrade MySQL Instances](./upgrade.html#upgrade-instances).
 
 ### Features
