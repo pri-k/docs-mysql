@@ -18,13 +18,15 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 All releases up to and including MySQL for PCF v2.3.1 have the following issue:
 
-- Service instances **cannot** be upgraded individually using the `cf update-service` CLI command. In order to upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
+- Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
+  To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
 
 ### Improvements and Bug Fixes
 
 * Fixes the known issue in MySQL for PCF v2.3.0 where apps cannot bind to/unbind from an outdated service instance.
 * Operators can now set the global limit for maximum service instances to 200.
-* Operators can now audit connections to service instances to determine which instances are **not** using TLS. They can do this by running the `find-non-tls-bindings` BOSH errand. 
+* Operators can now audit connections to service instances to determine which instances are **not** using TLS.
+  They can do this by running the `find-non-tls-bindings` BOSH errand. 
 
 
 ## <a id="230"></a>v2.3.0
