@@ -465,6 +465,51 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
 
 1. Click **Save**.
 
+###<a id="errands"></a> About Errands
+
+MySQL for PCF runs service broker errands at specific points during the installation. 
+You do not need to change the default configuration for errands.
+
+By default, MySQL for PCF runs errands at the following points:
+
+- **Post-Deploy Errands**: Run when you click **Apply Changes**.
+- **Pre-Delete Errands**: Run before deleting the MySQL for PCF tile.
+
+You can also run these errands when troubleshooting the broker or service instances. 
+For more information about using errands for troubleshooting, see [Run Service 
+Broker Errands to Manage Brokers and Instances](/troubleshoot.html#broker-errands).
+
+MySQL for PCF includes the errands listed in the following table:
+
+<table>
+    <tr>
+        <th><strong>Post-Deploy Errands</strong></th>
+        <td>
+            <ul>
+                <li><strong>Register On-demand MySQL Broker</strong>: 
+                    Registers a broker with the Cloud Controller and lists it in the Marketplace.</li>
+                <li><strong>Smoke Tests</strong>: Validates basic MySQL operations.</li>
+                <li><strong>Upgrade all On-demand MySQL Service Instances</strong>: 
+                    Upgrades existing instances of a service to its latest installed version.</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <th><strong>Pre-Delete Errand</strong></th>
+        <td>
+            <ul>
+                <li><strong>Delete All Service Instances and Deregister Broker</strong>: 
+                    Deletes all instances of service and deregisters the broker.</li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+<p class="note"><strong>Note:</strong>
+MySQL for PCF also uses errands to configure leader-follower service instances. 
+For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands 
+Used in Leader-Follower Failover</a>.</p>
+
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
 Follow the steps below to verify your stemcell version and apply all changes:
