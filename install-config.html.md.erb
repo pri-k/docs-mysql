@@ -505,15 +505,18 @@ By default, MySQL for PCF runs the following errands:
         </td>
     </tr>
 </table>
-<br>
-You can also run errands when troubleshooting the broker or service instances. 
+
+<p class="note warning"><strong>WARNING:</strong>The <strong>Delete All Service Instances and Deregister Broker</strong> errand does 
+necessary cleanup tasks when you delete the MySQL for PCF tile. Setting this errand to <strong>Off</strong> can cause 
+problems when attempting to reinstall the tile.</p>
+
+MySQL for PCF also uses errands to configure leader-follower service instances. 
+For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands Used in Leader-Follower Failover</a>.
+
+You can use errands when troubleshooting the broker or service instances. 
 For more information about using errands for troubleshooting, see [Run Service 
 Broker Errands to Manage Brokers and Instances](./troubleshoot.html#broker-errands).
 
-<p class="note"><strong>Note:</strong>
-MySQL for PCF also uses errands to configure leader-follower service instances. 
-For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands 
-Used in Leader-Follower Failover</a>.</p>
 
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
