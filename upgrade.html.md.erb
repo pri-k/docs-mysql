@@ -8,15 +8,11 @@ It also explains the service interruptions that can result from service changes 
 
 ## <a id="upgrade-service"></a>Upgrade MySQL for PCF
 
-<div class="note"><p style="margin-top: 0"><strong>Note: </strong>Before upgrading to the next version of MySQL for PCF, make sure all 
-your service instances are upgraded to your current version. Do this in two ways:</p>
+ <p class="note"><strong>Note:</strong>  Before upgrading to the next version of MySQL for PCF,
+run the <code>upgrade-all-service-instances</code> errand to make sure that
+all your service instances are upgraded to your current version.<br>
+For more information, see <a href="./troubleshoot.html#upgrade-all">Upgrade All Service Instances</a>.</p>
 
-<ul>
-	<li>Run the <code>upgrade-all-service-instances</code> errand. For more information, 
-		see <a href="./troubleshoot.html#upgrade-all">Upgrade All Service Instances</a>.</li>
-	<li>Have your app developers run <code>cf update-service SERVICE-INSTANCE-NAME</code>.</li>
-</ul>
-</div>
 To upgrade the MySQL for PCF service, you follow the same Ops Manager process that you use to install the service for the first time. 
 Your configuration settings migrate to the new version automatically. To perform an upgrade:
 
