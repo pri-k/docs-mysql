@@ -28,7 +28,7 @@ in order to validate that the server certificate can be trusted.
 PCF distributes the public component of the CA certificate to apps in two ways:
 
 * PCF provisions a copy of the CA certificate in the trusted store of each container's operating system.
-  Apps written in Java and Spring automatically discover the CA certificate in the trusted stored.
+  Apps written in Java and Spring automatically discover the CA certificate in the trusted store.
 * PCF supplies the public CA certificate in an environment variable called `VCAP_SERVICES` that exists in every container.
   Apps not written in Java and Spring can retrieve the public component of the CA certificate from `VCAP_SERVICES`
   and use it to establish an encrypted connection with the data service.
