@@ -62,10 +62,10 @@ log in to CredHub, and provide or generate a CA certificate.
 Perform the following steps to create a UAA client for CredHub on your UAA server:
 
 1. Retrieve the IP address of the BOSH Director VM and the Director credentials by performing the steps
-   in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#gather).
+   in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#gather).<br><br>
    Both the UAA and CredHub servers are colocated on the BOSH Director VM.
 
-1. SSH into the Ops Manager VM by performing the steps in [SSH into Ops Manager of Advanced Troubleshooting with the BOSH CLI](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#ssh). 
+1. SSH into the Ops Manager VM by performing the steps in [SSH into Ops Manager VM](https://docs.pivotal.io/pivotalcf/2-0/customizing/trouble-advanced.html#ssh). 
 
 1. From the Ops Manager VM, use the UAA Command Line Interface (UAAC) to target the UAA server on the BOSH Director VM. 
     In the UAAC command, specify the IP address for the BOSH Director VM, and port 8443.
@@ -116,11 +116,11 @@ Perform the following steps to create a UAA client for CredHub on your UAA serve
     <br><br>
     Enter the following command:
 
-    ```
-    uaac client add \
-    	--authorized\_grant\_types client\_credentials \
+    <pre class="terminal">
+    $ uaac client add \
+    	--authorized_grant_types client_credentials \
     	--authorities credhub.read,credhub.write
-    ```
+    </pre>
 
 1. When prompted for Client ID, enter `credhub`.
    When prompted for `New client secret`, enter a secure password of your choice.
