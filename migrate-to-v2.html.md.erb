@@ -97,8 +97,14 @@ Do the following to migrate data to an instance of the same name:
     <br><br>
     For debug purposes, optionally add the `--no-cleanup` flag. 
     This flag preserves the app that runs the migration task and the newly created service instances if the migration is not successful. 
+    <p class="note"><strong>Note</strong>: If the migration is not successful, an error message will indicate this. 
+    If the migration **is** successful, a <code>migration completed successfully</code> message appears
+    in the messages returned to you after you run the migraion command. This is the best inidcation that your migration process
+    was successfully completed.</p>
+    <br>
     Developers can SSH into the app container to examine the logs.
-    <p class="note"><strong>Note</strong>: If a migration succeeds, the migration app is cleaned up even if the <code>--no-cleanup</code> flag is provided.</p>
+    <br>
+    If a migration succeeds, the migration app is cleaned up even if the <code>--no-cleanup</code> flag is provided.
     <br>
     For example:
     <pre class="terminal">
