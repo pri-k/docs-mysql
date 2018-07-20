@@ -97,14 +97,13 @@ Do the following to migrate data to an instance of the same name:
     <br><br>
     For debug purposes, optionally add the `--no-cleanup` flag. 
     This flag preserves the app that runs the migration task and the newly created service instances 
-    if the migration is not successful. 
-    <p class="note"><strong>Note</strong>: If the migration is not successful, an error message will indicate that the migration failed. 
-    If the migration **is** successful, a <code>migration completed successfully</code> message appears
-    within the messages returned to you after you run the migraion command. This is the best inidcation that your migration process
-    was successfully completed.</p>
-    Developers can SSH into the app container to examine the logs.
+    if the migration is not successful. However, if a migration succeeds, the migration app is cleaned 
+    even if the <code>--no-cleanup</code> flag is provided.
     <br>
-    If a migration succeeds, the migration app is cleaned up even if the <code>--no-cleanup</code> flag is provided.</p>
+    <p class="note"><strong>Note</strong>: If the migration is not successful, an error message will indicate this. 
+    If the migration **is** successful, a <code>migration completed successfully</code> message appears
+    in the messages returned to you after you run the migraion command. This is the best inidcation that your migration process
+    was successfully completed.</p>
 
     For example:
     <pre class="terminal">
@@ -122,6 +121,8 @@ Do the following to migrate data to an instance of the same name:
     2018/04/24 11:41:29 Cleaning up...
     </pre>
 
+Developers can SSH into the app container to examine the logs. 
+<br>
 ## <a id='validate-data'></a>Validate Data
 
 After migrating your data, you must verify that the data has successfully migrated by validating the data in the new MySQL for PCF v2.x service instance. 
