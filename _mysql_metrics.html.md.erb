@@ -16,9 +16,9 @@
 | `<%= vars.mysql_metrics_origin %>/broker/disk_allocated_service_plans` | The number of MB allocated by the broker for all service plans, current and allocated. | MB |
 | `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_free` | The number of free pages in the InnoDB Buffer Pool. | pages |
 | `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_total` | The total number of pages in the InnoDB Buffer Pool. | pages |
+| `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_pages_data` | The number of pages in the InnoDB Buffer pool containing data. The number includes both dirty and clean pages. | pages |
 | `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_used` | The number of used pages in the InnoDB Buffer Pool. | pages |
 | `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_utilization` | The utilization of the InnoDB Buffer Pool. | fraction |
-| `<%= vars.mysql_metrics_origin %>/innodb/current_row_locks` | The number of current row locks. | locks |
 | `<%= vars.mysql_metrics_origin %>/innodb/data_reads` | The rate of data reads. | reads/second |
 | `<%= vars.mysql_metrics_origin %>/innodb/data_writes` | The rate of data writes. | writes/second |
 | `<%= vars.mysql_metrics_origin %>/innodb/mutex_os_waits` | The rate of mutex OS waits. | events/second |
@@ -37,12 +37,11 @@
 | `<%= vars.mysql_metrics_origin %>/performance/com_select` | The rate of select statements. | queries/second |
 | `<%= vars.mysql_metrics_origin %>/performance/com_update` | The rate of update statements. | queries/second |
 | `<%= vars.mysql_metrics_origin %>/performance/com_update_multi` | The rate of update-multi. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/cpu_time` | Total CPU time used. Emitted only by cf-mysql-release. Introduced in MariaDB 5.3. | numeric |
 | `<%= vars.mysql_metrics_origin %>/performance/cpu_utilization_percent` | The percent of the CPU in the use by all processes on the MySQL node. | percent utilization, from 0-100 |
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_disk_tables` | The rate of internal on-disk temporary tables created by second by the server while executing statements. | table/second |
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_files` | The rate of temporary files created by second. | files/second |
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_tables` | The rate of internal temporary tables created by second by the server while executing statements. | tables/second |
-| `<%= vars.mysql_metrics_origin %>/performance/kernel_time` | Percentage of CPU time spent in kernel space by MySQL. | percent |
-| `<%= vars.mysql_metrics_origin %>/performance/key_cache_utilization` | The key cache utilization ratio. | fraction |
 | `<%= vars.mysql_metrics_origin %>/performance/open_files` | The number of open files. | files |
 | `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | tables |
 | `<%= vars.mysql_metrics_origin %>/performance/qcache_hits` | The rate of query cache hits. | hits/second |
@@ -55,7 +54,18 @@
 | `<%= vars.mysql_metrics_origin %>/performance/max_connections` | The maximum permitted number of simultaneous client connections. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/open_files_limit` | The number of files that the operating system permits [ **mysqld** ](https://dev.mysql.com/doc/refman/5.6/en/mysqld.html "4.3.1 mysqld — The MySQL Server") to open. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/open_tables_definitions` | The number of currently cached table definitions (.frm files). | count |
 | `<%= vars.mysql_metrics_origin %>/performance/opened_tables` | The number of tables that have been opened. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/opened_table_definitions` | The number of `.frm` files that have been cached. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/queries` | The number of statements executed by the service, which resets to zero when the MySQL process is restarted. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
+| `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_tx_avg_wait_time` | The average time in microseconds the master waited for each transaction. This variable is available only if the master-side semisynchronous replication plugin is installed. | microsecond |
+| `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_no_tx` | The number of commits that were not acknowledged successfully by a slave.
+This variable is available only if the master-side semisynchronous replication plugin is installed. | commits |
+| `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_wait_sessions` | The number of sessions currently waiting for slave replies.
+This variable is available only if the master-side semisynchronous replication plugin is installed. | sessions |
+This variable is available only if the master-side semisynchronous replication plugin is installed. | commits |
+| `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
+| `<%= vars.mysql_metrics_origin %>/variables/max_connections` | The maximum permitted number of simultaneous client connections. | connections |
+| `<%= vars.mysql_metrics_origin %>/variables/open_files_limit` | The number of files that the operating system permits mysqld to open. | files |
+| `<%= vars.mysql_metrics_origin %>/variables/read_only` | Whether the server is in read-only mode. | boolean |
