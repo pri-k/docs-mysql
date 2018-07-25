@@ -133,7 +133,7 @@ Succeeded
 In the above scenario, the first instance is missing data but does not have replication configured. The second instance
 has data, and also has replication configured. The instructions below resolve this by copying data to the first instance,
 and resuming replication.</li>
-<li>Take a backup of the first instance using the <a href="backup-and-restore.html#manual-backup">Manual Backup</a> steps.</li>
+<li>Take a backup of the second instance using the <a href="backup-and-restore.html#manual-backup">Manual Backup</a> steps.</li>
 <li>Restore the backup artifact to the first instance using the <a href="backup-and-restore.html#restore">Manual Restore</a> steps.<br><br>
 	At this point, the instances have equivalent data.</li>
 <li> Run the <code>configure-leader-follower</code> errand to reconfigure replication:
