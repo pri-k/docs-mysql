@@ -13,30 +13,31 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 ### Features
 
-- **Transport Layer Security:** TLS (formerly known as SSL) to Applications, Docker-based containers, and other clients.
+- **Transport Layer Security** 
 
-  With MySQL for PCF v2.3.0, Applications can connect to MySQL over TLS (formerly known as SSL), without the need for IPSEC. **This feature requires PCF 1.12 and greater.** To use TLS, please refer to the following documentation:
-  - Developers will need to [enable TLS](using-tls.html)
-  - Developers will also need to [modify some apps](modify-apps-tls.html)
-  - **Important:** You must read and follow the [TLS preparation documentation](https://docs.pivotal.io/p-mysql/prepare-tls.html) before enabling TLS. It is not necessary to follow these steps before upgrading to v2.3.0.
+	- TLS (formerly known as SSL) can now be used with apps, Docker-based containers, and other clients.<br><br>
 
-  TLS works for desktop clients as well, if network connectivity allows. Just follow the [connect to services via SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html) instructions, and use the CA cert provided by the service key.
+    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPSEC. **This feature requires PCF 1.12 and greater.** To use TLS as an operator or developer, see [Preparing for TLS](./prepare-tls.html). It is not necessary to follow these steps before upgrading to v2.3.0.<br><br>
 
-- **Synchronous replication**
+    - TLS works for desktop clients as well, if network connectivity allows. Just follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html), and use the CA cert provided by the service key.
 
-  When choosing Leader/Follower topology, Developers can now enable MySQL's "semi-synchronous" mode to ensure that transactions are replicated in **real time** to ensure availability in the case of host or AZ failure. Read more in the [synchronous replication documentation](maintain-leader-follower.html#synchronous-replication) for the leader-follower topology.
+- **Synchronous Replication**
+
+  	- When choosing Leader/Follower topology, Developers can now enable MySQL's "semi-synchronous" mode to ensure that transactions are replicated in **real time** to ensure availability in the case of host or AZ failure. For the leader-follower topology, see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication).
 
 - **Service Credentials in CredHub**
 
-  For PAS 2.0 and greater, Operators can choose to store service credentials in CredHub. For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.
+  	- For PAS 2.0 and greater, Operators can choose to store service credentials in CredHub. For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.<br><br>
 
-  All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
+  	- All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
 
-- Developers can now create multiple DB schemas.
+- **Developers can now create multiple DB schemas**.
 
-  Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run: `create database FOO`
-- Developers can now define the database charset and collation
-  - See the documentation on [changing server defaults using optional parameters](change-default.html#configuring) to define these settings.
+  	- Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run `create database FOO`.
+
+- **Developers can now define the database charset and collation**
+
+  	- To define these settings, see [Optional Parameters for the MySQL for PCF Service Instances](change-default.html#configuring).
 
 ### Dependency Updates
 
