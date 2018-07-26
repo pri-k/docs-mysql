@@ -95,3 +95,9 @@ This section provides steps to restore your backup to a new service instance of 
 
 
 1. Your application is now using your new MySQL for Pivotal Cloud Foundry v2 database and should be operational again.
+
+## <a id='delete-old-database'></a> Delete the Old Database
+
+  After rebinding and restaging your apps to confirm that migration was successful, Pivotal recommends saving resources by deleting the old database instance. 
+
+  To perform the deletion, use the `cf delete-service -f SERVICE-INSTANCE-NAME-old` command.
