@@ -178,6 +178,16 @@ Run the following command:
   
 ## <a id='delete-old-database'></a> Delete the Old Database
 
-  After rebinding and restaging your apps to confirm that migration was successful, Pivotal recommends saving resources by deleting the old database instance. 
+After rebinding and restaging your apps to confirm that migration was successful, Pivotal recommends saving resources by deleting the old database instance. 
 
-  To perform the deletion, use the `cf delete-service -f SERVICE-INSTANCE-NAME-old` command.
+To perform the deletion, run the following command:
+
+  ```
+  cf delete-service SERVICE_INSTANCE
+  ```
+  <br>
+  Where `SERVICE_INSTANCE` is the name of your old database instance.
+
+  For example:
+
+  <pre class="terminal">$ cf delete-service my-instance</pre> 
