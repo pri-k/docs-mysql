@@ -161,8 +161,8 @@ Run the following command:
     <br><br>
     For example:
     <pre class="terminal">
-    $ cf bind-service my-app my-instance-new
-    Binding service my-instance-new to app my-app in org my-org / space my-space as user<span>@</span>example.com...
+    $ cf bind-service my-app my-v2-instance
+    Binding service my-v2-instance to app my-app in org my-org / space my-space as user<span>@</span>example.com...
     OK
     TIP: Use 'cf restage my-app' to ensure your env variable changes take effect
     </pre>
@@ -184,11 +184,11 @@ After rebinding and restaging your apps to confirm that migration was successful
 To perform the deletion, run the following command:
 
   ```
-  cf delete-service SERVICE_INSTANCE
+  cf delete-service V1-INSTANCE
   ```
   <br>
-  Where `SERVICE_INSTANCE` is the name of your old database instance.
+  Where `V1-INSTANCE` is the name of your old database instance.
 
   For example:
 
-  <pre class="terminal">$ cf delete-service my-instance</pre> 
+  <pre class="terminal">$ cf delete-service my-v1-instance</pre> 
