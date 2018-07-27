@@ -3,7 +3,7 @@ title: Release Notes
 owner: MySQL
 ---
 
-## <a id="230"></a>v2.3.0
+## <a id="230"></a>v2.4.0
 
 Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older v2.2.x version, upgrade to the latest v2.2.x version before upgrading to the latest v2.3.x version.
 
@@ -17,9 +17,13 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 	- TLS (formerly known as SSL) can now be used with apps, Docker-based containers, and other clients.<br><br>
 
-    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPSEC. **This feature requires PCF 1.12 and greater.** To use TLS as an operator or developer, see [Preparing for TLS](./prepare-tls.html). It is not necessary to follow these steps before upgrading to v2.3.0.<br><br>
+    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPSEC. 
+    **This feature requires PCF 1.12 and greater.** To use TLS as an operator or developer, 
+    see [Preparing for TLS](./prepare-tls.html).<br><br>
 
-    - TLS works for desktop clients as well, if network connectivity allows. Just follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html), and use the CA cert provided by the service key.
+    - TLS works for desktop clients as well, if network connectivity allows. 
+    Just follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html), 
+    and use the CA cert provided by the service key.
 
 - **Synchronous Replication**
 
