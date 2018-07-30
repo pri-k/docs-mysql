@@ -83,3 +83,10 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 - **Improvement:** The service broker `smoke-tests` errand now runs in the organization and space `system:pivotal-services` so that you can configure your ASGs to allow the `smoke-tests` app to succeed.
 - **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
+
+* If using PCF v2.2, after upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality 
+to facilitate failover in a leader-follower configuration. 
+To do this, after upgrade, developers must unbind and rebind their apps. 
+This allows apps to automatically connect to a new leader, in the case 
+where a leader in a leader-follower pair fails. 
+

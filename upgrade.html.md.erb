@@ -45,9 +45,15 @@ To upgrade existing service instances, do either of the following:
 	```
 	bosh -d DEPLOYMENT-NAME run-errand upgrade-all-service-instances
 	```
-<br>
 - **Operators or developers**: To upgrade existing service instances individually, run the `cf update-service` command. 
 For more information about this command, see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
+
+- **Developers:** After upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality 
+to facilitate failover in a leader-follower configuration. 
+To do this, after upgrade, developers must unbind and rebind their apps. 
+This allows apps to automatically connect to a new leader, in the case 
+where a leader in a leader-follower pair fails. 
+
 
 ## <a id="interruptions"></a>Service Interruptions
 
