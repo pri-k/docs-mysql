@@ -22,6 +22,10 @@ All releases up to and including MySQL for PCF v2.3.1 have the following issue:
 - Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
   To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
 
+MySQL for PCF v2.3.0 and v2.3.1 have the following issue:
+
+- The `mysqldump --all-databases` step when doing a [manual backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup) will not work due to a MySQL user permissions issue.
+
 ### Features
 
 New features and changes in this release:
