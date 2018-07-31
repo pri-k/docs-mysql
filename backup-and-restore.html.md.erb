@@ -251,6 +251,7 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
 1. Select **GCS**.
+
     ![GCS Backup Configuration Form](gcs-backups.png)
 
 1. Fill in the fields as follows:<br><br>
@@ -316,11 +317,12 @@ Perform the following steps to back up your MySQL for PCF data manually:
   <pre class="terminal">$ cf login</pre>
 
 1. Create a service key for the MySQL service instance. Run the following command:
-    `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME -c '{"read-only":true}'`
+    `cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME -c '{"read-only":true}'`
     <br><br>
     Where:<br>
-    * `SERVICE_INSTANCE_NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
-    * `SERVICE_KEY_NAME`: Choose a name for the new service key.
+    * `SERVICE-INSTANCE-NAME` is the name of the existing MySQL service instance
+       that contains the data you want to back up.  
+    * `SERVICE-KEY-NAME` a name you choose for the new service key.
 
     For example:
     <pre class="terminal">
@@ -334,8 +336,8 @@ Perform the following steps to back up your MySQL for PCF data manually:
   `cf service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME`
     <br><br>
     Where:<br>
-    * `SERVICE-INSTANCE-NAME`: Enter the name of the MySQL service instance you created a service key for.
-    * `SERVICE-KEY-NAME`: Enter the name of the newly created service key.
+    * `SERVICE-INSTANCE-NAME` is the name of the MySQL service instance you created a service key for.
+    * `SERVICE-KEY-NAME` is the name of the newly created service key.
 
     For example:
     <pre class="terminal">
@@ -361,21 +363,21 @@ Perform the following steps to back up your MySQL for PCF data manually:
 1. To get a list of the databases that need to be backed up, run the following command:
 
     ```
-     mysql -u USERNAME -p PASSWORD -h MYSQL-IP -sse 'show databases where \`database\` \
-     not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list
+     mysql -u USERNAME -pPASSWORD -h MYSQL-IP -sse 'show databases where `database` \
+     not regexp "^(information_schema|cf_metadata|performance_schema|mysql|sys)$"' > databases_list
     ```
 
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
     * `PASSWORD` is the password retrieved from the output of `cf service-key`. 
-    * `MYSQL-IP` is something something.
+    * `MYSQL-IP` is the MySQL for PCF proxy IP address.
 
-   	For example:
+    For example:
 
-   	<pre class="terminal">$ mysql -u abcdefghijklm -p123456789 -h 10.10.10.8 -sse \
-    'show databases where \`database\` \
-    not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list</pre> 
-
+    <pre class="terminal">$ mysql -u abcdefghijklm -p123456789 -h 10.10.10.5 -sse \
+    'show databases where `database` \
+    not regexp "^(information_schema|cf_metadata|performance_schema|mysql|sys)$"' > databases_list</pre> 
+ 
 1. To back up the data for your service instance using mysqldump, run the following command:
 
     ```
@@ -384,17 +386,17 @@ Perform the following steps to back up your MySQL for PCF data manually:
     ```
 
     Where:
-    * `USERNAME`: is the same as above.
-    * `PASSWORD`: is the same as above.
-    * `MYSQL-IP`: is the same as above.
-    * `BACKUP-NAME`: is the name for the backup file.
+    * `USERNAME` is the same as above.
+    * `PASSWORD` is the same as above.
+    * `MYSQL-IP` is the same as above.
+    * `BACKUP-NAME` is a name for the backup file.
 
     For example:
-    <pre class="terminal">$ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.8 \
+    <pre class="terminal">$ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.5 \
     --single-transaction --databases $(cat databases_list) > spring-db-backup.sql</pre>
 
-For more information about the mysqldump utility, 
-see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html).    
+    For more information about the mysqldump utility, 
+    see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html).    
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 
