@@ -373,30 +373,24 @@ Perform the following steps to back up your MySQL for PCF data manually:
    	For example:
 
    	<pre class="terminal">$ mysql -u abcdefghijklm -p123456789 -h 10.10.10.8 -sse \
-     'show databases where \`database\` \
-      not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list</pre> 
+    'show databases where \`database\` \
+    not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list</pre> 
 
-1. Back up the data for your service instance using the `mysqldump` command.
-   
-   
-   Run the following command:
+1. To back up the data for your service instance using mysqldump, run the following command:
 
-   // Backup all the databases
-   mysqldump -u USERNAME -pPASSWORD -h MYSQL-IP --single-transaction \
-      --databases $(cat databases_list) > BACKUP-NAME.sql
-    </pre>
-    Where:<br>
-    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
-    * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP`: Enter the password retrieved from the output of `cf service-key`.
-    * `BACKUP-NAME`: Enter a name for the backup file.
+    ```
+    mysqldump -u USERNAME -pPASSWORD -h MYSQL-IP --single-transaction \
+    --databases $(cat databases_list) > BACKUP-NAME.sql
+    ```
+
+    Where:
+    * `USERNAME`: is the same as above.
+    * `PASSWORD`: is the same as above.
+    * `MYSQL-IP`: is the same as above.
+    * `BACKUP-NAME`: is the name for the backup file.
 
     For example:
-    <pre class="terminal">
-    $ mysql -u abcdefghijklm -p123456789 -h 10.10.10.8 -sse \
-     'show databases where \`database\` \
-      not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list
-    $ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.8 \
+    <pre class="terminal">$ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.8 \
     --single-transaction --databases $(cat databases_list) > spring-db-backup.sql</pre>
 
 For more information about the mysqldump utility, 
