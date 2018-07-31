@@ -360,8 +360,14 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
 1. Use [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) to back up the data for your service instance.
    Run the following command:
-    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-IP --all-databases --single-transaction > BACKUP-NAME.sql`
-    <br><br>
+   <pre class="terminal">
+   // Get a list of databases need to be backup:
+   mysql -u USERNAME -pPASSWORD -h MYSQL-IP -sse 'show databases where \`database\` \
+      not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list
+   // Backup all the databases
+   mysqldump -u USERNAME -pPASSWORD -h MYSQL-IP --single-transaction \
+      --databases $(cat databases_list) > BACKUP-NAME.sql
+    </pre>
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
@@ -370,11 +376,11 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ mysqldump -u abcdefghijklm \
-    -p 123456789 \
-    -h 10.10.10.8 \
-    --all-databases \
-    --single-transaction > spring-db-backup.sql</pre>
+    $ mysql -u abcdefghijklm -p123456789 -h 10.10.10.8 -sse \
+     'show databases where \`database\` \
+      not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list
+    $ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.8 \
+    --single-transaction --databases $(cat databases_list) > spring-db-backup.sql</pre>
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 
