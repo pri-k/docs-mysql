@@ -358,12 +358,29 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
 
-1. Use [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) to back up the data for your service instance.
+1. To get a list of the databases that need to be backed up, run the following command:
+
+    ```
+     mysql -u USERNAME -p PASSWORD -h MYSQL-IP -sse 'show databases where \`database\` \
+     not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list
+    ```
+
+    Where:
+    * `USERNAME` is the username retrieved from the output of `cf service-key`.
+    * `PASSWORD` is the password retrieved from the output of `cf service-key`. 
+    * `MYSQL-IP` is something something.
+
+   	For example:
+
+   	<pre class="terminal">$ mysql -u abcdefghijklm -p123456789 -h 10.10.10.8 -sse \
+     'show databases where \`database\` \
+      not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list</pre> 
+
+1. Back up the data for your service instance using the `mysqldump` command.
+   
+   
    Run the following command:
-   <pre class="terminal">
-   // Get a list of databases need to be backup:
-   mysql -u USERNAME -pPASSWORD -h MYSQL-IP -sse 'show databases where \`database\` \
-      not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list
+
    // Backup all the databases
    mysqldump -u USERNAME -pPASSWORD -h MYSQL-IP --single-transaction \
       --databases $(cat databases_list) > BACKUP-NAME.sql
@@ -371,7 +388,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `MYSQL-IP`: Enter the password retrieved from the output of `cf service-key`.
     * `BACKUP-NAME`: Enter a name for the backup file.
 
     For example:
@@ -381,6 +398,9 @@ Perform the following steps to back up your MySQL for PCF data manually:
       not regexp "^(information\_schema|cf\_metadata|performance\_schema|mysql|sys)$"' > databases\_list
     $ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.8 \
     --single-transaction --databases $(cat databases_list) > spring-db-backup.sql</pre>
+
+For more information about the mysqldump utility, 
+see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html).    
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 
