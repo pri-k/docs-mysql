@@ -180,13 +180,26 @@ In a Galera cluster, however, all DDL is replicated and all replication failures
 Therefore, the bad `ALTER TABLE` command is run by all nodes.
 If it fails, the slave nodes log it as a "replication failure."
 
-Cases where a valid DDL works on some nodes yet fails on others are rare.
-Usually those cases are limited to problems with running out of disk space or working memory.
-
 #### Solution
 
 Disregard the replication errors as a normal behavior.
 If you see the "ALTER TABLE" error, fix the user error that produced it.
+
+### <a id="disk-usage-increasing-errors"></a> Increase in Persistent Disk Usage 
+
+#### Symptom
+
+You see an increase in persistent disk usage.
+
+#### Explanation
+
+Does the disk usage grow because the Galera GRA logs are growing? 
+
+
+#### Solution
+
+Decode and review the Galera GRA logs, looking for failing data definition language (DDL) statements. 
+For information about decoding GRA* log files, see the Knowledge Base article.
 
 ### <a id="no-space"></a> No Space Left
 
