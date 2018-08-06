@@ -7,14 +7,14 @@ This document describes the metrics that are produced by MySQL for PCF, and ever
 
 ## <a id="mysql-for-pcf-metrics"></a>Metrics
 
-MySQL emits a number of metrics that can be used to monitor the health and performance of the MySQL deployment.
-The Loggregator Firehose exposes these metrics.
+MySQL emits metrics that can be used to monitor the health and performance of the MySQL deployment. The Loggregator Firehose exposes these metrics.
 
-The metrics polling interval defaults to 30 seconds. This can be changed by navigating to the Advanced Options configuration pane and entering a new value in **Metrics polling interval (min: 10)**.
+The metrics polling interval defaults to 30 seconds. You can change this interval by navigating to the Advanced Options configuration pane and entering a new value in **Metrics polling interval (min: 10)**.
 
 ![Metrics Polling Interval](images/metrics_polling.png)
 
-Third-party monitoring tools can consume MySQL for PCF's metrics via [a nozzle](https://docs.pivotal.io/tiledev/nozzle.html) to monitor MySQL performance and health. For an example Datadog configuration that displays some of the significant metrics outlined below, see the [CF Redis and MySQL example dashboards](https://github.com/pivotal-cf/metrics-datadog-dashboard). Pivotal does not endorse or provide support for any third party solution.
+Third-party monitoring tools can consume MySQL for PCF's metrics using an nozzle to monitor MySQL performance and health. For more information, see this section 
+on [nozzles](https://docs.pivotal.io/tiledev/nozzle.html). For an example Datadog configuration that displays some of the significant metrics outlined below, see the [CF Redis and MySQL example dashboards](https://github.com/pivotal-cf/metrics-datadog-dashboard). Pivotal does not endorse or provide support for any third party solution.
 
 ## <a id="kpi"></a>Key Performance Indicators
 
