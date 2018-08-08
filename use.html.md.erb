@@ -45,7 +45,7 @@ To use MySQL in a PCF app:
    using `cf push`.
  
     For information about `cf push`,
-   see [Push](http://docs.pivotal.io/pivotalcf/2-0/cf-cli/getting-started.html#push).
+   see [Push](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#push).
 
 4. Bind the app to the MySQL for PCF service instance, to enable the app to use MySQL. 
   
@@ -109,11 +109,11 @@ The `watch` command shows you when your service instance is ready to bind and us
 
 To create an instance of the MySQL for PCF v2 service, do the following: 
 
-1. Run the command `cf create-service p.mysql PLAN SERVICE-INSTANCE`<br><br>
+1. Run the following command: `cf create-service p.mysql PLAN SERVICE-INSTANCE`
 
-    Where:<br>
-    - `PLAN` is the name of the MySQL for PCF v2 plan you want to use.
-    - `SERVICE-INSTANCE` is a name you choose to identify the service instance. 
+    Where:
+    * `PLAN` is the name of the MySQL for PCF v2 plan you want to use.
+    * `SERVICE-INSTANCE` is a name you choose to identify the service instance.
     This name appears under `service` in output from `cf services`.
 
 1. Enter `watch cf services` and wait for the `last operation` for your instance to show as `create succeeded`. 
@@ -135,11 +135,12 @@ To create an instance of the MySQL for PCF v2 service, do the following:
 
 For an app to use a service, you must bind the app to a service instance. Do this after you push or re-push the app using `cf push`.
 
-To bind an app to a MySQL for PCF instance run the command `cf bind-service APP SERVICE-INSTANCE`
+To bind an app to a MySQL for PCF instance run the following command: `cf bind-service APP SERVICE-INSTANCE`
 
-Where:<br>
-`APP` is the app you want to use the MySQL service instance.<br>
-`SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
+Where:
+
+  * `APP` is the app you want to use the MySQL service instance.<br>
+  * `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
 <pre class="terminal">
 $ cf bind-service my-app my-instance<br>
@@ -173,10 +174,9 @@ As apps and their databases grow, it may be necessary to update the service inst
 This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
 the database will be unavailable for several minutes.
 
-To update a service instance to a larger plan, run the commannd `cf update-service SERVICE-INSTANCE -p PLAN`
+To update a service instance to a larger plan, run the following command: `cf update-service SERVICE-INSTANCE -p PLAN`
 
-  Where:<br> 
-  `PLAN` is the plan you want to upgrade the service instance to.
+Where `PLAN` is the plan you want to upgrade the service instance to.
 
 <pre class="terminal">
 $ cf update-service my-instance -p db-large
@@ -185,13 +185,12 @@ $ cf update-service my-instance -p db-large
 
 ### <a id="unbind"></a>Unbind an App from a Service Instance
 
-To stop an app from using a service it no longer needs, run the following command to unbind the app from the service:
+To stop an app from using a service it no longer needs, run the following command to unbind the app from the service: `cf unbind-service APP SERVICE-INSTANCE`
 
-`cf unbind-service APP SERVICE-INSTANCE`
+Where
 
-  Where:<br>
-  `APP` is the app you want to stop using the MySQL service instance. <br>
-  `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
+  * `APP` is the app you want to stop using the MySQL service instance. <br>
+  * `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
 <pre class="terminal">
 $ cf unbind-service my-app my-instance<br>
@@ -205,10 +204,9 @@ You cannot delete a service instance that an app is bound to.
 
 To delete a service instance, do the following:
 
-1. Run the command `cf delete-service SERVICE-INSTANCE`
+1. Run the following command: `cf delete-service SERVICE-INSTANCE`
 
-    Where:<br>
-    `SERVICE-INSTANCE` is the name of the service to delete.
+    Where `SERVICE-INSTANCE` is the name of the service to delete.
 
     <pre class="terminal">
     $ cf delete-service my-instance<br>
