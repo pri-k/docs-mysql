@@ -44,14 +44,20 @@ This release fixes the following issue:
 
 **Release Date: June 1, 2018**
 
-### Known Issues
+### Known Issues and Limitations
 
-This release has the following issue:
+This release has the following issues and limitations:
 
-+ After upgrading to MySQL for PCF v2.3.0, developers cannot create new bindings
+* After upgrading to MySQL for PCF v2.3.0, developers cannot create new bindings
   to a service instance that has not also been upgraded.
-  For apps to bind and unbind successfully, operators must run the `upgrade-all-service-instances` errand.
+  For apps to bind and unbind successfully, operators must run the `upgrade-all-service-instances` 
+  errand.
   For more information, see [Upgrade MySQL Instances](./upgrade.html#upgrade-instances).
+* MySQL for PCF v2.3.0 requires v2.0 of the Cloud Foundry CLI MySQL plugin if secure service
+instance credentials are enabled. For more information, see the
+[Cloud Foundry CLI MySQL Plugin](https://github.com/andreasf/cf-mysql-plugin) GitHub
+repository and [Configure Security](install-config.html#security) in
+_Installing and Configuring MySQL for PCF_.
 
 ### Features
 
