@@ -60,11 +60,8 @@
 | `<%= vars.mysql_metrics_origin %>/performance/queries` | The number of statements executed by the service, which resets to zero when the MySQL process is restarted. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
 | `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_tx_avg_wait_time` | The average time in microseconds the master waited for each transaction. This variable is available only if the master-side semisynchronous replication plugin is installed. | microsecond |
-| `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_no_tx` | The number of commits that were not acknowledged successfully by a slave.
-This variable is available only if the master-side semisynchronous replication plugin is installed. | commits |
-| `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_wait_sessions` | The number of sessions currently waiting for slave replies.
-This variable is available only if the master-side semisynchronous replication plugin is installed. | sessions |
-This variable is available only if the master-side semisynchronous replication plugin is installed. | commits |
+| `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_no_tx` | The number of commits that were not acknowledged successfully by a slave. This variable is available only if the master-side semisynchronous replication plugin is installed. | commits |
+| `<%= vars.mysql_metrics_origin %>/rpl_semi_sync_master_wait_sessions` | The number of sessions currently waiting for slave replies. This variable is available only if the master-side semisynchronous replication plugin is installed. | sessions |
 | `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
 | `<%= vars.mysql_metrics_origin %>/variables/max_connections` | The maximum permitted number of simultaneous client connections. | connections |
 | `<%= vars.mysql_metrics_origin %>/variables/open_files_limit` | The number of files that the operating system permits mysqld to open. | files |
