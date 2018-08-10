@@ -44,6 +44,7 @@
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_tables` | The rate of internal temporary tables created by second by the server while executing statements. | tables/second |
 | `<%= vars.mysql_metrics_origin %>/performance/open_files` | The number of open files. | files |
 | `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | tables |
+| `<%= vars.mysql_metrics_origin %>/performance/open_table_definitions` | The number of currently cached table definitions (`.frm` files). | count |
 | `<%= vars.mysql_metrics_origin %>/performance/qcache_hits` | The rate of query cache hits. | hits/second |
 | `<%= vars.mysql_metrics_origin %>/performance/questions` | The rate of statements executed by the server. | queries/second |
 | `<%= vars.mysql_metrics_origin %>/performance/queries` | The rate of statements executed by the server, excluding `COM_PING` and `COM_STATISTICS`. Differs from `Questions` in that it also counts statements executed within stored programs. | queries/second |
