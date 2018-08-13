@@ -44,7 +44,7 @@
 | `<%= vars.mysql_metrics_origin %>/performance/created_tmp_tables` | The rate of internal temporary tables created by second by the server while executing statements. | tables/second |
 | `<%= vars.mysql_metrics_origin %>/performance/open_files` | The number of open files. | files |
 | `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | tables |
-| `<%= vars.mysql_metrics_origin %>/performance/open_table_definitions` | The number of currently cached table definitions (`.frm` files). | count |
+| `<%= vars.mysql_metrics_origin %>/performance/open_table_definitions` | The number of currently cached table definitions (FRM files). | count |
 | `<%= vars.mysql_metrics_origin %>/performance/qcache_hits` | The rate of query cache hits. | hits/second |
 | `<%= vars.mysql_metrics_origin %>/performance/questions` | The rate of statements executed by the server. | queries/second |
 | `<%= vars.mysql_metrics_origin %>/performance/queries` | The rate of statements executed by the server, excluding `COM_PING` and `COM_STATISTICS`. Differs from `Questions` in that it also counts statements executed within stored programs. | queries/second |
@@ -55,9 +55,9 @@
 | `<%= vars.mysql_metrics_origin %>/performance/max_connections` | The maximum permitted number of simultaneous client connections. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/open_files_limit` | The number of files that the operating system permits [ **mysqld** ](https://dev.mysql.com/doc/refman/5.6/en/mysqld.html "4.3.1 mysqld — The MySQL Server") to open. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | integer |
-| `<%= vars.mysql_metrics_origin %>/performance/open_tables_definitions` | The number of currently cached table definitions (.frm files). | count |
+| `<%= vars.mysql_metrics_origin %>/performance/open_tables_definitions` | The number of currently cached table definitions (FRM files). | count |
 | `<%= vars.mysql_metrics_origin %>/performance/opened_tables` | The number of tables that have been opened. | integer |
-| `<%= vars.mysql_metrics_origin %>/performance/opened_table_definitions` | The number of `.frm` files that have been cached. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/opened_table_definitions` | The number of FRM files that have been cached. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/queries` | The number of statements executed by the service, which resets to zero when the MySQL process is restarted. | integer |
 | `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
 | `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
