@@ -360,43 +360,45 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
 
-1. To get a list of the databases that need to be backed up, run the following command:
-
-    ```
-     mysql -u USERNAME -pPASSWORD -h MYSQL-IP -sse 'show databases where `database` \
-     not regexp "^(information_schema|cf_metadata|performance_schema|mysql|sys)$"' > databases_list
-    ```
+1. To view a list of your databases, run the following command:
+`mysql -u USERNAME -pPASSWORD -h MYSQL-IP -sse 'show databases'`
 
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
-    * `PASSWORD` is the password retrieved from the output of `cf service-key`. 
+    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
     * `MYSQL-IP` is the MySQL for PCF proxy IP address.
 
     For example:
+    <pre class="terminal">
+    $ mysql -u abcdefghijklm -p123456789 -h 10.10.10.5 -sse 'show databases'
+    </pre>
 
-    <pre class="terminal">$ mysql -u abcdefghijklm -p123456789 -h 10.10.10.5 -sse \
-    'show databases where `database` \
-    not regexp "^(information_schema|cf_metadata|performance_schema|mysql|sys)$"' > databases_list</pre> 
- 
-1. To back up the data for your service instance using mysqldump, run the following command:
+1. Delete the following databases from the list. Do not back up the following databases:
+    * `cf_metadata`
+    * `information_schema`
+    * `mysql`
+    * `performance_schema`
+    * `sys`
 
-    ```
-    mysqldump -u USERNAME -pPASSWORD -h MYSQL-IP --single-transaction \
-    --databases $(cat databases_list) > BACKUP-NAME.sql
-    ```
+1. To back up the databases remaining in the list, run the following command for each database:
+`mysqldump -u USERNAME -pPASSWORD -h MYSQL-IP databases DB-NAME > BACKUP.sql`
 
     Where:
-    * `USERNAME` is the same as above.
-    * `PASSWORD` is the same as above.
-    * `MYSQL-IP` is the same as above.
-    * `BACKUP-NAME` is a name for the backup file.
+    * `USERNAME` is the username retrieved from the output of `cf service-key`.
+    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
+    * `MYSQL-IP` is the MySQL for PCF proxy IP address.
+    * `DB-NAME` is the name of the database.
+    * `BACKUP` is a name you create for the backup file. Use a different filename for each backup.
 
     For example:
-    <pre class="terminal">$ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.5 \
-    --single-transaction --databases $(cat databases_list) > spring-db-backup.sql</pre>
+    <pre class="terminal">
+    $ mysqldump -u abcdefghijklm -p123456789 -h 10.10.10.5 --databases \ 
+    canary_db > canary_db.sql
+    </pre>
 
-    For more information about the mysqldump utility, 
-    see the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html).    
+    For more information about the mysqldump utility, see
+    [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) in the
+    [MySQL Documentation](https://dev.mysql.com/doc/).
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 
