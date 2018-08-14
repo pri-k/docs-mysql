@@ -30,6 +30,8 @@ Your app must perform the following tasks:
    for the bound MySQL for PCF service instance from the `VCAP_SERVICES` environment variable.
 1. Use the hostname, username, password, and CA certificate to establish a secure connection with the bound MySQL for PCF service instance.
 
+<a id="call-service"></a>
+
 For example, the following Node.js code initializes a variable named `mysql_creds`, and then populates it with the necessary information from `VCAP_SERVICES`:
 
 ```js
