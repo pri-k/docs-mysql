@@ -32,10 +32,12 @@ for gathering information to diagnose the type of failure the cluster is experie
   - Type of environment the MySQL deployment is running in, for example, Pivotal Application Service (PAS), Elastic Runtime, or MySQL for PCF
   - Versions of the installed Ops Manager, PAS or Elastic Runtime, and MySQL for PCF
 
+
 ## <a id="diagnostic-techniques"></a> Diagnostic Techniques
 
 After performing the procedure in [Diagnose Problems](#diagnosing),
 consult the following additional diagnostic techniques to learn more about your cluster.
+
 
 ### <a id="check-state"></a> Check Cluster State
 
@@ -140,6 +142,7 @@ Perform the following steps to check the replication status:
 1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment.
    If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
 
+
 ## <a id='common-problems'></a>Troubleshoot Common Problems
 
 This section lists symptoms, solutions, and explanations for the following common problems:
@@ -156,17 +159,8 @@ This section lists symptoms, solutions, and explanations for the following commo
 
 #### Symptom
 
-You see many replication errors in the MySQL logs.
+You see many replication errors in the MySQL logs, such as the following:
 
-#### Explanation
-
-Replication errors in your MySQL logs can also correspond to execution errors
-in replication logs (`GRA_*.log` files) during problems such as running out of disk space.
-
-Seeing many replication errors in your MySQL logs can also be part of normal behavior.
-For example, MySQL logs can show replication errors when an app issues an `ALTER TABLE` command that fails to apply to the current schema.
-This is usually the result of user error.
-Resulting MySQL log lines might resemble the following:
 
 <pre class="terminal">
 160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
@@ -174,19 +168,35 @@ Resulting MySQL log lines might resemble the following:
 160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
 </pre>
 
-The MySQL node that receives the request processes it normally.
-If it fails to apply, the statement returns an error.
-In a Galera cluster, however, all DDL is replicated and all replication failures are logged.
-Therefore, the bad `ALTER TABLE` command is run by all nodes.
-If it fails, the slave nodes log it as a "replication failure."
+#### Explanation and Solution
 
-Cases where a valid DDL works on some nodes yet fails on others are rare.
-Usually those cases are limited to problems with running out of disk space or working memory.
+Replication errors in MySQL log files can occur for various reasons.
 
-#### Solution
+Sometimes you can ignore them and sometimes you should not. 
+See the table below.
 
-Disregard the replication errors as a normal behavior.
-If you see the "ALTER TABLE" error, fix the user error that produced it.
+<table class="nice">
+  <tr>
+    <th>If you see replication errors and…</th>
+    <th>then…</th>
+  </tr>
+  <tr>
+    <td><code>ALTER TABLE</code> errors</td>
+    <td>fix the <code>ALTER TABLE</code> error.<br>
+        This error can occur when an app issues an invalid data definition statement.
+        Other nodes log this problem as a replication error because they fail to replicate the <code>ALTER TABLE</code>.</td>
+  </tr>
+  <tr>
+    <td>Increased persistent disk usage or running out of working memory</td>
+    <td>decode the <code>GRA_*.log</code> files and look for errors. 
+        See "How to decode Galera GRA log files" in the Pivotal Support knowledge base.
+        The GRA log files contain failing DDL statements.</td>
+  </tr>
+  <tr>
+    <td>No other problems</td>
+    <td>ignore the errors.</td>
+  </tr>
+</table>
 
 ### <a id="no-space"></a> No Space Left
 
