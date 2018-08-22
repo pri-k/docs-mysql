@@ -40,19 +40,24 @@ Developers cannot create new bindings to a service instance that has not been up
 
 To upgrade existing service instances, do one of the following:
 
-- **Operators**: Run the `upgrade-all-service-instances` errand using the following command:
+- **Operators** <br><br>
+	Run the `upgrade-all-service-instances` errand using the following command:
 
 	```
 	bosh -d DEPLOYMENT-NAME run-errand upgrade-all-service-instances
 	```
-- **Operators or developers**: To upgrade existing service instances individually, run the `cf update-service` command. 
+	<br>
+- **Operators or developers** <br><br>
+To upgrade existing service instances individually, run the `cf update-service` command. 
 For more information about this command, see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
-
-- **Developers:** After upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality 
-to facilitate failover in a leader-follower configuration. 
-To do this, after upgrade, developers must unbind and rebind their apps. 
-This allows apps to automatically connect to a new leader, in the case 
-where a leader in a leader-follower pair fails. 
+<br><br>
+- **Developers** <br><br>
+After upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality 
+to facilitate failover in a leader-follower configuration. <br><br>To allow apps to automatically connect to a new leader, in the case 
+where a leader in a leader-follower pair fails, do the following:
+	1. After upgrading to MySQL for PCF v2.4, unbind your apps. For instructions, see [Unbind an App from a Service Instance](./use.html#unbind).
+	2. Rebind your apps. For instructions, see [Bind a Service Instance to Your App](./use.html#bind).
+	3. If you use TLS, re-enable it. For instructions, see [Enable TLS](./using-tls.html#enable-tls).
 
 
 ## <a id="interruptions"></a>Service Interruptions
