@@ -361,7 +361,9 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `username`: The username for the user that can be used to perform backups of the service instance database
 
 1. To view a list of your databases, run the following command:
-`mysql --user=USERNAME --password=PASSWORD --host=MYSQL-IP --silent --silent --execute='show databases'`
+<code>mysql --user=USERNAME --password=PASSWORD \
+--host=MYSQL-IP \
+--silent --silent --execute='show databases'</code>
 
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
@@ -370,7 +372,9 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ mysql --user=abcdefghijklm --password=123456789 --host=10.10.10.5 --silent --silent --execute='show databases'
+    $ mysql --user=abcdefghijklm --password=123456789 \
+    --host=10.10.10.5 \
+    --silent --silent --execute='show databases'
     </pre>
 
 1. Delete the following databases from the list. Do not back up the following databases:
@@ -381,7 +385,9 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `sys`
 
 1. To back up the databases remaining in the list, run the following command for each database:
-`mysqldump --user=USERNAME --password=PASSWORD --host=MYSQL-IP \ --databases DB-NAME > BACKUP.sql`
+`mysqldump --user=USERNAME --password=PASSWORD \
+--host=MYSQL-IP \
+--databases DB-NAME > BACKUP.sql`
 
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
@@ -392,7 +398,9 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ mysqldump --user=abcdefghijklm --password=123456789 --host=10.10.10.5 \ --databases canary_db > canary_db.sql
+    $ mysqldump --user=abcdefghijklm --password=123456789 \
+    --host=10.10.10.5 \
+    --databases canary\_db > canary\_db.sql
     </pre>
 
     For more information about the mysqldump utility, see
