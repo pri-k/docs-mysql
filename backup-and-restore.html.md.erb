@@ -317,9 +317,10 @@ Perform the following steps to back up your MySQL for PCF data manually:
   <pre class="terminal">$ cf login</pre>
 
 1. Create a service key for the MySQL service instance. Run the following command:
-    `cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME -c '{"read-only":true}'`
-    <br><br>
-    Where:<br>
+<pre><code>cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME \
+  -c '{"read-only":true}'</code></pre>
+    <br/>
+    Where:<br/>
     * `SERVICE-INSTANCE-NAME` is the name of the existing MySQL service instance
        that contains the data you want to back up.  
     * `SERVICE-KEY-NAME` a name you choose for the new service key.
@@ -361,9 +362,9 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `username`: The username for the user that can be used to perform backups of the service instance database
 
 1. To view a list of your databases, run the following command:
-<code>mysql --user=USERNAME --password=PASSWORD \
+<pre><code>mysql --user=USERNAME --password=PASSWORD \
 --host=MYSQL-IP \
---silent --silent --execute='show databases'</code>
+--silent --silent --execute='show databases'</code></pre>
 
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
@@ -385,9 +386,10 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `sys`
 
 1. To back up the databases remaining in the list, run the following command for each database:
-`mysqldump --user=USERNAME --password=PASSWORD \
+<pre><code>mysqldump --user=USERNAME --password=PASSWORD \
 --host=MYSQL-IP \
---databases DB-NAME > BACKUP.sql`
+--databases DB-NAME > BACKUP.sql
+</code></pre>
 
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
