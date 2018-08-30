@@ -109,7 +109,7 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
 
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
-1. Select **SCP**.
+1. Select **SCP**.<br/>
     ![SCP Backup Configuration Form](scp-backups.png)
 
 1. Fill in the fields as follows:<br><br>
@@ -250,7 +250,7 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
 
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
-1. Select **GCS**.
+1. Select **GCS**. <br/>
     ![GCS Backup Configuration Form](gcs-backups.png)
 
 1. Fill in the fields as follows:<br><br>
@@ -316,7 +316,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
   <pre class="terminal">$ cf login</pre>
 
 1. Create a service key for the MySQL service instance. Run the following command:
-    `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME -c '{"read-only":true}'`
+   `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME -c '{"read-only":true}'`
     <br><br>
     Where:<br>
     * `SERVICE_INSTANCE_NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
@@ -360,8 +360,10 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
 1. Use [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) to back up the data for your service instance.
    Run the following command:
-    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-IP --all-databases --single-transaction > BACKUP-NAME.sql`
-    <br><br>
+   <pre><code>mysqldump --username=USERNAME --password=PASSWORD \
+    --host=MYSQL-IP \
+    --all-databases \
+    --single-transaction > BACKUP-NAME.sql</code></pre>
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
@@ -370,9 +372,8 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ mysqldump -u abcdefghijklm \
-    -p 123456789 \
-    -h 10.10.10.8 \
+    $ mysqldump --username=abcdefghijklm --password=123456789 \
+    --host=10.10.10.8 \
     --all-databases \
     --single-transaction > spring-db-backup.sql</pre>
 
