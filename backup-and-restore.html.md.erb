@@ -111,7 +111,7 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
 
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
-1. Select the **SCP** radio button.
+1. Select **SCP**.<br/>
     ![SCP Backup Configuration Form](scp-backups.png)
 
 1. Fill in the fields as follows:<br><br>
@@ -183,7 +183,7 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
 
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
-1. Select the **Ceph or Amazon S3** radio button.  
+1. Select **Ceph or Amazon S3**.  
     ![S3 Backup Configuration Form](S3-backups.png)
 
 1. Fill in the fields as follows:<br><br>
@@ -243,7 +243,7 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
 
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
-1. Select the **GCS** radio button.
+1. Select **GCS**. <br/>
     ![GCS Backup Configuration Form](gcs-backups.png)
 
 1. Fill in the fields as follows:<br><br>
@@ -268,7 +268,7 @@ Complete the following steps to back up your database to your Azure Storage acco
 
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
-1. Select the **Azure** radio button.
+1. Select **Azure**.
     ![Azure Backup Configuration Form](azure-backups.png)
 
 1. Fill in the fields as follows:<br><br>
@@ -357,8 +357,10 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `username`: The username for the user that can be used to perform backups of the service instance database
 1. Use [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) to back up the data for your service instance.
    Run the following command:
-    `mysqldump -u USERNAME -p PASSWORD -h MYSQL-IP --all-databases --single-transaction > BACKUP-NAME.sql`
-    <br><br>
+   <pre><code>mysqldump --username=USERNAME --password=PASSWORD \
+    --host=MYSQL-IP \
+    --all-databases \
+    --single-transaction > BACKUP-NAME.sql</code></pre>
     Where:<br>
     * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
     * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
@@ -367,9 +369,8 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ mysqldump -u abcdefghijklm \
-    -p 123456789 \
-    -h 10.10.10.8 \
+    $ mysqldump --username=abcdefghijklm --password=123456789 \
+    --host=10.10.10.8 \
     --all-databases \
     --single-transaction > spring-db-backup.sql</pre>
 
