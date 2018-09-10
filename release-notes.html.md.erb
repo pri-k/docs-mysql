@@ -4,13 +4,15 @@ owner: MySQL
 ---
 
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line.
-For example, if you use an older v2.2.x version, upgrade to the latest v2.2.x version before upgrading to the latest v2.3.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor line,
+then upgrade to the latest available version of the new minor line.
+For example, if you use an older v2.3.x version, upgrade to the latest v2.3.x version
+before upgrading to the latest v2.4.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
 
-## <a id="230"></a>v2.4.0
+## <a id="240"></a>v2.4.0
 
 **Release Date:**  September XX, 2018
 
@@ -23,81 +25,30 @@ For instructions on verifying the stemcell, see <a href="./install-config.html#s
 To download the Xenial stemcell from Pivotal Network, go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Stemcells for PCF (Ubuntu Xenial)</a>.
 </p>
 
+New features and changes in this release:
 
-- **Transport Layer Security**
+* 
 
-	- TLS (formerly known as SSL) can now be used with apps, Docker-based containers, and other clients.<br><br>
+* 
 
-    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPsec.
-    **This feature requires PCF v1.12 or later.**
-    To use TLS as an operator or developer,
-    see [Preparing for TLS](./prepare-tls.html).<br><br>
+### Security Fixes
 
-    - TLS works for desktop clients as well, if network connectivity allows.
-    Follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html),
-    and use the CA cert provided by the service key.
+This release includes the following security fixes:
 
-- **Synchronous Replication**
+* 
 
-  	- When choosing Leader/Follower topology, Developers can now enable MySQL's "semi-synchronous" mode to ensure that transactions are replicated in **real time** to ensure availability in the case of host or AZ failure. For the leader-follower topology, see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication).
+* 
 
-- **Service Credentials in CredHub**
+### Fixed Issues
 
-  	- For PAS 2.0 and greater, Operators can choose to store service credentials in CredHub. For more information, read the [PAS Runtime Credhub topic](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html). The [configuration documentation](install-config.html#security) covers how to enable this for MySQL for PCF.<br><br>
+This release fixes the following issues:
 
-  	- All developers **must re-bind any applications** of existing service instances in order to ensure that all credentials are stored in CredHub.
+* 
 
-- **Developers can now create multiple DB schemas**.
+* 
 
-  	- Database credentials created for application bindings or service keys are now able to create new MySQL databases (schemas). Previously, developers were not able to run `create database FOO`.
+### Known Issues
 
-- **Developers can now define the database charset and collation**
+This release has the following issue:
 
-  	- To define these settings, see [Optional Parameters for the MySQL for PCF Service Instances](change-default.html#configuring).
-
-### Dependency Updates
-
-- Service Instances will now run Percona Server 5.7.21-20
-- Service Instances will now be deployed using the [3541.x stemcell line](https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line)
-- Updated all dependencies to Golang to 1.9.6 or greater
-
-
-### General Improvements and Bug Fixes
-
-**Developer Improvements**
-
-- **Improvement:** A developer will get an error if they supply invalid arbitrary parameters when creating or updating a service instance.
-- **Bug fix:** Developers can now un-bind/re-bind an application from a leader-follower instance, even when the leader is down.
-- **Bug fix:** Developers cannot accidentally lose access to persistent disk by updating the plan of a service instance.
-- **[PLACEHOLDER [#155446132](https://www.pivotaltracker.com/story/show/155446132)]** **Bug fix:** If the broker is upgraded but the service instances are not, developers can still un-bind/re-bind an application to an outdated service instance.
-
-**Operator Improvements**
-
-- **Improvement:** We've made several cosmetic improvements to the `inspect` and `configure-leader-follower` errands
-- **Improvement:** We've introduced a new configuration pane, "Service Instance Upgrades" where you can control how many canary upgrades must succeed, and how many service instances may be upgraded in parallel
-- **Improvement:** Output from the broker's errands is now sent to syslog, if configured
-- **Improvement:** Logs sent to syslog are now annotated with the assigned hostname or IP
-- **Improvement:** All errands now uniformly send non-error output to stdout
-- **Improvement:** You can now control how long the service broker waits on a slow/unresponsive MySQL server before timing out.
-- **Bug fix:** We've had to stop collocating some errands for tiles that are compatible with PCF 1.12 and earlier
-- **Bug fix:** Extra whitespace in Azure backup configuration won't cause backup failures
-- **Security:** The metrics collection job now connects to the MySQL server over Unix socket, reducing the scope of that users' access.
-
-
-**Backups Improvements**
-
-- Operators are no longer required to specify an AWS region when using Amazon S3 to store backup artifacts.
-- Operators no longer need to provide the admin credential when restoring a backup artifact.
-- For PCF 2.0 and greater, all backup encryption keys will be stored in Credhub so that backup artificats can be decrypted even after the service instance is deleted.
-
-**Smoke Tests**
-
-- **Improvement:** The service broker `smoke-tests` errand now runs in the organization and space `system:pivotal-services` so that you can configure your ASGs to allow the `smoke-tests` app to succeed.
-- **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
-
-* If using PCF v2.2, after upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality
-to facilitate failover in a leader-follower configuration.
-To do this, after upgrade, developers must unbind and rebind their apps.
-This allows apps to automatically connect to a new leader, in the case
-where a leader in a leader-follower pair fails.
-
+* 
