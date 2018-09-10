@@ -8,11 +8,11 @@ The MySQL for PCF v2.3 service lets PCF developers create and use their own MySQ
 
 ## <a id="rbac"></a>Role-Based Access in Ops Manager
 
-Ops Manager administrators can use Role-Based Access Control (RBAC) to manage which 
-operators can make deployment changes, view credentials, and manage user roles in Ops Manager. 
+Ops Manager administrators can use Role-Based Access Control (RBAC) to manage which
+operators can make deployment changes, view credentials, and manage user roles in Ops Manager.
 Therefore, your role permissions might not allow you to perform every procedure in this operator guide.
 
-For more information about roles in Ops Manager, see 
+For more information about roles in Ops Manager, see
     <a href="https://docs.pivotal.io/pivotalcf/opsguide/config-rbac.html#about">
         Understand Roles in Ops Manager</a>.</p>
 
@@ -22,8 +22,8 @@ Before you download and install the MySQL for PCF tile, complete the following p
 
 + [Create an Application Security Group for MySQL for PCF](#asg)
 + [Enable the Ops Manager Resurrector](#resurrector)
-+ [(Optional) Preparing for TLS](prepare-tls.html): 
-Only required if you want to enable TLS. 
++ [(Optional) Preparing for TLS](prepare-tls.html):
+Only required if you want to enable TLS.
 
 ### <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
@@ -97,11 +97,16 @@ see [Using Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/customizin
 
 ## <a id="install"></a> Download and Install the Tile
 
+<p class="note"><strong>Note:</strong> Before using MySQL for PCF v2.4.0 and later,
+   you must update any BOSH add-ons to support Xenial stemcells.
+   See <a href="./upgrade.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.</p>
+
+
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/pivotal-mysql/).
 
-1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file. 
+1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file.
 
-1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF. 
+1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF.
    This adds the tile to your staging area.
 
 1. Click the newly-added **MySQL for PCF** tile to open its configuration panes.
@@ -110,7 +115,7 @@ see [Using Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/customizin
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
-Follow the steps below to configure the MySQL for PCF service. 
+Follow the steps below to configure the MySQL for PCF service.
 MySQL for PCF v2.3 has five service plans that deploy dedicated MySQL service instances on demand.
 
 By default, plans 1-3 are active and plans 4 and 5 are inactive. The procedures below describe how to change these defaults.
@@ -131,7 +136,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
     <tr><td><strong>Balance other jobs in</strong></td>
         <td>Ignore; not used.</td></tr>
     <tr><td><strong>Network</strong></td>
-        <td>Select a subnet for the MySQL broker. This is typically the same subnet 
+        <td>Select a subnet for the MySQL broker. This is typically the same subnet
             that includes the PAS or Elastic Runtime component VMs.<br>
             This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
             </td></tr>
@@ -149,7 +154,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
 
 ###<a id="active"></a> Configure Service Plans
 
-MySQL for PCF enables you to configure as many as five service plans. 
+MySQL for PCF enables you to configure as many as five service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
 By default, the first three plans are active and the fourth and fifth plans are inactive.
@@ -180,10 +185,10 @@ Perform the following steps for each plan that you want to use in your PCF deplo
                 </li>
         </ul></td></tr>
     <tr><td><strong>Plan Name</strong></td>
-        <td>Accept the default or enter a name. 
+        <td>Accept the default or enter a name.
             This is the name that appears in the Marketplace for developers.</td></tr>
     <tr><td><strong>Plan Description</strong></td>
-        <td>Accept the default or enter a description to help developers understand plan features. 
+        <td>Accept the default or enter a description to help developers understand plan features.
             Pivotal recommends adding VM type details and disk size to this field.
         </td></tr>
     <tr><td><strong>Plan Quota</strong></td>
@@ -192,7 +197,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>Select a VM type. The plan creates service instances of this size.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL messages.
-            <p class="note"><strong>Note</strong>: If you intend to enable backups, choose a persistent disk type 
+            <p class="note"><strong>Note</strong>: If you intend to enable backups, choose a persistent disk type
                 that is three times larger than the disk you intend to provide to developers.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
@@ -200,12 +205,12 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>If you check the **Multi-node deployment** box above to enable a leader-follower plan, choose one of the following:
         <ul>
             <li>To leverage the full HA advantages of leader-follower, select two AZs. You must choose AZs different from the one the broker is in.</li>
-            <li>To leverage some HA advantages, select one AZ. 
+            <li>To leverage some HA advantages, select one AZ.
             Using only one AZ for a **Multi-node deployment** greatly reduces the ability to recover from an outage and benefit from such a deployment.</li>
         </ul>
       If you do not check **Multi-node deployment**, select one AZ.
-      <p class="note"><strong>Note</strong>: To prevent orphaning a disk, only 
-        migrate service instances to a different plan if the new plan includes 
+      <p class="note"><strong>Note</strong>: To prevent orphaning a disk, only
+        migrate service instances to a different plan if the new plan includes
         all of the AZs in the existing plan.</p>
         </td></tr>
   </table>
@@ -215,7 +220,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
 
 ###<a id="inactive"></a> (Optional) Deactivate Service Plan
 
-Follow the steps below to deactivate a service plan: 
+Follow the steps below to deactivate a service plan:
 
 1. If the service plan has existing service instances, perform the following steps:
     1. Click the section for the plan. For example, **Plan 2**.
@@ -232,8 +237,8 @@ Follow the steps below to deactivate a service plan:
 
 ###<a id="global"></a> Configure Global Settings
 
-Follow the steps below to determine if service instances are assigned public IP addresses 
-and to set the total number of service instances allowed across all plans. 
+Follow the steps below to determine if service instances are assigned public IP addresses
+and to set the total number of service instances allowed across all plans.
 
 1. Click **Settings**.
 
@@ -269,7 +274,7 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Enable Lower Case Table Names</strong></td>
-        <td>Select this checkbox to store all table names in lowercase. 
+        <td>Select this checkbox to store all table names in lowercase.
             Selecting this sets the MySQL server system variable `lower_case_table_names` to 1 on all MySQL for PCF instances
         by default. To allow developers to override this default, see the checkbox below.
             For more information, see
@@ -277,7 +282,7 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
           in the MySQL documentation.
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
-        <td>Select this checkbox to allow developers to override the default <strong>Enable Lower Case Table Names</strong> value set above, when they are creating a new service instance. 
+        <td>Select this checkbox to allow developers to override the default <strong>Enable Lower Case Table Names</strong> value set above, when they are creating a new service instance.
             For more information, see <a href="./change-default.html#configuring">Optional Parameters for the MySQL for PCF Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
         <td>Select this checkbox to enable data downloading from the client's local file system.
@@ -298,7 +303,7 @@ Follow the steps below to configure automated backups:
 
 1. Consult [About Automated Backups](backup-and-restore.html#overview) in <em>Backing Up and Restoring</em> to learn about how automated backups work.
 
-1. Select a **Backup configuration** and perform the steps in the appropriate section of <em>Backing Up and Restoring</em>: 
+1. Select a **Backup configuration** and perform the steps in the appropriate section of <em>Backing Up and Restoring</em>:
   - [Option 1: Back up with SCP](backup-and-restore.html#scp)---MySQL for PCF runs an SCP command that secure-copies backups to a VM
     or physical machine operating outside of PCF.
     SCP stands for secure copy protocol, and offers a way to securely transfer files between two hosts.
@@ -314,18 +319,18 @@ Follow the steps below to configure automated backups:
 
 ###<a id="security"></a> Configure Security
 
-<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF v2, 
+<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF v2,
     you must follow the procedures in <a href="./prepare-tls.html">Preparing for TLS</a> <strong>before</strong> configuring security.</p>
 
 Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
 
-* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below. By default, TLS is disabled. 
+* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below. By default, TLS is disabled.
 * To store your service instance credentials in runtime CredHub on PAS v2.0.x or later,
   perform the procedure in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
 
 ![security](security.png)
 
-####<a id="security-tls"></a> Configure TLS 
+####<a id="security-tls"></a> Configure TLS
 
 To enable TLS for the MySQL service, perform the following steps:
 
@@ -336,7 +341,7 @@ To enable TLS for the MySQL service, perform the following steps:
     1. **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
     <p class="note warning"><strong>WARNING</strong>: Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
-1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html). 
+1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html).
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
@@ -346,21 +351,21 @@ perform the following steps:
 
 1. Ensure that you have configured the PAS tile to support securing service instance credentials in runtime CredHub.
    See [Step 1: Configure the PAS Tile](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html#pas-config).
-1. Ensure that you have created an ASG that opens port `8884`. See [Create an Application Security Group for MySQL for PCF](#asg) above. 
+1. Ensure that you have created an ASG that opens port `8884`. See [Create an Application Security Group for MySQL for PCF](#asg) above.
 1. Click **Security**.
 1. Select the **Enable Secure Service Instance Credentials** checkbox.
 1. Click **Save**.
 1. After deploying the tile, notify the developers that they must unbind and rebind any existing service instances bindings if they want to use secure service instance credentials. Perform the following steps:
 
-    1. Unbind the service instance from the app. 
+    1. Unbind the service instance from the app.
     For example:
     <pre class="terminal">$ cf unbind-service my-app my-service-instance</pre>
-    1. Rebind the service instance to the app. 
+    1. Rebind the service instance to the app.
     For example:
     <pre class="terminal">$ cf bind-service my-app my-service-instance</pre>
     1. Restart the app to apply the new service instance binding. For example:
     <pre class="terminal">$ cf restart my-app</pre>
-    1. Print the `VCAP_SERVICES` environment variable to verify that the new service instance binding includes CredHub pointers. 
+    1. Print the `VCAP_SERVICES` environment variable to verify that the new service instance binding includes CredHub pointers.
     For example:
     <pre class="terminal">$ cf env my-app
     Getting env variables for app my-app in org system / space example as admin...
@@ -424,7 +429,7 @@ Follow the steps below to enable system logging for the MySQL broker and service
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr>
         <td><strong>Address</strong></td>
-        <td>Enter the address or host of the syslog server for sending logs, for example, 
+        <td>Enter the address or host of the syslog server for sending logs, for example,
             <code>logmanager.example.com</code>.</td></tr>
     <tr><td><strong>Port</strong></td>
         <td>Enter the port of the syslog server for sending logs, for example, <code>29279</code>.</td></tr>
@@ -444,7 +449,7 @@ Follow the steps below to enable system logging for the MySQL broker and service
 
 ###<a id="service-instance-upgrades"></a> Configure Service Instance Upgrades
 
-Follow the steps below to configure service instance upgrades. 
+Follow the steps below to configure service instance upgrades.
 This section configures the `upgrade-all-service-instances` errand, which MySQL for PCF uses to upgrade service instances.
 
 1. Click the **Service Instance Upgrades** tab.
@@ -485,10 +490,10 @@ By default, MySQL for PCF runs the following errands:
         <th><strong>Post-Deploy Errands</strong></th>
         <td>
             <ul>
-                <li><strong>Register On-demand MySQL Broker</strong>: 
+                <li><strong>Register On-demand MySQL Broker</strong>:
                     Registers a broker with the Cloud Controller and lists it in the Marketplace.</li>
                 <li><strong>Smoke Tests</strong>: Validates basic MySQL operations.</li>
-                <li><strong>Upgrade all On-demand MySQL Service Instances</strong>: 
+                <li><strong>Upgrade all On-demand MySQL Service Instances</strong>:
                     Upgrades existing instances of a service to its latest installed version.</li>
             </ul>
         </td>
@@ -497,22 +502,22 @@ By default, MySQL for PCF runs the following errands:
         <th><strong>Pre-Delete Errand</strong></th>
         <td>
             <ul>
-                <li><strong>Delete All Service Instances and Deregister Broker</strong>: 
+                <li><strong>Delete All Service Instances and Deregister Broker</strong>:
                     Deletes all instances of service and deregisters the broker.</li>
             </ul>
         </td>
     </tr>
 </table>
 
-<p class="note warning"><strong>WARNING:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does 
-necessary cleanup tasks when you delete the MySQL for PCF tile. Setting this errand to <strong>Off</strong> can cause 
+<p class="note warning"><strong>WARNING:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does
+necessary cleanup tasks when you delete the MySQL for PCF tile. Setting this errand to <strong>Off</strong> can cause
 problems when attempting to reinstall the tile. Pivotal recommends that you do not set this errand to <strong>Off</strong>.</p>
 
-MySQL for PCF also uses errands to configure leader-follower service instances. 
+MySQL for PCF also uses errands to configure leader-follower service instances.
 For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands Used in Leader-Follower Failover</a>.
 
-You can use errands when troubleshooting the broker or service instances. 
-For more information about using errands for troubleshooting, see [Run Service 
+You can use errands when troubleshooting the broker or service instances.
+For more information about using errands for troubleshooting, see [Run Service
 Broker Errands to Manage Brokers and Instances](./troubleshoot.html#broker-errands).
 
 
@@ -522,10 +527,10 @@ Follow the steps below to verify your stemcell version and apply all changes:
 
 1. Depending on your Ops Manager version, navigate to the area where you can manage your stemcell for MySQL for PCF:
     * If you are using Ops Manager v2.0 or earlier, click **Stemcells**.
-    * If you are using Ops Manager v2.1 or later, click **Stemcell Library**. 
-    For more information about using the Stemcell Library, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html). 
+    * If you are using Ops Manager v2.1 or later, click **Stemcell Library**.
+    For more information about using the Stemcell Library, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html).
         <p class="note"><strong>Note</strong>: As of Ops Manager v2.1, operators manage stemcells for all products from the Stemcell Library.</p>
 
-1. Verify and, if necessary, import a new stemcell version. 
+1. Verify and, if necessary, import a new stemcell version.
 
 1. <a name="apply-changes"></a>Return to the Ops Manager Installation Dashboard and click **Apply Changes**.

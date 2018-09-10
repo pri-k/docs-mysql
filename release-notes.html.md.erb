@@ -3,27 +3,38 @@ title: Release Notes
 owner: MySQL
 ---
 
-## <a id="230"></a>v2.4.0
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older v2.2.x version, upgrade to the latest v2.2.x version before upgrading to the latest v2.3.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line.
+For example, if you use an older v2.2.x version, upgrade to the latest v2.2.x version before upgrading to the latest v2.3.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-**Release Date:**  May 22, 2018
+
+## <a id="230"></a>v2.4.0
+
+**Release Date:**  September XX, 2018
 
 ### Features
 
-- **Transport Layer Security** 
+<p class="note breaking"><strong>Breaking Change: </strong>MySQL for PCF v2.4.0 and later requires a Xenial stemcell.
+You must verify that you have the Xenial stemcell, and if necessary, download and import it into the Ops Manager Stemcell Library before deploying MySQL for PCF v2.4.0.
+This might break automations you have set up to update MySQL for PCF deployments that used Trusty stemcells.
+For instructions on verifying the stemcell, see <a href="./install-config.html#stemcell"> Verify Stemcell Version and Apply All Changes</a>.
+To download the Xenial stemcell from Pivotal Network, go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Stemcells for PCF (Ubuntu Xenial)</a>.
+</p>
+
+
+- **Transport Layer Security**
 
 	- TLS (formerly known as SSL) can now be used with apps, Docker-based containers, and other clients.<br><br>
 
-    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPsec. 
+    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPsec.
     **This feature requires PCF v1.12 or later.**
-    To use TLS as an operator or developer, 
+    To use TLS as an operator or developer,
     see [Preparing for TLS](./prepare-tls.html).<br><br>
 
-    - TLS works for desktop clients as well, if network connectivity allows. 
-    Follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html), 
+    - TLS works for desktop clients as well, if network connectivity allows.
+    Follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html),
     and use the CA cert provided by the service key.
 
 - **Synchronous Replication**
@@ -84,9 +95,9 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 - **Improvement:** The service broker `smoke-tests` errand now runs in the organization and space `system:pivotal-services` so that you can configure your ASGs to allow the `smoke-tests` app to succeed.
 - **Improvement:** We've increased the timeout for smoke-tests to 30 minutes, for very slow infrastructures.
 
-* If using PCF v2.2, after upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality 
-to facilitate failover in a leader-follower configuration. 
-To do this, after upgrade, developers must unbind and rebind their apps. 
-This allows apps to automatically connect to a new leader, in the case 
-where a leader in a leader-follower pair fails. 
+* If using PCF v2.2, after upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality
+to facilitate failover in a leader-follower configuration.
+To do this, after upgrade, developers must unbind and rebind their apps.
+This allows apps to automatically connect to a new leader, in the case
+where a leader in a leader-follower pair fails.
 
