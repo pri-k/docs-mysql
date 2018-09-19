@@ -3,8 +3,8 @@ title: Controlling Access to Service Plans by Org
 owner: MySQL
 ---
 
-This topic gives instructions for controlling access to service plans by org. 
-You can also set limits for the number of service intances globally and per plan. 
+This topic gives instructions for controlling access to service plans by org.
+You can also set limits for the number of service intances globally and per plan.
 For more information, see [Setting Limits for On-Demand Instances](./set-quotas.html).
 
 ## <a id="service-plan-access"></a> Control Access to Service Plan by Orgs
@@ -22,7 +22,11 @@ To configure MySQL for PCF v2 to control service-plan access, do the following:
 
 1. Click **Save**.
 
-1. Return to the Ops Manager Installation Dashboard and click **Apply Changes**.
+1. Return to the Ops Manager Installation Dashboard to apply changes:
+    1. If you are using Ops Manager v2.3 or later, click **Review Pending Changes**.
+    For more information about this Ops Manager page, see
+    [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
+    1. Click **Apply Changes**.
 
 1. For each org that you want to use the service plan, do the following:
 
@@ -33,15 +37,15 @@ To configure MySQL for PCF v2 to control service-plan access, do the following:
     1.  Enable service access to the org:
 
         <code>cf enable-service-access p.mysql -p PLAN -o ORGANIZATION</code>
-  
+
         Where:
-      
-        `PLAN`: The name of the specific plan to enable, set to manual in step 1 above. 
+
+        `PLAN`: The name of the specific plan to enable, set to manual in step 1 above.
 
         `ORGANIZATION`: The name of the org that needs access to `PLAN`
 
         For example,
- 
+
         <pre class="terminal">
         $ cf enable-service-access p.mysql -o prodteam -p db-large
         Enabling access to plan db-large of service p.mysql for org prodteam as admin...
