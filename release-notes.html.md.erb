@@ -14,7 +14,7 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 ## <a id="240"></a>v2.4.0
 
-**Release Date:**  September XX, 2018
+**Release Date:**  September 24, 2018
 
 ### Features
 
@@ -27,28 +27,51 @@ To download the Xenial stemcell from Pivotal Network, go to <a href="https://net
 
 New features and changes in this release:
 
-* 
+**Auto-healing**
 
-* 
+* A Leader VM that was resurrected by BOSH will return in read/write mode if no failover was triggered, removing the requirement for Operators to run the `configure-leader-follower` BOSH errand post-resurrection.
+
+**Improvements via BOSH DNS**
+
+* Developers can connect to a service instance using its BOSH DNS hostname, rather than over IPs.
+* The Leader-Follower failover process no longer relies on a Developer to rebind their Application to the service instance.
+
+<p class="warning"><strong>Warning</strong>: Service instances need to be upgraded, and Apps need to rebind in order to take advantage of this feature.</p>
+
+**Service Instance Sharing**
+
+* Developers can share their service instance across different Orgs and Spaces.
+
+**Encryption at Rest**
+
+* MySQL for PCF v2 enables integration with commercial vendors for full-disk encryption at rest. This integration has been certified with the <a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a>.
+
+**Improvements for Developers**
+
+* Clearer messaging to Developers trying to bind to a service instance with TLS disabled when the Operator has enforced TLS.
+
+**Improvements for Operators**
+
+* BOSH errands run faster, saving Operators time during upgrades and installation.
+* Developers are prevented from binding or updating a service that is two or more versions older than the service broker.
+* Operators can configure the timeout for the `upgrade-all-service-instances` BOSH errand to support large deployments.
+* Operators can see apps with outdated bindings by running the `find-deprecated-bindings` BOSH errand.
+
+**Improvements to Smoke Tests**
+
+* Operators can run smoke tests on a specific service instance to determine its health.
 
 ### Security Fixes
 
 This release includes the following security fixes:
 
-* 
-
-* 
+* Service bindings no longer have unnecessary access to the MySQL `sys` database.
 
 ### Fixed Issues
 
 This release fixes the following issues:
 
-* 
-
-* 
-
-### Known Issues
-
-This release has the following issue:
-
-* 
+* Placement of service instance VMs is now randomized across all selected AZs for its plan, reducing the magnitude of an outage caused by an AZ failure.
+* The `find-non-tls-bindings` BOSH errand on the service broker should still work when the installed PCF version has Credhub, but secure service credentials is not enabled.
+* If the `find-non-tls-bindings` errand fails, the Operator sees better messaging for the cause of the error.
+* Smoke tests no longer fail on an initial install of the tile when Service Plan Access is set to Manual.
