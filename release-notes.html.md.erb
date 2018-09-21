@@ -29,14 +29,15 @@ New features and changes in this release:
 
 **Auto-healing**
 
-* A Leader VM that was resurrected by BOSH will return in read/write mode if no failover was triggered, removing the requirement for Operators to run the `configure-leader-follower` BOSH errand post-resurrection.
+* A Leader VM that was resurrected by BOSH returns in read/write mode if no failover was triggered.
+This removes the requirement for operators to run the `configure-leader-follower` BOSH errand post-resurrection.
 
-**Improvements via BOSH DNS**
+**Improvements due to BOSH DNS**
 
 * Developers can connect to a service instance using its BOSH DNS hostname, rather than over IPs.
-* The Leader-Follower failover process no longer relies on a Developer to rebind their Application to the service instance.
+* The Leader-Follower failover process no longer relies on developers to rebind their app to the service instance.
 
-<p class="warning"><strong>Warning</strong>: Service instances need to be upgraded, and Apps need to rebind in order to take advantage of this feature.</p>
+	<p class="note warning"><strong>Important</strong>: To take advantage of this feature, you must upgrade your service instances and rebind your apps.</p>
 
 **Service Instance Sharing**
 
@@ -48,11 +49,11 @@ New features and changes in this release:
 
 **Improvements for Developers**
 
-* Clearer messaging to Developers trying to bind to a service instance with TLS disabled when the Operator has enforced TLS.
+* Clearer messaging to developers trying to bind to a service instance with TLS disabled when the operator has enforced TLS.
 
 **Improvements for Operators**
 
-* BOSH errands run faster, saving Operators time during upgrades and installation.
+* BOSH errands run faster, saving operators time during upgrades and installation.
 * Developers are prevented from binding or updating a service that is two or more versions older than the service broker.
 * Operators can configure the timeout for the `upgrade-all-service-instances` BOSH errand to support large deployments.
 * Operators can see apps with outdated bindings by running the `find-deprecated-bindings` BOSH errand.
@@ -72,6 +73,6 @@ This release includes the following security fixes:
 This release fixes the following issues:
 
 * Placement of service instance VMs is now randomized across all selected AZs for its plan, reducing the magnitude of an outage caused by an AZ failure.
-* The `find-non-tls-bindings` BOSH errand on the service broker should still work when the installed PCF version has Credhub, but secure service credentials is not enabled.
-* If the `find-non-tls-bindings` errand fails, the Operator sees better messaging for the cause of the error.
+* The `find-non-tls-bindings` BOSH errand on the service broker still works when the installed PCF version has Credhub, but secure service credentials is not enabled.
+* If the `find-non-tls-bindings` errand fails, the operator sees better messaging for the cause of the error.
 * Smoke tests no longer fail on an initial install of the tile when Service Plan Access is set to Manual.
