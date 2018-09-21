@@ -29,19 +29,19 @@ New features and changes in this release:
 
 **Auto-healing**
 
-* A Leader VM that was resurrected by BOSH returns in read/write mode if no failover was triggered.
-This removes the requirement for operators to run the `configure-leader-follower` BOSH errand post-resurrection.
+* A leader VM that was resurrected by BOSH returns in read/write mode if no failover was triggered.
+  This removes the requirement for operators to run the `configure-leader-follower` BOSH errand after resurrection.
 
 **Improvements due to BOSH DNS**
 
-* Developers can connect to a service instance using its BOSH DNS hostname, rather than over IPs.
-* The Leader-Follower failover process no longer relies on developers to rebind their app to the service instance.
+* Developers can connect to a service instance using its BOSH DNS hostname, instead of over IPs.
+* The leader-follower failover process no longer relies on developers to rebind their app to the service instance.
 
 	<p class="note warning"><strong>Important</strong>: To take advantage of this feature, you must upgrade your service instances and rebind your apps.</p>
 
 **Service Instance Sharing**
 
-* Developers can share their service instance across different Orgs and Spaces.
+* Developers can share their service instance across different orgs and spaces.
 
 **Encryption at Rest**
 
