@@ -386,7 +386,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `sys`
 
 1. To back up the databases remaining in the list, run the following command for each database:
-<pre><code>mysqldump --user=USERNAME --password=PASSWORD \
+<pre><code>mysqldump --single-transaction --user=USERNAME --password=PASSWORD \
 --host=MYSQL-IP \
 --databases DB-NAME > BACKUP.sql
 </code></pre>
@@ -400,7 +400,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
 
     For example:
     <pre class="terminal">
-    $ mysqldump --user=abcdefghijklm --password=123456789 \
+    $ mysqldump --single-transaction --user=abcdefghijklm --password=123456789 \
     --host=10.10.10.5 \
     --databases canary\_db > canary\_db.sql
     </pre>
