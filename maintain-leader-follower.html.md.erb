@@ -326,22 +326,13 @@ Perform the following steps to stop the leader VM and promote the follower VM to
    <pre class="terminal">
     $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
-1. Set the follower VM as writable:
-  * If you are using PCF v2.0 and above, run the `make-leader` errand, using the index of the follower VM retrieved above. For example:
-     <pre class="terminal">
-      $ bosh2 -d service-instance\_82dc607-710a-404e-b1b8-a7e3ea7ec063 \
-        run-errand make-leader \
-        --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
-     </pre>
-     If this command returns an error, re-run it until the follower VM has completed applying the transactions.
-  * If you are using PCF v1.12, use `bosh2 ssh` to run the errand, using the index of the follower VM retrieved above.
-    For example:
-     <pre class="terminal">
-      $ bosh2 -d service-instance\_82dc607-710a-404e-b1b8-a7e3ea7ec063 \
-        ssh \
-        mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8 \
-        -c "sudo /var/vcap/jobs/make-leader/bin/run"
-     </pre>
+1. Set the follower VM as writable by running the `make-leader` errand. Use the index of the follower VM retrieved above. For example:
+   <pre class="terminal">
+    $ bosh2 -d service-instance\_82dc607-710a-404e-b1b8-a7e3ea7ec063 \
+      run-errand make-leader \
+      --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+   </pre>
+   If this command returns an error, re-run it until the follower VM has completed applying the transactions.
 
 At this point, a single instance is working but leader-follower replication has not yet been restored. 
 If you want to fail your app over to a single instance instead of restoring leader-follower, 
