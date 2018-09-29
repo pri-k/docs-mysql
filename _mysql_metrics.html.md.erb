@@ -43,9 +43,9 @@
 | `<%= vars.mysql_metrics_origin_v2 %>/performance/threads_connected` | The number of currently open connections. | connections |
 | `<%= vars.mysql_metrics_origin_v2 %>/performance/threads_running` | The number of threads that are not sleeping. | threads |
 | `<%= vars.mysql_metrics_origin_v2 %>/performance/user_time` | Percentage of CPU time spent in user space by MySQL. | percent |
-| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_no_tx` | The number of transactions committed without follower acknowledgement. | integer |
+| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_no_tx` | The number of transactions committed without follower acknowledgement. | commits |
 | `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_tx_avg_wait_time` | The average time the leader has waited for the follower to accept transactions. | microseconds |
-| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_wait_sessions` | The current number of connections waiting for a semi-sync commit. For more information about semi-sync replication, see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication). | integer |
+| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_wait_sessions` | The current number of connections waiting for a semi-sync commit. For more information about semi-sync replication, see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication). | sessions |
 | `<%= vars.mysql_metrics_origin_v2 %>/variables/max_connections` | The maximum permitted number of simultaneous client connections. | connections |
 | `<%= vars.mysql_metrics_origin_v2 %>/variables/open_files_limit` | The number of files that the operating system permits mysqld to open. | files |
 | `<%= vars.mysql_metrics_origin_v2 %>/variables/read_only` | Whether the server is in read-only mode | boolean |
