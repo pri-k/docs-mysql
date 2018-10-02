@@ -34,19 +34,20 @@ New features and changes in this release:
 
 **Improvements due to BOSH DNS**
 
+<p class="note warning"><strong> Important:</strong> For your app to reliably connect to MySQL over BOSH DNS,
+you must make sure that your app, or the MySQL client library that the app uses,
+retries in the case of DNS timeouts.</p>
+
 * Developers now connect to a service instance using its BOSH DNS hostname,
   instead of over IPs as in MySQL for PCF v2.3.
-* The leader-follower failover process no longer relies on developers to rebind their app to the service instance.
 
-    <div class="note warning"><strong>Important</strong>: You must make sure that your apps retry in the case of DNS timeouts,
-       upgrade your service instances, and rebind your apps. 
-       For information, see:
-       <ul>
-          <li><a href="./use.html#call">Use the MySQL Service in Your App</a></li>
-          <li><a href="./upgrade.html#upgrade-instances">Upgrade MySQL Instances</a></li>
-          <li><a href="./use.html#bind">Bind a Service Instance to Your App</a></li>
-       </ul>
-     </div>
+* The leader-follower failover process no longer requires developers to rebind their apps to the service instance.
+
+To take advantage of the BOSH DNS improvments, you must do the following:
+
+1. Upgrade the MySQL instances, see <a href="./upgrade.html#upgrade-instances">Upgrade MySQL Instances</a>.
+
+2. Rebind the apps, see <a href="./use.html#bind">Bind a Service Instance to Your App</a>.
 
 **Service Instance Sharing**
 
