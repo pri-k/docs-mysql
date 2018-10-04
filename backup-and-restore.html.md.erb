@@ -7,6 +7,7 @@ This topic describes how to configure automated backups for MySQL for Pivotal Cl
 and how to manually restore a MySQL service instance from a backup.
 
 <p class="note"><strong>Note:</strong> As of v2.2.0, the MySQL for PCF tile no longer includes the option to disable automated backups. You must configure automated backups.</p>
+<p class="note"><strong>Note:</strong> It is recommended that you always configure a single instance plan in order to streamline the restore process for Leader-Follower plans.</p>
 
 ## <a id="overview"></a>About Automated Backups
 
@@ -534,9 +535,9 @@ To restore the backup to a new service instance, follow these procedures:
   $ cf service OLD-INSTANCE-NAME
  </pre>
 
-1. [Create a new service instance](./use.html#create) using the same service plan to restore to:
+1. [Create a new service instance using a single node plan](./use.html#create):
  <pre class="terminal">
-  $ cf create-service p.mysql db-small NEW-SERVICE-INSTANCE
+  $ cf create-service p.mysql SINGLE-NODE-PLAN-NAME NEW-SERVICE-INSTANCE
  </pre>
 
 1. Monitor the status of the service instance creation; it may take several minutes as the VM is created.
@@ -589,6 +590,11 @@ To restore the backup to a new service instance, follow these procedures:
   * `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.
 
 1. Exit the MySQL VM.
+
+1. If you wish to restore to a Leader-Follower plan, update the plan now:
+ <pre class="terminal">
+   $ cf update-service NEW-SERVICE-INSTANCE -p LEADER-FOLLOWER-PLAN
+ </pre>
 
 1. Determine if the app is currently bound to a MySQL service instance:
  <pre class="terminal">
