@@ -13,7 +13,7 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 | 2.4         | v2.4.x | 
 | 2.3         | v2.3.x | 
 | 2.2         | v2.2.x |  
-| 2.1         | v2.1.x | 
+| 2.1         | v2.1.x — Now PDFed: https://docs.pivotal.io/archives/mysql-docs-2.1.pdf | 
 | 2.0         | v2.0.x — Now PDFed: https://docs.pivotal.io/archives/mysql-docs-2.0.pdf |
 | 1.11        | There are no plans for a v1.11. However, because it publishes to the edge branch, you could use it to stage big changes for the v1.10.x without worrying they'll go to production prematurely. |
 | 1.10        | v1.10.x |
