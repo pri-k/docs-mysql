@@ -25,8 +25,9 @@ configure the firewall rules as follows to allow traffic between PAS (or Elastic
 | Inbound/TCP | Proxy API | 8080 |
 | Outbound/TCP | NATS | 4222 |
 | Internal/TCP | MySQL server | 3306 |
-| Internal/TCP | Galera | 4567 |
+| Internal/TCP | Galera | 4567, 4568, 4444 |
 | Internal/HTTP | Galera health check | 9200 |
+| Internal/HTTP | mysql-diag-agent | 8112 |
 
 ## <a id="load-balancer"></a> Configure a Load Balancer
 
