@@ -7,7 +7,7 @@ This topic describes how to configure automated backups for MySQL for Pivotal Cl
 and how to manually restore a MySQL service instance from a backup.
 
 <p class="note"><strong>Note:</strong> As of v2.2.0, the MySQL for PCF tile no longer includes the option to disable automated backups. You must configure automated backups.</p>
-<p class="note"><strong>Note:</strong> Pivotal recommends that you always configure a single instance plan in order to streamline the restore process for Leader-Follower plans.</p>
+<p class="note"><strong>Note:</strong> Pivotal recommends that you always configure a single instance plan in order to streamline the restore process for leader-follower plans.</p>
 
 ## <a id="overview"></a>About Automated Backups
 
@@ -530,12 +530,19 @@ To restore the backup to a new service instance, follow these procedures:
 
 #### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
+<p class="note"><strong>Note:</strong> You can only restore to a single node plan. Therefore, in this procedure the new service
+  instance you create for restore uses a single node plan. If you are restoring to a leader-follower plan, you can update the plan
+  on the new service instance after you run the restore utility. This is included in the instructions in <a href="#runrestore">
+  Run the Restore Utility</a> below.</p>
+
+To prepare a new service instance for restore, do the following:
+
 1. Determine the service plan associated with the old service instance:
  <pre class="terminal">
   $ cf service OLD-INSTANCE-NAME
  </pre>
 
-1. Create a new service instance using a single node plan:
+1. Create a new MySQL service instance using a single node plan:
  <pre class="terminal">
   $ cf create-service p.mysql SINGLE-NODE-PLAN-NAME NEW-INSTANCE-NAME
  </pre>
@@ -546,14 +553,15 @@ To restore the backup to a new service instance, follow these procedures:
   $ cf service NEW-INSTANCE-NAME
  </pre>
 
-1. Determine the GUID associated with your service instance:
+1. Determine the GUID associated with your new service instance:
  <pre class="terminal">
     $ cf service NEW-INSTANCE-NAME --guid
  </pre>
 
-1. Perform the steps in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds) to retrieve the admin password for your service instance.
+1. Perform the steps in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds)
+to retrieve the admin password for your new service instance.
 
-1. From the Ops Manager VM, find and record the MySQL instance name and GUID from BOSH:
+1. From the Ops Manager VM, find and record the new instance name and GUID from BOSH:
    <pre class="terminal">
    $ bosh2 -e my-env -d my-dep instances
    </pre>
@@ -577,7 +585,9 @@ To restore the backup to a new service instance, follow these procedures:
 
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
 
-1. Run the restore utility to restore the backup artifact into the data directory. This process:<br><br>
+1. Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
+
+1. Run the restore utility to restore the backup artifact into the data directory. This process:
     * Deletes any existing data
     * Decrypts and untars the backup artifact
     * Restores the backup artifact into the MySQL data directory
@@ -587,12 +597,12 @@ To restore the backup to a new service instance, follow these procedures:
  </pre>
   where:<br><br>
   * `ENCRYPTION-KEY` is the backup encryption key you retrieved in [Retrieve Backup Encryption Key](#retrieve-key).
-  * `ADMIN-PASSWORD` is the admin password for your service instance retrieved in [Create and Prepare a New Service Instance for Restore](#prepare).
+  * `ADMIN-PASSWORD` is the admin password for your new service instance, retrieved in [Create and Prepare a New Service Instance for Restore](#prepare) above.
   * `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.
 
 1. Exit the MySQL VM.
 
-1. If you wish to restore to a Leader-Follower plan, update the plan now:
+1. If you want to restore to a leader-follower plan, update the plan now:
  <pre class="terminal">
    $ cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
  </pre>
