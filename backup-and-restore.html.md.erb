@@ -530,14 +530,14 @@ To restore the backup to a new service instance, follow these procedures:
 
 #### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
-<p class="note"><strong>Note:</strong> You can only restore to a single node plan. Therefore, in this procedure the new service
-  instance you create for restore uses a single node plan. If you are restoring to a leader-follower plan, you can update the plan
+<p class="note"><strong>Note:</strong> You can only restore to a single-node plan. Therefore, in this procedure the new service
+  instance you create for restore uses a single-node plan. If you are restoring to a leader-follower plan, you can update the plan
   on the new service instance after you run the restore utility. This is included in the instructions in <a href="#runrestore">
   Run the Restore Utility</a> below.</p>
 
 To prepare a new service instance for restore, do the following:
 
-1. Create a new MySQL service instance using a single node plan:
+1. Create a new MySQL service instance using a single-node plan:
  <pre class="terminal">
   $ cf create-service p.mysql SINGLE-NODE-PLAN-NAME NEW-INSTANCE-NAME
  </pre>
