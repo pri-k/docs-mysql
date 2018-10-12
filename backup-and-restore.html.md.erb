@@ -537,11 +537,6 @@ To restore the backup to a new service instance, follow these procedures:
 
 To prepare a new service instance for restore, do the following:
 
-1. Determine the service plan associated with the old service instance:
- <pre class="terminal">
-  $ cf service OLD-INSTANCE-NAME
- </pre>
-
 1. Create a new MySQL service instance using a single node plan:
  <pre class="terminal">
   $ cf create-service p.mysql SINGLE-NODE-PLAN-NAME NEW-INSTANCE-NAME
