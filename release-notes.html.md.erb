@@ -12,10 +12,11 @@ Release Date: June 12, 2018
 
 Pivotal MySQL v1.10.14 is a maintenance release.
 
-- **Bug fix:** The `smoketests` errand now runs in the organization and space combination, `system:pivotal-services` 
+- **Bug fix:** The `smoketests` errand runs in the organization and space combination, `system:pivotal-services` 
 so that Operators can include the space in Application Security Groups (ASGs). This allows the `smoke-tests` errand 
 to run successfully when the service is deployed without any public plans. For more information, see [Application Security Groups 
 for MySQL](app-security-groups.html).
+- **Bug fix:** Only one `mariadb_ctrl` process can run at a time. 
 
 **Dependency Updates**
 
@@ -70,6 +71,8 @@ Release Date: April 6, 2018
 
             - Unable to render templates for job 'streaming-mysql-backup-tool'. Errors are:
               - Error filling in template 'streaming-mysql-backup-tool.yml.erb' (line 8: Can't find property '["cf-mysql-backup.endpoint_credentials.username"]')
+              
+<%= partial 'mariadb_ctrl_issue' %>
 
 ## <a id="1.10.12"></a>v1.10.12
 
@@ -78,7 +81,9 @@ Release Date: February 23, 2018
 - Update to stemcell 3445.28 to address:
   - [USN-3583-2: Linux kernel (Trusty HWE) vulnerabilities](https://usn.ubuntu.com/usn/usn-3583-2/)
 
-    For more information, see [pivotal.io/security](https://pivotal.io/security).
+    For more information, see [pivotal.io/security](https://pivotal.io/security).   
+     
+<%= partial 'mariadb_ctrl_issue' %>
 
 ## <a id="1.10.11"></a>v1.10.11
 
@@ -92,7 +97,9 @@ Release Date: February 7, 2018
   - /p-mysql/system/persistent\_disk\_inodes\_used\_percent
   - /p-mysql/system/ephemeral\_disk\_inodes\_used\_percent
 - **Bug fix:** `mysql-diag` now fails quickly when VMs in the cluster are not available
-- **Bug fix:** replication-canary causes high memory usage spikes because it overwrites logs files rather than appends
+- **Bug fix:** replication-canary causes high memory usage spikes because it overwrites logs files rather than appends 
+
+<%= partial 'mariadb_ctrl_issue' %>
 
 ## <a id="1-10-10"></a>v1.10.10
 
@@ -100,6 +107,8 @@ Release Date: January 24, 2018
 
 - Update to stemcell 3445.24 to address:
   - [USN-3540-2: Linux (Xenial HWE) vulnerability](http://www.ubuntu.com/usn/usn-3540-2/)
+  
+<%= partial 'mariadb_ctrl_issue' %>
 
 ## <a id="1-10-9"></a>v1.10.9
 
@@ -111,7 +120,9 @@ Release Date: January 19, 2018
   - [USN-3522-4: Linux kernel (Xenial HWE) regression](http://www.ubuntu.com/usn/usn-3522-4/)
   - [USN-3534-1: GNU C Library vulnerabilities](http://www.ubuntu.com/usn/usn-3534-1/)
 
-    For more information, see [pivotal.io/security](https://pivotal.io/security).
+    For more information, see [pivotal.io/security](https://pivotal.io/security).  
+    
+<%= partial 'mariadb_ctrl_issue' %>
 
 ## <a id="1-10-8"></a>v1.10.8
 
