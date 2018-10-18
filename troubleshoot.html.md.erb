@@ -323,8 +323,15 @@ Available disk space can be increased by deleting audit log files.
 After deleting audit logs, you can then upgrade to a larger MySQL service plan.    
 
 <h4>Solution</h4>
+
+The solution to this problem is to confirm that your persistent disk is full, and then delete an 
+audit log file to free up disk space.
+When the disk is no longer full, the service instance can be upgraded to a larger plan to prevent 
+the disk from becoming full again.<br><br>
+Follow the steps below:
+
 <ol>
-  <li> To retrieve and record the GUID of your service instance , run the
+  <li> To retrieve and record the GUID of your service instance, run the
     following command: 
     <br>
     <code>cf service SERVICE-INSTANCE-NAME --guid</code> 
@@ -344,13 +351,14 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
     <code>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</code> 
     <br><br>
     Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in the 
-    previous step.<br>
-      
+    above step.<br><br>
+    For example:
+      <!-- EXAMPLE -->
   </li>
   
   <li> 
     To retrieve and record the instance ID of your service instance, follow the 
-    procedure below that correponds with your VM topology.
+    procedure below that correponds with your VM topology:
     <ul>
     <li>If you are using single node MySQL VMs, to retrieve and record the 
       instance ID, run the 
@@ -359,7 +367,7 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
     <code>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</code>
     <br><br>
     Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in the 
-    step one.<br>
+    step 1.<br>
     <br>
     For example:
     <pre class="terminal">$ bosh -d service-instance_8b94fd28-b4f4-45g2-dhs5-7dsd018d5hf 
@@ -390,7 +398,7 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
   <code>bosh -d service-instance_SERVICE-INSTANCE-GUID run-errand inspect</code>
   <br><br>
   Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in the 
-  step one.<br>
+  step 1.<br>
   <br>
   For example:
   <pre class="terminal">
@@ -438,10 +446,12 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
   <br>
   <ul> 
     <li> <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in 
-      the step one.</li>
+      the step 1.</li>
     <li> <code>INSTANCE-ID</code> is the instance ID you recorded in the 
-      previous step </li>
+      above step. </li>
     <br>
+    For example:
+    <!-- EXAMPLE -->
   </ul>
   <li> To move to the directory where your audit log files are located, run the 
   following command:  
