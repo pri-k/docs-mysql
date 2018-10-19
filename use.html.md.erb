@@ -394,20 +394,20 @@ command:
       * `SERVICE-INSTANCE` is the name of your service instance.
       * `KEY-NAME` is the name of your service key.
   
-  For example:
+    For example:
   
-  <pre class="terminal">
-    $ cf service-key mydb mykey1<br>
-    {
-      "hostname": "99.99.99.9",
-      "jdbcUrl": "jdbc:mysql://99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
-      "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
-      "password": "123456789",
-      "port": 3306,
-      "uri": "mysql://abcdefghijklm:123456789<span>@</span>99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
-      "username": "abcdefghijklm"
-    }
-  </pre>  
+    <pre class="terminal">
+      $ cf service-key mydb mykey1<br>
+      {
+        "hostname": "99.99.99.9",
+        "jdbcUrl": "jdbc:mysql://99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
+        "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
+        "password": "123456789",
+        "port": 3306,
+        "uri": "mysql://abcdefghijklm:123456789<span>@</span>99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+        "username": "abcdefghijklm"
+      }
+    </pre>  
   
 1. Record the values for the following:  
     * `hostname`
