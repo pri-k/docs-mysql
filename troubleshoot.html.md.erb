@@ -344,8 +344,22 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
     <code>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</code> 
     <br><br>
     Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in the 
-    previous step.<br>
-      
+    above step.<br><br>
+    For example:
+      <pre class="terminal"> $bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances --vitals
+Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
+
+Task 19243. Done
+
+Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+Instance                                    Process State  AZ  IPs         VM Created At                 Uptime           Load              CPU    CPU    CPU   CPU   Memory        Swap      System      Ephemeral   Persistent
+                                                                                                                          (1m, 5m, 15m)     Total  User   Sys   Wait  Usage         Usage     Disk Usage  Disk Usage  Disk Usage
+mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z3  10.0.18.20  Wed Sep 12 22:01:44 UTC 2018  35d 20h 54m 17s  0.02, 0.03, 0.00  -      10.2%  0.4%  0.2%  14% (1.1 GB)  0% (0 B)  54% (37i%)  11% (4i%)   7% (0i%)
+
+1 instances
+
+Succeeded
   </li>
   
   <li> 
@@ -362,16 +376,16 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
     step one.<br>
     <br>
     For example:
-    <pre class="terminal">$ bosh -d service-instance_8b94fd28-b4f4-45g2-dhs5-7dsd018d5hf 
+    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef
       instances
       Using environment '34.237.123.534' as client 'admin'
 
       Task 204. Done
 
-      Deployment 'service-instance_8b94fd28-b4f4-45g2-dhs5-7dsd018d5hf'
+      Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
 
       Instance                                    Process State  AZ  IPs 
-      mysql/d15419ba-fc6c-4013-b056-19f91c6b0f1d  running        z2  10.244.17.3
+      mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z2  10.244.17.3
 
       1 instances
 
@@ -394,7 +408,7 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
   <br>
   For example:
   <pre class="terminal">
-  $ bosh -d service-instance_8b94fd28-b4f4-45g2-dhs5-7dsd018d5hf run-errand inspect
+  $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
   Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
   Exit Code  0
   Stdout     2018/04/03 18:08:46 Started executing command: inspect
@@ -442,6 +456,15 @@ After deleting audit logs, you can then upgrade to a larger MySQL service plan.
     <li> <code>INSTANCE-ID</code> is the instance ID you recorded in the 
       previous step </li>
     <br>
+    For example:
+    <pre class="terminal">
+      $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+      Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
+
+      Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+      Task 19244. Done
+    </pre>
   </ul>
   <li> To move to the directory where your audit log files are located, run the 
   following command:  
