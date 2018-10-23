@@ -143,6 +143,24 @@ Perform the following steps to create a UAA client for CredHub on your UAA serve
       created_by: f609e861-39ec-4a16-8aee-cba9e9b079e3
     </pre>
 
+###<a id='credhub-creds'></a> Find Services CredHub Login Credentails
+
+Find and save the CredHub client-name and client-secret to add the CA certificate in the procedure below.
+
+To find the CredHub client-name and client-secret, do the following:
+
+1. In the Ops Manager Installation Dashboard, click the PAS tile.
+1. Click the **Credentials** tab.
+1. In the UUA section, click the link to the Services CreHub Credentials.
+	![CredHub Credentials](credhub-creds.png)
+1. Copy the identity and the password. The identity is the CredHub client-name and the password is the CredHub client-secret.
+
+	For example:
+
+	```
+	{"credential":{"type":"simple_credentials","value":{"identity":"services_credhub_client","password":"example_client_secret"}}}
+	```
+
 ###<a id='add-ca-cert'></a> Add the CA Certificate
 
 Perform the following steps to log in to CredHub, provide or generate a CA certificate, and add the certificate to Ops Manager:
@@ -234,5 +252,3 @@ Click **Security**.
         This deploys MySQL for PCF, restarts all the VMs in your PCF deployment,
         and applies your CA certificate.
         <p class="note warning"><strong>WARNING</strong>: Restarting all of the VMs in your PCF deployment in order to apply a CA certificate takes a long time to complete.</p>
-
-
