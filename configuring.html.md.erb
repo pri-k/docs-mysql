@@ -31,14 +31,14 @@ Service plans offer developers different versions of the MySQL service. An examp
 
 The proxy tier routes connections from apps to healthy MariaDB cluster nodes, even in the event of node failure.
 
-- In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances.  
-    * These IP addresses must be in the CIDR range configured in the Director tile and not be currently allocated to another VM. 
-    * Look at the **Status** pages of other tiles to see what IP addresses are in use.  
+- In the **Proxy IPs** field, enter a list of IP addresses that should be assigned to the proxy instances.
+    * These IP addresses must be in the CIDR range configured in the Director tile and not be currently allocated to another VM.
+    * Look at the **Status** pages of other tiles to see what IP addresses are in use.
     * You must make the **Proxy** instance count in the [Resource Config tab](#resource-config) the same as the number of IP addresses you enter in this field.
     * For high availability, you must also ensure you increase the number of **MySQL Server** instances from one to three in the [Resource Config tab](#resource-config). For more information on high availability, see [Switch Between Single and HA Topologies](#switch-topologies).
 
-- In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service. 
-    * This hostname or IP address should resolve to your load balancer and be considered long-lived. 
+- In the **Binding Credentials Hostname** field, enter the hostname or IP address that should be given to bound applications for connecting to databases managed by the service.
+    * This hostname or IP address should resolve to your load balancer and be considered long-lived.
     * When this field is modified, applications must be rebound to receive updated credentials.
 
 To enable their PCF apps to use a MySQL database, developers bind their apps to instances of the MySQL for PCF service. For more information, see [Application Binding](http://docs.pivotal.io/pivotalcf/devguide/services/index.html#application-binding). By default, the MySQL service provides bound apps with the IP address of the first instance in the proxy tier, even with multiple proxy instances deployed. This makes the first proxy instance a single point of failure unless you deploy a load balancer.
@@ -174,7 +174,7 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
 - <a id="innodb-flush-log-at-trx-commit"></a>**InnoDB Log Flush Timing**
 
-    Default: 2 
+    Default: 2
 
     InnoDB log buffer is written to the log file at each commit;
     the log file is flushed to disk once per second.
@@ -184,10 +184,7 @@ For more information about how MySQL for PCF is configured, see the [architectur
     The MariaDB default, `1`, is to flush the log to disk at every commit,
     which is required for ACID compliance.
 
-    <p class="note"><strong>Note</strong>: The most recent second's transactions is flushed to disk <i>only</i> if all nodes crash simultaneously.
-       All other cluster lifecycle events do not affect data retention.
-       To eliminate this risk, set Log Flush Timing to <code>1</code>,
-       which improves the performance of heavily active clusters.</p>
+    <p class="note"><strong>Note</strong>: When set to <code>2</code>, the most recent second's transactions are not flushed to disk <b>only</b> when all nodes crash simultaneously. All other cluster lifecycle events do not affect data retention. To eliminate this risk, set Log Flush Timing to <code>1</code></p>.
 
 - **Maximum Server Connections**
 
@@ -271,7 +268,7 @@ If **Enable Backups** is selected in the **Backups** pane, set **Backup Prepare 
 
 The following topics describe common scenarios where you may want to edit the **Resource Config** tab:
 
-- [Redeploying with Larger Persistent Disks](#disk) 
+- [Redeploying with Larger Persistent Disks](#disk)
 - [Switch Between Single and HA Topologies](#switch-topologies)
 
 ### <a id="disk"></a> Redeploying with Larger Persistent Disks
@@ -283,7 +280,7 @@ The following topics describe common scenarios where you may want to edit the **
 
 There are two circumstances in which you might need to redeploy with larger persistent disks:
 
-1. So much data is stored on the disk that very little free space remains. 
+1. So much data is stored on the disk that very little free space remains.
 2. The Service Broker allocated so many service plans that there is insufficient reserved space to allocate to new service instances.
 
 #### Redeploy with Larger Persistent Disks
@@ -308,8 +305,8 @@ the service remains available as long as there is sufficient disk space for norm
 
 Problems with persistent disks are typically caused by:
 
-* Infrastructure failure---for example, an administrator disables, deletes, or detaches a disk. 
-* Hardware failure---for example, a disk physically breaks. 
+* Infrastructure failure---for example, an administrator disables, deletes, or detaches a disk.
+* Hardware failure---for example, a disk physically breaks.
 
 The MariaDB nodes store their data on the persistent disk, so when recovering from a disk issue you must either reattach or recreate the disk before restarting the node.
 
@@ -322,8 +319,8 @@ If the cluster has lost quorum, that is, less than half of the nodes can communi
 In this case:
 
 1. Repair or replace any corrupted or lost persistent disks:
-   * If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#recoverdisk-cli2) procedures to recover a disk. 
-   * If you are using PCF v1.10, follow the [BOSH CLI v1](#recoverdisk-cli1) procedures to recover a disk. 
+   * If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#recoverdisk-cli2) procedures to recover a disk.
+   * If you are using PCF v1.10, follow the [BOSH CLI v1](#recoverdisk-cli1) procedures to recover a disk.
 
 1. Bootstrap the cluster to restart it.
    For more information, see [Bootstrapping](./bootstrapping.html).
@@ -334,8 +331,8 @@ If clustering has quorum, that is, at least half of the nodes can communicate, a
 In this case:
 
 1. Repair or replace any corrupted or lost persistent disks:
-   * If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#recoverdisk-cli2) procedures to recover a disk. 
-   * If you are using PCF v1.10, follow the [BOSH CLI v1](#recoverdisk-cli1) procedures to recover a disk. 
+   * If you are using PCF v1.11 or later, follow the [BOSH CLI v2](#recoverdisk-cli2) procedures to recover a disk.
+   * If you are using PCF v1.10, follow the [BOSH CLI v1](#recoverdisk-cli1) procedures to recover a disk.
 
 2. Restart recovered nodes.
 
@@ -348,7 +345,7 @@ The steps to recover disks depend on the the nature of the disk failure, describ
 **A---When Persistent Disk Is Detached and Can Be Reattached**
 
 When the disk is detached, monit considers the process stopped and BOSH considers the job as failing.
-BOSH cloud check does not recognize the disk is unattached. 
+BOSH cloud check does not recognize the disk is unattached.
 
 To recover a disk in this scenario, do the following:
 
@@ -439,7 +436,7 @@ To recover a disk in this scenario, do the following:
   $ bosh2 -e my-env -d my-dep deploy manifest.yml
   </pre>
 1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
-1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`. 
+1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`.
 1. Redeploy the release. For example:
   <pre class="terminal">
   $ bosh2 -e my-env -d my-dep deploy manifest.yml
@@ -452,7 +449,7 @@ The steps to recover disks depend on the the nature of the disk failure, describ
 **A---When Persistent Disk Is Detached and Can Be Reattached**
 
 When the disk is detached, monit considers the process stopped and BOSH considers the job as failing.
-BOSH cloud check does not recognize the disk is unattached. 
+BOSH cloud check does not recognize the disk is unattached.
 
 To recover a disk in this scenario, do the following:
 
@@ -541,7 +538,7 @@ To recover a disk in this scenario, do the following:
   $ bosh deploy
   </pre>
 1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
-1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`. 
+1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`.
 1. Redeploy the release.
   <pre class="terminal">
   $ bosh deploy
