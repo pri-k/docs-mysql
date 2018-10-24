@@ -58,12 +58,26 @@ If the product is initially deployed without proxy IPs, adding IPs to the **Prox
 You can change the following options to suit your environment. Since these changes affect all service instances, exercise caution when making changes.
 
 For more information about how MySQL for PCF is configured, see the [architecture documentation](architecture.html).
+<ul>
+    <li><a id="innodb-strict-mode"></a><strong>Enable InnoDB Strict Mode</strong><br/>
+    Default: Enabled<br/>
+    See the <a href="architecture.html#innodb-strict-mode">architecture documentation</a> for information on this setting.</li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li><a id="remote-admin"></a><strong>Allow Remote Admin Access</strong><br/>
+    Default: Disabled<br/>
+    See the <a href="architecture.html#remote-admin">architecture documentation</a> for information on how to configure this setting.</br>
+    Enabling this checkbox affects how you back up and restore your MySQL data manually.
+    See <a href="backup.html#manual-process">Perform Manual Backup</a>.
+</li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
 
-- <a id="innodb-strict-mode"></a>**Enable InnoDB Strict Mode**
-
-    Default: Enabled
-
-    See the [architecture documentation](architecture.html#innodb-strict-mode) for information on this setting.
 
 - <a id="local-infile"></a>**Allow Clients to Send Files**
 
@@ -83,14 +97,7 @@ For more information about how MySQL for PCF is configured, see the [architectur
 
     See the [architecture documentation](architecture.html#reverse-dns-lookups) for information on this setting.
 
-- <a id="remote-admin"></a>**Allow Remote Admin Access**
-
-    Default: Disabled
-
-    See the [architecture documentation](architecture.html#remote-admin) for information on how to configure this setting.
-    Enabling this checkbox affects how you back up and restore your MySQL data manually.
-    See [Perform Manual Backup](backup.html#manual-process).
-
+- 
 - **Read-Only User Password**
 
     Default: Disabled
