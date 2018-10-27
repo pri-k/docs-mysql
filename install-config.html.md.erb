@@ -58,7 +58,7 @@ To create an ASG for MySQL for PCF, do the following:</br>
     If you are using Pivotal Application Service (PAS) v2.0.x or later and want to store your service instance credentials in runtime CredHub,
     you must also open port `8844` in addition to performing the steps
     in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
-    Modify the JSON file above to include `"ports": "3306", "8844"`.
+    Modify the JSON file above to include `"ports": "3306,8844"`.
 
 1. Use the CF CLI and the JSON file that you created to create an ASG called `p.mysql`:
 
