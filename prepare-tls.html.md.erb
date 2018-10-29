@@ -85,7 +85,7 @@ Perform the following steps to create a UAA client for CredHub on your UAA serve
     </pre>
 
 1. In the **Credentials** tab of the Ops Manager Director tile, retrieve the **Uaa Login Client Credentials** and record the `identity` and `password` values.
-    <p class="note"><strong>Note</strong>: These are the credentials for the UAA server colocated on the BOSH Director, not the UAA server colocated on Pivotal Application Service.</p>
+    <p class="note"><strong>Note</strong>: These are the credentials for the UAA server colocated on the BOSH Director, not the UAA server colocated on Pivotal Application Service (PAS).</p>
 
 1. Retrieve the **Uaa Admin User Credentials** and record the `identity` and `password` values.
 
@@ -143,27 +143,31 @@ Perform the following steps to create a UAA client for CredHub on your UAA serve
       created_by: f609e861-39ec-4a16-8aee-cba9e9b079e3
     </pre>
 
-###<a id='credhub-creds'></a> Find Services CredHub Login Credentails
+###<a id='credhub-creds'></a> Find the CredHub Credentials
 
-Find and save the CredHub client-name and client-secret to add the CA certificate in the procedure below.
+You will need the CredHub client name and client secret to complete the [Add the CA Certificate](#add-ca-cert) procedure below.
 
-To find the CredHub client-name and client-secret, do the following:
+To find the CredHub client name and client secret, do the following:
 
 1. In the Ops Manager Installation Dashboard, click the PAS tile.
 1. Click the **Credentials** tab.
 1. In the UUA section, click the link to the Services CreHub Credentials.
 	![CredHub Credentials](credhub-creds.png)
-1. Copy the identity and the password. The identity is the CredHub client-name and the password is the CredHub client-secret.
+1. Record the values for `identity` and `password`.
 
-	For example:
+
+	Here is an example of the credentials page:
 
 	```
 	{"credential":{"type":"simple_credentials","value":{"identity":"services_credhub_client","password":"example_client_secret"}}}
 	```
 
+    The `identity` is the CredHub client name and the `password` is the CredHub client secret.
+
+
 ###<a id='add-ca-cert'></a> Add the CA Certificate
 
-Perform the following steps to log in to CredHub, provide or generate a CA certificate, and add the certificate to Ops Manager:
+To generate and add the CA Certificate to Ops Manager, do the following:
 
 1. From the Ops Manager VM, set the API target of the CredHub CLI to your CredHub server.
     <br><br>
@@ -185,10 +189,11 @@ Perform the following steps to log in to CredHub, provide or generate a CA certi
     Run the following command:
 
     ```
-    credhub login --client-name=credhub --client-secret=CLIENT-SECRET
+    credhub login --client-name=CREDHUB-CLIENT-NAME --client-secret=CREDHUB-CLIENT-SECRET
     ```
-    <br>
-    Where `client-secret` is the client secret you set in step 9 above.
+    Where:<br>
+    * `CREDHUB-CLIENT-NAME` is the value you recorded for `identity` in [Find the CredHub Credentials](#credhub-creds) above.
+    * `CREDHUB-CLIENT-SECRET` is the value you recorded for `password` in [Find the CredHub Credentials](#credhub-creds) above.
     <br><br>
     For example:
     <pre class="terminal">
