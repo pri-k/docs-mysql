@@ -20,26 +20,30 @@ Instead, you must enable encryption for the instance after creating it.
 
 Perform the following steps to enable TLS for an existing service instance:
 
-1. Create a service key, specifying the name of your service instance and a name for the service key.
-	<br><br> 
-	Run the following command:
+1. To create a service key, run the following command:
 
 	```
 	cf create-service-key SERVICE-INSTANCE SERVICE-KEY
 	```
-	<br>
+
 	Where:
 	* `SERVICE-INSTANCE` is the name of the existing service instance that you want to secure communication to and from.
-	* `SERVICE-KEY` is a name for the service key you are creating.
-	<br><br>
+	* `SERVICE-KEY` is a name for the service key you are creating.    
+	
 	For example:
 	<pre class="terminal">$ cf create-service-key my-service-instance my-service-key</pre>
 
-1. Retrieve the service key credentials, specifying the same values as above. 
+1. To retrieve the service key credentials, run the following command, specifying the same values as above: 
+
+	```
+	cf service-key SERVICE-INSTANCE SERVICE-KEY
+	```
+	
+	In the output, record the value for `hostname`.<br>	   
 	For example:
 	<pre class="terminal">$ cf service-key my-service-instance my-service-key
 	{
- 	"hostname": "10.1.16.3",
+ 	"hostname": "q-n3s3y1.q-g31.bosh",
  	"jdbcUrl":    "jdbc:mysql<span>:</span>//10.1.16.3:3306/service\_instance\_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026",
  	"name": "service\_instance\_db",
  	"password": "a22aaa2a2a2aaaaa",
@@ -48,37 +52,29 @@ Perform the following steps to enable TLS for an existing service instance:
  	"username": "6bf07ae455a14064a9073cec8696366c"
 	}
 	</pre>
-	If you are using a leader-follower topology, the command displays `hostnames` and multiple IP addresses rather than `hostname` and a single IP address. For example:
-	<pre class="terminal">
-	{
-	"hostname": ["10.1.16.3", "10.1.16.4"],
-	[...]
-	</pre>
-1. In the output, record the value for `hostname` or `hostnames`. 
-1. Update the existing service instance to enable TLS by providing configuration parameters.
-	<br><br>
-	Run the following command:
+	
+1. To update the existing service instance to enable TLS, run the following command:
 
 	```
 	cf update-service SERVICE-INSTANCE -c '{"enable_tls": ["HOSTNAME"]}'
 	```
-	<br>
+	
 	Where:
 	* `SERVICE-INSTANCE` is the name of the existing service instance that you want to secure communication to and from.
-	* `HOSTNAME` is the value for `hostname` or `hostnames` retrieved above. If you are using a leader-follower topology, enter the comma-separated list of IP addresses that appears under `hostnames`. 
+	* `HOSTNAME` is the value for `hostname`. 
 
 	For example:
 	<pre class="terminal">
-	$ cf update-service my-service-instance -c '{"enable_tls": ["10.1.16.3"]}'
+	$ cf update-service my-service-instance -c '{"enable_tls": ["q-n3s3y1.q-g31.bosh"]}'
 	</pre>
 	If you receive the following error message, the operator has not enabled TLS.
     See the procedures in [Preparing for TLS](prepare-tls.html) and [Configure Security](install-config.html#security).
 	<pre class="terminal">TLS has not been enabled in the service offering. Speak with your Operator to make this available.</pre>
 
-1. Updating the service instance takes a moment. 
-	To check the status of the operation, run `cf services` and locate your service instance. 
-	For example:
-	<br><br>
+1. To check the status of the operation, run `cf services` and locate your service instance.    
+   <br>
+	 For example:   
+	
 	<pre class="terminal">
 	$ cf services
 	Getting services in org example / space development as admin...
@@ -88,8 +84,14 @@ Perform the following steps to enable TLS for an existing service instance:
 	my-service-instance   p.mysql   db-small                update in progress
 	</pre>
 	When the operation has completed, `update succeeded` appears under `last operation`.
-	<br><br>
-1. Delete the service key. For example:
+
+1. To delete the service key, run the following, specifying the same values as above: 
+ 
+	```
+	cf delete-service-key SERVICE-INSTANCE SERVICE-KEY
+	```
+	
+	For example:
 	<pre class="terminal">
 	$ cf delete-service-key my-service-instance my-service-key
 	</pre>
@@ -120,4 +122,3 @@ Perform the following steps:
 	<pre class="terminal">$ cf restage my-app</pre>
 
 Your app should now communicate securely with the MySQL service instance.
-
