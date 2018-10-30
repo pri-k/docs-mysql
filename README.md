@@ -21,6 +21,12 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 
 **Note**: Branches v1.9 through v1.4 and v2.0 are no longer published as live documentation. However, documentation for those versions of PDFs is available as PDFs.
 
+## Partials
+
+Cross-product partials for **Redis for PCF** are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-services-partials) repo to allow for versioning.
+
+Previously, these partials were sourced from the v018.x branch of the On Demand Service Broker SDK and did not support versions.
+
 ## Steps for local development
 ```
 $ git clone git@github.com:pivotal-cf/docs-layout-repo 
