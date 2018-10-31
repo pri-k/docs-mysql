@@ -161,6 +161,10 @@ Each service plan has a corresponding section in the tile configuration, such as
 
 By default, the first three plans are active and the fourth and fifth plans are inactive.
 
+<p class="note warning"><strong>WARNING:</strong> You must configure one of your service plans as
+a single-node plan. This is because you can only restore to a single-node plan. For 
+more information on restoring services instances, see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>. </p>
+
 Perform the following steps for each plan that you want to use in your PCF deployment:
 
 1. Click the section for the plan. For example, **Plan 1**.
@@ -543,5 +547,3 @@ Follow the steps below to verify your stemcell version and apply all changes:
     For more information about this Ops Manager page, see
     [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
     1. Click **Apply Changes**.
-
-
