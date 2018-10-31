@@ -219,7 +219,7 @@ If you get an error using optional parameters, see [Troubleshooting Instances](.
 
 To change the default parameters of an existing instance use the following command:
 
-`cf update-service SERVICE SERVICE-PLAN SERVICE-INSTANCE -c '{ "PARAMETER": "PARAMETER-VALUE" }'`
+`cf update-service SERVICE-INSTANCE -c '{ "PARAMETER": "PARAMETER-VALUE" }'`
 
 
 The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
@@ -228,7 +228,7 @@ provided either in-line or in a file.
 For example:
 
 <pre class="terminal">
-$ cf update-service p.mysql db-small myDB -c '{ "workload": "mixed" }'
+$ cf update-service myDB -c '{ "workload": "mixed" }'
 </pre>
 
 
