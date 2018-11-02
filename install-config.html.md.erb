@@ -161,6 +161,10 @@ Each service plan has a corresponding section in the tile configuration, such as
 
 By default, the first three plans are active and the fourth and fifth plans are inactive.
 
+<p class="note warning"><strong>WARNING:</strong> You must configure one of your service plans as
+a single-node plan. This is because you can only restore to a single-node plan. For 
+more information on restoring services instances, see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>. </p>
+
 Perform the following steps for each plan that you want to use in your PCF deployment:
 
 1. Click the section for the plan. For example, **Plan 1**.
@@ -199,7 +203,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>Select a VM type. The plan creates service instances of this size.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL messages.
-            <p class="note"><strong>Note</strong>: If you intend to enable backups, choose a persistent disk type
+            <p class="note"><strong>Note:</strong> If you intend to enable backups, choose a persistent disk type
                 that is three times larger than the disk you intend to provide to developers.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
@@ -211,14 +215,14 @@ Perform the following steps for each plan that you want to use in your PCF deplo
             Using only one AZ for a **Multi-node deployment** greatly reduces the ability to recover from an outage and benefit from such a deployment.</li>
         </ul>
       If you do not check **Multi-node deployment**, select one AZ.
-      <p class="note"><strong>Note</strong>: To prevent orphaning a disk, only
+      <p class="note"><strong>Note:</strong> To prevent orphaning a disk, only
         migrate service instances to a different plan if the new plan includes
         all of the AZs in the existing plan.</p>
         </td></tr>
   </table>
 1. Click **Save**.
 
-<p class="note warning"><strong>WARNING</strong>: If you expect your developers to upgrade from one plan to another, do not place the plans in separate AZs. For example, if you create Plan 1 in AZ1 and Plan 2 in AZ2, developers receive an error and cannot continue if they try to upgrade from Plan 1 to Plan 2. This prevents them from losing their data by orphaning their disk in AZ1.<br><br>To learn how to manually migrate the data from one AZ to another, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
+<p class="note warning"><strong>WARNING:</strong> If you expect your developers to upgrade from one plan to another, do not place the plans in separate AZs. For example, if you create Plan 1 in AZ1 and Plan 2 in AZ2, developers receive an error and cannot continue if they try to upgrade from Plan 1 to Plan 2. This prevents them from losing their data by orphaning their disk in AZ1.<br><br>To learn how to manually migrate the data from one AZ to another, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
 
 ###<a id="inactive"></a> (Optional) Deactivate Service Plan
 
@@ -543,5 +547,3 @@ Follow the steps below to verify your stemcell version and apply all changes:
     For more information about this Ops Manager page, see
     [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
     1. Click **Apply Changes**.
-
-
