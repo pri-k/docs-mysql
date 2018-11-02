@@ -90,7 +90,7 @@ Values are either 1 (available) or 0 (not available).
   For example, a follower VM may have copied writes from the leader VM that are timestamped up to 4:00pm,
   but it has only applied writes up to 1:00pm. Normal values for this metric depend on your apps.
 
-For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
+For more information, see [KPIs for MySQL Service Instances](monitoring.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
 
 ## <a id='synchronous-replication'></a>Enable Semi-Synchronous Replication
 
@@ -464,6 +464,3 @@ To fail their apps over to the new leader VM, your developers must perform the f
    <pre class="terminal">
    $ cf restage my-app
    </pre>
-
-
-

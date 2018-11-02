@@ -1,6 +1,5 @@
 ---
 title: Overview of MySQL for PCF v2
-owner: London Services
 ---
 
 This topic describes the significant features in MySQL for PCF v2.
@@ -31,8 +30,8 @@ Operators should not downsize the VMs or disk size as this can cause data loss i
 
 ##<a id="tls"></a> Transport Layer Security (TLS)
 
-In MySQL for PCF v2.3 and later, you can enable TLS. 
-Enabling TLS provisions a MySQL server with a certificate so 
+In MySQL for PCF v2.3 and later, you can enable TLS.
+Enabling TLS provisions a MySQL server with a certificate so
 that apps and clients can establish an encrypted connection with the data service.
 
 For more information on TLS, and the workflow for enabling and using it, see [Preparing for TLS](./prepare-tls.html).
@@ -56,7 +55,7 @@ Review the following table to determine if MySQL for PCF v2 has the features nee
 
 <tr><th colspan=2>Maintenance and Backups</th><th>More Information</th></tr>
 <tr><td>Operational Monitoring and Logging</td><td>MySQL for PCF v2 provides metrics for monitoring On-Demand plan usage and quotas, as well as MySQL component metrics. Additionally, MySQL for PCF provides syslog redirection to external log ingestors.</td>
-    <td><a href="./monitor.html">Monitoring MySQL for PCF</a></td></tr>
+    <td><a href="./monitoring.html">Monitoring MySQL for PCF</a></td></tr>
 <tr><td>Backup and Restore</td><td>MySQL for PCF v2 includes automatic backups on a configurable schedule to a variety of destinations, as well as a simple restore process.
 </td><td><a href="./backup-and-restore.html">Manual Backup and Restore of MySQL for PCF</a></td></tr>
 
@@ -80,9 +79,9 @@ Review the following table to determine if MySQL for PCF v2 has the features nee
 MySQL for PCF v2 supports configuring multiple AZs.
 However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
 
-* On-Demand plans can be assigned to any of the configured availability zones. 
+* On-Demand plans can be assigned to any of the configured availability zones.
 * You can select two AZs
-  for the multi-node plans to increase the availability. 
+  for the multi-node plans to increase the availability.
   Choosing three AZs for multi-node plans does not increase the number of AZs assigned to three.
 * You can select one AZ for the single-node plan.
   Choosing two AZs for the single-node plan does not increase the number of AZs assigned to two.
