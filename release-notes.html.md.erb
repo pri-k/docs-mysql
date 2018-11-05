@@ -42,7 +42,7 @@ Release Date: April 6, 2018
   - **Removed:** `/p-mysql/performance/busy_time`
   - **Known Issue:** The `wsrep_local_*_queue_avg` metrics do not track current state.
 
-     For more information, see [MySQL-Specific Metrics](monitoring-mysql.html#mysql-metrics).
+     For more information, see [MySQL-Specific Metrics](monitor.html#mysql-metrics).
 
 - **Improved:** Small usability updates to `download-logs`, which now relies on `bosh ssh` instead of manual SSH.
 
@@ -91,7 +91,7 @@ Release Date: February 7, 2018
 
 - **New:** Added metrics that represent disk usage as percentages.
            This makes it easier to alert on disk usage without knowing the deployment disk size.
-           For more information, see the [Persistent and Ephemeral Disk Used](monitoring-mysql.html#disk-free).
+           For more information, see the [Persistent and Ephemeral Disk Used](monitor.html#disk-free).
   - /p-mysql/system/persistent\_disk\_used\_percent
   - /p-mysql/system/ephemeral\_disk\_used\_percent
   - /p-mysql/system/persistent\_disk\_inodes\_used\_percent
@@ -146,8 +146,8 @@ and includes changes that improve syslog and metrics.
 - **New Disk Usage Metrics**
 
   - MySQL for PCF now produces disk space metrics and how much space has been reserved for service instances.
-    For more information, see [Persistent and Ephemeral Disk Free](monitoring-mysql.html#disk-free)
-    and [Service Plans Allocated](monitoring-mysql.html#broker-plans-allocated) in the KPI documentation.
+    For more information, see [Persistent and Ephemeral Disk Free](monitor.html#disk-free)
+    and [Service Plans Allocated](monitor.html#broker-plans-allocated) in the KPI documentation.
 
 - **Dependency Updates**
   - Updated to stemcell 3445.17 to address low and medium vulnerabilities.
@@ -226,7 +226,7 @@ Release Date: August 11, 2017
 
 - **Change the Interruptor default setting to OFF.**
 
-    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included the [Interruptor](interruptor.html). It's a protective mechanism which stops a node from automatically rejoining the cluster if doing so might delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitoring-mysql.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
+    For a [year](http://docs.pivotal.io/p-mysql/1-7/release-notes.html#1-7-11), MySQL for PCF has included the [Interruptor](interruptor.html). It's a protective mechanism which stops a node from automatically rejoining the cluster if doing so might delete application data. We also upgraded to [MariaDB 10.1](https://mariadb.com/kb/en/mariadb/what-is-mariadb-101/) and provided the [Replication Canary](monitor.html#repcanary) to further protect application data. There have been zero instances where the Interruptor has been needed to protect application data.<br><br>
 
     In this release, we are disabling the Interruptor because it is disruptive to normal cluster function, and requires manual operator action to restore availability. We feel confident that disabling the Interruptor in all but the most critical environments is a safe and convenient choice.<br><br>
 
