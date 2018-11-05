@@ -119,9 +119,9 @@ If all nodes crash simultaneously, it is possible to lose up to a second of tran
 
 * MySQL for PCF v1.9.13 and v1.10.6 set [innodb\_flush\_log\_at\_trx\_commit](https://mariadb.com/kb/en/mariadb/xtradbinnodb-server-system-variables/#innodb_flush_log_at_trx_commit) to `2`,
   which improves the performance of heavily active clusters.
-  Both `0` and `2` are [considered safe](http://galeracluster.com/documentation-webpages/configuration.html) when running a Galera cluster, 
+  Both `0` and `2` are [considered safe](http://galeracluster.com/documentation-webpages/configuration.html) when running a Galera cluster,
   because you can recover writes from another node.
-The last second's transactions are not flushed to disk **only** if all nodes in the cluster crash simultaneously. 
+The last second's transactions are not flushed to disk **only** if all nodes in the cluster crash simultaneously.
 
 * When set to `2`, the buffer is flushed at commit but it is not synced.
 This means that you can safely kill `mysqld`, but if the OS or the host crashes, you might lose some transactions on the local node.
@@ -130,7 +130,7 @@ This means that you can safely kill `mysqld`, but if the OS or the host crashes,
 Previous versions of MySQL for PCF v1 used `1`.
 
 * When set to `0`, the buffer is not flushed at each commit.
-  This means that the buffer can be lost if the `myslqd` process crashes.
+  This means that the buffer can be lost if the `mysqld` process crashes.
   If you run `kill -9 mysqld`, you might lose some transactions on the local node.
 
 
@@ -198,7 +198,7 @@ This option allows clients to send files to the server. Disabling ensures that c
 
 #### <a id="remote-admin"></a>Allow Remote Admin Access
 
-When enabled, `mysql` clients are allowed to connect as administrator from remote hosts. 
+When enabled, `mysql` clients are allowed to connect as administrator from remote hosts.
 When disabled, administrators must BOSH SSH into each MySQL VM to connect as the MySQL super user.
 This is a server setting; network configuration and [Application Security Groups](app-security-groups.html) restrictions may still limit a client's ability to establish a connection with the databases.
 
@@ -210,7 +210,7 @@ Some errands fail when remote admin access is disabled.</p>
 #### <a id="command-history"></a>Allow Command History
 
 When disabled, this prohibits the creation of command line history files on the MySQL nodes.
-If administrators frequently `ssh` into the MySQL VMs without using BOSH SSH, 
+If administrators frequently `ssh` into the MySQL VMs without using BOSH SSH,
 the default setting of Enabled automatically creates history files of their interactions with the server.
 These files may contain sensitive information.
 Disable this option to ensure that no trace files are left on the file system.

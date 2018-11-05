@@ -184,7 +184,11 @@ For more information about how MySQL for PCF is configured, see the [architectur
     The MariaDB default, `1`, is to flush the log to disk at every commit,
     which is required for ACID compliance.
 
-    <p class="note"><strong>Note</strong>: When set to <code>2</code>, the most recent second's transactions are not flushed to disk <b>only</b> when all nodes crash simultaneously. All other cluster lifecycle events do not affect data retention. To eliminate this risk, set Log Flush Timing to <code>1</code></p>.
+    <p class="note"><strong>Note</strong>: When set to <code>2</code>, the most
+        recent second's transactions are not flushed to disk <b>only</b> if all
+        nodes crash simultaneously.
+        All other cluster lifecycle events do not affect data retention.
+        To eliminate this risk, set Log Flush Timing to <code>1</code></p>.
 
 - **Maximum Server Connections**
 
