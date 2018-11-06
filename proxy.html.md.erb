@@ -9,7 +9,10 @@ Using a proxy gracefully handles failure of MariaDB nodes, enabling fast, unambi
 
 On-demand versions of MySQL for PCF do not use proxies.
 
-Switchboard offers three separate functions, for which it uses three separate ports. The default ports are documented, along with all other network port requirements, on the [installation](installing.html#network-layout) page.
+<!-- 
+Is this link correct
+
+Switchboard offers three separate functions, for which it uses three separate ports. For more infomation on default ports and other network port requirements, see [Required Networking Rules for On-Demand Services](http://docs-pcf-staging.cfapps.io/p-mysql/2-n/about.html#rules). -->
 
 - **MySQL Server Access**
 
@@ -38,7 +41,10 @@ When a new or resurrected nodes rejoin the cluster, the proxy continues to route
 
 If the healthcheck returns HTTP status code `503`, the proxy considers the node unhealthy.
 
-This happens when a node becomes non-primary, as specified by the [cluster behavior](architecture.html#behavior) section of the _Architecture_ topic.
+<!-- 
+Where should this section point to?
+
+This happens when a node becomes non-primary, as specified by the [cluster behavior](architecture.html#behavior) section of the _Architecture_ topic. -->
 
 The proxy severs existing connections to newly unhealthy node. The proxy routes new connections to a healthy node, assuming such a node exists. Clients are expected to handle reconnecting on connection failure should the entire cluster become inaccessible.
 
