@@ -310,45 +310,42 @@ Re-bootstrapping the cluster is not successful unless you shut down the `mariadb
 
 ### <a id="choose-node"></a> Choose Node to Bootstrap 
 
-To choose the node to bootstrap, you must find the node with the highest transaction sequence number (`seqno`).
+To choose the node to bootstrap, you must find the node with the highest transaction `sequence number`.
 
-Do the following to find the node with the highest `seqno`:
+Do the following for each node in the cluster:
 
-1. Run the following command from the node:
+1. To SSH into the node, run one of the following commands:
+    * **Ops Manager v1.11 or later**: See the [BOSH CLI v2 instructions](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#ssh-v2) for SSHing into BOSH-deployed VMs.
+    * **Ops Manager v1.10**: See the [BOSH CLI v1 instructions](https://docs.pivotal.io/pivotalcf/1-10/customizing/trouble-advanced.html#bosh-ssh) for SSHing into BOSH-deployed VMs.
+
+1. To view the sequence number for a node, run the following command:
             
     ```
-    cat /var/vcap/store/mysql/grastate.dat | grep 'seqno:'
+    /var/vcap/jobs/mysql/bin/get-sequence-number
     ```
-1. If a node shut down gracefully, the `seqno` is in the Galera state file. 
-Retrieve the `seqno` and continue to [Bootstrap the First Node](#set-bootstrap-node). 
-<br><br>
-If a node crashed or was killed, the `seqno` in the Galera state file is recorded as `-1`.
-In this case, the `seqno` might be recoverable from the database. 
-Run the following command to start up the database, log the recovered `seqno`, and then exit:
+    
+  When prompted confirm that you want to stop MySQL.
+  
+  For example:
+  
+  <pre class="terminal"> 
+    $ /var/vcap/jobs/mysql/bin/get-sequence-number
+    This script stops mysql. Are you sure? (y/n): y
+    
+    {"sequence_number":421,"instance_id":"012abcde-f34g-567h-ijk8-9123l4567891"}
+  </pre>
 
-    ```
-    /var/vcap/packages/mariadb/bin/mysqld --wsrep-recover
-    ```
-
-    Scan the error log for the recovered `seqno`. It is the last number after the group id (`uuid`). For example:
-
-    <pre class="terminal">
-    $ grep "Recovered position" /var/vcap/sys/log/mysql/mysql.err.log | tail -1
-    150225 18:09:42 mysqld_safe WSREP: Recovered position e93955c7-b797-11e4-9faa-9a6f0b73eb46:15
-    </pre>
-    If the node never connected to the cluster before crashing,
-    it may not even have a group id (`uuid` in `grastate.dat`).
-    In this case, there is nothing to recover. Unless all nodes crashed this way, do not choose this node for bootstrapping.
-
-1. After determining the `seqno` for all nodes in your cluster, identify the node with the highest `seqno`.
-   If all nodes have the same `seqno`, you can choose any node as the new bootstrap node.
+1. Record the value of `sequence_number`.
+  
+ After determining the `sequence_number` for all nodes in your cluster, identify the node with the highest `sequence_number`.
+If all nodes have the same `sequence_number`, you can choose any node as the new bootstrap node.
 
 ### <a id="set-bootstrap-node"></a>Bootstrap the First Node ###
 
-After determining the node with the highest `seqno`, do the following to bootstrap the node:
+After determining the node with the highest `sequence_number`, do the following to bootstrap the node:
 
-<p class="note"><strong>Note:</strong> Only run these bootstrap commands on the node with the highest <code>seqno</code>.
-   Otherwise the node with the highest <code>seqno</code> is unable to join the new cluster unless its data is abandoned.
+<p class="note"><strong>Note:</strong> Only run these bootstrap commands on the node with the highest <code>sequence_number</code>.
+   Otherwise the node with the highest <code>sequence_number</code> is unable to join the new cluster unless its data is abandoned.
    Its <code>mariadb</code> process exits with an error. 
    For more information about intentionally abandoning data, see <a href="architecture.html">Architecture</a>.</p>
 
@@ -377,7 +374,7 @@ From the bootstrap node, run the following command:
     <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure.
        Only do the procedure with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
 
-1. If the `monit start` command fails, it might be because the node with the highest `seqno` is `mysql/0`.
+1. If the `monit start` command fails, it might be because the node with the highest `sequence_number` is `mysql/0`.
    In this case, do the following:
     1. From the Ops Manager VM, use the BOSH CLI to make BOSH ignore updating `mysql/0`:
         * **Ops Manager v1.11 or later:** 
