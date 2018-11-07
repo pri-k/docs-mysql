@@ -11,6 +11,35 @@ upgrade to the latest version of 2.2 before upgrading to the latest version of 2
 For product versions and upgrade paths, see the [Product Compatibility 
 Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
+## <a id="232"></a>v2.3.2
+
+**Release Date: November 7, 2018**
+
+### Known Issues
+
+All releases up to and including MySQL for PCF v2.3.2 have the following issue:
+
+* Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
+  To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
+
+### Improvements
+
+Improvements and other changes in this release:
+
+* Bump Golang to v1.10.3.
+* Bump Percona Server to v5.7.23-23.
+* The `find-non-tls-bindings` BOSH errand has clearer error messaging to more easily determine the cause of failure.
+
+
+### Fixed Issues
+
+This release fixes the following issues:
+
+* The [manual backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup) steps in documentation have been updated to work around the previous Known Issue where the `mysqldump --all-databases` step fails.
+* Fixes an issue where smoke tests fail if Service Plan Access is set to manual.
+* Fixes an issue where the `find-non-tls-bindings` BOSH errand fails when the Secure Service Bindings feature is disabled, but Credhub is enabled on the foundation.
+* Fixes an issue with the `mysql-restore` command that does not completely clean up pre-existing MySQL users in the database if they have been granted column- or table-level privileges.
+
 ## <a id="231"></a>v2.3.1
 
 **Release Date: June 22, 2018**
