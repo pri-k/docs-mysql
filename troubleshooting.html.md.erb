@@ -230,9 +230,11 @@ A MySQL node is unable to rejoin a cluster.
 #### Explanation
 
 Existing server nodes restarted with `monit` should automatically join the cluster.
-If a detached existing node fails to join the cluster, it might be because its sequence number (`seqno`) is higher than those of the nodes with quorum.
+If a detached existing node fails to join the cluster, it might be because its `sequence_number` 
+is higher than those of the nodes with quorum.
 
-A higher `seqno` on the detached node indicates that it has recent changes to the data that the primary lacks.
+A higher `sequence_number` on the detached node indicates that it has recent changes to the data 
+that the primary lacks.
 Check this by looking at the node's error log at `/var/vcap/sys/log/mysql/mysql.err.log`.
 
 #### Solution
