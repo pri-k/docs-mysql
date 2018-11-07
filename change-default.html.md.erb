@@ -13,9 +13,9 @@ The following table lists the MySQL for PCF server defaults.
 
 <table>
     <th>Name</th>
-    <th width="500">Variable Name</th> 
+    <th width="275">Variable Name</th> 
     <th>Default</th>
-    <th>Notes</th>
+    <th width="300">Notes</th>
     <tr>
         <td><strong>Max Connections</strong></td>
         <td><code>max-connections</code></td>
@@ -182,12 +182,66 @@ For general information about using MySQL for PCF, see [Using MySQL for PCF](./u
 MySQL for PCF service instances are configured by default with industry best practices. 
 For more specific use cases, you can customize the following parameters:
 
-| Key | Type | Default | Description | Usage |
-| ---- | ---- | ---- | ---- | ---- |
-| `workload` | String | `mixed`| Set this to `read-heavy`, `mixed`, or `write-heavy`. See [Understanding Workload Types](#workload) below. | `create-service` or `update-service` |
-| `enable_lower_case_table_names` | Boolean | Set by the operator | The operator sets a default for this parameter and may allow you to override the default.<br>If allowed, you can only set this when creating a service instance. If you set this to `true`, table names are stored in lowercase. See [Understanding Lowercase Table Names](#lowercase) below. | `create-service` |
-| `default-charset` | String | `utf8` | You can set this to any MySQL 5.7 supported character set. See [Character Sets and Collations in MySQL](https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html). | `create-service` or `update-service` |
-| `default-collation` | String | `utf8-general-ci` | The `default-collation` changes based on the `default-charset`. To set the `default-collation`, first set the `default-charset`. For a list of available and default collations, see [Supported Character Sets and Collations](https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html). | `create-service` or `update-service` |
+<table>
+  <th width="200">Parameter</th>
+  <th>Type</th>
+  <th>Default</th>
+  <th>Description</th>
+  <th width="100">Usage</th>
+  <tr>
+    <td><code>workload</code></td>
+    <td>String</td>
+    <td><code>mixed</code></td>
+    <td>Set this to <code>read-heavy</code>, <code>mixed</code>, or <code>write-heavy</code>. 
+      See <a href="#workload">Understanding Workload Types</a> below.</td>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+  <tr>
+    <td><code>enable_lower_case_table_names</code></td>
+    <td>Boolean</td>
+    <td>Set by the operator</td>
+    <td> The operator sets a default for this parameter and may allow you to override the default. 
+      If allowed, you can only set this when creating a service instance. If you set this to 
+      <code>true</code>, table names are stored in lowercase. 
+      See <a href="#lowercase">Understanding Lowercase Table Names</a>  below.</td>
+    <td><code>create-service</code></td>
+  </tr>
+  <tr>
+    <td><code>default-charset</code></td>
+    <td>String</td>
+    <td><code>utf8</code></td>
+    <td>You can set this to any MySQL 5.7 supported character set. See <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html">Character Sets and Collations in MySQL</a>.</td>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+  <tr>
+    <td><code>default-collation</code></td>
+    <td>String</td>
+    <td><code>utf8-general-ci</code></td>
+    <td>The <code>default-collation</code> changes based on the <code>default-charset</code>. 
+      To set the <code>default-collation</code>, first set the <code>default-charset</code>. 
+      For a list of available and default collations, 
+      see 
+      <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">Supported Character Sets and Collations</a>.</td>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+  <tr>
+    <td><code>replication_mode</code></td>
+    <td>String</td>
+    <td><code>async</code></td>
+    <td>Set this to <code>async</code> or <code>semi-sync</code>. See 
+      <a href="#synchronous-replication">Understanding Synchronous Replication</a>.</td>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+  <tr>
+    <td><code>semi_sync_ack_timeout_in_ms</code></td>
+    <td>Integer</td>
+    <td>2<sup>63</sup> milliseconds</td>
+    <td>Sets the timeout in milliseconds for the leader to acknowledge a replication operation. See 
+      <a href="replication-timeout">Synchronous Replication Timeout</a>.
+    </td>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+</table>
 
 ### <a id="parameters"></a> Use Optional Parameters
 
@@ -279,4 +333,30 @@ If you are migrating a database from a system that was case insensitive,
 
 For more information, see the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
 
+### <a id='synchronous-replication'></a>Understanding Synchronous Replication
+In a leader-follower topology, MySQL for PCF supports synchronous replication in addition 
+to the default asynchronous replication. In sync replication, data does not get committed to the 
+leader node until the follower acknowledges the commit and can replicate it. 
 
+The guarantee of redundancy gives sync replication an advantage in data integrity over asynchronous replication. However, sync replication reduces the performance of write operations, depending on 
+latency.
+
+To enable sync replication on a leader-follower service instance, set `replication_mode` to 
+`semi-sync`. To restore the default asynchronous replication for a leader-follower service instance, 
+set `replication_mode` to `async`.
+
+#### <a id='replication-timeout'></a>Synchronous Replication Timeout
+
+By default, the timeout for sync replication is set to approximately 292 million years. Therefore, 
+the leader always waits for the follower to confirm receipt of the transaction. This guarantees that 
+if the leader is lost, a redundant copy of the data exists on the follower.
+
+<p class="note"><strong>Note:</strong> When the replication mode timeout is reached,
+the replication modes automatically reverts to asynchronous without any user intervention. You can manually override this timeout with a lower value.
+</p>
+
+#### <a id='semi-sync'></a>MySQL Semi-Synchronous Replication 
+
+In MySQL for PCF, the replication is called sync, rather than semi-sync. This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync 
+replication, see [16.3.9 Semisynchronous Replication](https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html) 
+in the MySQL documentation.
