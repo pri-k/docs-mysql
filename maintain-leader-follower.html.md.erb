@@ -87,6 +87,7 @@ Values are either 1 (available) or 0 (not available).
 
 For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4MySQL) in <em>Monitoring and KPIs</em>.
 
+<<<<<<< HEAD
 ## <a id='synchronous-replication'></a>Enable Semi-Synchronous Replication
  
 In a leader-follower topology, MySQL for PCF supports semi-synchronous replication ("semi-sync") in addition to the default asynchronous replication. 
@@ -173,6 +174,8 @@ When the replication mode timeout is reached,
 the replication modes automatically reverts to asynchronous without any user intervention.
 </p>
 
+=======
+>>>>>>> a1f0988... add draft changes to master [#161429736]
 ## <a id="errands"></a> Errands Used in Leader-Follower Failover
 
 This section describes the errands used in the [Trigger a Failover](#failover) procedures below. 
@@ -459,6 +462,3 @@ To fail their apps over to the new leader VM, your developers must perform the f
    <pre class="terminal">
    $ cf restage my-app
    </pre>
-
-
-

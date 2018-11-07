@@ -50,5 +50,5 @@
 | `<%= vars.mysql_metrics_origin_v2 %>/performance/opened_table_definitions` | The number of `.frm` files that have been cached. | integer |
 | `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_no_tx` | The number of transactions committed without follower acknowledgement. | integer |
 | `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_tx_avg_wait_time` | The average time the leader has waited for the follower to accept transactions. | microseconds |
-| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_wait_sessions` | The current number of connections waiting for a semi-sync commit. For more information about semi-sync replication, see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication). | integer |
+| `<%= vars.mysql_metrics_origin_v2 %>/rpl_semi_sync_master_wait_sessions` | The current number of connections waiting for a sync commit. For more information about sync replication, see [Understanding Synchronous Replication](./change-default.html#synchronous-replication). | sessions |
 | `<%= vars.mysql_metrics_origin_v2 %>/variables/read_only` | Whether the server is in read-only mode | boolean |
