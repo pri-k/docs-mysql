@@ -13,9 +13,12 @@ When a developer creates a leader-follower service instance, the on-demand broke
 and a follower VM in another AZ.
 
 By default, any data that is written to the leader is asynchronously replicated to the follower. 
-MySQL for PCF also supports semi-synchronous replication (“semi-sync”). 
-In semi-sync replication, data does not get committed to the leader node until the follower acknowledges the commit and can replicate it. 
-For more information about semi-sync replication and how to enable it, see [Enable Semi-Synchronous Replication](maintain-leader-follower.html#synchronous-replication).
+MySQL for PCF also supports synchronous replication ("sync"). 
+
+In sync replication, data does not get committed to the leader node until the follower acknowledges the commit and can replicate it. By default, the timeout for sync replication is set to approximately 292 million years. This means that the leader always waits for the follower to confirm receipt of the 
+transaction.
+
+For more information about sync replication, see [Understanding Synchronous Replication](./change-default.html#synchronous-replication).
 
 A leader-follower topology enables operators to initiate a
 failover and send app traffic to the follower if the leader fails.
