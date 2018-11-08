@@ -324,16 +324,16 @@ Do the following for each node in the cluster:
     /var/vcap/jobs/mysql/bin/get-sequence-number
     ```
     
-  When prompted confirm that you want to stop MySQL.
+    When prompted confirm that you want to stop MySQL.
   
-  For example:
+    For example:
   
-  <pre class="terminal"> 
-    $ /var/vcap/jobs/mysql/bin/get-sequence-number
-    This script stops mysql. Are you sure? (y/n): y
-    
-    {"sequence\_number":421,"instance\_id":"012abcde-f34g-567h-ijk8-9123l4567891"}
-  </pre>
+    <pre class="terminal"> 
+      $ /var/vcap/jobs/mysql/bin/get-sequence-number
+      This script stops mysql. Are you sure? (y/n): y
+      
+      {"sequence\_number":421,"instance\_id":"012abcde-f34g-567h-ijk8-9123l4567891"}
+    </pre>
 
 1. Record the value of `sequence_number`.
   
