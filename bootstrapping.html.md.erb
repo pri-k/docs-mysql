@@ -344,10 +344,10 @@ If all nodes have the same `sequence_number`, you can choose any node as the new
 
 After determining the node with the highest `sequence_number`, do the following to bootstrap the node:
 
-<p class="note"><strong>Note:</strong> Only run these bootstrap commands on the node with the highest <code>sequence_number</code>.
+<!-- <p class="note"><strong>Note:</strong> Only run these bootstrap commands on the node with the highest <code>sequence_number</code>.
    Otherwise the node with the highest <code>sequence_number</code> is unable to join the new cluster unless its data is abandoned.
    Its <code>mariadb</code> process exits with an error. 
-   For more information about intentionally abandoning data, see <a href="architecture.html">Architecture</a>.</p>
+   For more information about intentionally abandoning data, see <a href="architecture.html">Architecture</a>.</p> -->
 
 1. On the new bootstrap node, update the state file and restart the <code>mariadb</code> process. 
 Run the following commands:
@@ -367,9 +367,9 @@ From the bootstrap node, run the following command:
 
     <pre><code>monit start mariadb_ctrl</code></pre>
 
-    If the node is prevented from starting by the [Interruptor](interruptor.html),
+    <!-- If the node is prevented from starting by the [Interruptor](interruptor.html),
     do the manual procedure to force the node to rejoin the cluster,
-    documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
+    documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668).  -->
 
     <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure.
        Only do the procedure with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
