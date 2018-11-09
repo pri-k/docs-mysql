@@ -22,23 +22,43 @@ All releases up to and including MySQL for PCF v2.3.2 have the following issue:
 * Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
   To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
 
-### Improvements
+### Features
 
-Improvements and other changes in this release:
+New features and changes in this release:
 
-* Bump Golang to v1.10.3.
-* Bump Percona Server to v5.7.23-23.
-* The `find-non-tls-bindings` BOSH errand has clearer error messaging to more easily determine the cause of failure.
-
+* `find-non-tls-bindings` BOSH errand error messages have been improved to make determining the 
+cause of failure easier.
 
 ### Fixed Issues
 
 This release fixes the following issues:
 
-* The [manual backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup) steps in documentation have been updated to work around the previous Known Issue where the `mysqldump --all-databases` step fails.
-* Fixes an issue where smoke tests fail if Service Plan Access is set to manual.
-* Fixes an issue where the `find-non-tls-bindings` BOSH errand fails when the Secure Service Bindings feature is disabled, but Credhub is enabled on the foundation.
-* Fixes an issue with the `mysql-restore` command that does not completely clean up pre-existing MySQL users in the database if they have been granted column- or table-level privileges.
+* The `mysqldump --all-databases` step no longer fails during maunal backups. 
+For more information, see [Manual Backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup).
+* Smoke tests no longer fail if Service Plan Access is set to manual.
+* `find-non-tls-bindings` BOSH errands no longer fail when the Secure Service Bindings feature is 
+disabled and Credhub is enabled on the deployment.
+* The `mysql-restore` command now completely cleans up pre-existing MySQL users with column or 
+table level privileges in the database.
+
+<table border="1" class="nice">
+<tr>
+    <th>Component</th>
+    <th>Version</th>
+</tr>
+<tr>
+    <td>Stemcell</td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line">3541.x</a></td>
+</tr>
+<tr>
+    <td>Percona Server</td>
+    <td>v5.7.23-23.</td>
+</tr>
+<tr>
+    <td>golang</td>
+    <td>v1.10.3.</td>
+</tr>
+</table>
 
 ## <a id="231"></a>v2.3.1
 
@@ -46,10 +66,7 @@ This release fixes the following issues:
 
 ### Known Issues
 
-All releases up to and including MySQL for PCF v2.3.1 have the following issue:
-
-- Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
-  To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
+All releases up to and including MySQL for PCF v2.3.2 have the following issue:
 
 MySQL for PCF v2.3.0 and v2.3.1 have the following issue:
 
