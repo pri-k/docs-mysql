@@ -22,6 +22,17 @@ For information about architecture of the older, pre-provisioned service, see th
 
 Regardless of the specific network layout, the operator must ensure network rules are set up so that connections are open as described in the table below. 
 
+<!-- Need more info for this table 
+
+| Type | Listening service | TCP Port |
+| ---- | ---- | ---- |
+| Internal/TCP | Galera | 4567, 4568, 4444 |
+| Internal/HTTP | Galera health check | 9200 | Look for Pivotal docs, Github CF
+
+Galera to Galera, ports, two-way link out to Galera docs
+
+ -->
+
 <table class="nice">
 	<th>This component...</th>
 	<th>Must communicate with...</th>
@@ -117,5 +128,18 @@ Regardless of the specific network layout, the operator must ensure network rule
 		<td>This port is needed if secure service instance credentials are enabled.
                     For information, see <a href="install-config.html#security">Configure Security</a>.</td>
 	</tr>
+	<tr>
+		<td><strong>Galera</strong></td>
+		<td><strong>Galera</strong></td>
+		<td> 4567 <br> 4568 <br> 4444 </td>
+		<td>Two-way</td>
+		<td>This connection is needed to maintain network connectivity between nodes in a Galera Cluster. For more infomation, see <a href="http://galeracluster.com/documentation-webpages/firewallsettings.html">Firewall Settings</a> in the Galera documentation.</td>
+	</tr>
+	<tr>
+		<td><strong>Galera healthcheck</strong></td>
+		<td><strong>Galera healthcheck</strong></td>
+		<td>9200</td>
+		<td>Two-way</td>
+		<td>This port is for monitoring the health of nodes in a Galera Cluster. For more infomation, see the <a href="https://github.com/cloudfoundry-incubator/galera-healthcheck">galera-healthcheck</a> repository.</td>
+	</tr>
 </table>
-
