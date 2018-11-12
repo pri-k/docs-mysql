@@ -3,16 +3,17 @@ title: MySQL Proxy
 owner: MySQL
 ---
 
+<!-- Is operator guide okay for location? -->
+
 MySQL for Pivotal Cloud Foundry (PCF) uses the [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) router to proxy TCP connections to healthy MariaDB nodes.
 
 Using a proxy gracefully handles failure of MariaDB nodes, enabling fast, unambiguous failover to other server nodes within the cluster. When a server node becomes unhealthy, the proxy closes all connections to the unhealthy node and re-routes all subsequent connections to a healthy server node.
 
 On-demand versions of MySQL for PCF do not use proxies.
 
-<!-- 
-Is this link correct
+<!-- Is this link correct? link out to 1-10 docs for ports-->
 
-Switchboard offers three separate functions, for which it uses three separate ports. For more infomation on default ports and other network port requirements, see [Required Networking Rules for On-Demand Services](http://docs-pcf-staging.cfapps.io/p-mysql/2-n/about.html#rules). -->
+Switchboard offers three separate functions, for which it uses three separate ports. For more infomation on default ports and other network port requirements, see [Required Networking Rules for On-Demand Services](http://docs-pcf-staging.cfapps.io/p-mysql/2-n/about.html#rules).
 
 - **MySQL Server Access**
 
@@ -42,7 +43,7 @@ When a new or resurrected nodes rejoin the cluster, the proxy continues to route
 If the healthcheck returns HTTP status code `503`, the proxy considers the node unhealthy.
 
 <!-- 
-Where should this section point to?
+Where should this section point to? Link out to 1.10. Double check this
 
 This happens when a node becomes non-primary, as specified by the [cluster behavior](architecture.html#behavior) section of the _Architecture_ topic. -->
 
