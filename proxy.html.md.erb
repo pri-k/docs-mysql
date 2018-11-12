@@ -3,78 +3,110 @@ title: MySQL Proxy
 owner: MySQL
 ---
 
-<!-- Is operator guide okay for location? -->
+MySQL for Pivotal Cloud Foundry (PCF) uses the [Switchboard](https://github.com/cloudfoundry-incubator/switchboard)
+router to proxy TCP connections to healthy MariaDB nodes.
 
-MySQL for Pivotal Cloud Foundry (PCF) uses the [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) router to proxy TCP connections to healthy MariaDB nodes.
-
-Using a proxy gracefully handles failure of MariaDB nodes, enabling fast, unambiguous failover to other server nodes within the cluster. When a server node becomes unhealthy, the proxy closes all connections to the unhealthy node and re-routes all subsequent connections to a healthy server node.
+Using a proxy gracefully handles failure of MariaDB nodes, enabling fast,
+unambiguous failover to other server nodes within the cluster. When a server
+node becomes unhealthy, the proxy closes all connections to the unhealthy node
+and re-routes all subsequent connections to a healthy server node.
 
 On-demand versions of MySQL for PCF do not use proxies.
 
-<!-- Is this link correct? link out to 1-10 docs for ports-->
-
-Switchboard offers three separate functions, for which it uses three separate ports. For more infomation on default ports and other network port requirements, see [Required Networking Rules for On-Demand Services](http://docs-pcf-staging.cfapps.io/p-mysql/2-n/about.html#rules).
+Switchboard offers three separate functions, for which it uses three separate ports.
+For more infomation on default ports and other network port requirements, see
+[Network Layout](https://docs.pivotal.io/p-mysql/1-10/installing.html#network-layout).
 
 - **MySQL Server Access**
 
-    MySQL clients communicate with the MySQL servers through this network port. Do not configure any load balancer to check Proxy health via this port; these connections will be automatically passed through to the MySQL servers.
+    MySQL clients communicate with the MySQL servers through this network port.
+    Do not configure any load balancer to check Proxy health via this port; these
+    connections will be automatically passed through to the MySQL servers.
 
 - **Proxy Health**
 
-    Switchboard listens for connections on Port 1936. When using a load balancer to balance across multiple instances of Switchboard, configure the load balancer to test for health by connecting to port 1936. To support different kinds of load balancers, Switchboard supports simple TCP connection checks and HTTP requests. HTTP connections are not authenticated, and require no special load balancer configuration.
+    Switchboard listens for connections on Port 1936. When using a load balancer
+    to balance across multiple instances of Switchboard, configure the load balancer
+    to test for health by connecting to port 1936. To support different kinds of
+    load balancers, Switchboard supports simple TCP connection checks and HTTP
+    requests. HTTP connections are not authenticated, and require no special
+    load balancer configuration.
 
 - **Proxy Dashboard and API**
 
-    Operators can connect to Switchboard to view the state of the cluster back-ends. Read either the [Dashboard](#proxy-dashboard) or [API](#proxy-api) documentation for more information.
+    Operators can connect to Switchboard to view the state of the cluster
+    back-ends. Read either the [Dashboard](#proxy-dashboard) or [API](#proxy-api)
+    documentation for more information.
 
 
 ## <a id="node-health"></a>Node Health ##
 
-When determining where to route traffic, the proxy queries an HTTP healthcheck process running on the database node VM. This healthcheck can return as either healthy or unhealthy, or the node can be unresponsive.
+When determining where to route traffic, the proxy queries an HTTP healthcheck
+process running on the database node VM. This healthcheck can return as either
+healthy or unhealthy, or the node can be unresponsive.
 
 ### <a id="healthy"></a>Healthy ###
 
-If the healthcheck process returns HTTP status code `200`, the proxy includes the node in its pool of healthy nodes.
+If the healthcheck process returns HTTP status code `200`, the proxy includes
+the node in its pool of healthy nodes.
 
-When a new or resurrected nodes rejoin the cluster, the proxy continues to route all connections to the currently active node. In the case of failover, the proxy considers all healthy nodes as candidates for new connections.
+When a new or resurrected nodes rejoin the cluster, the proxy continues to
+route all connections to the currently active node. In the case of failover,
+the proxy considers all healthy nodes as candidates for new connections.
 
 ### <a id="unhealthy"></a>Unhealthy ###
 
-If the healthcheck returns HTTP status code `503`, the proxy considers the node unhealthy.
+If the healthcheck returns HTTP status code `503`, the proxy considers the node
+unhealthy.
 
-<!-- 
-Where should this section point to? Link out to 1.10. Double check this
+This happens when a node becomes non-primary. For more information, see
+[Cluster Scaling Behavior](https://docs.pivotal.io/p-mysql/1-10/architecture.html#scale-behavior).
 
-This happens when a node becomes non-primary, as specified by the [cluster behavior](architecture.html#behavior) section of the _Architecture_ topic. -->
-
-The proxy severs existing connections to newly unhealthy node. The proxy routes new connections to a healthy node, assuming such a node exists. Clients are expected to handle reconnecting on connection failure should the entire cluster become inaccessible.
+The proxy severs existing connections to newly unhealthy node. The proxy routes
+new connections to a healthy node, assuming such a node exists. Clients are
+expected to handle reconnecting on connection failure should the entire cluster
+become inaccessible.
 
 ### <a id="unresponsive"></a>Unresponsive ###
 
-If node health cannot be determined due to an unreachable or unresponsive healthcheck endpoint, the proxy considers the node unhealthy. This may happen if there is a network partition or if the VM running the MariaDB node and healthcheck died.
+If node health cannot be determined due to an unreachable or unresponsive
+healthcheck endpoint, the proxy considers the node unhealthy. This may happen
+if there is a network partition or if the VM running the MariaDB node and
+healthcheck died.
 
 ## <a id="proxy-count"></a>Proxy Count ##
 
-If the operator sets the total number of proxy hosts to `0` in OpsManager or BOSH deployment manifest, apps connect directly to one MariaDB server node. This makes that node a single point of failure (SPOF) for the cluster.
+If the operator sets the total number of proxy hosts to `0` in OpsManager or
+BOSH deployment manifest, apps connect directly to one MariaDB server node.
+This makes that node a single point of failure (SPOF) for the cluster.
 
-For high-availability, Pivotal recommends running two proxies, which provides redundancy should one of the proxies fail.
+For high-availability, Pivotal recommends running two proxies, which provides
+redundancy should one of the proxies fail.
 
 ## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
-The service provides a dashboard where administrators can observe health and metrics for each proxy instance. Metrics include the number of client connections routed to each backend database cluster node.
+The service provides a dashboard where administrators can observe health and
+metrics for each proxy instance. Metrics include the number of client connections
+routed to each backend database cluster node.
 
-From a browser, you can open the dashboard for each proxy instance at: `https://JOB-INDEX-proxy-p-mysql.SYSTEM-DOMAIN`.
+From a browser, you can open the dashboard for each proxy instance at:
+`https://JOB-INDEX-proxy-p-mysql.SYSTEM-DOMAIN`.
 You can also find links to the proxies at `https://proxy-p-mysql.SYSTEM-DOMAIN`.
 The job index starts at `0`.
-For example, if you have two proxy instances deployed and your system domain is `example.com`,
+For example, if you have two proxy instances deployed and your system domain is
+`example.com`,
 you would access your proxy instance dashboards would at:
 
 - `https://0-proxy-p-mysql.example.com`
 - `https://1-proxy-p-mysql.example.com`
 
-<p class="note"><strong>Note</strong>: Earlier versions of MySQL for PCF use a different hostname format for the proxies, in the form: <code>http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN</code><br>For example: <code>https://proxy-0-p-mysql.example.com</code></p>
+<p class="note"><strong>Note</strong>: Earlier versions of MySQL for PCF use a
+  different hostname format for the proxies, in the
+  form: <code>http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN</code><br>
+  For example: <code>https://proxy-0-p-mysql.example.com</code></p>
 
-You need basic auth credentials to access these dashboards. You can find them in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
+You need basic auth credentials to access these dashboards. You can find them
+in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
 
 ## <a id="proxy-api"></a> API ##
 
