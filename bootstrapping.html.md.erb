@@ -3,6 +3,7 @@ title: Bootstrapping
 owner: MySQL
 ---
 
+<!-- Note to self, update commands to reflect new style -->
 This topic describes how to bootstrap your MySQL cluster in the event of a cluster failure.
 
 <p class="note"><strong>Note:</strong> The examples in these instructions reflect a three-node MySQL for Pivotal Cloud Foundry (PCF) deployment. The process to bootstrap a two-node plus an arbitrator is identical, but the output will not match the examples.</p>
@@ -16,6 +17,8 @@ Quorum is lost when less than half of the nodes can communicate with each other 
 If quorum has not been lost, individual unhealthy nodes automatically rejoin the cluster once repaired, which means the error is resolved, the node is restarted, or connectivity is restored.
 
 To check whether your cluster has lost quorum, look for the following symptoms:
+
+<!-- Is this screenshot still correct? -->
 
 - All nodes appear "Unhealthy" on the proxy dashboard, as in the following screenshot:
 ![3 out of 3 nodes are unhealthy.](quorum-lost.png)
@@ -34,12 +37,15 @@ To check whether your cluster has lost quorum, look for the following symptoms:
 
 ## <a id="bootstrapping"></a>Prerequisites for Bootstrapping ##
 
+<!-- Assuming you just use bosh  not bosh2, but keep the rest of the command? -->
+
 Before running the bootstrapping procedures below, you must SSH into the Ops Manager VM and log in to the BOSH Director. 
 For more information, see [Prepare to Use the BOSH CLI](https://docs.pivotal.io/pivotalcf/1-11/customizing/trouble-advanced.html#prepare). 
     <p class="note"><strong>Note</strong>: The version of the BOSH CLI you use depends on your version of Ops Manager. For Ops Manager v1.11 or later, use the BOSH CLI v2. For Ops Manager v1.10, use the BOSH CLI v1.</p>
 
 ## <a id="assisted-bootstrap"></a>Bootstrap with the BOSH Errand ##
 
+<!-- Assuming the following is no longer accurate because script? -->
 MySQL for PCF v1.8.0 and later includes a [BOSH errand](http://bosh.io/docs/jobs.html#jobs-vs-errands) to automate the process of bootstrapping. 
 You must still manually initiate the bootstrap process, but using the errand reduces the number of manual steps necessary to complete the process.
 
@@ -68,6 +74,9 @@ To bootstrap in this scenario, follow these steps:
     ```
     bosh vms
     ```
+    
+    <!-- Output still the same? -->
+    
     <a id="vms"></a>The output resembles the following:
     <pre class="terminal">
     Instance                                                             Process State  AZ             IPs
@@ -103,6 +112,7 @@ To bootstrap in this scenario, follow these steps:
         ```
         bosh run errand bootstrap
         ```
+        <!-- The output still correct -->
         The command returns many lines of output, eventually followed by:
         <pre class="terminal">
         Bootstrap errand completed
@@ -284,6 +294,8 @@ To restore your BOSH configuration to its previous state, this procedure unignor
 If the bootstrap errand is not able to automatically recover the cluster,
 you might need to do the steps manually. 
 
+<!-- Note still good? -->
+
 <p class="note warning"><strong>WARNING</strong>: The following procedures are prone to user-error
    and can result in lost data if followed incorrectly.
    Follow the procedure in <a href="#assisted-bootstrap">Bootstrap with the BOSH Errand</a> above first,
@@ -324,16 +336,16 @@ Do the following for each node in the cluster:
     /var/vcap/jobs/mysql/bin/get-sequence-number
     ```
     
-  When prompted confirm that you want to stop MySQL.
+    When prompted confirm that you want to stop MySQL.
   
-  For example:
+    For example:
   
-  <pre class="terminal"> 
-    $ /var/vcap/jobs/mysql/bin/get-sequence-number
-    This script stops mysql. Are you sure? (y/n): y
-    
-    {"sequence_number":421,"instance_id":"012abcde-f34g-567h-ijk8-9123l4567891"}
-  </pre>
+    <pre class="terminal"> 
+      $ /var/vcap/jobs/mysql/bin/get-sequence-number
+      This script stops mysql. Are you sure? (y/n): y
+      
+      {"sequence_number":421,"instance_id":"012abcde-f34g-567h-ijk8-9123l4567891"}
+    </pre>
 
 1. Record the value of `sequence_number`.
   
@@ -344,10 +356,12 @@ If all nodes have the same `sequence_number`, you can choose any node as the new
 
 After determining the node with the highest `sequence_number`, do the following to bootstrap the node:
 
-<!-- <p class="note"><strong>Note:</strong> Only run these bootstrap commands on the node with the highest <code>sequence_number</code>.
+<!-- This link does not exist in 2.5.  -->
+
+<p class="note"><strong>Note:</strong> Only run these bootstrap commands on the node with the highest <code>sequence_number</code>.
    Otherwise the node with the highest <code>sequence_number</code> is unable to join the new cluster unless its data is abandoned.
    Its <code>mariadb</code> process exits with an error. 
-   For more information about intentionally abandoning data, see <a href="architecture.html">Architecture</a>.</p> -->
+   For more information about intentionally abandoning data, see <a href="architecture.html">Architecture</a>.</p>
 
 1. On the new bootstrap node, update the state file and restart the <code>mariadb</code> process. 
 Run the following commands:
@@ -367,9 +381,11 @@ From the bootstrap node, run the following command:
 
     <pre><code>monit start mariadb_ctrl</code></pre>
 
-    <!-- If the node is prevented from starting by the [Interruptor](interruptor.html),
+    <!-- This link does not exist in 2.5 -->
+    
+    If the node is prevented from starting by the [Interruptor](interruptor.html),
     do the manual procedure to force the node to rejoin the cluster,
-    documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668).  -->
+    documented in [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/en-us/articles/115014258668). 
 
     <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure.
        Only do the procedure with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
