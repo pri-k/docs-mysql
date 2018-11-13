@@ -567,8 +567,8 @@ To prepare a new service instance for restore, do the following:
   $ bosh2 -e my-env \
   -d my-dep scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
   </pre>
-  - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
-  - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
+  - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+  - `DESTINATION-PATH` is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
 1. Use the BOSH CLI to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
