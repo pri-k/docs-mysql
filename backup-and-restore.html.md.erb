@@ -515,7 +515,7 @@ To prepare a new service instance for restore, do the following:
 
 <p class="note"><strong>Note:</strong> You can only restore to a single-node plan.
   If you are restoring to a leader-follower plan, you can update the plan on the new service
-  instance in step 4 below.</p>
+  instance in step 3 below.</p>
 
 1. Run the restore utility to restore the backup artifact into the data directory. This process:<br><br>
     * deletes any existing data
@@ -530,6 +530,11 @@ To prepare a new service instance for restore, do the following:
   * `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists
 
 1. Exit the MySQL VM.
+
+1. If you want to restore to a leader-follower plan, update the plan now:
+ <pre class="terminal">
+   $ cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
+ </pre>
 
 1. Determine if the app is currently bound to a MySQL service instance:
  <pre class="terminal">
