@@ -540,42 +540,67 @@ To restore the backup to a new service instance, follow these procedures:
 To prepare a new service instance for restore, do the following:
 
 1. Create a new MySQL service instance using a single-node plan:
- <pre class="terminal">
-  $ cf create-service p.mysql SINGLE-NODE-PLAN-NAME NEW-INSTANCE-NAME
- </pre>
+
+    ```
+    cf create-service p.mysql SINGLE-NODE-PLAN-NAME NEW-INSTANCE-NAME
+    ```
   For more information, see [Create a Service Instance](./use.html#create).
 
 1. Monitor the status of the service instance creation; it may take several minutes as the VM is created.
- <pre class="terminal">
-  $ cf service NEW-SERVICE-INSTANCE
- </pre>
 
-1. Determine the GUID associated with your service instance:
- <pre class="terminal">
-    $ cf service NEW-SERVICE-INSTANCE --guid
- </pre>
+    ```
+    cf service NEW-INSTANCE-NAME
+    ```
+
+1. Determine the GUID associated with your new service instance:
+
+    ```
+    cf service NEW-INSTANCE-NAME --guid
+    ```
 
 1. Perform the steps in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds) to retrieve the admin password for your service instance.
 
-1. From the Ops Manager VM, find and record the MySQL instance name and GUID from BOSH:
-   <pre class="terminal">
-   $ bosh2 -e my-env -d my-dep instances
-   </pre>
+1. From the Ops Manager VM, find and record the new instance name and GUID from BOSH:
+
+    ```
+    bosh2 -e ENVIRONMENT -d DEPLOYMENT instances
+    ```
+
+1. If you created a leader-follower service instance to restore to, do the following:
+  1. Scale the instances to one by modifying the leader-follower instance group
+  in the deployment manifest as follows:
+
+         ```
+         instances: 1
+         ```
+  1. Redeploy the deployment manifest by running:
+
+        ```
+        bosh2 -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
+        ```
+        For example:
+
+        <pre class="terminal">
+        bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        </pre>
 
 1. Copy the downloaded backup to the new service instance:
-  <pre class="terminal">
-  $ bosh2 -e my-env \
-  -d my-dep scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
-  </pre>
-  - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
-  - `DESTINATION-PATH` is where the backup file saves on the BOSH VM. For example, `/tmp/`.
+
+    ```
+    bosh2 -e my-env \
+    -d my-dep scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+    ```
+    Where:<br>
+    - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+    - `DESTINATION-PATH` is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
 1. Use the BOSH CLI to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
 1. After securely logging in to MySQL, run `sudo su` to become root:
- <pre class="terminal">
-    $ sudo su
- </pre>
+
+    ```
+    sudo su
+    ```
 
 #### <a id="runrestore"></a> Run the Restore Utility
 
@@ -590,40 +615,66 @@ To prepare a new service instance for restore, do the following:
     * Deletes any existing data
     * Decrypts and untars the backup artifact
     * Restores the backup artifact into the MySQL data directory
- <pre class="terminal">
-  $ mysql-restore --encryption-key ENCRYPTION-KEY \
-  --mysql-username admin --mysql-password ADMIN-PASSWORD --restore-file RESTORE-FILE-PATH
- </pre>
-  where:<br><br>
-  * `ENCRYPTION-KEY` is the backup encryption key you retrieved in [Retrieve Backup Encryption Key](#retrieve-key).
-  * `ADMIN-PASSWORD` is the admin password for your service instance retrieved in [Create and Prepare a New Service Instance for Restore](#prepare).
-  * `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.
 
+    ```
+    mysql-restore --encryption-key ENCRYPTION-KEY \
+    --mysql-username admin --mysql-password ADMIN-PASSWORD --restore-file RESTORE-FILE-PATH
+    ```
+    Where:
+    <ul>
+      <li>`ENCRYPTION-KEY` is the backup encryption key you retrieved in [Retrieve Backup Encryption Key](#retrieve-key).</li>
+      <li>`ADMIN-PASSWORD` is the admin password for your new service instance, retrieved in [Create and Prepare a New Service Instance for Restore](#prepare) above.</li>
+      <li>`RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.</li>
+    </ul>
 1. Exit the MySQL VM.
 
 1. If you want to restore to a leader-follower plan, update the plan now:
- <pre class="terminal">
-   $ cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
- </pre>
+
+    ```
+    cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
+    ```
+
+1. If you scaled instances to one in step 6 of *Create and Prepare a New Service
+Instance for Restore* above, do the following:
+  1. Scale the instances to two by modifying the leader-follower instance group
+  in the deployment manifest as follows:
+
+         ```
+         instances: 2
+         ```
+  1. Redeploy the deployment manifest by running:
+
+        ```
+        bosh2 -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
+        ```
+        For example:
+
+        <pre class="terminal">
+        bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        </pre>
 
 1. Determine if the app is currently bound to a MySQL service instance:
- <pre class="terminal">
-   $ cf services
- </pre>
+
+    ```
+    cf services
+    ```
 
 1. If the previous step shows that the app is currently bound to a MySQL instance, unbind it:
- <pre class="terminal">
-   $ cf unbind-service MY-APP OLD-SERVICE-INSTANCE
- </pre>
+
+    ```
+    cf unbind-service MY-APP OLD-INSTANCE-NAME
+    ```
 
 1. Update your CF app to bind to the new service instance:
- <pre class="terminal">
-   $ cf bind-service MY-APP  NEW-SERVICE-INSTANCE
- </pre>
+
+    ```
+    cf bind-service MY-APP  NEW-INSTANCE-NAME
+    ```
 
 1. Restage your CF app to make the changes take effect:
- <pre class="terminal">
-   $ cf restage MY-APP
- </pre>
+
+    ```
+    cf restage MY-APP
+    ```
 
 Your app should be running and able to access the restored data.
