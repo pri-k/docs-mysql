@@ -532,20 +532,23 @@ To restore the backup to a new service instance, follow these procedures:
 
 #### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
-<p class="note"><strong>Note:</strong> You can only restore to a single-node plan.
-  Therefore, in this procedure the new service
-  instance you create for restore uses a single-node plan.
-  If you are restoring to a leader-follower plan, you can update the plan on the new service
-  instance after you run the restore utility.
-  This is included in the instructions in <a href="#runrestore">
-  Run the Restore Utility</a> below.</p>
-
 To prepare a new service instance for restore, do the following:
 
-1. Create a new MySQL service instance using a single-node plan:
+1. Create a new MySQL service instance using a single-node or leader-follower plan.
+<br><br>
+You can only restore backup artifacts to a single-node topology.
+If you want to restore to a leader-follower plan, you can do one of the following:
+  - **Create a single-node instance to restore to** then update the plan on this
+  instance to leader-follower after you run the restore utility.
+  For how to update the plan, see step 4 of [Run the Restore Utility](#runrestore) below.
+  - **Create a leader-follower instance to restore to** then scale the instances to one
+  before running the restore utility.
+  For how to scale instances, see step 6 of this procedure.
+
+    <p class="note"><strong>Note:</strong> Pivotal recommends that you restore to a single-node plan.</p>
 
     ```
-    cf create-service p.mysql SINGLE-NODE-PLAN-NAME NEW-INSTANCE-NAME
+    cf create-service p.mysql PLAN-NAME NEW-INSTANCE-NAME
     ```
   For more information, see [Create a Service Instance](./use.html#create).
 
@@ -571,12 +574,16 @@ to retrieve the admin password for your new service instance.
     ```
 
 1. If you created a leader-follower service instance to restore to, do the following:
-  1. Scale the instances to one by modifying the leader-follower instance group
-  in the deployment manifest as follows:
+  1. Scale the instances to one by modifying the deployment manifest.
+  Update instance group for your new service instance as follows:
 
-         ```
-         instances: 1
-         ```
+        ```yaml
+        instance_groups:
+        - name: mysql
+          ...
+          instances: 1    # Scale instances to 1
+          ...
+        ```
   1. Redeploy the deployment manifest by running:
 
         ```
@@ -611,10 +618,6 @@ to retrieve the admin password for your new service instance.
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and
   should only be run on a new and unused service instance.</p>
 
-<p class="note"><strong>Note:</strong> You can only restore to a single-node plan.
-  If you are restoring to a leader-follower plan, you can update the plan on the new service
-  instance in step 4 below.</p>
-
 1. Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
 
 1. Run the restore utility to restore the backup artifact into the data directory. This process:
@@ -634,7 +637,8 @@ to retrieve the admin password for your new service instance.
     </ul>
 1. Exit the MySQL VM.
 
-1. If you want to restore to a leader-follower plan, update the plan now:
+1. If you restored to a service instance with a single-node plan but want a
+leader-follower plan, update the plan now:
 
     ```
     cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
@@ -642,11 +646,15 @@ to retrieve the admin password for your new service instance.
 
 1. If you scaled instances to one in step 6 of *Create and Prepare a New Service
 Instance for Restore* above, do the following:
-  1. Scale the instances to two by modifying the leader-follower instance group
-  in the deployment manifest as follows:
+  1. Scale the instances to two by modifying the deployment manifest.
+  Update instance group for your new service instance as follows:
 
-         ```
-         instances: 2
+        ```yaml
+        instance_groups:
+        - name: mysql
+          ...
+          instances: 2    # Scale instances to 2
+          ...
          ```
   1. Redeploy the deployment manifest by running:
 
