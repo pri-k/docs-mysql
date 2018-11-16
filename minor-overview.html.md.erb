@@ -13,21 +13,17 @@ MySQL that App Developers can provision on-demand from the command line.
 The MySQL for PCF On-Demand service is designed to improve the flexibility in how and when
 instances are provisioned and allows for more efficient and seamless resource use for both Operator and App Developer.
 Additionally, both Operator and App Developer can configure essential MySQL settings.
-MySQL for PCF v2 can be installed alongside the earlier MySQL for PCF v1.x tiles.
 
 MySQL for PCF's On-Demand Service leverages the [on-demand service broker](https://docs.pivotal.io/svc-sdk/odb/0-15/).
 
 ## <a id="service"></a>On Demand Service Plan Descriptions
 
-PCF MySQL offers five on-demand plans as the `p.mysql` service within the PCF MySQL tile.
+PCF MySQL offers on-demand plans as the `p.mysql` service within the PCF MySQL tile.
 The plans can be configured in any way that you see fit.
-However, plans should be configured such that they increase in size.
-
-For each service plan, the operator can configure the **Multi-Node**, **Plan name**, **Plan description**, **Server VM type** and **Server Disk type**, or choose to disable the plan completely.
 
 Operators can update certain plan settings after the plans have been created.
 If the Operator updates the VM size or disk size these settings will be implemented in all instances already created.
-Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.
+Operators should not decrease the disk size because this can cause data loss in existing instances.
 
 ##<a id="tls"></a> Transport Layer Security (TLS)
 
@@ -61,7 +57,7 @@ Review the following table to determine if MySQL for PCF v2 has the features nee
 </td><td><a href="./backup-and-restore.html">Manual Backup and Restore of MySQL for PCF</a></td></tr>
 
 <tr><th colspan=2>Scale and Availability</th><th>More Information</th></tr>
-<tr><td>On-Demand Plan</td><td>MySQL for PCF provides up to 50 on-demand instances across all plans</td><td></td></tr>
+<tr><td>On-Demand Plan</td><td>MySQL for PCF provides up to 200 on-demand instances across all plans</td><td></td></tr>
 <tr><td>Ability to Scale Up / Down</td><td>Operators can scale VMs up, but not down</td><td><a href="./install-config.html">Configuring</a></td></tr>
 <tr><td>Rolling Deployments</td><td>MySQL for PCF does not support rolling deployments because it is single node; the service is unavailable during upgrades.</td><td><a href="./upgrade.html">Upgrades</a></td></tr>
 <tr><td>AZ Support</td><td>MySQL for PCF can be deployed to multiple zones to increase availability during unplanned outages of a zone.</td>
