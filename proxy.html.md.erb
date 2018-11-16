@@ -3,19 +3,15 @@ title: MySQL Proxy
 owner: MySQL
 ---
 
-MySQL for Pivotal Cloud Foundry (PCF) uses the [Switchboard](https://github.com/cloudfoundry-incubator/switchboard)
-router to proxy TCP connections to healthy MariaDB nodes.
-
-Using a proxy gracefully handles failure of MariaDB nodes, enabling fast,
-unambiguous failover to other server nodes within the cluster. When a server
+MySQL for PCF uses a proxy to send client connections to healthy MySQL nodes.
+Using a proxy gracefully handles failure of nodes, enabling fast,
+failover to other server nodes within the cluster. When a server
 node becomes unhealthy, the proxy closes all connections to the unhealthy node
 and re-routes all subsequent connections to a healthy server node.
 
-On-demand versions of MySQL for PCF do not use proxies.
-
-Switchboard offers three separate functions, for which it uses three separate ports.
-For more infomation on default ports and other network port requirements, see
-[Network Layout](https://docs.pivotal.io/p-mysql/1-10/installing.html#network-layout).
+The proxy, Switchboard, offers three separate functions, for which it uses three separate ports.
+For more information about default ports and other network port requirements, see
+[Required Networking Rules for On-Demand Services](about.html#rules).
 
 - **MySQL Server Access**
 
@@ -71,17 +67,9 @@ become inaccessible.
 
 If node health cannot be determined due to an unreachable or unresponsive
 healthcheck endpoint, the proxy considers the node unhealthy. This may happen
-if there is a network partition or if the VM running the MariaDB node and
+if there is a network partition or if the VM running the node and
 healthcheck died.
 
-## <a id="proxy-count"></a>Proxy Count ##
-
-If the operator sets the total number of proxy hosts to `0` in OpsManager or
-BOSH deployment manifest, apps connect directly to one MariaDB server node.
-This makes that node a single point of failure (SPOF) for the cluster.
-
-For high-availability, Pivotal recommends running two proxies, which provides
-redundancy should one of the proxies fail.
 
 ## <a id="proxy-dashboard"></a>Proxy Dashboard ##
 
