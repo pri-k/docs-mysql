@@ -1,0 +1,140 @@
+---
+title: Availability Options
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes and contrasts the three topologies for MySQL and explains the kind of 
+availability each provides.
+
+## <a id="three-topologies"></a> Three Topologies
+
+The three topologies offered in MySQL for PCF v2.5 are as follows:
+
++ Single node—This simple one-VM topology is inexpensive and good for testing and for apps
+  where availability is not important.
+
++ Leader follower—This two-VM topology gives you redundancy through failover of the leader
+  to the follower.
+
++ Highly available cluster—This three-VM plus jumpbox cluster uses Galera Cluster to provide
+  the greatest availability of the three topologies. 
+
+
+## <a id="pros-and-cons"></a> Pros and Cons
+
+The table below lists some key characteristics of the three topologies to help you decide
+which one is best for your developers.
+
+<table class="nice">
+  <tr><th>Topology</th><th>VMs needed</th><th>Pros</th><th>Cons</th></tr>
+  <tr><td>Single node</td><td>one</td>
+      <td>
+          <ul>
+            <li>Simple</li>
+            <li>Least expensive</li>
+            <li>Apps can share the same data-set</li>
+            <li>Straightforward operator experience</li>
+            <li>Easy for the developer</li>
+          </ul>    
+       </td>
+      <td>
+          <ul>
+            <li>No redundancy</li>
+            <li>All data since last backup can be lost</li>
+            <li>Data recovery requires restore from backup</li>
+          </ul>    
+       </td>
+  </tr>
+  <tr><td>Leader-follower</td><td>two</td>
+      <td>
+          <ul>
+            <li>Two copies of the data</li>
+            <li>Apps can share the same data-set</li>
+            <li>Data recovery is faster than single node</li>
+          </ul>    
+       </td>
+      <td>
+          <ul>
+            <li>Less flexible tuning than single node</li>
+            <li>Developers require some technical understanding</li>
+            <li>Operator must initiate failover</li>
+          </ul>    
+       </td>
+  </tr>
+  <tr><td>Highly available cluster</td><td>three and a jumpbox VM</td>
+      <td>
+          <ul>
+            <li>Tightest RPO and RTO. See <a href="#rpo-and-rto">RPOs and RTOs</a> below.</li>
+            <li>Straightforward operator experience</li>
+            <li>Easy for the developer</li>
+          </ul>    
+       </td>
+      <td>
+          <ul>
+            <li>Most expensive</li>
+            <li>Less flexible tuning than single node</li>
+            <li>Developers require moderate technical understanding</li>
+            <li>Apps cannot share the same data-set</li>
+          </ul>    
+       </td>
+  </tr>
+</table>
+
+
+## <a id="risk"></a> Risk
+
+When choosing a topology, risk is a factor to consider.
+Risk, in this case, encompasses the likelihood of:
+
++ Operators being interrupted to perform disaster recovery
+
++ Encountering issues because of the complexity of the topology and technology.
+
+The single node topology has the lowest risk.
+The highly available cluster has the highest risk.
+
+<table class="nice">
+  <tr><th>Topology</th><th>Risk-level</th></tr>
+  <tr><td>Single node</td><td>low</td></tr>
+  <tr><td>Leader-follower</td><td>medium</td></tr>
+  <tr><td>Highly available cluster</td><td>high</td></tr>
+</table>
+
+## <a id="rpo-and-rto"></a> RPOs and RTOs
+
+Recovery Point Objective (RPO) and Recovery Time Objective (RTO) are important considerations
+for availability.
+
+The table below describes the RPOs and RTOs for the three topologies.
+
+This table compares the RPO for the three topology types.
+
+<table class="nice">
+  <tr><th>Type of downtime</th><th>Single Node</th><th>Leader Follower</th><th>Highly Available Cluster</th></tr>
+  <tr><td><strong>Planned Maintenance</strong></td><td><em>NA</em></td>
+      <td><em>NA</em></td><td>Almost zero<sup>*</sup></td></tr>
+  <tr><td><strong>Unplanned Downtime</strong></td><td>Zero</td>
+      <td>Replica lag or 0 if in sync mode</td><td>Almost zero<sup>*</sup></td></tr>
+  <tr><td><strong>Data Recovery</strong></td><td>Time since last backup</td>
+      <td>Replica lag or 0 if in sync mode</td><td>Almost zero<sup>*</sup></td></tr>
+</table>
+
+<sup>*</sup> Zero means reconnection time and some additional time because of "technology limitations".
+
+This table compares the RTO for the three topology types.
+
+<table class="nice">
+  <tr><th>Type of downtime</th><th>Single Node</th><th>Leader Follower</th><th>Highly Available Cluster</th></tr>
+  <tr><td><strong>Planned Maintenance</strong></td><td>Time required to restore the VM</td>
+      <td>Time required to restore the VM or time for operator to initiate failover and failover to complete</td>
+      <td>Almost zero<sup>*</sup></td></tr>
+  <tr><td><strong>Unplanned Downtime</strong></td><td>Time required to restore the VM</td>
+      <td>Time required to restore the VM or time for operator to initiate failover and failover to complete</td>
+      <td>Almost zero<sup>*</sup></td></tr>
+  <tr><td><strong>Data Recovery</strong></td><td>Time to restore from backup</td>
+      <td>Time for operator to initiate failover and failover to complete</td><td>Almost zero<sup>*</sup></td></tr>
+</table>
+
+<sup>*</sup> Zero means reconnection time and some additional time because of "technology limitations".
