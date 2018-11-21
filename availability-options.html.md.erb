@@ -15,8 +15,9 @@ The three topologies offered in MySQL for PCF v2.5 are as follows:
 + Single node—This simple one-VM topology is inexpensive and good for testing and for apps
   where availability is not important.
 
-+ Leader follower—This two-VM topology gives you redundancy through failover of the leader
++ Leader-follower—This two-VM topology gives you redundancy through failover of the leader
   to the follower.
+  For more information, see [About Leader-Follower](./about-leader-follower.html).
 
 + Highly available cluster—This three-VM plus jumpbox cluster uses Galera Cluster to provide
   the greatest availability of the three topologies. 
@@ -112,7 +113,7 @@ The table below describes the RPOs and RTOs for the three topologies.
 This table compares the RPO for the three topology types.
 
 <table class="nice">
-  <tr><th>Type of downtime</th><th>Single Node</th><th>Leader Follower</th><th>Highly Available Cluster</th></tr>
+  <tr><th>Type of downtime</th><th>Single Node</th><th>Leader-Follower</th><th>Highly Available Cluster</th></tr>
   <tr><td><strong>Planned Maintenance</strong></td><td><em>NA</em></td>
       <td><em>NA</em></td><td>Almost zero<sup>*</sup></td></tr>
   <tr><td><strong>Unplanned Downtime</strong></td><td>Zero</td>
@@ -126,7 +127,7 @@ This table compares the RPO for the three topology types.
 This table compares the RTO for the three topology types.
 
 <table class="nice">
-  <tr><th>Type of downtime</th><th>Single Node</th><th>Leader Follower</th><th>Highly Available Cluster</th></tr>
+  <tr><th>Type of downtime</th><th>Single Node</th><th>Leader-Follower</th><th>Highly Available Cluster</th></tr>
   <tr><td><strong>Planned Maintenance</strong></td><td>Time required to restore the VM</td>
       <td>Time required to restore the VM or time for operator to initiate failover and failover to complete</td>
       <td>Almost zero<sup>*</sup></td></tr>
