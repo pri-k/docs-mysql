@@ -104,8 +104,7 @@ This table compares the RPO for the three topology types.
       <td>Replica lag or 0 if in sync mode</td><td>Almost zero*</td></tr>
 </table>
 
- *Almost zero indicates some reconnection time and
-             some additional time because of "technology limitations".
+ *This includes time for apps to reconnect to the MySQL service instance.
 
 ### <a id="rto"></a> RTOs
 
@@ -125,8 +124,7 @@ This table compares the RTO for the three topology types.
       <td>Time for operator to initiate failover and for failover to complete</td><td>Almost zero*</td></tr>
 </table>
 
- *Almost zero indicates some reconnection time and
-             some additional time because of "technology limitations".
+ *This includes time for apps to reconnect to the MySQL service instance.
 
 
 ## <a id="risk"></a> Risk
