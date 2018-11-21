@@ -97,14 +97,14 @@ This table compares the RPO for the three topology types.
 <table class="nice">
   <tr><th>Type of downtime</th><th>Single Node</th><th>Leader-Follower</th><th>Highly Available Cluster</th></tr>
   <tr><td><strong>Planned Maintenance</strong></td><td><em>NA</em></td>
-      <td><em>NA</em></td><td>Almost zero<sup>*</sup></td></tr>
+      <td><em>NA</em></td><td>Almost zero*</td></tr>
   <tr><td><strong>Unplanned Downtime</strong></td><td>Zero</td>
-      <td>Replica lag or 0 if in sync mode</td><td>Almost zero<sup>*</sup></td></tr>
+      <td>Replica lag or 0 if in sync mode</td><td>Almost zero*</td></tr>
   <tr><td><strong>Data Recovery</strong></td><td>Time since last backup</td>
-      <td>Replica lag or 0 if in sync mode</td><td>Almost zero<sup>*</sup></td></tr>
+      <td>Replica lag or 0 if in sync mode</td><td>Almost zero*</td></tr>
 </table>
 
-<sup>*</sup> Almost zero indicates some reconnection time and
+ *Almost zero indicates some reconnection time and
              some additional time because of "technology limitations".
 
 ### <a id="rto"></a> RTOs
@@ -114,16 +114,18 @@ This table compares the RTO for the three topology types.
 <table class="nice">
   <tr><th>Type of downtime</th><th>Single Node</th><th>Leader-Follower</th><th>Highly Available Cluster</th></tr>
   <tr><td><strong>Planned Maintenance</strong></td><td>Time required to restore the VM</td>
-      <td>Time required to restore the VM or time for operator to initiate failover and failover to complete</td>
-      <td>Almost zero<sup>*</sup></td></tr>
+      <td>Time required to restore the VM or time for operator to initiate failover and
+          for failover to complete</td>
+      <td>Almost zero*</td></tr>
   <tr><td><strong>Unplanned Downtime</strong></td><td>Time required to restore the VM</td>
-      <td>Time required to restore the VM or time for operator to initiate failover and failover to complete</td>
-      <td>Almost zero<sup>*</sup></td></tr>
+      <td>Time required to restore the VM or time for operator to initiate failover and
+          for failover to complete</td>
+      <td>Almost zero*</td></tr>
   <tr><td><strong>Data Recovery</strong></td><td>Time to restore from backup</td>
-      <td>Time for operator to initiate failover and failover to complete</td><td>Almost zero<sup>*</sup></td></tr>
+      <td>Time for operator to initiate failover and for failover to complete</td><td>Almost zero*</td></tr>
 </table>
 
-<sup>*</sup> Almost zero indicates some reconnection time and
+ *Almost zero indicates some reconnection time and
              some additional time because of "technology limitations".
 
 
