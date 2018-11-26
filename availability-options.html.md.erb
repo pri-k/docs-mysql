@@ -13,7 +13,7 @@ availability each provides.
 The three topologies offered in MySQL for PCF v2.5 are as follows:
 
 + Single node—This simple one-VM topology is inexpensive and good for testing and for apps
-  where availability is not important.
+  where high availability is not important.
 
 + Leader-follower—This two-VM topology gives you redundancy through failover of the leader
   to the follower.
@@ -85,14 +85,14 @@ which one is best for your developers.
 
 ## <a id="rpo-and-rto"></a> RPOs and RTOs
 
-Recovery Point Objective (RPO) and Recovery Time Objective (RTO) are important considerations
+Recovery point objective (RPO) and recovery time objective (RTO) are important considerations
 for availability.
 
 The tables below describe the RPOs and RTOs for the three topologies.
 
 ### <a id="rpo"></a> RPOs
 
-This table compares the RPO for the three topology types.
+This table compares the recovery point objectives for the three topology types.
 
 <table class="nice">
   <tr><th>Type of downtime</th><th>Single Node</th><th>Leader-Follower</th><th>Highly Available Cluster</th></tr>
@@ -108,7 +108,7 @@ This table compares the RPO for the three topology types.
 
 ### <a id="rto"></a> RTOs
 
-This table compares the RTO for the three topology types.
+This table compares the recovery time objectives for the three topology types.
 
 <table class="nice">
   <tr><th>Type of downtime</th><th>Single Node</th><th>Leader-Follower</th><th>Highly Available Cluster</th></tr>
