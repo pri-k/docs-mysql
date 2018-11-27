@@ -13,39 +13,10 @@ MySQL for PCF enables PCF app developers to provision and use a MySQL database w
 single command.
 
 The MySQL for PCF product delivers dedicated instances on demand, "Database as a Service", to PCF users.
-When installed, the tile deploys and maintains a single Service Broker that is responsible for PCF integration.
-The service is configured with sane defaults, following the principle of least surprise for a general-use relational database service.
-
-MySQL for PCF v2 introduces a new type of service, an *on-demand* service. MySQL for PCF v2 offers an alternative to the *pre-provisioned* service
-that was in the v1.x series.
-
-This table summarizes the main differences between the two:
-
-<table id='mysql-odb-vs-pre' border="1" class="nice"><tr>
-  <col style="width:15%">
-  <col style="width:10%">
-  <col style="width:28%">
-  <col style="width:29%">
-  <col style="width:18%">
-   <th></th>
-   <th>Available Since</th>
-   <th>VMs it Runs On</th>
-   <th>How VMs are Created</th>
-   <th>Metrics Name Prefix</th>
-   </tr><tr>
-   <th>On-Demand Service</th>
-   <td>New for v2</td>
-   <td>Dedicated instance VM(s) dynamically provisioned on demand</td>
-   <td>PCF creates each VM on-demand when an app developer creates service instance</td>
-   <td><code>p.mysql</code> (with a dot)</td>
-   </tr><tr>
-   <th>Pre-Provisioned Service</th>
-   <td>v1.4</td>
-   <td>Multi-tenant VMs shared by apps across PCF deployment</td>
-   <td>PCF creates all VMs when the operator deploys or updates service</td>
-   <td><code>p-mysql</code> (with a dash)</td>
-   </tr>
-</table>
+When installed, the tile deploys and maintains a single Service Broker that is
+responsible for PCF integration.
+The service is configured with sane defaults, following the principle of least
+surprise for a general-use relational database service.
 
 ## <a id='snapshot'></a> Product Snapshot
 
