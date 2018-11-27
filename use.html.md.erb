@@ -1,9 +1,11 @@
 ---
-title: Using MySQL for PCF v2
+title: Using MySQL for PCF
 owner: MySQL
 ---
 
-This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) v2 service for their
+<strong><%= modified_date %></strong>
+
+This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) service for their
 PCF apps. MySQL provides a relational database for apps and devices.
 
 These procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
@@ -14,7 +16,7 @@ You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-con
 
 ## <a id="prereqs"></a>Prerequisites
 
-To use MySQL for PCF v2 with your PCF apps, you need:
+To use MySQL for PCF with your PCF apps, you need:
 
 * A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
@@ -34,7 +36,7 @@ To use MySQL in a PCF app:
 1. Check the service availability in the Marketplace,
    and see if there is an existing instance of MySQL for PCF in your space.
 
-    See [Confirm the MySQL for PCF v2 Service Availability](#marketplace), below.
+    See [Confirm the MySQL for PCF Service Availability](#marketplace), below.
 
 2. If there is no existing instance or you want to use a different one,
    create an instance of the MySQL for PCF service in the same space as the app.
@@ -57,9 +59,9 @@ To use MySQL in a PCF app:
 
 
 
-## <a id='marketplace'></a>Confirm the MySQL for PCF v2 Service Availability
+## <a id='marketplace'></a>Confirm the MySQL for PCF Service Availability
 
-For an app to use the MySQL for PCF v2 service, both of the following must be true:
+For an app to use the MySQL for PCF service, both of the following must be true:
 
 * The service must be available in the Marketplace for its space.
 * An instance of the service must exist in its space.
@@ -68,7 +70,7 @@ You can confirm both of these using the cf CLI as follows.
 
 ### <a id="check-marketplace"></a> Check Service Availability in the Marketplace
 
-To find out if a MySQL for PCF v2 service is available in the Marketplace, do the following:
+To find out if a MySQL for PCF service is available in the Marketplace, do the following:
 
 1. Enter the following command:
 
@@ -76,7 +78,7 @@ To find out if a MySQL for PCF v2 service is available in the Marketplace, do th
     cf marketplace
     ```
 
-1. If the output lists `p.mysql` in the `service` column, MySQL for PCF v2 is available.
+1. If the output lists `p.mysql` in the `service` column, MySQL for PCF is available.
    If it is not available, ask your operator to install it.
 
     <pre class="terminal">
@@ -91,7 +93,7 @@ To find out if a MySQL for PCF v2 service is available in the Marketplace, do th
 
 ### <a id="check-instance"></a> Check That an Instance Is Running in the Space
 
-To confirm that a MySQL for PCF v2 instance is running in the space, do the following:
+To confirm that a MySQL for PCF instance is running in the space, do the following:
 
 1. Use the [cf CLI](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) or
 [Apps Manager](http://docs.pivotal.io/pivotalcf/customizing/console-login.html) to log in to the org and space that contains the app.
@@ -100,7 +102,7 @@ To confirm that a MySQL for PCF v2 instance is running in the space, do the foll
     ```
     cf services
     ```
-1. Any `p.mysql` listings in the `service` column are service instances of MySQL for PCF v2 in the space.
+1. Any `p.mysql` listings in the `service` column are service instances of MySQL for PCF in the space.
 <br><br>
 For example:
     <pre class="terminal">
@@ -114,10 +116,10 @@ For example:
 
 ## <a id='create'></a>Create a Service Instance
 
-Unlike pre-provisioned services, on-demand services are created asynchronously, not immediately.
+On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use.
 
-To create an instance of the MySQL for PCF v2 service, do the following:
+To create an instance of the MySQL for PCF service, do the following:
 
 1. Run the following command:
 
@@ -126,7 +128,7 @@ To create an instance of the MySQL for PCF v2 service, do the following:
     ```
 
     Where:<br>
-    - `PLAN` is the name of the MySQL for PCF v2 plan you want to use.
+    - `PLAN` is the name of the MySQL for PCF plan you want to use.
     - `SERVICE-INSTANCE` is a name you choose to identify the service instance.
     This name appears under `service` in output from `cf services`.
 
@@ -370,26 +372,26 @@ For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-m
 
 ### <a id="desktop"></a> Use Desktop Tools
 
-You can connect your MySQL for PCF databases to a desktop tool, such as MySQL Workbench 
-or Sequel Pro, if you have the credentials for your MySQL service instance. 
+You can connect your MySQL for PCF databases to a desktop tool, such as MySQL Workbench
+or Sequel Pro, if you have the credentials for your MySQL service instance.
 
-If you do not have credentials for your MySQL service instance, follow the procedure in 
+If you do not have credentials for your MySQL service instance, follow the procedure in
 [Create Read-only Access Credentials](././customize-access.html).
 
 To connect your databases to a desktop tool do the following:
-    
-1. To retrieve the credentials from your MySQL service instance service key, run the following 
+
+1. To retrieve the credentials from your MySQL service instance service key, run the following
 command:
 
     ```
     cf service-key SERVICE-INSTANCE MYSQL-SERVICE-KEY
     ```
-    Where:   
+    Where:
       * `SERVICE-INSTANCE` is the name of your service instance.
       * `KEY-NAME` is the name of your service key.
-  
+
     For example:
-  
+
     <pre class="terminal">
       $ cf service-key mydb mykey1<br>
       {
@@ -401,20 +403,20 @@ command:
         "uri": "mysql://abcdefghijklm:123456789<span>@</span>99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
         "username": "abcdefghijklm"
       }
-    </pre>  
-  
-1. Record the values for the following:  
+    </pre>
+
+1. Record the values for the following:
     * `hostname`
     * `name`
     * `password`
     * `port`
     * `username`
-    
+
 1. Configure an SSH tunnel using the values for `hostname` and `port` that you recorded in the above step.
    For information on configuring an SSH tunnel,
    see [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/2-3/devguide/deploy-apps/ssh-services.html#ssh-tunnel).
-    
-1. Configure a connection in your desktop tool using the values for `hostname`, `name`, `password`, `port`, and `username` that you recorded in the above step. 
+
+1. Configure a connection in your desktop tool using the values for `hostname`, `name`, `password`, `port`, and `username` that you recorded in the above step.
 
 ## <a id="example-app"></a>Example App
 

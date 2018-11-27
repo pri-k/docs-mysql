@@ -1,11 +1,11 @@
 ---
-title: On-Demand Service Architecture
+title: On-Demand Networking
 owner: MySQL
 ---
 
-This topic describes the architecture for on-demand MySQL for Pivotal Cloud Foundry (PCF).
+<strong><%= modified_date %></strong>
 
-For information about architecture of the older, pre-provisioned service, see the [Architecture](http://docs.pivotal.io/p-mysql/1-9/architecture.html) topic for MySQL for PCF v1.9.
+This topic describes networking for on-demand services, including MySQL for Pivotal Cloud Foundry (PCF).
 
 ## <a id="service-network"></a>Service Network Requirement
 
@@ -140,6 +140,6 @@ Galera to Galera, ports, two-way link out to Galera docs
 		<td><strong>Galera healthcheck</strong></td>
 		<td>9200</td>
 		<td>Two-way</td>
-		<td>This port is for monitoring the health of nodes in a Galera Cluster. For more infomation, see the <a href="https://github.com/cloudfoundry-incubator/galera-healthcheck">galera-healthcheck</a> repository.</td>
+		<td>This port is for monitoring the health of nodes in a Galera Cluster.</td>
 	</tr>
 </table>

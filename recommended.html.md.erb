@@ -3,13 +3,16 @@ title: MySQL for PCF Recommended Usage and Limitations
 owner: MySQL
 ---
 
+<strong><%= modified_date %></strong>
+
 ## <a id="usecases"></a> Recommended Use Cases
 
 MySQL is a powerful open-source relational database used by apps since the mid-90s. Developers have relied on MySQL as a first step to storing, processing and sharing data. As its user community has grown, MySQL has become a robust system capable of handling a wide variety of use cases and very significant workloads. Unlike other traditional databases which centralize and consolidate data, MySQL lends itself to dedicated deployment supporting the “shared nothing” context of building apps in the cloud.
 
 ##<a id="ondemand"></a> About On-Demand Plans
 * Each on-demand plan instance is deployed to its own VM and is suitable for production workloads.
-* The maximum-number of on-demand plan instances available to developers is set by the operator and enforced on both a global and per-plan level quota. The global quota cannot exceed 50.
+* The maximum-number of on-demand plan instances available to developers is set by the operator and enforced on both a global and per-plan level quota.
+  The global quota cannot exceed 200.
 * Operators can update the plan settings, including the VM size and disk size after the plans have been created. **Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.**
 * All plans deploy a single VM of the specified size with the specified disk type.
 * Cannot scale down the size of VMs on the plan once deployed (this protects against data loss).
@@ -21,7 +24,7 @@ For information on setting limits and calculating costs for on-demand service in
 
 ##<a id="azs"></a> Availability Using Multiple AZs
 
-MySQL for PCF v2 supports configuring multiple availability zones. At a minimum, Pivotal recommends using two availability
+MySQL for PCF supports configuring multiple availability zones. At a minimum, Pivotal recommends using two availability
 zones, one for the broker and one for the MySQL VMs. If you plan to configure leader follower, Pivotal recommends three availability zones as described in the
 [About Leader-Follower](./about-leader-follower.html) page.
 
