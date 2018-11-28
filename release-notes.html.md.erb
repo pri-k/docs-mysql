@@ -11,35 +11,22 @@ upgrade to the latest version of 2.2 before upgrading to the latest version of 2
 For product versions and upgrade paths, see the [Product Compatibility 
 Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-## <a id="232"></a>v2.3.2
+## <a id="233"></a>v2.3.3
 
-**Release Date: November 7, 2018**
+**Release Date: November XX, 2018**
 
 ### Known Issues
 
-All releases up to and including MySQL for PCF v2.3.2 have the following issue:
+All releases up to and including MySQL for PCF v2.3.3 have the following issue:
 
 * Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
   To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
 
-### Features
+### Security Fixes
 
-New features and changes in this release:
+This release includes the following security fix:
 
-* `find-non-tls-bindings` BOSH errand error messages have been improved to make determining the 
-cause of failure easier.
-
-### Fixed Issues
-
-This release fixes the following issues:
-
-* The `mysqldump --all-databases` step no longer fails during maunal backups. 
-For more information, see [Manual Backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup).
-* Smoke tests no longer fail if Service Plan Access is set to manual.
-* `find-non-tls-bindings` BOSH errands no longer fail when the Secure Service Bindings feature is 
-disabled and Credhub is enabled on the deployment.
-* The `mysql-restore` command now completely cleans up pre-existing MySQL users with column or 
-table level privileges in the database.
+* Critical [CVE-2018-15759: On Demand Services SDK Timing Attack Vulnerability](https://pivotal.io/security/cve-2018-15759)
 
 ### Compatibility
 
@@ -63,6 +50,29 @@ This release uses the following component versions:
     <td>v1.10.3</td>
 </tr>
 </table>
+
+## <a id="232"></a>v2.3.2
+
+**Release Date: November 7, 2018**
+
+### Features
+
+New features and changes in this release:
+
+* `find-non-tls-bindings` BOSH errand error messages have been improved to make determining the 
+cause of failure easier.
+
+### Fixed Issues
+
+This release fixes the following issues:
+
+* The `mysqldump --all-databases` step no longer fails during maunal backups. 
+For more information, see [Manual Backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup).
+* Smoke tests no longer fail if Service Plan Access is set to manual.
+* `find-non-tls-bindings` BOSH errands no longer fail when the Secure Service Bindings feature is 
+disabled and Credhub is enabled on the deployment.
+* The `mysql-restore` command now completely cleans up pre-existing MySQL users with column or 
+table level privileges in the database.
 
 ## <a id="231"></a>v2.3.1
 
