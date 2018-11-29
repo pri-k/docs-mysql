@@ -1,109 +1,116 @@
 ---
-title: Monitoring Proxy Metrics (Galera)
+title: Monitoring Proxy Health (Galera)
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to obtain health and metrics for each proxy instance in a Galera cluster.
+<!-- CHANGE EXAMPLE NAMES. FINISH OFF API STUFF -->
 
-The service provides a dashboard where administrators can observe health and
-metrics for each proxy instance. Metrics include the number of client connections
-routed to each backend database cluster node.
+This topic describes how to obtain the health status for each proxy instance 
+in a Galera cluster.
 
-WHAT is a PROXY INSTANCE? 
+Operators can observe health status for proxy instances using the Switchboard 
+Dashboard or API endpoint. You can also view the number of client connections routed to each backend database cluster node.
+For more information about proxy instances, see [MySQL Proxy](./proxy.html).
 
-## <a id="prereq"></a>Prerequisite ##
+## <a id="prereq"></a>Prerequisite
 
-You need the basic auth credentials for MySQL for PCF to view the dashboards.
+To connect to Switchboad you need your Switchboard credentials. 
 
-To obtain the admin? basic auth? redentials, do the following:
+To obtain your credentials, do the following:
 
-1. From the **MySQL for PCF** tile, click the **Credentials** tab.
-1. Locate the **Mysql Admin Password** entry in the **MySQL Server** section and click **Link to Credential**.
-1. Record the values for `identity` and `password`.
+1. Run the following command:
 
-2. WE NEED TO SEE THIS.  
+    ```
+    cf service YOUR-GALERA
+    ```
+  
+    Where `YOUR-GALERA` is the name of your Galera cluster.
+  
+    <pre class="terminal"> $ cf service myGalera
+    Showing info of service myGalera in org acceptance / space example as admin...
 
+    name:         myGalera
+    service:      p.mysql
+    tags:
+    plan:         db-ha-small
+    description:  Dedicated instances of MySQL
+    documentation:
+    dashboard:    proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com 
+    (username: 'abcdefghijklmno', password: '012345678912345')
 
-## <a id="proxy-dashboard"></a>Proxy Dashboard ##
+    Showing status of last operation from service myGalera...
 
-The service provides a dashboard where administrators can observe health and
-metrics for each proxy instance. Metrics include the number of client connections
-routed to each backend database cluster node.
+    status:    update succeeded
+    message:   Instance update completed
+    started:   2018-11-20T01:25:55Z
+    updated:   2018-11-20T01:30:33Z  
+    </pre>
 
-To monitor health and metrics using the Proxy Dashboard (aka Switchboard?),
-do the following:
+1. Record the values for `hostname`, `username`, and `password`.
 
-1. To view a list of proxy instances, navigate to the dashboard the following URL:
+## <a id="switchboard"></a>Switchboard Dashboard
 
-`https://proxy-p-mysql.SYSTEM-DOMAIN`
+To monitor proxy instance health status using the Switchboard Dashboard, do the following:
 
-Where:
+1. To view a list of proxy instances in your browser, navigate to the `hostname` you recorded in 
+[Prerequisite](#prereq) above.
 
-`SYSTEM-DOMAIN` is 
-
-[SCREENSHOT]
-
-2. Enter CREDENTIALS? 
+2. When prompted, enter the `username` and `password` you recorded in 
+[Prerequisite](#prereq) above.
 
 2. Click the link for the proxy instance that you want to monitor.
 
+2. If you are prompted, enter the `username` and `password` you recorded in 
+[Prerequisite](#prereq) above.
 
-You can also find links to the proxies at `https://proxy-p-mysql.SYSTEM-DOMAIN`.
-The job index starts at `0`.
-For example, if you have two proxy instances deployed and your system domain is
-`example.com`,
-you would access your proxy instance dashboards would at:
+    <%= image_tag "images/switchboard-all-healthy.png" %>
 
-- `https://0-proxy-p-mysql.example.com`
-- `https://1-proxy-p-mysql.example.com`
+## <a id="proxy-api"></a> Switchboard API ##
 
-<p class="note"><strong>Note</strong>: Earlier versions of MySQL for PCF use a
-  different hostname format for the proxies, in the
-  form: <code>http://proxy-JOB-INDEX-p-mysql.SYSTEM-DOMAIN</code><br>
-  For example: <code>https://proxy-0-p-mysql.example.com</code></p>
+1. To monitor proxy instance health, run the following command:
 
-You need basic auth credentials to access these dashboards. You can find them
-in the **Credentials** tab of the **MySQL for PCF** tile in Ops Manager.
+    ```
+    curl https://USERNAME:PASSWORD@0-HOSTNAME/v0/backends
+    ```
 
-## <a id="proxy-api"></a> API ##
+    Where:
+    + `USERNAME` is the `username` you recorded in [Prerequisite](#prereq) above.
+    + `PASSWORD` is the `password` you recorded in [Prerequisite](#prereq) above.
+    + `HOSTNAME` is the `hostname` you recorded in [Prerequisite](#prereq) above.
+    
+    The above command outputs a JSON object similar to the following: 
 
-The proxy hosts a JSON API at `JOB-INDEX-proxy-p-mysql.SYSTEM-DOMAIN/v0/`.
-
-The API provides the following route:
-
-Request:
-
-*  Method: GET
-*  Path: `/v0/backends`
-*  Params: ~
-*  Headers: Basic Auth
-
-Response:
-
-```
-[
-  {
-    "name": "mysql-0",
-    "ip": "1.2.3.4",
-    "healthy": true,
-    "active": true,
-    "currentSessionCount": 2
-  },
-  {
-    "name": "mysql-1",
-    "ip": "5.6.7.8",
-    "healthy": false,
-    "active": false,
-    "currentSessionCount": 0
-  },
-  {
-    "name": "mysql-2",
-    "ip": "9.9.9.9",
-    "healthy": true,
-    "active": false,
-    "currentSessionCount": 0
-  }
-]
-```
+    <pre class="terminal">
+    [
+      {
+        "host": "q-m1514n3s0.q-g693.bosh",
+        "port": 6033,
+        "healthy": true,
+        "name": "backend-0",
+        "currentSessionCount": 0,
+        "active": true,
+        "trafficEnabled": true
+      },
+      {
+        "host": "q-m1515n3s0.q-g693.bosh",
+        "port": 6033,
+        "healthy": true,
+        "name": "backend-1",
+        "currentSessionCount": 0,
+        "active": false,
+        "trafficEnabled": true
+      },
+      {
+        "host": "q-m1516n3s0.q-g693.bosh",
+        "port": 6033,
+        "healthy": true,
+        "name": "backend-2",
+        "currentSessionCount": 0,
+        "active": false,
+        "trafficEnabled": true
+      }
+    ]
+    </pre>
+  
