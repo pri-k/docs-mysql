@@ -11,9 +11,7 @@ failover to other server nodes within the cluster. When a server
 node becomes unhealthy, the proxy closes all connections to the unhealthy node
 and re-routes all subsequent connections to a healthy server node.
 
-Switchboard offers three separate functions and uses three separate ports.
-For more information about default ports and other network port requirements, see
-[Required Networking Rules for On-Demand Services](about.html#rules).
+Switchboard offers the following features: 
 
 - **MySQL Server Access**
 
@@ -21,22 +19,16 @@ For more information about default ports and other network port requirements, se
     Do not configure any load balancer to check proxy health via this port. These
     connections are automatically passed through to the MySQL servers.
 
-- **Proxy Health**
-
-    Switchboard listens for connections on Port 1936. When using a load balancer
-    to balance across multiple instances of Switchboard, configure the load balancer
-    to test for health by connecting to port 1936. To support different kinds of
-    load balancers, Switchboard supports simple TCP connection checks and HTTP
-    requests. HTTP connections are not authenticated and require no special
-    load balancer configuration.
-
 - **Switchboard and API**
 
     Operators can connect to Switchboard to view the state of the cluster
     back-ends. For more information about monitoring proxy health status, see 
-    [Monitoring Proxy Health](./proxy-metrics.html).
+    [Monitoring Proxy Health](./monitor-health.html).
 
-
+To use Switchboard you must open specfic connections. 
+For more information about default ports and other network port requirements, see
+[Required Networking Rules for On-Demand Services](about.html#rules).
+    
 ## <a id="node-health"></a>Node Health ##
 
 When determining where to route traffic, the proxy queries an HTTP healthcheck
