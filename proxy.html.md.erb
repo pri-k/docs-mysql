@@ -16,8 +16,7 @@ Switchboard offers the following features:
 - **MySQL Server Access**
 
     MySQL clients communicate with MySQL servers through this network port.
-    Do not configure any load balancer to check proxy health via this port. These
-    connections are automatically passed through to the MySQL servers.
+    These connections are automatically passed through to the MySQL servers.
 
 - **Switchboard and API**
 
@@ -25,7 +24,7 @@ Switchboard offers the following features:
     back-ends. For more information about monitoring proxy health status, see 
     [Monitoring Proxy Health](./monitor-health.html).
 
-To use Switchboard you must open specfic connections. 
+To use Switchboard you must open specfic ports. 
 For more information about default ports and other network port requirements, see
 [Required Networking Rules for On-Demand Services](about.html#rules).
     
@@ -50,6 +49,8 @@ the proxy considers all healthy nodes as candidates for new connections.
 
 If the healthcheck returns HTTP status code `503`, the proxy considers the node
 unhealthy.
+
+<!-- We will eventually move the following link to a troubleshooting topic in 2.5 -->
 
 This happens when a node becomes non-primary. For more information, see
 [Cluster Scaling Behavior](https://docs.pivotal.io/p-mysql/1-10/architecture.html#scale-behavior).
