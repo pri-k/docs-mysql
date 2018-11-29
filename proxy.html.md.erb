@@ -1,5 +1,5 @@
 ---
-title: MySQL Proxy
+title: MySQL Proxy (Galera)
 owner: MySQL
 ---
 
@@ -10,6 +10,10 @@ Using a proxy gracefully handles failure of nodes, enabling fast,
 failover to other server nodes within the cluster. When a server
 node becomes unhealthy, the proxy closes all connections to the unhealthy node
 and re-routes all subsequent connections to a healthy server node.
+
+The proxy used in MySQL for PCF is Switchboard.
+Switchboard was developed to replace HAProxy as the proxy tier for the high availability cluster
+for MySQL databases in Cloud Foundry.
 
 Switchboard offers the following features: 
 
