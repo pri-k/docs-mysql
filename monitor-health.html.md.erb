@@ -5,18 +5,16 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<!-- CHANGE EXAMPLE NAMES. FINISH OFF API STUFF -->
-
 This topic describes how to obtain the health status for each proxy instance 
 in a Galera cluster.
 
-Operators can observe health status for proxy instances using the Switchboard 
-Dashboard or API endpoint. You can also view the number of client connections routed to each backend database cluster node.
+If your cannot write or connect to your instances or database, you should
+check the health status of your the proxy instances. Operators can observe the health status of proxy instances using the Switchboard Dashboard or API endpoint. You can also view the number of client connections routed to each backend database cluster node. 
 For more information about proxy instances, see [MySQL Proxy](./proxy.html).
 
 ## <a id="prereq"></a>Prerequisite
 
-To connect to Switchboad you need your Switchboard credentials. 
+To connect to Switchboard you need your Switchboard credentials. 
 
 To obtain your credentials, do the following:
 
@@ -85,7 +83,7 @@ To monitor proxy instance health status using the Switchboard Dashboard, do the 
     <pre class="terminal">
     [
       {
-        "host": "q-m1514n3s0.q-g693.bosh",
+        "host": "a-b1234c5d6.e-f891.bosh",
         "port": 6033,
         "healthy": true,
         "name": "backend-0",
@@ -94,7 +92,7 @@ To monitor proxy instance health status using the Switchboard Dashboard, do the 
         "trafficEnabled": true
       },
       {
-        "host": "q-m1515n3s0.q-g693.bosh",
+        "host": "a-b1234c5d6.e-f891.bosh",
         "port": 6033,
         "healthy": true,
         "name": "backend-1",
@@ -103,7 +101,7 @@ To monitor proxy instance health status using the Switchboard Dashboard, do the 
         "trafficEnabled": true
       },
       {
-        "host": "q-m1516n3s0.q-g693.bosh",
+        "host": "a-b1234c5d6.e-f891.bosh",
         "port": 6033,
         "healthy": true,
         "name": "backend-2",
