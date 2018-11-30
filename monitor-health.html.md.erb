@@ -1,16 +1,17 @@
 ---
-title: Monitoring Proxy Health (Galera)
+title: Monitoring Node Health (Galera)
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to obtain the health status for each proxy instance 
+This topic describes how to obtain the health status for each node 
 in a Galera cluster.
 
 If your cannot write or connect to your app, you should
-check the health status of your proxy instances. You can observe the health status of proxy instances using the Switchboard dashboard or API endpoint. You can also view the number of client connections routed to each cluster node. 
-For more information about proxy instances, see [MySQL Proxy](./proxy.html).
+check the health status of your nodes. You can observe the health status of nodes using the Switchboard dashboard or API endpoint. You can also view the number of client connections routed through a MySQL 
+proxy to each node. 
+For more information about the MySQL proxy, see [MySQL Proxy](./proxy.html).
 
 ## <a id="prereq"></a>Prerequisite
 
@@ -48,32 +49,32 @@ To obtain credentials for accessing the Switchboard dashboard and API, do the fo
 
 1. Record the dashboard hostname, username, and password.
 
-## <a id="dashboard"></a>Monitor Proxy Health Using the Dashboard
+## <a id="dashboard"></a>Monitor Node Health Using the Dashboard
 
-To monitor proxy instance health status using the Switchboard dashboard, do the following:
+To monitor node health through the MySQL proxy using the Switchboard dashboard, do the following:
 
-1. To view a list of proxy instances in your browser, navigate to the hostname that you recorded in 
+1. To view a list of proxies in your browser, navigate to the hostname that you recorded in 
 [Prerequisite](#prereq) above. For example, `proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com`
 
 2. When prompted, enter the username and password that you recorded in 
 [Prerequisite](#prereq) above.
 
-2. Click the link for the proxy instance that you want to monitor.
+2. Click the link for the proxy that you want to use to monitor node health.
 
 2. If you are prompted, enter the username and password that you recorded in 
 [Prerequisite](#prereq) above.
 
     <%= image_tag "images/switchboard-all-healthy.png" %>
 
-## <a id="proxy-api"></a> Monitor Proxy Health Using the API ##
+## <a id="proxy-api"></a> Monitor Node Health Using the API
 
 You can also use the Switchboard API to obtain the information that is shown on the Switchboard dashboard.
 
 For example, you might want to use the API to write your own app to monitor the cluster.
 
-To monitor proxy instance health status using the Switchboard API, do the following:
+To monitor node health using the Switchboard API, do the following:
 
-1. To monitor proxy instance health, run the following command:
+1. To monitor node health, run the following command:
 
     ```
     curl https://USERNAME:PASSWORD@N-HOSTNAME/v0/backends
