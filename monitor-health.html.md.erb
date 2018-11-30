@@ -9,9 +9,10 @@ This topic describes how to obtain the health status for each node
 in a Galera cluster.
 
 If your cannot write or connect to your app, you should
-check the health status of your nodes. You can observe the health status of nodes using the Switchboard dashboard or API endpoint. You can also view the number of client connections routed through a MySQL 
-proxy to each node. 
-For more information about the MySQL proxy, see [MySQL Proxy](./proxy.html).
+check the health status of your nodes. You can observe the health status of nodes through a proxy 
+using the Switchboard dashboard or API endpoint. You can also view the number of client connections 
+routed through a proxy to each node. 
+For more information about proxies, see [MySQL Proxy](./proxy.html).
 
 ## <a id="prereq"></a>Prerequisite
 
@@ -51,7 +52,7 @@ To obtain credentials for accessing the Switchboard dashboard and API, do the fo
 
 ## <a id="dashboard"></a>Monitor Node Health Using the Dashboard
 
-To monitor node health through the MySQL proxy using the Switchboard dashboard, do the following:
+To monitor node health using the Switchboard dashboard, do the following:
 
 1. To view a list of proxies in your browser, navigate to the hostname that you recorded in 
 [Prerequisite](#prereq) above. For example, `proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com`
