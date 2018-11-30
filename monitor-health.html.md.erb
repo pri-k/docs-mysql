@@ -8,8 +8,8 @@ owner: MySQL
 This topic describes how to obtain the health status for each proxy instance 
 in a Galera cluster.
 
-If your cannot write or connect to your instances or database, you should
-check the health status of your the proxy instances. You can observe the health status of proxy instances using the Switchboard Dashboard or API endpoint. You can also view the number of client connections routed to each backend database cluster node. 
+If your cannot write or connect to your app, you should
+check the health status of your proxy instances. You can observe the health status of proxy instances using the Switchboard dashboard or API endpoint. You can also view the number of client connections routed to each cluster node. 
 For more information about proxy instances, see [MySQL Proxy](./proxy.html).
 
 ## <a id="prereq"></a>Prerequisite
@@ -46,11 +46,11 @@ To obtain credentials for accessing the Switchboard dashboard and API, do the fo
     updated:   2018-11-20T01:30:33Z  
     </pre>
 
-1. Record dashboard hostname, username, and password.
+1. Record the dashboard hostname, username, and password.
 
 ## <a id="dashboard"></a>Monitor Proxy Health Using the Dashboard
 
-To monitor proxy instance health status using the Switchboard Dashboard, do the following:
+To monitor proxy instance health status using the Switchboard dashboard, do the following:
 
 1. To view a list of proxy instances in your browser, navigate to the hostname that you recorded in 
 [Prerequisite](#prereq) above. For example, `proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com`
