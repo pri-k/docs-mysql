@@ -5,6 +5,8 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
+<%= partial "./galera_beta" %>
+
 This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foundry (PCF) v1.x service instance to a MySQL for PCF v2.x service instance.
 
 ## <a id='v1-to-v2'></a>Migrate Data from v1 to v2
@@ -13,9 +15,12 @@ This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foun
 
 To perform the procedures in this topic, you must have the following:
 
-* An existing MySQL for PCF v1.x service instance with the data you want to migrate
-* MySQL for PCF v2.x installed in the same PCF environment as your PCF v1.x service instance
+* An existing MySQL for PCF service instance with the data you want to migrate
+* MySQL for PCF  installed in the same PCF environment as your PCF v1.x service instance
 * At least one MySQL for PCF v2.x service plan available in the same space as your MySQL for PCF v1.x service instance
+
+Typo of typology you want to use you have a service plan for 
+
   <p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>. 
     MySQL for PCF v2.x appears as `p.mysql` and MySQL for PCF v1.x appears as `p-mysql`.</p>
 

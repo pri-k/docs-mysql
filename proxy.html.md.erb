@@ -5,8 +5,10 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
+<%= partial "./galera_beta" %>
+
 MySQL for Pivotal Cloud Foundry (PCF) uses a proxy to send client connections
-to the healthy MySQL database cluster nodes.
+to the healthy MySQL database cluster nodes in a highly available cluster plan.
 Using a proxy gracefully handles failure of nodes, enabling fast,
 failover to other nodes within the cluster. When a 
 node becomes unhealthy, the proxy closes all connections to the unhealthy node
