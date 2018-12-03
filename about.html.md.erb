@@ -20,6 +20,8 @@ This topic describes networking for on-demand services, including MySQL for Pivo
 
 <%= partial '../../mysql/odb/service_networks_table' %>
 
+## <a id='mysql-ports'></a> Required Networking Rules for MySQL for PCF
+
 Regardless of the specific network layout, the operator must ensure network rules are set up so that connections are open as described in the table below. 
 
 <table class="nice">
@@ -52,14 +54,6 @@ Regardless of the specific network layout, the operator must ensure network rule
 		<td>This port is for general use, app-specific tasks.
                     In addition to configuring your IaaS, create a security group
                     for the MySQL service instance.</td>
-	</tr>
-	<tr>
-		<td><strong>Leader VM</strong></td>
-		<td><strong>Follower VM</strong></td>
-		<td>8443<br>8081</td>
-		<td>Two-way</td>
-		<td>This port is needed if leader-follower is enabled.
-                    For information, see <a href="maintain-leader-follower.html#config-plan">Configure a Leader-Follower Service Plan</a>.</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
@@ -117,6 +111,101 @@ Regardless of the specific network layout, the operator must ensure network rule
 		<td>This port is needed if secure service instance credentials are enabled.
                     For information, see <a href="install-config.html#security">Configure Security</a>.</td>
 	</tr>
+</table>
+
+### <a id='lf-ports'></a> Required Networking Rules for Leader-Follwer Plans
+	
+In addtion to the networking rules required for MySQL for PCF, if you are using a leader-follower
+service plan, the operator must ensure network rules are set up so that connections are open as described in the table below
+
+<!-- Does leader-follower need any more ports? -->
+	
+<table class="nice">
+	<th>This component...</th>
+	<th>Must communicate with...</th>
+	<th>Default TCP Port</th>
+	<th>Communication direction(s)</th>
+	<th>Notes</th>
+	<tr>
+		<td><strong>Leader VM</strong></td>
+		<td><strong>Follower VM</strong></td>
+		<td>8443<br>8081</td>
+		<td>Two-way</td>
+		<td>This port is needed if leader-follower is enabled.
+                    For information, see <a href="maintain-leader-follower.html#config-plan">Configure a Leader-Follower Service Plan</a>.</td>
+	</tr>
+</table>
+
+### <a id='hac-ports'></a> Required Networking Rules for Highly Available Cluster Plans
+
+In addtion to the networking rules required for MySQL for PCF, if you are using a highly available 
+cluster service plan, the operator must ensure network rules are set up so that connections are open as described in the table below
+
+<!-- Does TCP vs HTTP matter? proxy health check vs SQL proxy vs MySQL server? Should it be MySQL proxy? Are any of these redudant? Some of these ports overlap! -->
+
+<table class="nice">
+	<th>This component...</th>
+	<th>Must communicate with...</th>
+	<th>Default TCP Port</th>
+	<th>Communication direction(s)</th>
+	<th>Notes</th>
+	
+	<tr>
+		<td><strong>Service broker</strong></td>
+		<td></td>
+		<td>8081</td>
+		<td></td>
+		<td></td>
+	</tr>
+	
+	<tr>
+		<td><strong>Proxy health check</strong></td>
+		<td></td>
+		<td>1936</td>
+		<td></td>
+		<td></td>
+	</tr>
+	
+	<tr>
+		<td><strong>SQL proxy</strong></td>
+		<td></td>
+		<td>3306</td>
+		<td></td>
+		<td></a></td>
+	</tr>
+	
+	<tr>
+		<td><strong>Proxy API</strong></td>
+		<td></td>
+		<td>8080</td>
+		<td></td>
+		<td></a></td>
+	</tr>
+	
+	<tr>
+		<td><strong>NATS</strong></td>
+		<td></td>
+		<td>4222</td>
+		<td></td>
+		<td></a></td>
+	</tr>
+	
+	<tr>
+		<td><strong>MySQL server</strong></td>
+		<td></td>
+		<td>3306</td>
+		<td></td>
+		<td></a></td>
+	</tr>
+	
+	<tr>
+		<td><strong>mysql-diag-agent</strong></td>
+		<td></td>
+		<td>8112</td>
+		<td></td>
+		<td></a></td>
+	</tr>
+	
 	<tr>
 		<td><strong>Galera</strong></td>
 		<td><strong>Galera</strong></td>
@@ -132,3 +221,4 @@ Regardless of the specific network layout, the operator must ensure network rule
 		<td>This port is for monitoring the health of nodes in a Galera Cluster.</td>
 	</tr>
 </table>
+	
