@@ -18,13 +18,40 @@ For instructions on verifying the stemcell, see <a href="./install-config.html#s
 To download the Xenial stemcell from Pivotal Network, go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Stemcells for PCF (Ubuntu Xenial)</a>.
 </p>
 
-## <a id="241"></a>v2.4.1
+## <a id="242"></a>v2.4.2
 
-**Release Date: November 7, 2018**
+**Release Date: December 3, 2018**
 
 ### Known Issues
 
 There are no known issues for this release.
+
+### Security Fixes
+
+This release includes the following security fixes:
+
+* Critical [CVE-2018-15759: On Demand Services SDK Timing Attack Vulnerability](https://pivotal.io/security/cve-2018-15759)
+* Open connections to the MySQL database are now severed immediately upon deletion of a binding or service key.
+
+### Fixed Issues
+
+This release fixes the following issues:
+
+* Fixes an issue where smoke tests fail if Service Plan Access is set to manual.
+* An attempt to install MySQL for PCF 2.4 with an incompatible version of PCF will fail fast when the tile is staged, rather than when MySQL smoke tests are run.
+
+### Improvements
+
+Improvements and other changes in this release:
+
+* Credentials for doing backups have been removed from the MySQL broker BOSH manifest, and are now stored securely in CredHub.
+* The `find-non-tls-bindings` BOSH errand has been enhanced to also search for IP-based bindings and service keys. The errand has been renamed to `find-deprecated-bindings`. 
+* The `find-deprecated-bindings` BOSH errand has clearer error messaging to more easily determine the cause of failure.
+* The AWS S3 Access Key ID and Secret Access Key fields in the Backups configuration pane in Ops Manager are no longer shown in plaintext.
+
+## <a id="241"></a>v2.4.1
+
+**Release Date: November 7, 2018**
 
 ### Improvements
 
