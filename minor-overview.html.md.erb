@@ -29,15 +29,6 @@ Operators can update certain plan settings after the plans have been created.
 If the Operator updates the VM size or disk size these settings will be implemented in all instances already created.
 Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.
 
-##<a id="tls"></a> Transport Layer Security (TLS)
-
-In MySQL for PCF v2.3 and later, you can enable TLS. 
-Enabling TLS provisions a MySQL server with a certificate so 
-that apps and clients can establish an encrypted connection with the data service.
-
-For more information on TLS, and the workflow for enabling and using it, see [Preparing for TLS](./prepare-tls.html).
-
-
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
 Review the following table to determine if MySQL for PCF v2 has the features needed to support your enterprise.
@@ -68,6 +59,11 @@ Review the following table to determine if MySQL for PCF v2 has the features nee
     <td><a href="#other-notes">About Multiple AZs in MySQL for PCF</a></td></tr>
 
 <tr><th colspan=2>Encryption</th><th>More Information</th></tr>
+<tr>
+  <td>Transport Layer Security (TLS)</td>
+  <td>MySQL for PCF supports TLS. Enabling TLS provisions a MySQL server with a certificate so that apps and clients can establish an encrypted connection with the data service.</td>
+  <td><a href="./prepare-tls.html">Preparing for TLS</a></td>
+</tr>
 <tr><td>Encrypted Communication in Transit</td><td>MySQL for PCF has been tested successfully with the BOSH IPsec Add-on</td>
     <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">Securing Data in Transit with the IPsec Add-on</a></td></tr>
 <tr><td>Encrypted Data at Rest</td><td>MySQL for PCF enables integration with commercial vendors for full-disk encryption at rest.</td><td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
