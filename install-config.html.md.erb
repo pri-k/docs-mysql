@@ -120,10 +120,9 @@ see [Using Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/customizin
 ## <a id="config-on-demand"></a> Configure the Tile
 
 Follow the steps below to configure the MySQL for PCF service.
-MySQL for PCF v2.5 has nine service plans that deploy dedicated MySQL service instances on demand.
+MySQL for PCF v2.5 has 9 service plans that deploy dedicated MySQL service instances on demand.
 
-<!-- Which ones are inactive? -->
-By default, plans 1-3 are active and plans 4 and 5 are inactive. The procedures below describe how to change these defaults.
+By default, plans 1-3 are active and plans 4-9 are inactive. The procedures below describe how to change these defaults.
 
 <p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must leave <code>broker de-registrar</code> checked.</p>
 
@@ -159,11 +158,10 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
 
 ###<a id="active"></a> Configure Service Plans
 
-MySQL for PCF enables you to configure as many as nine service plans.
+MySQL for PCF enables you to configure as many as 9 service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
-<!-- Which ones are inactive? -->
-By default, the first three plans are active and the fourth and fifth plans are inactive.
+By default, plans 1-3 are active and plans 4-9 are inactive..
 
 <p class="note warning"><strong>WARNING:</strong> You must configure one of your service plans as
 a single-node plan. This is because you can only restore to a single-node plan. You cannot restore
