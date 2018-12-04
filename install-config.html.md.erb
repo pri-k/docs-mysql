@@ -5,7 +5,6 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<%= partial "./galera_beta" %>
 
 This topic provides instructions to operators of Pivotal Cloud Foundry (PCF)
 about how to install, configure, and deploy the MySQL for PCF v2.5 tile.  The
@@ -126,6 +125,8 @@ MySQL for PCF v2.5 has nine service plans that deploy dedicated MySQL service in
 
 By default, plans 1-3 are active and plans 4-9 are inactive. The procedures below describe how to change these defaults.
 
+<%= partial "./galera_beta" %>
+
 <p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must leave <code>broker de-registrar</code> checked.</p>
 
 ###<a id="azs"></a> Configure AZs and Networks
@@ -159,6 +160,8 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
 1. Click **Save**.
 
 ###<a id="active"></a> Configure Service Plans
+
+<%= partial "./galera_beta" %>
 
 MySQL for PCF enables you to configure as many as nine service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
