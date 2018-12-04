@@ -5,8 +5,6 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<%= partial "./galera_beta" %>
-
 This topic describes networking for on-demand services, including MySQL for Pivotal Cloud Foundry (PCF).
 
 ## <a id="service-network"></a>Service Network Requirement
@@ -112,10 +110,10 @@ Regardless of the specific network layout, the operator must ensure network rule
 	</tr>
 </table>
 
-### <a id='lf-ports'></a> Required Networking Rules for Leader-Follwer Plans
+### <a id='lf-ports'></a> Required Networking Rules for Leader-Follower Plans
 	
-In addtion to the networking rules required for MySQL for PCF, if you are using a leader-follower
-service plan, the operator must ensure network rules are set up so that connections are open as described in the table below
+In addition to the networking rules required for MySQL for PCF, if you are using a leader-follower
+service plan, the operator must ensure network rules are set up so that connections are open as described in the table below.
 
 <!-- Does leader-follower need any more ports? -->
 	
@@ -137,8 +135,10 @@ service plan, the operator must ensure network rules are set up so that connecti
 
 ### <a id='hac-ports'></a> Required Networking Rules for Highly Available Cluster Plans
 
-In addtion to the networking rules required for MySQL for PCF, if you are using a highly available 
-cluster service plan, the operator must ensure network rules are set up so that connections are open as described in the table below
+In addition to the networking rules required for MySQL for PCF, if you are using a highly available 
+cluster service plan, the operator must ensure network rules are set up so that connections are open as described in the table below.
+
+<%= partial "./galera_beta" %>
 
 <!--  PAS or Elastic Runtime to MySQL service instances  may have changed. 
 mysql diag needs a doc ask Jane about it -->
