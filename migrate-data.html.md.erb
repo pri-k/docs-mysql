@@ -7,31 +7,36 @@ owner: MySQL
 
 <%= partial "./galera_beta" %>
 
-This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foundry (PCF) v1.x service instance to a MySQL for PCF v2.x service instance.
+This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foundry (PCF) service 
+instance to another MySQL for PCF service instance.
 
 ## <a id='v1-to-v2'></a>Migrate Data from v1 to v2
 
 ### <a id='prepare'></a>Prerequisites
 
+<!-- Feelings on source/destination for qualifers? -->
+
 To perform the procedures in this topic, you must have the following:
 
-* An existing MySQL for PCF service instance with the data you want to migrate
-* MySQL for PCF  installed in the same PCF environment as your PCF v1.x service instance
-* At least one MySQL for PCF v2.x service plan available in the same space as your MySQL for PCF v1.x service instance
+* An existing MySQL for PCF service instance to source the data you want to migrate.
+* MySQL for PCF v2.x installed in the same PCF environment as your source service instance.
+* At least one MySQL for PCF service plan for typology you want to use available in the same space 
+as your source service instance.
 
-Typo of typology you want to use you have a service plan for 
 
-  <p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>. 
-    MySQL for PCF v2.x appears as `p.mysql` and MySQL for PCF v1.x appears as `p-mysql`.</p>
+<p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>. 
+  MySQL for PCF v2.x appears as `p.mysql` and MySQL for PCF v1.x appears as `p-mysql`.</p>
 
-    <p class="note warning"><strong>WARNING</strong>: Migrating large datasets can take several hours.
-    Migration of the data is linear, and depends on the hardware being used.
-    For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
-    Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
+  <p class="note warning"><strong>WARNING</strong>: Migrating large datasets can take several hours.
+  Migration of the data is linear, and depends on the hardware being used.
+  For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
+  Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
 
 ### <a id='stop-unbind'></a>Stop and Unbind Apps
 
-Do the following to stop and unbind any apps that use your MySQL for PCF v1.x service instance:
+<!-- Is it clear here that you are doing this for the source service instance? -->
+
+Do the following to stop and unbind any apps that use your source MySQL for PCF service instance:
 
 1. Use the cf CLI to target and log in to your PCF deployment. 
 For example:
@@ -39,48 +44,49 @@ For example:
   $ cf target api.example.com
   $ cf login
   </pre>
-  When prompted, enter your credentials and target the org and space where the MySQL for PCF v1.x is located.
+  
+    When prompted, enter your credentials and target the org and space where the service 
+    instance is located.
 
-1. Stop any traffic to the MySQL for PCF v1.x database by stopping any apps that are bound to the service instance.
+1. Stop any traffic to the MySQL for PCF database by stopping any apps that are bound to the service instance.
   Run the following command for each app bound to the instance:
   
      ```
      cf stop APP
      ```
-     <br>
+     
      Where `APP` is the name of your app.
      <br><br>
      For example:
      <pre class="terminal">
      $ cf stop my-app
      Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
-     OK
-     </pre>
+     OK </pre>
      To retrieve a list of bound apps, run `cf services`.
   
-1. Unbind your app from the MySQL for PCF v1.x service instance.
+1. Unbind your app from the MySQL for PCF service instance.
   Run the following command for each app bound to the instance:
   
      ```
-     cf unbind-service APP V1-INSTANCE
+     cf unbind-service APP SOURCE-INSTANCE
      ```
-     <br>
+
      Where:
      * `APP` is the name of your app.
-     * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
+     * `SOURCE-INSTANCE` is the name of your source MySQL for PCF service instance.
      <br><br>
      For example:
      <pre class="terminal">
      $ cf unbind-service my-app my-instance
-     Unbinding app my-app from service my-v1-instance in org my-org / space my-space as user<span>@</span>example.com...
+     Unbinding app my-app from service my-instance in org my-org / space my-space as user<span>@</span>example.com...
      OK
      </pre>
 
 ### <a id='migrate-data'></a>Migrate Data
 
-To migrate the data from the MySQL for PCF v1.x service instance to a new MySQL for PCF v2.x service instance, use the `cf mysql-tools plugin`.
+To migrate the data from the source MySQL for PCF service instance to a new destination MySQL for PCF v2.x service instance, use the `cf mysql-tools plugin`.
 
-The `migrate` command of the plugin renames the MySQL for PCF v1.x service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
+The `migrate` command of the plugin renames the MySQL for PCF service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
 
 Do the following to migrate data to an instance of the same name:
 
@@ -95,11 +101,11 @@ Do the following to migrate data to an instance of the same name:
   Run the following command:
 
     ```
-    cf mysql-tools migrate V1-INSTANCE V2-PLAN
+    cf mysql-tools migrate SOURCE-INSTANCE V2-PLAN
     ```
     <br>
     Where:
-    * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
+    * `SOURCE-INSTANCE` is the name of your source MySQL for PCF service instance.
     * `V2-PLAN` is the name of the MySQL for PCF v2.x service plan to use for the new MySQL for PCF v2.x service instance. 
     For example, `db-small`. 
     To view available MySQL for PCF v2.x service plans, run `cf marketplace` and locate the plans under `p.mysql`.
@@ -204,17 +210,3 @@ To perform the deletion, run the following command:
   For example:
 
   <pre class="terminal">$ cf delete-service my-v1-instance</pre> 
-  
-## <a id='single-lf-to-hac'></a>Migrate Data from Singe Node or Leader-Follower Plan to Highly Available Cluser Plan
-
-### <a id='prepare'></a>Prerequisites
-
-### <a id='stop-unbind'></a>Stop and Unbind Apps
-
-### <a id='migrate-data'></a>Migrate Data
-
-### <a id='validate-data'></a>Validate Data
-
-### <a id='rebind-restage'></a>Rebind and Restage Apps
-
-### <a id='delete-old-database'></a> Delete the Old Database
