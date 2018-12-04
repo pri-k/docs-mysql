@@ -80,10 +80,7 @@ Regardless of the specific network layout, the operator must ensure network rule
 		<td><strong>MySQL service instances</strong>
 		</td>
 		<td>	
-			
-				3306<br>
-				8443
-			
+				8443<br>3306
 		</td>
 		<td>One-way</td>
 		<td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
@@ -143,7 +140,7 @@ service plan, the operator must ensure network rules are set up so that connecti
 In addtion to the networking rules required for MySQL for PCF, if you are using a highly available 
 cluster service plan, the operator must ensure network rules are set up so that connections are open as described in the table below
 
-<!-- Does TCP vs HTTP matter? proxy health check vs SQL proxy vs MySQL server? Should it be MySQL proxy? Are any of these redudant? Some of these ports overlap! -->
+<!--  proxy API port may have changed. mysql diag agent needs a doc ask Jane about it -->
 
 <table class="nice">
 	<th>This component...</th>
@@ -151,61 +148,23 @@ cluster service plan, the operator must ensure network rules are set up so that 
 	<th>Default TCP Port</th>
 	<th>Communication direction(s)</th>
 	<th>Notes</th>
-	
+		
 	<tr>
-		<td><strong>Service broker</strong></td>
-		<td></td>
-		<td>8081</td>
-		<td></td>
-		<td></td>
-	</tr>
-	
-	<tr>
-		<td><strong>Proxy health check</strong></td>
-		<td></td>
-		<td>1936</td>
-		<td></td>
-		<td></td>
-	</tr>
-	
-	<tr>
-		<td><strong>SQL proxy</strong></td>
-		<td></td>
-		<td>3306</td>
-		<td></td>
-		<td></a></td>
-	</tr>
-	
-	<tr>
-		<td><strong>Proxy API</strong></td>
-		<td></td>
+		<td><strong>PAS or Elastic Runtime</strong></td>
+		<td>MySQL service instances</td>
 		<td>8080</td>
-		<td></td>
-		<td></a></td>
+		<td>One-way</td>
+		<td>This port is needed to monitor cluster health with Switchboard. 
+			For more information, see <a href="./monitor-health.html">Monitoring Node Health</a></td>
 	</tr>
 	
 	<tr>
-		<td><strong>NATS</strong></td>
-		<td></td>
-		<td>4222</td>
-		<td></td>
-		<td></a></td>
-	</tr>
-	
-	<tr>
-		<td><strong>MySQL server</strong></td>
-		<td></td>
-		<td>3306</td>
-		<td></td>
-		<td></a></td>
-	</tr>
-	
-	<tr>
-		<td><strong>mysql-diag-agent</strong></td>
-		<td></td>
+		<td><strong>mysql-diag</strong></td>
+		<td>MySQL service instances</td>
 		<td>8112</td>
-		<td></td>
-		<td></a></td>
+		<td>One-way</td>
+		<td>This port is needed to for troubleshooting cluster nodes with <code>mysql-diag</code>. 
+			For more infomation, see <a href="">Running mysql-diag</a></td>
 	</tr>
 	
 	<tr>
@@ -213,7 +172,7 @@ cluster service plan, the operator must ensure network rules are set up so that 
 		<td><strong>Galera</strong></td>
 		<td> 4567 <br> 4568 <br> 4444 </td>
 		<td>Two-way</td>
-		<td>This connection is needed to maintain network connectivity between nodes in a Galera Cluster. For more infomation, see <a href="http://galeracluster.com/documentation-webpages/firewallsettings.html">Firewall Settings</a> in the Galera documentation.</td>
+		<td>This port is needed to maintain network connectivity between nodes in a Galera Cluster. For more infomation, see <a href="http://galeracluster.com/documentation-webpages/firewallsettings.html">Firewall Settings</a> in the Galera documentation.</td>
 	</tr>
 	<tr>
 		<td><strong>Galera healthcheck</strong></td>
