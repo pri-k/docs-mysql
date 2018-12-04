@@ -10,7 +10,9 @@ owner: MySQL
 This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foundry (PCF) service 
 instance to another MySQL for PCF service instance.
 
-## <a id='v1-to-v2'></a>Migrate Data from v1 to v2
+<!-- Rework this header  -->
+
+## <a id='v1-to-v2'></a>Migrate Data from Service Instance to Another Service Instance
 
 ### <a id='prepare'></a>Prerequisites
 
@@ -163,7 +165,7 @@ following sections of [Accessing Services with SSH](https://docs.pivotal.io/pivo
 
 ### <a id='rebind-restage'></a>Rebind and Restage Apps
 
-To complete the migration, rebind and restage any apps that had been bound to the original MySQL for PCF v1.x service instance. 
+To complete the migration, rebind and restage any apps that had been bound to the original MySQL for PCF service instance. 
 
 Do the following to rebind and restage your apps:
 
@@ -202,11 +204,11 @@ After rebinding and restaging your apps to confirm that migration was successful
 To perform the deletion, run the following command:
 
   ```
-  cf delete-service V1-INSTANCE
+  cf delete-service SOURCE-INSTANCE
   ```
   <br>
-  Where `V1-INSTANCE` is the name of your old database instance.
+  Where `SOURCE-INSTANCE` is the name of your old database instance.
 
   For example:
 
-  <pre class="terminal">$ cf delete-service my-v1-instance</pre> 
+  <pre class="terminal">$ cf delete-service my-instance</pre> 
