@@ -212,6 +212,9 @@ As apps and their databases grow, it may be necessary to update the service inst
 This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
 the database will be unavailable for several minutes.
 
+<p class="note"><strong>Note:</strong> You cannot update to or from a highly available (HA) cluster plan
+  to a plan that uses another topology (single-node or leader-follower) using the <code>update-service</code> command. To update to HA cluster plan, you must migrate your data to a new service instance using the <code>mysql-tools</code> cf CLI plugin. For more information, see <a href=""></a></p>
+
 To update a service instance to a larger plan, run the following command:
 
 ```
@@ -278,145 +281,10 @@ that the instance no longer exists:
     watch cf service SERVICE-INSTANCE
     ```
 
-
-##<a id='remote-connection'></a> Connecting to a Service Instance From Outside the Foundation
-
-If you are connecting to a MySQL service instance from within your PCF foundation, you can do so by using the BOSH DNS hostname provided in service keys and app bindings. This process is more complex if you wish to connect from outside the PCF foundation where the service instance is located. Some use cases included, but are not limited to:
-
-* [Connecting from your local workstation](././use.html#mysql-for-pcf-tools), e.g. using MySQL Workbench or a MySQL command-line client
-* Connecting an app on a different PCF foundation
-* Connecting a legacy app that is completely off-platform
-* Taking a manual backup to be stored locally
-
-You can connect to a MySQL service instance from outside the PCF foundation using one of the two following methods.
-
-###<a id='ssh-tunnel'></a> Connecting via an App SSH Tunnel
-
-Any CF application deployed within the foundation can resolve BOSH DNS hostnames and forward traffic to MySQL service instance via an App SSH Tunnel. 
-
-Your Operator **must** [allow SSH access to app containers](https://docs.pivotal.io/pivotalcf/2-3/opsguide/config-ssh.html) in order to connect using this method.
-
-For information on configuring an SSH tunnel, see [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/2-3/devguide/deploy-apps/ssh-services.html#ssh-tunnel)
-
-###<a id='ip-address'></a> Connect Directly to an IP Address
-
-Alternatively, you can connect remotely to the MySQL service instance by directly using its IP Address. There are multiple methods for obtaining the IP address.
-
-<p class="note"><strong>Note:</strong> By connecting to the MySQL service istance directly over its IP address, the client is responsible to handle cases in which the IP address of the service instance will change transparently. This can happen when a VM is recreated, or during a failover.</p>
-
-####<a id='ip-address-cf-ssh'></a> Obtain the IP Address Using cf SSH
-
-Your Operator **must** [allow SSH access to app containers](https://docs.pivotal.io/pivotalcf/2-3/opsguide/config-ssh.html) in order to connect using this method.
-
-1. Obtain the BOSH DNS hostname of the MySQL service instance. For example:
-
-  <pre class="terminal">
-  $ cf service-key SERVICE-INSTANCE MYSQL-SERVICE-KEY
-  Getting key testkey for service instance galeraTLS as admin...
-
-  {
-   "hostname": "q-n3s3y1.q-g693.bosh",
-   ...
-  }
-  </pre>
-1. Have an app deployed on the same foundation as the MySQL service instance.
-1. SSH into the app container:
-
-  <pre class="terminal">
-  $ cf ssh APP-NAME
-  </pre>
-1. Run the following command to obtain the IP address of the service instance.
-
-  <pre class="terminal">
-  $ dig +short BOSH-DNS-HOSTNAME
-  10.0.16.19
-  </pre>
-  Where:
-    * `BOSH-DNS-HOSTNAME` is the BOSH DNS hostname that you retrieved from Step 1.
-
-####<a id='ip-address-lookup'></a> Obtain the IP Address Using DNS Lookup App
-
-For foundations with App SSH disabled, you can deploy an app to your foundation that will resolve BOSH DNS hostnames for you.
-
-![DNS Lookup App](dns-lookup-app.png)
-
-See the DNS Lookup [code repo](https://github.com/menicosia/dns-lookup).
-
-####<a id='ip-address-bosh'></a> Obtain the IP Address Using the BOSH CLI
-
-You must have access to the BOSH CLI in order to connect using this method.
-
-1. Obtain the MySQL service instance GUID:
-
-  <pre class="terminal">
-  $ cf service SERVICE-INSTANCE --guid
-  b2e92d56-27e2-407e-90e0-c34612c10dba
-  </pre>
-1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
-   and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of
-   <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Ops Manager VM.
-1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI.
-   See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in
-   <em>Advanced Troubleshooting with the BOSH CLI</em>.
-1. Use the BOSH CLI to view the VM information of the MySQL service instance:
-  <pre><code>bosh -d service-instance\_GUID instances</code></pre>
-  <br>
-  Where `GUID` is the GUID of the service instance retrieved above.
-  <br><br>
-  For example:
-  <pre class="terminal">
-  $ bosh -d service-instance\_b2e92d56-27e2-407e-90e0-c34612c10dba \
-      instances
-  Using environment 'https://10.0.0.6:25555' as client 'admin'
-
-  Task 21409. Done
-
-  Deployment 'service-instance_0b26c8d1-2795-438e-bcbf-339e77daf88e'
-
-  Instance                                    Process State  AZ  IPs
-  mysql/1373022d-4eab-46d3-8fd1-a12067edf597  running        z2  10.0.17.14
-
-  1 instances
-
-  Succeeded
-  </pre>
-  If the MySQL service instance is a Highly Available cluster, you may connect to any of `mysql/*` instances. If it is a Leader-Follower topology, you will have to run the `inspect` BOSH errand to determine the IP address of the Leader node. For example:
-  <pre><code>bosh -d service-instance\_GUID run-errand inspect</code></pre>
-
-  Observe the output:
-  <pre class="terminal">
-  Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-  Exit Code  0
-  Stdout     2018/04/03 18:08:46 Started executing command: inspect
-            2018/04/03 18:08:46
-            IP Address: 10.0.8.11
-            Role: leader
-            Read Only: false
-            Replication Configured: false
-            Replication Mode: async
-            Has Data: true
-            GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-            2018/04/03 18:08:46 Successfully executed command: inspect
-  Stderr     -
-  <br>
-  Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
-  Exit Code  0
-  Stdout     2018/04/03 18:08:46 Started executing command: inspect
-            2018/04/03 18:08:46
-            IP Address: 10.0.8.10
-            Role: follower
-            Read Only: true
-            Replication Configured: true
-            Replication Mode: async
-            Has Data: true
-            GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-            2018/04/03 18:08:46 Successfully executed command: inspect
-  </pre>
-  The instance marked `Role: leader` is the Leader node.
-
 ##<a id='establish-tls'></a> Establish a TLS Connection to a Service Instance
 
-You can use `mysql` to establish a TLS connection to a MySQL for PCF service instance that has TLS enabled. For more information about how to enable TLS for a service instance, see [Using TLS](using-tls.html).
+You can use `mysql` to establish a TLS connection to a MySQL for PCF service instance that has TLS 
+enabled. For more information about how to enable TLS for a service instance, see [Using TLS](using-tls.html).
 
 Perform the following steps:
 
@@ -437,7 +305,8 @@ Perform the following steps:
    "username": "6bf07ae455a14064a9073cec8696366c"
   }
   </pre>
-  If the service key does not have a CA certificate under `tls.cert.ca`, the service key may be stale. Create a new one.
+  If the service key does not have a CA certificate under `tls.cert.ca`, the service key may be stale. 
+  Create a new one.
 
 1. Copy the contents of the CA certificate under `tls.cert.ca` and paste it into a file. For example:
   <pre class="terminal">$ pbpaste > root.pem</pre>
@@ -465,8 +334,175 @@ Perform the following steps:
       --ssl-ca=root.pem \
       --ssl-verify-server-cert
     </pre>
+    
+<!-- Why above TLS connection? Are these simialr?  reationship to the PCF Tools section-->
+##<a id='remote-connection'></a> Establish a Connection to a Service Instance From Outside your Foundation
 
-<p class="note"><strong>Note:</strong> If BOSH DNS is enabled, you can only connect to the MySQL service instance from within the PCF foundation. To connect to a MySQL from outside the foundation, see the [cf CLI MySQL Plugin](././use.html#plugin).</p>
+If you want to connect to a MySQL service instance from outside the PCF foundation where your MySQL
+for PCF service instance is located, you can do one of the following: 
+
+  + [Connect Using an App SSH Tunnel](#ssh-tunnel)
+  + [Connect Using an IP Address](ip-address)
+
+<!-- you are connecting to a MySQL service instance from within your PCF foundation, you use the 
+BOSH DNS hostname provided in service keys and app bindings.  -->
+
+This process is more complex than ... conectioning this case: Bind a Service Instance to APP
+
+You may want to use an app SSH tunnel or IP address for establihing a connection when:
+
++ Connecting from a local workstation. For more information, see [MySQL for PCF Tools](#mysql-for-pcf-tools).
++ Connectin from an external PCF foundation
++ Connecting from a legacy app that is not in a PCF foundation
++ Taking a manual backup to be stored locally
+
+You can connect to a MySQL service instance from outside the PCF foundation using one of the two 
+ollowing methods.
+
+###<a id='ssh-tunnel'></a> Connect using an App SSH Tunnel
+
+Any app deployed within the foundation can resolve BOSH DNS hostnames and forward traffic to MySQL 
+service instance using an App SSH Tunnel. 
+
+Prerequisites
+
+Your Operator **must** allow SSH access to app containers in order to connect using this method. 
+For more information, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html) 
+
+Nest thing to do this the follwoing
+
+For information on configuring an SSH tunnel, see [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/2-3/devguide/deploy-apps/ssh-services.html#ssh-tunnel)
+
+###<a id='ip-address'></a> Connect Directly to an IP Address
+
+Alternatively, you can connect remotely to the MySQL service instance by directly using its IP address. 
+There are multiple methods for obtaining the IP address.
+
+<p class="note"><strong>Note:</strong> By connecting to the MySQL service instance directly using its 
+IP address, the client is responsible to handle cases in which the IP address of the service 
+instance will change transparently. This can happen when a VM is recreated, or during a failover.</p>
+
+####<a id='ip-address-cf-ssh'></a> Obtain the IP Address Using cf SSH
+
+Your Operator **must** [allow SSH access to app containers](https://docs.pivotal.io/pivotalcf/2-3/opsguide/config-ssh.html) 
+in order to connect using this method.
+
+need service key
+Have an app deployed on the same foundation as the MySQL service instance.
+
+1. Obtain the BOSH DNS hostname of the MySQL service instance. For example:
+
+<pre class="terminal">
+$ cf service-key SERVICE-INSTANCE MYSQL-SERVICE-KEY
+Getting key MYSQL-SERVICE-KEY for service instance SERVICE-INSTANCE as admin...
+
+{
+ "hostname": "q-n3s3y1.q-g693.bosh",
+ ...
+}
+</pre>
+
+Record
+
+1. SSH into the app:
+
+<pre class="terminal">
+$ cf ssh APP-NAME
+</pre>
+
+1. Run the following command to obtain the IP address of the service instance.
+
+<pre class="terminal">
+$ dig +short BOSH-DNS-HOSTNAME
+10.0.16.19
+</pre>
+Where:
+  * `BOSH-DNS-HOSTNAME` is the BOSH DNS hostname that you retrieved from Step 1.
+
+####<a id='ip-address-lookup'></a> Obtain the IP Address Using the DNS Lookup App
+
+For foundations with App SSH disabled, you can deploy the DNS Lookup app to your foundation that 
+will resolve BOSH DNS hostnames for you.
+
+![DNS Lookup App](dns-lookup-app.png)
+
+See the DNS Lookup [code repo](https://github.com/menicosia/dns-lookup).
+
+####<a id='ip-address-bosh'></a> Obtain the IP Address Using the BOSH CLI
+
+need operator to do this 
+You must have access to the BOSH CLI in order to connect using this method.
+
+1. Obtain the MySQL service instance GUID:
+
+<pre class="terminal">
+$ cf service SERVICE-INSTANCE --guid
+b2e92d56-27e2-407e-90e0-c34612c10dba
+</pre>
+1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
+ and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of
+ <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Ops Manager VM.
+1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI.
+ See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in
+ <em>Advanced Troubleshooting with the BOSH CLI</em>.
+1. Use the BOSH CLI to view the VM information of the MySQL service instance:
+<pre><code>bosh -d service-instance\_GUID instances</code></pre>
+<br>
+Where `GUID` is the GUID of the service instance retrieved above.
+<br><br>
+For example:
+<pre class="terminal">
+$ bosh -d service-instance\_b2e92d56-27e2-407e-90e0-c34612c10dba \
+    instances
+Using environment 'https://10.0.0.6:25555' as client 'admin'
+
+Task 21409. Done
+
+Deployment 'service-instance_0b26c8d1-2795-438e-bcbf-339e77daf88e'
+
+Instance                                    Process State  AZ  IPs
+mysql/1373022d-4eab-46d3-8fd1-a12067edf597  running        z2  10.0.17.14
+
+1 instances
+
+Succeeded
+</pre>
+If the MySQL service instance is a Highly Available cluster, you may connect to any of `mysql/*` 
+instances. If it is a Leader-Follower topology, you will have to run the `inspect` BOSH errand to 
+determine the IP address of the Leader node. For example:
+<pre><code>bosh -d service-instance\_GUID run-errand inspect</code></pre>
+
+Observe the output:
+<pre class="terminal">
+Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+Exit Code  0
+Stdout     2018/04/03 18:08:46 Started executing command: inspect
+          2018/04/03 18:08:46
+          IP Address: 10.0.8.11
+          Role: leader
+          Read Only: false
+          Replication Configured: false
+          Replication Mode: async
+          Has Data: true
+          GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
+          2018/04/03 18:08:46 Successfully executed command: inspect
+Stderr     -
+<br>
+Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+Exit Code  0
+Stdout     2018/04/03 18:08:46 Started executing command: inspect
+          2018/04/03 18:08:46
+          IP Address: 10.0.8.10
+          Role: follower
+          Read Only: true
+          Replication Configured: true
+          Replication Mode: async
+          Has Data: true
+          GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
+          2018/04/03 18:08:46 Successfully executed command: inspect
+</pre>
+The instance marked `Role: leader` is the Leader node.
+
 
 ## <a id="dev-tools"></a>MySQL for PCF Tools
 
@@ -475,7 +511,8 @@ The following tools let developers access their MySQL for PCF databases.
 ### <a id="mysqlweb"></a>Pivotal MySQLWeb Database Management App
 
 The Pivotal MySQLWeb app provides a web-based UI for managing MySQL for PCF databases.
-The free app lets you view and operate on tables, indexes, constraints, and other database structures, and directly execute SQL commands.
+The free app lets you view and operate on tables, indexes, constraints, and other database structures, 
+and directly execute SQL commands.
 
 ![Pivotal MySQLWeb](mysqlweb.png)
 
@@ -484,7 +521,8 @@ You can run the Pivotal MySQLWeb app in two ways:
 * Standalone on your own machine
 * Deployed to PCF
 
-If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically bind to a specific service instance.
+If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically 
+bind to a specific service instance.
 
 See the Pivotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLWeb) and
 [demo video](https://drive.google.com/file/d/0B2wmRcJj8XF-SXloNFNNaGJXbFk/view),
