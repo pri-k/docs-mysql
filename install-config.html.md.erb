@@ -123,12 +123,6 @@ see [Using Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/customizin
 Follow the steps below to configure the MySQL for PCF service.
 MySQL for PCF v2.5 has nine service plans that deploy dedicated MySQL service instances on demand.
 
-By default, plans 1-3 are active and plans 4-9 are inactive. The procedures below describe how to change these defaults.
-
-<%= partial "./galera_beta" %>
-
-<p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must leave <code>broker de-registrar</code> checked.</p>
-
 ###<a id="azs"></a> Configure AZs and Networks
 
 Follow the steps below to choose an availability zone (AZ) to run the service broker and to select networks.
@@ -166,7 +160,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
 MySQL for PCF enables you to configure as many as nine service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
-By default, plans 1-3 are active and plans 4-9 are inactive.
+By default, plans 1-3 are active and plans 4-9 are inactive. The procedures below describe how to change these defaults.
 
 <p class="note warning"><strong>WARNING:</strong> You must configure one of your service plans as
 a single-node plan. This is because you can only restore to a single-node plan. You cannot restore
@@ -178,16 +172,13 @@ Perform the following steps for each plan that you want to use in your PCF deplo
 
 1. Click the section for the plan. For example, **Plan 1**.
 
-1. Ensure that **Active** is selected.
+1. Select the plan for your desired topology.
 
     ![plan-1-tab-v2.1.0](service-plan-configuration.png)
 
 1. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
-    <tr><td><strong>Multi-node deployment</strong></td>
-        <td>Check the box to configure a leader-follower plan. Leave unchecked to configure each instance as a singleton.
-            For more information, see [Configure a Leader-Follower Service Plan](./maintain-leader-follower.html#config-plan).</td></tr>
     <tr><td><strong>Service Plan Access</strong></td>
         <td>Select one of the following options:<br>
             <ul>
@@ -207,26 +198,37 @@ Perform the following steps for each plan that you want to use in your PCF deplo
             Pivotal recommends adding VM type details and disk size to this field.
         </td></tr>
     <tr><td><strong>Plan Quota</strong></td>
-        <td>Enter the maximum number of service instances that can exist at one time.</td></tr>
+        <td>Enter the maximum number of service instances that can exist at one time. If you have selected the Galera plan, the Plan Quota maximum is 5. This is because the Galera plan is in beta.</td></tr>
+    <tr><td><strong>Paid Plan</strong></td>
+        <td>Check this box to indicate that this service plan is paid.</td></tr>
     <tr><td><strong>MySQL VM Type</strong></td>
-        <td>Select a VM type. The plan creates service instances of this size.</td></tr>
+        <td>Select a VM type for the MySQL data nodes.</td></tr>
+    <tr><td><strong>Jumpbox VM Type</strong></td>
+        <td>Only for Galera plans. Select a VM type for the MySQL jumpbox node.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL messages.
-            <p class="note"><strong>Note</strong>: If you intend to enable backups, choose a persistent disk type
+          For Single Node or Leader Follower plans, this should be 3x larger than the disk you intend to provide to developers.
+          
+          For Galera, this can be 1x the size you intend to provide to developers.
+          
+          
+            <p class="note"><strong>Note</strong>: In order for backups to work properly, choose a persistent disk type
                 that is three times larger than the disk you intend to provide to developers.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
+    <tr><td><strong>Jumpbox Persistent Disk</strong></td>
+        <td>Select a disk size. This disk stores backups.
+        N/A for Single Node or Leader Follower.
+          
+        For Galera, this must be 2x the size of the MySQL Persistent Disk.</td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
-        <td>If you check the **Multi-node deployment** box above to enable a leader-follower plan, choose one of the following:
-        <ul>
-            <li>To leverage the full HA advantages of leader-follower, select two AZs. You must choose AZs different from the one the broker is in.</li>
-            <li>To leverage some HA advantages, select one AZ.
-            Using only one AZ for a **Multi-node deployment** greatly reduces the ability to recover from an outage and benefit from such a deployment.</li>
-        </ul>
-      If you do not check **Multi-node deployment**, select one AZ.
-      <p class="note"><strong>Note</strong>: To prevent orphaning a disk, only
-        migrate service instances to a different plan if the new plan includes
-        all of the AZs in the existing plan.</p>
+        <td> The availability zones BOSH will deploy your service instances to. If more than one AZ is selected, BOSH will randomize which AZ to place each VM.
+          
+          Single Node: Select one AZ for service instances of this plan to be deployed.
+          
+          Leader Follower: You must select at least 2 AZs in order to be resilient against AZ failures.
+          
+          Galera: You must select at least 3 AZs for this plan to be HA.
         </td></tr>
   </table>
 1. Click **Save**.
@@ -272,6 +274,9 @@ and to set the total number of service instances allowed across all plans.
             For information about determining global quotas, see <a href="recommended.html#serviceplan">
             Service Plan Recommended Usage and Limitations</a>.
            </td></tr>
+     <tr><td><strong>Email address</strong></td>
+         <td>Enter an email address to send MySQL monitoring notifications to.
+            </td></tr>
   </table>
 
 1. Click **Save**.
@@ -303,6 +308,9 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
         <td>Select this checkbox to enable data downloading from the client's local file system.
             For more information about local data loading capability,
             see [Security Issues with LOAD DATA LOCAL](https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html) in the MySQL 5.7 Reference Manual.
+    </td></tr>
+    <tr><td><strong>Wait Timeout</strong></td>
+        <td>Set the time in seconds that MySQL waits to close inactive connections. For more information, see <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_wait_timeout">wait_timeout</a> in the MySQL 5.7 Reference Manual.
     </td></tr>
   </table>
 
@@ -484,6 +492,9 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
     <tr><td><strong>Number of upgrade canary instances</td>
         <td>Enter the number of service instances to upgrade first before upgrading the rest of the instances.</td>
     </tr>
+    <tr><td><strong>BOSH Upgrade Timeout</td>
+        <td>Enter the amount of time in seconds to wait for BOSH to respond before timing out when upgrading service instances.</td>
+    </tr>
 </table>
 
 1. Click **Save**.
@@ -491,6 +502,8 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
 ###<a id="errands"></a> (Optional) Review Errands
 
 You do not need to change the default configuration for errands in the **Errands** tab.
+
+<p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must leave the <code>broker de-registrar</code> Pre-Delete Errand `ON`.</p>
 
 Errands are scripts that run to do various tasks.
 MySQL for PCF can run errands to manage the broker and service instances at the following points:
@@ -508,6 +521,8 @@ By default, MySQL for PCF runs the following errands:
                 <li><strong>Register On-demand MySQL Broker</strong>:
                     Registers a broker with the Cloud Controller and lists it in the Marketplace.</li>
                 <li><strong>Smoke Tests</strong>: Validates basic MySQL operations.</li>
+                <li><strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong>:
+                    Checks if service instances have app bindings or service keys using IP addresses, or have a TLS certificate that is signed with an IP address. If true, the installtion will fail.</li>
                 <li><strong>Upgrade all On-demand MySQL Service Instances</strong>:
                     Upgrades existing instances of a service to its latest installed version.</li>
             </ul>
