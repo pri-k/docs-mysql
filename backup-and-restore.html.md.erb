@@ -347,20 +347,22 @@ Perform the following steps to back up your MySQL for PCF data manually:
     Getting key spring-key for service instance mysql-spring as admin...
 
     {
-     "hostname": "10.10.10.5",
-     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
+     "hostname": "q-n3s3y1.q-g696.bosh",
+     "jdbcUrl": "jdbc:mysql://q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
      "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
      "password": "123456789",
      "port": 3306,
-     "uri": "mysql://abcdefghijklm:123456789<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+     "uri": "mysql://abcdefghijklm:123456789<span>@</span>q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
      "username": "abcdefghijklm"
     }
     </pre>
 
 1. Examine the output and record the following values:
-    * `hostname`: The MySQL for PCF proxy IP address
+    * `hostname`: The MySQL BOSH DNS hostname
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
+
+1. Connect to the database, by either using an SSH tunnel, or by connecting directly to its IP address. For more information, see TODO: Reference the connecting from off-foundation section here.
 
 1. To view a list of your databases, run the following command:
 <pre><code>mysql --user=USERNAME --password=PASSWORD \
@@ -370,13 +372,13 @@ Perform the following steps to back up your MySQL for PCF data manually:
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
     * `PASSWORD` is the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP` is the MySQL for PCF proxy IP address.
+    * `MYSQL-IP` is the MySQL IP address. This value is `0` if you are connecting via SSH tunnel.
 
     For example:
     <pre class="terminal">
     $ mysql --user=abcdefghijklm --password=123456789 \
     --host=10.10.10.5 \
-    --silent --silent --execute='show databases'
+    --silent --execute='show databases'
     </pre>
 
 1. Delete the following databases from the list. Do not back up the following databases:
@@ -395,7 +397,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
     * `PASSWORD` is the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP` is the MySQL for PCF proxy IP address.
+    * `MYSQL-IP` is the MySQL IP address.
     * `DB-NAME` is the name of the database.
     * `BACKUP` is a name you create for the backup file. Use a different filename for each backup.
 
