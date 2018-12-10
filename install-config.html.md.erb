@@ -178,11 +178,10 @@ Perform the following steps for each plan that you want to use in your PCF deplo
 
 1. Configure the fields as follows:
   <table>
-    <tr><th>Field</th><th>Instructions</th></tr>
+    <tr><th>Field</th><th>Description</th></tr>
     <tr><td><strong>Service Plan Access</strong></td>
         <td>Select one of the following options:<br>
-            <ul>
-                <li>**Enable (Default)**---Gives access to all orgs, and displays the service plan to all developers in the Marketplace.
+            <ul><li>**Enable (Default)**---Gives access to all orgs, and displays the service plan to all developers in the Marketplace.
                 </li>
                 <li>**Disable**---Disables access to all orgs, and hides the service plan to all developers in the Marketplace. This disables creating new service instances of this plan.
                 </li>
@@ -207,28 +206,22 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>Only for Galera plans. Select a VM type for the MySQL jumpbox node.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL messages.
-          For Single Node or Leader Follower plans, this should be 3x larger than the disk you intend to provide to developers.
-          
-          For Galera, this can be 1x the size you intend to provide to developers.
-          
-          
-            <p class="note"><strong>Note</strong>: In order for backups to work properly, choose a persistent disk type
-                that is three times larger than the disk you intend to provide to developers.
+          <ul><li>Single node or leader-follower plans: Select a disk size 3x larger than the disk you intend to provide to developers.</li>
+            <li>Galera plans: Select a disk size that is the same size you intend to provide to developers.</li>
+        <p class="note"><strong>Note</strong>: In order for backups to work properly, follow these 
+          sizing recommendations.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
     <tr><td><strong>Jumpbox Persistent Disk</strong></td>
-        <td>Select a disk size. This disk stores backups.
-        N/A for Single Node or Leader Follower.
-          
-        For Galera, this must be 2x the size of the MySQL Persistent Disk.</td></tr>
+        <td>Only for Galera plans. Select a disk size. This disk stores backups. This must be 2x the size of the MySQL Persistent Disk.</td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
-        <td> The availability zones BOSH will deploy your service instances to. If more than one AZ is selected, BOSH will randomize which AZ to place each VM.
-          
-          Single Node: Select one AZ for service instances of this plan to be deployed.
-          
-          Leader Follower: You must select at least 2 AZs in order to be resilient against AZ failures.
-          
-          Galera: You must select at least 3 AZs for this plan to be HA.
+        <td> BOSH deploys your service instances to these availability zones (AZ). If more than one AZ is selected, BOSH will randomize which AZ to place each VM.
+    <ul><li>Single node plans: Select one AZ for service instances of this plan to be deployed.</li>
+    
+    <li>Leader-follower plans: You must select at least 2 AZs in order to be resilient against AZ failures.</li>
+    
+    <li>Galera plans: You must select at least 3 AZs for this plan to be HA.</li>
+  </ul>
         </td></tr>
   </table>
 1. Click **Save**.
@@ -248,8 +241,6 @@ Follow the steps below to deactivate a service plan:
     1. Return to the MySQL for PCF tile configuration.
 1. Click the section for the plan. For example, **Plan 2**.
 1. Click **Inactive**.
-
-    ![plan-inactive-tab-v2.1.0](service-plan-inactive.png)
 1. Click **Save**.
 
 ###<a id="global"></a> Configure Global Settings
@@ -298,7 +289,7 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
             Selecting this sets the MySQL server system variable `lower_case_table_names` to 1 on all MySQL for PCF instances
         by default. To allow developers to override this default, see the checkbox below.
             For more information, see
-          [lower_case_table_names](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names)
+          [lower\_case\_table\_names](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names)
           in the MySQL documentation.
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
@@ -503,13 +494,15 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
 
 You do not need to change the default configuration for errands in the **Errands** tab.
 
-<p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must leave the <code>broker de-registrar</code> Pre-Delete Errand `ON`.</p>
+<p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must set the <b>Delete All Service Instances and Deregister Broker</b> errand to <b>On</b>.</p>
 
 Errands are scripts that run to do various tasks.
 MySQL for PCF can run errands to manage the broker and service instances at the following points:
 
 - **Post-Deploy Errands:** Run when you click **Apply Changes**.
 - **Pre-Delete Errands:** Run before you delete the MySQL for PCF tile.
+
+![Errands](errands.png)
 
 By default, MySQL for PCF runs the following errands:
 
@@ -533,7 +526,7 @@ By default, MySQL for PCF runs the following errands:
         <td>
             <ul>
                 <li><strong>Delete All Service Instances and Deregister Broker</strong>:
-                    Deletes all instances of service and deregisters the broker.</li>
+                    Deletes all service instances and deregisters the broker.</li>
             </ul>
         </td>
     </tr>
