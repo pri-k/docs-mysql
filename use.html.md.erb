@@ -346,12 +346,12 @@ for PCF service instance is located, you can do one of the following:
 <!-- you are connecting to a MySQL service instance from within your PCF foundation, you use the 
 BOSH DNS hostname provided in service keys and app bindings.  -->
 
-You may want to use an SSH tunnel or IP address for establihing a connection when:
+You may want to use an SSH tunnel or IP address for establishing a connection when:
 
 + Connecting from a local workstation. For more information, see [MySQL for PCF Tools](#mysql-for-pcf-tools).
 + Connecting from an external PCF foundation.
 + Connecting from a legacy app that is not in a PCF foundation.
-+ Taking a manual backup to be stored locally. For more infomation, see [Manual Backup](./backup-and-restore.html#manual-backup)
++ Taking a manual backup to be stored locally. For more information, see [Manual Backup](./backup-and-restore.html#manual-backup)
 
 ###<a id='ssh-tunnel'></a> Connect using an SSH Tunnel
 
@@ -360,7 +360,7 @@ service instances using an SSH tunnel.
 
 #### Prerequisite
 
-To connect using an SSH tunnel, you must have SSH access to app containers. For more infomation, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html). 
+To connect using an SSH tunnel, you must have SSH access to app containers. For more information, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html). 
 
 #### Procedure
 
@@ -373,8 +373,8 @@ You can also connect remotely to the MySQL service instance by directly using it
 You can obtain the IP address, using on the following methods:
 
 +  Using cf SSH. For more information, see [Obtain the IP Address Using cf SSH](#ip-address-cf-ssh)
-+  Using the DNS Lookup app. For more infomation, see [Obtain the IP Address Using the DNS Lookup App](#ip-address-lookup).
-+  Using the BOSH CLI. For more infomation, see [Obtain the IP Address Using the BOSH CLI](#ip-address-bosh).
++  Using the DNS Lookup app. For more information, see [Obtain the IP Address Using the DNS Lookup App](#ip-address-lookup).
++  Using the BOSH CLI. For more information, see [Obtain the IP Address Using the BOSH CLI](#ip-address-bosh).
 
 <p class="note"><strong>Note:</strong> By connecting to the MySQL service instance directly using its 
 IP address, the client is responsible to handle cases in which the IP address of the service 
@@ -386,7 +386,7 @@ instance will change transparently. This can happen when a VM is recreated, or d
 
 To obtain the IP address using cf SSH, you must have the following: 
 
-+ SSH access to app containers. For more infomation, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html). 
++ SSH access to app containers. For more information, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html). 
 
 + An app deployed on the same foundation as the MySQL service instance.
 
@@ -448,13 +448,13 @@ To obtain the IP address using cf SSH, you must have the following:
 If your foundation has app SSH disabled, you can deploy the DNS Lookup app to your foundation. The 
 DNS Lookup app resolves BOSH DNS hostnames.
 
-For more infomation, see the [dns-lookup](https://github.com/menicosia/dns-lookup) repo in GitHub.
+For more information, see the [dns-lookup](https://github.com/menicosia/dns-lookup) repo in GitHub.
 
 ####<a id='ip-address-bosh'></a> Obtain the IP Address Using the BOSH CLI
 
 #### Prerequisite
 
-To connect using the BOSH CLI, you must have have access to the BOSH CLI. Aksk you operator for access to the BOSH CLI. 
+To connect using the BOSH CLI, you must have have access to the BOSH CLI. Ask you operator for access to the BOSH CLI. 
 
 #### Procedure
  
@@ -478,7 +478,7 @@ commands depending on your topology:
 
         Where `GUID` is the GUID of the service instance retrieved above. <br><br>
             
-        If you are using a HA cluster, record IP address of any of your instances.
+        If you are using a HA cluster, record IP address of any of your instances.<br><br>
 
         For example:
         <pre class="terminal">$ bosh -d service-instance\_b2e92d56-27e2-407e-90e0-c34612c10dba \
@@ -501,6 +501,8 @@ commands depending on your topology:
         ```
         bosh -d service-instance\_GUID run-errand inspect
         ```
+        
+        Record the IP Address for the instance marked `Role: leader`. <br><br>
 
         For example:
         <pre class="terminal">
@@ -532,7 +534,7 @@ commands depending on your topology:
                   2018/04/03 18:08:46 Successfully executed command: inspect
         </pre>
         
-        Record the IP Address for the instance marked `Role: leader`.
+        
 
 
 ## <a id="dev-tools"></a>MySQL for PCF Tools
