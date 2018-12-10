@@ -10,13 +10,13 @@ owner: MySQL
 This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foundry (PCF) service 
 instance to another MySQL for PCF service instance.
 
-<!-- Rework this header  -->
+You may want to migrate your data in the following cases:
 
-## <a id='v1-to-v2'></a>Migrate Data from Service Instance to Another Service Instance
++ Migrating from MySQL for PCF v1.x to MySQL for PCF v2.x.
++ Migrating from a single node or leader-follower plan to highly available (HA) cluster plan.
++ Migrating from HA cluster plan to single node or leader-follower plan. 
 
-### <a id='prepare'></a>Prerequisites
-
-<!-- Feelings on source/destination for qualifers? -->
+## <a id='prepare'></a>Prerequisites
 
 To perform the procedures in this topic, you must have the following:
 
@@ -27,16 +27,14 @@ as your source service instance.
 
 
 <p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>. 
-  MySQL for PCF v2.x appears as `p.mysql` and MySQL for PCF v1.x appears as `p-mysql`.</p>
+  MySQL for PCF v2.x appears as <code>p.mysql</code> and MySQL for PCF v1.x appears as <code>p-mysql</code>.</p>
 
   <p class="note warning"><strong>WARNING</strong>: Migrating large datasets can take several hours.
   Migration of the data is linear, and depends on the hardware being used.
   For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
   Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
 
-### <a id='stop-unbind'></a>Stop and Unbind Apps
-
-<!-- Is it clear here that you are doing this for the source service instance? -->
+## <a id='stop-unbind'></a>Stop and Unbind Apps
 
 Do the following to stop and unbind any apps that use your source MySQL for PCF service instance:
 
@@ -84,9 +82,9 @@ For example:
      OK
      </pre>
 
-### <a id='migrate-data'></a>Migrate Data
+## <a id='migrate-data'></a>Migrate Data
 
-To migrate the data from the source MySQL for PCF service instance to a new destination MySQL for PCF v2.x service instance, use the `cf mysql-tools plugin`.
+To migrate the data from the source MySQL for PCF service instance to a new destination MySQL for PCF v2.x service instance, use the `cf mysql-tools` plugin.
 
 The `migrate` command of the plugin renames the MySQL for PCF service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
 
@@ -140,7 +138,7 @@ Do the following to migrate data to an instance of the same name:
 Developers can SSH into the app container to examine the logs. 
 
 
-### <a id='validate-data'></a>Validate Data
+## <a id='validate-data'></a>Validate Data
 
 After migrating your data, you must verify that the data has successfully migrated by validating the data in the new MySQL for PCF v2.x service instance. 
 You can validate the data by creating an SSH tunnel to gain direct command line access to the new MySQL for PCF v2.x service instance.
@@ -163,7 +161,7 @@ following sections of [Accessing Services with SSH](https://docs.pivotal.io/pivo
 
 1. Exit the MySQL shell and kill the SSH tunnel.
 
-### <a id='rebind-restage'></a>Rebind and Restage Apps
+## <a id='rebind-restage'></a>Rebind and Restage Apps
 
 To complete the migration, rebind and restage any apps that had been bound to the original MySQL for PCF service instance. 
 
@@ -197,7 +195,7 @@ Run the following command:
   </pre>
   The app is now using your new MySQL for PCF v2.x service instance and should be operational again.
   
-### <a id='delete-old-database'></a> Delete the Old Database
+## <a id='delete-old-database'></a> Delete the Old Database
 
 After rebinding and restaging your apps to confirm that migration was successful, Pivotal recommends saving resources by deleting the old database instance. 
 
