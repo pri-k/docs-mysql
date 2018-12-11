@@ -159,7 +159,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
 MySQL for PCF enables you to configure as many as nine service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
-By default, plans 1-3 are active and plans 4-9 are inactive. The procedures below describe how to change these defaults.
+By default, plans 1–3 are active and plans 4–9 are inactive. The procedures below describe how to change these defaults.
 
 <p class="note warning"><strong>WARNING:</strong> You must configure one of your service plans as
 a single-node plan. This is because you can only restore to a single-node plan. You cannot restore
@@ -205,21 +205,21 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>Only for Galera plans. Select a VM type for the MySQL jumpbox node.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL messages.
-          <ul><li>Single node or leader-follower plans: Select a disk size 3x larger than the disk you intend to provide to developers.</li>
-            <li>Galera plans: Select a disk size that is the same size you intend to provide to developers.</li>
-        <p class="note"><strong>Note</strong>: In order for backups to work properly, follow these 
+          <ul><li>Single node or leader-follower plans: Select a disk size three times larger than the disk you intend to provide to developers.</li>
+            <li>Galera plans: Select a disk size that is the same size you intend to provide to developers.</li></ul>
+        <p class="note"><strong>Note</strong>: For backups to work properly, follow these 
           sizing recommendations.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
     <tr><td><strong>Jumpbox Persistent Disk</strong></td>
-        <td>Only for Galera plans. Select a disk size. This disk stores backups. This must be 2x the size of the MySQL Persistent Disk.</td></tr>
+        <td>Only for Galera plans. Select a disk size. This disk stores backups. This must be twice the size of the MySQL Persistent Disk.</td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
         <td> BOSH deploys your service instances to these availability zones (AZ). If more than one AZ is selected, BOSH will randomize which AZ to place each VM.
     <ul><li>Single node plans: Select one AZ for service instances of this plan to be deployed.</li>
     
-    <li>Leader-follower plans: You must select at least 2 AZs in order to be resilient against AZ failures.</li>
+    <li>Leader-follower plans: You must select at least two AZs in order to be resilient against AZ failures.</li>
     
-    <li>Galera plans: You must select at least 3 AZs for this plan to be HA.</li>
+    <li>Galera plans: You must select at least three AZs for this plan to be HA.</li>
   </ul>
         </td></tr>
   </table>
