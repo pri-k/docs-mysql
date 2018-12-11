@@ -29,43 +29,118 @@ MySQL for PCF supports the following VM topologies:
     
     <%= partial "./galera_beta" %>
 
-<!-- For more information about Galera Clusters, see [WHATEVER THIS ENDS UP BEING](). -->
+##<a id="intro"></a> On-Demand Service
+
+MySQL for PCF uses on-demand service, which provides dedicated instances of
+MySQL that app developers can provision on-demand from the command line or Apps Manager.
+The MySQL for PCF on-demand service gives flexibility in how and when
+instances are provisioned and allows for efficient and seamless resource use for both the operator and app developer.
+Additionally, both the operator and app developer can configure essential MySQL settings.
+
+The MySQL for PCF on-demand service leverages the on-demand service broker. For general information about the on-demand service
+broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/0-15/)
+
+### <a id="service"></a>On-Demand Service Plan 
+
+MySQL for PCF offers on-demand plans as the `p.mysql` service in the MySQL for PCF tile.
+The plans can be configured in any way that you see fit.
+
+Operators can update certain plan settings after the plans have been created.
+If the operator updates the VM size or disk size these settings will be implemented in all instances already created.
+Operators should not decrease the disk size because this can cause data loss in existing instances.
+
+##<a id="checklist"></a> Enterprise-Ready Checklist
+
+Review the following table to determine if MySQL for PCF has the features needed to support your enterprise.
+
+<table border="1" class="nice">
+<tr><th colspan=2>Plans and Instances</th><th>More Information</th></tr>
+<tr><td>On-Demand, Dedicated-VM plans</td><td>MySQL for PCF provides On-Demand VM plans</td><td><a href="./about.html">Architecture</a></td></tr>
+<tr><td>Customizable plans</td><td>For the On-Demand Plan, the operator can customize the VM, disk size, and availability zone.</td><td><a href="./install-config.html#active">Configuring</a></td></tr>
+
+<tr><th colspan=2>Installation and Upgrades</th><th>More Information</th></tr>
+<tr><td>Product upgrades</td><td>MySQL for PCF can be upgraded within the v2.x tile series.</td>
+   <td><a href="./upgrade.html">Upgrading MySQL for PCF</a></td></tr>
+<tr><td>Deployment Smoke Tests</td><td>MySQL for PCF installation and upgrade runs
+      a post deployment BOSH errand that validates basic MySQL operations</td>
+  <td></td></tr>
+
+<tr><th colspan=2>Maintenance and Backups</th><th>More Information</th></tr>
+<tr><td>Operational Monitoring and Logging</td><td>MySQL for PCF provides metrics for monitoring On-Demand plan usage and quotas, as well as MySQL component metrics. Additionally, MySQL for PCF provides syslog redirection to external log ingestors.</td>
+  <td><a href="./monitor.html">Monitoring MySQL for PCF</a></td></tr>
+<tr><td>Backup and Restore</td><td>MySQL for PCF includes automatic backups on a configurable schedule to a variety of destinations, as well as a simple restore process.
+</td><td><a href="./backup-and-restore.html">Manual Backup and Restore of MySQL for PCF</a></td></tr>
+
+<tr><th colspan=2>Scale and Availability</th><th>More Information</th></tr>
+<tr><td>On-Demand Plan</td><td>MySQL for PCF provides up to 200 on-demand instances across all plans</td><td></td></tr>
+<tr><td>Ability to Scale Up / Down</td><td>Operators can scale VMs up, but not down</td><td><a href="./install-config.html">Configuring</a></td></tr>
+<tr><td>Rolling Deployments</td><td>MySQL for PCF supports rolling deployments when using Galera Cluster;
+      the service is unavailable during upgrades.</td>
+  <td><a href="./upgrade.html">Upgrades</a></td></tr>
+<tr><td>AZ Support</td><td>MySQL for PCF can be deployed to multiple zones to increase availability during unplanned outages of a zone.</td>
+  <td><a href="#other-notes">About Multiple AZs in MySQL for PCF</a></td></tr>
+
+<tr><th colspan=2>Encryption</th><th>More Information</th></tr>
+<tr>
+<td>Transport Layer Security (TLS)</td>
+<td>MySQL for PCF supports TLS. Enabling TLS provisions a MySQL server with a certificate so that apps and clients can establish an encrypted connection with the data service.</td>
+<td><a href="./prepare-tls.html">Preparing for TLS</a></td>
+</tr>
+<tr>  
+<td>Encrypted Communication in Transit</td>
+<td>MySQL for PCF has been tested successfully with the BOSH IPsec Add-on</td>
+  <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">Securing Data in Transit with the IPsec Add-on</a></td></tr>
+<tr><td>Encrypted Data at Rest</td><td>MySQL for PCF enables integration with commercial vendors for full-disk encryption at rest.</td><td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
+</table>
+
+
+## <a id="other-notes"></a>About Multiple AZs in MySQL for PCF
+
+MySQL for PCF supports configuring multiple AZs.
+However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
+
+* You can assign on-demand plans to any of the configured availability zones.
+* You can select two AZs
+for the multi-node plans to increase the availability.
+Choosing three AZs for multi-node plans does not increase the number of AZs assigned to three.
+* You can select one AZ for the single-node plan.
+Choosing two AZs for the single-node plan does not increase the number of AZs assigned to two.
 
 ## <a id='snapshot'></a> Product Snapshot
 
 The following table provides version and version-support information about MySQL for PCF.
 
 <table class="nice">
-    <th>Element</th>
-    <th>Details</th>
-    <tr>
-        <td>Version</td>
-        <td>v2.5.0</td>
-    </tr>
-    <tr>
-        <td>Release date</td>
-        <td>MM DD, YYYY</td>
-    </tr>
-    <tr>
-        <td>Software component version</td>
-        <td>Percona Server v5.7.20-21</td>
-    </tr>
-    <tr>
-        <td>Compatible Ops Manager version(s)</td>
-        <td>v2.3.x and v2.2.2 or later</td>
-    </tr>
-    <tr>
-        <td>Compatible Pivotal Application Service (PAS) version(s)</td>
-        <td>v2.3.x and v2.2.x</td>
-    </tr>
-    <tr>
-        <td>IaaS support</td>
-        <td>AWS, Azure, GCP, OpenStack, and vSphere</td>
-    </tr>
-    <tr>
-        <td>IPsec support</td>
-        <td>Yes</td>
-    </tr>
+<th>Element</th>
+<th>Details</th>
+<tr>
+  <td>Version</td>
+  <td>v2.5.0</td>
+</tr>
+<tr>
+  <td>Release date</td>
+  <td>MM DD, YYYY</td>
+</tr>
+<tr>
+  <td>Software component version</td>
+  <td>Percona Server v5.7.20-21</td>
+</tr>
+<tr>
+  <td>Compatible Ops Manager version(s)</td>
+  <td>v2.3.x and v2.2.2 or later</td>
+</tr>
+<tr>
+  <td>Compatible Pivotal Application Service (PAS) version(s)</td>
+  <td>v2.3.x and v2.2.x</td>
+</tr>
+<tr>
+  <td>IaaS support</td>
+  <td>AWS, Azure, GCP, OpenStack, and vSphere</td>
+</tr>
+<tr>
+  <td>IPsec support</td>
+  <td>Yes</td>
+</tr>
 </table>
 
 
