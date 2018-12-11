@@ -212,7 +212,7 @@ As apps and their databases grow, it may be necessary to update the service inst
 This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
 the database will be unavailable for several minutes.
 
-<p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
+<p class="note warning"><strong>WARNING:</strong> You cannot update to or from a highly available (HA) cluster plan
   to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a></p>
 
 To update a service instance to a larger plan, run the following command:
