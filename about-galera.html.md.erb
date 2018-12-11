@@ -1,0 +1,135 @@
+---
+title: About Galera 
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+<%= partial "./galera_beta" %>
+
+This topic explains how a developer on Pivotal Cloud Foundry (PCF) can start using MySQL with their apps.
+It is important to note that MySQL for PCF v1 is different than standard MySQL and has some limitations that you must be aware of.
+
+## <a id="PCF-MySQL-Galera-Limitations"></a>MySQL for PCF v1 Limitations ##
+
+- Only InnoDB tables are supported. Writes to other types of tables, such as MyISAM tables will not replicate across the cluster. 
+- Explicit locking is not supported, i.e. `LOCK TABLES`, `FLUSH TABLES tableA WITH READ_LOCK`.
+- Large DDL (ie, schema changes like ALTER TABLE) will lock all schemas, affecting all sessions with the DB. This can be mitigated via a manual step using [Galera’s RSU](./rsu.html) feature.
+- Table partitioning may cause the cluster to get into a hung state. This is as a result of the implicit table locks that are used when running table partition commands.
+- MySQL for PCF supports table triggers; however multiple triggers per table are not supported
+- All tables must have a primary key; multi-column primary keys are OK. This is because of the the way Galera replicates using row based replication and ensuring unique rows on each instance
+- While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In a MariaDB Galera cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
+- Do not execute a DML statement in parallel with a DDL statement when both statements affect the same tables. Locking is lax in Galera, even in single node mode. Rather than the DDL waiting for the DML to finish, they will both apply immediately to the cluster and may cause [unexpected side effects](https://jira.mariadb.org/browse/MDEV-468). 
+- Do not rely on auto increment values being sequential as Galera guarantees auto-incrementing unique non-conflicting sequences, so each node will have gaps in IDs. Furthermore, Galera sets user’s to READ ONLY in regards to auto increment variables. Without this feature, Galera would require shared locking of the auto increment variables across the cluster, causing it to be slower and less reliable
+- MySQL for PCF does not support MySQL 5.7's JSON
+- Max size of a DDL or DML is [limted to 2GB](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size)
+- Defining whether the node splits large `Load Data` commands into more [maneageable units] (http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-load-data-splitting)
+
+### <a id="Checking-for-Limitations"></a>Check Your App for Limitations ##
+
+Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
+
+## <a id="ha"></a>High Availability with Data-Sensitive Apps
+
+When in High Availability mode, for example when you have a MySQL cluster with three nodes, queries are normally sent to the same back end. In some cases, such as during a network partition, an app's reads and writes may be sent to different MySQL back ends so that a query is given stale data.
+
+If you have a data-sensitive app, you may want to reduce this risk by using Galera's [wsrep-sync-wait](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-sync-wait) session variable on your critical read statements. This session variable enables causality checks, blocking incoming queries until all nodes in the cluster are synced.
+
+## <a id="proxy"></a>MySQL Proxy
+
+MySQL for Pivotal Cloud Foundry (PCF) uses a proxy to send client connections
+to the healthy MySQL database cluster nodes in a highly available cluster plan.
+Using a proxy gracefully handles failure of nodes, enabling fast,
+failover to other nodes within the cluster. When a 
+node becomes unhealthy, the proxy closes all connections to the unhealthy node
+and re-routes all subsequent connections to a healthy node.
+
+The proxy used in MySQL for PCF is Switchboard.
+Switchboard was developed to replace HAProxy as the proxy tier for the high availability cluster
+for MySQL databases in PCF.
+
+Switchboard offers the following features: 
+
+- **MySQL Server Access**
+
+    MySQL clients communicate with nodes through this network port.
+    These connections are automatically passed through to the nodes.
+
+- **Switchboard and API**
+
+    Operators can connect to Switchboard to view the state of the nodes.
+    For more information about monitoring proxy health status, see 
+    [Monitoring Node Health](./monitor-health.html).
+    
+## <a id="node-health"></a>Node Health ##
+
+When determining where to route traffic, the proxy queries an HTTP healthcheck
+process running on the node. This healthcheck can return as either
+healthy or unhealthy, or the node can be unresponsive.
+
+### <a id="healthy"></a>Healthy ###
+
+If the healthcheck process returns HTTP status code `200`, the proxy includes
+the node in its pool of healthy nodes.
+
+When a new or resurrected nodes rejoin the cluster, the proxy continues to
+route all connections to the currently active node. In the case of failover,
+the proxy considers all healthy nodes as candidates for new connections.
+
+<%= image_tag "images/switchboard-all-healthy.png" %>
+
+### <a id="unhealthy"></a>Unhealthy ###
+
+If the healthcheck returns HTTP status code `503`, the proxy considers the node
+unhealthy.
+
+<!-- We will eventually move the following link to a troubleshooting topic in 2.5 -->
+
+This happens when a node becomes non-primary. For more information, see
+[Cluster Scaling Behavior](https://docs.pivotal.io/p-mysql/1-10/architecture.html#scale-behavior).
+
+The proxy severs existing connections to newly unhealthy node. The proxy routes
+new connections to a healthy node, assuming such a node exists. Clients are
+expected to handle reconnecting on connection failure should the entire cluster
+become inaccessible.
+
+<%= image_tag "images/switchboard-unhealthy.png" %>
+
+### <a id="unresponsive"></a>Unresponsive ###
+
+If node health cannot be determined due to an unreachable or unresponsive
+healthcheck endpoint, the proxy considers the node unhealthy. This may happen
+if there is a network partition or if the VM running the node and
+healthcheck died.
+
+
+<!-- ## <a id="dev-tools"></a>MySQL for PCF Tools ## -->
+
+<!-- The following tools let developers check the usage of their MySQL for PCF service instances, and access their databases directly. -->
+
+<!-- ### <a id="dashboard"></a>Service Instance Dashboard ## -->
+
+<!-- Developers can check their current storage usage and service plan quota in the service instance dashboard. You can access this dashboard by either navigating to it from Apps Manager or obtaining its URL from the Cloud Foundry Command-Line Interface (cf CLI): -->
+
+<!-- * **From Apps Manager**
+  1. Select the space that the service instance runs in.
+  1.  Select the **Services** tab.
+  1.  Under **Services** click the service instance to check.
+  1.  Click **Manage** at top right to open the service instance dashboard.
+* **From the cf CLI**
+  1.  Log into the space that the service instance runs in.
+  1.  Run `cf service INSTANCE-NAME`:  
+  <pre class="terminal">
+  $ cf service acceptDB
+  Service instance: acceptDB
+  Service: p-mysql
+  Plan: 100mb-dev
+  Description: MySQL service for application development and testing
+  Documentation url:
+  Dashboard: https<span>:</span>//p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
+</pre>
+  1. Navigate to the URL listed in the output as `Dashboard`. In the example above, the instance dashboard URL is `https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`. -->
+
+<!-- The MySQL for PCF service instance dashboard shows how much storage the instance currently uses and the maximum usage allowed by its service plan. It does not show or manage database contents. You can think of it as a gas gauge, while the [Pivotal MySQL Database Management App](#mysqlweb) provides an interface through which you can drive.
+
+<p class="note"><strong>Note</strong>: The service instance dashboard is distinct from the <a href="./proxy.html#proxy-dashboard">proxy dashboard</a> that PCF operators can access to check the proxy instances handling queries for all MySQL for PCF service instances in a PCF deployment.</p> -->
