@@ -329,9 +329,9 @@ Perform the following steps:
       --ssl-verify-server-cert
     </pre>
     
-    ##<a id='remote-connection'></a> Establish a Connection to a Service Instance From Outside your Foundation
+    ##<a id='remote-connection'></a> Establish a Connection to a Service Instance From Outside Your Deployment
 
-    If you want to connect to a MySQL service instance from outside the PCF foundation where your MySQL
+    If you want to connect to a MySQL service instance from outside the PCF deployment where your MySQL
     for PCF service instance is located, you can do one of the following: 
 
       + [Connect Using an SSH Tunnel](#ssh-tunnel)
@@ -340,13 +340,13 @@ Perform the following steps:
     You may want to use an SSH tunnel or IP address for establishing a connection when:
 
     + Connecting from a local workstation. For more information, see [MySQL for PCF Tools](#mysql-for-pcf-tools).
-    + Connecting from an external PCF foundation.
-    + Connecting from a legacy app that is not in a PCF foundation.
+    + Connecting from an external PCF deployment.
+    + Connecting from a legacy app that is not in a PCF deployment.
     + Taking a manual backup to be stored locally. For more information, see [Manual Backup](./backup-and-restore.html#manual-backup)
 
     ###<a id='ssh-tunnel'></a> Connect using an SSH Tunnel
 
-    Any app deployed within a PCF foundation can resolve BOSH DNS hostnames and forward traffic to MySQL 
+    Any app deployed within a PCF deployment can resolve BOSH DNS hostnames and forward traffic to MySQL 
     service instances using an SSH tunnel. 
 
     #### Prerequisite
@@ -379,7 +379,7 @@ Perform the following steps:
 
     + SSH access to app containers. For more information, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html). 
 
-    + An app deployed on the same foundation as the MySQL service instance.
+    + An app deployed on the same deployment as the MySQL service instance.
 
     #### Procedure
 
@@ -421,7 +421,7 @@ Perform the following steps:
         $ cf ssh APP-NAME
         ```
 
-        Where `APP-NAME` is the name of your app deployed on the same foundation as the MySQL service instance. 
+        Where `APP-NAME` is the name of your app deployed on the same deployment as the MySQL service instance. 
 
     1. To obtain the IP address of the service instance, run the following command: 
 
@@ -436,7 +436,7 @@ Perform the following steps:
 
     ![DNS Lookup App](dns-lookup-app.png)
 
-    If your foundation has app SSH disabled, you can deploy the DNS Lookup app to your foundation. The 
+    If your deployment has app SSH disabled, you can deploy the DNS Lookup app to your deployment. The 
     DNS Lookup app resolves BOSH DNS hostnames.
 
     For more information, see the [dns-lookup](https://github.com/menicosia/dns-lookup) repo in GitHub.
