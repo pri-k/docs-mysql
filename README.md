@@ -10,6 +10,7 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 | Branch name | Use for… |
 |-------------| ------|
 | master      | "edge" branch for 2.x, publishes to https://docs-pcf-staging.cfapps.io/p-mysql/2-n/|
+| 2.5         | v2.5.x |
 | 2.4         | v2.4.x | 
 | 2.3         | v2.3.x | 
 | 2.2         | v2.2.x |  
