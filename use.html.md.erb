@@ -335,25 +335,26 @@ Perform the following steps:
       --ssl-verify-server-cert
     </pre>
     
-    ##<a id='remote-connection'></a> Establish a Connection to a Service Instance From Outside Your Deployment
+##<a id='remote-connection'></a> Establish a Connection to a Service Instance From Outside Your PCF Deployment
 
-    If you want to connect to a MySQL service instance from outside the PCF deployment where your MySQL
-    for PCF service instance is located, you can do one of the following: 
+If you want to connect to a MySQL service instance from outside the PCF deployment where your MySQL
+for PCF service instance is located, you can do one of the following: 
 
-  + [Connect Using an SSH Tunnel](#ssh-tunnel)
-  + [Connect Using an IP Address](#ip-address)
++ [Connect Using an SSH Tunnel](#ssh-tunnel)
++ [Connect Using an IP Address](#ip-address)
 
 You may want to use an SSH tunnel or IP address for establishing a connection when:
 
-    + Connecting from a local workstation. For more information, see [MySQL for PCF Tools](#mysql-for-pcf-tools).
-    + Connecting from an external PCF deployment.
-    + Connecting from a legacy app that is not in a PCF deployment.
-    + Taking a manual backup to be stored locally. For more information, see [Manual Backup](./backup-and-restore.html#manual-backup)
++ Connecting from a local workstation. For more information, see [MySQL for PCF Tools](#mysql-for-pcf-tools).
++ Connecting from an external PCF deployment.
++ Connecting from a legacy app that is not in a PCF deployment.
++ Taking a manual backup to be stored locally.
+  For more information, see [Manual Backup](./backup-and-restore.html#manual-backup).
 
 ###<a id='ssh-tunnel'></a> Connect using an SSH Tunnel
 
-    Any app deployed within a PCF deployment can resolve BOSH DNS hostnames and forward traffic to MySQL 
-    service instances using an SSH tunnel. 
+Any app deployed within a PCF deployment can resolve BOSH DNS hostnames and forward traffic to MySQL 
+service instances using an SSH tunnel. 
 
 #### Prerequisite
 
