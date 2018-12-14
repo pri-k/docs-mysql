@@ -1,5 +1,5 @@
 ---
-title: About Galera 
+title: About Highly Available 
 owner: MySQL
 ---
 
@@ -7,12 +7,32 @@ owner: MySQL
 
 <%= partial "./galera_beta" %>
 
-This topic explains how a developer on Pivotal Cloud Foundry (PCF) can start using MySQL with their apps.
-It is important to note that MySQL for PCF v1 is different than standard MySQL and has some limitations that you must be aware of.
+This topic describes how highly available (HA) clusters work in MySQL for Pivotal Cloud Foundry (PCF)
+and contains information to help users decide whether to enable or use HA clusters.
 
-## <a id="PCF-MySQL-Galera-Limitations"></a>MySQL for PCF v1 Limitations ##
+## <a id="understanding"></a> Understanding Highly Available Clusters
 
-- Only InnoDB tables are supported. Writes to other types of tables, such as MyISAM tables will not replicate across the cluster. 
+## <a id="requirements"></a> Infrastructure Requirements for Highly Available Deployments
+
+### <a id="network-req"></a> Networking Rules
+In addition to the standard networking rules needed for MySQL for PCF, the operator must ensure HA
+cluster specific network rules are also set up.
+
+For information about HA cluster specific networking rules, see [Required Networking Rules for Highly Available
+Cluter Plans](./about.html#hac-ports).
+
+## <a id="limitations"></a> Highly Available Cluster Limitations
+
+<!-- Correct that limitations do not apply to L-F? -->
+
+<!-- - Although two proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](proxy.html) section, as well as the entry in [Known Issues](known-issues.html). -->
+
+When deployed in HA topology, MySQL for PCF runs three leader nodes. This cluster arrangement imposes some limitations that you should be aware of, which do not apply to single node or leader-follower MySQL database servers.
+
+- MySQL for PCF only supports the InnoDB storage engine; it is the default storage engine for new tables. Pre-existing tables that are not InnoDB are at risk because they are not replicated within a cluster.
+- The database servers are shared, managed by multi-tenant processes to serve apps across the PCF deployment. Although data is securely isolated between tenants using unique credentials, app performance may be impacted by noisy neighbors.
+- Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and become unusable until manually bootstrapped.
+- For more infomation about the HA limitations, see Percona XtraDB Cluster Limitations](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/limitation.html) in the Percona XtraDB Cluster documentation.
 - Explicit locking is not supported, i.e. `LOCK TABLES`, `FLUSH TABLES tableA WITH READ_LOCK`.
 - Large DDL (ie, schema changes like ALTER TABLE) will lock all schemas, affecting all sessions with the DB. This can be mitigated via a manual step using Galera’s RSU ./rsu.html feature.
 - Table partitioning may cause the cluster to get into a hung state. This is as a result of the implicit table locks that are used when running table partition commands.
@@ -25,15 +45,11 @@ It is important to note that MySQL for PCF v1 is different than standard MySQL a
 - Max size of a DDL or DML is [limted to 2GB](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size)
 - Defining whether the node splits large `Load Data` commands into more [maneageable units] (http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-load-data-splitting)
 
-### <a id="Checking-for-Limitations"></a>Check Your App for Limitations ##
+### <a id="check-limitations"></a>Check Your App for Limitations ##
 
 Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
 
-## <a id="ha"></a>High Availability with Data-Sensitive Apps
-
-When in High Availability mode, for example when you have a MySQL cluster with three nodes, queries are normally sent to the same back end. In some cases, such as during a network partition, an app's reads and writes may be sent to different MySQL back ends so that a query is given stale data.
-
-If you have a data-sensitive app, you may want to reduce this risk by using Galera's [wsrep-sync-wait](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-sync-wait) session variable on your critical read statements. This session variable enables causality checks, blocking incoming queries until all nodes in the cluster are synced.
+## <a id="enable-using"></a> Enabling and Using Highly Available Cluters
 
 ## <a id="proxy"></a>MySQL Proxy
 
@@ -101,35 +117,3 @@ If node health cannot be determined due to an unreachable or unresponsive
 healthcheck endpoint, the proxy considers the node unhealthy. This may happen
 if there is a network partition or if the VM running the node and
 healthcheck died.
-
-
-<!-- ## <a id="dev-tools"></a>MySQL for PCF Tools ## -->
-
-<!-- The following tools let developers check the usage of their MySQL for PCF service instances, and access their databases directly. -->
-
-<!-- ### <a id="dashboard"></a>Service Instance Dashboard ## -->
-
-<!-- Developers can check their current storage usage and service plan quota in the service instance dashboard. You can access this dashboard by either navigating to it from Apps Manager or obtaining its URL from the Cloud Foundry Command-Line Interface (cf CLI): -->
-
-<!-- * **From Apps Manager**
-  1. Select the space that the service instance runs in.
-  1.  Select the **Services** tab.
-  1.  Under **Services** click the service instance to check.
-  1.  Click **Manage** at top right to open the service instance dashboard.
-* **From the cf CLI**
-  1.  Log into the space that the service instance runs in.
-  1.  Run `cf service INSTANCE-NAME`:  
-  <pre class="terminal">
-  $ cf service acceptDB
-  Service instance: acceptDB
-  Service: p-mysql
-  Plan: 100mb-dev
-  Description: MySQL service for application development and testing
-  Documentation url:
-  Dashboard: https<span>:</span>//p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0
-</pre>
-  1. Navigate to the URL listed in the output as `Dashboard`. In the example above, the instance dashboard URL is `https://p-mysql.sys.acceptance.cf-app.example.com/manage/instances/ddfa6842-b308-4983-a544-50b3d1fb62f0`. -->
-
-<!-- The MySQL for PCF service instance dashboard shows how much storage the instance currently uses and the maximum usage allowed by its service plan. It does not show or manage database contents. You can think of it as a gas gauge, while the [Pivotal MySQL Database Management App](#mysqlweb) provides an interface through which you can drive.
-
-<p class="note"><strong>Note</strong>: The service instance dashboard is distinct from the <a href="./proxy.html#proxy-dashboard">proxy dashboard</a> that PCF operators can access to check the proxy instances handling queries for all MySQL for PCF service instances in a PCF deployment.</p> -->
