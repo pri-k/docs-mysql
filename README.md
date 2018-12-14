@@ -20,7 +20,7 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 | 1.10        | v1.10.x |
 | 1.9         | v1.9.x — Now PDFed: https://docs.pivotal.io/archives/mysql-docs-1.9.pdf |
 
-**Note**: Branches v1.9 through v1.4 and v2.0 are no longer published as live documentation. However, documentation for those versions of PDFs is available as PDFs.
+**Note**: Branches v1.9 through v1.4, v2.0 and v2.1 are no longer published as live documentation. However, documentation for those versions of PDFs is available as PDFs.
 
 ## Partials
 
