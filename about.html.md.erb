@@ -131,7 +131,7 @@ service plan, the operator must ensure network rules are set up so that connecti
 	</tr>
 </table>
 
-### <a id='hac-ports'></a> Required Networking Rules for Highly Available Cluster Plans
+### <a id='hac-ports'></a> Required Networking Rules for Highly Available (HA) Cluster Plans
 
 In addition to the networking rules required for MySQL for PCF, if you are using a highly available 
 cluster service plan, the operator must ensure network rules are set up so that connections are open as described in the table below.
@@ -163,18 +163,18 @@ cluster service plan, the operator must ensure network rules are set up so that 
 	</tr>
 	
 	<tr>
-		<td><strong>Galera</strong></td>
-		<td><strong>Galera</strong></td>
+		<td><strong>HA cluster node</strong></td>
+		<td><strong>HA cluster node</strong></td>
 		<td> 4567 <br> 4568 <br> 4444 </td>
 		<td>Two-way</td>
-		<td>This port is needed to maintain network connectivity between nodes in a Galera Cluster. For more infomation, see <a href="http://galeracluster.com/documentation-webpages/firewallsettings.html">Firewall Settings</a> in the Galera documentation.</td>
+		<td>This port is needed to maintains network connectivity between nodes in a HA cluster. For more infomation, see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a> in the Percona XtraDB Cluster documentation.</td>
 	</tr>
 	<tr>
 		<td><strong>Galera healthcheck</strong></td>
 		<td><strong>Galera healthcheck</strong></td>
 		<td>9200</td>
 		<td>Two-way</td>
-		<td>This port is for monitoring the health of nodes in a Galera Cluster.</td>
+		<td>This port is for monitoring the health of nodes in a HA cluster.</td>
 	</tr>
 </table>
 	

@@ -1,5 +1,5 @@
 ---
-title: Monitoring Node Health (Galera)
+title: Monitoring Node Health (HA Cluster)
 owner: MySQL
 ---
 
@@ -8,7 +8,7 @@ owner: MySQL
 <%= partial "./galera_beta" %>
 
 This topic describes how to obtain the health status for each node 
-in a Galera cluster in a highly available cluster plan.
+in a MySQL database cluster node in a highly available (HA) plan.
 
 If you cannot write or connect to your app, you should
 check the health status of your nodes. You can observe the health status of nodes through a proxy 
@@ -25,15 +25,15 @@ To obtain credentials for accessing the Switchboard dashboard and API, do the fo
 1. Run the following command:
 
     ```
-    cf service YOUR-GALERA
+    cf service YOUR-HA
     ```
   
-    Where `YOUR-GALERA` is the name of your Galera cluster.
+    Where `YOUR-HA` is the name of your HA cluster.
   
-    <pre class="terminal"> $ cf service myGalera
-    Showing info of service myGalera in org acceptance / space example as admin...
+    <pre class="terminal"> $ cf service myHA
+    Showing info of service myHA in org acceptance / space example as admin...
 
-    name:         myGalera
+    name:         myHA
     service:      p.mysql
     tags:
     plan:         db-ha-small
@@ -42,7 +42,7 @@ To obtain credentials for accessing the Switchboard dashboard and API, do the fo
     dashboard:    proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com 
     (username: 'abcdefghijklmno', password: '012345678912345')
 
-    Showing status of last operation from service myGalera...
+    Showing status of last operation from service myHA...
 
     status:    update succeeded
     message:   Instance update completed

@@ -1,5 +1,5 @@
 ---
-title: MySQL Proxy (Galera)
+title: MySQL Proxy (HA Cluster)
 owner: MySQL
 ---
 
@@ -8,14 +8,14 @@ owner: MySQL
 <%= partial "./galera_beta" %>
 
 MySQL for Pivotal Cloud Foundry (PCF) uses a proxy to send client connections
-to the healthy MySQL database cluster nodes in a highly available cluster plan.
+to the healthy MySQL database cluster nodes in a highly available (HA) cluster plan.
 Using a proxy gracefully handles failure of nodes, enabling fast,
 failover to other nodes within the cluster. When a 
 node becomes unhealthy, the proxy closes all connections to the unhealthy node
 and re-routes all subsequent connections to a healthy node.
 
 The proxy used in MySQL for PCF is Switchboard.
-Switchboard was developed to replace HAProxy as the proxy tier for the high availability cluster
+Switchboard was developed to replace HAProxy as the proxy tier for the HA cluster
 for MySQL databases in PCF.
 
 Switchboard offers the following features: 

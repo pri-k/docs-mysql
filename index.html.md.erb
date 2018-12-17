@@ -23,7 +23,7 @@ MySQL for PCF supports the following VM topologies:
 
   + Single node.
   + Leader-follower. For more information, see [About Leader-Follower](./about-leader-follower.html).
-  + Highly available cluster. For highly available clusters, MySQL for PCF uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
+  + Highly available (HA) cluster. For highly available clusters, MySQL for PCF uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
     
@@ -109,9 +109,9 @@ Review the following table to determine if MySQL for PCF has the features needed
 </td><td><a href="./backup-and-restore.html">Manual Backup and Restore of MySQL for PCF</a></td></tr>
 
 <tr><th colspan=2>Scale and Availability</th><th>More Information</th></tr>
-<tr><td>On-Demand Plan</td><td>MySQL for PCF provides up to 200 on-demand instances across all plans.</td><td></td></tr>
-<tr><td>Ability to Scale Up / Down</td><td>Operators can scale VMs up, but not down.</td><td><a href="./install-config.html">Configuring</a></td></tr>
-<tr><td>Rolling Deployments</td><td>MySQL for PCF supports rolling deployments when using Galera Cluster;
+<tr><td>On-Demand Plan</td><td>MySQL for PCF provides up to 200 on-demand instances across all plans</td><td></td></tr>
+<tr><td>Ability to Scale Up / Down</td><td>Operators can scale VMs up, but not down</td><td><a href="./install-config.html">Configuring</a></td></tr>
+<tr><td>Rolling Deployments</td><td>MySQL for PCF supports rolling deployments when using HA clusters;
       the service is unavailable during upgrades.</td>
   <td><a href="./upgrade.html">Upgrades</a></td></tr>
 <tr><td>AZ Support</td><td>MySQL for PCF can be deployed to multiple zones to increase availability during unplanned outages of a zone.</td>
