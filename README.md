@@ -34,7 +34,7 @@ This is a word list for terminology and word usage specific to the MySQL for PCF
 
 | Word | Explanation |
 |------|-------------|
-| highly available cluster | No need to capitalize or abbreviate. Don't mix with "high availability cluster" or Galera. Galeria happens to be the technology right now, but highly available cluster is the topology. |
+| highly available cluster | No need to capitalize. Don't mix with "high availability cluster" or Galera. Galeria happens to be the technology right now, but highly available cluster is the topology. You can abbreviate to HA cluster after spelling out on first use. Don't use "HAC". |
 | MySQL database cluster node | Only applies to Galera clusters. Spell out like this at first use, then opt for "node" on the rest of the page. |
 | node | See above. The old proxy page used: MySQL node, server node, MySQL servers, cluster back-ends, Backend database cluster node, database node VM, proxy instance, proxy. But, only two things are referred to here, nodes and proxies. |
 | proxy | Use proxy consistently instead of alternating between "proxy instance" and "proxy". |
