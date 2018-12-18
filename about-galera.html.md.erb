@@ -10,9 +10,23 @@ owner: MySQL
 This topic describes how highly available (HA) clusters work in MySQL for Pivotal Cloud Foundry (PCF)
 and contains information to help users decide whether to enable or use HA clusters.
 
+- By default, Galera splits large `Load Data` commands into more [maneageable units] (http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-load-data-splitting)
+
+fails half way through can be good or bad. different from how mysql usually does stuff
+
 ## <a id="understanding"></a> Understanding Highly Available Clusters
 
 ## <a id="requirements"></a> Infrastructure Requirements for Highly Available Deployments
+
+Capacity Planning
+
+When calculating IaaS usage, you must take into account that each HA instance requires three VMs. Therefore, the resources used for a HA plan must be tripled. For more information, see Resource Usage Planning for On-Demand Plans.
+
+
+Availability Zones
+To minimize impact of an AZ outage and to remove single points of failure, Pivotal recommends that you provision three AZs if using leader-follower deployments. With three AZs, the MySQL VMs are deployed to two AZs, and the broker is deployed to a third.
+
+
 
 ### <a id="network-req"></a> Networking Rules
 In addition to the standard networking rules needed for MySQL for PCF, the operator must ensure HA
@@ -25,31 +39,57 @@ Cluter Plans](./about.html#hac-ports).
 
 <!-- Correct that limitations do not apply to L-F? -->
 
-<!-- - Although two proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](proxy.html) section, as well as the entry in [Known Issues](known-issues.html). -->
+<!--  -->
 
 When deployed in HA topology, MySQL for PCF runs three leader nodes. This cluster arrangement imposes some limitations that you should be aware of, which do not apply to single node or leader-follower MySQL database servers.
 
+Storage Engine Limitations 
+
 - MySQL for PCF only supports the InnoDB storage engine; it is the default storage engine for new tables. Pre-existing tables that are not InnoDB are at risk because they are not replicated within a cluster.
-- The database servers are shared, managed by multi-tenant processes to serve apps across the PCF deployment. Although data is securely isolated between tenants using unique credentials, app performance may be impacted by noisy neighbors.
-- Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and become unusable until manually bootstrapped.
-- For more infomation about the HA limitations, see [Percona XtraDB Cluster Limitations](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/limitation.html) in the Percona XtraDB Cluster documentation.
-- Explicit locking is not supported, i.e. `LOCK TABLES`, `FLUSH TABLES tableA WITH READ_LOCK`.
-- Large DDL (ie, schema changes like ALTER TABLE) will lock all schemas, affecting all sessions with the DB. This can be mitigated via a manual step using Galera’s RSU ./rsu.html feature.
-- Table partitioning may cause the cluster to get into a hung state. This is as a result of the implicit table locks that are used when running table partition commands.
-- MySQL for PCF supports table triggers; however multiple triggers per table are not supported
-- All tables must have a primary key; multi-column primary keys are OK. This is because of the the way Galera replicates using row based replication and ensuring unique rows on each instance
-- While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In a MariaDB Galera cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
-- Do not execute a DML statement in parallel with a DDL statement when both statements affect the same tables. Locking is lax in Galera, even in single node mode. Rather than the DDL waiting for the DML to finish, they will both apply immediately to the cluster and may cause [unexpected side effects](https://jira.mariadb.org/browse/MDEV-468). 
-- Do not rely on auto increment values being sequential as Galera guarantees auto-incrementing unique non-conflicting sequences, so each node will have gaps in IDs. Furthermore, Galera sets user’s to READ ONLY in regards to auto increment variables. Without this feature, Galera would require shared locking of the auto increment variables across the cluster, causing it to be slower and less reliable
-- MySQL for PCF does not support MySQL 5.7's JSON
-- Max size of a DDL or DML is [limted to 2GB](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size)
-- Defining whether the node splits large `Load Data` commands into more [maneageable units] (http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-load-data-splitting)
+
 
 ### <a id="check-limitations"></a>Check Your App for Limitations ##
 
 Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
+Performance Limitations
 
-## <a id="enable-using"></a> Enabling and Using Highly Available Cluters
+- Large DDL (ie, schema changes like ALTER TABLE) will lock all schemas, affecting all sessions with the DB. This can be mitigated via a manual step using Galera’s RSU ./rsu.html feature.
+
+- While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In a HA cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
+
+- Do not execute a DML statement in parallel with a DDL statement when both statements affect the same tables. Locking is lax in Galera, even in single node mode. Rather than the DDL waiting for the DML to finish, they will both apply immediately to the cluster and may cause [unexpected side effects](https://jira.mariadb.org/browse/MDEV-468). 
+
+Architecture Limitations
+
+- Explicit locking is not supported, i.e. `LOCK TABLES`, `FLUSH TABLES tableA WITH READ_LOCK`.
+
+- Table partitioning may cause the cluster to get into a hung state. This is as a result of the implicit table locks that are used when running table partition commands.
+
+- MySQL for PCF supports table triggers; however multiple triggers per table are not supported
+
+- All tables must have a primary key; multi-column primary keys are OK. This is because of the the way Galera replicates using row based replication and ensuring unique rows on each instance
+
+- Do not rely on auto increment values being sequential as Galera guarantees auto-incrementing unique non-conflicting sequences, so each node will have gaps in IDs. Furthermore, Galera sets user’s to READ ONLY in regards to auto increment variables. Without this feature, Galera would require shared locking of the auto increment variables across the cluster, causing it to be slower and less reliable (can't assume
+sequential)
+
+- MySQL for PCF does not support MySQL 5.7's JSON (what does this mean?)
+
+- Max size of a DDL or DML is [limted to 2GB](http://galeracluster.com/documentation-webpages/mysqlwsrepoptions.html#wsrep-max-ws-size).
+
+Networking Limitations
+
+- The database servers are shared, managed by multi-tenant processes to serve apps across the PCF deployment. Although data is securely isolated between tenants using unique credentials, app performance may be impacted by noisy neighbors.
+
+- Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and become unusable until manually bootstrapped.
+
+- Although two proxy instances are deployed by default, there is no automation to direct clients from one to the other. See the note in the [Proxy](proxy.html) section, as well as the entry in [Known Issues](known-issues.html).
+
+For more infomation about the HA limitations, see [Percona XtraDB Cluster Limitations](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/limitation.html) in the Percona XtraDB Cluster documentation.
+
+
+## <a id="enable-using"></a> Enabling and Using Highly Available Clusters
+
+bootstrapped is a thing
 
 ## <a id="proxy"></a>MySQL Proxy
 
