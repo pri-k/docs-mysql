@@ -1,5 +1,5 @@
 ---
-title: When to use RSU for a DDL
+title: When to Use RSU for DDL
 owner: MySQL
 ---
 
@@ -7,6 +7,8 @@ Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During 
 
 
  Because the DDL statements are applied to nodes one at a time, the statements must be backwards compatible with the previous schema.
+ 
+ For more infomation about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
 
 <!-- Note: If you have a DDL of >2GB, you must use RSU as it will always fail under Total Order Isolation (TOI). Pivotal reccomends seeking help when applying DDL statements using RSU in the event that you are doing large and long running changes to the database schema.  -->
 
