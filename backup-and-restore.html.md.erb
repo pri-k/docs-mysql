@@ -534,7 +534,7 @@ To restore the backup to a new service instance for a single node, leader-follow
 
 * [Create and Prepare a New Service Instance for Restore](#prepare)
 * [Restore a Single Node or Leader-Follower Instance](#run-sn-leader-follower)
-* [Restore a HA Cluster Instance](#runHA)
+* [Restore an HA Cluster Instance](#runHA)
 * [Redeploy the Service Instance](#redeploy)
 
 #### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
@@ -553,7 +553,7 @@ To prepare a new service instance for restore, do the following:
     <br><br>
     
     <ul>
-    <li>If you are using a HA cluster plan, you can only restore backup artifacts to a HA topology.</li><br>
+    <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA topology.</li><br>
     
     <li>If you are using a single node or leader-follower plan, you can only restore backup artifacts to a single-node topology. </li><br>
     
@@ -658,14 +658,14 @@ To restore a single node or leader-follower service instance, do the following:
 1. Exit the MySQL VM.
 
 
-#### <a id="runHA"></a>Restore a HA Cluster Instance
+#### <a id="runHA"></a>Restore an HA Cluster Instance
 
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and
   should only be run on a new and unused service instance.</p>
 
 Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
 
-To restore a HA cluster, do the following:
+To restore an HA cluster, do the following:
 
 1. To pause the local database server, run the following command:
 
@@ -736,7 +736,7 @@ Instance for Restore* above, do the following:
               instances: 2    # Scale instances to 2
               ...
              ```
-      + If you scaled a HA cluster instance, scale the instances to three by modifying the deployment manifest.
+      + If you scaled an HA cluster instance, scale the instances to three by modifying the deployment manifest.
       Update instance group for your new service instance as follows:
 
             ```yaml

@@ -18,7 +18,7 @@ By default, HA clusters splits large `Load Data` commands into small maneageable
 
 ### <a id="cap-plan"></a> Capacity Planning
 
-When calculating IaaS usage, you must take into account that each HA instance requires three VMs. Therefore, the resources used for a HA plan must be tripled. For more information, see [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
+When calculating IaaS usage, you must take into account that each HA instance requires three VMs. Therefore, the resources used for an HA plan must be tripled. For more information, see [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
 
 
 ### <a id="avail-zones"></a> Availability Zones
@@ -43,7 +43,7 @@ When deployed in HA topology, MySQL for PCF runs three leader nodes. This cluste
 
 - Large data defintion lanaguge (DDL) statements can lock all schemas. This can be mitigated by using the Rolling Schema Upgrade (RSU) method.  For more information about using RSU to apply DDL statements, see [When to Use RSU for DDL](./rsu.html).
 
-- While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In a HA cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
+- While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In an HA cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
 
 - You cannot execute a data manipulation language (DML) statement in parallel with a DDL statement if both statements affect the same tables. Locking is lax in Galera, even in single node mode. Rather than the DDL waiting for the DML to finish, they will both apply immediately to the cluster and may cause [unexpected side effects](https://jira.mariadb.org/browse/MDEV-468). 
 
@@ -155,4 +155,4 @@ healthcheck died.
 
 When HA clusters loses quorum, you must bootstrap to recover your cluster. A cluster loses quorum when less than half of the nodes can communicate with each other for longer than the configured grace period. If a cluster does not lose quorum, individual unhealthy nodes automatically rejoin the cluster after resolving the error, restarting the node, or restoring connectivity.
 
-For more information about bootstrapping a HA cluster, see [Bootstrapping](./bootstrapping.html)
+For more information about bootstrapping an HA cluster, see [Bootstrapping](./bootstrapping.html)
