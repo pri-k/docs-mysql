@@ -530,57 +530,70 @@ Because restoring a service instance is destructive, Pivotal recommends that you
 
 These instructions assume you have a backup downloaded.
 
-To restore the backup to a new service instance, follow these procedures:
+To restore the backup to a new service instance for a single node, leader-follower, or highly available (HA) cluster plan, do the following:
 
-* [Create and Prepare a New Service Instance for Restore](#prepare)<br>
-* [Run the Restore Utility](#runrestore)
+* [Create and Prepare a New Service Instance for Restore](#prepare)
+* [Restore a Single Node or Leader-Follower Instance](#run-sn-leader-follower)
+* [Restore a HA Cluster Instance](#runHA)
+* [Redeploy the Service Instance](#redeploy)
 
 #### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
 To prepare a new service instance for restore, do the following:
 
-1. Create a new MySQL service instance using a single-node or leader-follower plan.
-<br><br>
-You can only restore backup artifacts to a single-node topology.
-If you want to restore to a leader-follower plan, you can do one of the following:
-  - **Create a single-node instance to restore to** then update the plan on this
-  instance to leader-follower after you run the restore utility.
-  For how to update the plan, see step 4 of [Run the Restore Utility](#runrestore) below.
-  - **Create a leader-follower instance to restore to** then scale the instances to one
-  before running the restore utility.
-  For how to scale instances, see step 6 of this procedure.
-
-    <p class="note"><strong>Note:</strong> Pivotal recommends that you restore to a single-node plan.</p>
+1. To create a new MySQL service instance, run the following command:
 
     ```
-    cf create-service p.mysql PLAN-NAME NEW-INSTANCE-NAME
+    cf create-service p.mysql SERVICE-PLAN NEW-INSTANCE-NAME
     ```
-  For more information, see [Create a Service Instance](./use.html#create).
+    
+    Where:
+    + `SERVICE-PLAN` is the name of the service plan for your new service instance.
+    + `NEW-INSTANCE-NAME` is the name of the new service instance. 
+    <br><br>
+    
+    <ul>
+    <li>If you are using a HA cluster plan, you can only restore backup artifacts to a HA topology.</li><br>
+    
+    <li>If you are using a single node or leader-follower plan, you can only restore backup artifacts to a single-node topology. </li><br>
+    
+    <li>If you want to restore to a leader-follower plan, you can do one of the following:
+      <ul>
+        <li><b>Create a single-node instance to restore to</b> then update the plan on this instance to leader-follower after you run the restore utility. For how to update the plan, see step 1 of <a href="#redeploy">Redeploy the Service Instance</a>.</li>
+        <li><b>Create a leader-follower instance to restore to</b> then scale the instances to one before running the restore utility. For how to scale instances, see step 6 of this procedure.</li>
+      </ul>
+        <p class="note"><strong>Note:</strong> Pivotal recommends that you restore to a single-node plan.</p>
+    </li>
+</ul>
 
-1. Monitor the status of the service instance creation; it may take several minutes as the VM is created.
+    
+
+    For more information, see [Create a Service Instance](./use.html#create).
+
+1. To monitor the status of the service instance creation, run the following command: 
 
     ```
     cf service NEW-INSTANCE-NAME
     ```
-
-1. Determine the GUID associated with your new service instance:
+    Where `NEW-INSTANCE-NAME` is the name of the new service instance. <br><br>
+        
+1. To locate and record the GUID associated with your new service instance, run the following command:
 
     ```
     cf service NEW-INSTANCE-NAME --guid
     ```
+    Where `NEW-INSTANCE-NAME` is the name of the new service instance. <br><br>
 
-1. Perform the steps in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds)
-to retrieve the admin password for your new service instance.
+1. To retrieve the admin password for your new service instance,do the procedure in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds).
 
-1. From the Ops Manager VM, find and record the new instance name and GUID from BOSH:
+1. From the Ops Manager VM, to find and record the new instance name and GUID from BOSH, run the following command:
 
     ```
     bosh2 -e ENVIRONMENT -d DEPLOYMENT instances
     ```
-
-1. If you created a leader-follower service instance to restore to, do the following:
-  1. Scale the instances to one by modifying the deployment manifest.
-  Update instance group for your new service instance as follows:
+  
+1. If you created a leader-follower or HA cluster service instance to restore to, do the following:
+  1. To scale the instances to one, modify the deployment manifest as follows:
 
         ```yaml
         instance_groups:
@@ -589,7 +602,7 @@ to retrieve the admin password for your new service instance.
           instances: 1    # Scale instances to 1
           ...
         ```
-  1. Redeploy the deployment manifest by running:
+  1. To redeploy the deployment manifest, run the following command:
 
         ```
         bosh2 -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
@@ -599,8 +612,8 @@ to retrieve the admin password for your new service instance.
         <pre class="terminal">
         bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
         </pre>
-
-1. Copy the downloaded backup to the new service instance:
+    <!-- HA probs the same for scaling. Andrew is going to confirm the manifest stuff -->
+1. To copy the downloaded backup to the new service instance, run the following command:
 
     ```
     bosh2 -e my-env \
@@ -612,18 +625,20 @@ to retrieve the admin password for your new service instance.
 
 1. Use the BOSH CLI to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
-1. After securely logging in to MySQL, run `sudo su` to become root:
+1. After securely logging in to MySQL, to become root, run the following command: 
 
     ```
     sudo su
     ```
-
-#### <a id="runrestore"></a> Run the Restore Utility
+    
+#### <a id="#run-sn-leader-follower"></a> Restore a Single Node or Leader-Follower Instance
 
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and
   should only be run on a new and unused service instance.</p>
 
-1. Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
+Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
+
+To restore a single node or leader-follower service instance, do the following:
 
 1. Run the restore utility to restore the backup artifact into the data directory. This process:
     * Deletes any existing data
@@ -642,6 +657,65 @@ to retrieve the admin password for your new service instance.
     </ul>
 1. Exit the MySQL VM.
 
+
+#### <a id="runHA"></a>Restore a HA Cluster Instance
+
+<p class="note warning"><strong>WARNING</strong>: This is a destructive action and
+  should only be run on a new and unused service instance.</p>
+
+Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
+
+To restore a HA cluster, do the following:
+
+1. To pause the local database server, run the following command:
+
+    ```
+    monit stop all
+    ```
+1. To confirm that all jobs are listed as `not monitored`, run the following command:
+
+    ```
+    watch monit summary 
+    ```
+    <!-- What happends if it is `monitored` -->
+1. To delete the existing MySQL data that is stored on disk, run the following command:
+
+    ```
+    rm -rf /var/vcap/store/mysql/*
+    ```
+
+1. Move the compressed backup file to the node using `scp`.
+1. To decrypt and expand the file using `gpg`, sending the output to tar:
+
+    ```
+    gpg --decrypt mysql-backup.tar.gpg | tar -C /var/vcap/store/mysql -xvf -
+    ```
+1. To change the owner of the data directory, run the following:
+
+     ```
+     chown -R vcap:vcap /var/vcap/store/mysql
+     ```
+   
+     MySQL expects the data directory to be owned by a particular user. 
+1. To start all services with `monit`, run the following command:
+    
+    ```
+    monit start all
+    ```
+    
+1. To watch the summary until all jobs are listed as `running`, run the following command:
+   
+    ```
+    watch monit summary
+    ```
+1. Exit out of the MySQL node.
+    
+#### <a id="restage"></a> Restage the Service Instance
+
+After you restore your single node, leader-follower, or HA cluster service instance, you must restage your new service instance.
+
+To restage your service instance, do the following:
+
 1. If you restored to a service instance with a single-node plan but want a
 leader-follower plan, update the plan now:
 
@@ -650,26 +724,38 @@ leader-follower plan, update the plan now:
     ```
 
 1. If you scaled instances to one in step 6 of *Create and Prepare a New Service
-Instance for Restore* above, do the following:
-  1. Scale the instances to two by modifying the deployment manifest.
-  Update instance group for your new service instance as follows:
+Instance for Restore* above, do the following:  
+    1. To scale you instance, do one of the following:
+      + If you scaled a leader-follower instance, scale the instances to two by modifying the deployment manifest.
+      Update instance group for your new service instance as follows:
 
-        ```yaml
-        instance_groups:
-        - name: mysql
-          ...
-          instances: 2    # Scale instances to 2
-          ...
-         ```
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 2    # Scale instances to 2
+              ...
+             ```
+      + If you scaled a HA cluster instance, scale the instances to three by modifying the deployment manifest.
+      Update instance group for your new service instance as follows:
+
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 3    # Scale instances to 3
+              ...
+             ```
   1. Redeploy the deployment manifest by running:
 
         ```
         bosh2 -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
         ```
+        
         For example:
 
         <pre class="terminal">
-        bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        bosh2 -e my-env -d service-instance\_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
         </pre>
 
 1. Determine if the app is currently bound to a MySQL service instance:
