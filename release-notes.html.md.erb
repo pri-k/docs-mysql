@@ -12,12 +12,11 @@ before upgrading to the latest v2.5.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-<p class="note breaking"><strong>Before Upgrading: </strong> All bindings created using MySQL for PCF v2.3 or earlier use IP addresses. Any bindings created using version 2.3 or earlier <strong>must be re-created</strong> before upgrading to v2.5, which requires DNS-based bindings.</p>
+<p class="note breaking"><strong>Before Upgrading: </strong> All bindings created using MySQL for PCF v2.3 or earlier use IP addresses. Any bindings created using v2.3 or earlier <strong>must be re-created</strong> before upgrading to v2.5, which requires DNS-based bindings. For more information, see [MySQL for PCF Errands](errands.html#find-deprecated-bindings).
 
-## <a id="251"></a>v2.5.1
+## <a id="252"></a>v2.5.2
 
-**Release Date:**  December 17, 2018
-
+**Release Date:**  December 20, 2018
 
 #### Bindings Use DNS
 
@@ -27,48 +26,74 @@ This release completes the transition from bindings via IP addresses to DNS host
 
 New features and changes in this release:
 
-**Three Topologies**
+#### Highly Available Clusters On-Demand
 
-<p class="note warning"><strong>WARNING! </strong> Highly available plans are <strong>beta</strong> in v2.5. MySQL for PCF limits the total number of HA Cluster instances to five.</p>
+MySQL for PCF now supports **three deployment topologies**. In addition to Single Node and Leader-Follower, Operators can now offer a Highly Available Cluster service plan. For information on how to configure a HA Cluster plan, see [Configure Service Plans](http://docs.pivotal.io/p-mysql/install-config.html#active) option. For information on availability criteria for each topology, see [Availability Options](http://docs.pivotal.io/p-mysql/availability-options.html).
 
-MySQL for PCF now supports [Three Deployment Topologies](http://docs.pivotal.io/p-mysql/2-5/availability-options.html). In addition to single node and Leader-Follower, Operators can now offer a [Highly Available Cluster](http://docs.pivotal.io/p-mysql/2-5/install-config.html#active) option.
+<p class="note warning"><strong>WARNING! </strong> Highly available clusters are <strong>beta</strong> in v2.5.</p>
 
-Highly Available clusters are **Beta** in this release of MySQL for PCF. While in **Beta**,
+While in **beta**, the following limitations exist:
+- Operators are required to impose a plan quota that is no more than five instances.
+- Restoring from backups is a manual process. For more information, see [Restore an HA Cluster Instance](https://docs.pivotal.io/p-mysql/backup-and-restore.html#runHA).
+- No encryption at rest for HA clusters.
 
-**Highly Available Clusters are recommended for advanced use cases only**. In addition to higher infrastructure cost, Galera clusters introduce some [significant limitations](https://docs.pivotal.io/p-mysql/1-10/index.html#limitations) that are different from running standard MySQL. Due to these limitations, HA Clusters are **not recommended for sharing between multiple users/applications**. Service instance sharing is **disabled** for HA Clusters. If necessary, you can still share via User Provided Service Instances (UPSI). For more information, see the [User Provided Service Instances documentation](https://docs.pivotal.io/pivotalcf/devguide/services/user-provided.html).
+**Highly Available Clusters are for Advanced Use Cases Only**
+
+In addition to higher infrastructure cost, Galera clusters introduce some significant limitations that are different from running Single-Node or Leader-Follower MySQL. For more information, see [High Availability Limitations](https://docs.pivotal.io/p-mysql/1-10/index.html#limitations).
+
+Due to these limitations, HA Clusters are **not recommended for sharing between multiple users/applications**. Service instance sharing is **disabled** for HA Clusters. If necessary, you can still share by creating User Provided Service Instances (UPSI). For more information, see [User Provided Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/user-provided.html).
 
 Choose HA Clusters only when the availability criteria that Leader-Follower provides is not sufficient for your application.
 
-Features of Highly Available clusters include:
+**Features of Highly Available Clusters**
 
-- Highly Available clusters are provisioned on-demand. 
-- [introducing a jumpbox?] `mysql-diag` and the replication canary (note MySQL diag shows disk usage, so nice, link to KPI for measuring/alerting?)
-- Developers can vuew cluster state on a dashboard 
-
-- Binky would like to find a link to a dashboard **so that** she can view cluster state (_on-demand ha,p.mysql-2.5.0,p.mysql-2.5.x_) [[#161357186](https://www.pivotaltracker.com/story/show/161357186)]
-- Binky would like to connect to her service instance using TLS when deploying with a PXC enabled plan (_on-demand ha,p.mysql-2.5.0,p.mysql-2.5.x,tls_) [[#160588712](https://www.pivotaltracker.com/story/show/160588712)]
-
-## Improvements for Developers
-- Binky sees that her service instance does not need to run `enable_tls` when TLS is enabled in the tile (_apps connect to mysql over tls,p.mysql-2.5.0,p.mysql-2.5.x,pcf-2.3_) [[#160112817](https://www.pivotaltracker.com/story/show/160112817)]
-- Binky should be able to see metrics for her service instances via the CF CLI (_dev-self-service,metrics,p.mysql-2.5.0,p.mysql-2.5.x_) [[#159125660](https://www.pivotaltracker.com/story/show/159125660)]
-- Binky can no longer connect to her service instance using a cert generated with IPs (_apps connect to mysql over tls,p.mysql-2.5.0,p.mysql-2.5.x_) [[#160112819](https://www.pivotaltracker.com/story/show/160112819)]
-
-## Improvements for Operators
-- Sally can see that all databases are using Percona Server 5.7.23-23 (_engine,p.mysql-2.2.x,p.mysql-2.3.2,p.mysql-2.3.x,p.mysql-2.4.x,p.mysql-2.5.0,p.mysql-2.5.x_) [[#160462660](https://www.pivotaltracker.com/story/show/160462660)]
-- Sally can run a BOSH errand to find IP-based bindings (_p.mysql-2.4.1,p.mysql-2.4.x,p.mysql-2.5.0,p.mysql-2.5.x_) [[#160263101](https://www.pivotaltracker.com/story/show/160263101)]
-- Sally can define 9 plans in the tile (_on-demand ha,p.mysql-2.5.0,p.mysql-2.5.x,tile_) [[#161598817](https://www.pivotaltracker.com/story/show/161598817)]
-- **Conditional Do** Sally would like to mark plans as either free or not free **so that** Binky is aware that a cost is associated with on-demand instances (_p.mysql-2.5.0,p.mysql-2.5.x,tile_) [[#161553441](https://www.pivotaltracker.com/story/show/161553441)]
-- Sally would like to configure the default idle timeout of service instance (_p.mysql-2.5.0,p.mysql-2.5.x,security,tile_) [[#160568096](https://www.pivotaltracker.com/story/show/160568096)]
-
-### Bug Fixes
-- [BUG] Binky cannot create a L/F service instance when TLS is required (_p.mysql-2.4.0,p.mysql-2.4.x,p.mysql-2.5.0,p.mysql-2.5.x_) [[#160434818](https://www.pivotaltracker.com/story/show/160434818)]
-- [BUG] Sally should be able to see the reason why the find-non-tls-bindings  errand fails (_p.mysql-2.3.2,p.mysql-2.3.x,p.mysql-2.4.0,p.mysql-2.4.x,p.mysql-2.5.0,p.mysql-2.5.x_) [[#160173057](https://www.pivotaltracker.com/story/show/160173057)]
-- [BUG] Binky should be confident that destroying a binding has revoked access to the database (_mysql-agent,p.mysql-2.4.2,p.mysql-2.4.x,p.mysql-2.5.0,p.mysql-2.5.x,security,waiting-for-ci_) [[#160567770](https://www.pivotaltracker.com/story/show/160567770)]
+- Highly Available clusters are provisioned on-demand.
+- Monitoring, diagnostics, and backups are performed from a **jumpbox VM**. For information on how to configure this VM, see [Configure Service Plans](https://docs.pivotal.io/p-mysql/install-config.html#active).
+	- The jumpbox VM runs a replication canary that continuously tests replication health between cluster nodes. For more information, see [Replication Canary](https://docs.pivotal.io/p-mysql/1-10/monitor.html#repcanary).
+	- Operators can run diagnostics (e.g., disk usage) on an HA cluster by running the `mysql-diag` script on the jumpbox VM. For more information, see [Running mysql-diag](https://docs.pivotal.io/p-mysql/1-10/mysql-diag.html).
+	- Like Single Node and Leader-Follower, configuring automatic backups is required. For information on how to configure automated backups, see [Configure Backups](https://docs.pivotal.io/p-mysql/install-config.html#backups). For how to perform a manual backup and restore, see [Backing Up and Restoring On-Demand MySQL for PCF](https://docs.pivotal.io/p-mysql/2-5/backup-and-restore.html).
+- Developers can view a dashboard to see the state of each node in the HA cluster. For more information, see [Monitor Node Health Using the Dashboard](https://docs.pivotal.io/p-mysql/2-5/monitor-health.html#dashboard).
+- Connections to the Highly Available cluster
 
 
+#### Improvements for Developers
+- Developers no longer need to perform manual steps to enable TLS connections to their service instances.
+- Developers can see metrics for their service instances via the [CF CLI Log Cache plugin](https://github.com/cloudfoundry/log-cache-cli).
 
-- ~~**Explore and do** Sally can see that audit logs are forwarded to syslog (_cvs,logging,p.mysql-2.5.0,p.mysql-2.5.x,possibly impossible_) [[#160188668](https://www.pivotaltracker.com/story/show/160188668)]~~
+#### Improvements for Operators
+- Operators can run the `find-deprecated-bindings` BOSH errand to discover service instances with outdated service bindings and service keys. For more information, see [MySQL for PCF Errands](errands.html#find-deprecated-bindings).
+- Operators can configure up to nine service plans in the tile.
+- Operators can mark service plans as **free** or **paid** so that developer can be aware of costs associated with certain service plans.
+- Operators can configure the default idle timeout for connections to a service instance to allow compliance with CIS security benchmarks.
+
+
+## <a id="251"></a>v2.5.1
+
+**Do not use.**
 
 ## <a id="250"></a>v2.5.0
 
 **Do not use.**
+
+### Compatibility
+
+The following components are compatible with this release:
+
+<table border="1" class="nice">
+<tr>
+    <th>Component</th>
+    <th>Version</th>
+</tr>
+<tr>
+    <td>Stemcell</td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#170-line">Xenial 170.x</a></td>
+</tr>
+<tr>
+    <td>Percona Server</td>
+    <td>5.7.23-23</td>
+</tr>
+<tr>
+    <td>golang</td>
+    <td>1.10.3</td>
+</tr>
+</table>
