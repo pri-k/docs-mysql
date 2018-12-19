@@ -14,6 +14,8 @@ and contains information to help users decide whether to  use HA clusters.
 
 By default, HA clusters splits large `Load Data` commands into small maneageable units. This deviates from the standard behavior for MySQL. For more infomation, see [wsrep\_load\_data\_splitting] (https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_load_data_splitting) in the Percona XtraDB Cluster documentation.
 
+For more infomation about the difference between single node, leader-follower, and HA cluster topologies, see [Availability Options](./availability-options.html).
+
 ## <a id="requirements"></a> Infrastructure Requirements for Highly Available Deployments
 
 ### <a id="cap-plan"></a> Capacity Planning
@@ -28,62 +30,65 @@ To minimize impact of an AZ outage and to remove single points of failure, Pivot
 
 ### <a id="network-req"></a> Networking Rules
 In addition to the standard networking rules needed for MySQL for PCF, the operator must ensure HA
-cluster specific network rules are also set up.
+cluster specific network rules are also configured.
 
 For information about HA cluster specific networking rules, see [Required Networking Rules for Highly Available
 Cluter Plans](./about.html#hac-ports).
 
 ## <a id="limitations"></a> Highly Available Cluster Limitations
 
-When deployed in HA topology, MySQL for PCF runs three leader nodes. This cluster arrangement imposes some limitations that you should be aware of, which do not apply to single node or leader-follower MySQL database servers.
+When deployed wth HA topology, MySQL for PCF runs three nodes. This cluster arrangement imposes some limitations that you should be aware of, which do not apply to single node or leader-follower MySQL database servers.
 
 ### <a id="storage-limit"></a> Storage Engine Limitations 
 
 - MySQL for PCF only supports the InnoDB storage engine. The InnoDB is the default storage engine for new tables. Pre-existing tables that are not using InnoDB are at risk because they are not replicated within a cluster.
 
-- Large data defintion lanaguge (DDL) statements can lock all schemas. This can be mitigated by using the Rolling Schema Upgrade (RSU) method.  For more information about using RSU to apply DDL statements, see [When to Use RSU for DDL](./rsu.html).
+- Large data defintion lanaguge (DDL) statements can lock all schemas. This can be mitigated by using the Rolling Schema Upgrade (RSU) method. For more information about using RSU to apply DDL statements, see [Using Rolling Schema Upgrade](./rsu.html).
 
-- While not explicitly a limitation, large transaction sizes may inhibit the performance of the cluster and thus the applications using the cluster. In an HA cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
+- While not explicitly a limitation, large transaction sizesc an inhibit the performance of the cluster and apps using the cluster. In a HA cluster, writes are processed as “a single memory-resident buffer”, so very large transactions will adversely affect cluster performance.
 
-- You cannot execute a data manipulation language (DML) statement in parallel with a DDL statement if both statements affect the same tables. Locking is lax in Galera, even in single node mode. Rather than the DDL waiting for the DML to finish, they will both apply immediately to the cluster and may cause [unexpected side effects](https://jira.mariadb.org/browse/MDEV-468). 
+- You cannot execute a data manipulation language (DML) statement in parallel with a DDL statement, if both statements affect the same tables. If they are exected in parallel, the DML and DDL statements are both applied immediately to the cluster, causing errors.
 
-<!-- Is this also a limitation in single node? -->
+- In InnoDB, some transactions can cause deadlocks. You can minimize deadlocks in your apps by rewriting transactions and SQL statements. For more information about deadlocks, see [Deadlocks in InnoDB](http://dev.mysql.com/doc/refman/en/innodb-deadlocks.html) and [How to Minimize and Handle Deadlocks](http://dev.mysql.com/doc/refman/en/innodb-deadlocks-handling.html) in MySQL documentation.
 
-#### <a id="check-limitations"></a>Check Your App for Limitations 
-
-Certain types of queries may cause deadlocks. For example, transactions like `UPDATE` or `SELECT ... for UPDATE` when querying rows in opposite order will cause the queries to deadlock. Rewriting these queries and SQL statements will help minimize the deadlocks that your application experiences. One such solution is to query for a bunch of potential rows, then do an update statement. The MySQL documentation provides more information about [InnoDB](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) [Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks.html) and [Handling InnoDB Deadlocks](http://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html).
-Performance Limitations
 
 ### <a id="arch-limit"></a> Architecture Limitations
 
-- Explicit locking is not supported, i.e. `LOCK TABLES`, `FLUSH TABLES tableA WITH READ_LOCK`.
+- Explicit table locking is not supported. For more infomation, see [EXPLICIT TABLE LOCKING](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/features/pxc-strict-mode.html#explicit-table-locking) in the Percona XtraDB Cluster documentation.
 
-- Table partitioning may cause the cluster to get into a hung state. This is as a result of the implicit table locks that are used when running table partition commands.
+- Table partitioning can cause an hung state in the cluster. This is as a result of the implicit table locks that are used when running table partition commands.
 
-- MySQL for PCF supports table triggers; however multiple triggers per table are not supported
+- All tables must have a primary key. You can use multi-column primary keys. This is because HA clusters replicate using row based replication and ensure unique rows on each instance.
 
-- All tables must have a primary key; multi-column primary keys are OK. This is because of the the way Galera replicates using row based replication and ensuring unique rows on each instance
+- By default, auto-increment variables are not sequential and each node has gaps in IDs. This prevents auto-increment replication conflicts across the cluster. For more infomation, see [wsrep\_auto\_increment\_control](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_auto_increment_control) in the Percona XtraDB Cluster documentation.
+ 
+- HA clusters sets users to `READ ONLY` when using auto increment variables. This is because, otherwise HA clusters would require shared locking of the auto increment variables across the cluster, which causes it to be slower and less reliable.
 
-- Do not rely on auto increment values being sequential as Galera guarantees auto-incrementing unique non-conflicting sequences, so each node will have gaps in IDs. Furthermore, Galera sets user’s to READ ONLY in regards to auto increment variables. Without this feature, Galera would require shared locking of the auto increment variables across the cluster, causing it to be slower and less reliable (can't assume
-sequential)
+- MySQL for PCF does not support MySQL 5.7's JSON 
 
-- MySQL for PCF does not support MySQL 5.7's JSON (what does this mean?)
+<!-- (what does this mean?) -->
 
 - The maximum size that a node allows for DDL or DML statements is limted to 2GB. For more information, see [wsrep\_max\_ws\_size] (https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_max_ws_size) in the Percona XtraDB Cluster documentation. 
+
 <!-- not sure if this is true anymore -->
 
 ### <a id="network-limit"></a> Networking Limitations
 
-- The database servers are shared, managed by multi-tenant processes to serve apps across the PCF deployment. Although data is securely isolated between tenants using unique credentials, app performance may be impacted by noisy neighbors.
+- Database servers are shared and managed by multi-tenant processes to serve apps across the deployment. Although data is securely isolated between tenants using unique credentials, app performance can be impacted by noisy neighbors.
 
-- Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and become unusable until manually bootstrapped.
+- Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and becomes unusable until manually bootstrapped. For more infomation about bootstrapping HA clusters, see [Bootstrapping](./bootstrapping.html).
 
 - Although two proxy instances are deployed by default, there is no automation to direct clients from one to the other. 
 
 <br><br>
 For more infomation about the HA limitations, see [Percona XtraDB Cluster Limitations](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/limitation.html) in the Percona XtraDB Cluster documentation.
 
-## <a id="proxy"></a>Unstanding the MySQL Proxy
+## <a id="use"></a>Using HA Clusters
+
+<p class="note warning"><strong>WARNING:</strong> You cannot update to or from a highly available (HA) cluster plan
+  to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
+  
+## <a id="proxy"></a>Understanding the MySQL Proxy
 
 MySQL for Pivotal Cloud Foundry (PCF) uses a proxy to send client connections
 to the healthy MySQL database cluster nodes in a highly available cluster plan.
@@ -151,8 +156,8 @@ if there is a network partition or if the VM running the node and
 healthcheck died.
 
 
-## <a id="bootstrap"></a> Understanding Bootstrapping HA clusters
+## <a id="bootstrap"></a> Understanding Bootstrapping HA Clusters
 
 When HA clusters loses quorum, you must bootstrap to recover your cluster. A cluster loses quorum when less than half of the nodes can communicate with each other for longer than the configured grace period. If a cluster does not lose quorum, individual unhealthy nodes automatically rejoin the cluster after resolving the error, restarting the node, or restoring connectivity.
 
-For more information about bootstrapping an HA cluster, see [Bootstrapping](./bootstrapping.html)
+For more information about bootstrapping an HA cluster, see [Bootstrapping](./bootstrapping.html).
