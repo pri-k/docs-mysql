@@ -35,16 +35,16 @@ MySQL for PCF now supports [Three Deployment Topologies](http://docs.pivotal.io/
 
 Highly Available clusters are **Beta** in this release of MySQL for PCF. While in **Beta**,
 
-**Highly Available Clusters are not recommended for general use**. In addition to higher infrastructure cost, Galera clusters introduce some [significant limitations](https://docs.pivotal.io/p-mysql/1-10/index.html#limitations) that are different from running standard MySQL. Due to these limitations, HA Clusters are **not recommended for sharing between multiple users/applications**. Service instance sharing is **disabled** for HA Cluster. If necessary, you can still share via User Provided Service Instances (UPSI). For more information, see the [User Provided Service Instances documentation](https://docs.pivotal.io/pivotalcf/devguide/services/user-provided.html).
+**Highly Available Clusters are recommended for advanced use cases only**. In addition to higher infrastructure cost, Galera clusters introduce some [significant limitations](https://docs.pivotal.io/p-mysql/1-10/index.html#limitations) that are different from running standard MySQL. Due to these limitations, HA Clusters are **not recommended for sharing between multiple users/applications**. Service instance sharing is **disabled** for HA Clusters. If necessary, you can still share via User Provided Service Instances (UPSI). For more information, see the [User Provided Service Instances documentation](https://docs.pivotal.io/pivotalcf/devguide/services/user-provided.html).
 
-Choose HA Cluster only when the availability criteria that Leader-Follower provides is not sufficient for your application.
+Choose HA Clusters only when the availability criteria that Leader-Follower provides is not sufficient for your application.
 
 Features of Highly Available clusters include:
 
-- On-demand HA
+- Highly Available clusters are provisioned on-demand. 
 - [introducing a jumpbox?] `mysql-diag` and the replication canary (note MySQL diag shows disk usage, so nice, link to KPI for measuring/alerting?)
+- Developers can vuew cluster state on a dashboard 
 
-- **Special Note:** Sally does not want Binky to share Galera clusters, lest they discover that Galera is not good in a multi-tenant context (_p.mysql-2.5.0,p.mysql-2.5.x_) [[#161486979](https://www.pivotaltracker.com/story/show/161486979)]
 - Binky would like to find a link to a dashboard **so that** she can view cluster state (_on-demand ha,p.mysql-2.5.0,p.mysql-2.5.x_) [[#161357186](https://www.pivotaltracker.com/story/show/161357186)]
 - Binky would like to connect to her service instance using TLS when deploying with a PXC enabled plan (_on-demand ha,p.mysql-2.5.0,p.mysql-2.5.x,tls_) [[#160588712](https://www.pivotaltracker.com/story/show/160588712)]
 
