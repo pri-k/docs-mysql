@@ -82,20 +82,28 @@ Stderr     2018/12/18 02:51:51 Deprecated service instances found, try upgrade i
 
 <h4>Explanation</h4>
 
-In MySQL for PCF v2.5, if you run `upgrade-all-service-instances` while there are service bindings that use IP addresses, app downtime can occur. This is because bindings are still directing apps to connect with IP addresses, but the TLS certificate is signed with a DNS hostname. This prevents apps that validate the server hostname in the TLS certificate from establishing a TLS connection to the database.
+In MySQL for PCF v2.5, if you run `upgrade-all-service-instances` while there
+are service bindings that use IP addresses, app downtime can occur. This is
+because bindings are still directing apps to connect with IP addresses, but the
+TLS certificate is signed with a DNS hostname. This prevents apps that validate
+the server hostname in the TLS certificate from establishing a TLS connection
+to the database.
 
-In MySQL for PCF v2.5, the `validate-before-upgrade-instances` errand checks that there are no service bindings or service keys using IP addresses, and if there are, outputs the above error and prevents the `upgrade-all-service-instances` errand from running.
+In MySQL for PCF v2.5, the `validate-before-upgrade-instances` errand checks
+that there are no service bindings or service keys using IP addresses, and, if
+there are, outputs the above error and prevents the
+`upgrade-all-service-instances` errand from running.
 
 <h4>Solution</h4>
 
-To solve this issue, please follow these steps carefully. Some of the following steps require  coordination with your app developers. 
+To solve this issue, follow these steps carefully. Some of the following steps require  coordination with your app developers. 
 
 <h5>Operator Procedure: Part 1 </h5>
 
 To upgrade your service instances, operators must do the following:
 
 1. Notify the developers who own the apps listed in the error output table above that you will be upgrading all service instances, which can impact app connectivity to the database.
-1. To log into the BOSH Director, do the procedure in [Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
+1. To log in to the BOSH Director, do the procedure in [Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
 1. To locate the BOSH deployment name for your MySQL service broker, run the following command: 
 
     ```
@@ -123,17 +131,17 @@ To replace your deprecated service bindings with new service bindings that use D
 1. To unbind your app from your service instance, run the following command:
 
     ```
-    cf unbind-service APP_NAME SERVICE_INSTANCE
+    cf unbind-service APP-NAME SERVICE-INSTANCE
     ```
 1. To re-bind your app to your service instance, run the following command:
 
     ```
-    cf bind-service APP_NAME SERVICE_INSTANCE
+    cf bind-service APP-NAME SERVICE-INSTANCE
     ```
 1. To restart your app, run the following command:
 
      ```
-     cf restart APP_NAME
+     cf restart APP-NAME
      ```
 
 <h5>Operator Procedure: Part 2 </h5>
