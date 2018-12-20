@@ -52,16 +52,24 @@ This section provides information on how to troubleshooting specific errors or e
 
 <a id="deprecated-service-bindings"></a><h3>Deprecated Service Bindings Found (Upgrade Error)</h3>
 
-This problem happens when upgrading to MySQL for PCF v2.5 if there are service bindings that are still using IP addresses. 
+This problem happens when upgrading to MySQL for PCF v2.5 if there are service bindings that are still using IP addresses.
 
 <h4>Symptom</h4>
 
 You see in the Ops Manager installation pane that the upgrade process fails at the following step:
+<<<<<<< HEAD
 
 <%= image_tag("error-step.png") %>
 
 The error output in the logs contains a table of bindings or service keys which must be updated.
 
+=======
+
+<%= image_tag("error-step.png") %>
+
+The error output in the logs contains a table of bindings or service keys which must be updated.
+
+>>>>>>> upstream/2.5
 For example:
 
 <pre class="terminal">
@@ -96,7 +104,7 @@ there are, outputs the above error and prevents the
 
 <h4>Solution</h4>
 
-To solve this issue, follow these steps carefully. Some of the following steps require  coordination with your app developers. 
+To solve this issue, follow these steps carefully. Some of the following steps require  coordination with your app developers.
 
 <h5>Operator Procedure: Part 1 </h5>
 
@@ -104,18 +112,18 @@ To upgrade your service instances, operators must do the following:
 
 1. Notify the developers who own the apps listed in the error output table above that you will be upgrading all service instances, which can impact app connectivity to the database.
 1. To log in to the BOSH Director, do the procedure in [Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
-1. To locate the BOSH deployment name for your MySQL service broker, run the following command: 
+1. To locate the BOSH deployment name for your MySQL service broker, run the following command:
 
     ```
     bosh deployments
     ```
-1. Record the BOSH deployment name for the MySQL service broker, which looks like `pivotal-mysql-GUID`. 
-1. To upgrade all service instances, run the following command: 
+1. Record the BOSH deployment name for the MySQL service broker, which looks like `pivotal-mysql-GUID`.
+1. To upgrade all service instances, run the following command:
 
     ```
     bosh -d pivotal-mysql-GUID run-errand upgrade-all-service-instances
     ```
-    
+
     Where `pivotal-mysql-GUID` is the value you recorded in the previous step.
 
 1. Notify your developers that at this time, they will see that apps that do hostname validation cannot establish a TLS connection to the database. These apps will output an error similar the following example:
@@ -123,9 +131,9 @@ To upgrade your service instances, operators must do the following:
     <pre class="terminal">
     failed to perform TLS handshake with host "10.0.8.5:3306": x509: certificate is valid for 127.0.0.1, not 10.0.8.5
     </pre>
-    
+
 <h5>Developer Procedure</h5>
-  
+
 To replace your deprecated service bindings with new service bindings that use DNS hostnames, developers must do the following for each binding listed in the log error above:
 
 1. To unbind your app from your service instance, run the following command:
@@ -146,13 +154,13 @@ To replace your deprecated service bindings with new service bindings that use D
 
 <h5>Operator Procedure: Part 2 </h5>
 
-After you restart all of your apps, your apps can connect to the database and resume service. However, your Ops Manager installation is still in a failed state. To finish the installation, operators must complete the following steps:   
+After you restart all of your apps, your apps can connect to the database and resume service. However, your Ops Manager installation is still in a failed state. To finish the installation, operators must complete the following steps:
 
 1. To ensure that all deprecated service bindings have been replaced, run the following errand:
 
     ```
     bosh -d pivotal-mysql-GUID run-errand validate-before-upgrade-instances
-    ```  
+    ```
    If this errand succeeds, you see the following output:
     <pre class="terminal">
     $ bosh -d pivotal-mysql-00b772e5b11318b2c001 run-errand validate-before-upgrade-instances
@@ -174,7 +182,7 @@ After you restart all of your apps, your apps can connect to the database and re
     Succeeded
     </pre>
 
-1. In the Ops Manager Installation Dashboard, click **Review Pending Changes**. 
+1. In the Ops Manager Installation Dashboard, click **Review Pending Changes**.
 
 1. In the **Review Pending Changes** pane, ensure that the **Validate no IP-based bindings in use before upgrade-all-service-instances** and **Upgrade all On-demand MySQL Service Instances** errands are selected.
 
@@ -692,30 +700,6 @@ Instructions on interacting with the on-demand service broker and on-demand serv
 <a id="access-instance"></a><h4>Access Service Instance Logs and VMs</h4>
 
 <%= partial '../../mysql/odb/tshoot-tech-access-instance' %>
-
-<a id="broker-errands"></a><h3>Run Service Broker Errands to Manage Brokers and Instances</h3>
-
-<%= partial '../../mysql/odb/tshoot-tech-broker-errands' %>
-
-<a id="register-broker"></a><h4>Register Broker</h4>
-
-<%= partial '../../mysql/odb/tshoot-tech-register-broker' %>
-
-<a id="deregister-broker"></a><h4>Deregister Broker</h4>
-
-<%= partial '../../mysql/odb/tshoot-tech-deregister-broker' %>
-
-<a id="upgrade-all"></a><h4>Upgrade All Service Instances</h4>
-
-<%= partial '../../mysql/odb/tshoot-tech-upgrade-all' %>
-
-<a id="delete-all"></a><h4>Delete All Service Instances</h4>
-
-<%= partial '../../mysql/odb/tshoot-tech-delete-all' %>
-
-<a id="detect-orphans"></a><h3>Detect Orphaned Service Instances</h3>
-
-<%= partial '../../mysql/odb/tshoot-tech-detect-orphans' %>
 
 <a id="instance-creds"></a><h3>Retrieve Admin and Read-Only Admin Credentials for a Service Instance</h3>
 
