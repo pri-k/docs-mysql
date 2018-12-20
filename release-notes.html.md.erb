@@ -24,10 +24,10 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 New features and changes in this release:
 
 - [Highly Available (HA) Cluster Service Plans](#ha-cluster)
-- [Bindings Use DNS](#bindings)
+- [All Bindings Use DNS](#bindings)
 - [Developers Can Monitor Service Instances](#dev-monitor)
 - [Connections Secured with TLS by Default](#connections)
-- [Improvements for Operators](#improvements) 
+- [Improvements for Operators](#improvements)
 
 ####<a name="ha-cluster"></a>Highly Available (HA) Cluster Service Plans
 
@@ -49,8 +49,8 @@ Features of HA clusters include:
 - Monitoring, diagnostics, and backups are performed from a jumpbox VM. For information on how to configure this VM, see [Configure Service Plans](https://docs.pivotal.io/p-mysql/install-config.html#active).
 	- The jumpbox VM runs a replication canary that continuously tests replication health of cluster nodes. For more information, see [Replication Canary](https://docs.pivotal.io/p-mysql/1-10/monitor.html#repcanary).
 	- Operators can run diagnostics, such as disk usage, on an HA cluster by running `mysql-diag` on the jumpbox VM. For more information, see [Running mysql-diag](https://docs.pivotal.io/p-mysql/1-10/mysql-diag.html).
-	
-	
+
+
 	- Like Single Node and Leader-Follower, configuring automatic backups is required. For information on how to configure automated backups, see [Configure Backups](https://docs.pivotal.io/p-mysql/install-config.html#backups). For instructions to perform a manual backup and restore, see [Backing Up and Restoring On-Demand MySQL for PCF](https://docs.pivotal.io/p-mysql/2-5/backup-and-restore.html).
 
 While in beta, the following limitations exist:
@@ -70,9 +70,9 @@ For more information, see [User-Provided Service Instances](https://docs.pivotal
 
 You should use HA clusters only when the availability criteria that leader follower provides is not sufficient for your app.
 
-####<a name="bindings"></a>Bindings Use DNS 
+####<a name="bindings"></a>All Bindings Use DNS
 
-+ All services bindings use DNS hostnames instead of IP addresses. This feature enables future improvements and highly available (HA) clusters.
++ All services bindings use DNS hostnames instead of IP addresses. This feature was introduced in [MySQL for PCF v2.4](https://docs.pivotal.io/p-mysql/2-4/release-notes.html#240), which enabled no-rebind failovers as well as future improvements and highly available (HA) clusters.
 
 ####<a name="dev-monitor"></a>Developers Can Monitor Service Instances
 
