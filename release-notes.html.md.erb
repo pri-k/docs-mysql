@@ -12,12 +12,16 @@ before upgrading to the latest v2.5.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-<p class="note breaking"><strong>Before Upgrading: </strong> All bindings created using MySQL for PCF v2.3 or earlier use IP addresses. Any bindings created using v2.3 or earlier <strong>must be re-created</strong> before upgrading to v2.5, which requires DNS-based bindings. For more information, see <a href="errands.html#find-deprecated-bindings">MySQL for PCF Errands</a>.</p>
-
+<!-- If you do not do this than your installation is like stuck. Does count as a breaking change or warning? -->
+<p class="note breaking"><strong>Breaking Change: </strong> All bindings created using MySQL for PCF v2.3 or earlier use IP addresses. Any bindings created using v2.3 or earlier <strong>must be re-created</strong> before upgrading to v2.5, which requires DNS-based bindings. For more information, see <a href="errands.html#find-deprecated-bindings">MySQL for PCF Errands</a>.</p>
 
 ## <a id="252"></a>v2.5.2
 
 **Release Date:**  December 19, 2018
+
+### Features
+
+New features and changes in this release:
 
 #### Bindings Use DNS
 
@@ -26,11 +30,20 @@ This release completes the transition from bindings via IP addresses to DNS host
 #### Developers can Monitor Service Instances
 Developers can see metrics for their service instances via the [CF CLI Log Cache plugin](https://github.com/cloudfoundry/log-cache-cli). For more information about metrics that MySQL for PCF emits, see [Monitoring and KPIs](https://docs.pivotal.io/p-mysql/monitor.html).
 
+#### Connections Secured by Default
+
+Connections to the database over TLS are enabled by default for each service instance. It is no longer necessary for developers to perform manual steps to enable TLS. TLS can be optionally disabled by the Operator.
+
+#### Improvements for Operators
+- Operators can configure up to nine service plans in the tile.
+- Operators can mark service plans as **free** or **paid** so that developers can be aware of costs associated with certain service plans.
+- Operators can configure the default idle timeout for connections to a service instance, which prevents applications from overloading the database with unnecessary connections.
+
 ### **Highly Available Option**
 
-MySQL for PCF now supports **three deployment topologies**. In addition to Single Node and Leader-Follower, Operators can now offer a Highly Available Cluster service plan. For information on how to configure a HA Cluster plan, see [Configure Service Plans](http://docs.pivotal.io/p-mysql/install-config.html#active). For information on availability criteria for each topology, see [Availability Options](http://docs.pivotal.io/p-mysql/availability-options.html).
+<%= partial "./galera_beta" %>
 
-<p class="note warning"><strong>WARNING! </strong> Highly available clusters are <strong>beta</strong> in MySQL for PCF v2.5.</p>
+MySQL for PCF now supports **three deployment topologies**. In addition to Single Node and Leader-Follower, Operators can now offer a Highly Available Cluster service plan. For information on how to configure a HA Cluster plan, see [Configure Service Plans](http://docs.pivotal.io/p-mysql/install-config.html#active). For information on availability criteria for each topology, see [Availability Options](http://docs.pivotal.io/p-mysql/availability-options.html).
 
 Features of HA clusters include:
 
@@ -56,15 +69,9 @@ Due to these limitations, HA Clusters are **not recommended for sharing between 
 
 Choose HA Clusters only when the availability criteria that Leader-Follower provides is not sufficient for your application.
 
-#### Connections Secured by Default
+### Known Issues
 
-Connections to the database over TLS are enabled by default for each service instance. It is no longer necessary for developers to perform manual steps to enable TLS. TLS can be optionally disabled by the Operator.
-
-#### Improvements for Operators
-- Operators can configure up to nine service plans in the tile.
-- Operators can mark service plans as **free** or **paid** so that developers can be aware of costs associated with certain service plans.
-- Operators can configure the default idle timeout for connections to a service instance, which prevents applications from overloading the database with unnecessary connections.
-
+There are no known issues for this release.
 
 ## <a id="251"></a>v2.5.1
 
