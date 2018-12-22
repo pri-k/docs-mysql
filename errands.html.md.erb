@@ -64,7 +64,7 @@ Stdout     +---------------------------+--------------------------------------+-
 
 ### <a id="validate-before"></a>validate-before-upgrade-instances
 
-The `validate-before-upgrade-instances` errand is used to determine if it is safe to upgrade to a newer version of MySQL for PCF. Deprecated application bindings or service keys may prevent the Operator from upgrading the service to new versions of MySQL for PCF. Operators can use this errand to decide if it is safe to enable certain features, such as requiring TLS for all apps.
+The `validate-before-upgrade-instances` errand is used to determine if it is safe to upgrade to a newer version of MySQL for PCF. Deprecated application bindings or service keys may prevent the operator from upgrading the service to new versions of MySQL for PCF. Operators can use this errand to decide if it is safe to enable certain features, such as requiring TLS for all apps.
 
 The errand identifies app bindings and service keys that do not have TLS. 
 
