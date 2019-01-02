@@ -1,0 +1,101 @@
+---
+title: MySQL for PCF Errands
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic decribes how to use the BOSH command line interface to run service broker errands. Errands can manage service brokers and run mass operations on service instances created by brokers.
+
+## <a id="errand"></a> Run the Errand
+
+To run an errand, run the following command:
+
+```
+bosh -d DEPLOYMENT-NAME run-errand ERRAND-NAME
+```
+
+Where: 
+
++ `DEPLOYMENT-NAME` is the name of your deployment. 
++ `ERRAND-NAME` is the name of the errand you want to run. 
+
+For example:
+
+<pre class="terminal">$ bosh -d my-deployment run-errand deregister-broker</pre>
+
+
+### <a id="find-deprecated-bindings"></a>find-deprecated-bindings 
+
+The `find-deprecated-bindings` errand identifies deprecated app bindings and service keys. 
+App bindings and service keys that use IP addresses or do not use TLS were deprecated with the introduction of MySQL for Pivotal Cloud Foundry (PCF) v2.4, and are not allowed in MySQL for PCF v2.5. The errand exits successfully even if deprecated bindings are found.
+
+For example:
+
+<pre class="terminal">
+$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings
+Using environment '10.0.0.5' as client 'ops_manager'
+
+Using deployment 'pivotal-mysql-e3ddd36247fe5b923caf'
+
+Task 148
+
+Task 148 | 02:42:08 | Preparing deployment: Preparing deployment (00:00:01)
+Task 148 | 02:42:09 | Running errand: dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0) (00:00:03)
+Task 148 | 02:42:12 | Fetching logs for dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0): Finding and packing log files (00:00:01)
+
+Task 148 Started  Tue Dec 18 02:42:08 UTC 2018
+Task 148 Finished Tue Dec 18 02:42:13 UTC 2018
+Task 148 Duration 00:00:05
+Task 148 done
+
+Instance   dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb
+Exit Code  0
+Stdout     +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+           |          SERVICE          |             SERVICE GUID             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
+           +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no tls                      |
+           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no dns: hostname="10.0.8.6" |
+           | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no dns: hostname="10.0.8.5" |
+           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept-tls      | AppBinding        | no dns: hostname="10.0.8.6" |
+           +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+</pre>
+
+### <a id="validate-before"></a>validate-before-upgrade-instances
+
+The `validate-before-upgrade-instances` errand identifies if it is safe to upgrade to a newer version of MySQL for PCF. Deprecated app bindings or service keys prevent the operator from upgrading the service to new versions of MySQL for PCF. If app bindings that use IP adresses are present, this errand lists the app bindings and then fails.
+
+### <a id="smoke-tests"></a>smoke-tests
+
+This errand performs a test to validate that the service broker has been installed and configured correctly, and can perform the basic functions of creating and removing service instances. If this errand runs successfully, MySQL for PCF has been installed successfully. If it fails, refer to [Deprecated Service Bindings Found](./troubleshoot.html#deprecated-service-bindings) to debug installation.
+
+### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
+
+<%= partial '../../p-mysql/odb/tshoot-tech-upgrade-all' %>
+See [Upgrading MySQL for PCF](upgrade.html#upgrade-instances) for more details.
+
+
+<!-- a id="orphan-deployments"></a -->
+
+<!-- %= partial '../../p-mysql/odb/tshoot-tech-detect-orphans' % -->
+
+
+## <a id="deprecated-errands"></a> Deprecated Errands
+
+### <a id="register-broker"></a>register-broker
+
+<!-- Why should you not use it? -->
+**Do not use.**
+
+<%= partial '../../p-mysql/odb/tshoot-tech-register-broker' %>
+
+### <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
+
+<!-- Why should you not use it? -->
+**Do not use.**
+
+This errand is run by Ops Manager only when deleting MySQL for PCF. Running this errand removes all service instances and their data.
+
+<!-- a id="delete-all"></a><h4>Delete All Service Instances</h4 -->
+
+<!-- %= partial '../../p-mysql/odb/tshoot-tech-delete-all' % -->
