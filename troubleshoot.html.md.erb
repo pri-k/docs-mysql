@@ -180,39 +180,39 @@ After you restart all of your apps, your apps can connect to the database and re
 
 <a id="install-fail"></a><h3>Failed Install</h3>
 
-<%= partial '../../mysql/odb/tshoot-err-install-fail' %>
+<%= partial '../../p-mysql/odb/tshoot-err-install-fail' %>
 
 <a id="cannot-create-delete"></a><h3>Cannot Create or Delete Service Instances</h3>
 
-<%= partial '../../mysql/odb/tshoot-err-cannot-create-delete' %>
+<%= partial '../../p-mysql/odb/tshoot-err-cannot-create-delete' %>
 
 <a id="timeouts"></a><h3>Broker Request Timeouts</h3>
 
-<%= partial '../../mysql/odb/tshoot-err-timeouts' %>
+<%= partial '../../p-mysql/odb/tshoot-err-timeouts' %>
 
 <a id="cannot-bind"></a><h3>Cannot Bind to or Unbind from Service Instances</h3>
 
 <a id="instance-not-exist"></a><h4>Instance Does Not Exist</h4>
 
-<%= partial '../../mysql/odb/tshoot-err-instance-not-exist' %>
+<%= partial '../../p-mysql/odb/tshoot-err-instance-not-exist' %>
 
 <a id="other-errors"></a><h4>Other Errors</h4>
 
-<%= partial '../../mysql/odb/tshoot-err-other-errors' %>
+<%= partial '../../p-mysql/odb/tshoot-err-other-errors' %>
 
 <a id="cannot-connect"></a><h3>Cannot Connect to a Service Instance</h3>
 
-<%= partial '../../mysql/odb/tshoot-err-cannot-connect' %>
+<%= partial '../../p-mysql/odb/tshoot-err-cannot-connect' %>
 
 Service instances can also become temporarily inaccessible during upgrades and VM or network failures. See <a href="./upgrade.html#interruptions">Service Interruptions</a> for more information.
 
 <a id="upgrade-all-fails"></a><h3>Upgrade All Instances Fails</h3>
 
-<%= partial '../../mysql/odb/tshoot-err-upgrade-all-fails' %>
+<%= partial '../../p-mysql/odb/tshoot-err-upgrade-all-fails' %>
 
 <a id="missing-logs"></a><h3>Missing Logs and Metrics</h3>
 
-<%= partial '../../mysql/odb/tshoot-err-missing-logs' %>
+<%= partial '../../p-mysql/odb/tshoot-err-missing-logs' %>
 
 <a id="unable-to-determine"></a><h3>Unable to Determine Leader and Follower (Errand Error)</h3>
 
@@ -622,45 +622,45 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <a id="large-queue"></a><h4>Large BOSH Queue</h4>
 
-<%= partial '../../mysql/odb/tshoot-comp-large-queue' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-large-queue' %>
 
 <a id="bosh-config"></a><h3>Configuration</h3>
 
 <a id="bosh-instance-fail"></a><h4>Service instances in failing state</h4>
 
-<%= partial '../../mysql/odb/tshoot-comp-bosh-instance-fail' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-bosh-instance-fail' %>
 
 <a id="auth"></a><h3>Authentication</h3>
 
 <a id="uaa-change"></a><h4>UAA Changes</h4>
 
-<%= partial '../../mysql/odb/tshoot-comp-uaa-change' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-uaa-change' %>
 
 <a id="network"></a><h3>Networking</h3>
 
-<%= partial '../../mysql/odb/tshoot-comp-network' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-network' %>
 
 <a id="broker-to-instances"></a><h4>Validate Service Broker Connectivity to Service Instances</h4>
 
-<%= partial '../../mysql/odb/tshoot-comp-broker-to-instances' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-broker-to-instances' %>
 
 <a id="app-to-instances"></a><h4>Validate App Access to Service Instance</h4>
 
-<%= partial '../../mysql/odb/tshoot-comp-app-to-instances' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-app-to-instances' %>
 
 <a id="quotas"></a><h3>Quotas</h3>
 
 <a id="plan-quotas"></a><h4>Plan Quota issues</h4>
 
-<%= partial '../../mysql/odb/tshoot-comp-plan-quotas' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-plan-quotas' %>
 
 <a id="global-quotas"></a><h4>Global Quota Issues</h4>
 
-<%= partial '../../mysql/odb/tshoot-comp-global-quotas' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-global-quotas' %>
 
 <a id="failing-jobs"></a><h3>Failing Jobs and Unhealthy Instances</h3>
 
-<%= partial '../../mysql/odb/tshoot-comp-failing-jobs' %>
+<%= partial '../../p-mysql/odb/tshoot-comp-failing-jobs' %>
 
 A failing process or failing VM might come back automatically after a temporary service outage.
 See <a href="./interruptions.html#process-fail">VM Process Failure</a> and
@@ -677,19 +677,19 @@ Instructions on interacting with the on-demand service broker and on-demand serv
 
 <a id="parse-error"></a><h3>Parse a Cloud Foundry (CF) Error Message</h3>
 
-<%= partial '../../mysql/odb/tshoot-tech-parse-error' %>
+<%= partial '../../p-mysql/odb/tshoot-tech-parse-error' %>
 
 <a id="bosh-cf-access"></a><h3>Access Broker and Instance Logs and VMs</h3>
 
-<%= partial '../../mysql/odb/tshoot-tech-bosh-cf-access' %>
+<%= partial '../../p-mysql/odb/tshoot-tech-bosh-cf-access' %>
 
 <a id="access-broker"></a><h4>Access Broker Logs and VM(s)</h4>
 
-<%= partial '../../mysql/odb/tshoot-tech-access-broker' %>
+<%= partial '../../p-mysql/odb/tshoot-tech-access-broker' %>
 
 <a id="access-instance"></a><h4>Access Service Instance Logs and VMs</h4>
 
-<%= partial '../../mysql/odb/tshoot-tech-access-instance' %>
+<%= partial '../../p-mysql/odb/tshoot-tech-access-instance' %>
 
 <a id="instance-creds"></a><h3>Retrieve Admin and Read-Only Admin Credentials for a Service Instance</h3>
 
@@ -759,20 +759,20 @@ To reinstall the MySQL for PCF tile, see the <a href="https://discuss.pivotal.io
 
 <a id="view-resources"></a><h3>View Resource Saturation and Scaling</h3>
 
-<%= partial '../../mysql/odb/tshoot-tech-view-resources' %>
+<%= partial '../../p-mysql/odb/tshoot-tech-view-resources' %>
 
 <a id="id-instance-owner"></a><h3>Identify Service Instance Owner</h3>
 
-<%= partial '../../mysql/odb/tshoot-tech-id-instance-owner' %>
+<%= partial '../../p-mysql/odb/tshoot-tech-id-instance-owner' %>
 
 <a id="monitor-quota"></a><h3>Monitor Quota Saturation and Service Instance Count</h3>
 
-<%= partial '../../mysql/odb/tshoot-tech-monitor-quota' %>
+<%= partial '../../p-mysql/odb/tshoot-tech-monitor-quota' %>
 
 <a id="kb"></a><h2>Knowledge Base (Community)</h2>
 
-<%= partial '../../mysql/odb/tshoot-kb' %>
+<%= partial '../../p-mysql/odb/tshoot-kb' %>
 
 <a id="support"></a><h2>File a Support Ticket</h2>
 
-<%= partial '../../mysql/odb/tshoot-support' %>
+<%= partial '../../p-mysql/odb/tshoot-support' %>
