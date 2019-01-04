@@ -3,38 +3,47 @@ title: Migrating Data from v1 to v2
 owner: MySQL
 ---
 
-This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foundry (PCF) v1.x service instance to a MySQL for PCF v2.x service instance.
+This topic describes how to migrate the data from a MySQL for Pivotal Cloud
+Foundry (PCF) v1.x service instance to a MySQL for PCF v2.x service instance.
 
 ## <a id='prepare'></a>Prerequisites
 
 To perform the procedures in this topic, you must have the following:
 
 * An existing MySQL for PCF v1.x service instance with the data you want to migrate
-* MySQL for PCF v2.x installed in the same PCF environment as your PCF v1.x service instance
-* At least one MySQL for PCF v2.x service plan available in the same space as your MySQL for PCF v1.x service instance
-  <p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>. 
-    MySQL for PCF v2.x appears as `p.mysql` and MySQL for PCF v1.x appears as `p-mysql`.</p>
+* MySQL for PCF v2.x installed in the same PCF environment as your PCF v1.x
+service instance
+* At least one MySQL for PCF v2.x service plan available in the same space as
+your MySQL for PCF v1.x service instance
+  <p class="note"><strong>Note:</strong> To view available service plans, run
+    <code>cf marketplace</code>. MySQL for PCF v2.x appears as `p.mysql` and
+     MySQL for PCF v1.x appears as `p-mysql`.</p>
 
-    <p class="note warning"><strong>WARNING</strong>: Migrating large datasets can take several hours.
-    Migration of the data is linear, and depends on the hardware being used.
-    For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
-    Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
+    <p class="note warning"><strong>WARNING:</strong> Migrating large datasets
+      can take several hours. Migration of the data is linear, and depends on the hardware being used.
+    For example, if X amount of data takes 10 minutes to migrate,
+    then 2X amount of data will take 20 minutes to migrate using the same hardware.
+    Do a test migration with small datasets to estimate how long the entire migration
+    will take before migrating larger datasets.</p>
 
 ## <a id='stop-unbind'></a>Stop and Unbind Apps
 
-Do the following to stop and unbind any apps that use your MySQL for PCF v1.x service instance:
+Do the following to stop and unbind any apps that use your MySQL for PCF v1.x
+service instance:
 
-1. Use the cf CLI to target and log in to your PCF deployment. 
+1. Use the cf CLI to target and log in to your PCF deployment.
 For example:
   <pre class="terminal">
   $ cf target api.example.com
   $ cf login
   </pre>
-  When prompted, enter your credentials and target the org and space where the MySQL for PCF v1.x is located.
+  When prompted, enter your credentials and target the org and space where the
+  MySQL for PCF v1.x is located.
 
-1. Stop any traffic to the MySQL for PCF v1.x database by stopping any apps that are bound to the service instance.
+1. Stop any traffic to the MySQL for PCF v1.x database by stopping any apps that
+are bound to the service instance.
   Run the following command for each app bound to the instance:
-  
+
      ```
      cf stop APP
      ```
@@ -48,10 +57,10 @@ For example:
      OK
      </pre>
      To retrieve a list of bound apps, run `cf services`.
-  
+
 1. Unbind your app from the MySQL for PCF v1.x service instance.
   Run the following command for each app bound to the instance:
-  
+
      ```
      cf unbind-service APP V1-INSTANCE
      ```
@@ -69,9 +78,17 @@ For example:
 
 ## <a id='migrate-data'></a>Migrate Data
 
-To migrate the data from the MySQL for PCF v1.x service instance to a new MySQL for PCF v2.x service instance, use the `cf mysql-tools plugin`.
+To migrate the data from the MySQL for PCF v1.x service instance to a new MySQL
+for PCF v2.x service instance, use the `cf mysql-tools plugin`.
 
-The `migrate` command of the plugin renames the MySQL for PCF v1.x service instance by appending `-old` and gives the original name of the instance to the newly created MySQL for PCF v2.x service instance.
+The `migrate` command of the plugin renames the MySQL for PCF v1.x service
+instance by appending `-old` and gives the original name of the instance to the
+newly created MySQL for PCF v2.x service instance.
+
+<p class="note warning"><strong>WARNING:</strong> The <code>migrate</code> command
+  does not migrate all stored code. The command only migrates views and does not
+  migrate triggers, routines or events. To manually migrate triggers, routines
+  or events, contact <a href="https://pivotal.io/support">Pivotal Support</a>.</p>
 
 Do the following to migrate data to an instance of the same name:
 
@@ -91,19 +108,25 @@ Do the following to migrate data to an instance of the same name:
     <br>
     Where:
     * `V1-INSTANCE` is the name of your MySQL for PCF v1.x service instance.
-    * `V2-PLAN` is the name of the MySQL for PCF v2.x service plan to use for the new MySQL for PCF v2.x service instance. 
-    For example, `db-small`. 
-    To view available MySQL for PCF v2.x service plans, run `cf marketplace` and locate the plans under `p.mysql`.
+    * `V2-PLAN` is the name of the MySQL for PCF v2.x service plan to use for
+    the new MySQL for PCF v2.x service instance.
+    For example, `db-small`.
+    To view available MySQL for PCF v2.x service plans, run `cf marketplace` and
+    locate the plans under `p.mysql`.
     <br><br>
-   For debug purposes, optionally add the `--no-cleanup` flag. 
-    This flag preserves the app that runs the migration task and the newly created service instances 
-    if the migration is not successful. However, if a migration succeeds, the migration app is cleaned 
-    even if the <code>--no-cleanup</code> flag is provided.
+    For debug purposes, optionally add the `--no-cleanup` flag.
+    This flag preserves the app that runs the migration task and the newly
+    created service instances if the migration is not successful. However, if a
+    migration succeeds,
+    the migration app is cleaned even if the <code>--no-cleanup</code> flag is provided.
     <br>
-    <p class="note"><strong>Note</strong>: An error message appears if the migration is not successful. 
-    If the migration **is** successful, a <code>Migration completed successfully</code> message appears
-    in the messages returned to you after you run the migration command, as show in the example below.
-    This message is the best indication that your migration process was successfully completed.</p>
+    <p class="note"><strong>Note</strong>: An error message appears if the
+      migration is not successful. If the migration **is** successful, a
+      <code>Migration completed successfully</code> message appears
+    in the messages returned to you after you run the migration command, as
+    show in the example below. This message is the best indication that your
+    migration process was successfully completed.</p>
+
     For example:
     <pre class="terminal">
     $ cf mysql-tools migrate my-instance db-small
@@ -120,17 +143,19 @@ Do the following to migrate data to an instance of the same name:
     2018/04/24 11:41:29 Cleaning up...
     </pre>
 
-Developers can SSH into the app container to examine the logs. 
-
+Developers can SSH into the app container to examine the logs.
+<br>
 ## <a id='validate-data'></a>Validate Data
 
-After migrating your data, you must verify that the data has successfully migrated by validating the data in the new MySQL for PCF v2.x service instance. 
-You can validate the data by creating an SSH tunnel to gain direct command line access to the new MySQL for PCF v2.x service instance.
+After migrating your data, you must verify that the data has successfully
+migrated by validating the data in the new MySQL for PCF v2.x service instance.
+You can validate the data by creating an SSH tunnel to gain direct command line
+access to the new MySQL for PCF v2.x service instance.
 
 Do the following to create an SSH tunnel to the instance and validate your data:
 
-1. Create an SSH tunnel to your MySQL for PCF v2.x service instance. 
-To do this, perform the steps in the 
+1. Create an SSH tunnel to your MySQL for PCF v2.x service instance.
+To do this, perform the steps in the
 following sections of [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html):
 
     1. Push Your Host App
@@ -140,14 +165,15 @@ following sections of [Accessing Services with SSH](https://docs.pivotal.io/pivo
     1. Configure Your SSH Tunnel
 
     1. Access Your Service Instance
-    
+
 1. From the MySQL shell, validate that the data that you expect to see has been imported into the MySQL for PCF v2.x service instance.
 
 1. Exit the MySQL shell and kill the SSH tunnel.
 
 ## <a id='rebind-restage'></a>Rebind and Restage Apps
 
-To complete the migration, rebind and restage any apps that had been bound to the original MySQL for PCF v1.x service instance. 
+To complete the migration, rebind and restage any apps that had been bound to
+the original MySQL for PCF v1.x service instance.
 
 Do the following to rebind and restage your apps:
 
@@ -169,7 +195,7 @@ Run the following command:
     OK
     TIP: Use 'cf restage my-app' to ensure your env variable changes take effect
     </pre>
- 
+
 1. Restage the app.
   For example:
   <pre class="terminal">
@@ -177,11 +203,14 @@ Run the following command:
   Restaging app my-app in org my-org / space my-space as user<span>@</span>example.com...
   [...]
   </pre>
-  The app is now using your new MySQL for PCF v2.x service instance and should be operational again.
-  
+
+  The app is now using your new MySQL for PCF v2.x service instance and should
+  be operational again.
+
 ## <a id='delete-old-database'></a> Delete the Old Database
 
-After rebinding and restaging your apps to confirm that migration was successful, Pivotal recommends saving resources by deleting the old database instance. 
+After rebinding and restaging your apps to confirm that migration was successful,
+Pivotal recommends saving resources by deleting the old database instance.
 
 To perform the deletion, run the following command:
 
@@ -193,4 +222,4 @@ To perform the deletion, run the following command:
 
   For example:
 
-  <pre class="terminal">$ cf delete-service my-v1-instance</pre> 
+  <pre class="terminal">$ cf delete-service my-v1-instance</pre>
