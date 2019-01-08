@@ -19,6 +19,15 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 **Release Date:**  December 19, 2018
 
+### Known Issues
+
+This release has the following issue:
+
+- There is a known issue in the interaction between the [MariaDB Connector/J](https://mariadb.com/kb/en/library/about-mariadb-connector-j/) and the Java API, which leads to the following limitations:
+  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile must have TLS **disabled** in the MySQL for PCF tile. 
+  - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J in their Spring apps to connect to a MySQL service instance.
+  Pivotal recommends developers configure their apps to use the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
+
 ### Features
 
 New features and changes in this release:
@@ -108,10 +117,6 @@ Operators can optionally disable TLS.
   This feature helps developers to be aware of costs associated with certain service plans.
 + Operators can configure the default idle timeout for connections to a service instance.
   This prevents apps from overloading the database with unnecessary connections.
-
-### Known Issues
-
-There are no known issues for this release.
 
 ## <a id="251"></a>v2.5.1
 
