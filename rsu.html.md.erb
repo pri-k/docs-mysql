@@ -4,21 +4,26 @@ owner: MySQL
 ---
 
 <!--  This is an operator topic -->
-<!-- Is the dev version in troubleshooting topic? Whne do devs want to do this? -->
+<!-- Is the dev version in troubleshooting topic? When do devs want to do this? -->
+
+Add a index, database migration
+
+there would be performance issues
+
+dont really use this method, maybe KB article 
 
 Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statments to the desynchronized nodes indivdually.
 
+Because the DDL statements are applied to nodes one at a time, the statements must be backwards compatible with the previous schema.
 
- Because the DDL statements are applied to nodes one at a time, the statements must be backwards compatible with the previous schema.
- 
- For more infomation about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
+For more infomation about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
 
 
-<!-- Note: If you have a DDL of >2GB, you must use RSU as it will always fail under Total Order Isolation (TOI). Pivotal reccomends seeking help when applying DDL statements using RSU in the event that you are doing large and long running changes to the database schema.  -->
+<!-- Note: If modifying a large number of rows (insert delted large transaction) you must use RSU as it will always fail under Total Order Isolation (TOI). Pivotal reccomends seeking help when applying DDL statements using RSU in the event that you are doing large and long running changes to the database schema.  talk to operator-->
 
 <!-- Pivotal reccomends processing schema upgrades on a test environment to approximate the time it will take on a production  -->
 
-<!-- It is hard to know exactly how long a given migration will take.  Try to run the migrations on a test environment first and see how long they take as an approximation to gauge how long the production DDL will take. Then, if this is longer than the cluster can be “unavailable” consult with your operator about using RSU for DDL.  -->
+<!-- It is hard to know exactly how long a given migration will take.  Try to run the migrations on a test environment first and see how long they take as an approximation to gauge how long the production DDL will take. Then, if this is longer than the cluster can be “unavailable”.  -->
 
 ## <a id=""></a>Using RSU for DDL
 
@@ -28,6 +33,9 @@ Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During 
 <!-- Are you using this https://dev.mysql.com/doc/refman/5.5/en/mysqlimport.html -->
 
 The following procudres assume that you are using an import SQL file to perform the data imports. In the event you choose to execute a DDL manually with the mysql client, run the following steps using your MySQL client.
+
+When doing an inital data migration, does not interput Cluster
+current product has on demand cluster tied to a specfic user
 
 ### <a id="base-table"></a>Import Base Table Structure and Data
 
@@ -53,20 +61,33 @@ At this point, all MySQL nodes should have the same schema structure
 
 <!-- INTRO -->
 
+need to generate index file but application dependent 
+
+use config that allows them to login as admin on nodes on vm itself, local connection
+
 As an admin user, for each of the nodes, do the following: 
 
-1. To enable `global read_only`, run the following command:
-		
-	```
-	$ mysql -u USER -p -h MYSQL-HOST -e "set global read_only=on;""
-	```
-	
-	Where:
-	+ `USER` is the MySQL user name you use to connect to your server.
-	+ `MYSQL-HOST` is the IP address used to connect to your server.
+Confirm that the MySQL for PCF service instance exists in BOSH and obtain the GUID CF by running:
+
+cf service MY-INSTANCE --guid
+Using the GUID obtained above, the following BOSH CLI command:
+
+bosh -d service-instance_GUID vms
+
+ Target each vms in this deployment
+ 
+mysql/GUID
+
+1. BOSH SSH into a node https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh
+
+1.
+
+  ```
+  $ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=on;"
+  ```
 	
 1. To verify that the node is unhealthy, follow the procdeure in [Monitoring Node Health](./monitor-health.html).
-
+file full of mysql commands 
 2. Add the following to your import file:	
 	* `set wsrep_osu_method=rsu;` to the top of the constraints and indexes.
 	* `set global wsrep_desync=on;` to the top of the constraints and indexes file.
@@ -83,18 +104,16 @@ As an admin user, for each of the nodes, do the following:
 5. To execute the constraints and index modification file, run the following command:
 
 	```
-	$ mysql -u USER -p -h MYSQL-HOST -D DATABASE-NAME < INDEX-FILE-PATH
+	$ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -D DATABASE-NAME < INDEX-FILE-PATH
 	```
 	Where:
-  + `USER` is the MySQL user name you use to connect to your server.
-  + `MYSQL-HOST` is the IP address used to connect to your server.
   + `DATABASE-NAME` is the name of the database to use.
 	+ `INDEX-FILE-PATH` is the path to your index file. 
 	
 1. To disable `global read_only`, run the following command:
 		
 	```
-	$ mysql -u USER -p -h MYSQL-HOST -e "set global read_only=off;""
+	$ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=off;""
 	```
 	
 	Where:
