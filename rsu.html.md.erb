@@ -3,6 +3,9 @@ title: Using Rolling Schema Upgrade (HA Cluster)
 owner: MySQL
 ---
 
+<!--  This is an operator topic -->
+<!-- Is the dev version in troubleshooting topic? Whne do devs want to do this? -->
+
 Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statments to the desynchronized nodes indivdually.
 
 
@@ -10,17 +13,25 @@ Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During 
  
  For more infomation about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
 
+
 <!-- Note: If you have a DDL of >2GB, you must use RSU as it will always fail under Total Order Isolation (TOI). Pivotal reccomends seeking help when applying DDL statements using RSU in the event that you are doing large and long running changes to the database schema.  -->
 
 <!-- Pivotal reccomends processing schema upgrades on a test environment to approximate the time it will take on a production  -->
 
 <!-- It is hard to know exactly how long a given migration will take.  Try to run the migrations on a test environment first and see how long they take as an approximation to gauge how long the production DDL will take. Then, if this is longer than the cluster can be “unavailable” consult with your operator about using RSU for DDL.  -->
 
-## <a id="Performing-RSU"></a>Steps for Performing an RSU DDL
+## <a id=""></a>Using RSU for DDL
 
+<!-- need to edit the var desciprtions  -->
+<!-- Are all the commands correct? -->
 <!-- How do you get the import file? -->
+<!-- Are you using this https://dev.mysql.com/doc/refman/5.5/en/mysqlimport.html -->
 
-The following steps assume that you are using import SQL file to perform the data imports. In the event you choose to execute a DDL manually with the mysql client, run the following steps using the client in order.
+The following procudres assume that you are using an import SQL file to perform the data imports. In the event you choose to execute a DDL manually with the mysql client, run the following steps using your MySQL client.
+
+### <a id="base-table"></a>Import Base Table Structure and Data
+
+<!-- INTRO -->
 
 1. To import base table structure and data in normal TOI mode, run the following command:
 
@@ -29,64 +40,69 @@ The following steps assume that you are using import SQL file to perform the dat
 	```
 	
 	Where:
-	+ `USER` is 
-	+ `IP-ADDRESS` is
-	+ `DATABASE-NAME` is
-	+ `IMPORT-FILE-PATH` is
+	+ `USER` is the MySQL user name you use to connect to your server.
+	+ `IP-ADDRESS` is the IP address used to connect to your server.
+	+ `DATABASE-NAME` is the name of the database to use. 
+	+ `IMPORT-FILE-PATH` is the path to your import file. 
+  
+<!-- Should IP address be BOSH DNS hostname? -->
 
-	At this point, all MySQL nodes should have the same schema structure
+At this point, all MySQL nodes should have the same schema structure
+  
+### <a id="base-table"></a>Enable and Run RSU
 
-2. As an admin user, for each of the nodes, do the following: 
+<!-- INTRO -->
 
-	1. Enable global read_only and verify that the node is unhealthy via the proxies by doing the following:
-	1. To enable `global read_only`, run the following command:
-			
-		```
-		$ mysql -u USER -p -h MYSQL-HOST -e "set global read_only=on;""
-		```
-		
-		Where:
-		+ `USER` is 
-		+ `MYSQL-HOST` is
-		
-	1. To verify that the node is unhealthy, follow the procdeure in [Monitoring Node Health](./monitor-health.html).
+As an admin user, for each of the nodes, do the following: 
 
-	2. Add the following to your import file:	
-		* `set wsrep_osu_method=rsu;` to the top of the constraints and indexes.
-		* `set global wsrep_desync=on;` to the top of the constraints and indexes file.
-		* `set global wsrep_desync=off;` to the bottom of the constraints and indexes file.
+1. To enable `global read_only`, run the following command:
 		
-		For example:
-		
-		```
-		set wsrep_osu_method=rsu;
-		set global wsrep_desync=on;
-		...
-		set global wsrep_desync=off;
-		```
-	5. To execute the constraints and index modification file, run the following command:
+	```
+	$ mysql -u USER -p -h MYSQL-HOST -e "set global read_only=on;""
+	```
 	
-		```
-		$ mysql -u USER -p -h MYSQL-HOST -D DATABASE-NAME < INDEX-FILE-PATH
-		```
-		Where:
-		+ `USER` is 
-		+ `MYSQL-HOST` is
-		+ `DATABASE-NAME` is
-		+ `INDEX-FILE-PATH` is
-		
-	6. To disable `global read_only` and verify that all nodes are healthy via the proxies
+	Where:
+	+ `USER` is the MySQL user name you use to connect to your server.
+	+ `MYSQL-HOST` is the IP address used to connect to your server.
 	
-	1. To disable `global read_only`, run the following command:
-			
-		```
-		$ mysql -u USER -p -h MYSQL-HOST -e "set global read_only=off;""
-		```
+1. To verify that the node is unhealthy, follow the procdeure in [Monitoring Node Health](./monitor-health.html).
+
+2. Add the following to your import file:	
+	* `set wsrep_osu_method=rsu;` to the top of the constraints and indexes.
+	* `set global wsrep_desync=on;` to the top of the constraints and indexes file.
+	* `set global wsrep_desync=off;` to the bottom of the constraints and indexes file.
+	
+	For example:
+	
+	```
+	set wsrep_osu_method=rsu;
+	set global wsrep_desync=on;
+	...
+	set global wsrep_desync=off;
+	```
+5. To execute the constraints and index modification file, run the following command:
+
+	```
+	$ mysql -u USER -p -h MYSQL-HOST -D DATABASE-NAME < INDEX-FILE-PATH
+	```
+	Where:
+  + `USER` is the MySQL user name you use to connect to your server.
+  + `MYSQL-HOST` is the IP address used to connect to your server.
+  + `DATABASE-NAME` is the name of the database to use.
+	+ `INDEX-FILE-PATH` is the path to your index file. 
+	
+1. To disable `global read_only`, run the following command:
 		
-		Where:
-		+ `USER` is 
-		+ `MYSQL-HOST` is
-		
-	1. To verify that the node is healthy, follow the procdeure in [Monitoring Node Health](./monitor-health.html).	
+	```
+	$ mysql -u USER -p -h MYSQL-HOST -e "set global read_only=off;""
+	```
+	
+	Where:
+  + `USER` is the MySQL user name you use to connect to your server.
+  + `MYSQL-HOST` is the IP address used to connect to your server.
+	
+1. To verify that the node is healthy, follow the procdeure in [Monitoring Node Health](./monitor-health.html).	
+
+1. Repeat the above procudere for your next node. 
 	
 At this point your cluster should be stable and running with the new schema
