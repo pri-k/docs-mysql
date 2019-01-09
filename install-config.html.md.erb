@@ -21,7 +21,7 @@ For more information about roles in Ops Manager, see
 Before you download and install the MySQL for PCF tile, complete the following procedures:
 
 + [Create an Application Security Group for MySQL for PCF](#asg)
-+ [Enable the Ops Manager Resurrector](#resurrector)
++ [Enable the BOSH Resurrector](#resurrector)
 + [(Optional) Preparing for TLS](prepare-tls.html):
 Only required if you want to enable TLS.
 
@@ -35,7 +35,7 @@ The example below follows [this procedure](http://docs.pivotal.io/pivotalcf/1-11
 
 To create an ASG for MySQL for PCF, do the following:</br>
 
-1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
+1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
 
 1. Click **Create Networks**.</br>
     ![Create Networks page](opsman-dir-networks.png)
@@ -72,19 +72,19 @@ To create an ASG for MySQL for PCF, do the following:</br>
     $ cf bind-running-security-group p.mysql
     ```
 
-### <a id="resurrector"></a> Enable the Ops Manager Resurrector
+### <a id="resurrector"></a> Enable the BOSH Resurrector
 
-The [Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html)
+The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html)
 increases the availability of MySQL for PCF by restarting and resuming MySQL service in the following ways:
 
 - Reacts to hardware failure and network disruptions by restarting VMs on active, stable hosts
 - Detects operating system failures by continuously monitoring VMs and restarting them as required
 - Continuously monitors the BOSH Agent running on each service instance VM and restarts the VM as required
 
-Pivotal recommends enabling the Ops Manager Resurrector when installing MySQL for PCF. To enable the Ops Manager Resurrector,
+Pivotal recommends enabling the BOSH Resurrector when installing MySQL for PCF. To enable the BOSH Resurrector,
 do the following:
 
-1. Navigate to the Ops Manager Installation Dashboard and click the **Ops Manager Director** tile.
+1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
 
 2. Click **Director Config**.
 
@@ -92,8 +92,8 @@ do the following:
 
 4. Click **Save**.
 
-For general information about the Ops Manager Resurrector,
-see [Using Ops Manager Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling)
+For general information about the BOSH Resurrector,
+see [Using BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling)
 
 ## <a id="install"></a> Download and Install the Tile
 
@@ -468,7 +468,7 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
             <li>The maximum value is two fewer than the number of BOSH workers configured.</li>
         </ul>
         <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, 
-            navigate to the Ops Manager Director tile, click <strong>Director Config</strong> 
+            navigate to the BOSH Director tile, click <strong>Director Config</strong> 
             and locate the **Director Workers** field.</p>
         </td>
     </tr>
