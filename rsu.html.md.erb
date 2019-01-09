@@ -3,26 +3,27 @@ title: Using Rolling Schema Upgrade (HA Cluster)
 owner: MySQL
 ---
 
-Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statments to the desynchronized nodes individually.
+Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statements to the desynchronized nodes individually.
 
 For more information about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
 
 
 ## <a id="using-rsu"></a>Using RSU for DDL
 
- If you are modifying a large number of rows, you must use RSU. Large transactions fail under Total Order Isolation (TOI). 
+ If you are modifying a large number of rows, you must use RSU. Large transactions fail under Total Order Isolation (TOI). For more information about TOI, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
  
  Pivotal recommends developers run migrations on a test environment to gauge how long the production DDL will take. If this is longer than the cluster can be unavailable, contact your operator to do the following procedure.
 
-<p class="note"><strong>Note: </strong>DDL statements are applied to nodes one at a time. Beacuse of this the statements must be backwards compatible with the previous schema.</p>
+<p class="note"><strong>Note: </strong>DDL statements are applied to nodes one at a time. Because of this the statements must be backwards compatible with the previous schema.</p>
 
 ###<a id="prereq"></a>Prerequisite
 
-The following procedure assumes that you are using a generated import SQL file to perform the data imports and run MySQL commands. 
+The following procedure assumes that you are using a generated SQL file to perform the data imports and run MySQL commands. 
 
 ###<a id="procedure"></a>Retrieve Node VM ID
 
-You need the ID for each of your node VMs to target the VM for running RSU. 
+You need the ID for each of your node VMs to run RSU. 
+
 To retrieve node VM IDs, do the following:
  
 1. To retrieve your service instance GUID, run the following command: 
@@ -42,7 +43,7 @@ To retrieve node VM IDs, do the following:
 	
 ###<a id="run"></a>Run RSU
 
-To run RSU, for each node VM in your deployment, do the following
+To run RSU, for each node VM in your deployment, do the following:
 
 1. To BOSH SSH into your node VM, do the procedure in [BOSH SSH](https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh) in the Pivotal Cloud Foundry documentation.
 
@@ -53,7 +54,7 @@ To run RSU, for each node VM in your deployment, do the following
 	```
 	
 1. To verify that the node is unhealthy, do the procedure in [Monitoring Node Health](./monitor-health.html).
-2. Add the following to the index file you generated:	
+2. Add the following to the SQL file you generated:	
 	* `set wsrep_osu_method=rsu;` to the top of the import file.
 	* `set global wsrep_desync=on;` to the top of the import file.
 	* `set global wsrep_desync=off;` to the bottom of the import file.
@@ -66,14 +67,14 @@ To run RSU, for each node VM in your deployment, do the following
 	...
 	set global wsrep_desync=off;
 	```
-5. To execute the index file, run the following command:
+5. To execute the SQL file, run the following command:
 
 	```
-	mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -D DATABASE-NAME < INDEX-FILE-PATH
+	mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e -D DATABASE-NAME < SQL-FILE-PATH
 	```
 	Where:
   + `DATABASE-NAME` is the name of the database to use.
-	+ `INDEX-FILE-PATH` is the path to your index file. 
+	+ `SQL-FILE-PATH` is the path to your import file. 
 	
 1. To disable `global read_only`, run the following command:
 		
