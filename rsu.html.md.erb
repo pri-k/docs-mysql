@@ -3,22 +3,22 @@ title: Using Rolling Schema Upgrade (HA Cluster)
 owner: MySQL
 ---
 
-Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statments to the desynchronized nodes indivdually.
+Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statments to the desynchronized nodes individually.
 
-For more infomation about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
+For more information about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
 
 
 ## <a id="using-rsu"></a>Using RSU for DDL
 
  If you are modifying a large number of rows, you must use RSU. Large transactions fail under Total Order Isolation (TOI). 
  
- Pivotal reccomends developers run migrations on a test environment to gague how long the production DDL will take. If this is longer than the cluster can be unavailable, contact your operator to do the following procdeure.
+ Pivotal recommends developers run migrations on a test environment to gauge how long the production DDL will take. If this is longer than the cluster can be unavailable, contact your operator to do the following procedure.
 
 <p class="note"><strong>Note: </strong>DDL statements are applied to nodes one at a time. Beacuse of this the statements must be backwards compatible with the previous schema.</p>
 
 ###<a id="prereq"></a>Prerequisite
 
-The following procdeure assumes that you are using a generated import SQL file to perform the data imports and run MySQL commands. 
+The following procedure assumes that you are using a generated import SQL file to perform the data imports and run MySQL commands. 
 
 ###<a id="procedure"></a>Retrieve Node VM ID
 
@@ -33,7 +33,7 @@ To retrieve node VM IDs, do the following:
 	Where `YOUR-INSTANCE` is the name of your MySQL for PCF service instance.
 	Record the guid returned in the output.
 
-1. To idenifty the node VMs in your cluster, run the following command:
+1. To identify the node VMs in your cluster, run the following command:
 
 	```
 	bosh -d service-instance_GUID vms
@@ -52,7 +52,7 @@ To run RSU, for each node VM in your deployment, do the following
 	mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=on;"
 	```
 	
-1. To verify that the node is unhealthy, do the procdeure in [Monitoring Node Health](./monitor-health.html).
+1. To verify that the node is unhealthy, do the procedure in [Monitoring Node Health](./monitor-health.html).
 2. Add the following to the index file you generated:	
 	* `set wsrep_osu_method=rsu;` to the top of the import file.
 	* `set global wsrep_desync=on;` to the top of the import file.
@@ -80,8 +80,8 @@ To run RSU, for each node VM in your deployment, do the following
 	```
 	$ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=off;""
 	```
-1. To verify that the node is healthy, do the procdeure in [Monitoring Node Health](./monitor-health.html).	
+1. To verify that the node is healthy, do the procedure in [Monitoring Node Health](./monitor-health.html).	
 
-1. Repeat the above procudere for your next node. 
+1. Repeat the above procedure for your next node. 
 	
 At this point your cluster should be stable and running with the new schema.
