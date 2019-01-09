@@ -3,95 +3,60 @@ title: Using Rolling Schema Upgrade (HA Cluster)
 owner: MySQL
 ---
 
-<!--  This is an operator topic -->
-<!-- Is the dev version in troubleshooting topic? When do devs want to do this? -->
-
-Add a index, database migration
-
-there would be performance issues
-
-dont really use this method, maybe KB article 
-
 Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statments to the desynchronized nodes indivdually.
-
-Because the DDL statements are applied to nodes one at a time, the statements must be backwards compatible with the previous schema.
 
 For more infomation about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
 
 
-<!-- Note: If modifying a large number of rows (insert delted large transaction) you must use RSU as it will always fail under Total Order Isolation (TOI). Pivotal reccomends seeking help when applying DDL statements using RSU in the event that you are doing large and long running changes to the database schema.  talk to operator-->
+## <a id="using-rsu"></a>Using RSU for DDL
 
-<!-- Pivotal reccomends processing schema upgrades on a test environment to approximate the time it will take on a production  -->
-
-<!-- It is hard to know exactly how long a given migration will take.  Try to run the migrations on a test environment first and see how long they take as an approximation to gauge how long the production DDL will take. Then, if this is longer than the cluster can be “unavailable”.  -->
-
-## <a id=""></a>Using RSU for DDL
-
-<!-- need to edit the var desciprtions  -->
-<!-- Are all the commands correct? -->
-<!-- How do you get the import file? -->
-<!-- Are you using this https://dev.mysql.com/doc/refman/5.5/en/mysqlimport.html -->
-
-The following procudres assume that you are using an import SQL file to perform the data imports. In the event you choose to execute a DDL manually with the mysql client, run the following steps using your MySQL client.
-
-When doing an inital data migration, does not interput Cluster
-current product has on demand cluster tied to a specfic user
-
-### <a id="base-table"></a>Import Base Table Structure and Data
-
-<!-- INTRO -->
-
-1. To import base table structure and data in normal TOI mode, run the following command:
-
-	```
-  $ mysql -u USER -p -h IP-ADDRESS -D DATABASE-NAME < IMPORT-FILE-PATH
-	```
-	
-	Where:
-	+ `USER` is the MySQL user name you use to connect to your server.
-	+ `IP-ADDRESS` is the IP address used to connect to your server.
-	+ `DATABASE-NAME` is the name of the database to use. 
-	+ `IMPORT-FILE-PATH` is the path to your import file. 
-  
-<!-- Should IP address be BOSH DNS hostname? -->
-
-At this point, all MySQL nodes should have the same schema structure
-  
-### <a id="base-table"></a>Enable and Run RSU
-
-<!-- INTRO -->
-
-need to generate index file but application dependent 
-
-use config that allows them to login as admin on nodes on vm itself, local connection
-
-As an admin user, for each of the nodes, do the following: 
-
-Confirm that the MySQL for PCF service instance exists in BOSH and obtain the GUID CF by running:
-
-cf service MY-INSTANCE --guid
-Using the GUID obtained above, the following BOSH CLI command:
-
-bosh -d service-instance_GUID vms
-
- Target each vms in this deployment
+ If you are modifying a large number of rows, you must use RSU. Large transactions fail under Total Order Isolation (TOI). 
  
-mysql/GUID
+ Pivotal reccomends developers run migrations on a test environment to gague how long the production DDL will take. If this is longer than the cluster can be unavailable, contact your operator to do the following procdeure.
 
-1. BOSH SSH into a node https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh
+<p class="note"><strong>Note: </strong>DDL statements are applied to nodes one at a time. Beacuse of this the statements must be backwards compatible with the previous schema.</p>
 
-1.
+###<a id="prereq"></a>Prerequisite
 
-  ```
-  $ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=on;"
-  ```
+The following procdeure assumes that you are using a generated import SQL file to perform the data imports and run MySQL commands. 
+
+###<a id="procedure"></a>Retrieve Node VM ID
+
+You need the ID for each of your node VMs to target the VM for running RSU. 
+To retrieve node VM IDs, do the following:
+ 
+1. To retrieve your service instance GUID, run the following command: 
+
+	```
+	cf service MY-INSTANCE --guid
+	```
+	Where `YOUR-INSTANCE` is the name of your MySQL for PCF service instance.
+	Record the guid returned in the output.
+
+1. To idenifty the node VMs in your cluster, run the following command:
+
+	```
+	bosh -d service-instance_GUID vms
+	```
+	Where `GUID` is the guid you recorded in the previous step.  
 	
-1. To verify that the node is unhealthy, follow the procdeure in [Monitoring Node Health](./monitor-health.html).
-file full of mysql commands 
-2. Add the following to your import file:	
-	* `set wsrep_osu_method=rsu;` to the top of the constraints and indexes.
-	* `set global wsrep_desync=on;` to the top of the constraints and indexes file.
-	* `set global wsrep_desync=off;` to the bottom of the constraints and indexes file.
+###<a id="run"></a>Run RSU
+
+To run RSU, for each node VM in your deployment, do the following
+
+1. To BOSH SSH into your node VM, do the procedure in [BOSH SSH](https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh) in the Pivotal Cloud Foundry documentation.
+
+1. To set enable ` global read_only` as an admin user, run the following command:
+
+	```
+	mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=on;"
+	```
+	
+1. To verify that the node is unhealthy, do the procdeure in [Monitoring Node Health](./monitor-health.html).
+2. Add the following to the index file you generated:	
+	* `set wsrep_osu_method=rsu;` to the top of the import file.
+	* `set global wsrep_desync=on;` to the top of the import file.
+	* `set global wsrep_desync=off;` to the bottom of the import file.
 	
 	For example:
 	
@@ -101,10 +66,10 @@ file full of mysql commands
 	...
 	set global wsrep_desync=off;
 	```
-5. To execute the constraints and index modification file, run the following command:
+5. To execute the index file, run the following command:
 
 	```
-	$ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -D DATABASE-NAME < INDEX-FILE-PATH
+	mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -D DATABASE-NAME < INDEX-FILE-PATH
 	```
 	Where:
   + `DATABASE-NAME` is the name of the database to use.
@@ -115,13 +80,8 @@ file full of mysql commands
 	```
 	$ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=off;""
 	```
-	
-	Where:
-  + `USER` is the MySQL user name you use to connect to your server.
-  + `MYSQL-HOST` is the IP address used to connect to your server.
-	
-1. To verify that the node is healthy, follow the procdeure in [Monitoring Node Health](./monitor-health.html).	
+1. To verify that the node is healthy, do the procdeure in [Monitoring Node Health](./monitor-health.html).	
 
 1. Repeat the above procudere for your next node. 
 	
-At this point your cluster should be stable and running with the new schema
+At this point your cluster should be stable and running with the new schema.
