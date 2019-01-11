@@ -23,10 +23,15 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 This release fixes the following issue:
 
-* The issue in the interaction between the MariaDB Connector/J and the Java API,
-  which required using the MySQL Connector/J with Spring apps or, if Spring Cloud Services and Scheduler for PCF tiles were installed,
-  disabling TLS.
+* The issue in the interaction between the MariaDB Connector/J and the Java API.
+  This issue prevented TLS connection for Spring Cloud Services, Scheduler for PCF,
+  and all Spring apps that used the MariaDB Connector/J.
   
+### Features
+
+Changes in this release:
+
+* Updates golang to v1.11.4 to address [CVE-2018-16873](https://github.com/golang/go/issues/29230)
 
 ## <a id="252"></a>v2.5.2
 
