@@ -15,6 +15,19 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 <!-- If you do not do this than your installation is like stuck. Does count as a breaking change or warning? -->
 <p class="note breaking"><strong>Breaking Change: </strong> All service bindings created using MySQL for Pivotal Cloud Foundry (PCF) v2.3 or earlier use IP addresses. Any bindings created using v2.3 or earlier must be re-created before upgrading to v2.5, which requires service bindings that use DNS hostnames. For more information, see <a href="errands.html#find-deprecated-bindings">MySQL for PCF Errands</a>.</p>
 
+## <a id="253"></a>v2.5.3
+
+**Release Date:**  January 11, 2019
+
+### Fixed Issues
+
+This release fixes the following issue:
+
+* The issue in the interaction between the MariaDB Connector/J and the Java API,
+  which required using the MySQL Connector/J with Spring apps or, if Spring Cloud Services and Scheduler for PCF tiles were installed,
+  disabling TLS.
+  
+
 ## <a id="252"></a>v2.5.2
 
 **Release Date:**  December 19, 2018
