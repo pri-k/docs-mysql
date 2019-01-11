@@ -78,7 +78,7 @@ To create an ASG for MySQL for PCF, do the following:</br>
 
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
-The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/1-10/customizing/resurrector.html)
+The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html)
 increases the availability of MySQL for PCF by restarting and resuming MySQL service in the following ways:
 
 - Reacts to hardware failure and network disruptions by restarting VMs on active, stable hosts
@@ -207,7 +207,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>Select a disk size. This disk stores the MySQL messages.
           <ul><li>Single node or leader-follower plans: Select a disk size three times larger than the disk you intend to provide to developers.</li>
             <li>Highly available cluster plans: Select a disk size that is the same size you intend to provide to developers.</li></ul>
-        <p class="note"><strong>Note</strong>: For backups to work properly, follow these 
+        <p class="note"><strong>Note</strong>: For backups to work properly, follow these
           sizing recommendations.
                 For more information, see <a href="backup-and-restore.html">Backing Up and Restoring On-Demand MySQL</a>.</p>
     </td></tr>
@@ -216,16 +216,22 @@ Perform the following steps for each plan that you want to use in your PCF deplo
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
         <td> BOSH deploys your service instances to these availability zones (AZ). If more than one AZ is selected, BOSH will randomize which AZ to place each VM.
     <ul><li>Single node plans: Select one AZ for service instances of this plan to be deployed.</li>
-    
+
     <li>Leader-follower plans: You must select at least two AZs in order to be resilient against AZ failures.</li>
-    
+
     <li>Highly available cluster plans: You must select at least three AZs for this plan to be HA.</li>
   </ul>
         </td></tr>
   </table>
 1. Click **Save**.
 
-<p class="note warning"><strong>WARNING</strong>: If you expect your developers to upgrade from one plan to another, do not place the plans in separate AZs. For example, if you create Plan 1 in AZ1 and Plan 2 in AZ2, developers receive an error and cannot continue if they try to upgrade from Plan 1 to Plan 2. This prevents them from losing their data by orphaning their disk in AZ1.<br><br>To learn how to manually migrate the data from one AZ to another, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
+<p class="note warning"><strong>WARNING</strong>: If you expect your developers
+  to upgrade from one plan to another, do not place the plans in separate AZs.
+  For example, if you create Plan 1 in AZ1 and Plan 2 in AZ2, developers receive
+  an error and cannot continue if they try to upgrade from Plan 1 to Plan 2. This
+  prevents them from losing their data by orphaning their disk in AZ1.<br><br>
+  To learn how to manually migrate the data from one AZ to another, see
+  <a href="migrate-data.html/">Migrating Data in MySQL for PCF</a>.</p>
 
 ###<a id="inactive"></a> (Optional) Deactivate Service Plan
 
@@ -332,12 +338,12 @@ Follow the steps below to configure automated backups:
 
 ###<a id="security"></a> Configure Security
 
-<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF,
-    you must follow the procedures in <a href="./prepare-tls.html">Preparing for TLS</a> <strong>before</strong> configuring security.</p>
+<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF, you must follow the procedures in <a href="./prepare-tls.html">Preparing for TLS</a> <strong>before
+</strong> configuring security.</p>
 
 Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
 
-* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below. By default, TLS is disabled.
+* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below.
 * To store your service instance credentials in runtime CredHub on PAS v2.0.x or later,
   perform the procedure in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
 
@@ -350,9 +356,9 @@ To enable TLS for the MySQL service, perform the following steps:
 1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
 1. Click **Security**.
 1. Under **TLS Options**, select one of the following:
-    1. **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
-    1. **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
-    <p class="note warning"><strong>WARNING</strong>: Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
+1. **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
+1. **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
+<p class="note warning"><strong>WARNING</strong>: Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
 1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html).
 
@@ -449,7 +455,7 @@ Follow the steps below to enable system logging for the MySQL broker and service
     <tr><td><strong>Transport Protocol</strong></td>
         <td>Select the protocol over which you want system logs. Pivotal recommends using TCP.</td></tr>
     <tr><td><strong>Enable TLS</strong></td>
-        <td>If you select TCP, you can also select to send logs encrypted over TLS.</td></tr>
+    <td>If you select TCP, you can also select to send logs encrypted over TLS.</td></tr>
     <tr><td><strong>Permitted Peer</strong></td>
         <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, for example, <code>*.example.com</strong></td></tr>
     <tr><td><strong>SSL Certificate</strong></td>
