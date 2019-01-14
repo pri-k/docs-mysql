@@ -178,6 +178,30 @@ OK
 TIP: Use 'cf push' to ensure your env variable changes take effect
 </pre>
 
+##<a id="schema">Bind a Schema to Your App
+  
+  [SHOULD THERE BE A PROCEDURE FOR MAKING CUSTOM SCHEMA FIRST?, create database NAME-OF-NEW-SCHEMA]
+  
+  MySQL for PCF v2.3 and later supports multiple [database/schema]. You can bind your app to custom (?) [databases/schemas] to allow apps that share service instances to use different [databases/schemas]. By default, your app is bound to a default? standard? [database/schema] when you bind your app to a service instance. 
+  
+  To use custom (?) [database/schema] in your apps do the following:
+  
+  1. To create a custom (?) )database/schema], run the following command:
+    
+    ```
+    mysql create database YOUR-NEW-SCHEMA
+    ```
+    
+    Where `YOUR-NEW-SCHEMA` is .
+  
+  1. To bind your app to a custom (?) [database/schema], run the following command:
+  
+    ```
+    cf 
+    ```
+    Where:
+    
+
 ## <a id="call"></a>Use the MySQL Service in Your App
 
 To access the MySQL service from your app:
