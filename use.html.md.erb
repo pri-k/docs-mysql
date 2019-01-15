@@ -210,9 +210,9 @@ To access the MySQL service from your app:
     
   2. To modify your app to use your custom schema, do one of the following: 
     + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema. 
-    + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP\_SERVICES`.
+    + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP_SERVICES`.
     
-    For more information about the environment variable credentials hash `VCAP\_SERVICES`, see [MySQL Environment Variables](./reference.html).
+    For more information about the environment variable credentials hash `VCAP_SERVICES`, see [MySQL Environment Variables](./reference.html).
   3. Push your app using `cf push`.
 
 ## <a id="manage"></a> Manage Service Instances
@@ -548,7 +548,7 @@ commands depending on your topology:
     command:
 
         ```
-        bosh -d service-instance\_GUID run-errand inspect
+        bosh -d service-instance_GUID run-errand inspect
         ```
 
         Record the IP address for the instance marked `Role: leader`. <br><br>
@@ -653,11 +653,11 @@ command:
       $ cf service-key mydb mykey1<br>
       {
         "hostname": "q-n3s3y1.q-g693.bosh",
-        "jdbcUrl": "jdbc:mysql<span>://</span>q-n3s3y1.q-g693.bosh:3306/service\_instance\_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026=true",
+        "jdbcUrl": "jdbc:mysql<span>://</span>q-n3s3y1.q-g693.bosh:3306/service_instance_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026=true",
         "name": "service\_instance\_db",
         "password": "a22aaa2a2a2aaaaa",
         "port": 3306,
-        "uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>q-n3s3y1.q-g693.bosh:3306/service\_instance\_db?reconnect=true",
+        "uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>q-n3s3y1.q-g693.bosh:3306/service_instance_db?reconnect=true",
         "username": "6bf07ae455a14064a9073cec8696366c"
       }
     </pre>
