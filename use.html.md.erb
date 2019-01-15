@@ -154,7 +154,8 @@ your instance to show as `create succeeded`.
 
 ## <a id="bind"></a>Bind a Service Instance to Your App
 
-For an app to use a service, you must bind the app to a service instance. Do this after you push or re-push the app using `cf push`.
+For an app to use a service, you must bind the app to a service instance.
+Do this after you push or re-push the app using `cf push`.
 
 To bind an app to a MySQL for PCF instance run the following command:
 
@@ -180,7 +181,8 @@ TIP: Use 'cf push' to ensure your env variable changes take effect
 
 To modify your app code to access and use the MySQL service, do the following:
 
-1. Verify that your app code (or the MySQL client library that the app uses) retries in the case of DNS timeouts.
+1. Verify that your app code (or the MySQL client library that the app uses)
+retries in the case of DNS timeouts.
 
 1. Run the following command:
 
@@ -197,20 +199,20 @@ To modify your app code to access and use the MySQL service, do the following:
   See this example [Node.js code](./modify-apps-tls.html#call-service).
 
 ###<a id="schema"></a>Create and Use Custom Schemas
-  
-  MySQL for PCF v2.3 and later supports multiple custom schemas. You can use custom schemas with apps that share a single MySQL service instance to isolate app data by schema. By default, service bindings use the default schema `service_instance_db`. 
-  
+
+  MySQL for PCF v2.3 and later supports multiple custom schemas. You can use custom schemas with apps that share a single MySQL service instance to isolate app data by schema. By default, service bindings use the default schema `service_instance_db`.
+
   To use custom schemas in your apps do the following:
-  
-  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation. 
+
+  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
   <br><br>
     For more information about the `CREATE DATABASE` SQL statement, see [
     13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
-    
-  2. To modify your app to use your custom schema, do one of the following: 
-    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema. 
+
+  2. To modify your app to use your custom schema, do one of the following:
+    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema.
     + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP_SERVICES`.
-    
+
     For more information about the environment variable credentials hash `VCAP_SERVICES`, see [MySQL Environment Variables](./reference.html).
   3. Push your app using `cf push`.
 
@@ -225,7 +227,8 @@ This section describes tasks you do over the life cycle of your apps and data:
 ### <a id="update"></a>Update a Service Instance to a Larger Plan
 
 As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
-This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
+This does not require a rebinding of your app. However, while the instance is
+being migrated to a new service instance,
 the database will be unavailable for several minutes.
 
 To update a service instance to a larger plan, run the following command:
@@ -245,7 +248,8 @@ $ cf update-service my-instance -p db-large
 
 ### <a id="unbind"></a>Unbind an App from a Service Instance
 
-To stop an app from using a service it no longer needs, run the following command to unbind the app from the service:
+To stop an app from using a service it no longer needs, run the following command
+to unbind the app from the service:
 
 ```
 cf unbind-service APP SERVICE-INSTANCE
@@ -374,7 +378,8 @@ traffic to MySQL service instances using an SSH tunnel.
 #### Prerequisite
 
 To connect using an SSH tunnel, you must have SSH access to app containers.
-For more information, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
+For more information, see
+[Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
 
 #### Procedure
 
@@ -492,7 +497,8 @@ your operator for access to the BOSH CLI.
 To connect using the BOSH CLI, follow these steps:
 
 1. To obtain the credentials and IP address needed to use the BOSH CLI, follow
-the procedure in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather).
+the procedure in
+[Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather).
 
 1. To SSH into your Ops Manager VM, follow the procedure in
 [Log in to the Ops Manager VM with SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh)
@@ -511,8 +517,7 @@ for your IaaS.
 
 1. To use the BOSH CLI to view the IP address, run one of the following
 commands depending on your topology:
-    + If your MySQL service instance topology is single node or highly available
-    (HA) cluster, run the following command:
+    + If your MySQL service instance topology is single node, run the following command:
 
         ```
         bosh -d service-instance_GUID instance
@@ -520,10 +525,9 @@ commands depending on your topology:
 
         Where `GUID` is the GUID of the service instance retrieved above. <br><br>
 
-        If you are using an HA cluster, record the IP address of any of your instances.<br><br>
+        For example:
 
-            For example:
-            <pre class="terminal">$ bosh -d service-instance\_b2e92d56-27e2-407e-90e0-c34612c10dba \
+        <pre class="terminal">$ bosh -d service-instance\_b2e92d56-27e2-407e-90e0-c34612c10dba \
                 instances
           Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
 
