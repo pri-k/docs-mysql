@@ -31,7 +31,7 @@ For example:
 
 The `find-deprecated-bindings` errand determines deprecated app bindings and service
 keys. App bindings and service keys that use IP addresses or do not use TLS were
-deprecated with the introduction of MySQL for Pivotal Cloud Foundry (PCF) v2.4,
+deprecated with the introduction of MySQL for Pivotal Cloud Foundry (PCF) v2.4
 and are not allowed in MySQL for PCF v2.5. The errand exits successfully even if
 deprecated bindings are found.
 
@@ -73,7 +73,7 @@ The `validate-before-upgrade-instances` errand identifies if it is safe to upgra
 ### <a id="smoke-tests"></a>smoke-tests
 
 This errand performs a test to validate that the service broker has been installed
-and configured correctly, and can perform the basic functions of creating and
+and configured correctly and can perform the basic functions of creating and
 removing service instances. If this errand runs successfully, MySQL for PCF is
 installed successfully. If it fails, see
 [Deprecated Service Bindings Found](./troubleshoot.html#deprecated-service-bindings) to debug installation.
@@ -84,7 +84,7 @@ installed successfully. If it fails, see
 
 <%= partial '../../p-mysql/odb/tshoot-tech-upgrade-all' %>
 
-See [Upgrading MySQL for PCF](upgrade.html#upgrade-instances) for more details.
+For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instances).
 
 
 <!-- a id="orphan-deployments"></a -->
