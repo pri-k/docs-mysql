@@ -197,6 +197,24 @@ To access the MySQL service from your app:
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
 
+###<a id="schema"></a>Create and Use Custom Schemas
+  
+  MySQL for PCF v2.3 and later supports multiple custom schemas. You can use custom schemas with apps that share a single MySQL service instance to isolate app data by schema. By default, service bindings use the default schema `service_instance_db`. 
+  
+  To use custom schemas in your apps do the following:
+  
+  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation. 
+  
+
+    For more information about the `CREATE DATABASE` SQL statement, see [
+  13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
+    
+  2. To modify your app to use your custom schema, do one of the following: 
+    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema. 
+    + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP\_SERVICES`.
+    
+    For more information about the environment variable credentials hash `VCAP\_SERVICES`, see [MySQL Environment Variables](./reference.html).
+  3. Push your app using `cf push`.
 
 ## <a id="manage"></a> Manage Service Instances
 
