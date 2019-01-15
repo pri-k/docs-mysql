@@ -338,19 +338,11 @@ Follow the steps below to configure automated backups:
 
 ###<a id="security"></a> Configure Security
 
-<p class="note"><strong>Note</strong>: TLS is enabled by default. If you want to disable TLS in MySQL for PCF, you must follow the procedures in [SOME TOPIC]</p>
-
-Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
- 
-* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below. By default, TLS is enabled.
-
-<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF, you must follow the procedures in <a href="./prepare-tls.html">Preparing for TLS</a> <strong>before
-</strong> configuring security.</p>
+<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF, you must follow the procedures in <a href="./prepare-tls.html">Preparing for TLS</a> <strong>before< </strong> configuring security./p>
 
 Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
  
 * To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below.
->>>>>>> 656e1dd... final edits for PM feedback [#162967506]
 * To store your service instance credentials in runtime CredHub on PAS v2.0.x or later,
   perform the procedure in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
 
@@ -367,7 +359,7 @@ To enable TLS for the MySQL service, perform the following steps:
 1. **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
 <p class="note warning"><strong>WARNING</strong>: Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
-1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html) and [Modifying Apps for TLS](modify-apps-tls.html).
+1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html).
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
@@ -461,10 +453,8 @@ Follow the steps below to enable system logging for the MySQL broker and service
         <td>Enter the port of the syslog server for sending logs, for example, <code>29279</code>.</td></tr>
     <tr><td><strong>Transport Protocol</strong></td>
         <td>Select the protocol over which you want system logs. Pivotal recommends using TCP.</td></tr>
-=======
     <tr><td><strong>Enable TLS</strong></td>
     <td>If you select TCP, you can also select to send logs encrypted over TLS.</td></tr>
->>>>>>> 574f06f... small edits [#162967506]
     <tr><td><strong>Permitted Peer</strong></td>
         <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, for example, <code>*.example.com</strong></td></tr>
     <tr><td><strong>SSL Certificate</strong></td>
