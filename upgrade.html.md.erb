@@ -55,32 +55,20 @@ For more information, see [Service Interruptions](#interruptions) below.
 
 ## <a id="upgrade-instances"></a>Upgrade MySQL Instances
 
-After upgrading the MySQL for PCF service, you must upgrade existing service instances
+After upgrading the MySQL for PCF service, operators must upgrade existing service instances
 to be in sync with the new version of the service.
 Developers cannot create new bindings to a service instance that has not been upgraded.
 
-To upgrade existing service instances, do one of the following:
+To upgrade existing service instances, operators run the following command:
 
-- **Operators** <br><br>
-	Run the `upgrade-all-service-instances` errand using the following command:
+```
+bosh -d BROKER-NAME run-errand upgrade-all-service-instances
+```
 
-	```
-	bosh -d DEPLOYMENT-NAME run-errand upgrade-all-service-instances
-	```
-	<br>
-- **Operators or developers** <br><br>
-To upgrade existing service instances individually, run the `cf update-service` command.
-For more information about this command, see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
-<br><br>
-- **Developers** <br><br>
-After upgrade to MySQL for PCF v2.4, developers can take advantage of BOSH DNS functionality
-to facilitate failover in a leader-follower configuration. <br><br>To allow apps to automatically connect to a new leader, in the case
-where a leader in a leader-follower pair fails, do the following:
-	1. After upgrading to MySQL for PCF v2.4, unbind your apps. For instructions, see [Unbind an App from a Service Instance](./use.html#unbind).
-	2. Rebind your apps. For instructions, see [Bind a Service Instance to Your App](./use.html#bind).
-	3. If you use TLS, re-enable it. For instructions, see [Using TLS](./using-tls.html).
+Where `BROKER-NAME` is the deployment name of the broker.
 
-
+For more information about the `upgrade-all-service-instances` errand, see [upgrade-all-service-instances](./errands.html#upgrade-all-service-instances).
+	
 ## <a id="interruptions"></a>Service Interruptions
 
 Service changes and upgrades and failures at the process, VM, and IaaS level can cause outages in the MySQL for PCF service, as described below.
