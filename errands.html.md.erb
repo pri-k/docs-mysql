@@ -21,22 +21,17 @@ bosh deployments
 To run an errand, enter the following command:
 
 ```
-bosh -d DEPLOYMENT-NAME run-errand ERRAND-NAME
+bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
 ```
 
 Where:
 
-+ `DEPLOYMENT-NAME` is the BOSH deployment name for your MySQL service broker.
++ `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
 + `ERRAND-NAME` is the name of the errand you want to run.
-
-
-
 
 For example:
 
-<pre class="terminal">$ bosh -d pivotal-mysql-GUID run-errand deregister-broker</pre>
-
-`DEPLOYMENT-NAME` is always prefaced with `pivotal-mysql-`.
+<pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
 
 ### <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
