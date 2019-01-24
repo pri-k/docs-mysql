@@ -96,10 +96,9 @@ node becomes unhealthy, the proxy closes all connections to the unhealthy node
 and re-routes all subsequent connections to a healthy node.
 
 The proxy used in MySQL for PCF is Switchboard.
-Switchboard was developed to replace HAProxy as the proxy tier for the high availability cluster
-for MySQL databases in PCF.
+Switchboard was developed to replace HAProxy as the proxy tier for the high availability cluster for MySQL databases in PCF.
 
-<!-- PUT PICTURE HERE -->
+<%= image_tag "images/switchboard-all-healthy.png" %>
 
 Switchboard offers the following features: 
 
@@ -113,6 +112,4 @@ Switchboard offers the following features:
     Operators can connect to Switchboard to view the state of the nodes.
     For more information about monitoring proxy health status, see 
     [Monitoring Node Health](./monitor-health.html).
-    
-<!-- MOVE BELOW TO MONITORING -->
     
