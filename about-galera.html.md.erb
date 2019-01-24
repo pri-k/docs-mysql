@@ -14,7 +14,7 @@ and contains information to help users decide whether to  use HA clusters.
 
 By default, HA clusters splits large `Load Data` commands into small manageable units. This deviates from the standard behavior for MySQL. For more information, see [wsrep\_load\_data\_splitting] (https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_load_data_splitting) in the Percona XtraDB Cluster documentation.
 
-
+<!-- LINK OUT TO AVAILABILITY OPTIONS PAGE -->
 
 ## <a id="requirements"></a> Infrastructure Requirements for Highly Available Deployments
 
@@ -83,13 +83,10 @@ For more information about HA limitations, see [Percona XtraDB Cluster Limitatio
 - Large transaction sizes can inhibit the performance of the cluster and apps using the cluster. In a HA cluster, writes are processed as “a single memory-resident buffer”.
 
 - You cannot execute a DML statement in parallel with a DDL statement, if both statements affect the same tables. If they are expected in parallel, the DML and DDL statements are both applied immediately to the cluster, causing errors.
-
-## <a id="use"></a>Using HA Clusters
-
-<p class="note warning"><strong>WARNING:</strong> You cannot update to or from a highly available (HA) cluster plan
-  to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
   
 ## <a id="proxy"></a>Understanding the MySQL Proxy
+
+<!-- acknowledge this exists, give picture  -->
 
 MySQL for Pivotal Cloud Foundry (PCF) uses a proxy to send client connections
 to the healthy MySQL database cluster nodes in a highly available cluster plan.
@@ -101,6 +98,8 @@ and re-routes all subsequent connections to a healthy node.
 The proxy used in MySQL for PCF is Switchboard.
 Switchboard was developed to replace HAProxy as the proxy tier for the high availability cluster
 for MySQL databases in PCF.
+
+<!-- PUT PICTURE HERE -->
 
 Switchboard offers the following features: 
 
@@ -115,43 +114,5 @@ Switchboard offers the following features:
     For more information about monitoring proxy health status, see 
     [Monitoring Node Health](./monitor-health.html).
     
-### <a id="node-health"></a>Node Health ##
-
-When determining where to route traffic, the proxy queries an HTTP healthcheck
-process running on the node. This healthcheck can return as either
-healthy or unhealthy, or the node can be unresponsive.
-
-#### <a id="healthy"></a>Healthy ###
-
-If the healthcheck process returns HTTP status code `200`, the proxy includes
-the node in its pool of healthy nodes.
-
-When a new or resurrected nodes rejoin the cluster, the proxy continues to
-route all connections to the currently active node. In the case of failover,
-the proxy considers all healthy nodes as candidates for new connections.
-
-<%= image_tag "images/switchboard-all-healthy.png" %>
-
-#### <a id="unhealthy"></a>Unhealthy ###
-
-If the healthcheck returns HTTP status code `503`, the proxy considers the node
-unhealthy.
-
-<!-- We will eventually move the following link to a troubleshooting topic in 2.5 -->
-
-This happens when a node becomes non-primary. For more information, see
-[Cluster Scaling Behavior](https://docs.pivotal.io/p-mysql/1-10/architecture.html#scale-behavior).
-
-The proxy severs existing connections to newly unhealthy node. The proxy routes
-new connections to a healthy node, assuming such a node exists. Clients are
-expected to handle reconnecting on connection failure should the entire cluster
-become inaccessible.
-
-<%= image_tag "images/switchboard-unhealthy.png" %>
-
-#### <a id="unresponsive"></a>Unresponsive ###
-
-If node health cannot be determined due to an unreachable or unresponsive
-healthcheck endpoint, the proxy considers the node unhealthy. This may happen
-if there is a network partition or if the VM running the node and
-healthcheck died.
+<!-- MOVE BELOW TO MONITORING -->
+    
