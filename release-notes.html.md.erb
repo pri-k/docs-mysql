@@ -18,13 +18,36 @@ For instructions on verifying the stemcell, see <a href="./install-config.html#s
 To download the Xenial stemcell from Pivotal Network, go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Stemcells for PCF (Ubuntu Xenial)</a>.
 </p>
 
+## <a id="243"></a>v2.4.3
+
+**Release Date: January 25, 2019**
+
+### Fixed Issues
+
+This release fixes the following issue:
+
+* The issue in the interaction between the MariaDB Connector/J and the Java API.
+  This issue prevented TLS connection for Spring Cloud Services, Scheduler for PCF,
+  and all Spring apps that used the MariaDB Connector/J.
+  
+### Features
+
+Changes in this release:
+
+* Updates golang to v1.11.4 to address [CVE-2018-16873](https://github.com/golang/go/issues/29230)
+
 ## <a id="242"></a>v2.4.2
 
 **Release Date: December 3, 2018**
 
 ### Known Issues
 
-There are no known issues for this release.
+This release has the following issue:
+
+- There is a known issue in the interaction between the [MariaDB Connector/J](https://mariadb.com/kb/en/library/about-mariadb-connector-j/) and the Java API, which leads to the following limitations:
+  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile must have TLS **disabled** in the MySQL for PCF tile. 
+  - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J in their Spring apps to connect to a MySQL service instance.
+  Pivotal recommends developers configure their apps to use the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
 
 ### Security Fixes
 
