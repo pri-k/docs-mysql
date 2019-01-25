@@ -18,6 +18,8 @@ You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-con
 
 To use MySQL for PCF with your PCF apps, you need:
 
+* Decide what type of plan you want from the following options: single node, leader-follower, and highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
+* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).  
 * A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 * A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the PCF installation
