@@ -8,7 +8,7 @@ owner: MySQL
 <%= partial "./galera_beta" %>
 
 This topic describes how highly available (HA) clusters work in MySQL for Pivotal Cloud Foundry (PCF)
-and contains information to help users decide whether to use HA clusters.
+and contains information to help you decide whether to use HA clusters.
 
 ## <a id="understanding"></a> Understanding Highly Available Clusters
 
@@ -19,11 +19,11 @@ In an HA cluster topology, a cluster consists of three nodes, where each node co
 With three nodes, HA clusters are highly available and automatically resilient to failure. This is because if a node loses contact with the other two nodes, the other two nodes can remain in contact and continue to accept transactions. Because the number of nodes is odd, the two nodes can assume they represent the primary component. For more information about cluster availability, see
 [Percona XtraDB Cluster: Quorum and Availability of the cluster](https://www.percona.com/blog/2015/06/12/percona-xtradb-cluster-quorum-availability-cluster/) in the Percona XtraDB Cluster documentation.
 
-
-
 For more information about other availability options supported by MySQL for PCF, see [Availability Options](availability-options.html).
 
 ## <a id="requirements"></a> Infrastructure Requirements for Highly Available Deployments
+
+ Before deciding to use HA clusters for MySQL for PCF service plans, consider the following requirements.
 
 ### <a id="cap-plan"></a> Capacity Planning
 
