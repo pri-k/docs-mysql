@@ -13,7 +13,12 @@ before upgrading to the latest v2.5.x version.
 For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
 <!-- If you do not do this than your installation is like stuck. Does count as a breaking change or warning? -->
-<p class="note breaking"><strong>Breaking Change: </strong> All service bindings created using MySQL for Pivotal Cloud Foundry (PCF) v2.3 or earlier use IP addresses. Any bindings created using v2.3 or earlier must be re-created before upgrading to v2.5, which requires service bindings that use DNS hostnames. For more information, see <a href="errands.html#find-deprecated-bindings">MySQL for PCF Errands</a>.</p>
+<p class="note breaking"><strong>Breaking Change: </strong>
+  All service bindings created using MySQL for Pivotal Cloud Foundry (PCF) v2.3
+  or earlier use IP addresses. Any bindings created using v2.3 or earlier must
+  be re-created before upgrading to v2.5, which requires service bindings that
+  use DNS hostnames. For more information, see
+  <a href="errands.html#find-deprecated-bindings">MySQL for PCF Errands</a>.</p>
 
 ## <a id="253"></a>v2.5.3
 
@@ -26,7 +31,7 @@ This release fixes the following issue:
 * The issue in the interaction between the MariaDB Connector/J and the Java API.
   This issue prevented TLS connection for Spring Cloud Services, Scheduler for PCF,
   and all Spring apps that used the MariaDB Connector/J.
-  
+
 ### Features
 
 Changes in this release:
@@ -42,7 +47,7 @@ Changes in this release:
 This release has the following issue:
 
 - There is a known issue in the interaction between the [MariaDB Connector/J](https://mariadb.com/kb/en/library/about-mariadb-connector-j/) and the Java API, which leads to the following limitations:
-  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile must have TLS **disabled** in the MySQL for PCF tile. 
+  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile must have TLS **disabled** in the MySQL for PCF tile.
   - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J in their Spring apps to connect to a MySQL service instance.
   Pivotal recommends developers configure their apps to use the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
 
@@ -63,35 +68,34 @@ New features and changes in this release:
 MySQL for PCF now supports three deployment topologies. In addition to single
 node and leader-follower service plans, operators can offer an HA cluster
 service plan. For information on how to configure an HA cluster plan, see
-[Configure Service
-Plans](http://docs.pivotal.io/p-mysql/install-config.html#active). For
-information on availability criteria for each topology, see [Availability
-Options](http://docs.pivotal.io/p-mysql/availability-options.html).
+[Configure Service Plans](./install-config.html#active). For
+information on availability criteria for each topology, see
+[Availability Options](./availability-options.html).
 
 Features of HA clusters include:
 
 - Multiple deployments of HA clusters can be provisioned on demand.
 - Developers can view a dashboard to see the state of each node in an HA cluster.
-  For more information, see [Monitor Node Health Using the Dashboard](https://docs.pivotal.io/p-mysql/monitor-health.html#dashboard).
+  For more information, see [Monitor Node Health Using the Dashboard](./monitor-health.html#dashboard).
 - Connections to HA clusters are secured via TLS.
 - Monitoring, diagnostics, and backups are performed from a jumpbox VM.
   For information on how to configure this VM,
-  see [Configure Service Plans](https://docs.pivotal.io/p-mysql/install-config.html#active).
+  see [Configure Service Plans](./install-config.html#active).
 	- The jumpbox VM runs a replication canary that continuously tests replication health of cluster nodes.
           For more information, see [Replication Canary](https://docs.pivotal.io/p-mysql/1-10/monitor.html#repcanary).
 	- Operators can run diagnostics, such as disk usage, on an HA cluster by running `mysql-diag` on the jumpbox VM.
-          For more information, see [Running mysql-diag](https://docs.pivotal.io/p-mysql/1-10/mysql-diag.html).
+          For more information, see [Running mysql-diag](./mysql-diag.html).
 	- Like single node and leader-follower, configuring automatic backups is required.
           For information on how to configure automated backups,
-          see [Configure Backups](https://docs.pivotal.io/p-mysql/install-config.html#backups).
+          see [Configure Backups](./install-config.html#backups).
           For instructions to perform a manual backup and restore,
-          see [Backing Up and Restoring On-Demand MySQL for PCF](https://docs.pivotal.io/p-mysql/2-5/backup-and-restore.html).
+          see [Backing Up and Restoring On-Demand MySQL for PCF](./backup-and-restore.html).
 
 While in beta, the following limitations exist for HA clusters:
 
 - Operators are required to impose a plan quota of five or fewer instances.
 - Restoring from backups is a manual process.
-  For more information, see [Restore an HA Cluster Instance](https://docs.pivotal.io/p-mysql/backup-and-restore.html#runHA).
+  For more information, see [Restore an HA Cluster Instance](./backup-and-restore.html#runHA).
 - HA clusters cannot integrate with [Vormetric Transparent Encryption for PCF](https://docs.pivotal.io/partners/vormetric-transparent-encryption/).
 
 <!-- Add new link when topic is done -->
@@ -111,7 +115,7 @@ You should use HA clusters only when the availability criteria that leader-follo
 ####<a name="bindings"></a>All Bindings Use DNS
 
 + All services bindings use DNS hostnames instead of IP addresses.
-This feature was introduced in [MySQL for PCF v2.4](https://docs.pivotal.io/p-mysql/2-4/release-notes.html#240),
+This feature was introduced in [MySQL for PCF v2.4.0](https://docs.pivotal.io/p-mysql/2-4/release-notes.html#240),
 which enabled no-rebind failovers as well as future improvements and highly available (HA) clusters.
 
 ####<a name="dev-monitor"></a>Developers Can Monitor Service Instances
@@ -120,7 +124,7 @@ which enabled no-rebind failovers as well as future improvements and highly avai
 [Cloud Foundry Command Line Interface (cf CLI) Log Cache plugin](https://github.com/cloudfoundry/log-cache-cli).
 For more information about the cf CLI Log Cache plugin,
 see [Cloud Foundry Command Line Interface (cf CLI) Log Cache plugin](https://github.com/cloudfoundry/log-cache-cli).
-For more information about metrics for MySQL for PCF, see [Monitoring and KPIs](https://docs.pivotal.io/p-mysql/monitor.html).
+For more information about metrics for MySQL for PCF, see [Monitoring and KPIs](./monitor.html).
 
 ####<a name="connections"></a>Connections Secured with TLS by Default
 
