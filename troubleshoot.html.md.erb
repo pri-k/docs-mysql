@@ -49,6 +49,136 @@ For information on temporary MySQL for PCF service interruptions, see <a href=".
 
 This section provides information on how to troubleshooting specific errors or error messages.
 
+<a id="deprecated-service-bindings"></a><h3>Deprecated Service Bindings Found (Upgrade Error)</h3>
+
+This problem happens when upgrading to MySQL for PCF v2.5 if there are service bindings that are still using IP addresses.
+
+<h4>Symptom</h4>
+
+You see in the Ops Manager installation pane that the upgrade process fails at the following step:
+
+<%= image_tag("error-step.png") %>
+
+The error output in the logs contains a table of bindings or service keys which must be updated.
+
+<pre class="terminal">
+Stdout    +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+          |          SERVICE          |             SERVICE GUID             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
+          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+          | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no dns: hostname="10.0.8.5" |
+          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+          | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept-tls      | AppBinding        | no dns: hostname="10.0.8.6" |
+          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+          | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | test-cli           | ServiceKeyBinding | no dns: hostname="10.0.8.6" |
+          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+
+Errand 'validate-before-upgrade-instances' completed with error (exit code 1)
+Exit code 1
+Stderr     2018/12/18 02:51:51 Deprecated service instances found, try upgrade it manually before upgrading tile
+</pre>
+
+<h4>Explanation</h4>
+
+In MySQL for PCF v2.5, if you run `upgrade-all-service-instances` while there
+are service bindings that use IP addresses, app downtime can occur. This is
+because bindings are still directing apps to connect with IP addresses, but the
+TLS certificate is signed with a DNS hostname. This prevents apps that validate
+the server hostname in the TLS certificate from establishing a TLS connection
+to the database.
+
+In MySQL for PCF v2.5, the `validate-before-upgrade-instances` errand checks
+that there are no service bindings or service keys using IP addresses, and, if
+there are, outputs the above error and prevents the
+`upgrade-all-service-instances` errand from running.
+
+For general information about errands, including `validate-before-upgrade-instances` and `upgrade-all-service-instances`, see [MySQL for PCF Errands](./errands.html).
+
+<h4>Solution</h4>
+
+To solve this issue, follow these steps carefully. Some of the following steps require coordination with your app developers.
+
+<h5>Operator Procedure: Part 1 </h5>
+
+To upgrade your service instances, operators must do the following:
+
+1. Notify the developers who own the apps listed in the error output table above that you will be upgrading all service instances, which can impact app connectivity to the database.
+1. To log in to the BOSH Director, do the procedure in [Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
+1. To locate the BOSH deployment name for your MySQL service broker, run the following command:
+
+    ```
+    bosh deployments
+    ```
+1. Record the BOSH deployment name for the MySQL service broker, which looks like `pivotal-mysql-GUID`.
+1. To upgrade all service instances, run the following command:
+
+    ```
+    bosh -d pivotal-mysql-GUID run-errand upgrade-all-service-instances
+    ```
+
+    Where `pivotal-mysql-GUID` is the value you recorded in the previous step.
+
+1. Notify your developers that at this time, they will see that apps that do hostname validation cannot establish a TLS connection to the database. These apps will output an error similar the following example:
+
+    <pre class="terminal">
+    failed to perform TLS handshake with host "10.0.8.5:3306": x509: certificate is valid for 127.0.0.1, not 10.0.8.5
+    </pre>
+
+<h5>Developer Procedure</h5>
+
+To replace your deprecated service bindings with new service bindings that use DNS hostnames, developers must do the following for each binding listed in the log error above:
+
+1. To unbind your app from your service instance, run the following command:
+
+    ```
+    cf unbind-service APP-NAME SERVICE-INSTANCE
+    ```
+1. To re-bind your app to your service instance, run the following command:
+
+    ```
+    cf bind-service APP-NAME SERVICE-INSTANCE
+    ```
+1. To restart your app, run the following command:
+
+     ```
+     cf restart APP-NAME
+     ```
+
+<h5>Operator Procedure: Part 2 </h5>
+
+After you restart all of your apps, your apps can connect to the database and resume service. However, your Ops Manager installation is still in a failed state. To finish the installation, operators must complete the following steps:
+
+1. To ensure that all deprecated service bindings have been replaced, run the following errand:
+
+    ```
+    bosh -d pivotal-mysql-GUID run-errand validate-before-upgrade-instances
+    ```
+   If this errand succeeds, you see the following output:
+    <pre class="terminal">
+    $ bosh -d pivotal-mysql-00b772e5b11318b2c001 run-errand validate-before-upgrade-instances
+    Using environment '10.0.0.5' as client 'ops_manager'<br />
+    Using deployment 'pivotal-mysql-00b772e5b11318b2c001'<br />
+    Task 186<br />
+    Task 186 | 00:07:32 | Preparing deployment: Preparing deployment (00:00:01)
+    Task 186 | 00:07:33 | Running errand: dedicated-mysql-broker/2a286b01-cf96-4519-a8ed-294e27f8752c (0) (00:00:01)
+    Task 186 | 00:07:34 | Fetching logs for dedicated-mysql-broker/2a286b01-cf96-4519-a8ed-294e27f8752c (0): Finding and packing log files (00:00:01)<br />
+    Task 186 Started  Wed Dec 19 00:07:32 UTC 2018
+    Task 186 Finished Wed Dec 19 00:07:35 UTC 2018
+    Task 186 Duration 00:00:03
+    Task 186 done<br />
+    Instance   dedicated-mysql-broker/2a286b01-cf96-4519-a8ed-294e27f8752c
+    Exit Code  0
+    Stdout     No deprecated bindings found.<br />
+    Stderr     -<br />
+    1 errand(s)<br />
+    Succeeded
+    </pre>
+
+1. In the Ops Manager Installation Dashboard, click **Review Pending Changes**.
+
+1. In the **Review Pending Changes** pane, ensure that the **Validate no IP-based bindings in use before upgrade-all-service-instances** and **Upgrade all On-demand MySQL Service Instances** errands are selected.
+
+1. After reviewing the pending changes, click **Apply Changes** to complete the installation.
+
 <a id="install-fail"></a><h3>Failed Install</h3>
 
 <%= partial '../../p-mysql/odb/tshoot-err-install-fail' %>
