@@ -18,6 +18,25 @@ For instructions on verifying the stemcell, see <a href="./install-config.html#s
 To download the Xenial stemcell from Pivotal Network, go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Stemcells for PCF (Ubuntu Xenial)</a>.
 </p>
 
+## <a id="244"></a>v2.4.4
+
+**Release Date:**  February 5, 2019
+
+### Fixed Issues
+
+This release fixes the following issue:
+
+* The issue in the interaction between the MariaDB Connector/J and the Java API.
+  This issue prevented TLS connection for Spring Cloud Services, Scheduler for PCF,
+  and all Spring apps that used the MariaDB Connector/J.
+
+### Security Fixes
+
+Changes in this release:
+
+* Updates golang to v1.11.4 to address [CVE-2018-16873](https://github.com/golang/go/issues/29230).
+* Updates Percona Server to v5.7.24-26 to address [CVE-2018-3133](http://www.aqdog.com/vulns/vulnsmanagent/vulnsDetails?id=20093&cve_id=CVE-2018-3133).
+
 ## <a id="243"></a>v2.4.3
 
 **Release Date: January 25, 2019**
