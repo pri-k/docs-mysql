@@ -10,16 +10,23 @@ owner: MySQL
 This topic describes how highly available (HA) clusters work in MySQL for Pivotal Cloud Foundry (PCF)
 and contains information to help users decide whether to use HA clusters.
 
-## <a id="understanding"></a> Understanding Highly Available Clusters
+## <a id="understanding"></a> Highly Available Cluster Topology
 
 In an HA cluster topology, a cluster consists of three nodes, where each node contains the same set of data synchronized across nodes. Data is replicated across nodes simultaneously or not written at all if replication fails even on a single node. 
-
-<!-- DIAGRAM -->
 
 With three nodes, HA clusters are highly available and automatically resilient to failure. This is because if a node loses contact with the other two nodes, the other two nodes can remain in contact and continue to accept transactions. Because the number of nodes is odd, the two nodes can assume they represent the primary component. For more information about cluster availability, see
 [Percona XtraDB Cluster: Quorum and Availability of the cluster](https://www.percona.com/blog/2015/06/12/percona-xtradb-cluster-quorum-availability-cluster/) in the Percona XtraDB Cluster documentation.
 
+In HA topology, the MySQL for PCF service uses the following:
 
+* Three MySQL servers running [Percona XtraDB](https://www.percona.com/software/mysql-database/percona-xtradb-cluster) as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync.
+
+* Three [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) proxies that are colocated on the MySQL nodes that direct queries to a single backend and provide fast failover in the event of a backend server failure.
+
+If you use multiple availability zones, the MySQL installer spreads MySQL and Proxy components across zones to make the service durable in the event of a zone failure.
+
+<!-- Edit corresponding ha-clusters.html file in draw.io to update diagram -->
+![Highly Available Topology](ha-clusters.png)
 
 For more information about other availability options supported by MySQL for PCF, see [Availability Options](availability-options.html).
 
@@ -99,7 +106,7 @@ The maximum write-set size allowed in HA clusters is 2 GB. For more information,
 
 The maximum number of rows each write-set can contain defaults to no limit.  For more information, see [wsrep\_max\_ws\_rows](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_max_ws_rows).
   
-## <a id="proxy"></a>Understanding the MySQL Proxy
+## <a id="proxy"></a>MySQL Proxy
 
 MySQL for Pivotal Cloud Foundry (PCF) uses a proxy to send client connections
 to the healthy MySQL database cluster nodes in a highly available cluster plan.
