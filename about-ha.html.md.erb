@@ -7,122 +7,187 @@ owner: MySQL
 
 <%= partial "./galera_beta" %>
 
-This topic describes how highly available (HA) clusters work in MySQL for Pivotal Cloud Foundry (PCF)
-and contains information to help you decide whether to use HA clusters.
+This topic describes how highly available (HA) clusters work in MySQL for Pivotal
+Cloud Foundry (PCF) and contains information to help you decide whether to use
+HA clusters.
 
 ## <a id="understanding"></a> Highly Available Cluster Topology
 
-In an HA cluster topology, a cluster consists of three nodes, where each node contains the same set of data synchronized across nodes. Data is replicated across nodes simultaneously or not written at all if replication fails even on a single node. 
+In an HA cluster topology, a cluster consists of three nodes, where each node
+contains the same set of data synchronized across nodes. Data is replicated across
+nodes simultaneously or not written at all if replication fails even on a single node.
 
-With three nodes, HA clusters are highly available and automatically resilient to failure. This is because if a node loses contact with the other two nodes, the other two nodes can remain in contact and continue to accept transactions. Because the number of nodes is odd, the two nodes can assume they represent the primary component. For more information about cluster availability, see
-[Percona XtraDB Cluster: Quorum and Availability of the cluster](https://www.percona.com/blog/2015/06/12/percona-xtradb-cluster-quorum-availability-cluster/) in the Percona XtraDB Cluster documentation.
+With three nodes, HA clusters are highly available and automatically resilient to failure.
+This is because if a node loses contact with the other two nodes, the other two nodes can
+remain in contact and continue to accept transactions. Because the number of nodes is odd,
+the two nodes can assume they represent the primary component. For more information about cluster availability, see
+[Percona XtraDB Cluster: Quorum and Availability of the cluster](https://www.percona.com/blog/2015/06/12/percona-xtradb-cluster-quorum-availability-cluster/)
+in the Percona XtraDB Cluster documentation.
 
 In HA topology, the MySQL for PCF service uses the following:
 
-* Three MySQL servers running [Percona XtraDB](https://www.percona.com/software/mysql-database/percona-xtradb-cluster) as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync.
+* Three MySQL servers running [Percona XtraDB](https://www.percona.com/software/mysql-database/percona-xtradb-cluster)
+as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync.
 
-* Three [Switchboard](https://github.com/cloudfoundry-incubator/switchboard) proxies that are colocated on the MySQL nodes that direct queries to a single backend and provide fast failover in the event of a backend server failure.
+* Three Switchboard proxies that are colocated on the MySQL nodes. The proxies
+gracefully handle failure of nodes which enables fast failover to other nodes
+within the cluster. For more information, see [MySQL Proxy](#proxy).
 
-If you use multiple availability zones, the MySQL installer spreads MySQL and Proxy components across zones to make the service durable in the event of a zone failure.
+* A jumpbox VM for monitoring, diagnosing and backing up MySQL nodes. For more
+information, see [Highly Available (HA) Cluster Service Plans
+](release-notes.html#ha-cluster).
+
+The following diagram shows an HA cluster in three availability zones (AZs):
 
 <!-- Edit corresponding ha-clusters.html file in draw.io to update diagram -->
 ![Highly Available Topology](ha-clusters.png)
 
-For more information about other availability options supported by MySQL for PCF, see [Availability Options](availability-options.html).
+For more information about other availability options supported by MySQL for PCF,
+see [Availability Options](availability-options.html).
 
 ## <a id="requirements"></a> Infrastructure Requirements for Highly Available Deployments
 
- Before deciding to use HA clusters for MySQL for PCF service plans, consider the following requirements.
+ Before deciding to use HA clusters for MySQL for PCF service plans, consider the
+ following requirements.
 
 ### <a id="cap-plan"></a> Capacity Planning
 
-When calculating IaaS usage, you must take into account that each HA instance requires three VMs. Therefore, the resources used for an HA plan must be tripled. For more information, see [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
+When calculating IaaS usage, you must take into account that each HA instance
+requires three VMs. Therefore, the resources used for an HA plan must be tripled.
+For more information, see [Resource Usage Planning for On-Demand Plans](./recommended.html#resources).
 
 
-### <a id="avail-zones"></a> Availability Zones 
+### <a id="avail-zones"></a> Availability Zones
 
-To minimize impact of an availability zone (AZ) outage and to remove single points of failure, Pivotal recommends that you provision three AZs if using HA deployments. With three AZs, nodes are deployed to separate AZs.
+To minimize impact of an AZ outage and to remove single points
+of failure, Pivotal recommends that you provision three AZs if using HA deployments.
+With three AZs, nodes are deployed to separate AZs.
 
 
 ### <a id="network-req"></a> Networking Rules
-In addition to the standard networking rules needed for MySQL for PCF, the operator must ensure HA
-cluster specific network rules are also configured.
+In addition to the standard networking rules needed for MySQL for PCF, the operator
+must ensure HA cluster specific network rules are also configured.
 
-For information about HA cluster specific networking rules, see [Required Networking Rules for Highly Available
-Cluster Plans](./about.html#hac-ports).
+For information about HA cluster specific networking rules,
+see [Required Networking Rules for Highly Available Cluster Plans](./about.html#hac-ports).
 
 ## <a id="limitations"></a> Highly Available Cluster Limitations
 
-When deployed with HA topology, MySQL for PCF runs three nodes. This cluster arrangement imposes some limitations which do not apply to single node or leader-follower MySQL database servers. For more information about the difference between single node, leader-follower, and HA cluster topologies, see [Availability Options](./availability-options.html).
+When deployed with HA topology, MySQL for PCF runs three nodes. This cluster
+arrangement imposes some limitations which do not apply to single node or
+leader-follower MySQL database servers. For more information about the difference
+between single node, leader-follower, and HA cluster topologies,
+see [Availability Options](./availability-options.html).
 
-HA clusters perform validations at startup and during runtime to prevent you from using MySQL features that are not supported. If a validation fails during startup, the server is halted and throws an error. If a validation fails during runtime the operation is denied and throws an error.
+HA clusters perform validations at startup and during runtime to prevent you from
+using MySQL features that are not supported. If a validation fails during startup,
+the server is halted and throws an error. If a validation fails during runtime the
+operation is denied and throws an error.
 
-These validations are designed to ensure optimal operation for common cluster setups that do not require experimental features and do not rely on operations not supported by HA clusters.
+These validations are designed to ensure optimal operation for common cluster setups
+that do not require experimental features and do not rely on operations not supported
+by HA clusters.
 
-For more information about HA limitations, see [Percona XtraDB Cluster Limitations](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/limitation.html) in the Percona XtraDB Cluster documentation.
+For more information about HA limitations,
+see [Percona XtraDB Cluster Limitations](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/limitation.html)
+in the Percona XtraDB Cluster documentation.
 
-### <a id="dev-storage"></a> Storage Engine Limitations 
+### <a id="dev-storage"></a> Storage Engine Limitations
 
-- HA clusters only supports the InnoDB storage engine. The InnoDB is the default storage engine for new tables. Pre-existing tables that are not using InnoDB are at risk because they are not replicated within a cluster.
+- HA clusters only supports the InnoDB storage engine. The InnoDB is the default
+storage engine for new tables. Pre-existing tables that are not using InnoDB are
+at risk because they are not replicated within a cluster.
 
-- Large DDL statements can lock all schemas. This can be mitigated by using the Rolling Schema Upgrade (RSU) method. For more information about using RSU to apply DDL statements, see [Using Rolling Schema Upgrade](./rsu.html).
+- Large DDL statements can lock all schemas. This can be mitigated by using the
+ Rolling Schema Upgrade (RSU) method. For more information about using RSU to apply
+ DDL statements, see [Using Rolling Schema Upgrade](./rsu.html).
 
-- Large transaction sizes can inhibit the performance of the cluster and apps using the cluster because they are buffered in memory.
+- Large transaction sizes can inhibit the performance of the cluster and apps using
+the cluster because they are buffered in memory.
 
-- You cannot execute a DML statement in parallel with a DDL statement, if both statements affect the same tables. If they are expected in parallel, the DML and DDL statements are both applied immediately to the cluster, causing errors.
+- You cannot execute a DML statement in parallel with a DDL statement, if both
+statements affect the same tables. If they are expected in parallel, the DML and
+DDL statements are both applied immediately to the cluster, causing errors.
 
 ### <a id="dev-arch"></a> Architecture Limitations
 
-- All tables must have a primary key. You can use multi-column primary keys. This is because HA clusters replicate using row based replication and ensure unique rows on each instance.
+- All tables must have a primary key. You can use multi-column primary keys. This
+is because HA clusters replicate using row based replication and ensure unique rows
+on each instance.
 
-- Explicit table locking is not supported. For more information, see [EXPLICIT TABLE LOCKING](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/features/pxc-strict-mode.html#explicit-table-locking) in the Percona XtraDB Cluster documentation.
+- Explicit table locking is not supported. For more information,
+see [EXPLICIT TABLE LOCKING](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/features/pxc-strict-mode.html#explicit-table-locking)
+in the Percona XtraDB Cluster documentation.
 
-- By default, auto-increment variables are not sequential and each node has gaps in IDs. This prevents auto-increment replication conflicts across the cluster. For more information, see [wsrep\_auto\_increment\_control](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_auto_increment_control) in the Percona XtraDB Cluster documentation.
+- By default, auto-increment variables are not sequential and each node has gaps
+in IDs. This prevents auto-increment replication conflicts across the cluster.
+For more information, see [wsrep\_auto\_increment\_control](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_auto_increment_control)
+in the Percona XtraDB Cluster documentation.
 
 - HA clusters sets developers to `READ ONLY` when using auto increment variables.
 
-- In InnoDB, some transactions can cause deadlocks. You can minimize deadlocks in your apps by rewriting transactions and SQL statements. For more information about deadlocks, see [Deadlocks in InnoDB](http://dev.mysql.com/doc/refman/en/innodb-deadlocks.html) and [How to Minimize and Handle Deadlocks](http://dev.mysql.com/doc/refman/en/innodb-deadlocks-handling.html) in MySQL documentation.
+- In InnoDB, some transactions can cause deadlocks. You can minimize deadlocks in
+your apps by rewriting transactions and SQL statements. For more information about
+deadlocks, see [Deadlocks in InnoDB](http://dev.mysql.com/doc/refman/en/innodb-deadlocks.html)
+and [How to Minimize and Handle Deadlocks](http://dev.mysql.com/doc/refman/en/innodb-deadlocks-handling.html)
+in MySQL documentation.
 
-- Table partitioning can cause performance issues in the cluster. This is as a result of the implicit table locks that are used when running table partition commands.
+- Table partitioning can cause performance issues in the cluster. This is as a
+result of the implicit table locks that are used when running table partition commands.
 
 ### <a id="network-limit"></a> Networking Limitations
 
-- Round-trip latency between database nodes must be less than five seconds. Latency exceeding this results in a network partition. If more than half of the nodes are partitioned, the cluster loses quorum and becomes unusable until manually bootstrapped. For more information about bootstrapping HA clusters, see [Bootstrapping](./bootstrapping.html).
+- Round-trip latency between database nodes must be less than five seconds.
+Latency exceeding this results in a network partition. If more than half of the
+nodes are partitioned, the cluster loses quorum and becomes unusable until manually
+bootstrapped. For more information about bootstrapping HA clusters, see [Bootstrapping](./bootstrapping.html).
 
 ## <a id="server"></a> MySQL Server Defaults for HA Components
 This section describes some defaults that MySQL for PCF applies to HA components.
 
 ### State Snapshot Transfer Process
-When a new node is added to or rejoins a cluster, a primary node from the cluster is designated as the state donor. The new node synchronizes with the donor through the State Snapshot Transfer (SST) process.
+When a new node is added to or rejoins a cluster, a primary node from the cluster
+is designated as the state donor. The new node synchronizes with the donor through
+the State Snapshot Transfer (SST) process.
 
-MySQL for PCF uses Xtrabackup for SST, which lets the state donor node to continue accepting reads and writes during the transfer. HA clusters default to using rsync to perform SST, which is fast, but blocks requests during the transfer. For more information about [Percona XtraBackup SST Configuration](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/manual/xtrabackup_sst.html) in the Percona XtraDB Cluster documentation.
+MySQL for PCF uses Xtrabackup for SST, which lets the state donor node to continue
+accepting reads and writes during the transfer. HA clusters default to using rsync
+to perform SST, which is fast, but blocks requests during the transfer. For more
+information about [Percona XtraBackup SST Configuration](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/manual/xtrabackup_sst.html)
+in the Percona XtraDB Cluster documentation.
 
 ### Large Data File Splitting Enabled
 
-By default, HA clusters splits large `Load Data` commands into small manageable units. This deviates from the standard behavior for MySQL. For more information, see [wsrep\_load\_data\_splitting] (https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_load_data_splitting) in the Percona XtraDB Cluster documentation.
+By default, HA clusters splits large `Load Data` commands into small manageable units.
+This deviates from the standard behavior for MySQL.
+For more information, see [wsrep\_load\_data\_splitting] (https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_load_data_splitting)
+in the Percona XtraDB Cluster documentation.
 
 ### Maximum Transaction Sizes
 These are the maximum transaction sizes set for HA clusters:
 
-The maximum write-set size allowed in HA clusters is 2 GB. For more information, see [wsrep\_max\_ws\_size](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_max_ws_size).
+The maximum write-set size allowed in HA clusters is 2 GB. For more information,
+see [wsrep\_max\_ws\_size](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_max_ws_size).
 
-The maximum number of rows each write-set can contain defaults to no limit.  For more information, see [wsrep\_max\_ws\_rows](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_max_ws_rows).
-  
+The maximum number of rows each write-set can contain defaults to no limit.
+For more information, see [wsrep\_max\_ws\_rows](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_max_ws_rows).
+
 ## <a id="proxy"></a>MySQL Proxy
 
 MySQL for Pivotal Cloud Foundry (PCF) uses a proxy to send client connections
 to the healthy MySQL database cluster nodes in a highly available cluster plan.
 Using a proxy gracefully handles failure of nodes, enabling fast,
-failover to other nodes within the cluster. When a 
+failover to other nodes within the cluster. When a
 node becomes unhealthy, the proxy closes all connections to the unhealthy node
 and re-routes all subsequent connections to a healthy node.
 
 The proxy used in MySQL for PCF is Switchboard.
-Switchboard was developed to replace HAProxy as the proxy tier for the high availability cluster for MySQL databases in PCF.
+Switchboard was developed to replace HAProxy as the proxy tier for the high
+availability cluster for MySQL databases in PCF.
 
 <%= image_tag "images/switchboard-all-healthy.png" %>
 
-Switchboard offers the following features: 
+Switchboard offers the following features:
 
 - **MySQL Server Access**
 
@@ -132,6 +197,5 @@ Switchboard offers the following features:
 - **Switchboard and API**
 
     Operators can connect to Switchboard to view the state of the nodes.
-    For more information about monitoring proxy health status, see 
+    For more information about monitoring proxy health status, see
     [Monitoring Node Health](./monitor-health.html).
-    
