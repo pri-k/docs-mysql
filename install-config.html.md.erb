@@ -200,12 +200,12 @@ Perform the following steps for each plan that you want to use in your PCF deplo
     <tr><td><strong>Paid Plan</strong></td>
         <td>Check this box to indicate that this service plan is paid.</td></tr>
     <tr><td><strong>MySQL VM Type</strong></td>
-        <td>Select a VM type for the MySQL data nodes.</td></tr>
+        <td>Select a VM type for the MySQL nodes.</td></tr>
     <tr><td><strong>Jumpbox VM Type</strong></td>
         <td>Only for highly available cluster plans. Select a VM type for the MySQL jumpbox node.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
-        <td>Select a disk size. This disk stores the MySQL messages.
-          <ul><li>Single node or leader-follower plans: Select a disk size three times larger than the disk you intend to provide to developers.</li>
+        <td>Select a disk size. This disk stores the MySQL data.
+          <ul><li>Single node or leader-follower plans: Select a disk size three times larger than the maximum size of the data developers will store in it.</li>
             <li>Highly available cluster plans: Select a disk size that is the same size you intend to provide to developers.</li></ul>
         <p class="note"><strong>Note</strong>: For backups to work properly, follow these
           sizing recommendations.
