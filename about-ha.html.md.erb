@@ -33,9 +33,8 @@ as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync.
 gracefully handle failure of nodes which enables fast failover to other nodes
 within the cluster. For more information, see [MySQL Proxy](#proxy).
 
-* A jumpbox VM for monitoring, diagnosing and backing up MySQL nodes. For more
-information, see [Highly Available (HA) Cluster Service Plans
-](release-notes.html#ha-cluster).
+* A jumpbox VM called `mysql-monitor` for monitoring, diagnosing and backing up MySQL nodes. You can run the `mysql-diag` tool on the `mysql-monitor` VM to view the status of your cluster nodes. For more
+information about `mysql-diag`, see [Running mysql-diag](./mysql-diag.html).
 
 The following diagram shows an HA cluster in three availability zones (AZs):
 
