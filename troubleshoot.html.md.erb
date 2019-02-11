@@ -37,6 +37,11 @@ In this topic:
     * [View Resource Saturation and Scaling](#view-resources)
     * [Identify Service Instance Owner](#id-instance-owner)
     * [Monitor Quota Saturation and Service Instance Count](#monitor-quota)
+* [Highly Available Cluster Troubleshooting Errors]()
+    * [Many Replication Errors in Logs]()
+    * [Node Unable to Rejoin]()
+    * [Unresponsive Nodes]()
+    * [Accidental Deletion of Service Plan]()
 * [Techniques for Troubleshooting Highly Available Clusters](#tech-ha)
     * [Check Cluster State](#check-state)
     * [Check Replication Status](#check-replication)
@@ -767,13 +772,13 @@ To retrieve the admin and read-only admin credentials for a service instance fro
         --client-secret=abcdefghijklm123456789</pre>
 </li>
 <li> Use the CredHub CLI to retrieve the credentials.
-    <ul><li> To retrieve the password for the admin user, run the following command:
-        <pre><code>credhub get -n /p-bosh/service-instance_GUID/admin_password</code></pre>
+    <ol><li> To retrieve the password for the admin user, run the following command:
+        <pre>credhub get -n /p-bosh/service-instance_GUID/admin_password</pre>
         In the output, the password appears under <code>value</code>.</li>
         <br>
     <li> To retrieve the password for the read-only admin user, run the following command:
-        <pre><code>credhub get -n /p-bosh/service-instance_GUID/read_only_admin_password</pre></code>
-        In the output, the password appears under <code>value</code>.</li></ul>
+        <pre>credhub get -n /p-bosh/service-instance_GUID/read_only_admin_password</pre>
+        In the output, the password appears under <code>value</code>.</li></ol>
     <br>
     For example:
     <pre class="terminal">$ credhub get -n /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/admin_password
@@ -782,6 +787,8 @@ To retrieve the admin and read-only admin credentials for a service instance fro
     type: password
     value: UMF2DXsqNPPlCNWMdVMcNv7RC3Wi10
     version_created_at: 2018-04-02T23:16:09Z</pre>
+</li>
+</ol>
 
 <a id="reinstall"></a><h3>Reinstall a Tile</h3>
 
@@ -799,26 +806,253 @@ To reinstall the MySQL for PCF tile, see the <a href="https://discuss.pivotal.io
 
 <%= partial '../../p-mysql/odb/tshoot-tech-monitor-quota' %>
 
-<h2><a id="tech-ha"></a>Techniques for Troubleshooting Highly Available Clusters</h2>
+<h2><a id="dig-tech"></a>Highly Available Cluster Troubleshooting Errors</h2>
+
+<h3><a id="replication-errors"></a> Many Replication Errors in Logs</h3>
+
+  <h4>Symptom</h4>
+
+  You see many replication errors in the MySQL logs, like the following:
+
+
+  <pre class="terminal">160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
+160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
+160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'</pre>
+
+  <h4>Explanation and Solution</h4>
+
+  For solutions for replication errors in MySQL log files, see the table below.
+
+  <table class="nice">
+    <tr>
+      <th>If you see replication errors and…</th>
+      <th>then…</th>
+    </tr>
+    <tr>
+      <td><code>ALTER TABLE</code> errors</td>
+      <td>Fix the <code>ALTER TABLE</code> error.<br>
+          This error can occur when an app issues an invalid data definition statement.
+          Other nodes log this problem as a replication error because they fail to replicate the <code>ALTER TABLE</code>.</td>
+    </tr>
+    <tr>
+      <td>Increased persistent disk usage or running out of working memory</td>
+      <td>Decode the <code>GRA_*.log</code> files and look for errors. 
+          See <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-PCF-v1-10">
+          How to decode Galera GRA log files</a> in the Pivotal Support knowledge base.
+          The GRA log files contain failing DDL statements.</td>
+    </tr>
+    <tr>
+      <td>No other problems</td>
+      <td>Ignore the errors.</td>
+    </tr>
+  </table>
+  
+  <h3> <a id="wont-rejoin"></a> Node Unable to Rejoin</h3>
+
+  <h4>Symptom</h4>
+
+  A MySQL node is unable to rejoin a cluster.
+
+  <h4>Explanation</h4>
+
+  Existing server nodes restarted with <code>monit</code> should automatically join the cluster.
+  If a detached existing node fails to join the cluster, it might be because its <code>sequence_number</code>
+  is higher than those of the nodes with quorum.
+<br><br>
+  A higher <code>sequence_number</code> on the detached node indicates that it has recent changes to the data 
+  that the primary lacks.
+  Check this by looking at the node's error log at <code>/var/vcap/sys/log/mysql/mysql.err.log</code>.
+
+  <h4>Solution</h4>
+
+  If the detached node has a higher sequence number than the primary component, do the procedures in <a href="./bootstrapping.html">Bootstrapping</a>.
+
+  <h3><a id="unresponsive"></a> Unresponsive Node(s)</h3>
+
+  <h4>Symptom</h4>
+
+  A client connected to a MySQL cluster node reports the following error: 
+  <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
+  <br>
+  Some clients might instead return the following: 
+  <pre class="terminal">unknown error</pre>
+
+  <h4>Explanation</h4>
+
+  If the client is connected to a MySQL cluster node that loses connection to the rest of the cluster
+  the node stops accepting writes.
+  If the connection to this node is made through the proxy,
+  the proxy automatically re-routes further connections to a different node.
+<br><br>
+  A node can become unresponsive for a number of reasons. For solutions to different different reasons a node can become unresponsive, see the following:
+  <ul>
+  <li><a href="#network-latency">Network Latency</a></li>
+  <li><a href="#mysql-process-failure">MySQL Process Failure</a></li>
+  <li><a href="#firewall-rule-change">Firewall Rule Change</a></li>
+  <li><a href="#vm-failure">VM Failure</a></li>
+  <li><a href="#service-plan-deletion">Accidental Deletion of Service Plan</a></li>
+  <li><a href="#interruptor">The Interruptor</a></li>
+</ul>
+
+  <h4><a id='network-latency'></a>Network Latency</h4>
+
+  If network latency causes a node to become unresponsive, the node drops but eventually rejoins.
+
+  The node will only rejoin automatically if only one node has left the cluster.
+
+  Consult your IaaS network settings to reduce your network latency.
+
+  <h4> <a id='mysql-process-failure'></a>MySQL Process Failure</h4>
+
+  If the MySQL process crashes, <code>monit</code> and BOSH will bring the process back. No further action is necessary.
+
+  <h4><a id='firewall-rule-change'></a>Firewall Rule Change</h4>
+
+  If firewall rules change, it might prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.
+<br><br>
+  In this scenario, the logs show the node leaving the cluster but do not show network latency errors.
+<br><br>
+  To confirm that the node is unresponsive due to a firewall rule change, try to SSH from a responsive node to the unresponsive node. If you can't connect, the node is unresponsive due to a firewall rule change.
+<br><br>
+  Change the firewall rules to enable the unresponsive node to rejoin the cluster.
+
+  <h4><a id='vm-failure'></a>VM Failure</h4>
+
+  If you cannot SSH onto a node, and you are not detecting either network
+  latency or firewall issues, your node might be down due to VM failure.
+
+  To confirm that VM failure has caused the node to become unresponsive, perform the following steps:
+<ol>
+  <li> SSH into the Ops Manager VM. For more information, see
+     <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a>.</li>
+  <li> Record the IP address for the MySQL server by navigating to the <strong>MySQL for PCF</strong> tile and clicking the <strong>Status</strong> tab.</li>
+  <li>Record the VM credentials for the MySQL server by navigating to the <strong>MySQL for PCF</strong> tile and clicking the <strong>Credentials</strong> tab.</li>
+  <li> To log in to the BOSH Director, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a></li>
+  <li> To identify the unresponsive node and recreate it with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a>.
+    <p class="note warning"><strong>WARNING</strong>: Recreating a node will clear its logs. Ensure the node is completely down before recreating it.</p>
+    <p class="note warning"><strong>WARNING</strong>: Only recreate one node. Do not recreate the entire cluster. If more than one node is down, contact <a href="https://support.pivotal.io">Pivotal Support</a>.</p></li>
+  </ol>
+  
+  <h4><a id='interruptor'></a>The Interruptor</h4>
+
+  The Interruptor is disabled by default. If you have enabled the Interruptor, it might be preventing a node from starting.
+
+  You can confirm that the Interruptor has activated by examining <code>/var/vcap/sys/log/mysql/mysql.err.log</code> on the failing node. The log contains the following message:
+
+  <pre class="terminal">  WSREP\_SST: [ERROR] ##################################################################################### (20160610 04:33:21.338)
+  WSREP\_SST: [ERROR] SST disabled due to danger of data loss. Verify data and run the rejoin-unsafe errand (20160610 04:33:21.340)
+  WSREP\_SST: [ERROR] ##################################################################################### (20160610 04:33:21.341)</pre>
+
+  To force the node to rejoin the cluster, do the following:
+<ol>
+<li>To locate the BOSH deployment name for your MySQL service broker, run the following command:
+<pre>bosh deployments</pre></li>
+<li>Record the BOSH deployment name for the MySQL service broker, which looks like <code>pivotal-mysql-GUID</code>.</li>
+<li>To force a node to rejoin the cluster, run the following command:
+<pre>bosh -d p-mysql-GUID run-errand rejoin-unsafe</pre>
+Where <code>pivotal-mysql-GUID</code> is the value you recorded in the previous step. 
+<br>For example:
+<pre class="terminal">
+$ bosh2 -e my-env -d p-mysql-abc123def456ghi run-errand rejoin-unsafe
+[...]
+[stdout]
+Started rejoin-unsafe errand ...
+Successfully repaired cluster
+rejoin-unsafe errand completed
+
+[stderr]
+None
+
+Errand `rejoin-unsafe' completed successfully (exit code 0)
+</pre>
+</li>
+<li>If the <code>rejoin-unsafe</code> errand is not able to cause a node to join the cluster, log in to each node that has tripped the Interruptor and perform the manual procedure to force the node to rejoin the cluster, documented in <a href="https://discuss.pivotal.io/hc/en-us/articles/115014258668">Pivotal Knowledge Base</a>. </li>
+</ol>
+<p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+
+<h3><a id="service-plan-deletion"></a> Accidental Deletion of Service Plan </h3>
+
+<h4>Symptom</h4>
+
+  You have deleted a service plan accidentally.
+
+<a id="deletion-explan"></a><h4>Explanation</h4>
+
+  A service plan is only unrecoverable if you do the following steps in sequence:
+<ol>
+  <li>Click the trash-can icon in the **Service Plan** section of the MySQL for PCF configuration</li>
+  <li>Create a plan with the same name.</li>
+  <li>Click <strong>Save</strong>.</li>
+  <li>Return to the Ops Manager Installation Dashboard, and click <strong>Apply Changes</strong>.</li>
+</ol>
+  The deploy eventually fails with the following error:
+
+  <pre class="terminal">Server error, status code: 502, error code: 270012, message: Service broker catalog is invalid: Plan names must be unique within a service.</pre>
+
+  <h4> Solution </h4>
+
+  After you have deployed with <strong>Apply Changes</strong>, the original plan cannot be recovered.
+  As long as service instances of that plan exist, you may not enter a new plan of the same name.<br><br>
+  The only workaround is to create a new plan with the same specifications, but specify a different name.
+  Existing instances continue to appear under the old plan name, but new instances need to be created using the new plan name.
+<ul>
+  <li>If you have performed steps 1 and 2 in the above <a href="#deletion-explan">Explantion</a> section, do the following:</li>
+  <ol>
+  <li>Do not click <strong>Save</strong>.</li>
+  <li>Return to the <strong>Installation Dashboard</strong>.</li>
+  </ol>
+  Any accidental changes are discarded.
+
+  <li>If you have performed steps 1, 2, and 3 in the above <a href="#deletion-explan">Explantion</a> section, do the following: 
+  <ol>
+    <li>Do not click <strong>Apply Changes</strong>.</li>
+  <li>Return to the <strong> Installation Dashboard</strong> and click the <strong>Revert</strong>.</li>
+  </ol>
+  Any accidental changes are discarded.</li>
+  </ul>
+  
+
+
+<h2><a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters</h2>
 
 <h3><a id="check-state"></a> Check Cluster State</h3>
 
-You can manually check the state of your highly available (HA) cluster
+You can manually check the state of your highly available cluster
 by connecting to each MySQL node using a MySQL client.
 <br><br>
-Alternatively, you can use <code>mysql_diag</code> tool to check cluster state and view
+Alternatively, you can use <code>mysql-diag</code> tool to check cluster state and view
 solutions if your node fails. For more information about the <code>mysql-diag</code>
 tool, see <a href="./mysql-diag.html">Running mysql-diag</a>.
 <br><br>
-To manually check the state of your HA cluster, run the following command:
+
+To check the state of the your cluster or how many nodes are in your cluster, do the following: 
+
+<ol>
+<li> To obtain the IP addresses of your MySQL server, do the following:</li>
+  <ol>
+  <li>Navigate to <strong>Installation Dashboard</sTrong> in Ops Manager
+    and click the <strong>MySQL for Pivotal Cloud Foundry</strong> tile.</li>
+  <li>Click the <strong>Status</strong> tab.</li>
+  <li>Record the IP addresses for all instances of the <strong>MySQL Server</strong> job.</li>
+  </ol>
+<li> To obtain the admin credentials for your MySQL server, do the following:</li>
+  <ol>
+  <li> From the <strong>MySQL for PCF</strong> tile, click the <strong>Credentials</strong>
+    tab.</li>
+  <li>Locate the <strong>Mysql Admin Password</strong> entry in the <strong>MySQL Server</strong>
+    section and click <strong>Link to Credential</strong></li>
+  <li>Record the values for <code>identity</code> and <code>password</code>.</li>
+  </ol>
+  
+<li>To manually check the state of your HA cluster, run the following command:
 <pre>
-mysql -h NODE-IP -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_status";'
+mysql -h NODE-IP-ADDRESS -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep\_cluster\_status";'
 </pre>
 
 Where:
 <ul>
-  <li><code>NODE-IP</code> is </li>
-  <li><code>PASSWORD</code> is </li>
+  <li><code>NODE-IP-ADDRESS</code> is the IP address of the first node you recorded in step 1. </li>
+  <li><code>PASSWORD</code> is the value of <code>password</code> that you recorded in step 2 </li>.
 </ul>
 
 For example:
@@ -834,47 +1068,44 @@ $ mysql -h NODE-IP -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_statu
 
 If all nodes are in the <code>Primary</code> component, you have a healthy cluster.
 If some nodes are in a <code>Non-primary</code> component, those nodes are not able
-to join the cluster.
-<br><br><br>
-To check how many nodes are in the cluster, run the following command:
+to join the cluster.</li>
+<li>To check how many nodes are in the cluster, run the following command:
 <pre>
-mysql -h NODE-IP -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
+mysql -h NODE-IP-ADDRESS -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
 </pre>
 
 Where:
 <ul>
-  <li><code>NODE-IP</code> is </li>
-  <li><code>PASSWORD</code> is </li>
+  <li><code>NODE-IP-ADDRESS</code> is the IP address of the first node you recorded in step 1.</li>
+  <li><code>PASSWORD</code>is the value of <code>password</code> that you recorded in step 2.</li>
 </ul>
-
 For example:
 
-<pre class="terminal">
-$ mysql -h NODE-IP -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
-+--------------------+-------+
-| Variable_name      | Value |
-+--------------------+-------+
-| wsrep_cluster_size | 3     |
-+--------------------+-------+
-</pre>
+  <pre class="terminal">
+  $ mysql -h NODE-IP -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
+  +--------------------+-------+
+  | Variable_name      | Value |
+  +--------------------+-------+
+  | wsrep_cluster_size | 3     |
+  +--------------------+-------+</pre>
 
-If the value of `wsrep_cluster_size` is equal to the expected number of nodes,
+If the value of <code>wsrep_cluster_size</code> is equal to the expected number of nodes,
 then all nodes have joined the cluster.
-Otherwise, check network connectivity between nodes and use `monit status`
+Otherwise, check network connectivity between nodes and use <code>monit status</code>
 to identify any issues preventing nodes from starting.
-<br>
-For more information, see the official Galera documentation for
+<br><br>
+For more information, see
 <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/manual/monitoring.html">
-  Monitoring the cluster</a>
-<br>
+  Monitoring the cluster</a>in the Percon XtraDB Cluster documentation. 
+<br><br>
 If none of your nodes are in the <code>Primary</code> component, then your cluster has lost
 quorum and must be bootstrapped.
 
 For more information, see <a href="./bootstrapping.html">Bootstrapping</a>
-
+</li>
 <h3><a id="check-replication"></a>Check Replication</h3>
 
-If you see stale data in your cluster, check whether replication is
+If you see stale data in your cluster, you can check whether replication is
 functioning normally.
 <br><br>
 To check the replication status, do the following:
@@ -930,7 +1161,7 @@ To check the replication status, do the following:
   </li>
   <li>
   To query the table and verify that the three rows of dummy data exist on the first node, run the following:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
     
     <ul>
       <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
@@ -968,7 +1199,7 @@ To verify that the other nodes contain the same dummy data do the following each
   <li>  
     To  verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
     
-    <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
+    <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
     
     <ul>
       <li><code>NEXT-NODE-IP-ADDRESS</code> is the IP address of the
@@ -992,6 +1223,7 @@ To verify that the other nodes contain the same dummy data do the following each
 <li> If each MySQL server instance does not return the same result, contact <a href="https://support.pivotal.io/">Pivotal Support</a> before proceeding further or making any changes to your deployment. <br>
 If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.</li>
 </ol>
+
 <a id="kb"></a><h2>Knowledge Base (Community)</h2>
 
 <%= partial '../../p-mysql/odb/tshoot-kb' %>
