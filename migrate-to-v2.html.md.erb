@@ -10,15 +10,21 @@ This topic describes how to migrate the data from a MySQL for Pivotal Cloud Foun
 To perform the procedures in this topic, you must have the following:
 
 * An existing MySQL for PCF v1.x service instance with the data you want to migrate
-* MySQL for PCF v2.x installed in the same PCF environment as your PCF v1.x service instance
-* At least one MySQL for PCF v2.x service plan available in the same space as your MySQL for PCF v1.x service instance
-  <p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>.
-    MySQL for PCF v2.x appears as `p.mysql` and MySQL for PCF v1.x appears as `p-mysql`.</p>
+* MySQL for PCF v2.x installed in the same PCF environment as your PCF v1.x
+service instance
+* At least one MySQL for PCF v2.x service plan available in the same space as
+your MySQL for PCF v1.x service instance. The persistent disk size of this service plan must be three times larger than the maximum size of the data you store in it.
 
-    <p class="note warning"><strong>WARNING</strong>: Migrating large datasets can take several hours.
-    Migration of the data is linear, and depends on the hardware being used.
-    For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
-    Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
+  <p class="note"><strong>Note:</strong> To view available service plans, run
+    <code>cf marketplace</code>. MySQL for PCF v2.x appears as `p.mysql` and
+     MySQL for PCF v1.x appears as `p-mysql`.</p>
+
+    <p class="note warning"><strong>WARNING:</strong> Migrating large datasets
+      can take several hours. Migration of the data is linear, and depends on the hardware being used.
+    For example, if X amount of data takes 10 minutes to migrate,
+    then 2X amount of data will take 20 minutes to migrate using the same hardware.
+    Do a test migration with small datasets to estimate how long the entire migration
+    will take before migrating larger datasets.</p>
 
 ## <a id='stop-unbind'></a>Stop and Unbind Apps
 
