@@ -14,7 +14,9 @@ To perform the procedures in this topic, you must have the following:
 * MySQL for PCF v2.x installed in the same PCF environment as your PCF v1.x
 service instance
 * At least one MySQL for PCF v2.x service plan available in the same space as
-your MySQL for PCF v1.x service instance
+your MySQL for PCF v1.x service instance. The persistent disk size of this service plan must be three times larger than the maximum size of the data you store in it.
+<p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>.
+
   <p class="note"><strong>Note:</strong> To view available service plans, run
     <code>cf marketplace</code>. MySQL for PCF v2.x appears as `p.mysql` and
      MySQL for PCF v1.x appears as `p-mysql`.</p>
