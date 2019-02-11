@@ -835,7 +835,7 @@ $ mysql -h NODE-IP -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_statu
 If all nodes are in the <code>Primary</code> component, you have a healthy cluster.
 If some nodes are in a <code>Non-primary</code> component, those nodes are not able
 to join the cluster.
-<br><br>
+<br><br><br>
 To check how many nodes are in the cluster, run the following command:
 <pre>
 mysql -h NODE-IP -u root -p PASSWORD -e 'SHOW STATUS LIKE "wsrep_cluster_size";'
@@ -877,7 +877,7 @@ For more information, see <a href="./bootstrapping.html">Bootstrapping</a>
 If you see stale data in your cluster, check whether replication is
 functioning normally.
 <br><br>
-To check the replication status, run the following command:
+To check the replication status, do the following:
 
 <ol>
 <li> To obtain the IP addresses of your MySQL server, do the following:</li>
@@ -898,43 +898,87 @@ To check the replication status, run the following command:
 
 <li> SSH into the Ops Manager VM. For more information, see
    <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a>.</li>
-
-<li> From the Ops Manager VM, place some data in the first node by performing the
-  following steps, replacing `FIRST-NODE-IP-ADDRESS` with the IP address of the
-  first node retrieved from the initial step and `YOUR-IDENTITY` with the `identity`
-  value obtained from the second step.
-   When prompted for a password, provide the `password` value obtained from the second step.</li
-  1. Create a dummy database in the first node:
+  <li> To create a dummy database in the first node, run the following command:
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>  
+    Where:
+    <ul>
+      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
+      first node you recorded in step 1. </li>
+      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
+      that you recorded in step 2. </li> 
+    </ul>
+  </li>
+  <li>
+  To create a dummy table in the dummy database, do the following:
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='InnoDB';"</pre>
+    <ul>
+      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
+      first node you recorded in step 1. </li>
+      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
+      that you recorded in step 2. </li> 
+    </ul>
+  </li>
+  <li>
+  To insert some data into the dummy table, run the following command:
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
+    <ul>
+      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
+      first node you recorded in step 1. </li>
+      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
+      that you recorded in step 2. </li> 
+    </ul>
+  </li>
+  <li>
+  To query the table and verify that the three rows of dummy data exist on the first node, run the following:
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
+    
+    <ul>
+      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
+      first node you recorded in step 1. </li>
+      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
+      that you recorded in step 2. </li> 
+    </ul>
+    
+    When prompted for a password, provide the <code>password</code> value recorded in step 2.
+    <br>
+    The above command returns output similar to the following:
     <pre class="terminal">
-    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"
-    </pre>
-  1. Create a dummy table in the dummy database:
-    <pre class="terminal">
-    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "create table dummy_table (id int not null primary key auto\_increment, info text) engine='InnoDB';"
-    </pre>
-  1. Insert some data into the dummy table:
-    <pre class="terminal">
-    $ mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"
-    </pre>
-  1. Query the table and verify that the three rows of dummy data exist on the first node:
-    <pre class="terminal">
-    mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
-    Enter password:
     +----+----------------------+
     | id | info                 |
     +----+----------------------+
     |  4 | dummy data           |
     |  7 | more dummy data      |
     | 10 | even more dummy data |
-    +----+----------------------+
-  </pre>
-
-1. Verify that the other nodes contain the same dummy data by performing the following steps for each of the remaining MySQL server IP addresses obtained above:
-  1. Query the dummy table, replacing `NEXT-NODE-IP-ADDRESS` with the IP address of the MySQL server instance and `YOUR-IDENTITY` with the `identity` value obtained above. When prompted for a password, provide the `password` value obtained above.
-    <pre class="terminal">
-    $ mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"
-    </pre>
-  1. Examine the output of the `mysql` command and verify that the node contains the same three rows of dummy data as the other nodes.
+    +----+----------------------+</pre>
+</li>
+<li>
+To verify that the other nodes contain the same dummy data do the following each of the remaining MySQL server IP addresses:</li>
+<ol>
+  <li>To query the dummy table, do the following:
+    <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
+    
+    <ul>
+      <li><code>NEXT-NODE-IP-ADDRESS</code> is the IP address of the
+    next node you recorded in step 1. </li>
+      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
+      that you recorded in step 2. </li> 
+    </ul>
+    When prompted for a password, provide the <code>password</code> value recorded in step 2.
+  </li>
+  <li>  
+    To  verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
+    
+    <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
+    
+    <ul>
+      <li><code>NEXT-NODE-IP-ADDRESS</code> is the IP address of the
+    next node you recorded in step 1. </li
+      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
+      that you recorded in step 2. </li> 
+    </ul>
+    
+    When prompted for a password, provide the <code>password</code> value recorded in step 2.
+    Verify that the above command returns output similar to the following:
     <pre class="terminal">
     +----+----------------------+
     | id | info                 |
@@ -942,11 +986,11 @@ To check the replication status, run the following command:
     |  4 | dummy data           |
     |  7 | more dummy data      |
     | 10 | even more dummy data |
-    +----+----------------------+
-    </pre>
-
-1. If each MySQL server instance does not return the same result, contact [Pivotal Support](https://support.pivotal.io/) before proceeding further or making any changes to your deployment.
-   If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.
+    +----+----------------------+</pre>
+  </li>
+</ol>
+<li> If each MySQL server instance does not return the same result, contact <a href="https://support.pivotal.io/">Pivotal Support</a> before proceeding further or making any changes to your deployment. <br>
+If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.</li>
 </ol>
 <a id="kb"></a><h2>Knowledge Base (Community)</h2>
 
