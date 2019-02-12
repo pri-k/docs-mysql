@@ -33,9 +33,13 @@ zones, one for the broker and one for the MySQL VMs. If you plan to configure le
 
 Redeploying MySQL for PCF for configuration changes or upgrades will result in MySQL being inaccessible to apps for a brief period of time.
 
-##<a id="persistent"></a> MySQL Persistent Disk Usage
+##<a id="persistent"></a> Persistent Disk Usage
 
-MySQL backups are taken on the VM and temporarily stored and encrypted on the VM. This results in increased disk usage while backups are being taken.
-When enabling backups, we recommend choosing persistent disk sizes that are three times larger than you intend to be available to app developers using the service.
+The persistent disk receives and temporarily stores and encrypts MySQL backups. This results in increased disk usage while backups are being processed.
+When enabling backups, choose persistent disk sizes that are three times larger than what you want to be available to app developers using the service plan. 
 
-Backups require two to three times as much disk space as the server needs. The first is for the actual data, the second is the copied backup, and the third is for the encrypted backup.
+For example, if you intend 5 GB to be available to app developers, you must offer a service plan with a total of 15 GB. In this example, 5 GB are used for the data that is stored, 5 GB is used for the copied backups, and 5 GB is used for encryption and compression.
+
+![Persistent Disk diagram](persistent-disk.png)
+
+For single node and leader follower service plans, backups are processed on the MySQL VM. For highly available (HA) clusters, backups are processed on the jumpbox VM. 
