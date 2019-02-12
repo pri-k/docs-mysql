@@ -458,7 +458,7 @@ To restore the backup to a new service instance, follow these procedures:
  <pre class="terminal">
   $ cf create-service p.mysql db-small NEW-SERVICE-INSTANCE
  </pre>
-The persistent disk size of this service plan must be three times larger than the maximum size than the disk you intend to provide to developers.
+The persistent disk size of this service plan must be three times larger than the maximum size than the disk you intend to provide to developers. For more information, see <a href="recommended.html#persistent">MySQL Persistent Disk Usage</a>.
 1. Monitor the status of the service instance creation; it may take several minutes as the VM is created.
  <pre class="terminal">
   $ cf service NEW-SERVICE-INSTANCE
