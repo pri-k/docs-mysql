@@ -202,7 +202,8 @@ Perform the following steps for each plan that you want to use in your PCF deplo
     <tr><td><strong>MySQL VM Type</strong></td>
         <td>Select a VM type for the MySQL nodes.</td></tr>
     <tr><td><strong>Jumpbox VM Type</strong></td>
-        <td>Only for highly available cluster plans. Select a VM type for the MySQL jumpbox node.</td></tr>
+        <td>Only for highly available cluster plans. Select a VM type for the MySQL jumpbox node.
+            This VM is also called `mysql-monitor`.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL messages.
           <ul><li>Single node or leader-follower plans: Select a disk size three times larger than the disk you intend to provide to developers.</li>
