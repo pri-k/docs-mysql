@@ -35,11 +35,12 @@ Redeploying MySQL for PCF for configuration changes or upgrades will result in M
 
 ##<a id="persistent"></a> Persistent Disk Usage
 
-The persistent disk receives and temporarily stores and encrypts MySQL backups. This results in increased disk usage while backups are being processed.
-When enabling backups, choose persistent disk sizes that are three times larger than what you want to be available to app developers using the service plan. 
+The persistent disk receives and temporarily stores and encrypts MySQL backups. This results in increased disk usage while backups are being processed. For single node and leader follower service plans, backups are processed on the MySQL VM. For highly available (HA) clusters, backups are processed on the jumpbox VM. 
 
-For example, if you intend 5 GB to be available to app developers, you must offer a service plan with a total of 15 GB. In this example, 5 GB are used for the data that is stored, 5 GB is used for the copied backups, and 5 GB is used for encryption and compression.
+When enabling backups for single node and leader-follower service plans, choose MySQL persistent disk sizes that are three times larger than what you want to be available to app developers using the service plan. 
 
-![Persistent Disk diagram](persistent-disk.png)
+When enabling backups for HA cluster service plans, choose jumpbox persistent disk sizes that are two times larger than what you want to be available to app developers using the service plan. 
 
-For single node and leader follower service plans, backups are processed on the MySQL VM. For highly available (HA) clusters, backups are processed on the jumpbox VM. 
+See the following digram for an example sizing recommendations: 
+
+![Persistent Disk diagram](disk-lf-ha.png)
