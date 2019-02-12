@@ -540,7 +540,9 @@ To prepare a new service instance for restore, do the following:
 1. Create a new MySQL service instance using a single-node or leader-follower plan.
 <br><br>
 You can only restore backup artifacts to a single-node topology.
-The persistent disk size of this single node plan must be three times larger than the maximum size of the data you intend to provide to developers. For more information, see <a href="recommended.html#persistent">MySQL Persistent Disk Usage</a>.
+The persistent disk size of this single node plan must be three times larger
+than the maximum size of the data you intend for developers.
+For more information, see <a href="recommended.html#persistent">MySQL Persistent Disk Usage</a>.
 If you want to restore to a leader-follower plan, you can do one of the following:
   - **Create a single-node instance to restore to** then update the plan on this
   instance to leader-follower after you run the restore utility.
