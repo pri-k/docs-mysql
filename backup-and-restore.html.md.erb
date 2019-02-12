@@ -555,7 +555,8 @@ To prepare a new service instance for restore, do the following:
     <ul>
     <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA topology.</li><br>
 
-    <li>If you are using a single node or leader-follower plan, you can only restore backup artifacts to a single node topology. The persistent disk size of this single node plan must be three times larger than the maximum size of the data you intend to provide to developers.</li><br>
+    <li>If you are using a single node or leader-follower plan, you can only restore backup artifacts to a single node topology.
+        The persistent disk size of this single node plan must be three times larger than the maximum amount of data that developers will store on the disk.</li><br>
 
     <li>If you want to restore to a leader-follower plan, you can do one of the following:
       <ul>
