@@ -7,6 +7,8 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
+This topic describes how to rotate certificate authority (CA) certificates. If you are using TLS for MySQL for PCF, you provided a CA certificate to BOSH CredHub when performing the procedures in [Preparing for TLS](prepare-tls.html). Operators must rotate these CA certificates before they expire or if they are compromised. 
+
 <%= partial "../../p-mysql/odb/rotate-ca" %>
               
 <!-- Partials in https://github.com/pivotal-cf/docs-services-partials -->
