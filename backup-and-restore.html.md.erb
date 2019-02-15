@@ -260,14 +260,13 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
 1. Fill in the fields as follows:<br><br>
     * **Project ID**---Enter the Project ID for the Google Cloud project that you are using.
     * **Bucket Name**---Enter the bucket name in which to upload.
-    * **Service Account JSON**---Enter the contents of the service account json file that you downloaded when creating a service account above.
+    * **Service Account JSON**---Enter the contents of the service account JSON file that you downloaded when creating a service account above.
     * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
         to take backups of each service instance.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you done the following:
-          * Added all users who need to be notified about failed backups to System org and System space</li>
-          * Configured Email Notifications in PAS (or Elastic Runtime),
-          see <em>Configure Email Notifications</em> for your IaaS:
+          * Added all users who need to be notified about failed backups to System org and System space
+          * Configured Email Notifications in PAS (or Elastic Runtime). For more information see **Configure Email Notifications** for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
@@ -554,12 +553,12 @@ To prepare a new service instance for restore, do the following:
 
     <ul>
     <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA topology.</li><br>
-    
-    <li>If you are using a single node or leader-follower plan, you can only restore backup artifacts to a single node topology. The persistent disk 
-     size of this single node plan must be three times larger than the maximum size of the data you intend 
-     to provide to developers. For more information, 
+
+    <li>If you are using a single node or leader-follower plan, you can only restore backup artifacts to a single node topology. The persistent disk
+     size of this single node plan must be three times larger than the maximum size of the data you intend
+     to provide to developers. For more information,
      see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li><br>
-    
+
     <li>If you want to restore to a leader-follower plan, you can do one of the following:
       <ul>
         <li><b>Create a single-node instance to restore to</b> then update the plan on this instance to leader-follower after you run the restore utility. For how to update the plan, see step 1 of <a href="#redeploy">Redeploy the Service Instance</a>.</li>
