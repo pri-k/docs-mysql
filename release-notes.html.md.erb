@@ -24,12 +24,18 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 **Release Date:**  January 11, 2019
 
+### Known Issues
+
+This release has the following issue:
+
+* Scheduler for PCF tile must have TLS disabled in the MySQL for PCF tile.
+
 ### Fixed Issues
 
 This release fixes the following issue:
 
 * The issue in the interaction between the MariaDB Connector/J and the Java API.
-  This issue prevented TLS connection for Spring Cloud Services, Scheduler for PCF,
+  This issue prevented TLS connection for Spring Cloud Services
   and all Spring apps that used the MariaDB Connector/J.
 
 ### Features
