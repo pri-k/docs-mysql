@@ -130,7 +130,7 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
            <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="ceph-or-s3"></a> Option 2: Back Up to Ceph or S3
@@ -146,15 +146,15 @@ MySQL for PCF accesses your S3 store through a user account.
 Pivotal recommends that this account be solely for MySQL for PCF.
 You must apply a minimal policy that lets the user account upload backups to your S3 store.
 
-1. Create a policy for your MySQL for PCF user account.
+1. Create a policy for your MySQL for PCF user account. 
 
     <br>Policy creation varies depending on the S3 provider.
         Follow the relevant procedure to give MySQL for PCF the following permissions:<br><br>
       * List and upload to buckets
-      * (Optional) Create buckets in order to use buckets that do not already exist
+      * (Optional) Create buckets in order to use buckets that do not already exist  
 
     For example, in AWS, to create a new custom policy, go to **IAM** > **Policies** > **Create Policy** > **Create Your Own Policy**
-    and paste in the following permissions:
+    and paste in the following permissions:  
      <pre class="highlight json">
 {
   "Version": "2012-10-17",
@@ -188,7 +188,8 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
 
 1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
 
-1. Select **Ceph or Amazon S3**.
+1. Select **Ceph or Amazon S3**.  
+    ![S3 Backup Configuration Form](S3-backups.png)
 
     ![S3 Backup Configuration Form](S3-backups.png)<br/>
 
@@ -199,10 +200,10 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
           The default is https://s3.amazonaws.com
       * **Region**---Enter the region where your bucket is located or the region where you want a bucket to be created.
         If the bucket does not already exist, it is created automatically.
-      * **Bucket Name**---Enter the name of your bucket.
-      Do not include an `s3://` prefix, a trailing `/`, or underscores.
+      * **Bucket Name**---Enter the name of your bucket. 
+      Do not include an `s3://` prefix, a trailing `/`, or underscores. 
       Pivotal recommends using the naming convention `DEPLOYMENT-backups`, such as `sandbox-backups`.
-      * **Bucket Path**---Enter the path in the bucket to store backups.
+      * **Bucket Path**---Enter the path in the bucket to store backups. 
       Do not include a trailing `/`. Pivotal recommends using `mysql-v2`.
       * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
           to take backups of each service instance.
@@ -214,7 +215,7 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
            <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="gcs"></a> Option 3: Back Up to GCS
@@ -234,7 +235,7 @@ You must apply a minimal policy that lets the user account upload backups to you
 
       MySQL for PCF needs the following permissions for this account:
       * List and upload to buckets
-      * (Optional) Create buckets in order to use buckets that do not already exist
+      * (Optional) Create buckets in order to use buckets that do not already exist  
 
 
 1. Enter a unique name in the **Service account name** field, such as `MySQL-for-PCF`.
@@ -268,7 +269,7 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
            <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="azure"></a> Option 4: Back Up to Azure Storage
@@ -296,7 +297,7 @@ Complete the following steps to back up your database to your Azure Storage acco
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
+           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or 
            <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
 
 ## <a id="manual-backup"></a> Manual Backup
@@ -320,7 +321,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
    `cf create-service-key SERVICE_INSTANCE_NAME SERVICE_KEY_NAME -c '{"read-only":true}'`
     <br><br>
     Where:<br>
-    * `SERVICE_INSTANCE_NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.
+    * `SERVICE_INSTANCE_NAME`: Enter the name of the existing MySQL service instance that contains the data you want to back up.  
     * `SERVICE_KEY_NAME`: Choose a name for the new service key.
 
     For example:
@@ -359,45 +360,17 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
 
-1. Connect to the database, by either using an SSH tunnel, or by connecting directly to its IP address.
-For more information, see [Establish a Connection to a Service Instance from Outside Your PCF Deployment](./use.html#remote-connection).
-
-1. To view a list of your databases, run the following command:
-<pre><code>mysql --user=USERNAME --password=PASSWORD \
---host=MYSQL-IP \
---silent --silent --execute='show databases'</code></pre>
-
-    Where:
-    * `USERNAME` is the username retrieved from the output of `cf service-key`.
-    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP` is the MySQL IP address. This value is `0` if you are connecting via SSH tunnel.
-
-    For example:
-    <pre class="terminal">
-    $ mysql --user=abcdefghijklm --password=123456789 \
-    --host=10.10.10.5 \
-    --silent --execute='show databases'
-    </pre>
-
-1. Delete the following databases from the list. Do not back up the following databases:
-    * `cf_metadata`
-    * `information_schema`
-    * `mysql`
-    * `performance_schema`
-    * `sys`
-
-1. To back up the databases remaining in the list, run the following command for each database:
-<pre><code>mysqldump --single-transaction --user=USERNAME --password=PASSWORD \
---host=MYSQL-IP \
---databases DB-NAME > BACKUP.sql
-</code></pre>
-
-    Where:
-    * `USERNAME` is the username retrieved from the output of `cf service-key`.
-    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP` is the MySQL IP address.
-    * `DB-NAME` is the name of the database.
-    * `BACKUP` is a name you create for the backup file. Use a different filename for each backup.
+1. Use [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) to back up the data for your service instance.
+   Run the following command:
+   <pre><code>mysqldump --username=USERNAME --password=PASSWORD \
+    --host=MYSQL-IP \
+    --all-databases \
+    --single-transaction > BACKUP-NAME.sql</code></pre>
+    Where:<br>
+    * `USERNAME`: Enter the username retrieved from the output of `cf service-key`.
+    * `PASSWORD`: Enter the password retrieved from the output of `cf service-key`.
+    * `MYSQL-IP`: Enter the value of `hostname` retrieved from the output of `cf service-key`.
+    * `BACKUP-NAME`: Enter a name for the backup file.
 
     For example:
     <pre class="terminal">
@@ -451,7 +424,7 @@ If you are using one of the other backup options, steps 5, 6, and 8 are differen
    For information and to download the CLI, see [AWS Command Line Interface](https://aws.amazon.com/cli/).
 
 6. List the available backups for the instance, replacing `BUCKET-NAME` and `BUCKET-PATH` with values from above.
-  The artifacts are sorted by time.
+  The artifacts are sorted by time. 
  <pre class="terminal">
   $ aws s3 ls --recursive s3://BUCKET-NAME/BUCKET-PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
  </pre>
@@ -467,9 +440,9 @@ If you are using one of the other backup options, steps 5, 6, and 8 are differen
 
 ###<a id="restoreinstance"></a> Restore the Service Instance
 
-Because restoring a service instance is destructive, Pivotal recommends that you restore to a new and unused service instance.
+Because restoring a service instance is destructive, Pivotal recommends that you restore to a new and unused service instance. 
 
-These instructions assume you have a backup downloaded.
+These instructions assume you have a backup downloaded. 
 
 To restore the backup to a new service instance, follow these procedures:
 
@@ -521,7 +494,7 @@ For more information, see <a href="recommended.html#persistent">MySQL Persistent
   - BOSH-INSTANCE is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
   - DESTINATION-PATH is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
-1. Use the BOSH CLI v2 to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html#bosh-ssh).
+1. Use the BOSH CLI v2 to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/1-12/customizing/trouble-advanced.html#bosh-ssh). 
 
 1. After securely logging in to MySQL, run `sudo su` to become root:
  <pre class="terminal">
@@ -532,7 +505,7 @@ For more information, see <a href="recommended.html#persistent">MySQL Persistent
 
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and should only be run on a new and unused service instance.</p>
 
-1. Run the restore utility to restore the backup artifact into the data directory. This process:<br><br>
+1. Run the restore utility to restore the backup artifact into the data directory. This process:<br><br> 
     * deletes any existing data
     * decrypts and untars the backup artifact
     * restores the backup artifact into the mysql data directory
@@ -563,7 +536,7 @@ For more information, see <a href="recommended.html#persistent">MySQL Persistent
 
 1. Restage your CF app to make the changes take effect:
  <pre class="terminal">
-   $ cf restage MY-APP
+   $ cf restage MY-APP 
  </pre>
 
 Your app should be running and able to access the restored data.
