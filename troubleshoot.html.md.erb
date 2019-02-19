@@ -807,48 +807,11 @@ To reinstall the MySQL for PCF tile, see the <a href="https://discuss.pivotal.io
 
 <%= partial '../../p-mysql/odb/tshoot-tech-monitor-quota' %>
 
-<h2><a id="dig-tech"></a>Highly Available Cluster Troubleshooting Errors</h2>
+<h2><a id="ha-errors"></a>Highly Available Cluster Troubleshooting Errors</h2>
 
 This section lists symptoms, solutions, and explanations for common errors when using highly available 
 clusters:
 
-<h3><a id="replication-errors"></a> Many Replication Errors in Logs</h3>
-
-  <h4>Symptom</h4>
-
-  You see many replication errors in the MySQL logs, like the following:
-
-  <pre class="terminal">160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
-160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
-160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'</pre>
-
-  <h4>Explanation and Solution</h4>
-
-  For solutions for replication errors in MySQL log files, see the table below.
-
-  <table class="nice">
-    <tr>
-      <th>If you see replication errors and…</th>
-      <th>then…</th>
-    </tr>
-    <tr>
-      <td><code>ALTER TABLE</code> errors</td>
-      <td>Fix the <code>ALTER TABLE</code> error.<br>
-          This error can occur when an app issues an invalid data definition statement.
-          Other nodes log this problem as a replication error because they fail to replicate the <code>ALTER TABLE</code>.</td>
-    </tr>
-    <tr>
-      <td>Increased persistent disk usage or running out of working memory</td>
-      <td>Decode the <code>GRA_*.log</code> files and look for errors. 
-          See <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-PCF-v1-10">
-          How to decode Galera GRA log files</a> in the Pivotal Support knowledge base.
-          The GRA log files contain failing DDL statements.</td>
-    </tr>
-    <tr>
-      <td>No other problems</td>
-      <td>Ignore the errors.</td>
-    </tr>
-  </table>
   
   <h3><a id="unresponsive"></a> Unresponsive Node(s)</h3>
 
@@ -878,102 +841,194 @@ clusters:
 
   <h4><a id='network-latency'></a>Network Latency</h4>
 
-  If network latency causes a node to become unresponsive, the node drops but eventually rejoins.
-
-  The node will only rejoin automatically if only one node has left the cluster.
-
-  Consult your IaaS network settings to reduce your network latency.
+  If network latency causes a node to become unresponsive, the node drops but eventually rejoins.The 
+  node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings 
+  to reduce your network latency.
 
   <h4> <a id='mysql-process-failure'></a>MySQL Process Failure</h4>
 
-  If the MySQL process crashes, <code>monit</code> and BOSH will bring the process back. No further action is necessary.
-
+  If the MySQL process crashes, <code>monit</code> and BOSH should restore the process. 
+  If the process is not restored, consult error logs using the <code>download-logs</code> tool.
+  For more information, see [LINK]
+ 
   <h4><a id='firewall-rule-change'></a>Firewall Rule Change</h4>
 
-  If firewall rules change, it might prevent a node from reaching the rest of the cluster, causing the node to become unresponsive.
+  If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. 
+  This causes the node to become unresponsive.In this case, the logs show the node leaving the cluster 
+  but do not show network latency errors.
 <br><br>
-  In this scenario, the logs show the node leaving the cluster but do not show network latency errors.
-<br><br>
-  To confirm that the node is unresponsive due to a firewall rule change, try to SSH from a responsive node to the unresponsive node. If you can't connect, the node is unresponsive due to a firewall rule change.
-<br><br>
-  Change the firewall rules to enable the unresponsive node to rejoin the cluster.
+  To confirm that the node is unresponsive due to a firewall rule change, SSH from a responsive node
+  to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change.
+  Change your firewall rules to enable the unresponsive node to rejoin the cluster.
 
   <h4><a id='vm-failure'></a>VM Failure</h4>
 
-  If you cannot SSH onto a node, and you are not detecting either network
-  latency or firewall issues, your node might be down due to VM failure.
+  If you cannot SSH into a node, and you are not detecting either network
+  latency or firewall issues, your node might be down due to VM failure. To confirm that the node 
+  is unresponsive and recreate the VM, see <a href=#recreate-VM> Recreate a Corrupted VM</a>.
   
-  https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html
-
-  To confirm that VM failure has caused the node to become unresponsive, perform the following steps:
-<ol>
-  <li> SSH into the Ops Manager VM. For more information, see
-     <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a>.</li>
-  <li> Record the IP address for the MySQL server by navigating to the <strong>MySQL for PCF</strong> tile and clicking the <strong>Status</strong> tab.</li>
-  <li>Record the VM credentials for the MySQL server by navigating to the <strong>MySQL for PCF</strong> tile and clicking the <strong>Credentials</strong> tab.</li>
-  <li> To log in to the BOSH Director, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a></li>
-  <li> To identify the unresponsive node and recreate it with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a>.
-    <p class="note warning"><strong>WARNING</strong>: Recreating a node will clear its logs. Ensure the node is completely down before recreating it.</p>
-    <p class="note warning"><strong>WARNING</strong>: Only recreate one node. Do not recreate the entire cluster. If more than one node is down, contact <a href="https://support.pivotal.io">Pivotal Support</a>.</p></li>
-  </ol>
   
   <h4> <a id="unable-rejoin"></a> Node Unable to Rejoin</h4>
 
   If a detached existing node fails to join the cluster, its <code>sequence\_number</code>
-  might be higher than those of the nodes with quorum. A higher <code>sequence\_number</code> on the detached node indicates that it has recent changes to the data that the primary component lacks. You can
+  might be higher than those of the nodes with quorum. A higher <code>sequence\_number</code> on the 
+  detached node indicates that it has recent changes to the data that the primary component lacks. You can
   check this by looking at the node's error log at <code>/var/vcap/sys/log/mysql/mysql.err.log</code>.
 
   To restore the cluster, do one the following:
 
   - If the detached node has a higher sequence number than the primary component, do the procedures in <a href="./bootstrapping.html">Bootstrapping</a>.
 
-  - Manually force the node to rejoin the cluster. This removes all of the unsynchronized data from the 
-  detached server node and creates a new copy of the cluster data on the node. For more information, see 
-  <a href="#">Manually Force a Node to Rejoin the Cluster</a>.ß
-  <p class="note warning"><strong>WARNING</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only perform it with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+  - If bootstrapping does not restore the cluster, you can manually force the node to rejoin the cluster. 
+  This removes all of the unsynchronized data from the detached server node and creates a new copy of the 
+  cluster data on the node. For more information, see 
+  <a href="#manual-force">Force a Node to Rejoin the Cluster Manually</a>.
+  <p class="note warning"><strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive 
+    procedure. Only do this procedure with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+    
+<h3><a id="replication-errors"></a> Many Replication Errors in Logs</h3>
+
+This problem happens when there are errors in SQL statements.
+
+  <h4>Symptom</h4>
+
+  You see many replication errors in the MySQL logs, like the following:
+
+  <pre class="terminal">160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
+160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
+160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'</pre>
+
+  <h4>Explanation and Solution</h4>
+
+  For solutions for replication errors in MySQL log files, see the table below.
+
+  <table class="nice">
+    <tr>
+      <th>Error</th>
+      <th>Solution</th>
+    </tr>
+    <tr>
+      <td><code>ALTER TABLE</code> errors</td>
+      <td>Fix the <code>ALTER TABLE</code> error.<br>
+          This error can occur when an app issues an invalid data definition statement.
+          Other nodes log this problem as a replication error because they fail to replicate the <code>ALTER TABLE</code>.</td>
+    </tr>
+    <tr>
+      <td>Increased persistent disk usage or running out of working memory</td>
+      <td>Decode the <code>GRA_*.log</code> files and look for errors. 
+          See <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-PCF-v1-10">
+          How to decode Galera GRA log files</a> in the Pivotal Support knowledge base.
+          The GRA log files contain failing DDL statements.</td>
+    </tr>
   
+  </table>
+  
+  If you see replication errors, but no <code>ALTER TABLE</code> or persistent disk or memory issues, 
+  you can ignore the replication errors.
+
+
 <h2><a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters</h2>
 
-If your cluster is experiencing downtime or is in a degraded state, Pivotal recommends the following workflow
-for gathering information to diagnose the type of failure the cluster is experiencing.
-
-<p class="note warning"><strong>WARNING</strong>: Do not attempt to resolve cluster issues by reconfiguring the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
+If your cluster is experiencing downtime or in a degraded state, Pivotal recommends
+gathering information to diagnose the type of failure the cluster is experiencing with the following 
+workflow:
 
 <ol>
-  <li>Use <code>mysql-diag</code> to view a summary of the network, disk, and replication state of each cluster node. Depending on the output from <code>mysql-diag</code>, the troubleshooting techniques listed in [SOMETHING] might allow you to recover your cluster.<br><br>
-  For more information, see <a href="./mysql-diag.html">Running mysql-diag</a>.
+  <li>Consult solutions for common errors in <a href="#ha-errors">Highly Available Cluster Troubleshooting Errors</a>.
+  </li>
+  <li>Use <code>mysql-diag</code> to view a summary of the network, disk, and replication state of each 
+    cluster node. Depending on the output from <code>mysql-diag</code>, you might recover your cluster with the following troubleshooting techniques:
+    <ul>
+      <li>To force a <a href="#manual-force">Force a Node to Rejoin the Cluster Manually</a></li>
+      <li><a href="#recreate-VM">Recreate a Corrupted VM</a></li>
+      <li><a href="check-replication">Check Replication</a></li>
+    </ul>
+  For more information about <code>mysql-diag</code>, see <a href="./mysql-diag.html">Running mysql-diag</a>.
   </li>
   
-  <li> Run <a href=""> download-logs</a> against each node in your MySQL cluster,
-   the MySQL proxies, and the MySQL backup-prepare node. Do this before attempting recovery
-   because any failures in the recovery procedure can result in logs being lost or made inaccessible.
+  <li> Run <code>download-logs</code> against each node in your MySQL cluster, MySQL proxies, and 
+    jumpbox VM. You must run <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible.
+   For more information, see [SOMETHING].
    <br><br>
-    Pivotal recommends that you use the <code>-X</code> flag to get the complete set of available logs.
-    However, if your cluster processes a high volume of transactions, the complete set might be too large and you can omit this flag to fetch the essential set of logs.</li>
+    <p class="note"><strong>Note:</strong> Pivotal recommends that you use the <code>-X</code> flag to get the complete set of available logs.
+    However, if your cluster processes a high volume of transactions, the complete set might be too 
+    large and you can omit this flag to fetch the essential set of logs.</li>
     
-<li> If you are uncertain about the recovery steps to take, submit a ticket through <a href="https://support.pivotal.io/">Pivotal Support</a> with the following information:
+<li> If you are uncertain about the recovery steps to take, submit a ticket through <a href="https://support.pivotal.io/">Pivotal Support</a>. When you submit a ticket provide the following information:
   <ul>
-    <li>Output from <code>mysql-diag</code></li>
-    <li>Logs fetched by running the <code>download-logs</code></li>
-    <li>Type of environment the MySQL deployment is running in such as Pivotal Application Service (PAS) or a service tile.</li>
-    <li>Versions of the installed Ops Manager, PAS, and MySQL for PCF</li>
+    <li><strong>mysql-diag output:</strong> The ouput summary of the network, disk, and replication state.
+    </li>
+    <li><strong>download-logs logs:</strong> Logs about your MySQL cluster, MySQL proxies, 
+      and jumpbox VM. </li>
+    <li><strong>Deployment environment:</strong> The environment that MySQL for PCF is running in such 
+      as Pivotal Application Service (PAS) or a service tile.</li>
+    <li><strong>Version numbers:</strong> The versions of the installed Ops Manager, PAS, 
+      and MySQL for PCF</li>
   </ul>
   
 </li>
 
-For more information, see <a href="./bootstrapping.html">Bootstrapping</a>
+<p class="note warning"><strong>Warning:</strong> Do not attempt to resolve cluster issues by reconfiguring 
+  the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this 
+  document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
 
+<h3><a id="manual-force"></a>Force a Node to Rejoin the Cluster Manually</h3>
 
-Note: Do not do this if there is any data on the local node that you need to preserve.
+If a detached node fails to rejoin the cluster after a configured grace period, you can manually 
+force the node to rejoin the cluster. This procedure removes all the data on the node, 
+forces the node to join the cluster, and creates a new copy of the cluster data on the node. 
 
-Log into the node as root.
-Run monit stop mariadb_ctrl
-Run rm -rf /var/vcap/store/mysql
-Run /var/vcap/jobs/mysql/bin/pre-start
-Run monit start mariadb_ctrl
+<p class="note warning"><strong>Warning:</strong> If you manually force a node to rejoin the cluster, 
+  data stored on the local node is lost. Do not force nodes to rejoin the cluster if you want to 
+  preserve unsynchronized data. Only do this procedure with the assistance of 
+  <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+  
+  Before following this procedure, you should first try to bootstrap
+  the cluster. For more information, see <a href="./bootstrapping.html">Bootstrapping</a>. 
+<br><br>
+To manually force a node to rejoin the cluster, do the following:
 
+<ol>
+  <li>
+    To SSH into the node, follow the procedure in 
+    <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
+  </li>
+  <li> To shut down the <code>mysqld</code> process on the node, run the following command:
+    <pre>  monit stop galera-init </pre>
+  </li>
+  <li>
+    To remove the unsynchronized data on the node, run the following command:
+    <pre>  rm -rf /var/vcap/store/pxc-mysql</pre>
+  </li>
+  <li>
+    To prepare the node before restarting, run the following command:
+    <pre>  /var/vcap/jobs/mysql/bin/pre-start</pre>
+  </li>
+  <li>To restart the <code>mysqld</code> process, run the following command:
+    <pre> monit start galera-init</pre>
+  </li>
+  </ol>
+  
+<h3><a id="recreate-VM"></a>Recreate a Corrupted VM</h3>
 
-
+  To recreate a corrupted VM, do the following:
+  <ol>
+  <li>To log in to the BOSH Director VM, do the following procedures:
+    <ol>
+      <li>To gather the information needed to log in to the BOSH Director VM, 
+        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
+      <li>To log in to the Ops Manager VM, 
+        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
+      <li>To log in to the BOSH Director VM, 
+        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
+    </ol>
+  </li>
+  <li> To identify and recreate the unresponsive node with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a> and run 
+    <code>Recreate VM using last known apply spec</code>.
+    <p class="note warning"><strong>Warning:</strong> Recreating a node will clear its logs. Ensure the node is completely down before recreating it.</p>
+    <p class="note warning"><strong>Warning:</strong> Only recreate one node. Do not recreate the entire cluster. If more than one node is down, contact <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+  </li>
+  </ol>
 
 <h3><a id="check-replication"></a>Check Replication</h3>
 
@@ -981,26 +1036,14 @@ If you see stale data in your cluster, you can check whether replication is
 functioning normally.
 <br><br>
 To check the replication status, do the following:
-
 <ol>
-<li> To obtain the IP addresses of your MySQL server, do the following:</li>
+<li>To log in to the BOSH Director VM, do the following procedures:
   <ol>
-  <li>Navigate to <strong>Installation Dashboard</sTrong> in Ops Manager
-    and click the <strong>MySQL for Pivotal Cloud Foundry</strong> tile.</li>
-  <li>Click the <strong>Status</strong> tab.</li>
-  <li>Record the IP addresses for all instances of the <strong>MySQL Server</strong> job.</li>
-  </ol>
-<li> To obtain the admin credentials for your MySQL server, do the following:</li>
-  <ol>
-  <li> From the <strong>MySQL for PCF</strong> tile, click the <strong>Credentials</strong>
-    tab.</li>
-  <li>Locate the <strong>Mysql Admin Password</strong> entry in the <strong>MySQL Server</strong>
-    section and click <strong>Link to Credential</strong></li>
-  <li>Record the values for <code>identity</code> and <code>password</code>.</li>
-  </ol>
-
-<li> SSH into the Ops Manager VM. For more information, see
-   <a href="http://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a>.</li>
+    <li>To gather the information needed to log in to the BOSH Director VM, 
+      see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
+    <li>To log in to the Ops Manager VM, 
+      see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
+  </ol></li>
   <li> To create a dummy database in the first node, run the following command:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>  
     Where:
@@ -1008,41 +1051,22 @@ To check the replication status, do the following:
       <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
       first node you recorded in step 1. </li>
       <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 2. </li> 
+      that you recorded in step 1. </li> 
     </ul>
   </li>
   <li>
   To create a dummy table in the dummy database, do the following:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='InnoDB';"</pre>
-    <ul>
-      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
-      first node you recorded in step 1. </li>
-      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 2. </li> 
-    </ul>
   </li>
   <li>
   To insert some data into the dummy table, run the following command:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
-    <ul>
-      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
-      first node you recorded in step 1. </li>
-      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 2. </li> 
-    </ul>
   </li>
   <li>
   To query the table and verify that the three rows of dummy data exist on the first node, run the following:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
-    
-    <ul>
-      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
-      first node you recorded in step 1. </li>
-      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 2. </li> 
-    </ul>
-    
-    When prompted for a password, provide the <code>password</code> value recorded in step 2.
+        
+    When prompted for a password, provide the <code>password</code> value recorded in step 1.
     <br>
     The above command returns output similar to the following:
     <pre class="terminal">
@@ -1055,32 +1079,19 @@ To check the replication status, do the following:
     +----+----------------------+</pre>
 </li>
 <li>
-To verify that the other nodes contain the same dummy data do the following each of the remaining MySQL server IP addresses:</li>
+To verify that the other nodes contain the same dummy data do the following for each of the remaining MySQL server IP addresses:</li>
 <ol>
   <li>To query the dummy table, do the following:
     <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
     
-    <ul>
-      <li><code>NEXT-NODE-IP-ADDRESS</code> is the IP address of the
-    next node you recorded in step 1. </li>
-      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 2. </li> 
-    </ul>
-    When prompted for a password, provide the <code>password</code> value recorded in step 2.
+    When prompted for a password, provide the <code>password</code> value recorded in step 1.
   </li>
   <li>  
     To  verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
     
     <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
     
-    <ul>
-      <li><code>NEXT-NODE-IP-ADDRESS</code> is the IP address of the
-    next node you recorded in step 1. </li
-      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 2. </li> 
-    </ul>
-    
-    When prompted for a password, provide the <code>password</code> value recorded in step 2.
+    When prompted for a password, provide the <code>password</code> value recorded in step 1.
     Verify that the above command returns output similar to the following:
     <pre class="terminal">
     +----+----------------------+
@@ -1092,7 +1103,7 @@ To verify that the other nodes contain the same dummy data do the following each
     +----+----------------------+</pre>
   </li>
 </ol>
-<li> If each MySQL server instance does not return the same result, contact <a href="https://support.pivotal.io/">Pivotal Support</a> before proceeding further or making any changes to your deployment. <br>
+<li> If each MySQL server instance does not return the same result, before proceeding further or making any changes to your deployment, contact <a href="https://support.pivotal.io/">Pivotal Support</a> <br>
 If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.</li>
 </ol>
 
