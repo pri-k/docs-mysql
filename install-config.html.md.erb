@@ -173,7 +173,89 @@ Perform the following steps for each plan that you want to use in your PCF deplo
 
 1. Select the plan for your desired topology.
 
-    ![plan-1-tab-v2.1.0](service-plan-configuration.png)
+    <style>
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+        background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+        background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+    </style>
+
+    <script>
+    function openDocs(evt, docsName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(docsName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    </script>
+
+
+    <div class="tab">
+      <!- Tab headers and links ->
+      <button class="tablinks" onclick="openDocs(event, 'tab1')">Single Node</button>
+      <button class="tablinks" onclick="openDocs(event, 'tab2')">Leader-Follower</button>
+      <button class="tablinks" onclick="openDocs(event, 'tab3')">Galera [BETA]</button>
+    </div>
+
+
+    <div id="tab1" class="tabcontent">
+      <img src="./images/single-node-plan.png">
+    </div>
+    <div id="tab2" class="tabcontent">
+      <img src="./images/leader-follower-plan.png">
+    </div>
+    <div id="tab3" class="tabcontent">
+      <img src="./images/ha-plan.png">
+    </div>
+
+
+
+
 
 1. Configure the fields as follows:
   <table>
