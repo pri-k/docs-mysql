@@ -8,8 +8,42 @@ before you upgrade to the latest available version of the new minor release.
 For example, if you use v2.2.3,
 upgrade to the latest version of 2.2 before upgrading to the latest version of 2.3.
 
-For product versions and upgrade paths, see the [Product Compatibility 
+For product versions and upgrade paths, see the [Product Compatibility
 Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
+
+## <a id="234"></a>v2.3.4
+
+**Release Date: February 20, 2019**
+
+### Security Fixes
+
+This release includes the following security fix:
+
+* Updates golang to v1.11.4 to address [CVE-2018-16873](https://github.com/golang/go/issues/29230).
+* Updates Percona Server to v5.7.24-26 to address [CVE-2018-3133](http://www.aqdog.com/vulns/vulnsmanagent/vulnsDetails?id=20093&cve_id=CVE-2018-3133).
+
+### Compatibility
+
+This release uses the following component versions:
+
+<table border="1" class="nice">
+<tr>
+    <th>Component</th>
+    <th>Version</th>
+</tr>
+<tr>
+    <td>Stemcell</td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#3541-line">3541.x</a></td>
+</tr>
+<tr>
+    <td>Percona Server</td>
+    <td>v5.7.24-26</td>
+</tr>
+<tr>
+    <td>golang</td>
+    <td>v1.11.4</td>
+</tr>
+</table>
 
 ## <a id="233"></a>v2.3.3
 
@@ -20,7 +54,7 @@ Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 All releases up to and including MySQL for PCF v2.3.3 have the following issue:
 
 * Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
-  To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand. 
+  To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand.
 
 ### Security Fixes
 
@@ -59,19 +93,19 @@ This release uses the following component versions:
 
 New features and changes in this release:
 
-* `find-non-tls-bindings` BOSH errand error messages have been improved to make determining the 
+* `find-non-tls-bindings` BOSH errand error messages have been improved to make determining the
 cause of failure easier.
 
 ### Fixed Issues
 
 This release fixes the following issues:
 
-* The `mysqldump --all-databases` step no longer fails during maunal backups. 
+* The `mysqldump --all-databases` step no longer fails during maunal backups.
 For more information, see [Manual Backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup).
 * Smoke tests no longer fail if Service Plan Access is set to manual.
-* `find-non-tls-bindings` BOSH errands no longer fail when the Secure Service Bindings feature is 
+* `find-non-tls-bindings` BOSH errands no longer fail when the Secure Service Bindings feature is
 disabled and Credhub is enabled on the deployment.
-* The `mysql-restore` command now completely cleans up pre-existing MySQL users with column or 
+* The `mysql-restore` command now completely cleans up pre-existing MySQL users with column or
 table level privileges in the database.
 
 ## <a id="231"></a>v2.3.1
@@ -92,7 +126,7 @@ New features and changes in this release:
 
 * Operators can set the global limit for maximum service instances to 200.
 * Operators can audit connections to service instances to determine which instances are **not** using TLS.
-  They can do this by running the `find-non-tls-bindings` BOSH errand. 
+  They can do this by running the `find-non-tls-bindings` BOSH errand.
 
 ### Fixed Issues
 
@@ -110,7 +144,7 @@ This release has the following issues and limitations:
 
 * After upgrading to MySQL for PCF v2.3.0, developers cannot create new bindings
   to a service instance that has not also been upgraded.
-  For apps to bind and unbind successfully, operators must run the `upgrade-all-service-instances` 
+  For apps to bind and unbind successfully, operators must run the `upgrade-all-service-instances`
   errand.
   For more information, see [Upgrade MySQL Instances](./upgrade.html#upgrade-instances).
 * MySQL for PCF v2.3.0 requires v2.0 of the Cloud Foundry CLI MySQL plugin if secure service
@@ -123,16 +157,16 @@ _Installing and Configuring MySQL for PCF_.
 
 New features and changes in this release:
 
-- **Transport Layer Security** 
+- **Transport Layer Security**
 
   - TLS (formerly known as SSL) can now be used with apps, Docker-based containers, and other clients.<br><br>
 
-    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPsec. 
-    To use TLS as an operator or developer, 
+    - With MySQL for PCF v2.3.0, apps can connect to MySQL over TLS, without the need for IPsec.
+    To use TLS as an operator or developer,
     see [Preparing for TLS](./prepare-tls.html).<br><br>
 
-    - TLS works for desktop clients as well, if network connectivity allows. 
-    Follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html), 
+    - TLS works for desktop clients as well, if network connectivity allows.
+    Follow [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html),
     and use the CA cert provided by the service key.
 
 - **Synchronous replication**
@@ -160,10 +194,10 @@ New features and changes in this release:
 
 - Improvements for **developers**:
 
-    - Developers can now **create multiple database schemas** within a dedicated service instance. 
-    Database credentials created for application bindings or service keys can create new MySQL databases (schemas). 
-    This means that multiple apps can co-exist on the same service instance without 
-    interfering or having access to other schemas. 
+    - Developers can now **create multiple database schemas** within a dedicated service instance.
+    Database credentials created for application bindings or service keys can create new MySQL databases (schemas).
+    This means that multiple apps can co-exist on the same service instance without
+    interfering or having access to other schemas.
     To use this feature, run: `create database NAME-OF-NEW-SCHEMA`.
 
     - Developers can now define the database charset and collation.
