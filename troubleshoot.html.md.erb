@@ -848,7 +848,7 @@ clusters:
   If a detached existing node fails to join the cluster, its <code>sequence\_number</code>
   might be higher than those of the nodes with quorum. A higher <code>sequence\_number</code> on the 
   detached node indicates that it has recent changes to the data that the primary component lacks. You can
-  check this by looking at the node's error log at <code>/var/vcap/sys/log/mysql/mysql.err.log</code>.
+  check this by looking at the node's error log at <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
 
   To restore the cluster, do one the following:
 
