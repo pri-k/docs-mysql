@@ -43,7 +43,7 @@ In this topic:
     * [Many Replication Errors in Logs](#replication-errors)
 * [Techniques for Troubleshooting Highly Available Clusters](#trouble-ha)
     * [Force a Node to Rejoin the Cluster Manually](#manual-force)
-    * [Recreate a Corrupted VM](#recreate-VM)
+    * [Re-create a Corrupted VM](#recreate-VM)
     * [Check Replication Status](#check-replication)    
 * [Knowledge Base (Community)](#kb)
 * [File a Support Ticket](#support)
@@ -51,11 +51,11 @@ In this topic:
 
 This topic provides operators with basic instructions for troubleshooting on-demand MySQL for PCF.
 
-For information on temporary MySQL for PCF service interruptions, see <a href="./upgrade.html#interruptions">Service Interruptions</a>.
+For information about temporary MySQL for PCF service interruptions, see <a href="./upgrade.html#interruptions">Service Interruptions</a>.
 
 <a id="errors"></a><h2>Troubleshooting Errors</h2>
 
-This section provides information on how to troubleshooting specific errors or error messages.
+This section provides information about how to troubleshooting specific errors or error messages.
 
 <a id="deprecated-service-bindings"></a><h3>Deprecated Service Bindings Found (Upgrade Error)</h3>
 
@@ -109,7 +109,7 @@ To solve this issue, follow these steps carefully. Some of the following steps r
 
 To upgrade your service instances, operators must do the following:
 
-1. Notify the developers who own the apps listed in the error output table above that you will be upgrading all service instances, which can impact app connectivity to the database.
+1. Notify the developers who own the apps listed in the error output table above that you are be upgrading all service instances, which can impact app connectivity to the database.
 1. To log in to the BOSH Director, do the procedure in [Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
 1. To locate the BOSH deployment name for your MySQL service broker, run the following command:
 
@@ -339,7 +339,7 @@ Succeeded
 If the GTID Executed sets for both instances are the same, continue to Step 2. If they are different, continue to Step 4.</li>
 <li>Look at the value of GTID Executed for both instances.
     <ul><li>If the range after the GUID is equivalent, either instance can be made read-only, as described in Step 3.</li>
-    <li>If one instance has a range that is a subset of the other, the instance with the subset should be made read-only, as
+    <li>If one instance has a range that is a subset of the other, the instance with the subset should must be made read-only, as
       described in Step 3.</li></ul></li>
 <li>Based on the information you gathered in the step above, run the <code>make-read-only</code> errand to make the appropriate instance read-only:
 <code> bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE
@@ -482,7 +482,7 @@ Follow the steps below:
     <pre class="terminal">$ cf service my-service-instance --guid
     12345678-90ab-cdef-1234-567890abcdef</pre>
     If you do not know the name of your service instance, you can list service
-    instances in the space with <code>cf services</code>.</pre>
+    instances in the space with <code>cf services</code>.
   </li>
 
   <li> To confirm that your persistent disk usage is at 100%, run the following
@@ -768,7 +768,7 @@ To retrieve the admin and read-only admin credentials for a service instance fro
 
 <a id="reinstall"></a><h3>Reinstall a Tile</h3>
 
-To reinstall the MySQL for PCF tile, see the <a href="https://discuss.pivotal.io/hc/en-us/articles/360003453534">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a> Knowledge Base article.
+To reinstall the MySQL for PCF tile, see the <a href="https://discuss.pivotal.io/hc/en-us/articles/360003453534">Reinstalling MySQL for Pivotal Cloud Foundry version v2 and later</a> Knowledge Base article.
 
 <a id="view-resources"></a><h3>View Resource Saturation and Scaling</h3>
 
@@ -842,7 +842,7 @@ clusters:
 
   If you cannot SSH into a node, and you are not detecting either network
   latency or firewall issues, your node might be down due to VM failure. To confirm that the node 
-  is unresponsive and recreate the VM, see <a href=#recreate-VM> Recreate a Corrupted VM</a>.
+  is unresponsive and re-create the VM, see <a href=#recreate-VM> Recreate a Corrupted VM</a>.
   
   
   <h4> <a id="unable-rejoin"></a> Node Unable to Rejoin</h4>
@@ -861,7 +861,7 @@ clusters:
   cluster data on the node. For more information, see 
   <a href="#manual-force">Force a Node to Rejoin the Cluster Manually</a>.
   <p class="note warning"><strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive 
-    procedure. Only do this procedure with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+    procedure. Only do this procedure with the help of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
     
 <h3><a id="replication-errors"></a> Many Replication Errors in Logs</h3>
 
@@ -919,7 +919,7 @@ workflow:
     cluster node. Depending on the output from <code>mysql-diag</code>, you might recover your cluster with the following troubleshooting techniques:
     <ul>
       <li>To force a node to rejoin the cluster, see <a href="#manual-force">Force a Node to Rejoin the Cluster Manually</a>.</li>
-      <li>To recreate a corrupted VM, see <a href="#recreate-VM">Recreate a Corrupted VM</a>.</li>
+      <li>To re-create a corrupted VM, see <a href="#recreate-VM">Re-create a Corrupted VM</a>.</li>
       <li>To check if replication is working, see <a href="#check-replication">Check Replication</a>.</li>
     </ul>
   For more information about <code>mysql-diag</code>, see <a href="./mysql-diag.html">Running mysql-diag</a>.
@@ -960,7 +960,7 @@ forces the node to join the cluster, and creates a new copy of the cluster data 
 
 <p class="note warning"><strong>Warning:</strong> If you manually force a node to rejoin the cluster, 
   data stored on the local node is lost. Do not force nodes to rejoin the cluster if you want to 
-  preserve unsynchronized data. Only do this procedure with the assistance of 
+  preserve unsynchronized data. Only do this procedure with the help of 
   <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
   
   Before following this procedure, you should first try to bootstrap
@@ -993,9 +993,9 @@ To manually force a node to rejoin the cluster, do the following:
   </li>
   </ol>
   
-<h3><a id="recreate-VM"></a>Recreate a Corrupted VM</h3>
+<h3><a id="recreate-VM"></a>Re-create a Corrupted VM</h3>
 
-  To recreate a corrupted VM, do the following:
+  To re-create a corrupted VM, do the following:
   <ol>
   <li>To log in to the BOSH Director VM, do the following procedures:
     <ol>
@@ -1007,10 +1007,10 @@ To manually force a node to rejoin the cluster, do the following:
         see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
     </ol>
   </li>
-  <li> To identify and recreate the unresponsive node with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a> and run 
+  <li> To identify and re-create the unresponsive node with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a> and run 
     <code>Recreate VM using last known apply spec</code>.
-    <p class="note warning"><strong>Warning:</strong> Recreating a node will clear its logs. Ensure the node is completely down before recreating it.</p>
-    <p class="note warning"><strong>Warning:</strong> Only recreate one node. Do not recreate the entire cluster. If more than one node is down, contact <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+    <p class="note warning"><strong>Warning:</strong> Recreating a node clears its logs. Ensure the node is completely down before recreating it.</p>
+    <p class="note warning"><strong>Warning:</strong> Only re-create one node. Do not rec-reate the entire cluster. If more than one node is down, contact <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
   </li>
   </ol>
 
@@ -1043,7 +1043,7 @@ To check the replication status, do the following:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='InnoDB';"</pre>
   </li>
   <li>
-  To insert some data into the dummy table, run the following command:
+  To insert data into the dummy table, run the following command:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
   </li>
   <li>
