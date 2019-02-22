@@ -828,20 +828,51 @@ clusters:
   If the connection to this node is made through the proxy,
   the proxy automatically re-routes further connections to a different node.
 <br><br>
+
+  <h4>Solutions</h4>
   A node can become unresponsive for a number of reasons. For solutions to different different reasons a node can become unresponsive, see the following:
   <ul>
-  <li><a href="#network-latency">Network Latency</a></li>
-  <li><a href="#mysql-process-failure">MySQL Process Failure</a></li>
-  <li><a href="#firewall-rule-change">Firewall Rule Change</a></li>
-  <li><a href="#vm-failure">VM Failure</a></li>
-  <li><a href="#unable-rejoin">Node Unable to Rejoin</a>
-</ul>
-
-  <h4><a id='network-latency'></a>Network Latency</h4>
-
+  <li><strong>Network Latency</strong>: 
   If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The 
   node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings 
-  to reduce your network latency.
+  to reduce your network latency.</li>
+  <li><strong>MySQL Process Failure:</strong>
+  If the MySQL process crashes, <code>monit</code> and BOSH should restore the process. 
+  If the process is not restored, consult error logs using the <code>download-logs</code> tool.
+  For more information, see <a href="https://github.com/cloudfoundry/cf-mysql-release/blob/develop/scripts/download-logs">download-logs</a> in the <code>cf-mysql-release</code> GitHub repository. 
+  </li>
+  <li><strong>Firewall Rule Change:</strong>
+  If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. 
+  This causes the node to become unresponsive.In this case, the logs show the node leaving the cluster 
+  but do not show network latency errors.
+  <br>
+  To confirm that the node is unresponsive due to a firewall rule change, SSH from a responsive node
+  to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change.
+  Change your firewall rules to enable the unresponsive node to rejoin the cluster.
+  </li>
+  <li><strong>VM Failure:</strong>
+  If you cannot SSH into a node, and you are not detecting either network
+  latency or firewall issues, your node might be down due to VM failure. To confirm that the node 
+  is unresponsive and recreate the VM, see <a href=#recreate-VM> Recreate a Corrupted VM</a>.
+  </li>
+  <li><strong>Node Unable to Rejoin:</strong>
+  If a detached existing node fails to join the cluster, its <code>sequence\_number</code>
+  might be higher than those of the nodes with quorum. A higher <code>sequence\_number</code> on the 
+  detached node indicates that it has recent changes to the data that the primary component lacks. You can
+  check this by looking at the node's error log at <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
+
+  To restore the cluster, do one the following:
+
+  - If the detached node has a higher sequence number than the primary component, do the procedures in <a href="./bootstrapping.html">Bootstrapping</a>.
+
+  - If bootstrapping does not restore the cluster, you can manually force the node to rejoin the cluster. 
+  This removes all of the unsynchronized data from the detached server node and creates a new copy of the 
+  cluster data on the node. For more information, see 
+  <a href="#manual-force">Force a Node to Rejoin the Cluster Manually</a>.
+  <p class="note warning"><strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive 
+    procedure. Only do this procedure with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+  </li>
+</ul>
 
   <h4> <a id='mysql-process-failure'></a>MySQL Process Failure</h4>
   
