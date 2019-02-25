@@ -158,12 +158,11 @@ cluster service plan, the operator must ensure network rules are set up so that 
 	</tr>
 
 	<tr>
-		<td><strong>mysql-diag</strong></td>
-		<td>MySQL service instances</td>
-		<td>8112</td>
+		<td><strong>Jumpbox VM</strong></td>
+		<td>PAS UAA</td>
+		<td>443</td>
 		<td>One-way</td>
-		<td>This port is needed for troubleshooting cluster nodes with <code>mysql-diag</code>.
-		  For more information, see <a href="./mysql-diag.html">Running mysql-diag</a>.</td>
+		<td>This port is needed so that the replication canary can create a UAA client for sending email notifications.</td>
 	</tr>
 
 	<tr>
@@ -171,8 +170,7 @@ cluster service plan, the operator must ensure network rules are set up so that 
 		<td><strong>HA cluster node</strong></td>
 		<td> 4567 <br> 4568 <br> 4444 </td>
 		<td>Two-way</td>
-		<td>This port is needed to maintains network connectivity between nodes in an HA cluster.
-			For more infomation, see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a> in the Percona XtraDB Cluster documentation.</td>
+		<td>This port is needed to maintain network connectivity between nodes in an HA cluster. For more information, see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a> in the Percona XtraDB Cluster documentation.</td>
 	</tr>
 	<tr>
 		<td><strong>Galera healthcheck</strong></td>
