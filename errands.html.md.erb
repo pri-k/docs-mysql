@@ -35,15 +35,49 @@ For example:
 
 ### <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
-The `find-deprecated-bindings` errand determines deprecated app bindings and service
-keys. App bindings and service keys that use IP addresses or do not use TLS were
-deprecated with the introduction of MySQL for Pivotal Cloud Foundry (PCF) v2.4
-and are not allowed in MySQL for PCF v2.5. The errand exits successfully even if
-deprecated bindings are found.
+The `find-deprecated-bindings` errand searches for and outputs a list of apps and service keys that: 
 
-For more information, see [Deprecated Service Bindings Found (Upgrade Error)](https://docs.pivotal.io/p-mysql/2-5/troubleshoot.html#deprecated-service-bindings ).
++ Use IP addresses instead of DNS
++ Do not use TLS
 
-See below an example of an errand exiting even though deprecated bindings were found.
+The errand exits whether or not a deprecated binding is found. You run this errand before upgrading to MySQL for PCF v2.5. You cannot have bindings that use IP address in v2.5. As an operator, you can configure bindings to require TLS.
+
+Consult the table below to see whether or not an app or service key appears in the output of the `find-deprecated-bindings` errand: 
+<table class="nice">
+  <tr>
+    <th colspan ="2">Does the app or service key have...</th>
+    <th rowspan="2" width=50%><br>The app or service key appears in table?<br><br></th>
+  </tr>
+  <tr>
+    <th width=25%>BOSH DNS</th>
+    <th width=25%>TLS</th>
+  </tr>
+
+  <tr>
+      <td>True</td>
+      <td>True</td>
+      <td>No</td>
+  </tr>
+  <tr>
+      <td>True</td>
+      <td>False</td>
+      <td>Yes</td>
+  </tr>
+  <tr>
+  <td>False</td>
+  <td>True</td>
+  <td>Yes</td>
+  </tr>
+  <tr>
+    <td>False</td>
+    <td>False</td>
+    <td>Yes</td>
+  </tr>
+
+</table>
+
+
+See below an example of the errand output:
 
 <pre class="terminal">
 $ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings
