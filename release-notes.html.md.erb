@@ -54,7 +54,7 @@ This release fixes the following issue:
 This release has the following issue:
 
 - There is a known issue in the interaction between the [MariaDB Connector/J](https://mariadb.com/kb/en/library/about-mariadb-connector-j/) and the Java API, which leads to the following limitations:
-  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile must have TLS **disabled** in the MySQL for PCF tile. 
+  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile must have TLS **disabled** in the MySQL for PCF tile.
   - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J in their Spring apps to connect to a MySQL service instance.
   Pivotal recommends developers configure their apps to use the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
 
@@ -74,7 +74,7 @@ This release includes the following security fixes:
 New features and changes in this release:
 
 * Credentials for doing backups have been removed from the MySQL broker BOSH manifest, and are stored securely in CredHub.
-* The `find-non-tls-bindings` BOSH errand has been enhanced to also search for IP-based bindings and service keys. The errand has been renamed to `find-deprecated-bindings`. 
+* The `find-non-tls-bindings` BOSH errand has been enhanced to also search for IP-based bindings and service keys. The errand has been renamed to `find-deprecated-bindings`.
 * The `find-deprecated-bindings` BOSH errand has clearer error messaging to more easily determine the cause of failure.
 * The AWS S3 Access Key ID and Secret Access Key fields in the Backups configuration pane in Ops Manager are no longer shown in plaintext.
 * Backup secrets are redacted.
@@ -121,7 +121,7 @@ To take advantage of the BOSH DNS improvments, you must do the following:
 * Developers can share their service instance across different orgs and spaces.
 
     <p class="note"><strong>Note</strong>: Service instance sharing is a beta feature in PCF v2.2
-       and a GA feature in PCF v2.3. 
+       and a GA feature in PCF v2.3.
        For information about service instance sharing,
        see <a href="https://docs.pivotal.io/pivotalcf/devguide/services/sharing-instances.html">Sharing Service Instances</a>.
 
@@ -175,13 +175,5 @@ The following components are compatible with this release:
 <tr>
     <td>Stemcell</td>
     <td><a href="https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#97-line">Xenial 97.x</a></td>
-</tr>
-<tr>
-    <td>Percona Server</td>
-    <td>5.7.21-21</td>
-</tr>
-<tr>
-    <td>golang</td>
-    <td>1.10.3</td>
 </tr>
 </table>
