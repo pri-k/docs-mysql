@@ -102,7 +102,19 @@ For general information about errands, including the `upgrade-all-service-instan
 
 <h4>Solution</h4>
 
-To solve this issue, do the procedures in <a href="./upgrade.html#remove-bindings">Remove Deprecated Bindings</a>
+To solve this issue, do the following:
+
+1. Do the procedures in <a href="./upgrade.html#remove-bindings">Remove Deprecated Bindings</a>.
+
+    After you restart all of your apps, your apps can connect to the database and resume service. However, your Ops Manager installation is still in a failed state. 
+
+1. To finish the installation, do the following:
+
+    1. In the Ops Manager Installation Dashboard, click **Review Pending Changes**.
+
+    1. In the **Review Pending Changes** pane, ensure that the **Validate no IP-based bindings in use before upgrade-all-service-instances** and **Upgrade all On-demand MySQL Service Instances** errands are selected.
+
+    1. After reviewing the pending changes, click **Apply Changes** to complete the installation.
 
 <a id="install-fail"></a><h3>Failed Install</h3>
 
