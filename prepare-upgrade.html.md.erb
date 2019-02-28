@@ -12,6 +12,11 @@ Before you upgrade to MySQL for PCF v2.5, you must do the following:
 + [Remove Bindings with IP Addresses](#deprecated-bindings)
 + [Update Add-ons to Run with Xenial Stemcell](#update-addons)
 
+Do these pre-upgrade procedures well in advance of upgrading the MySQL for PCF tile.
+This is because if app or service key bindings are found to use IP addresses,
+you have to wait for developers to unbind, rebind, and restart those apps 
+before you can upgrade the MySQL for PCF tile.
+
 ## <a id="deprecated-bindings"></a>Remove Bindings with IP Addresses
 
 Before you upgrade your MySQL for PCF service, you must remove all bindings that use IP addresses. This is because for MySQL for PCF v2.5 and later you must use BOSH DNS for bindings. If you do not remove these bindings your upgrade fails. 
