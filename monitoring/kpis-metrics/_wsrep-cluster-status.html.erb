@@ -1,0 +1,32 @@
+<%= partial 'monitoring/ha-kpi-metric', locals: {
+    metric: '/galera/wsrep_cluster_status' ,
+    description: <<~DESC,
+       Shows the primary status of the cluster component that the node is in.
+       <br>Values are:
+       <ul>
+         <li> <code>Primary</code>: Node has a quorum.</li>
+         <li> <code>Non-primary</code>:  Node has lost a quorum. </li>
+         <li> <code>Disconnected</code>: Node is unable to connect to other nodes.</li>
+        </ul>
+        <strong>Use:</strong> Any value other than <code>Primary</code> indicates that the node is
+       part of a nonoperational component. This occurs in cases of multiple
+       membership changes that result in a loss of quorum.
+       <br><br><strong>Origin:</strong> Doppler/Firehose
+       <br> <strong>Type:</strong> integer (see above)
+       <br><strong>Frequency:</strong> 30 s (default)
+    DESC
+
+    measurement: 	'Sum of each of the nodes, over the last 5 minutes',
+    alert: <<~DESC,
+      <strong>Yellow warning:</strong> < 3 <br>
+      <strong>Red critical:</strong> < 1
+    DESC
+    response: <<~DESC,
+      <ul>
+        <li>Check node status to ensure that they are all in working order and able
+       to receive write-sets</li>
+       <li> Run <code>mysql-diag</code> and check the MySQL Server logs for errors</li>
+       </ul>
+    DESC
+
+} %>

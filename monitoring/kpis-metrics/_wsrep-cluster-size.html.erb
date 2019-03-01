@@ -1,0 +1,20 @@
+<%= partial 'monitoring/ha-kpi-metric', locals: {
+    metric: '/galera/wsrep_cluster_size' ,
+    description: <<~DESC,
+      The number of cluster nodes with which each node is communicating normally.
+      <br><br> <strong>Use:</strong> When running in a multi-node configuration, this metric
+      indicates if each member of the cluster is communicating normally with all
+      other nodes.<br><br><strong>Origin:</strong> Doppler/Firehose<br> <strong>Type:</strong> count
+      <br><strong>Frequency:</strong> 30 s (default)
+    DESC
+
+    measurement: 	'(Average of the values of each node / cluster size), over the last 5 minutes',
+    alert: <<~DESC,
+      <strong>Yellow warning:</strong> < 3 (availability compromised)<br>
+      <strong>Red critical:</strong> < 1 (cluster unavailable)
+    DESC
+    response: <<~DESC,
+      Run <code>mysql-diag</code> and check the MySQL Server logs for errors.
+    DESC
+
+} %>

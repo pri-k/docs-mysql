@@ -1,0 +1,26 @@
+<%= partial 'monitoring/ha-kpi-metric', locals: {
+    metric: '/galera/wsrep_ready' ,
+    description: <<~DESC,
+      Shows whether each cluster node can accept queries. Returns only 0 or 1.
+       When this metric is 0, almost all queries to that node fail with the
+       error:<br> <code>ERROR 1047 (08501) Unknown Command</code><br><br>
+       <strong>Use:</strong> Discover when nodes of a cluster have been unable to
+       communicate and accept transactions.
+       <br><br><strong>Origin:</strong> Doppler/Firehose<br>
+       <strong>Type:<strong> boolean<br><strong>Frequency:</strong> 30 s (default)
+    DESC
+    measurement: 	'Average of values of each cluster node, over the last 5 minutes',
+    alert: <<~DESC,
+      <strong>Yellow warning:</strong> < 1 <br> <strong>Red critical:</strong> 0 (cluster is down)
+    DESC
+    response: <<~DESC,
+      <ul>
+        <li> Run <code>mysql-diag</code> and check the MySQL Server logs for errors.</li>
+        <li> Make sure there has been no infrastructure event that affects intra-cluster
+          communication.</li>
+        <li> Ensure that <code>wsrep_ready</code> has not been set to off by using the
+           query:<br>
+           <code>SHOW STATUS LIKE 'wsrep_ready';</code>. </li>
+    DESC
+        
+} %>
