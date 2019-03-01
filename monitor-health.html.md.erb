@@ -5,6 +5,8 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
+<%= partial '../../p-mysql/odb/mysql-tile-proxy-toc' %>
+
 <%= partial "./galera_beta" %>
 
 This topic describes how to obtain the health status for each node 
@@ -16,111 +18,6 @@ using the Switchboard dashboard or API endpoint. You can also view the number of
 routed through a proxy to each node. 
 For more information about proxies, see [MySQL Proxy](./about-ha.html#proxy).
 
-## <a id="prereq"></a>Prerequisite
+<a href="#prereq">Prerequisite</a>
 
-To connect to Switchboard you need credentials. 
-
-To obtain credentials for accessing the Switchboard dashboard and API, do the following:
-
-1. Run the following command:
-
-    ```
-    cf service YOUR-HA
-    ```
-  
-    Where `YOUR-HA` is the name of your HA cluster.
-  
-    <pre class="terminal"> $ cf service myHA
-    Showing info of service myHA in org acceptance / space example as admin...
-
-    name:         myHA
-    service:      p.mysql
-    tags:
-    plan:         db-ha-small
-    description:  Dedicated instances of MySQL
-    documentation:
-    dashboard:    proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com 
-    (username: 'abcdefghijklmno', password: '012345678912345')
-
-    Showing status of last operation from service myHA...
-
-    status:    update succeeded
-    message:   Instance update completed
-    started:   2018-11-20T01:25:55Z
-    updated:   2018-11-20T01:30:33Z  
-    </pre>
-
-1. Record the dashboard hostname, username, and password.
-
-## <a id="dashboard"></a>Monitor Node Health Using the Dashboard
-
-To monitor node health using the Switchboard dashboard, do the following:
-
-1. To view a list of proxies in your browser, navigate to the hostname that you recorded in 
-[Prerequisite](#prereq) above. For example, `proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com`
-
-2. When prompted, enter the username and password that you recorded in 
-[Prerequisite](#prereq) above.
-
-2. Click the link for the proxy that you want to use to monitor node health.
-
-2. If you are prompted, enter the username and password that you recorded in 
-[Prerequisite](#prereq) above.
-
-    <%= image_tag "images/switchboard-all-healthy.png" %>
-
-## <a id="proxy-api"></a> Monitor Node Health Using the API
-
-You can also use the Switchboard API to obtain the information that is shown on the Switchboard dashboard.
-
-For example, you might want to use the API to write your own app to monitor the cluster.
-
-To monitor node health using the Switchboard API, do the following:
-
-1. To monitor node health, run the following command:
-
-    ```
-    curl https://USERNAME:PASSWORD@N-HOSTNAME/v0/backends
-    ```
-
-    Where:
-    + `USERNAME` is the `username` you recorded in [Prerequisite](#prereq) above.
-    + `PASSWORD` is the `password` you recorded in [Prerequisite](#prereq) above.
-    + `N` is either 0, 1, or 2 depending on the proxy you want to connect to. 
-    + `HOSTNAME` is the `hostname` you recorded in [Prerequisite](#prereq) above.
-    
-    The above command outputs a JSON object similar to the following: 
-
-    <pre class="terminal">
-    $ curl https://abcdefghijklmno:012345678912345@0-proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com/v0/backends
-    [
-      {
-        "host": "a-b1234c5d6.e-f891.bosh",
-        "port": 6033,
-        "healthy": true,
-        "name": "backend-0",
-        "currentSessionCount": 0,
-        "active": true,
-        "trafficEnabled": true
-      },
-      {
-        "host": "a-b1234c5d6.e-f891.bosh",
-        "port": 6033,
-        "healthy": true,
-        "name": "backend-1",
-        "currentSessionCount": 0,
-        "active": false,
-        "trafficEnabled": true
-      },
-      {
-        "host": "a-b1234c5d6.e-f891.bosh",
-        "port": 6033,
-        "healthy": true,
-        "name": "backend-2",
-        "currentSessionCount": 0,
-        "active": false,
-        "trafficEnabled": true
-      }
-    ]
-    </pre>
-  
+<%= partial '../../p-mysql/odb/mysql-monitor-health' %>
