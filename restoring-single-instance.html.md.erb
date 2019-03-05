@@ -30,17 +30,18 @@ Perform the following procedures to restore a single service instance:
 1. Locate your backup artifact.
    The location of your backup artifact depends on how you configured your automated backups.
    For more information, see the [Enable Automated Backups](backup.html#enable-backups) section of the <em>Backups</em> topic.
-1. Transfer the backup artifact to the temporary MariaDB instance. 
+1. Transfer the backup artifact to the temporary MariaDB instance.
 1. SSH into the temporary MariaDB instance.
 1. Delete the existing MySQL data that is stored on the temporary MariaDB instance by running `rm -rf PATH-TO-MARIADB-DATA-DIRECTORY/*`. For example:
 	<pre class="terminal">
 	$ rm -rf /mysql/*
 	</pre>
-	If you are using MySQL for PCF, the path to your MariaDB data directory is `/var/vcap/store/mysql`. 
+	If you are using MySQL for PCF, the path to your MariaDB data directory is `/var/vcap/store/mysql`.
 1. Decrypt and expand the backup artifact into the MariaDB data directory. For example:
 	<pre class="terminal">
 	$ gpg --decrypt mysql-backup.tar.gpg | tar -C /mysql -xvf -
 	</pre>
+  This requires an encryption key, located in the **Credentials** tab of the MySQL for PCF tile.
 1. Change the owner of the MariaDB data directory, because MySQL expects the data directory to be owned by a particular user. For example:
 	<pre class="terminal">
 	$ chown -R vcap:vcap /mysql
@@ -65,9 +66,8 @@ Perform the following procedures to restore a single service instance:
     For example:
     <pre class="terminal">
     $ mysql -u abcdefghijklm \
-    -p 123456789 \ 
+    -p 123456789 \
     -h 10.10.10.8 -e < user_database.sql</pre>
     <br>
   	This replaces the existing data in the MySQL for PCF cluster with the content of the backup artifact,
   	without affecting the data of any other service instances.
-
