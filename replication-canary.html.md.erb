@@ -13,9 +13,9 @@ monitors an HA cluster to ensure that replication is working.
 
 ## <a id="overview"></a>Overview
 
-The replication canary writes to a private dataset in the cluster and then attempts to read the written 
-data from each node. It pauses between reds and writes to ensure that the write-sets have been replicated. 
-The private dataset does not use a significant amount of disk capacity.
+The replication canary writes to a private dataset in the cluster and then attempts to read the 
+written data from each node. It pauses between reds and writes to ensure that the write-sets have 
+been replicated. The private dataset does not use a significant amount of disk capacity.
 
 When replication fails, the canary cannot read the data from all the nodes and does the 
 following:
@@ -24,9 +24,12 @@ following:
   See [Sample Notification Email](#sample-canary) below.
   - Disables client access to the cluster. See [Monitor Cluster Access](#access) below.
 
-  <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost. Because of this, both of the above behaviors are enabled by default. Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of replication failure.</p>
+  <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost. 
+    Because of this, both of the above behaviors are enabled by default. 
+    Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of 
+    replication failure.</p>
 
-## <a name="sample-canary"></a>Sample Notification Email
+## <a id="sample-canary"></a>Sample Notification Email
  
 If the canary detects replication failure, it immediately sends an email through the 
 Pivotal Application Service (PAS) notification service.
@@ -44,9 +47,11 @@ has detected an unsafe cluster condition in which replication is not
 performing as expected across all nodes.
 ```
 
-## <a name="access"></a> Monitor Cluster Access
+## <a id="access"></a> Monitor Cluster Access
 
-When the canary detects replication failure, it disables connections to the database cluster through the proxies. When replication issue resolves, the canary automatically restores client access to the cluster.
+When the canary detects replication failure, it disables connections to the database cluster 
+through the proxies. When replication issue resolves, the canary automatically restores client 
+access to the cluster.
 
 If you must restore client access to the cluster while replication is failing, contact 
 [Pivotal Support](https://support.pivotal.io).
@@ -87,34 +92,45 @@ To monitor cluster access, do the following:
     When cluster access is disabled, `trafficEnabled` is set to false.
 
 
-## <a name="enable-canary"></a>Enable the Replication Canary
+## <a id="enable-canary"></a>Enable the Replication Canary
 
 To enable the replication canary, follow the instructions below to configure PAS and the MySQL for PCF.
 
-### <a name="configure-pas"></a>Configure PAS 
+### <a id="configure-pas"></a>Configure PAS 
 
 To configure PAS to send notification emails, do the following:
 
 1. Navigate to Ops Manager **Installation Dashboard > Pivotal Application Service > Email Notifications**. 
 
-1. In **From Email**, enter an email address from which the notification emails are sent. The replication canary uses this email to send notifications and the SMTP server configuration.
+1. In **From Email**, enter an email address from which the notification emails are sent. The 
+replication canary uses this email to send notifications and the SMTP server configuration.
 
 1. In the **Errands** pane, enable **Notifications Errand**.
 
 <p class="note"><strong>Note:</strong> In a typical PCF deployment, these settings are already configured.
 </p>
 
-### <a name="configure-mysql"></a>Configure MySQL for PCF 
+<%# THE BELOW PROCEDURE NEEDS TO UPDATED WITH THE NEW UI OR CLI PROCEDURE %>
+
+### <a id="configure-mysql"></a>Configure MySQL for PCF 
 
 1. In the **Advanced Options** section, select **Enable replication canary**.
     <%#[Enable Replication](enable-replication.png) %>
-1. If you want to the replication canary to send email but not disable access at the proxy, select **Notify only**.
-  <p class="note"><strong>Note</strong>: Pivotal recommends leaving this checkbox unselected due to the possibility of data loss from replication failure.</p>
-1. You can override the **Replication canary time period**. The **Replication canary time period** sets how frequently the canary checks for replication failure, in seconds. This adds a small amount of load to the databases, but the canary reacts more quickly to replication failure. The default is 30 seconds.
+1. If you want to the replication canary to send email but not disable access at the proxy, 
+select **Notify only**.
+  <p class="note"><strong>Note</strong>: Pivotal recommends leaving this checkbox unselected due to 
+    the possibility of data loss from replication failure.</p>
+1. You can override the **Replication canary time period**. The **Replication canary time period** 
+sets how frequently the canary checks for replication failure, in seconds. This adds a small amount 
+of load to the databases, but the canary reacts more quickly to replication failure. The default is 30 seconds.
 
     <%# ![Canary time](canary_time.png) %>
 
-1. You can override the **Replication canary read delay**. The **Replication canary read delay** sets how long the canary waits to verify data is replicating across each MySQL node, in seconds. Clusters under heavy load experience some small replication lag as writesets are committed across the nodes. The default is 20 seconds.
-1. Enter an **Email address** to receive monitoring notifications. Use a closely monitored email address account. The purpose of the canary is to escalate replication failure as quickly as possible.
+1. You can override the **Replication canary read delay**. The **Replication canary read delay** 
+sets how long the canary waits to verify data is replicating across each MySQL node, in seconds. 
+Clusters under heavy load experience some small replication lag as writesets are committed across 
+the nodes. The default is 20 seconds.
+1. Enter an **Email address** to receive monitoring notifications. Use a closely monitored email 
+address account. The purpose of the canary is to escalate replication failure as quickly as possible.
 1. In the **Resource Config** section, ensure the **Monitoring** job has one instance.
   <%# [Resource config](monitoring-resource-config.png) %>
