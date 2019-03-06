@@ -66,6 +66,8 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
 
 <%= partial './mysql_kpis' %>
 
+<%# If you are confused about how to edit the following HA partials see the Tile Dev partials topic in the wiki  %>
+
 #### <a id="wsrep-ready"></a> Highly Available Cluster WSREP Ready
 
 <%= partial 'monitoring/kpis-metrics/wsrep-ready' %>
@@ -85,7 +87,7 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
 
 <h3> <a id="bosh"></a> BOSH System Health Metrics </h3>
 
-<!-- Parital in https://github.com/pivotal-cf/docs-services-partials -->
+<%# Parital in https://github.com/pivotal-cf/docs-services-partials %>
 
 <%= partial '../../p-mysql/odb/bosh_health_metrics' %>
 
@@ -100,7 +102,6 @@ In addition to the above KPIs, the MySQL service emits the followings metrics
 that can be used for monitoring and alerting:
 
 <%= partial './mysql_metrics' %>
-
 
 <h3><a id="ha-metrics"></a> MySQL Highly Available Cluster Metrics</h3>
 
