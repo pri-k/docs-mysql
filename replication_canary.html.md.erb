@@ -67,24 +67,24 @@ To enable the Replication Canary, follow the instructions below to configure bot
 #### Configure the MySQL for PCF Tile
 
 1. In the **Advanced Options** section, select **Enable replication canary**.
-    <!-- ![Enable Replication](enable-replication.png) -->
+    <%#[Enable Replication](enable-replication.png) %>
 1. If you want to the Replication Canary to send email but not disable access at the proxy, select **Notify only**.
   <p class="note"><strong>Note</strong>: Pivotal recommends leaving this checkbox unselected due to the possibility of data loss from replication failure.</p>
 1. You can override the **Replication canary time period**. The **Replication canary time period** sets how frequently the canary checks for replication failure, in seconds. This adds a small amount of load to the databases, but the canary reacts more quickly to replication failure. The default is 30 seconds.
 
-    <!-- ![Canary time](canary_time.png) -->
+    <%# ![Canary time](canary_time.png) %>
 
 1. You can override the **Replication canary read delay**. The **Replication canary read delay** sets how long the canary waits to verify data is replicating across each MySQL node, in seconds. Clusters under heavy load experience some small replication lag as writesets are committed across the nodes. The Default is 20 seconds.
 1. Enter an **Email address** to receive monitoring notifications. Use a closely monitored email address account. The purpose of the Canary is to escalate replication failure as quickly as possible.
 1. In the **Resource Config** section, ensure the **Monitoring** job has one instance.
-  <!-- ![Resource config](monitoring-resource-config.png) -->
+  <%# [Resource config](monitoring-resource-config.png) %>
 
 ### <a name="disable-canary"></a> Disable the Replication Canary
 
 If you do not need the Replication Canary, for instance if you use a single MySQL node, follow this procedure to disable both the job and the resource configuration.
 
 1. In the **Advanced Options** section of the MySQL for PCF tile, select **Disable Replication Canary**.
-    <!-- ![Disable protection](disable-protection.png) -->
+    <%# [Disable protection](disable-protection.png) %>
 
 1. In the **Resource Config** pane, set the **Monitoring** job to zero instances.
-    <!-- ![Monitoring zero](monitoring-zero.png) -->
+    <%# [Monitoring zero](monitoring-zero.png) %>
