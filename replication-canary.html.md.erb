@@ -7,11 +7,9 @@ owner: MySQL
 
 <%= partial "./galera_beta" %>
 
-This topic describes  replication canary and how to enable it. 
-
-MySQL for Pivotal Cloud Foundry (PCF) highly available (HA) clusters use replication to provide benefits such as quick failover and rolling upgrades. The replication canary monitors an HA cluster to ensure that replication is working. 
-
-<%# MENTION JUMPBOX VM SOMEWHERE %>
+This topic describes how to enable the replication canary for an highly available (HA) cluster in MySQL 
+for Pivotal Cloud Foundry (PCF). The replication canary runs on the jumpbox VM and 
+monitors an HA cluster to ensure that replication is working. 
 
 ## <a id="overview"></a>Overview
 
@@ -24,14 +22,12 @@ following:
 
   - Sends a message that replication has failed to a configured email address. 
   See [Sample Notification Email](#sample-canary) below.
-  - Disables client access to the cluster. See [Monitor Cluster Access](#access).
+  - Disables client access to the cluster. See [Monitor Cluster Access](#access) below.
 
   <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost. Because of this, both of the above behaviors are enabled by default. Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of replication failure.</p>
 
 ## <a name="sample-canary"></a>Sample Notification Email
-
-<%# IS THE NOTIFICATION SERVICE A THING? %> 
-
+ 
 If the canary detects replication failure, it immediately sends an email through the 
 Pivotal Application Service (PAS) notification service.
 
@@ -97,13 +93,18 @@ To enable the replication canary, follow the instructions below to configure PAS
 
 ### <a name="configure-pas"></a>Configure PAS 
 
+To configure PAS to send notification emails, do the following:
+
+1. Navigate to Ops Manager **Installation Dashboard > Pivotal Application Service > Email Notifications**. 
+
+1. In **From Email**, enter an email address from which the notification emails are sent. The replication canary uses this email to send notifications and the SMTP server configuration.
+
+1. In the **Errands** pane, enable **Notifications Errand**.
+
 <p class="note"><strong>Note:</strong> In a typical PCF deployment, these settings are already configured.
 </p>
-1. In the **SMTP Config** section, enter a **From Email** that the replication canary can use to send notifications, along with the SMTP server configuration.
-1. In the **Errands** section, select the **Notifications** errand.
 
-
-### <a name="configure-mysql"></a>Configure the MySQL for PCF 
+### <a name="configure-mysql"></a>Configure MySQL for PCF 
 
 1. In the **Advanced Options** section, select **Enable replication canary**.
     <%#[Enable Replication](enable-replication.png) %>
