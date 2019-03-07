@@ -586,6 +586,10 @@ If you want to restore to a leader-follower plan, you can do one of the followin
           ...
           instances: 1    # Scale instances to 1
           ...
+        properties:
+          leader_follower:
+            enabled: false    # Set to false
+          ...
         ```
   1. Redeploy the deployment manifest by running:
 
@@ -657,6 +661,10 @@ Instance for Restore* above, do the following:
         - name: mysql
           ...
           instances: 2    # Scale instances to 2
+          ...
+        properties:
+          leader_follower:
+            enabled: true    # Set to true
           ...
          ```
   1. Redeploy the deployment manifest by running:
