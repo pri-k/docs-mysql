@@ -596,16 +596,34 @@ To prepare a new service instance for restore, do the following:
     ```
 
 1. If you created a leader-follower or HA cluster service instance to restore to, do the following:
-  1. To scale the instances to one, modify the deployment manifest as follows:
+    1. Modify the deployment manifest to scale instances to one. Do one of the following:
+      * To scale a leader-follower instance, scale instances one and set the
+      `leader-follower` property to `false`.
+      Update the instance group  and properties for your new service instance as follows:
 
-        ```yaml
-        instance_groups:
-        - name: mysql
-          ...
-          instances: 1    # Scale instances to 1
-          ...
-        ```
-  1. To redeploy the deployment manifest, run the following command:
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 1    # Scale instances to 1
+              ...
+            properties:
+              leader_follower:
+                enabled: false    # Set to false
+              ...
+            ```
+      * To scale an HA cluster instance, modify the deployment manifest
+      to scale instances to one.
+      Update the instance group for your new service instance as follows:
+
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 1    # Scale instances to 1
+              ...
+            ```
+  1. Redeploy the deployment manifest by running:
 
         ```
         bosh2 -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
@@ -728,9 +746,10 @@ leader-follower plan, update the plan now:
 
 1. If you scaled instances to one in step 6 of *Create and Prepare a New Service
 Instance for Restore* above, do the following:
-    1. To scale you instance, do one of the following:
-      + If you scaled a leader-follower instance, scale the instances to two by modifying the deployment manifest.
-      Update instance group for your new service instance as follows:
+    1. To scale your instance, do one of the following:
+      + If you scaled a leader-follower instance, modify the deployment manifest
+      to scale the instances two and set the `leader-follower` property to `true`.
+      Update the instance group and properties for your new service instance as follows:
 
             ```yaml
             instance_groups:
@@ -738,9 +757,14 @@ Instance for Restore* above, do the following:
               ...
               instances: 2    # Scale instances to 2
               ...
+            properties:
+              leader_follower:
+                enabled: true    # Set to true
+              ...
+
              ```
       + If you scaled an HA cluster instance, scale the instances to three by modifying the deployment manifest.
-      Update instance group for your new service instance as follows:
+      Update the instance group for your new service instance as follows:
 
             ```yaml
             instance_groups:
