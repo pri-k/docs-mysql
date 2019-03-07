@@ -535,7 +535,7 @@ To restore the backup to a new service instance for a single node, leader-follow
 * [Create and Prepare a New Service Instance for Restore](#prepare)
 * [Restore a Single Node or Leader-Follower Instance](#run-sn-leader-follower)
 * [Restore an HA Cluster Instance](#runHA)
-* [Redeploy the Service Instance](#redeploy)
+* [Restage the Service Instance](#restage)
 
 #### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
@@ -562,7 +562,8 @@ To prepare a new service instance for restore, do the following:
 
     <li>If you want to restore to a leader-follower plan, you can do one of the following:
       <ul>
-        <li><b>Create a single-node instance to restore to</b> then update the plan on this instance to leader-follower after you run the restore utility. For how to update the plan, see step 1 of <a href="#redeploy">Redeploy the Service Instance</a>.</li>
+        <li><b>Create a single-node instance to restore to</b> then update the plan on this instance to leader-follower after you run the restore utility.
+          For how to update the plan, see step 1 of <a href="#restage">Restage the Service Instance</a>.</li>
         <li><b>Create a leader-follower instance to restore to</b> then scale the instances to one before running the restore utility. For how to scale instances, see step 6 of this procedure.</li>
       </ul>
         <p class="note"><strong>Note:</strong> You can only restore to a single node.</p>
@@ -652,7 +653,7 @@ To prepare a new service instance for restore, do the following:
     sudo su
     ```
 
-#### <a id="#run-sn-leader-follower"></a> Restore a Single Node or Leader-Follower Instance
+#### <a id="run-sn-leader-follower"></a> Restore a Single Node or Leader-Follower Instance
 
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and
   should only be run on a new and unused service instance.</p>
