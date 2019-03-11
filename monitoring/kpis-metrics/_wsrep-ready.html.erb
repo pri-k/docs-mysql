@@ -1,4 +1,4 @@
-<%= partial 'monitoring/ha-kpi-metric', locals: {
+<%= partial 'monitoring/kpis', locals: {
     metric: '/galera/wsrep_ready' ,
     description: <<~DESC,
       Shows whether each cluster node can accept queries. Returns only 0 or 1.

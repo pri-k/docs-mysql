@@ -68,41 +68,7 @@ For a list of all the MySQL for PCF component metrics, see [Component Metrics](#
 
 <%# If you are confused about how to edit the following HA partials see the Tile Dev partials topic in the wiki  %>
 
-#### <a id="server-heartbeat"></a> Server Availability
-
-<%= partial 'monitoring/kpis-metrics/available' %>
-
-#### <a id="persistent-used"></a> Persistent Disk Used
-
-<%= partial 'monitoring/kpis-metrics/persistent-used' %>
-
-#### <a id="ephemeral-used"></a> Ephemeral Disk Used
-
-<%= partial 'monitoring/kpis-metrics/ephemeral-used' %>
-
-#### <a id="connections"></a> Connections
-
-<%= partial 'monitoring/kpis-metrics/connections' %>
-
-#### <a id="open-files"></a> Questions
-
-<%= partial 'monitoring/kpis-metrics/questions' %>
-
-#### <a id="open-files"></a> Service Plans Allocated
-
-<%= partial 'monitoring/kpis-metrics/disk-allocated' %>
-
-#### <a id="wsrep-ready"></a> Highly Available Cluster WSREP Ready
-
-<%= partial 'monitoring/kpis-metrics/wsrep-ready' %>
-
-#### <a id="wsrep-cluster-size"></a> Highly Available Cluster WSREP Cluster Size
-
-<%= partial 'monitoring/kpis-metrics/wsrep-cluster-size' %>
-
-#### <a id="wsrep-cluster-status"></a> Highly Available Cluster WSREP Status
-
-<%= partial 'monitoring/kpis-metrics/wsrep-cluster-status' %>
+<%= partial 'monitoring/kpis-metrics/all-kpis' %>
 
 <h3> <a id="bosh"></a> BOSH System Health Metrics </h3>
 

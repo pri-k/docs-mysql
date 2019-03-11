@@ -1,7 +1,7 @@
 <% metrics.each do |metric| %>
   <table class="nice">
   <tr>
-  <th colspan="2" style="text-align: center;"><a id="<% metric[:tag] %>"></a><%= vars.mysql_metrics_origin_v2 %>/<%= metric[:source]%></th>
+  <th colspan="2" style="text-align: center;"><a name="<%= metric[:tag] %>"></a><%= vars.mysql_metrics_origin_v2 %>/<%= metric[:source]%></th>
   </tr>
   <tr>
     <th width="20%">Description</th>

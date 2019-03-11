@@ -1,10 +1,10 @@
-<%= partial 'monitoring/ha-metric', locals: {
+<%= partial 'monitoring/metrics', locals: {
     metrics: [
       {
         source: 'available',
         description: 'Indicates if the local database server is available and responding.',
         unit: 'boolean',
-        tag: 'available'
+        tag: 'available-metrics'
       },
       
       {
@@ -35,7 +35,7 @@
         DESC
         
         unit: 'count',
-        tag: 'questions'
+        tag: 'questions-metrics'
       },
       
       {
