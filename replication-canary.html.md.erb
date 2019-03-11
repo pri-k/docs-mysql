@@ -14,7 +14,7 @@ monitors an HA cluster to ensure that replication is working.
 ## <a id="overview"></a>Overview
 
 The replication canary writes to a private dataset in the cluster and then attempts to read the 
-written data from each node. It pauses between reds and writes to ensure that the write-sets have 
+written data from each node. It pauses between reads and writes to ensure that the write-sets have 
 been replicated. The private dataset does not use a significant amount of disk capacity. 
 
 When replication fails, the canary cannot read the data from all the nodes and does the 
@@ -22,7 +22,7 @@ following:
 
   - Sends a message that replication has failed to a configured email address. 
   See [Sample Notification Email](#sample-canary) below.
-  - Disables client access to the cluster. See [Monitor Cluster Access](#access) below.
+  - Disables client access to the cluster. See [Determine if Cluster is Accessible](#access) below.
 
   <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost. 
     Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of 
@@ -31,7 +31,7 @@ following:
 ## <a id="sample-canary"></a>Sample Notification Email
 
 If the canary detects replication failure, it immediately sends an email through the 
-Pivotal Application Service notification service. You must have configured email notifications in 
+Pivotal Application Service (PAS) notification service. You must have configured email notifications in 
 PAS for the replication canary to send emails.
 
 For more information about configuring email notifications, see the _Configure Email Notifications_ 
@@ -50,20 +50,18 @@ has detected an unsafe cluster condition in which replication is not
 performing as expected across all nodes.
 ```
 
-## <a id="access"></a> Monitor Cluster Access
+## <a id="access"></a> Determine if Cluster is Accessible 
 
-When the canary detects replication failure, it disables connections to the database cluster 
-through the proxies. When replication issue resolves, the canary automatically restores client 
-access to the cluster.
+When the canary detects replication failure, it disables connections to the database cluster through 
+the proxies. When replication issue resolves, the canary automatically restores client access to the 
+cluster. You can determine if the canary disabled cluster access by observing the cluster using 
+the Switchboard API.
 
-You can determine if the canary disabled cluster access using the Switchboard API. For more information
-about the Switchboard API, see [Monitor Node Health Using the API](./monitor-health.html#proxy-api).
-
-To monitor cluster access, do the following:
+To determine if cluster access is disabled, do the following:
 
 1. Do the prerequisite procedure in [Monitor Node Health](monitor-health.html#monitor).
 
-1. To monitor cluster access, run the following command:
+1. To view cluster access, run the following command:
 
     ```
     curl https://USERNAME:PASSWORD@N-HOSTNAME/v0/cluster
@@ -92,3 +90,5 @@ To monitor cluster access, do the following:
     
 If you must restore client access to the cluster while replication is failing, contact 
 [Pivotal Support](https://support.pivotal.io).
+
+For more information about the Switchboard API, see [Monitoring Node Health](monitor-health.html).
