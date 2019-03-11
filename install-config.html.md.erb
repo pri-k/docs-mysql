@@ -59,7 +59,7 @@ To create an ASG for MySQL for PCF, do the following:</br>
       }
     ]
     ```
-    If you are using Pivotal Application Service (PAS) v2.0.x or later and want to store your service instance credentials in runtime CredHub,
+    If you want to store your service instance credentials in runtime CredHub,
     you must also open port `8844` in addition to performing the steps
     in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
     Modify the JSON file above to include `"ports": "3306,8844"`.
@@ -132,7 +132,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
         <td>Ignore; not used.</td></tr>
     <tr><td><strong>Network</strong></td>
         <td>Select a subnet for the MySQL broker. This is typically the same subnet
-            that includes the PAS or Elastic Runtime component VMs.<br>
+            that includes the PAS component VMs.<br>
             This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
@@ -421,7 +421,7 @@ Follow the steps below to configure automated backups:
 Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
 
 * To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below.
-* To store your service instance credentials in runtime CredHub on PAS v2.0.x or later,
+* To store your service instance credentials in runtime CredHub,
   perform the procedure in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
 
 ![security](security.png)
@@ -441,7 +441,7 @@ To enable TLS for the MySQL service, perform the following steps:
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
-If you are using PAS v2.0.x or later and want to store your service instance credentials
+If you want to store your service instance credentials
 in runtime [CredHub](https://docs.pivotal.io/pivotalcf/2-0/credhub/) instead of the Cloud Controller Database (CCDB),
 perform the following steps:
 
@@ -632,17 +632,14 @@ MySQL for PCF v2.4.0 and later requires a Xenial stemcell.
 
 Follow the steps below to verify your stemcell version and apply all changes:
 
-1. Depending on your Ops Manager version, navigate to the area where you can manage your stemcell for MySQL for PCF:
-    * If you are using Ops Manager v2.0 or earlier, click **Stemcells**.
-    * If you are using Ops Manager v2.1 or later, click **Stemcell Library**.
+1. Click **Stemcell Library**.
     For more information about using the Stemcell Library, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html).
-        <p class="note"><strong>Note</strong>: As of Ops Manager v2.1, operators manage stemcells for all products from the Stemcell Library.</p>
 
 1. Verify and, if necessary, import a new stemcell version.
 
 1. <a name="apply-changes"></a>In the Ops Manager Dashboard, do the following to complete the installation:
 
-    1. If you are using Ops Manager v2.3 or later, click **Review Pending Changes**.
+    1. Click **Review Pending Changes**.
     For more information about this Ops Manager page, see
     [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
     1. Click **Apply Changes**.
