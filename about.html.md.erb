@@ -24,7 +24,7 @@ This topic describes networking for on-demand services, including MySQL for Pivo
 
 ## <a id='mysql-ports'></a> Required Networking Rules for MySQL for PCF
 
-Regardless of the specific network layout, the operator must ensure network rules are set up 
+Regardless of the specific network layout, the operator must ensure network rules are set up
 so that connections are open as described in the table below.
 
 <table class="nice">
@@ -84,7 +84,7 @@ so that connections are open as described in the table below.
 				8443<br>3306
 		</td>
 		<td>One-way</td>
-		<td>This connection is for administrative tasks. Avoid opening general use, app-specific 
+		<td>This connection is for administrative tasks. Avoid opening general use, app-specific
 			ports for this connection.</td>
 	</tr>
 	<tr>
@@ -131,7 +131,7 @@ service plan, the operator must ensure network rules are set up so that connecti
 		<td>8443<br>8081</td>
 		<td>Two-way</td>
 		<td>This port is needed if leader-follower is enabled.
-                    For information, 
+                    For information,
 	see <a href="maintain-leader-follower.html#config-plan">Configure a Leader-Follower Service Plan</a>.</td>
 	</tr>
 </table>
@@ -139,7 +139,7 @@ service plan, the operator must ensure network rules are set up so that connecti
 ### <a id='hac-ports'></a> Required Networking Rules for Highly Available (HA) Cluster Plans
 
 In addition to the networking rules required for MySQL for PCF, if you are using a highly available
-cluster service plan, the operator must ensure network rules are set up so that connections are open 
+cluster service plan, the operator must ensure network rules are set up so that connections are open
 as described in the table below.
 
 <%= partial "./galera_beta" %>
@@ -163,9 +163,9 @@ as described in the table below.
 	<tr>
 		<td><strong>Jumpbox VM</strong></td>
 		<td>PAS UAA</td>
-		<td>443</td>
+		<td>8443</td>
 		<td>One-way</td>
-		<td>This port is needed so that the replication canary can create a UAA client for sending email 
+		<td>This port is needed so that the replication canary can create a UAA client for sending email
 			notifications. For more information, see <a href="./replication-canary.html">Replication Canary</a>.</td>
 	</tr>
 
@@ -174,9 +174,9 @@ as described in the table below.
 		<td><strong>HA cluster node</strong></td>
 		<td> 4567 <br> 4568 <br> 4444 </td>
 		<td>Two-way</td>
-		<td>This port is needed to maintain network connectivity between nodes in an HA cluster. 
-			For more information, 
-			see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a> 
+		<td>This port is needed to maintain network connectivity between nodes in an HA cluster.
+			For more information,
+			see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a>
 			in the Percona XtraDB Cluster documentation.</td>
 	</tr>
 	<tr>
