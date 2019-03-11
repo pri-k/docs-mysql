@@ -22,7 +22,7 @@ following:
 
   - Sends a message that replication has failed to a configured email address. 
   See [Sample Notification Email](#sample-canary) below.
-  - Disables client access to the cluster. See [Determine if Cluster is Accessible](#access) below.
+  - Disables client access to the cluster. See [Determine if the Cluster Is Accessible](#access) below.
 
   <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost. 
     Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of 
@@ -50,10 +50,10 @@ has detected an unsafe cluster condition in which replication is not
 performing as expected across all nodes.
 ```
 
-## <a id="access"></a> Determine if Cluster is Accessible 
+## <a id="access"></a> Determine if the Cluster Is Accessible 
 
 When the canary detects replication failure, it disables connections to the database cluster through 
-the proxies. When replication issue resolves, the canary automatically restores client access to the 
+the proxies. When the replication issue is resolved, the canary automatically restores client access to the 
 cluster. You can determine if the canary disabled cluster access by observing the cluster using 
 the Switchboard API.
 
@@ -70,7 +70,7 @@ To determine if cluster access is disabled, do the following:
     Where:
     + `USERNAME` is the `username` you recorded in step 1.
     + `PASSWORD` is the `password` you recorded in step 1.
-    + `N` is either 0, 1, or 2 depending on the proxy you want to connect to.
+    + `N` is 0, 1, or 2 depending on the proxy you want to connect to.
     + `HOSTNAME` is the `hostname` you recorded in step 1.
         
     For example:
