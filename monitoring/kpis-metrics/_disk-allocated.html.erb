@@ -1,24 +1,18 @@
 <%= partial 'monitoring/ha-kpi-metric', locals: {
-    metric: '/broker/disk_allocated_service_plans' ,
-    description: <<~DESC,
-    The number of megabytes allocated by the broker for all service plans, current
-     and allocated. <br><br> <strong>Use:</strong> The service broker will not allow new
-     service instances to be created if there isn't sufficient unreserved space
-     remaining on the persistent disk. <br><br><strong>Origin:</strong> Doppler/Firehose<br>
-     <strong>Type:</strong> Megabytes<br><strong>Frequency:</strong> 30 s (default)
-    DESC
-
-    measurement: 	'disk allocated / persistent disk size ',
-    alert: <<~DESC,
-      <strong>Yellow warning:</strong> < 80% <br>
-      <strong>Red critical:</strong> < 90%
-    DESC
-    response: <<~DESC,
-      <ul>
-        <li>Audit plan allocation by your users, recommend deletion of unused
-       service instances.</li>
-       <li>Redeploy with larger persistent disks</li>
-       </ul>
-    DESC
-
-} %>
+    metric: '/available',
+    description:<<~DESC,
+     The number of megabytes allocated by the broker for all service plans, current and allocated.<br><br>
+     <strong>Use</strong>: The service broker does not allow new service instances to be created if there is not sufficient unreserved space remaining on the persistent disk. 
+     <br><br>
+     <strong>Origin</strong>: Doppler/Firehose<br>
+     <strong>Type</strong>: MB<br>
+     <strong>Frequency</strong>: 30 s
+     
+     DESC
+     measurement:'disk allocated / persistent disk size',
+     alert: <<~DESC,
+       <strong>Yellow warning</strong>:< 80%<br>
+       <strong>Red critical</strong>: < 90%
+     DESC
+     response: 'Audit plan allocation by your users and recommend deletion of unused service instances.'
+} %>  

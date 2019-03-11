@@ -1,0 +1,27 @@
+<%= partial 'monitoring/ha-kpi-metric', locals: {
+    metric: '/available',
+    description:<<~DESC,
+     MySQL Server is currently responding to requests, which indicates if the component is available.<br><br>
+     <strong>Use</strong>: If the server does not emit heartbeats, it is offline.
+     <br><br>
+     <strong>Origin</strong>: Doppler/Firehose<br>
+     <strong>Type</strong>: boolean<br>
+     <strong>Frequency</strong>: 30 s
+     
+     DESC
+     measurement:'Average over last 5 minutes',
+     alert: <<~DESC,
+       <strong>Yellow warning</strong>: N/A<br>
+       <strong>Red critical</strong>: &lt; 1
+     DESC
+     response: <<~DESC,
+     Check the MySQL Server logs for errors.
+     You can find the instance by targeting your MySQL deployment with BOSH
+     and inspecting logs for the instance.
+     For more information,
+     see <a href="./troubleshoot.html#failing-jobs">Failing Jobs and Unhealthy Instances</a>.
+     <br><br>
+    If your service plan is an highly available (HA) cluster, you can also
+    run <code>mysql-diag</code> to checklogs for errors.
+    DESC
+} %>  

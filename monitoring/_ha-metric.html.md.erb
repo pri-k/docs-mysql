@@ -1,15 +1,16 @@
-<table class="nice">
+<% metrics.each do |metric| %>
+  <table class="nice">
   <tr>
-  <th> Data Source</th>
-  <th> Description</th>
-  <th> Metric Unit</th>
+  <th colspan="2" style="text-align: center;"><a id="<% metric[:tag] %>"></a><%= vars.mysql_metrics_origin_v2 %>/<%= metric[:source]%></th>
   </tr>
-
-  <% metrics.each do |metric| %>
   <tr>
-    <td width="110"><code><%= vars.mysql_metrics_origin_v2 %>/<%= metric[:source] %></code></td>
-    <td> <%= metric[:description] %> </td>
-    <td> <%= metric[:unit] %></td>
+    <th width="20%">Description</th>
+    <td><%= metric[:description] %> </td>
   </tr>
-  <% end %>
+  <tr>
+    <th width="15%">Metric Unit</th>
+    <td><%= metric[:unit] %></td>
+  </tr>
 </table>
+<br>
+<% end %>
