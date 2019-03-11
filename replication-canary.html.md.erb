@@ -22,7 +22,7 @@ following:
 
   - Sends a message that replication has failed to a configured email address. 
   See [Sample Notification Email](#sample-canary) below.
-  - Disables client access to the cluster. See [Determine if the Cluster Is Accessible](#access) below.
+  - Disables client access to the cluster. See [Determine If the Cluster Is Accessible](#access) below.
 
   <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost. 
     Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of 
@@ -50,7 +50,7 @@ has detected an unsafe cluster condition in which replication is not
 performing as expected across all nodes.
 ```
 
-## <a id="access"></a> Determine if the Cluster Is Accessible 
+## <a id="access"></a> Determine If the Cluster Is Accessible 
 
 When the canary detects replication failure, it disables connections to the database cluster through 
 the proxies. When the replication issue is resolved, the canary automatically restores client access to the 
