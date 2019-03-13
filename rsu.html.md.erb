@@ -31,35 +31,48 @@ unavailable, contact your operator to do the following procedure.
 Before you run a RSU, you must have the following:
 
 + A generated SQL file to perform data imports and run MySQL commands.
-+ An ephemeral disk with enough space for your largest IDB file.
++ An ephemeral disk with enough space for your largest IBD data file.
 See [Check Ephemeral Disk Size](#ephemeral-disk).
 
 
 ###<a id="check-eph"></a>Check Ephemeral Disk Size
 
-Go to the "data directory" — where is the data directory? what machine, what path,
-what's its real name, how do I get there?
+[THIS SEEMS LIKE AN OPERATOR PROCEDURE]
+Running a RSU on a large table can fill up your ephemeral disk. MySQL for PCF
+cannot function properly if there is not sufficient free space on files systems.
+Before running a RSU, confirm that your ephemeral disk is large enough to run the
+upgrade.
 
-Do an ls -l -ah command (Al guesses that this is the command but not sure.)
+To check the size of your ephemeral disk, do the following:
 
-Look at the sizes of the IBD files and note the size of the largest IBD file.
-(Is it true that only one file is processed at a time?)
+1. To navigate to your data directory, run the following command:
 
-"Look at the ephemeral disk and see how much space is left on it."
-(how does one do this?)
+    ```
+    cd /var/vcap/store/mysql
+    ```
 
-If there is not enough space to add the largest IBD file to the ephemeral disk,
-scale up the size of the ephemeral disk for the HA cluster before beginning the RSU.
-(This is controlled during install and config, in MySQL VM Type field, https://docs-pcf-staging.cfapps.io/p-mysql/2-5/install-config.html#active
-. How does one scale up? I don't think we say that in the docs...
+1. To retrieve the size of your largest IDB file, run the following command:
+
+    ```
+    ls -l -ahS
+    ```
+    Record the size of the largest IDB file.
+
+1. To retrieve your ephemeral disk usage, do the procedure in
+[Run mysql-diag the Using BOSH Command Line Interface (CLI)](./mysql-diag.html#bosh-v2)
+and record the size of the ephemeral disk being used.
+
+1. If there is not enough space to add the largest IBD file to the ephemeral disk,
+scale up the size of the ephemeral disk.
+To scale up the size of the ephemeral disk, do the following: [SOMETHING]
 
 
-## <a id="use-rsu"></a>Use a RSU
+## <a id="run-rsu"></a>Run a RSU
 
-To use a RSU, you must do the following:
+To run a RSU, you must do the following:
 
-1. Retrieve the ID for each node in your HA cluster. See [Retrieve Node ID](#run).
-1. Run the RSU on each node in your deployment. See [Run RSU](#retrieve).
+1. Retrieve the ID for each node in your HA cluster. See [Retrieve Node ID](#retrieve).
+1. Run the RSU on each node in your deployment. See [Apply a New Schema](#apply).
 
 ###<a id="retrieve"></a>Retrieve Node ID
 
@@ -82,9 +95,9 @@ To retrieve the IDs for your nodes, do the following:
 	```
 	Where `GUID` is the guid you recorded in the previous step.
 
-###<a id="run"></a>Run RSU
+###<a id="apply"></a>Apply a New Schema
 
-To run a RSU for each node in your deployment, do the following:
+To run a RSU to apply a new schema on each node in your deployment, do the following:
 
 1. To BOSH SSH into your node, do the procedure in
 [BOSH SSH](https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh)
