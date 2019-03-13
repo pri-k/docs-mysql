@@ -2,32 +2,72 @@
 title: Using Rolling Schema Upgrade (HA Cluster)
 owner: MySQL
 ---
+This topic describes how to run a Rolling Schema Upgrade (RSU).
 
-Rolling Schema Upgrade (RSU) is a method for processing schema upgrades. During RSU, nodes are desynchronized from your cluster so that schema upgrades do not block the rest of the nodes. Operators can then manually apply data definition language (DDL) statements to the desynchronized nodes individually.
+## <a id="using-rsu"></a>Overview
 
-For more information about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
+RSU is a method for processing schema upgrades.
+During a RSU, nodes are desynchronized from your highly available (HA) cluster so that schema upgrades
+do not block the rest of the nodes. Operators can then manually apply data
+definition language (DDL) statements to the desynchronized nodes individually.
 
+For more information about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method)
+in the Percona XtraDB Cluster documentation.
 
-## <a id="using-rsu"></a>Using RSU for DDL
+If you are modifying a large number of rows, you must use a RSU. Large transactions
+fail under Total Order Isolation (TOI). For more information about TOI,
+see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method)
+in the Percona XtraDB Cluster documentation.
 
- If you are modifying a large number of rows, you must use RSU. Large transactions fail under Total Order Isolation (TOI). For more information about TOI, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method) in the Percona XtraDB Cluster documentation. 
- 
- Pivotal recommends developers run migrations on a test environment to gauge how long the production DDL will take. If this is longer than the cluster can be unavailable, contact your operator to do the following procedure.
+Pivotal recommends developers run migrations on a test environment to gauge how
+long the production DDL will take. If this is longer than the HA cluster can be
+unavailable, contact your operator to do the following procedure.
 
 <p class="note"><strong>Note: </strong>DDL statements are applied to nodes one at a time.
    Because of this, the statements must be backwards compatible with the previous schema.</p>
 
-###<a id="prereq"></a>Prerequisite
+##<a id="prereq"></a>Prerequisites
 
-The following procedure assumes that you are using a generated SQL file to perform the data imports and run MySQL commands. 
+Before you run a RSU, you must have the following:
 
-###<a id="procedure"></a>Retrieve Node VM ID
++ A generated SQL file to perform data imports and run MySQL commands.
++ An ephemeral disk with enough space for your largest IDB file.
+See [Check Ephemeral Disk Size](#ephemeral-disk).
 
-You need the ID for each of your node VMs to run RSU. 
 
-To retrieve node VM IDs, do the following:
- 
-1. To retrieve your service instance GUID, run the following command: 
+###<a id="check-eph"></a>Check Ephemeral Disk Size
+
+Go to the "data directory" — where is the data directory? what machine, what path,
+what's its real name, how do I get there?
+
+Do an ls -l -ah command (Al guesses that this is the command but not sure.)
+
+Look at the sizes of the IBD files and note the size of the largest IBD file.
+(Is it true that only one file is processed at a time?)
+
+"Look at the ephemeral disk and see how much space is left on it."
+(how does one do this?)
+
+If there is not enough space to add the largest IBD file to the ephemeral disk,
+scale up the size of the ephemeral disk for the HA cluster before beginning the RSU.
+(This is controlled during install and config, in MySQL VM Type field, https://docs-pcf-staging.cfapps.io/p-mysql/2-5/install-config.html#active
+. How does one scale up? I don't think we say that in the docs...
+
+
+## <a id="use-rsu"></a>Use a RSU
+
+To use a RSU, you must do the following:
+
+1. Retrieve the ID for each node in your HA cluster. See [Retrieve Node ID](#run).
+1. Run the RSU on each node in your deployment. See [Run RSU](#retrieve).
+
+###<a id="retrieve"></a>Retrieve Node ID
+
+You need the ID for each of your nodes to run a RSU.
+
+To retrieve the IDs for your nodes, do the following:
+
+1. To retrieve your service instance GUID, run the following command:
 
 	```
 	cf service MY-INSTANCE --guid
@@ -35,33 +75,35 @@ To retrieve node VM IDs, do the following:
 	Where `YOUR-INSTANCE` is the name of your MySQL for PCF service instance.
 	Record the guid returned in the output.
 
-1. To identify the node VMs in your cluster, run the following command:
+1. To identify the nodes in your HA cluster, run the following command:
 
 	```
 	bosh -d service-instance_GUID vms
 	```
-	Where `GUID` is the guid you recorded in the previous step.  
-	
+	Where `GUID` is the guid you recorded in the previous step.
+
 ###<a id="run"></a>Run RSU
 
-To run RSU, for each node VM in your deployment, do the following:
+To run a RSU for each node in your deployment, do the following:
 
-1. To BOSH SSH into your node VM, do the procedure in [BOSH SSH](https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh) in the Pivotal Cloud Foundry documentation.
+1. To BOSH SSH into your node, do the procedure in
+[BOSH SSH](https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh)
+in the Pivotal Cloud Foundry documentation.
 
 1. To set enable ` global read_only` as an admin user, run the following command:
 
 	```
 	mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=on;"
 	```
-	
+
 1. To verify that the node is unhealthy, do the procedure in [Monitoring Node Health](./monitor-health.html).
-2. Add the following to the SQL file you generated:	
+2. Add the following to the SQL file you generated:
 	* `set wsrep_osu_method=rsu;` to the top of the import file.
 	* `set global wsrep_desync=on;` to the top of the import file.
 	* `set global wsrep_desync=off;` to the bottom of the import file.
-	
+
 	For example:
-	
+
 	```
 	set wsrep_osu_method=rsu;
 	set global wsrep_desync=on;
@@ -75,15 +117,15 @@ To run RSU, for each node VM in your deployment, do the following:
 	```
 	Where:
   + `DATABASE-NAME` is the name of the database to use.
-	+ `SQL-FILE-PATH` is the path to your import file. 
-	
+	+ `SQL-FILE-PATH` is the path to your import file.
+
 1. To disable `global read_only`, run the following command:
-		
+
 	```
 	$ mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=off;""
 	```
-1. To verify that the node is healthy, do the procedure in [Monitoring Node Health](./monitor-health.html).	
+1. To verify that the node is healthy, do the procedure in [Monitoring Node Health](./monitor-health.html).
 
-1. Repeat the above procedure for your next node. 
-	
-At this point your cluster should be stable and running with the new schema.
+1. Repeat the above procedure for your next node.
+
+At this point your HA cluster should be stable and running with the new schema.
