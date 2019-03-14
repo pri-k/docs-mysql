@@ -9,7 +9,7 @@ This topic describes how to run a Rolling Schema Upgrade (RSU).
 RSU is a method for processing schema upgrades.
 During a RSU, nodes are desynchronized from your highly available (HA) cluster so that schema upgrades
 do not block the rest of the nodes. Operators can then manually apply data
-definition language (DDL) statements to the desynchronized nodes individually.
+definition language (DDL) statements to the desynchronized nodes individually. If you want to run a RSU, contact your operator and request them to do the procedures in this topic. 
 
 For more information about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method)
 in the Percona XtraDB Cluster documentation.
@@ -37,7 +37,6 @@ See [Check Ephemeral Disk Size](#ephemeral-disk).
 
 ###<a id="check-eph"></a>Check Ephemeral Disk Size
 
-[THIS SEEMS LIKE AN OPERATOR PROCEDURE]
 Running a RSU on a large table can fill up your ephemeral disk. MySQL for PCF
 cannot function properly if there is not sufficient free space on file systems.
 Before running a RSU, confirm that your ephemeral disk is large enough to run the
@@ -45,13 +44,12 @@ upgrade.
 
 To check the size of your ephemeral disk, do the following:
 
-1. [DO YOU NEED TO SSH INTO A NODE FIRST? IF SO DO YOU ONLY HAVE TO DO THIS WITH
-ONE NODE or ALL OF THEM?]
+1. To SSH into a node, follow the procedure in [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
 1. To view your data directory, run the following command:
 
     ```
-    /var/vcap/store/mysql or /var/vcap/store/pxc-mysql
+    /var/vcap/store/pxc-mysql
     ```
 
 1. To retrieve the size of your largest IDB file, run the following command:
@@ -65,10 +63,8 @@ ONE NODE or ALL OF THEM?]
 [Run mysql-diag the Using BOSH Command Line Interface (CLI)](./mysql-diag.html#bosh-v2)
 and record the size of the ephemeral disk being used.
 
-1. If there is not enough space to add the largest IBD file to the ephemeral disk,
-scale up the size of the ephemeral disk.
-To scale up the size of the ephemeral disk, do the following: [SOMETHING]
-
+1. If there is not enough free space to add the largest IBD file to the ephemeral disk,
+update your service plan to one with a larger ephemeral disk.
 
 ## <a id="run-rsu"></a>Run a RSU
 
