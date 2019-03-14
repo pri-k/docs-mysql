@@ -39,16 +39,19 @@ See [Check Ephemeral Disk Size](#ephemeral-disk).
 
 [THIS SEEMS LIKE AN OPERATOR PROCEDURE]
 Running a RSU on a large table can fill up your ephemeral disk. MySQL for PCF
-cannot function properly if there is not sufficient free space on files systems.
+cannot function properly if there is not sufficient free space on file systems.
 Before running a RSU, confirm that your ephemeral disk is large enough to run the
 upgrade.
 
 To check the size of your ephemeral disk, do the following:
 
-1. To navigate to your data directory, run the following command:
+1. [DO YOU NEED TO SSH INTO A NODE FIRST? IF SO DO YOU ONLY HAVE TO DO THIS WITH
+ONE NODE or ALL OF THEM?]
+
+1. To view your data directory, run the following command:
 
     ```
-    cd /var/vcap/store/mysql
+    /var/vcap/store/mysql or /var/vcap/store/pxc-mysql
     ```
 
 1. To retrieve the size of your largest IDB file, run the following command:
