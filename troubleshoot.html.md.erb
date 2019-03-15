@@ -5,39 +5,51 @@ owner: MySQL
 
 In this topic:
 
-* [Troubleshooting Errors](#errors)
-    * [Failed Install](#install-fail)
-    * [Cannot Create or Delete Service Instances](#cannot-create-delete)
-    * [Broker Request Timeouts](#timeouts)
-    * [Cannot Bind to or Unbind from Service Instances](#cannot-bind)
-    * [Cannot Connect to a Service Instance](#cannot-connect)
-    * [Upgrade All Instances Fails](#upgrade-all-fails)
-    * [Missing Logs and Metrics](#missing-logs)
-    * [Unable to Determine Leader and Follower (Errand Error)](#unable-to-determine)
-    * [Both Leader and Follower Instances Are Writable (Errand Error)](#both-writable)
-    * [Both Leader and Follower Instances Are Read-Only](#both-read-only)
-    * [Persistent Disk is Full](#persistent-disk)
-* [Troubleshooting Components](#components)
-    * [BOSH Problems](#bosh)
-    * [Configuration](#bosh-config)
-    * [Authentication](#auth)
-    * [Networking](#network)
-    * [Quotas](#quotas)
-    * [Failing Jobs and Unhealthy Instances](#failing-jobs)
-    * [AZ or Region Failure](#az-region-fail)
-* [Techniques for Troubleshooting](#techniques)
-    * [Parse a Cloud Foundry (CF) Error Message](#parse-error)
-    * [Access Broker and Instance Logs and VMs](#bosh-cf-access)
-    * [Run Service Broker Errands to Manage Brokers and Instances](#broker-errands)
-    * [Detect Orphaned Service Instances](#detect-orphans)
-    * [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](#instance-creds)
-    * [Reinstall a Tile](#reinstall)
-    * [View Resource Saturation and Scaling](#view-resources)
-    * [Identify Service Instance Owner](#id-instance-owner)
-    * [Monitor Quota Saturation and Service Instance Count](#monitor-quota)
-* [Knowledge Base (Community)](#kb)
-* [File a Support Ticket](#support)
-<br><br>
+<div class="quick-links">
+  <ul>
+    <li><a href="#errors">Troubleshooting Errors</a>
+      <ul>
+        <li><a href="#install-fail">Failed Install</a></li>
+        <li><a href="#cannot-create-delete">Cannot Create or Delete Service Instances</a></li>
+        <li><a href="#timeouts">Broker Request Timeouts</a></li>
+        <li><a href="#cannot-bind">Cannot Bind to or Unbind from Service Instances</a></li>
+        <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
+        <li><a href="#upgrade-all-fails">Upgrade All Instances Fails</a></li>
+        <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
+        <li><a href="#unable-to-determine">Unable to Determine Leader and Follower (Errand Error)</a></li>
+        <li><a href="#both-writable">Both Leader and Follower Instances Are Writable (Errand Error)</a></li>
+        <li><a href="#both-read-only">Both Leader and Follower Instances Are Read-Only</a></li>
+        <li><a href="#persistent-disk">Persistent Disk is Full</a></li>
+      </ul>
+    </li>
+    <li><a href="#components">Troubleshooting Components</a>
+      <ul>
+        <li><a href="#bosh">BOSH Problems</a></li>
+        <li><a href="#bosh-config">Configuration</a></li>
+        <li><a href="#auth">Authentication</a></li>
+        <li><a href="#network">Networking</a></li>
+        <li><a href="#quotas">Quotas</a></li>
+        <li><a href="#failing-jobs">Failing Jobs and Unhealthy Instances</a></li>
+        <li><a href="#az-region-fail">AZ or Region Failure</a></li>
+      </ul>
+    </li>
+    <li><a href="#techniques">Techniques for Troubleshooting</a>
+      <ul>
+        <li><a href="#parse-error">Parse a Cloud Foundry (CF) Error Message</a></li>
+        <li><a href="#bosh-cf-access">Access Broker and Instance Logs and VMs</a></li>
+        <li><a href="#broker-errands">Run Service Broker Errands to Manage Brokers and Instances</a></li>
+        <li><a href="#detect-orphans">Detect Orphaned Service Instances</a></li>
+        <li><a href="#instance-creds">Retrieve Admin and Read-Only Admin Credentials for a Service Instance</a></li>
+        <li><a href="#reinstall">Reinstall a Tile</a></li>
+        <li><a href="#view-resources">View Resource Saturation and Scaling</a></li>
+        <li><a href="#id-instance-owner">Identify Service Instance Owner</a></li>
+        <li><a href="#monitor-quota">Monitor Quota Saturation and Service Instance Count</a></li>
+      </ul>
+    </li>
+    <li><a href="#kb">Knowledge Base (Community)</a></li>
+    <li><a href="#support">File a Support Ticket</a></li>
+  </ul>
+</div>
 
 This topic provides operators with basic instructions for troubleshooting on-demand MySQL for PCF.
 
