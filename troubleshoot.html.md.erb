@@ -7,46 +7,58 @@ owner: MySQL
 
 In this topic:
 
-* [Troubleshooting Errors](#errors)
-    * [Deprecated Service Bindings Found (Upgrade Error)](#deprecated-service-bindings)
-    * [Failed Install](#install-fail)
-    * [Cannot Create or Delete Service Instances](#cannot-create-delete)
-    * [Broker Request Timeouts](#timeouts)
-    * [Cannot Bind to or Unbind from Service Instances](#cannot-bind)
-    * [Cannot Connect to a Service Instance](#cannot-connect)
-    * [Upgrade All Instances Fails](#upgrade-all-fails)
-    * [Missing Logs and Metrics](#missing-logs)
-    * [Unable to Determine Leader and Follower (Errand Error)](#unable-to-determine)
-    * [Both Leader and Follower Instances Are Writable (Errand Error)](#both-writable)
-    * [Both Leader and Follower Instances Are Read-Only](#both-read-only)
-    * [Persistent Disk is Full](#persistent-disk)
-    * [Unresponsive Node in a Highly Available Cluster](#unresponsive) 
-    * [Many Replication Errors in Logs for Highly Available Clusters](#replication-errors)
-* [Troubleshooting Components](#components)
-    * [BOSH Problems](#bosh)
-    * [Configuration](#bosh-config)
-    * [Authentication](#auth)
-    * [Networking](#network)
-    * [Quotas](#quotas)
-    * [Failing Jobs and Unhealthy Instances](#failing-jobs)
-    * [AZ or Region Failure](#az-region-fail)
-* [Techniques for Troubleshooting](#techniques)
-    * [Parse a Cloud Foundry (CF) Error Message](#parse-error)
-    * [Access Broker and Instance Logs and VMs](#bosh-cf-access)
-    * [Run Service Broker Errands to Manage Brokers and Instances](#broker-errands)
-    * [Detect Orphaned Service Instances](#detect-orphans)
-    * [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](#instance-creds)
-    * [Reinstall a Tile](#reinstall)
-    * [View Resource Saturation and Scaling](#view-resources)
-    * [Identify Service Instance Owner](#id-instance-owner)
-    * [Monitor Quota Saturation and Service Instance Count](#monitor-quota)    
-    * [Techniques for Troubleshooting Highly Available Clusters](#trouble-ha)
-    * [Force a Node to Rejoin a Highly Available Cluster Manually](#manual-force)
-    * [Re-create a Corrupted VM in a Highly Available Cluster](#recreate-VM)
-    * [Check Replication Status in a Highly Available Cluster](#check-replication)    
-* [Knowledge Base (Community)](#kb)
-* [File a Support Ticket](#support)
-<br><br>
+<div class="quick-links">
+  <ul>
+    <li><a href="#errors">Troubleshooting Errors</a>
+      <ul>
+        <li><a href="#deprecated-service-bindings">Deprecated Service Bindings Found (Upgrade Error)</a></li>
+        <li><a href="#install-fail">Failed Install</a></li>
+        <li><a href="#cannot-create-delete">Cannot Create or Delete Service Instances</a></li>
+        <li><a href="#timeouts">Broker Request Timeouts</a></li>
+        <li><a href="#cannot-bind">Cannot Bind to or Unbind from Service Instances</a></li>
+        <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
+        <li><a href="#upgrade-all-fails">Upgrade All Instances Fails</a></li>
+        <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
+        <li><a href="#unable-to-determine">Unable to Determine Leader and Follower (Errand Error)</a></li>
+        <li><a href="#both-writable">Both Leader and Follower Instances Are Writable (Errand Error)</a></li>
+        <li><a href="#both-read-only">Both Leader and Follower Instances Are Read-Only</a></li>
+        <li><a href="#persistent-disk">Persistent Disk is Full</a></li>
+        <li><a href="#unresponsive">Unresponsive Node in a Highly Available Cluster</a> </li>
+        <li><a href="#replication-errors">Many Replication Errors in Logs for Highly Available Clusters</a></li>
+      </ul>
+    </li>
+    <li><a href="#components">Troubleshooting Components</a>
+      <ul>
+        <li><a href="#bosh">BOSH Problems</a></li>
+        <li><a href="#bosh-config">Configuration</a></li>
+        <li><a href="#auth">Authentication</a></li>
+        <li><a href="#network">Networking</a></li>
+        <li><a href="#quotas">Quotas</a></li>
+        <li><a href="#failing-jobs">Failing Jobs and Unhealthy Instances</a></li>
+        <li><a href="#az-region-fail">AZ or Region Failure</a></li>
+      </ul>
+    </li>
+    <li><a href="#techniques">Techniques for Troubleshooting</a>
+      <ul>
+        <li><a href="#parse-error">Parse a Cloud Foundry (CF) Error Message</a></li>
+        <li><a href="#bosh-cf-access">Access Broker and Instance Logs and VMs</a></li>
+        <li><a href="#broker-errands">Run Service Broker Errands to Manage Brokers and Instances</a></li>
+        <li><a href="#detect-orphans">Detect Orphaned Service Instances</a></li>
+        <li><a href="#instance-creds">Retrieve Admin and Read-Only Admin Credentials for a Service Instance</a></li>
+        <li><a href="#reinstall">Reinstall a Tile</a></li>
+        <li><a href="#view-resources">View Resource Saturation and Scaling</a></li>
+        <li><a href="#id-instance-owner">Identify Service Instance Owner</a></li>
+        <li><a href="#monitor-quota">Monitor Quota Saturation and Service Instance Count</a>    </li>
+        <li><a href="#trouble-ha">Techniques for Troubleshooting Highly Available Clusters</a></li>
+        <li><a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a></li>
+        <li><a href="#recreate-VM">Re-create a Corrupted VM in a Highly Available Cluster</a></li>
+        <li><a href="#check-replication">Check Replication Status in a Highly Available Cluster</a></li>
+      </ul>
+    </li>
+    <li><a href="#kb">Knowledge Base (Community)</a></li>
+  </ul>
+</div>
+
 
 This topic provides operators with basic instructions for troubleshooting on-demand MySQL for PCF.
 
@@ -86,35 +98,38 @@ Stderr     2018/12/18 02:51:51 Deprecated service instances found, try upgrade i
 
 <h4>Explanation</h4>
 
-In MySQL for PCF v2.5, if you run `upgrade-all-service-instances` while there
+In MySQL for PCF v2.5, if you run <code>upgrade-all-service-instances</code> while there
 are service bindings that use IP addresses, app downtime can occur. This is
 because bindings are still directing apps to connect with IP addresses, but the
 TLS certificate is signed with a DNS hostname. This prevents apps that validate
 the server hostname in the TLS certificate from establishing a TLS connection
 to the database.
-
-In MySQL for PCF v2.5, the `validate-before-upgrade-instances` errand checks
+<br><br>
+In MySQL for PCF v2.5, the <code>validate-before-upgrade-instances</code> errand checks
 that there are no service bindings or service keys using IP addresses, and, if
 there are, outputs the above error and prevents the
-`upgrade-all-service-instances` errand from running.
+<code>upgrade-all-service-instances</code> errand from running.
+<br><br>
+For general information about errands, including the <code>upgrade-all-service-instances</code> errand, see <a href="./errands.html">MySQL for PCF Errands</a>.
 
-For general information about errands, including the `upgrade-all-service-instances` errand, see [MySQL for PCF Errands](./errands.html).
 
 <h4>Solution</h4>
 
 To solve this issue, do the following:
-
-1. Do the procedures in <a href="./upgrade.html#remove-bindings">Remove Deprecated Bindings</a>.
-
-    After you restart all of your apps, your apps can connect to the database and resume service. However, your Ops Manager installation is still in a failed state. 
-
-1. To finish the installation, do the following:
-
-    1. In the Ops Manager Installation Dashboard, click **Review Pending Changes**.
-
-    1. In the **Review Pending Changes** pane, ensure that the **Validate no IP-based bindings in use before upgrade-all-service-instances** and **Upgrade all On-demand MySQL Service Instances** errands are selected.
-
-    1. After reviewing the pending changes, click **Apply Changes** to complete the installation.
+<ol>
+  <li>Do the procedures in <a href="./upgrade.html#remove-bindings">Remove Deprecated Bindings</a>.<br>
+  After you restart all of your apps, your apps can connect to the database and resume service.
+  However, your Ops Manager installation is still in a failed state.</li>
+  <li>To finish the installation, do the following:
+    <ol>
+      <li>In the Ops Manager Installation Dashboard, click <strong>Review Pending Changes</strong>.</li>
+      <li>In the <strong>Review Pending Changes</strong> pane, ensure that the
+        <strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong>
+        and <strong>Upgrade all On-demand MySQL Service Instances</strong> errands are selected.</li>
+      <li>After reviewing the pending changes, click <strong>Apply Changes</strong> to complete the installation.</li>
+    </ol>
+  </li>
+</ol>
 
 <a id="install-fail"></a><h3>Failed Install</h3>
 
@@ -142,7 +157,8 @@ To solve this issue, do the following:
 
 <%= partial '../../p-mysql/odb/tshoot-err-cannot-connect' %>
 
-Service instances can also become temporarily inaccessible during upgrades and VM or network failures. See <a href="./upgrade.html#interruptions">Service Interruptions</a> for more information.
+Service instances can also become temporarily inaccessible during upgrades and VM or network failures.
+See <a href="./upgrade.html#interruptions">Service Interruptions</a> for more information.
 
 <a id="upgrade-all-fails"></a><h3>Upgrade All Instances Fails</h3>
 
@@ -167,8 +183,10 @@ information available to determine the correct state and topology without operat
 
 <h4>Solution</h4>
 
-Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the <a href="./about-leader-follower.html#errands">orchestration</a> errands and backup/restore, you can
-put the service instance into a safe topology, and then rerun the <code>configure-leader-follower</code> errand. This is shown in the example below.
+Use the <code>inspect</code> errand to determine which instance should be the leader.
+Then, using the <a href="./about-leader-follower.html#errands">orchestration</a> errands and backup/restore, you can
+put the service instance into a safe topology, and then rerun the <code>configure-leader-follower</code> errand.
+This is shown in the example below.
 
 This example shows one outcome that the <code>inspect</code> errand can return:
 
@@ -557,10 +575,10 @@ Succeeded
 
 <h4>Symptom</h4>
 
-A client connected to a MySQL cluster node reports the following error: 
+A client connected to a MySQL cluster node reports the following error:
 <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
 <br>
-Some clients might instead return the following: 
+Some clients might instead return the following:
 <pre class="terminal">unknown error</pre>
 
 <h4>Explanation</h4>
@@ -574,18 +592,18 @@ the proxy automatically re-routes further connections to a different node.
 <h4>Solutions</h4>
 A node can become unresponsive for a number of reasons. For solutions, see the following:
 <ul>
-<li><strong>Network Latency</strong>: 
-If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The 
-node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings 
+<li><strong>Network Latency</strong>:
+If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The
+node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings
 to reduce your network latency.</li>
 <li><strong>MySQL Process Failure:</strong>
-If the MySQL process crashes, <code>monit</code> and BOSH should restore the process. 
+If the MySQL process crashes, <code>monit</code> and BOSH should restore the process.
 If the process is not restored, consult error logs using the <code>download-logs</code> tool.
-For more information, see <a href="https://github.com/cloudfoundry/cf-mysql-release/blob/develop/scripts/download-logs">download-logs</a> in the <code>cf-mysql-release</code> GitHub repository. 
+For more information, see <a href="https://github.com/cloudfoundry/cf-mysql-release/blob/develop/scripts/download-logs">download-logs</a> in the <code>cf-mysql-release</code> GitHub repository.
 </li>
 <li><strong>Firewall Rule Change:</strong>
-If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. 
-This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster 
+If your firewall rules change, it might prevent a node from communicating with the rest of the cluster.
+This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster
 but do not show network latency errors.
 <br><br>
 To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node
@@ -594,13 +612,13 @@ Change your firewall rules to enable the unresponsive node to rejoin the cluster
 </li>
 <li><strong>VM Failure:</strong>
 If you cannot SSH into a node and you are not detecting either network
-latency or firewall issues, your node might be down due to VM failure. To confirm that the node 
-is unresponsive and re-create the VM, see <a href=#recreate-VM> Re-create a Corrupted VM in a Highly 
+latency or firewall issues, your node might be down due to VM failure. To confirm that the node
+is unresponsive and re-create the VM, see <a href=#recreate-VM> Re-create a Corrupted VM in a Highly
   Available</a> below.
 </li>
 <li><strong>Node Unable to Rejoin:</strong>
 If a detached existing node fails to join the cluster, its <code>sequence_number</code>
-might be higher than those of the nodes with quorum. A higher <code>sequence_number</code> on the 
+might be higher than those of the nodes with quorum. A higher <code>sequence_number</code> on the
 detached node indicates that it has recent changes to the data that the primary component lacks. You can
 check this by looking at the node's error log at <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
 <br><br>
@@ -608,11 +626,11 @@ To restore the cluster, do one the following:
 <ul>
 <li>If the detached node has a higher sequence number than the primary component, do the procedures in <a href="./bootstrapping.html">Bootstrapping</a>.</li>
 
-<li>If bootstrapping does not restore the cluster, you can manually force the node to rejoin the cluster. 
-This removes all of the unsynchronized data from the detached server node and creates a new copy of the 
-cluster data on the node. For more information, see 
+<li>If bootstrapping does not restore the cluster, you can manually force the node to rejoin the cluster.
+This removes all of the unsynchronized data from the detached server node and creates a new copy of the
+cluster data on the node. For more information, see
 <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.
-<p class="note warning"><strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive 
+<p class="note warning"><strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive
   procedure. Only do this procedure with the assistance of <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
 </li>
 </ul>
@@ -646,7 +664,7 @@ For solutions for replication errors in MySQL log files, see the table below.
   </tr>
   <tr>
     <td>Increased persistent disk usage or running out of working memory</td>
-    <td>Decode the <code>GRA_*.log</code> files and look for errors. 
+    <td>Decode the <code>GRA_*.log</code> files and look for errors.
         See <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-PCF-v1-10">
         How to decode Galera GRA log files</a> in the Pivotal Support knowledge base.
         The GRA log files contain failing DDL statements.</td>
@@ -654,7 +672,7 @@ For solutions for replication errors in MySQL log files, see the table below.
 
 </table>
 
-If you see replication errors, but no <code>ALTER TABLE</code> or persistent disk or memory issues, 
+If you see replication errors, but no <code>ALTER TABLE</code> or persistent disk or memory issues,
 you can ignore the replication errors.
 
 <a id="components"></a><h2>Troubleshooting Components</h2>
@@ -819,7 +837,7 @@ To reinstall the MySQL for PCF tile, see the <a href="https://discuss.pivotal.io
 <h3><a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters</h3>
 
 If your cluster is experiencing downtime or in a degraded state, Pivotal recommends
-gathering information to diagnose the type of failure the cluster is experiencing with the following 
+gathering information to diagnose the type of failure the cluster is experiencing with the following
 workflow:
 
    <%# BELOW LINK TO download-logs WILL CHANGE WHEN INCLUDED WITH MYSQL V2 RELEASE. WILL BE FILE PATH? %>
@@ -827,7 +845,7 @@ workflow:
 <ol>
   <li>Consult solutions for common errors. See <a href="#ha-errors">Highly Available Cluster Troubleshooting Errors</a> above.
   </li>
-  <li>Use <code>mysql-diag</code> to view a summary of the network, disk, and replication state of each 
+  <li>Use <code>mysql-diag</code> to view a summary of the network, disk, and replication state of each
     cluster node. Depending on the output from <code>mysql-diag</code>, you might recover your cluster with the following troubleshooting techniques:
     <ul>
       <li>To force a node to rejoin the cluster, see <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.</li>
@@ -836,53 +854,53 @@ workflow:
     </ul>
   For more information about <code>mysql-diag</code>, see <a href="./mysql-diag.html">Running mysql-diag</a>.
   </li>
-  
-  <li> Run <code>download-logs</code> against each node in your MySQL cluster, MySQL proxies, and 
+
+  <li> Run <code>download-logs</code> against each node in your MySQL cluster, MySQL proxies, and
     jumpbox VM. You must run <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible. <br><br>
-   For more information, see <a href="https://github.com/cloudfoundry/cf-mysql-release/blob/develop/scripts/download-logs">download-logs</a> in the <code>cf-mysql-release</code> GitHub repository. 
-   
+   For more information, see <a href="https://github.com/cloudfoundry/cf-mysql-release/blob/develop/scripts/download-logs">download-logs</a> in the <code>cf-mysql-release</code> GitHub repository.
+
    <br><br>
     <p class="note"><strong>Note:</strong> Pivotal recommends that you use the <code>-X</code> flag to get the complete set of available logs.
-    However, if your cluster processes a high volume of transactions, the complete set might be too 
+    However, if your cluster processes a high volume of transactions, the complete set might be too
     large and you can omit this flag to fetch the essential set of logs.</li>
-    
+
 <li> If you are uncertain about the recovery steps to take, submit a ticket through <a href="https://support.pivotal.io/">Pivotal Support</a>. When you submit a ticket provide the following information:
   <ul>
     <li><strong>mysql-diag output:</strong> The ouput summary of the network, disk, and replication state.
     </li>
-    <li><strong>download-logs logs:</strong> Logs about your MySQL cluster, MySQL proxies, 
+    <li><strong>download-logs logs:</strong> Logs about your MySQL cluster, MySQL proxies,
       and jumpbox VM. </li>
-    <li><strong>Deployment environment:</strong> The environment that MySQL for PCF is running in such 
+    <li><strong>Deployment environment:</strong> The environment that MySQL for PCF is running in such
       as Pivotal Application Service (PAS) or a service tile.</li>
-    <li><strong>Version numbers:</strong> The versions of the installed Ops Manager, PAS, 
+    <li><strong>Version numbers:</strong> The versions of the installed Ops Manager, PAS,
       and MySQL for PCF</li>
   </ul>
-  
+
 </li>
 
-<p class="note warning"><strong>Warning:</strong> Do not attempt to resolve cluster issues by reconfiguring 
-  the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this 
+<p class="note warning"><strong>Warning:</strong> Do not attempt to resolve cluster issues by reconfiguring
+  the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this
   document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
 
 <h3><a id="manual-force"></a>Force a Node to Rejoin a Highly Available Cluster Manually</h3>
 
-If a detached node fails to rejoin the cluster after a configured grace period, you can manually 
-force the node to rejoin the cluster. This procedure removes all the data on the node, 
-forces the node to join the cluster, and creates a new copy of the cluster data on the node. 
+If a detached node fails to rejoin the cluster after a configured grace period, you can manually
+force the node to rejoin the cluster. This procedure removes all the data on the node,
+forces the node to join the cluster, and creates a new copy of the cluster data on the node.
 
-<p class="note warning"><strong>Warning:</strong> If you manually force a node to rejoin the cluster, 
-  data stored on the local node is lost. Do not force nodes to rejoin the cluster if you want to 
-  preserve unsynchronized data. Only do this procedure with the help of 
+<p class="note warning"><strong>Warning:</strong> If you manually force a node to rejoin the cluster,
+  data stored on the local node is lost. Do not force nodes to rejoin the cluster if you want to
+  preserve unsynchronized data. Only do this procedure with help from
   <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
-  
-  Before following this procedure, try to bootstrap the cluster. 
-  For more information, see <a href="./bootstrapping.html">Bootstrapping</a>. 
+
+  Before following this procedure, try to bootstrap the cluster.
+  For more information, see <a href="./bootstrapping.html">Bootstrapping</a>.
 <br><br>
 To manually force a node to rejoin the cluster, do the following:
 
 <ol>
   <li>
-    To SSH into the node, follow the procedure in 
+    To SSH into the node, follow the procedure in
     <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
   </li>
   <li>
@@ -904,22 +922,22 @@ To manually force a node to rejoin the cluster, do the following:
     <pre> monit start galera-init</pre>
   </li>
   </ol>
-  
+
 <h3><a id="recreate-VM"></a>Re-create a Corrupted VM in a Highly Available Cluster</h3>
 
   To re-create a corrupted VM, do the following:
   <ol>
   <li>To log in to the BOSH Director VM, do the following procedures:
     <ol>
-      <li>To gather the information needed to log in to the BOSH Director VM, 
+      <li>To gather the information needed to log in to the BOSH Director VM,
         see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
-      <li>To log in to the Ops Manager VM, 
+      <li>To log in to the Ops Manager VM,
         see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
-      <li>To log in to the BOSH Director VM, 
+      <li>To log in to the BOSH Director VM,
         see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
     </ol>
   </li>
-  <li> To identify and re-create the unresponsive node with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a> and run 
+  <li> To identify and re-create the unresponsive node with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a> and run
     <code>Recreate VM using last known apply spec</code>.
     <p class="note warning"><strong>Warning:</strong> Re-creating a node will clear its logs. Ensure the node is completely down before re-creating it.</p>
     <p class="note warning"><strong>Warning:</strong> Only re-create one node. Do not re-create the entire cluster. If more than one node is down, contact <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
@@ -935,19 +953,19 @@ To check the replication status, do the following:
 <ol>
 <li>To log in to the BOSH Director VM, do the following procedures:
   <ol>
-    <li>To gather the information needed to log in to the BOSH Director VM, 
+    <li>To gather the information needed to log in to the BOSH Director VM,
       see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
-    <li>To log in to the Ops Manager VM, 
+    <li>To log in to the Ops Manager VM,
       see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
   </ol></li>
   <li> To create a dummy database in the first node, run the following command:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>  
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>
     Where:
     <ul>
       <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
       first node you recorded in step 1. </li>
       <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 1. </li> 
+      that you recorded in step 1. </li>
     </ul>
   </li>
   <li>
@@ -961,7 +979,7 @@ To check the replication status, do the following:
   <li>
   To query the table and verify that the three rows of dummy data exist on the first node, run the following:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
-        
+
     When prompted for a password, provide the <code>password</code> value recorded in step 1.
     <br>
     The above command returns output similar to the following:
@@ -979,14 +997,14 @@ To verify that the other nodes contain the same dummy data do the following for 
 <ol>
   <li>To query the dummy table, do the following:
     <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
-    
+
     When prompted for a password, provide the <code>password</code> value recorded in step 1.
   </li>
-  <li>  
+  <li>
     To  verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
-    
+
     <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
-    
+
     When prompted for a password, provide the <code>password</code> value recorded in step 1.
     Verify that the above command returns output similar to the following:
     <pre class="terminal">
