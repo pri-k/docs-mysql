@@ -44,13 +44,13 @@ so that connections are open as described in the table below.
 	</tr>
 	<tr>
 		<td><strong>Broker and Service Instances</strong></td>
-		<td><strong>Doppler on PAS</strong></td>
+		<td><strong>Doppler on PAS or Elastic Runtime</strong></td>
 		<td>8082</td>
 		<td>One-way</td>
 		<td>This port is for metrics.</td>
 	</tr>
 	<tr>
-		<td><strong>Deployed Apps on PAS</strong></td>
+		<td><strong>Deployed Apps on PAS or Elastic Runtime</strong></td>
 		<td><strong>MySQL Service Instances</strong></td>
 		<td>3306</td>
 		<td>One-way</td>
@@ -89,19 +89,19 @@ so that connections are open as described in the table below.
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td><strong>PAS</strong>
+		<td><strong>PAS or Elastic Runtime</strong>
 		</td>
 		<td>8443</td>
 		<td>One-way</td>
 		<td>The default port is not configurable.</td>
 	</tr>
 	<tr>
-		<td><strong>PAS</strong></td>
+		<td><strong>PAS or Elastic Runtime</strong></td>
 		<td><strong>ODB</strong>
 		</td>
 		<td>8080</td>
 		<td>One-way</td>
-		<td>This port enables PAS to communicate with the ODB component.</td>
+		<td>This port allows PAS or Elastic Runtime to communicate with the ODB component.</td>
 	</tr>
 	<tr>
 		<td><strong>Deployed apps on PAS</strong></td>
@@ -109,7 +109,7 @@ so that connections are open as described in the table below.
 		</td>
 		<td>8844</td>
 		<td>One-way</td>
-		<td>This port is needed if secure binding credentials are enabled.
+		<td>This port is needed if secure service instance credentials are enabled.
                     For information, see <a href="install-config.html#security">Configure Security</a>.</td>
 	</tr>
 	<tr>
@@ -144,7 +144,7 @@ service plan, the operator must ensure network rules are set up so that connecti
 	</tr>
 </table>
 
-### <a id='hac-ports'></a> Required Networking Rules for High Availability Cluster Plans
+### <a id='hac-ports'></a> Required Networking Rules for Highly Available (HA) Cluster Plans
 
 In addition to the networking rules required for MySQL for PCF, if you are using a highly available
 cluster service plan, the operator must ensure network rules are set up so that connections are open
@@ -160,7 +160,7 @@ as described in the table below.
 	<th>Notes</th>
 
 	<tr>
-		<td><strong>PAS</strong></td>
+		<td><strong>PAS or Elastic Runtime</strong></td>
 		<td>MySQL service instances</td>
 		<td>8083</td>
 		<td>One-way</td>
@@ -178,19 +178,20 @@ as described in the table below.
 	</tr>
 
 	<tr>
-		<td><strong>High availability cluster node</strong></td>
-		<td><strong>High availability cluster node</strong></td>
+		<td><strong>HA cluster node</strong></td>
+		<td><strong>HA cluster node</strong></td>
 		<td> 4567 <br> 4568 <br> 4444 </td>
 		<td>Two-way</td>
-		<td>This port is needed to maintain network connectivity between nodes in a high availability cluster.
+		<td>This port is needed to maintain network connectivity between nodes in an HA cluster.
 			For more information,
-			see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">the Percona XtraDB Cluster documentation</a>.</td>
+			see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a>
+			in the Percona XtraDB Cluster documentation.</td>
 	</tr>
 	<tr>
-		<td><strong>Galera health check</strong></td>
-		<td><strong>Galera health check</strong></td>
+		<td><strong>Galera healthcheck</strong></td>
+		<td><strong>Galera healthcheck</strong></td>
 		<td>9200</td>
 		<td>Two-way</td>
-		<td>This port is for monitoring the health of nodes in a high availability cluster.</td>
+		<td>This port is for monitoring the health of nodes in an HA cluster.</td>
 	</tr>
 </table>
