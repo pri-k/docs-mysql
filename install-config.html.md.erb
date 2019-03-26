@@ -132,7 +132,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
         <td>Ignore; not used.</td></tr>
     <tr><td><strong>Network</strong></td>
         <td>Select a subnet for the MySQL broker. This is typically the same subnet
-            that includes the PAS or Elastic Runtime component VMs.<br>
+            that includes the PAS component VMs.<br>
             This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
@@ -155,9 +155,9 @@ Each service plan has a corresponding section in the tile configuration, such as
 By default, the first three plans are active and the fourth and fifth plans are inactive.
 
 <p class="note warning"><strong>WARNING:</strong> You must configure one of your service plans as
-a single-node plan. This is because you can only restore to a single-node plan. You cannot restore 
-directly to a leader-follower plan. Ensure that the persistent disk in the single-node plan is as 
-least as large as the persistent disk of your largest leader-follower plan. For more information on restoring services instances, 
+a single-node plan. This is because you can only restore to a single-node plan. You cannot restore
+directly to a leader-follower plan. Ensure that the persistent disk in the single-node plan is as
+least as large as the persistent disk of your largest leader-follower plan. For more information on restoring services instances,
 see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>. </p>
 
 Perform the following steps for each plan that you want to use in your PCF deployment:
@@ -320,7 +320,7 @@ Follow the steps below to configure automated backups:
 
 ###<a id="security"></a> Configure Security
 
-<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF v2, 
+<p class="note"><strong>Note</strong>: If you want to enable TLS in MySQL for PCF v2,
     you must follow the procedures in <a href="./prepare-tls.html">Preparing for TLS</a> <strong>before</strong> configuring security.</p>
 
 Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
@@ -467,8 +467,8 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
             <li>The minimum value is 0.</li>
             <li>The maximum value is two fewer than the number of BOSH workers configured.</li>
         </ul>
-        <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, 
-            navigate to the BOSH Director tile, click <strong>Director Config</strong> 
+        <p class="note"><strong>Note</strong>: To determine the number of BOSH workers,
+            navigate to the BOSH Director tile, click <strong>Director Config</strong>
             and locate the **Director Workers** field.</p>
         </td>
     </tr>
@@ -496,10 +496,10 @@ By default, MySQL for PCF runs the following errands:
         <th><strong>Post-Deploy Errands</strong></th>
         <td>
             <ul>
-                <li><strong>Register On-demand MySQL Broker</strong>: 
+                <li><strong>Register On-demand MySQL Broker</strong>:
                     Registers a broker with the Cloud Controller and lists it in the Marketplace.</li>
                 <li><strong>Smoke Tests</strong>: Validates basic MySQL operations.</li>
-                <li><strong>Upgrade all On-demand MySQL Service Instances</strong>: 
+                <li><strong>Upgrade all On-demand MySQL Service Instances</strong>:
                     Upgrades existing instances of a service to its latest installed version.</li>
             </ul>
         </td>
@@ -508,22 +508,22 @@ By default, MySQL for PCF runs the following errands:
         <th><strong>Pre-Delete Errand</strong></th>
         <td>
             <ul>
-                <li><strong>Delete All Service Instances and Deregister Broker</strong>: 
+                <li><strong>Delete All Service Instances and Deregister Broker</strong>:
                     Deletes all instances of service and deregisters the broker.</li>
             </ul>
         </td>
     </tr>
 </table>
 
-<p class="note warning"><strong>WARNING:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does 
-necessary cleanup tasks when you delete the MySQL for PCF tile. Setting this errand to <strong>Off</strong> can cause 
+<p class="note warning"><strong>WARNING:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does
+necessary cleanup tasks when you delete the MySQL for PCF tile. Setting this errand to <strong>Off</strong> can cause
 problems when attempting to reinstall the tile. Pivotal recommends that you do not set this errand to <strong>Off</strong>.</p>
 
-MySQL for PCF also uses errands to configure leader-follower service instances. 
+MySQL for PCF also uses errands to configure leader-follower service instances.
 For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands Used in Leader-Follower Failover</a>.
 
-You can use errands when troubleshooting the broker or service instances. 
-For more information about using errands for troubleshooting, see [Run Service 
+You can use errands when troubleshooting the broker or service instances.
+For more information about using errands for troubleshooting, see [Run Service
 Broker Errands to Manage Brokers and Instances](./troubleshoot.html#broker-errands).
 
 
