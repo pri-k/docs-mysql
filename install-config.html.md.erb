@@ -139,7 +139,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
         <td>Ignore; not used.</td></tr>
     <tr><td><strong>Network</strong></td>
         <td>Select a subnet for the MySQL broker. This is typically the same subnet
-            that includes the PAS or Elastic Runtime component VMs.<br>
+            that includes the PAS component VMs.<br>
             This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
@@ -162,9 +162,9 @@ Each service plan has a corresponding section in the tile configuration, such as
 By default, the first three plans are active and the fourth and fifth plans are inactive.
 
 <p class="note warning"><strong>WARNING:</strong> You must configure one of your service plans as
-a single-node plan. This is because you can only restore to a single-node plan. You cannot restore 
-directly to a leader-follower plan. Ensure that the persistent disk in the single-node plan is as 
-least as large as the persistent disk of your largest leader-follower plan. For more information on restoring services instances, 
+a single-node plan. This is because you can only restore to a single-node plan. You cannot restore
+directly to a leader-follower plan. Ensure that the persistent disk in the single-node plan is as
+least as large as the persistent disk of your largest leader-follower plan. For more information on restoring services instances,
 see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>. </p>
 
 Perform the following steps for each plan that you want to use in your PCF deployment:
