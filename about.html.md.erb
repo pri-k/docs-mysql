@@ -22,7 +22,7 @@ For information about architecture of the older, pre-provisioned service, see th
 
 <%= partial '../../p-mysql/odb/service_networks_table' %>
 
-Regardless of the specific network layout, the operator must ensure network rules are set up so that connections are open as described in the table below. 
+Regardless of the specific network layout, the operator must ensure network rules are set up so that connections are open as described in the table below.
 
 <table class="nice">
 	<th>This component...</th>
@@ -40,15 +40,15 @@ Regardless of the specific network layout, the operator must ensure network rule
 		    The default port is not configurable.  </td>
 	</tr>
 	<tr>
-		<td><strong>Broker and service instances</strong></td>
-		<td><strong>the Doppler on PAS or Elastic Runtime</strong></td>
+		<td><strong>Broker and Service Instances</strong></td>
+		<td><strong>Doppler on PAS</strong></td>
 		<td>8082</td>
 		<td>One-way</td>
 		<td>This port is for metrics.</td>
 	</tr>
 	<tr>
-		<td><strong>Deployed apps on PAS or Elastic Runtime</strong></td>
-		<td><strong>MySQL service instances</strong></td>
+		<td><strong>Deployed Apps on PAS</strong></td>
+		<td><strong>MySQL Service Instances</strong></td>
 		<td>3306</td>
 		<td>One-way</td>
 		<td>This port is for general use, app-specific tasks.
@@ -66,17 +66,17 @@ Regardless of the specific network layout, the operator must ensure network rule
 	<tr>
 		<td><strong>ODB</strong></td>
 		<td>
-		    
+
 		        <strong>BOSH Director</strong>
                         <br>
 		  	<strong>BOSH UAA</strong>
-		   
+
 		</td>
 		<td>
-			
+
 				25555<br>
 				8443
-			
+
 		</td>
 		<td>One-way</td>
 		<td>The default ports are not configurable.</td>
@@ -85,30 +85,30 @@ Regardless of the specific network layout, the operator must ensure network rule
 		<td><strong>ODB</strong></td>
 		<td><strong>MySQL service instances</strong>
 		</td>
-		<td>	
-			
+		<td>
+
 				3306<br>
 				8443
-			
+
 		</td>
 		<td>One-way</td>
 		<td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td><strong>PAS or Elastic Runtime</strong>
+		<td><strong>PAS</strong>
 		</td>
 		<td>8443</td>
 		<td>One-way</td>
 		<td>The default port is not configurable.</td>
 	</tr>
 	<tr>
-		<td><strong>PAS or Elastic Runtime</strong></td>
+		<td><strong>PAS</strong></td>
 		<td><strong>ODB</strong>
 		</td>
 		<td>8080</td>
 		<td>One-way</td>
-		<td>This port allows PAS or Elastic Runtime to communicate with the ODB component.</td>
+		<td>This port allows PAS to communicate with the ODB component.</td>
 	</tr>
 	<tr>
 		<td><strong>Deployed apps on PAS</strong></td>
