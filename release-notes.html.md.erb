@@ -26,11 +26,16 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 ### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
-* The Scheduler for PCF tile does not support TLS. If you have the Scheduler for PCF tile installed, MySQL for PCF must have **TLS Options** set to **Optional** or **Not Configured**.
-* There is an issue with HA Clusters that prevents automated backups from working properly.
-* Java apps will not be able to establish a connection to a HA Clusters service instance if TLS is disabled.
+* The Scheduler for PCF tile does not support TLS.
+  If you have the Scheduler for PCF tile installed, MySQL for PCF must have
+  **TLS Options** set to **Optional** or **Not Configured**.
+
+* An issue with HA Clusters prevents automated backups from working properly.
+
+* Java apps are not able to establish a connection to an HA Cluster service
+  instance if TLS is disabled.
 
 ### Fixed Issues
 
