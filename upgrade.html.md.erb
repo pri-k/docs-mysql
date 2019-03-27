@@ -23,6 +23,14 @@ you must update the add-on definition to include the Xenial stemcell before you 
 + ClamAV for PCF Add-on. For update instructions, see [Updating ClamAV Add-on for PCF to Run with Xenial Stemcells](https://docs.pivotal.io/addon-antivirus/updating-for-xenial.html).
 + IPsec for PCF Add-on. For update instructions, see [Updating IPsec Add-on for PCF to Run with Xenial Stemcells](https://docs.pivotal.io/addon-ipsec/updating-for-xenial.html).
 
+## <a id="change-networking"></a>Update Networking Rules
+
+MySQL for PCF v2.4.0 and later implements DNS hostnames in service bindings, which removes the need to rebind apps when 
+doing Leader-Follower failovers. In order for apps to connect to a Leader-Follower service instance over DNS, you must
+update your Networking rules to allow the DNS server in the PAS network to talk to MySQL service instances.
+
+1. Update your networking rules so that it matches the table in 
+   <a href="https://docs.pivotal.io/p-mysql/2-4/about.html#rules">Required Networking Rules for On-Demand Services</a>.
 
 ## <a id="upgrade-service"></a>Upgrade MySQL for PCF
 
