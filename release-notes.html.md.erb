@@ -18,6 +18,12 @@ For instructions on verifying the stemcell, see <a href="./install-config.html#s
 To download the Xenial stemcell from Pivotal Network, go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Stemcells for PCF (Ubuntu Xenial)</a>.
 </p>
 
+<p class="note breaking"><strong>Breaking Change: </strong>New service bindings created on MySQL for PCF v2.4.0 replaces
+  IP addresses with DNS hostnames. In order for apps bound to Leader-Follower service instances to use DNS hostnames,
+  you must modify your network rules. For instructions on how to configure your network rules, see 
+  <a href="https://docs.pivotal.io/p-mysql/2-4/upgrade.html">Upgrading MySQL for PCF</a>.
+</p>
+
 ## <a id="244"></a>v2.4.4
 
 **Release Date:**  February 5, 2019
