@@ -9,24 +9,24 @@ then upgrade to the latest available version of the new minor line.
 For example, if you use an older v2.3.x version, upgrade to the latest v2.3.x version
 before upgrading to the latest v2.4.x version.
 
-For product versions and upgrade paths, 
+For product versions and upgrade paths,
 see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-<p class="note breaking"><strong>Breaking Change: </strong>MySQL for PCF v2.4.0 and later requires 
+<p class="note breaking"><strong>Breaking Change: </strong>MySQL for PCF v2.4.0 and later requires
   a Xenial stemcell.
-You must verify that you have the Xenial stemcell, and, if necessary, download and import it into 
+You must verify that you have the Xenial stemcell, and, if necessary, download and import it into
 the Ops Manager Stemcell Library before deploying MySQL for PCF v2.4.0.
 This might break automations you have set up to update MySQL for PCF deployments that used Trusty stemcells.
-For instructions on verifying the stemcell, 
+For instructions on verifying the stemcell,
 see <a href="./install-config.html#stemcell"> Verify Stemcell Version and Apply All Changes</a>.
-To download the Xenial stemcell from Pivotal Network, 
+To download the Xenial stemcell from Pivotal Network,
 go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Stemcells for PCF (Ubuntu Xenial)</a>.
 </p>
 
-<p class="note breaking"><strong>Breaking Change: </strong>In MySQL for PCF v2.4.0 and later, 
-  new service bindings replace IP addresses with BOSH DNS hostnames. 
-  You must modify your networking rules to enable apps bound to leader-follower service instances to 
-  use BOSH DNS hostnames. 
+<p class="note breaking"><strong>Breaking Change: </strong>In MySQL for PCF v2.4.0 and later,
+  new service bindings replace IP addresses with BOSH DNS hostnames.
+  You must modify your networking rules to enable apps bound to leader-follower service instances to
+  use BOSH DNS hostnames.
   For more information, see <a href="./upgrade.html#change-networking">Update Networking Rules</a>.
 </p>
 
@@ -34,12 +34,17 @@ go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Ste
 
 **Release Date:**  April 5, 2019
 
-### Dependency Updates
+### Features
 
-* Updates Service Backups for PCF to 18.2.0. This bump includes:
-  * Fix for the Smoke Tests errand for environments that use custom Java buildpacks with OracleJDK instead of OpenJDK.
+New features and changes in this release:
+
+* Updates Service Backups. This update includes the following:
+  * `smoke-tests` errands can be used in environments that use
+  custom Java buildpacks with OracleJDK.
   * Azure backups where the Blobstore Base URL is non-default.
-  For more information, see the [Release Notes](https://docs.pivotal.io/svc-sdk/service-backup/18-2/release-notes.html).
+  For more information,
+  see [v18.2.0](https://docs.pivotal.io/svc-sdk/service-backup/18-2/release-notes.html)
+  in _Service Backups for PCF Release Notes_.
 
 ## <a id="244"></a>v2.4.4
 
@@ -76,14 +81,14 @@ This release fixes the following issue:
 
 This release has the following issue:
 
-- There is a known issue in the interaction between the 
-[MariaDB Connector/J](https://mariadb.com/kb/en/library/about-mariadb-connector-j/) 
+- There is a known issue in the interaction between the
+[MariaDB Connector/J](https://mariadb.com/kb/en/library/about-mariadb-connector-j/)
 and the Java API, which leads to the following limitations:
-  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile 
+  - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile
   must have TLS **disabled** in the MySQL for PCF tile.
-  - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J 
+  - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J
   in their Spring apps to connect to a MySQL service instance.
-  Pivotal recommends developers configure their apps to use the 
+  Pivotal recommends developers configure their apps to use the
   [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
 
 ### Security Fixes
@@ -102,10 +107,10 @@ This release includes the following security fixes:
 New features and changes in this release:
 
 * Credentials for doing backups have been removed from the MySQL broker BOSH manifest, and are stored securely in CredHub.
-* The `find-non-tls-bindings` BOSH errand has been enhanced to also search for IP-based bindings and service keys. 
+* The `find-non-tls-bindings` BOSH errand has been enhanced to also search for IP-based bindings and service keys.
 The errand has been renamed to `find-deprecated-bindings`.
 * The `find-deprecated-bindings` BOSH errand has clearer error messaging to more easily determine the cause of failure.
-* The AWS S3 Access Key ID and Secret Access Key fields in the Backups configuration pane in Ops Manager 
+* The AWS S3 Access Key ID and Secret Access Key fields in the Backups configuration pane in Ops Manager
 are no longer shown in plaintext.
 * Backup secrets are redacted.
 
@@ -114,7 +119,7 @@ are no longer shown in plaintext.
 This release fixes the following issues:
 
 * Fixes an issue where smoke tests fail if Service Plan Access is set to manual.
-* An attempt to install MySQL for PCF 2.4 with an incompatible version of PCF will fail fast 
+* An attempt to install MySQL for PCF 2.4 with an incompatible version of PCF will fail fast
 when the tile is staged, rather than when MySQL smoke tests are run.
 
 ## <a id="240"></a>v2.4.0
@@ -158,8 +163,8 @@ To take advantage of the BOSH DNS improvments, you must do the following:
 
 **Encryption at Rest**
 
-* MySQL for PCF v2 enables integration with commercial vendors for full-disk encryption at rest. 
-This integration has been certified with the 
+* MySQL for PCF v2 enables integration with commercial vendors for full-disk encryption at rest.
+This integration has been certified with the
 <a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a>.
 
 **Improvements for Developers**
@@ -189,7 +194,7 @@ This release includes the following security fixes:
 
 This release fixes the following issues:
 
-* Placement of service instance VMs is now randomized across all selected AZs for its plan, 
+* Placement of service instance VMs is now randomized across all selected AZs for its plan,
 reducing the magnitude of an outage caused by an AZ failure.
 * The `find-non-tls-bindings` BOSH errand on the service broker still works when the i
 nstalled PCF version has Credhub, but secure service credentials is not enabled.
