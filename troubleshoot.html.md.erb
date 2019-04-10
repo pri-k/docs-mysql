@@ -16,6 +16,7 @@ owner: MySQL
         <li><a href="#cannot-bind">Cannot Bind to or Unbind from Service Instances</a></li>
         <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
         <li><a href="#upgrade-all-fails">Upgrade All Instances Fails</a></li>
+        <li><a href="#credential-setting-failure">Error: Failed to Set Credentials in Credential Store</a></li>
         <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
         <li><a href="#unable-to-determine">Unable to Determine Leader and Follower (Errand Error)</a></li>
         <li><a href="#both-writable">Both Leader and Follower Instances Are Writable (Errand Error)</a></li>
@@ -162,6 +163,10 @@ See <a href="./upgrade.html#interruptions">Service Interruptions</a> for more in
 <a id="upgrade-all-fails"></a><h3>Upgrade All Instances Fails</h3>
 
 <%= partial '../../p-mysql/odb/tshoot-err-upgrade-all-fails' %>
+
+<a id='credential-setting-failure'></a><h3>Error: Failed to Set Credentials in Credential Store</h3>
+
+<%= partial '../../p-mysql/odb/tshoot-credhub-failing-credentials.html.md.erb' %>
 
 <a id="missing-logs"></a><h3>Missing Logs and Metrics</h3>
 
