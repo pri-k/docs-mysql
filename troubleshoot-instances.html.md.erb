@@ -13,27 +13,31 @@ You might experience the following during upgrades or in a leader-follower topol
 
 ### <a id="outages"></a>Temporary Outages
 
-MySQL for PCF service instances can become temporarily inaccessible during upgrades and VM or network failures. 
+MySQL for PCF service instances can become temporarily inaccessible during upgrades and VM or network failures.
 For more information, see [Service Interruptions](./upgrade.html#interruptions).
 
 ### <a id="read-only"></a>Apps Cannot Write to the Database
 
-If you have a leader-follower topology and your apps can no longer write to the database, the leader VM might be read-only. 
-Contact your operator to check if the leader VM is read-only. 
-For more information about troubleshooting this problem, see 
+If you have a leader-follower topology and your apps can no longer write to the database, the leader VM might be read-only.
+Contact your operator to check if the leader VM is read-only.
+For more information about troubleshooting this problem, see
 [Both Leader and Follower Instances Are Read-Only](./troubleshoot.html#both-read-only).
 
-If you can no longer read to the database as well, your persistent disk might be full. For more 
+If you can no longer read to the database as well, your persistent disk might be full. For more
 information about troubleshooting inoperable apps, see [Apps are Inoperable](#disk-full).
 
 ### <a id="disk-full"></a>Apps are Inoperable
 
-If your apps become inoperable, your persistent disk might be full. In this state, read, 
-write, and Cloud Foundry Command-Line Interface (cf CLI) opertations do not work. 
+If your apps become inoperable, your persistent disk might be full. In this state, read,
+write, and Cloud Foundry Command-Line Interface (cf CLI) opertations do not work.
 
 Contact your operator to check if your persistent disk is full.
-For more information about troubleshooting this problem, see 
-[Persistent Disk is Full](./troubleshoot.html#persistent-disk). 
+For more information about troubleshooting this problem, see
+[Persistent Disk is Full](./troubleshoot.html#persistent-disk).
+
+### <a id='credential-setting-failure'></a>Error: Failed to Set Credentials in Credential Store
+
+<%= partial '../../p-mysql/odb/tshoot-credhub-failing-credentials' %>
 
 ## <a id="errors"></a> Troubleshoot Errors
 
@@ -56,12 +60,12 @@ You might see an error when using the Cloud Foundry Command-Line Interface (cf C
 You might need to find the name, GUID, or other information about a service instance.
 To find this information, do the following:
 
-1. Log into the space containing the instance or failed instance. 
+1. Log into the space containing the instance or failed instance.
     <pre class="terminal">
     $ cf login
     </pre>
 
-1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space. 
+1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space.
 The service instances are listed in the `name` column.
     <pre class="terminal">
     $ cf services
