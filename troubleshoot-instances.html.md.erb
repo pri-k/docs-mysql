@@ -33,10 +33,6 @@ Contact your operator to check if your persistent disk is full.
 For more information about troubleshooting this problem, see
 [Persistent Disk is Full](./troubleshoot.html#persistent-disk).
 
-### <a id='credential-setting-failure'></a>Error: Failed to Set Credentials in Credential Store
-
-<%= partial '../../p-mysql/odb/tshoot-credhub-failing-credentials' %>
-
 ## <a id="errors"></a> Troubleshoot Errors
 
 You might see an error when using the Cloud Foundry Command-Line Interface (cf CLI) to perform basic operations on a MySQL for PCF service instance:
@@ -78,6 +74,10 @@ The service instances are listed in the `name` column.
 1. To retrieve the GUID of the instance, run `cf service SERVICE-INSTANCE-NAME --guid`
 
    The GUID is useful for debugging.
+
+### <a id='credential-setting-failure'></a>Error: Failed to Set Credentials in Credential Store
+
+<%= partial '../../p-mysql/odb/tshoot-credhub-failing-credentials' %>
 
 ## <a id="kb"></a>Use the Knowledge Base (Community)
 
