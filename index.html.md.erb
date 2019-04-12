@@ -19,14 +19,14 @@ responsible for PCF integration.
 The service is configured with sane defaults, following the principle of least
 surprise for a general-use relational database service.
 
-MySQL for PCF supports the following VM topologies: 
+MySQL for PCF supports the following VM topologies:
 
   + Single node.
   + Leader-follower. For more information, see [About Leader-Follower](./about-leader-follower.html).
   + Highly available (HA) cluster. For highly available clusters, MySQL for PCF uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
-    
+
     <%= partial "./galera_beta" %>
 
 ## <a id='snapshot'></a> Product Snapshot
@@ -50,11 +50,11 @@ The following table provides version and version-support information about MySQL
 </tr>
 <tr>
   <td>Compatible Ops Manager version(s)</td>
-  <td>2.3 and 2.4</td>
+  <td>2.3, 2.4, and 2.5</td>
 </tr>
 <tr>
   <td>Compatible Pivotal Application Service (PAS) version(s)</td>
-  <td>2.3 and 2.4</td>
+  <td>2.3, 2.4, and 2.5</td>
 </tr>
 <tr>
   <td>IaaS support</td>
@@ -77,7 +77,7 @@ Additionally, both the operator and app developer can configure essential MySQL 
 The MySQL for PCF on-demand service leverages the on-demand service broker. For general information about the on-demand service
 broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/0-15/)
 
-### <a id="service"></a>On-Demand Service Plan 
+### <a id="service"></a>On-Demand Service Plan
 
 MySQL for PCF offers on-demand plans as the `p.mysql` service in the MySQL for PCF tile.
 The plans can be configured in any way that you see fit.
@@ -120,7 +120,7 @@ Review the following table to determine if MySQL for PCF has the features needed
   <td><a href="#other-notes">About Multiple AZs in MySQL for PCF</a></td></tr>
 
 <tr><th colspan=2>Encryption</th><th>More Information</th></tr>
-<tr>  
+<tr>
   <td>Transport Layer Security (TLS)</td>
   <td>MySQL for PCF supports TLS. Enabling TLS provisions a MySQL server with a certificate so that apps and clients can establish an encrypted connection with the data service.</td>
   <td><a href="./prepare-tls.html">Preparing for TLS</a></td>
