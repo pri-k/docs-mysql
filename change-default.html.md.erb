@@ -5,8 +5,8 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides information about the defaults that MySQL for Pivotal Cloud 
-Foundry (PCF) applies to its Percona Server components. This topic also provides 
+This topic provides information about the defaults that MySQL for Pivotal Cloud
+Foundry (PCF) applies to its Percona Server components. This topic also provides
 instructions for how to use optional parameters to change certain server defaults.
 
 ## <a id="defaults"></a> Server Defaults
@@ -15,7 +15,7 @@ The following table lists the MySQL for PCF server defaults.
 
 <table>
     <th>Name</th>
-    <th width="275">Variable Name</th> 
+    <th width="275">Variable Name</th>
     <th>Default</th>
     <th width="300">Notes</th>
     <tr>
@@ -37,7 +37,7 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>table-definition-cache</code></td>
         <td>8192</td>
         <td>For more information about updating this variable,
-            see the 
+            see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache">
                 MySQL documentation</a>.
         </td>
@@ -58,9 +58,9 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>symbolic-links</code></td>
         <td>OFF</td>
         <td>
-            MySQL for PCF is configured to prevent the use of symlinks to tables. 
-            This recommended security setting prevents users from manipulating 
-            files on the server’s file system. For more information, see 
+            MySQL for PCF is configured to prevent the use of symlinks to tables.
+            This recommended security setting prevents users from manipulating
+            files on the server’s file system. For more information, see
             <a href="https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html">
                 Making MySQL Secure Against Attackers</a>.
         </td>
@@ -70,8 +70,8 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>myisam-recover-options</code></td>
         <td>BACKUP, FORCE</td>
         <td>
-            This setting enables MySQL for PCF to recover from most MyISAM problems 
-            without human intervention. For more information, see the 
+            This setting enables MySQL for PCF to recover from most MyISAM problems
+            without human intervention. For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
         </td>
@@ -81,8 +81,8 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>log-bin-trust-function-creators</code></td>
         <td>ON</td>
         <td>
-            This setting relaxes constraints on how MySQL writes stored procedures 
-            to the binary log. For more information, see the 
+            This setting relaxes constraints on how MySQL writes stored procedures
+            to the binary log. For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html">
                 MySQL documentation</a>.
         </td>
@@ -92,7 +92,7 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>event-scheduler</code></td>
         <td>ON</td>
         <td>
-            MySQL for PCF enables the event scheduler so users can create and use 
+            MySQL for PCF enables the event scheduler so users can create and use
             events in their dedicated service instances.
         </td>
     </tr>
@@ -101,12 +101,12 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>lower-case-table-names</code></td>
         <td>0</td>
         <td>
-            By default, all table names are case sensitive. 
-            Operators can change this default on the 
-            <a href="./install-config.html#mysql">MySQL Configuration page</a>, 
-            and may allow developers to override the default when creating a 
-            service instance. For more information about the use for lowercase 
-            table names, see the 
+            By default, all table names are case sensitive.
+            Operators can change this default on the
+            <a href="./install-config.html#mysql">MySQL Configuration page</a>,
+            and may allow developers to override the default when creating a
+            service instance. For more information about the use for lowercase
+            table names, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">
                 MySQL documentation</a>.
         </td>
@@ -115,10 +115,10 @@ The following table lists the MySQL for PCF server defaults.
         <td><strong>Audit Log</strong></td>
         <td><code>audit-log</code></td>
         <td>OFF</td>
-        <td> 
+        <td>
             When enabled on the <a href="./install-config.html#monitoring">
             MySQL Monitoring pane</a>,
-            logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql-audit-log</code> 
+            logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql-audit-log</code>
             as well as a remote syslog drain if it is enabled.
         </td>
     </tr>
@@ -126,28 +126,28 @@ The following table lists the MySQL for PCF server defaults.
         <td><strong>InnoDB Buffer Pool Size</strong></td>
         <td><code>innodb-buffer-pool-size</code></td>
         <td>50% of the available memory on each service instance</td>
-        <td>Dynamically configured to be 50% of the available memory on each 
+        <td>Dynamically configured to be 50% of the available memory on each
             service instance.</td>
-    </tr>  
+    </tr>
      <tr>
         <td><strong>InnoDB Log File Size</strong></td>
         <td><code>innodb-log-file-size</code></td>
         <td>256&nbsp;MB</td>
         <td>MySQL for PCF clusters default to a log-file size of 256&nbsp;MB.</td>
-    </tr> 
+    </tr>
      <tr>
         <td><strong>InnoDB Log Buffer Size</strong></td>
         <td><code>innodb-log-buffer-size</code></td>
         <td>32&nbsp;MB</td>
-        <td>MySQL for PCF defaults to 32&nbsp;MB to avoid excessive disk I/O when 
+        <td>MySQL for PCF defaults to 32&nbsp;MB to avoid excessive disk I/O when
             issuing large transactions.</td>
-    </tr> 
+    </tr>
     <tr>
         <td><strong>InnoDB Auto Increment Lock Mode</strong></td>
         <td><code>innodb-autoinc-lock-mode</code></td>
         <td>2</td>
         <td>
-            Auto Increment uses "interleaved" mode. 
+            Auto Increment uses "interleaved" mode.
             This enables multiple statements to execute at the same time.
             There may be gaps in auto-incrementing columns.
         </td>
@@ -163,25 +163,25 @@ The following table lists the MySQL for PCF server defaults.
         <td><code>character-set-server</code></td>
         <td><code>utf8</code></td>
         <td>Defaults all character sets. You can override this during a session.</td>
-    </tr>  
+    </tr>
 </table>
 
 ## <a id="changes"></a>Changing MySQL Server Defaults
 
-You can set optional parameters to change the MySQL for PCF server defaults to 
-accommodate apps with a read-heavy or write-heavy workload, or if you need to use 
+You can set optional parameters to change the MySQL for PCF server defaults to
+accommodate apps with a read-heavy or write-heavy workload, or if you need to use
 lowercase table names.
 
-The procedures in this section use the Cloud Foundry Command Line Interface 
-([cf CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html)). 
-You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) 
+The procedures in this section use the Cloud Foundry Command Line Interface
+([cf CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html)).
+You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html)
 to perform the same tasks using a graphical UI.
 
 For general information about using MySQL for PCF, see [Using MySQL for PCF](./use.html).
 
 ### <a id="configuring"></a>Optional Parameters for the MySQL for PCF Service Instances
 
-MySQL for PCF service instances are configured by default with industry best practices. 
+MySQL for PCF service instances are configured by default with industry best practices.
 For more specific use cases, you can customize the following parameters:
 
 <table>
@@ -194,18 +194,18 @@ For more specific use cases, you can customize the following parameters:
     <td><code>workload</code></td>
     <td>String</td>
     <td><code>mixed</code></td>
-    <td>Set this to <code>read-heavy</code>, <code>mixed</code>, or <code>write-heavy</code>. 
-      See <a href="#workload">Understanding Workload Types</a> below.</td>
+    <td>Set this to <code>read-heavy</code>, <code>mixed</code>, or <code>write-heavy</code>.
+      See <a href="#workload">About Workload Types</a> below.</td>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
   <tr>
     <td><code>enable_lower_case_table_names</code></td>
     <td>Boolean</td>
     <td>Set by the operator</td>
-    <td> The operator sets a default for this parameter and may allow you to override the default. 
-      If allowed, you can only set this when creating a service instance. If you set this to 
-      <code>true</code>, table names are stored in lowercase. 
-      See <a href="#lowercase">Understanding Lowercase Table Names</a>  below.</td>
+    <td> The operator sets a default for this parameter and may allow you to override the default.
+      If allowed, you can only set this when creating a service instance. If you set this to
+      <code>true</code>, table names are stored in lowercase.
+      See <a href="#lowercase">About Lowercase Table Names</a>  below.</td>
     <td><code>create-service</code></td>
   </tr>
   <tr>
@@ -219,10 +219,10 @@ For more specific use cases, you can customize the following parameters:
     <td><code>default-collation</code></td>
     <td>String</td>
     <td><code>utf8-general-ci</code></td>
-    <td>The <code>default-collation</code> changes based on the <code>default-charset</code>. 
-      To set the <code>default-collation</code>, first set the <code>default-charset</code>. 
-      For a list of available and default collations, 
-      see 
+    <td>The <code>default-collation</code> changes based on the <code>default-charset</code>.
+      To set the <code>default-collation</code>, first set the <code>default-charset</code>.
+      For a list of available and default collations,
+      see
       <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">Supported Character Sets and Collations</a>.</td>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
@@ -230,15 +230,15 @@ For more specific use cases, you can customize the following parameters:
     <td><code>replication_mode</code></td>
     <td>String</td>
     <td><code>async</code></td>
-    <td>Set this to <code>async</code> or <code>semi-sync</code>. See 
-      <a href="#synchronous-replication">Understanding Synchronous Replication</a>.</td>
+    <td>Set this to <code>async</code> or <code>semi-sync</code>. See
+      <a href="#synchronous-replication">About Synchronous Replication</a>.</td>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
   <tr>
     <td><code>semi_sync_ack_timeout_in_ms</code></td>
     <td>Integer</td>
     <td>2<sup>63</sup> milliseconds</td>
-    <td>Sets the timeout in milliseconds for the leader to acknowledge a replication operation. See 
+    <td>Sets the timeout in milliseconds for the leader to acknowledge a replication operation. See
       <a href="#replication-timeout">Synchronous Replication Timeout</a>.
     </td>
     <td><code>create-service</code> or <code>update-service</code></td>
@@ -290,23 +290,23 @@ $ cf update-service myDB -c '{ "workload": "mixed" }'
 
 If you get an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-### <a id='workload'></a> Understanding Workload Types
+### <a id='workload'></a> About Workload Types
 
-MySQL for PCF offers three workload profiles that developers can use to configure MySQL instances based on their 
+MySQL for PCF offers three workload profiles that developers can use to configure MySQL instances based on their
 specific app workloads. For instructions on changing configuration options, see [Use Optional Parameters](#parameters).
 
 <table class="nice">
     <th>Profile</th><th>Description</th>
     <tr>
         <td>Mixed Workload</td>
-        <td>By default, each MySQL service instance is configured for a mixed workload, 
-            that is, a workload that is equally heavy on reads and writes. 
+        <td>By default, each MySQL service instance is configured for a mixed workload,
+            that is, a workload that is equally heavy on reads and writes.
             The configuration for this profile is described in detail in <a href="#defaults">MySQL Server Defaults</a>.</td>
     </tr>
     <tr>
         <td>Read-Heavy Workload</td>
-        <td>For apps that have a large number of reads, the service instance can be configured for a read-heavy workload. 
-            The read-heavy profile changes these two properties from 
+        <td>For apps that have a large number of reads, the service instance can be configured for a read-heavy workload.
+            The read-heavy profile changes these two properties from
             the <a href="#defaults">MySQL Server Defaults</a>:
 
 <ul>
@@ -316,8 +316,8 @@ specific app workloads. For instructions on changing configuration options, see 
 
     <tr>
         <td>Write-Heavy Workload</td>
-        <td>For apps that write to the database a lot, the service instance can be configured for 
-            a write-heavy workload. The write-heavy profile changes these four properties from 
+        <td>For apps that write to the database a lot, the service instance can be configured for
+            a write-heavy workload. The write-heavy profile changes these four properties from
             the <a href="#defaults">MySQL Server Defaults</a>:
 <ul>
 <li><code>innodb_buffer_pool_size</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
@@ -325,40 +325,40 @@ specific app workloads. For instructions on changing configuration options, see 
 <li><code>innodb_log_file_size</code> is increased to <code>1GB</code></li>
 <li><code>max_allowed_packets</code> is increased to <code>1GB</code></li>
 </ul>
-</table> 
+</table>
 
-### <a id="lowercase"></a> Understanding Lowercase Table Names
+### <a id="lowercase"></a> About Lowercase Table Names
 
-If you are migrating a database from a system that was case insensitive, 
-            that is, where `TableName` is the same as `TABLEname`, then forcing lowercase turns both into `tablename`. 
-            In this way both names are interpreted as the same table. 
+If you are migrating a database from a system that was case insensitive,
+            that is, where `TableName` is the same as `TABLEname`, then forcing lowercase turns both into `tablename`.
+            In this way both names are interpreted as the same table.
 
 For more information, see the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
 
-### <a id='synchronous-replication'></a>Understanding Synchronous Replication
-In a leader-follower topology, MySQL for PCF supports synchronous replication in addition 
-to the default asynchronous replication. In sync replication, data does not get committed to the 
-leader node until the follower acknowledges the commit and can replicate it. 
+### <a id='synchronous-replication'></a>About Synchronous Replication
+In a leader-follower topology, MySQL for PCF supports synchronous replication in addition
+to the default asynchronous replication. In sync replication, data does not get committed to the
+leader node until the follower acknowledges the commit and can replicate it.
 
-The guarantee of redundancy gives sync replication an advantage in data integrity over asynchronous replication. However, sync replication reduces the performance of write operations, depending on 
+The guarantee of redundancy gives sync replication an advantage in data integrity over asynchronous replication. However, sync replication reduces the performance of write operations, depending on
 latency.
 
-To enable sync replication on a leader-follower service instance, set `replication_mode` to 
-`semi-sync`. To restore the default asynchronous replication for a leader-follower service instance, 
+To enable sync replication on a leader-follower service instance, set `replication_mode` to
+`semi-sync`. To restore the default asynchronous replication for a leader-follower service instance,
 set `replication_mode` to `async`.
 
 #### <a id='replication-timeout'></a>Synchronous Replication Timeout
 
-By default, the timeout for sync replication is set to approximately 292 million years. Therefore, 
-the leader always waits for the follower to confirm receipt of the transaction. This guarantees that 
+By default, the timeout for sync replication is set to approximately 292 million years. Therefore,
+the leader always waits for the follower to confirm receipt of the transaction. This guarantees that
 if the leader is lost, a redundant copy of the data exists on the follower.
 
 <p class="note"><strong>Note:</strong> When the replication mode timeout is reached,
 the replication modes automatically reverts to asynchronous without any user intervention. You can manually override this timeout with a lower value.
 </p>
 
-#### <a id='semi-sync'></a>MySQL Semi-Synchronous Replication 
+#### <a id='semi-sync'></a>MySQL Semi-Synchronous Replication
 
-In MySQL for PCF, the replication is called sync, rather than semi-sync. This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync 
-replication, see [16.3.9 Semisynchronous Replication](https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html) 
+In MySQL for PCF, the replication is called sync, rather than semi-sync. This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync
+replication, see [16.3.9 Semisynchronous Replication](https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html)
 in the MySQL documentation.

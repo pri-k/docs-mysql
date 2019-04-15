@@ -8,7 +8,7 @@ owner: MySQL
 This topic describes how the leader-follower topology works in MySQL for Pivotal Cloud Foundry (PCF)
 and contains information to help users decide whether to enable or use leader-follower.
 
-## <a id='understand-lf'></a> Understanding Leader-Follower
+## <a id='about-lf'></a> About Leader-Follower
 
 The leader-follower topology increases the availability of a MySQL database by
 deploying two MySQL VMs in two separate availability zones (AZs).
@@ -25,7 +25,7 @@ follower acknowledges the commit and can replicate it. By default, the timeout f
 transaction.
 
 For more information about sync replication,
-see [Understanding Synchronous Replication](./change-default.html#synchronous-replication).
+see [About Synchronous Replication](./change-default.html#synchronous-replication).
 
 A leader-follower topology enables operators to initiate a
 failover and send app traffic to the follower if the leader fails.
@@ -34,7 +34,7 @@ This ensures that the app bound to the MySQL database continues to function norm
 The follower VM is only for increasing availability
 and is not exposed to developers to increase read throughput.
 Developers who want increased read throughput can configure `workload` profiles.
-For more information, see [Understanding Workload Types](./change-default.html#workload).
+For more information, see [About Workload Types](./change-default.html#workload).
 
 For high-level information on the leader-follower process,
 see [Leader-Follower Setup and Failover Process](./maintain-leader-follower.html#process).
@@ -84,7 +84,7 @@ For information on enabling and using leader-follower,
 see [Using Leader-Follower Topology For Availability](./maintain-leader-follower.html).
 
 
-## <a id="failover"></a>Understanding Failover
+## <a id="failover"></a>About Failover
 
 MySQL for PCF focuses on data consistency rather than availability.
 Therefore, it does not trigger failover automatically,
@@ -93,7 +93,7 @@ When an operator triggers a failover, app traffic is sent to the follower.
 
 For more information, see [Trigger a Failover](./maintain-leader-follower.html#failover).
 
-## <a id="errands"></a>Understanding Leader-Follower Errands
+## <a id="errands"></a>About Leader-Follower Errands
 
 MySQL for PCF automates orchestrating the standard lifecycle of creating, updating,
 and deleting leader-follower service instances.
@@ -102,4 +102,4 @@ In addition, MySQL for PCF provides three leader-follower errands.
 An operator can use them to control the lifecycle of a leader-follower service instance
 and manually intervene, when necessary, without being an expert at MySQL.
 
-For more information, see [Leader-Follower Errands](./maintain-leader-follower.html#errands).
+For more information, see [Errands Used in Leader-Follower Failover](./maintain-leader-follower.html#errands).
