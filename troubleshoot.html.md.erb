@@ -192,7 +192,7 @@ This example shows one outcome that the <code>inspect</code> errand can return:
 <ol>
 <li>Use the <code>inspect</code> errand to retrieve relevant information about the two VMs:
 <pre class="terminal">
-$ bosh2 -e my-env -d my-dep run-errand inspect
+$ bosh -e my-env -d my-dep run-errand inspect
 [...]
 Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
 Exit Code  0
@@ -224,9 +224,9 @@ and resuming replication.</li>
 <li>Restore the backup artifact to the first instance using the <a href="backup-and-restore.html#restore">Manual Restore</a> steps.<br><br>
 	At this point, the instances have equivalent data.</li>
 <li> Run the <code>configure-leader-follower</code> errand to reconfigure replication:
-<code> bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER </code>
+<code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER </code>
 <pre class="terminal">
-$ bosh2 -e my-env -d my-dep \
+$ bosh -e my-env -d my-dep \
   run-errand configure-leader-follower \
   --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
 </pre></li>
@@ -257,7 +257,7 @@ promoted and reduce the potential for data divergence.
 <ol>
 <li> Use the <code>inspect</code> errand to retrieve the GTID Executed set for each VM:
 <pre class="terminal">
-$ bosh2 -e my-env -d my-dep run-errand inspect
+$ bosh -e my-env -d my-dep run-errand inspect
 [...]
 Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
 Exit Code  0
@@ -288,10 +288,10 @@ If the GTID Executed sets for both instances are the same, continue to Step 2. I
     <li>If one instance has a range that is a subset of the other, the instance with the subset should must be made read-only, as
       described in Step 3.</li></ul></li>
 <li>Based on the information you gathered in the step above, run the <code>make-read-only</code> errand to make the appropriate instance read-only:
-<code> bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE
+<code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE
 </code>
 <pre class="terminal">
-$ bosh2 -e my-env -d my-dep \
+$ bosh -e my-env -d my-dep \
   run-errand make-read-only \
   --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
 [...]
@@ -301,8 +301,8 @@ Succeeded
    data has diverged and you must determine what data has diverged as part of the procedure below:
    <ol>
 	<li>Use the <code>make-read-only</code> errand to set both instances to read-only to prevent further data divergence.
-    <code> bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-INSTANCE </code>
-<pre class="terminal">$ bosh2 -e my-env -d my-dep \
+    <code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-INSTANCE </code>
+<pre class="terminal">$ bosh -e my-env -d my-dep \
   run-errand make-read-only \
   --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
 [...]
@@ -312,15 +312,15 @@ Succeeded</pre></li>
     further ahead---this instance has the higher GTID Executed set, and will be the new leader.</li>
 	<li>Migrate all appropriate data to the new leader instance.</li>
 	<li>After putting all data on the leader, ssh onto the follower:
-    <code> bosh2 -e ENVIRONMENT -d DEPLOYMENT ssh mysql/GUID-OF-FOLLOWER</code>
-<pre class="terminal">$ bosh2 -e my-env -d my-dep ssh mysql/e0b94ade-0114-4d49-a929-ce1616d8beda</pre></li>
+    <code> bosh -e ENVIRONMENT -d DEPLOYMENT ssh mysql/GUID-OF-FOLLOWER</code>
+<pre class="terminal">$ bosh -e my-env -d my-dep ssh mysql/e0b94ade-0114-4d49-a929-ce1616d8beda</pre></li>
 	<li>Become root with the command <code>sudo su</code>.<br></li>
 	<li>Stop the mysql process with the command <code>monit stop mysql</code>.</li>
 	<li>Delete the data directory of the follower with the command <code>rm -rf /var/vcap/store/mysql</code>.</li>
 	<li>Start the mysql process with the command <code>monit start mysql</code>.</li>
 	<li>Use the <code>configure-leader-follower</code> errand to copy the leader's data to the follower and resume replication:
-    <code> bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code>
-<pre class="terminal">$ bosh2 -e my-env -d my-dep \
+    <code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code>
+<pre class="terminal">$ bosh -e my-env -d my-dep \
   run-errand configure-leader-follower \
   --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre></li>
 </ol>
@@ -348,7 +348,7 @@ When the leader is resurrected, it is set as read-only.
 <ol>
     <li> Use the <code>inspect</code> errand to confirm that both VMs are in a read-only state:
         <code>
-            bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand inspect
+            bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect
         </code>
     </li>
     <li>Examine the output and locate the information about the leader-follower MySQL VMs:
@@ -379,10 +379,10 @@ Succeeded
     </li>
     <li>
         If Read Only is set to <code>true</code> for both VMs, make the leader writable using the following command:
-        <code>bosh2 -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code>
+        <code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code>
         <br><br>For example, if the second instance above is the leader:
 <pre class="terminal">
-$ bosh2 -e my-env -d my-dep \
+$ bosh -e my-env -d my-dep \
   run-errand configure-leader-follower \
   --instance=mysql/e0exampleade-0114-4d49-a929-cexample8beda
 </pre>
@@ -465,7 +465,7 @@ Succeeded
     <br>
     <code>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</code>
     <br><br>
-    Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in the
+    Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
     step 1.<br>
     <br>
     For example:
@@ -545,7 +545,7 @@ Succeeded
   <br>
   <ul>
     <li> <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
-      the step 1.</li>
+      step 1.</li>
     <li> <code>INSTANCE-ID</code> is the instance ID you recorded in the
       above step. </li>
     <br>
