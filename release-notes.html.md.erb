@@ -20,6 +20,35 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
   use DNS hostnames. For more information, see
   <a href="./prepare-upgrade.html">Preparing for Upgrading MySQL for PCF</a>.</p>
 
+## <a id="254"></a>v2.5.4
+
+**Release Date:**  April 17, 2019
+
+### Fixed Issues
+
+This release fixes the following issues:
+
+* HA Clusters can now successfully take regular backups. 
+* HA Clusters now allow app bindings when TLS is configured off.
+* When retrieving cluster status, `mysql-diag` will now check all three MySQL nodes, rather than just the active node.
+* When detecting replication failures, `replication-canary` will now check all three MySQL nodes, rather than just the active node.
+
+### Features
+
+Changes in this release:
+
+* Updates Service Backups to v18.2.0. This update includes the following:
+  * `smoke-tests` errands can be used in environments that use
+  custom Java buildpacks with OracleJDK.
+  * Azure backups are updated to support non-default blob storage base URLs.
+  For more information,
+  see [Service Backups for PCF v18.2.0](https://docs.pivotal.io/svc-sdk/service-backup/18-2/release-notes.html#1820x).
+* Updates PXC release to v0.15.0. This update includes the following:
+  * MySQL backups are run as a limited-permissions user, rather than as `admin`.
+  * Bumps Percona XtraDB Cluster to v5.7.25-31.35.
+  For more information,
+  see [pxc-release v0.15.0](https://github.com/cloudfoundry-incubator/pxc-release/releases/tag/v0.15.0).
+
 ## <a id="253"></a>v2.5.3
 
 **Release Date:**  January 11, 2019
