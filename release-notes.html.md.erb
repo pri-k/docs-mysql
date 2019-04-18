@@ -32,7 +32,6 @@ New features and changes in this release:
 * Updates Service Backups to v18.2.0. This update includes the following:
   * `smoke-tests` errands can be used in environments that use
   custom Java buildpacks with OracleJDK.
-  * Azure backups are updated to support non-default blob storage base URLs.
   For more information,
   see [Service Backups for PCF v18.2.0](https://docs.pivotal.io/svc-sdk/service-backup/18-2/release-notes.html#1820x).
 * Updates PXC release to v0.15.0. This update includes the following:
@@ -44,12 +43,23 @@ New features and changes in this release:
 
 ### Resolved Issues
 
-This release fixes the following issues:
+This release fixes known issues, so that:
 
-* Highly available (HA) clusters no longer prevent automated backups from working properly.
-* HA clusters no longer prevent app bindings when **TLS Options** is set to **Not Configured**.
-* `mysql-diag` and `replication-canary` no longer only check the active node.
-They now check all three MySQL nodes.
+* Automatic backup works for highly available (HA) clusters.
+
+* Java apps can establish connection to HA clusters when **TLS Options** is set to **Required**.
+
+* Azure backups support on-premise blob storage.
+  For more information,
+  see the **Blob Store Base URL** field in [Option 4: Back Up to Azure Storage](./backup-and-restore.html#azure).
+
+### Known Issues
+
+This release has the following issue:
+
+* The Scheduler for PCF tile does not support TLS.
+  If you have the Scheduler for PCF tile installed, MySQL for PCF must have
+  **TLS Options** set to **Optional** or **Not Configured**.
 
 ## <a id="253"></a>v2.5.3
 
@@ -63,7 +73,7 @@ This release has the following issues:
   If you have the Scheduler for PCF tile installed, MySQL for PCF must have
   **TLS Options** set to **Optional** or **Not Configured**.
 
-* An issue with HA clusters prevents automated backups from working properly.
+<%= partial 'ha_cluster_backup_ki' %>
 
 * Java apps are not able to establish a connection to an HA cluster service
   instance if TLS is disabled.
@@ -94,6 +104,8 @@ This release has the following issue:
   - PCF deployments using the Spring Cloud Services tile or the Scheduler for PCF tile must have TLS **disabled** in the MySQL for PCF tile.
   - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J in their Spring apps to connect to a MySQL service instance.
   Pivotal recommends developers configure their apps to use the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
+
+<%= partial 'ha_cluster_backup_ki' %>
 
 ### Features
 
