@@ -10,7 +10,8 @@ then upgrade to the latest available version of the new minor line.
 For example, if you use an older v2.4.x version, upgrade to the latest v2.4.x version
 before upgrading to the latest v2.5.x version.
 
-For product versions and upgrade paths, see the [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
+For product versions and upgrade paths, see the
+[Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
 <!-- If you do not do this than your installation is like stuck. Does count as a breaking change or warning? -->
 <p class="note breaking"><strong>Breaking Change: </strong>
@@ -22,20 +23,11 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 ## <a id="254"></a>v2.5.4
 
-**Release Date:**  April 17, 2019
-
-### Fixed Issues
-
-This release fixes the following issues:
-
-* HA Clusters can now successfully take regular backups. 
-* HA Clusters now allow app bindings when TLS is configured off.
-* When retrieving cluster status, `mysql-diag` will now check all three MySQL nodes, rather than just the active node.
-* When detecting replication failures, `replication-canary` will now check all three MySQL nodes, rather than just the active node.
+**Release Date:**  April 18, 2019
 
 ### Features
 
-Changes in this release:
+New features and changes in this release:
 
 * Updates Service Backups to v18.2.0. This update includes the following:
   * `smoke-tests` errands can be used in environments that use
@@ -44,10 +36,22 @@ Changes in this release:
   For more information,
   see [Service Backups for PCF v18.2.0](https://docs.pivotal.io/svc-sdk/service-backup/18-2/release-notes.html#1820x).
 * Updates PXC release to v0.15.0. This update includes the following:
-  * MySQL backups are run as a limited-permissions user, rather than as `admin`.
-  * Bumps Percona XtraDB Cluster to v5.7.25-31.35.
+  * MySQL backups are run as a limited-permissions user.
+  Previously, backups were run as an admin.
+  * Updates Percona XtraDB Cluster to v5.7.25-31.35.
   For more information,
   see [pxc-release v0.15.0](https://github.com/cloudfoundry-incubator/pxc-release/releases/tag/v0.15.0).
+
+  ### Resolved Issues
+
+  This release fixes the following issues:
+
+  * Highly available (HA) clusters no longer prevent automated backups from working properly.
+  * HA clusters no longer prevent app bindings when TLS is configured off.
+  * When retrieving HA cluster status, `mysql-diag` no longer only checks the active node.
+  It now checks all three MySQL nodes.
+  * When detecting replication failures, `replication-canary` no longer only checks the active node.
+  It now checks all three MySQL nodes.
 
 ## <a id="253"></a>v2.5.3
 
@@ -66,7 +70,7 @@ This release has the following issues:
 * Java apps are not able to establish a connection to an HA cluster service
   instance if TLS is disabled.
 
-### Fixed Issues
+### Resolved Issue
 
 This release fixes the following issue:
 
@@ -74,9 +78,9 @@ This release fixes the following issue:
   This issue prevented TLS connection for Spring Cloud Services
   and all Spring apps that used the MariaDB Connector/J.
 
-### Features
+### Feature
 
-Changes in this release:
+New feature and change in this release:
 
 * Updates golang to v1.11.4 to address [CVE-2018-16873](https://github.com/golang/go/issues/29230)
 
@@ -142,7 +146,7 @@ While in beta, the following limitations exist for HA clusters:
 
 <!-- Add new link when topic is done -->
 
-**Highly Available clusters are for advanced use cases only.**
+**Highly available clusters are for advanced use cases only.**
 In addition to higher infrastructure cost,
 HA clusters introduce some significant limitations that are different from running single node or leader-follower service plans.
 For more information, see [High Availability Limitations](https://docs.pivotal.io/p-mysql/1-10/index.html#limitations).
