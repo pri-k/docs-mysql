@@ -47,11 +47,9 @@ New features and changes in this release:
 This release fixes the following issues:
 
 * Highly available (HA) clusters no longer prevent automated backups from working properly.
-* HA clusters no longer prevent app bindings when TLS is configured off.
-* When retrieving HA cluster status, `mysql-diag` no longer only checks the active node.
-It now checks all three MySQL nodes.
-* When detecting replication failures, `replication-canary` no longer only checks the active node.
-It now checks all three MySQL nodes.
+* HA clusters no longer prevent app bindings when **TLS Options** is set to **Not Configured**.
+* `mysql-diag` and `replication-canary` no longer only check the active node.
+They now check all three MySQL nodes.
 
 ## <a id="253"></a>v2.5.3
 
