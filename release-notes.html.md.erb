@@ -41,10 +41,14 @@ Updated dependencies in this release:
 * Updates Service Backups to v18.2.0. This update includes the following:
   * `smoke-tests` errands can be used in environments that use
   custom Java buildpacks with OracleJDK.
-  * Azure backups with non-default blob storage base URLs have been updated.
+  
+### Resolved Issue
+
+This release fixes a known issue, so that:
+
+* Azure backups support on-premise blob storage.
   For more information,
-  see [v18.2.0](https://docs.pivotal.io/svc-sdk/service-backup/18-2/release-notes.html)
-  in _Service Backups for PCF Release Notes_.
+  see the **Blob Store Base URL** field in [Option 4: Back Up to Azure Storage](./backup-and-restore.html#azure).
 
 ## <a id="244"></a>v2.4.4
 
