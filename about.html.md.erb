@@ -28,52 +28,44 @@ Regardless of the specific network layout, the operator must ensure network rule
 so that connections are open as described in the table below.
 
 <table class="nice">
-	<th>This component...</th>
-	<th>Must communicate with...</th>
+	<th>Source VM</th>
+	<th>Destination VM</th>
 	<th>Default TCP Port</th>
-	<th>Communication direction(s)</th>
 	<th>Notes</th>
 	<tr>
 		<td><strong>BOSH Agent</strong></td>
 		<td><strong>BOSH Director</strong></td>
 		<td>4222</td>
-		<td>Two-way</td>
 		<td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM.
-                    The BOSH Agent initiates the connection with the BOSH Director.<br>
-		    The default port is not configurable.  </td>
+        The BOSH Agent initiates the connection with the BOSH Director.<br>
+		    The default port is not configurable.<br><br>
+				The communication between these VMs is two-way.
+		</td>
 	</tr>
 	<tr>
 		<td><strong>Broker and Service Instances</strong></td>
 		<td><strong>Doppler on PAS</strong></td>
 		<td>8082</td>
-		<td>One-way</td>
 		<td>This port is for metrics.</td>
 	</tr>
 	<tr>
 		<td><strong>Deployed Apps on PAS</strong></td>
 		<td><strong>MySQL Service Instances</strong></td>
 		<td>3306</td>
-		<td>One-way</td>
 		<td>This port is for general use, app-specific tasks.
-                    In addition to configuring your IaaS, create a security group
-                    for the MySQL service instance.</td>
+        In addition to configuring your IaaS, create a security group
+        for the MySQL service instance.</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
 		<td>
-
-		        <strong>BOSH Director</strong>
-                        <br>
-		  	<strong>BOSH UAA</strong>
-
+			<strong>BOSH Director</strong><br>
+		  <strong>BOSH UAA</strong>
 		</td>
 		<td>
-
 				25555<br>
 				8443
-
 		</td>
-		<td>One-way</td>
 		<td>The default ports are not configurable.</td>
 	</tr>
 	<tr>
@@ -81,43 +73,38 @@ so that connections are open as described in the table below.
 		<td><strong>MySQL Service Instances</strong>
 		</td>
 		<td>
-				8443<br>3306
+				8443<br>
+				3306
 		</td>
-		<td>One-way</td>
-		<td>This connection is for administrative tasks. Avoid opening general use, app-specific
-			ports for this connection.</td>
+		<td>This connection is for administrative tasks.
+			Avoid opening general use, app-specific ports for this connection.
+		</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td><strong>PAS</strong>
-		</td>
+		<td><strong>PAS</strong></td>
 		<td>8443</td>
-		<td>One-way</td>
 		<td>The default port is not configurable.</td>
 	</tr>
 	<tr>
 		<td><strong>PAS</strong></td>
-		<td><strong>ODB</strong>
-		</td>
+		<td><strong>ODB</strong></td>
 		<td>8080</td>
-		<td>One-way</td>
 		<td>This port allows PAS to communicate with the ODB component.</td>
 	</tr>
 	<tr>
 		<td><strong>Deployed apps on PAS</strong></td>
-		<td><strong>Runtime CredHub</strong>
-		</td>
+		<td><strong>Runtime CredHub</strong></td>
 		<td>8844</td>
-		<td>One-way</td>
 		<td>This port is needed if secure service instance credentials are enabled.
-                    For information, see <a href="install-config.html#security">Configure Security</a>.</td>
+        For information, see <a href="install-config.html#security">Configure Security</a>.
+		</td>
 	</tr>
 	<tr>
 		<td><strong>PAS</strong></td>
 		<td><strong>MySQL Service Instances</strong>
 		</td>
 		<td>8853</td>
-		<td>One-way</td>
 		<td>This port is for DNS to run health checks against services instances.</td>
 	</tr>
 </table>
@@ -128,19 +115,19 @@ In addition to the networking rules required for MySQL for PCF, if you are using
 service plan, the operator must ensure network rules are set up so that connections are open as described in the table below.
 
 <table class="nice">
-	<th>This component...</th>
-	<th>Must communicate with...</th>
+	<th>Source VM</th>
+	<th>Destination VM</th>
 	<th>Default TCP Port</th>
-	<th>Communication direction(s)</th>
 	<th>Notes</th>
 	<tr>
 		<td><strong>Leader VM</strong></td>
 		<td><strong>Follower VM</strong></td>
-		<td>8443<br>8081</td>
-		<td>Two-way</td>
+		<td>8443<br>
+				8081
+		</td>
 		<td>This port is needed if leader-follower is enabled.
-                    For information,
-	see <a href="maintain-leader-follower.html#config-plan">Configure a Leader-Follower Service Plan</a>.</td>
+				For more information, see <a href="maintain-leader-follower.html#config-plan">Configure a Leader-Follower Service Plan</a>.<br><br>
+				The communication between these VMs is two-way.</td>
 	</tr>
 </table>
 
@@ -153,45 +140,47 @@ as described in the table below.
 <%= partial "./galera_beta" %>
 
 <table class="nice">
-	<th>This component...</th>
-	<th>Must communicate with...</th>
+	<th>Source VM</th>
+	<th>Destination VM</th>
 	<th>Default TCP Port</th>
-	<th>Communication direction(s)</th>
 	<th>Notes</th>
 
 	<tr>
 		<td><strong>PAS</strong></td>
-		<td>MySQL service instances</td>
+		<td><strong>MySQL service instances</strong></td>
 		<td>8083</td>
-		<td>One-way</td>
 		<td>This port is needed to monitor cluster health with Switchboard.
-			For more information, see <a href="./monitor-health.html">Monitoring Node Health</a>.</td>
+			For more information, see <a href="./monitor-health.html">Monitoring Node Health (HA Cluster)</a>.</td>
 	</tr>
 
 	<tr>
 		<td><strong>Jumpbox VM</strong></td>
-		<td>PAS UAA</td>
+		<td><strong>PAS UAA</strong></td>
 		<td>8443</td>
-		<td>One-way</td>
 		<td>This port is needed so that the replication canary can create a UAA client for sending email
-			notifications. For more information, see <a href="./replication-canary.html">Replication Canary</a>.</td>
+			notifications. For more information, see <a href="./replication-canary.html">Replication Canary (HA Cluster)</a>.</td>
 	</tr>
 
 	<tr>
 		<td><strong>HA cluster node</strong></td>
 		<td><strong>HA cluster node</strong></td>
-		<td> 4567 <br> 4568 <br> 4444 </td>
-		<td>Two-way</td>
+		<td>4567<br>
+				4568<br>
+				4444
+		</td>
 		<td>This port is needed to maintain network connectivity between nodes in an HA cluster.
 			For more information,
 			see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a>
-			in the Percona XtraDB Cluster documentation.</td>
+			in the Percona XtraDB Cluster documentation.<br><br>
+			The communication between these VMs is two-way.
+	</td>
 	</tr>
 	<tr>
 		<td><strong>Galera healthcheck</strong></td>
 		<td><strong>Galera healthcheck</strong></td>
 		<td>9200</td>
-		<td>Two-way</td>
-		<td>This port is for monitoring the health of nodes in an HA cluster.</td>
+		<td>This port is for monitoring the health of nodes in an HA cluster.<br><br>
+			The communication between these VMs is two-way.
+	</td>
 	</tr>
 </table>
