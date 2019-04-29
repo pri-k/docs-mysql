@@ -167,18 +167,19 @@ your instance to show as `create succeeded`.
 
 ### <a id='create-multi-dc'></a>Create Service Instances for a Multi-Datacenter Deployment
 
-<!-- SOME THING ABOUT HOW THE LEADER AND FOLLOWER SERVICE INSTANCES SHOULD BE IN DIF PCF DEPLOYMENT?  -->
+<!-- SOME THING ABOUT HOW THE LEADER AND FOLLOWER SERVICE INSTANCES SHOULD BE IN DIF PCF DEPLOYMENT? 
+MAKE SUPER CLEAR YOU ARE MAKING ONE LEADER AND ONE FOLLOWER -->
 
 To create an instance of the MySQL for PCF service for a multi-datacenter deployment, do the following:
 
 1. Create two service instances by doing the following twice:
     
-    1. Log into the PCF deployment for your leader or follower node by running the following command:
+    1. Log into the PCF deployment for your leader or follower service instance by running the following command:
       
         ```
         cf login API-URL
         ```
-        Where `API-URL` is the API endpoint for the deployment for your leader or follower node. 
+        Where `API-URL` is the API endpoint for the deployment for your leader or follower service instance. 
 
     1. Create a service instance by running the following command:
 
@@ -212,12 +213,12 @@ To create an instance of the MySQL for PCF service for a multi-datacenter deploy
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
     
-1. Log into the PCF deployment for your follower node by running the following command:
+1. Log into the PCF deployment for your follower service instance by running the following command:
 
     ```
     cf login API-URL
     ```
-    Where `API-URL` is the API endpoint for the deployment for your follower node. 
+    Where `API-URL` is the API endpoint for the deployment for your follower service instance. 
     
 1. Create a service key for your follower service instance by running the following command:
 
@@ -228,7 +229,7 @@ To create an instance of the MySQL for PCF service for a multi-datacenter deploy
     + `FOLLOWER-INSTANCE` is name of the follower service instance you created in step 1b above. 
     + `SERVICE-KEY-NAME` is a name you choose for the service key. 
     
-1. View the `replication-credentials` for your follower node service key by running the following command:
+1. View the `replication-credentials` for your follower service key by running the following command:
 
     ```
     cf service-key FOLLOWER-INSTANCE SERVICE-KEY-NAME
@@ -250,14 +251,15 @@ To create an instance of the MySQL for PCF service for a multi-datacenter deploy
         }
       }</pre>
 1. Record the output of the above command.
-1. Log into the PCF deployment for your leader node by running the following command:
+1. Log into the PCF deployment for your leader service instance by running the following command:
 
     ```
     cf login API-URL
     ```
-    Where `API-URL` is the API endpoint for the deployment for your leader node.  
+    Where `API-URL` is the API endpoint for the deployment for your leader service instance.  
 
-1. Update your leader node with the follower node `replication-credentials` by running the following command:
+1. Update your leader service instance with the follower `replication-credentials` by running the 
+following command:
     
     ```
     cf update-service LEADER-INSTANCE -c REPLICATION-CREDS
@@ -279,7 +281,7 @@ To create an instance of the MySQL for PCF service for a multi-datacenter deploy
     Where: 
     + `LEADER-INSTANCE` is the name of the leader service instance you created in step 1b above. 
     + `SERVICE-KEY-NAME` is a name you choose for the service key. 
-1. View the `replication-credentials` for your leader node service key by running the following command:
+1. View the `replication-credentials` for your leader service key by running the following command:
 
     ```
     cf service-key LEADER-INSTANCE SERVICE-KEY-NAME
@@ -305,14 +307,15 @@ To create an instance of the MySQL for PCF service for a multi-datacenter deploy
       }</pre>
     
 1. Record the output of the above command.
-1. Log into the PCF deployment for your follower node by running the following command:
+1. Log into the PCF deployment for your follower service instance by running the following command:
 
     ```
     cf login API-URL
     ```
-    Where `API-URL` is the API endpoint for the deployment for your follower node. 
+    Where `API-URL` is the API endpoint for the deployment for your follower service instance. 
     
-1. Update your follower node with the leader node `replication-credentials` by running the following command:
+1. Update your follower service instance with the leader `replication-credentials` by 
+running the following command:
 
     ```
     cf update-service FOLLOWER-INSTANCE -c REPLICATION-CREDS
