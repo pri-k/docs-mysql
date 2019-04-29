@@ -119,9 +119,18 @@ For example:
 ## <a id='create'></a>Create a Service Instance
 
 On-demand services are created asynchronously, not immediately.
-The `watch` command shows you when your service instance is ready to bind and use.
+The `watch` command shows you when your service instance is ready to bind and use. 
 
-To create an instance of the MySQL for PCF service, do the following:
+To create an instance of the MySQL for PCF service, do the one following:
+
++ If you are creating a single node, leader-follower, or highly available cluster service instance, 
+do the procedure in [Create a Service Instance for a Single Deployment](#create-single).
++ If you are creating PXC single node service instances for a multi-datacenter deployment, 
+do the procedure in [Create a Service Instance for a Multi-Datacenter Deployment](#create-multi-dc). 
+
+### <a id='create-single'></a>Create a Service Instance for a Single Deployment
+
+To create an instance of the MySQL for PCF service for a single deployment, do the following:
 
 1. Run the following command:
 
@@ -156,6 +165,160 @@ your instance to show as `create succeeded`.
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
+### <a id='create-multi-dc'></a>Create a Service Instance for a Multi-Datacenter Deployment
+
+To create an instance of the MySQL for PCF service for a multi-datacenter deployment, do the following:
+
+1. Create two service instance, one for a leader node and one a follower node, by doing the following twice:
+    
+    1. Log into the space you want for your leader or follower node by runing the following command:
+      
+        ```
+        cf login 
+        ```
+
+    1. Run the following command:
+
+        ```
+        cf create-service p.mysql PLAN SERVICE-INSTANCE
+        ```
+
+        Where:<br>
+        - `PLAN` is the name of the MySQL for PCF PXC single node plan you want to use.
+        - `SERVICE-INSTANCE` is a name you choose to identify the service instance.
+        This name appears under `service` in output from `cf services`. You should choose a name that 
+        differentes between the leader and follower node. 
+
+    1. Enter the following command and wait for the `last operation` for
+    your instance to show as `create succeeded`.
+
+        ```
+        watch cf services
+        ```
+
+        For example:
+
+        <pre class="terminal">
+       $ cf create-service p.mysql db-small my-instance<br>
+        Creating service my-instance in org my-org / space my-space as user<span>@</span>example.com...
+        OK<br>
+       $ watch cf services<br>
+        Getting services in org my-org / space my-space as user<span>@</span>example.com...
+        OK
+        name          service       plan        bound apps    last operation
+        my-instance   p.mysql       db-small                  create succeeded
+      </pre>
+
+    If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
+    
+1.  Log into (target) the space for your follower node by running the following command:
+    
+    ```
+    cf login 
+    ```
+    
+1. Create a service key for your follower service instance by running the following command:
+
+    ```
+    cf create-service-key FOLLOWER-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "host-info"}
+    ```
+    Where: 
+    + `FOLLOWER-INSTANCE` is 
+    + `SERVICE-KEY-NAME` is 
+    
+1. View your follower node service key by running the following command:
+
+    ```
+    cf service-key FOLLOWER-INSTANCE SERVICE-KEY-NAME
+    ```
+    Where: 
+    + `FOLLOWER-INSTANCE` is 
+    + `SERVICE-KEY-NAME` is 
+    
+    For example:
+    
+    <pre class="terminal">$ cf service-key follower-node rep-key
+      Getting key rep-key for service instance follower-node as user@example.com...
+
+      {
+        "replication-credentials": {
+          "hostname": "q-n3s3y1.q-g1188.bosh",
+          "ip": "10.0.18.12",
+          "uuid": "8e0b6c95-ab41-4ef3-5996-5dce13cbdda9"
+        }
+      }
+    </pre>
+
+1.  Log into (target) the space for your leader node by running the following command:
+  
+    ```
+    cf login 
+    ```  
+
+1. Update your leader node with the follower credentials by running the following command:
+    
+    ```
+    cf update-service LEADER-INSTANCE -c {"replication-credentials":{
+      "hostname": "q-n3s3y1.q-g1188.bosh",
+      "ip": "10.0.18.12",
+      "uuid": "8e0b6c95-ab41-4ef3-5996-5dce13cbdda9"
+      }
+    }
+    ```
+1. Create a service key for your leader service instance by running the following command:
+
+    ```
+    cf create-service-key LEADER-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "credentials"}
+    ```
+    Where: 
+    + `LEADER-INSTANCE` is 
+    + `SERVICE-KEY-NAME` is 
+1. View your leader node service key by doing the following:
+
+    ```
+    cf service-key LEADER-INSTANCE SERVICE-KEY-NAME
+    ```
+    Where: 
+    + `LEADER-INSTANCE` is 
+    + `SERVICE-KEY-NAME` is 
+    
+    For example:
+    
+    <pre class="terminal">$ cf service-key leader-node rep-key
+      Getting key rep-key for service instance follower-node as user@example.com...
+
+      {
+        "replication-credentials": {
+          "hostname": "q-n3s3y1.q-g1181.bosh",
+          "ip": "10.0.17.12",
+          "password": [REDACTED],
+          "port": 3306,
+          "username": [REDACTED],
+          "uuid": "dd74cadd-d0f2-4319-5fce-c0aed37b6aa8"
+        }
+      }
+    </pre>
+    
+1. Log into (target) the space for your leader node by running the following command:
+  
+    ```
+    cf login 
+    ``` 
+  
+1. Update your follower node with the leader credentials by running the following command:
+    
+    ```
+    cf update-service LEADER-INSTANCE -c {"replication-credentials":{
+      "hostname": "q-n3s3y1.q-g1181.bosh",
+      "ip": "10.0.17.12",
+      "password": [REDACTED],
+      "port": 3306,
+      "username": [REDACTED],
+      "uuid": "dd74cadd-d0f2-4319-5fce-c0aed37b6aa8"
+      }
+    }
+    ```
+    
 ## <a id="bind"></a>Bind a Service Instance to Your App
 
 For an app to use a service, you must bind the app to a service instance. Do this after you push or re-push the app using `cf push`.
