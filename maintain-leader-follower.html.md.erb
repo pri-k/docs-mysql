@@ -57,22 +57,7 @@ When a developer creates a leader-follower service instance,
 a leader VM is automatically deployed in one availability zone (AZ),
 and a follower VM is deployed in another AZ.
 
-To configure a leader-follower service plan, do the following:
-
-1. Follow the steps for [configuring an active service plan](install-config.html#active),
-   and do the following specifically for the leader-follower plan:
-	1. Click the tab for any of the available service plans: Plan 1 to Plan 9.
-	1. Select the **Multi-node deployment** checkbox.
-		![multi node checkbox](multi-node-box.png)
-	1. Select a **MySQL VM Type** and a **MySQL Persistent Disk**.
-	1. Select two **MySQL Availability Zones** to use for the MySQL VMs.
-	1. Click **Save**.
-1. <a name="apply-changes"></a>In the Ops Manager Dashboard, do the following:
-
-    1. If you are using Ops Manager v2.3 or later, click **Review Pending Changes**.
-    For more information about this Ops Manager page, see
-    [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
-    1. Click **Apply Changes**.
+To configure a leader-follower service plan, do the procedure in [Configure Service Plans](./install-config.html#active) and select **Leader-Follower**.
 
 ## <a id="monitor"></a> Monitor Leader-Follower Instances
 
