@@ -121,24 +121,24 @@ For example:
 On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use. 
 
-To create an instance of the MySQL for PCF service, do the one following:
+To create an instance of the MySQL for PCF service, do one of the following:
 
 + If you are creating a single node, leader-follower, or highly available cluster service instance, 
 do the procedure in [Create a Service Instance for a Single Deployment](#create-single).
 + If you are creating PXC single node service instances for a multi-datacenter deployment, 
-do the procedure in [Create a Service Instance for a Multi-Datacenter Deployment](#create-multi-dc). 
+do the procedure in [Create Service Instances for a Multi-Datacenter Deployment](#create-multi-dc). 
 
 ### <a id='create-single'></a>Create a Service Instance for a Single Deployment
 
 To create an instance of the MySQL for PCF service for a single deployment, do the following:
 
-1. Run the following command:
+1. Create a service instance by running the following command:
 
     ```
     cf create-service p.mysql PLAN SERVICE-INSTANCE
     ```
 
-    Where:<br>
+    Where:
     - `PLAN` is the name of the MySQL for PCF plan you want to use.
     - `SERVICE-INSTANCE` is a name you choose to identify the service instance.
     This name appears under `service` in output from `cf services`.
@@ -165,29 +165,31 @@ your instance to show as `create succeeded`.
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-### <a id='create-multi-dc'></a>Create a Service Instance for a Multi-Datacenter Deployment
+### <a id='create-multi-dc'></a>Create Service Instances for a Multi-Datacenter Deployment
+
+<!-- SOME THING ABOUT HOW THE LEADER AND FOLLOWER SERVICE INSTANCES SHOULD BE IN DIF PCF DEPLOYMENT?  -->
 
 To create an instance of the MySQL for PCF service for a multi-datacenter deployment, do the following:
 
-1. Create two service instance, one for a leader node and one a follower node, by doing the following twice:
+1. Create two service instances by doing the following twice:
     
-    1. Log into the space you want for your leader or follower node by runing the following command:
+    1. Log into the PCF deployment for your leader or follower node by running the following command:
       
         ```
-        cf login 
+        cf login API-URL
         ```
+        Where `API-URL` is the API endpoint for the deployment for your leader or follower node. 
 
-    1. Run the following command:
+    1. Create a service instance by running the following command:
 
         ```
         cf create-service p.mysql PLAN SERVICE-INSTANCE
         ```
 
-        Where:<br>
+        Where:
         - `PLAN` is the name of the MySQL for PCF PXC single node plan you want to use.
         - `SERVICE-INSTANCE` is a name you choose to identify the service instance.
-        This name appears under `service` in output from `cf services`. You should choose a name that 
-        differentes between the leader and follower node. 
+        This name appears under `service` in output from `cf services`. 
 
     1. Enter the following command and wait for the `last operation` for
     your instance to show as `create succeeded`.
@@ -198,24 +200,24 @@ To create an instance of the MySQL for PCF service for a multi-datacenter deploy
 
         For example:
 
-        <pre class="terminal">
-       $ cf create-service p.mysql db-small my-instance<br>
-        Creating service my-instance in org my-org / space my-space as user<span>@</span>example.com...
+        <pre class="terminal">$ cf create-service p.mysql db-small my-leader<br>
+        Creating service my-leader in org my-org / space my-space as user<span>@</span>example.com...
         OK<br>
        $ watch cf services<br>
         Getting services in org my-org / space my-space as user<span>@</span>example.com...
         OK
         name          service       plan        bound apps    last operation
-        my-instance   p.mysql       db-small                  create succeeded
+        my-leader   p.mysql       db-small                  create succeeded
       </pre>
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
     
-1.  Log into (target) the space for your follower node by running the following command:
-    
+1. Log into the PCF deployment for your follower node by running the following command:
+
     ```
-    cf login 
+    cf login API-URL
     ```
+    Where `API-URL` is the API endpoint for the deployment for your follower node. 
     
 1. Create a service key for your follower service instance by running the following command:
 
@@ -223,101 +225,110 @@ To create an instance of the MySQL for PCF service for a multi-datacenter deploy
     cf create-service-key FOLLOWER-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "host-info"}
     ```
     Where: 
-    + `FOLLOWER-INSTANCE` is 
-    + `SERVICE-KEY-NAME` is 
+    + `FOLLOWER-INSTANCE` is name of the follower service instance you created in step 1b above. 
+    + `SERVICE-KEY-NAME` is a name you choose for the service key. 
     
-1. View your follower node service key by running the following command:
+1. View the `replication-credentials` for your follower node service key by running the following command:
 
     ```
     cf service-key FOLLOWER-INSTANCE SERVICE-KEY-NAME
     ```
     Where: 
-    + `FOLLOWER-INSTANCE` is 
-    + `SERVICE-KEY-NAME` is 
+    + `FOLLOWER-INSTANCE` is the name of the follower service instance you created in step 1b above. 
+    + `SERVICE-KEY-NAME` is the name of the follower service key you created in step 3 above. 
     
     For example:
     
-    <pre class="terminal">$ cf service-key follower-node rep-key
-      Getting key rep-key for service instance follower-node as user@example.com...
+    <pre class="terminal">$ cf service-key my-follower rep-key
+      Getting key rep-key for service instance my-follower as user@example.com...
 
       {
         "replication-credentials": {
           "hostname": "q-n3s3y1.q-g1188.bosh",
           "ip": "10.0.18.12",
-          "uuid": "8e0b6c95-ab41-4ef3-5996-5dce13cbdda9"
+          "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
         }
-      }
-    </pre>
+      }</pre>
+1. Record the output of the above command.
+1. Log into the PCF deployment for your leader node by running the following command:
 
-1.  Log into (target) the space for your leader node by running the following command:
-  
     ```
-    cf login 
-    ```  
+    cf login API-URL
+    ```
+    Where `API-URL` is the API endpoint for the deployment for your leader node.  
 
-1. Update your leader node with the follower credentials by running the following command:
+1. Update your leader node with the follower node `replication-credentials` by running the following command:
     
     ```
-    cf update-service LEADER-INSTANCE -c {"replication-credentials":{
+    cf update-service LEADER-INSTANCE -c REPLICATION-CREDS
+    ```
+    Where `REPLICATION-CREDS` is the output you recorded in step 5 above. 
+    
+    For example:
+    <pre class="terminal">cf update-service my-leader -c {"replication-credentials":{
       "hostname": "q-n3s3y1.q-g1188.bosh",
       "ip": "10.0.18.12",
-      "uuid": "8e0b6c95-ab41-4ef3-5996-5dce13cbdda9"
+      "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
       }
-    }
-    ```
+    }</pre>
 1. Create a service key for your leader service instance by running the following command:
 
     ```
     cf create-service-key LEADER-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "credentials"}
     ```
     Where: 
-    + `LEADER-INSTANCE` is 
-    + `SERVICE-KEY-NAME` is 
-1. View your leader node service key by doing the following:
+    + `LEADER-INSTANCE` is the name of the leader service instance you created in step 1b above. 
+    + `SERVICE-KEY-NAME` is a name you choose for the service key. 
+1. View the `replication-credentials` for your leader node service key by running the following command:
 
     ```
     cf service-key LEADER-INSTANCE SERVICE-KEY-NAME
     ```
     Where: 
-    + `LEADER-INSTANCE` is 
-    + `SERVICE-KEY-NAME` is 
+    + `LEADER-INSTANCE` is the name of the leader service instance you created in step 1b above. 
+    + `SERVICE-KEY-NAME` is the name of the leader service key you created in step 7 above. 
     
     For example:
     
-    <pre class="terminal">$ cf service-key leader-node rep-key
-      Getting key rep-key for service instance follower-node as user@example.com...
+    <pre class="terminal">$ cf service-key my-leader rep-key
+      Getting key rep-key for service instance my-leader as user@example.com...
 
       {
         "replication-credentials": {
           "hostname": "q-n3s3y1.q-g1181.bosh",
           "ip": "10.0.17.12",
-          "password": [REDACTED],
+          "password": "a22aaa2a2a2aaaaa",
           "port": 3306,
-          "username": [REDACTED],
-          "uuid": "dd74cadd-d0f2-4319-5fce-c0aed37b6aa8"
+          "username": "6bf07ae455a14064a9073cec8696366c",
+          "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
         }
-      }
-    </pre>
+      }</pre>
     
-1. Log into (target) the space for your leader node by running the following command:
-  
+1. Record the output of the above command.
+1. Log into the PCF deployment for your follower node by running the following command:
+
     ```
-    cf login 
-    ``` 
-  
-1. Update your follower node with the leader credentials by running the following command:
+    cf login API-URL
+    ```
+    Where `API-URL` is the API endpoint for the deployment for your follower node. 
     
+1. Update your follower node with the leader node `replication-credentials` by running the following command:
+
     ```
-    cf update-service LEADER-INSTANCE -c {"replication-credentials":{
+    cf update-service FOLLOWER-INSTANCE -c REPLICATION-CREDS
+    ```
+    Where `REPLICATION-CREDS` is the output you recorded in step 10 above. 
+    
+    For example:
+    <pre class="terminal"> cf update-service my-follower -c {"replication-credentials":{
       "hostname": "q-n3s3y1.q-g1181.bosh",
       "ip": "10.0.17.12",
-      "password": [REDACTED],
+      "password": "a22aaa2a2a2aaaaa",
       "port": 3306,
-      "username": [REDACTED],
-      "uuid": "dd74cadd-d0f2-4319-5fce-c0aed37b6aa8"
+      "username": "6bf07ae455a14064a9073cec8696366c",
+      "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
       }
-    }
-    ```
+    }</pre>
     
 ## <a id="bind"></a>Bind a Service Instance to Your App
 
