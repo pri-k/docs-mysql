@@ -55,17 +55,7 @@ When a developer creates a leader-follower service instance,
 a leader VM is automatically deployed in one availability zone (AZ),
 and a follower VM is deployed in another AZ.
 
-To configure a leader-follower service plan, do the following:
-
-1. Follow the steps for [configuring an active service plan](install-config.html#active),
-   and do the following specifically for the leader-follower plan:
-	1. Click the tab for any of the five available service plans: Plan 1 to Plan 5.
-	1. Select the **Multi-node deployment** checkbox.
-		![multi node checkbox](multi-node-box.png)
-	1. Select a **MySQL VM Type** and a **MySQL Persistent Disk**.
-	1. Select two **MySQL Availability Zones** to use for the MySQL VMs.
-	1. Click **Save**.
-1. In the Ops Manager Installation Dashboard, click **Apply Changes**.
+To configure a leader-follower service plan, do the procedure in [Configure Service Plans](./install-config.html#active) and select **Multi-node deployment**.
 
 ## <a id="monitor"></a> Monitor Leader-Follower Instances
 
