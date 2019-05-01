@@ -3,7 +3,7 @@ title: Using MySQL for PCF Across Multiple Foundations
 owner: MySQL
 ---
 This topic ...
-
+FIGURE OUT HOW TO DEAL WITH LEADER-FOLLOWER TERMS IN THIS DOC
 ## <a id="overview"> </a>Overview 
 
 MySQL for PCF allows developers to deploy Leader-Follower instances across multiple PCF foundations. The Operator can configure these foundations to be in the same data center, or spread across multiple data centers. This is useful for the following use cases:
@@ -24,11 +24,18 @@ For more information about the above multi-foundation architectures, see []().
 * Topology
 * Decoupled Leader-Follower: Customers can use the `pxc-single-node` plan to set up leader-follower as separate BOSH deployments. This allows them to spread the L-F across orgs/spaces, foundations, and/or data centers.
 
-## <a id='create-multi-dc'></a>Set up a Leader-Follower Across Multiple Foundations
+## <a id='set-up-multi-dc'></a>Set up a Leader-Follower Across Multiple Foundations
 
-To set up a Leader-Follower service instance of MySQL for PCF across multiple foundations, do the following:
+To set up a leader-follower service instance of MySQL for PCF across multiple foundations, do the following:
 
-1. Create a service instance of topology `pxc-single-node` in your **primary** foundation by doing the following:
+
+### <a id='create-multi-dc'></a>Create Leader-Follower Service Instance
+
+Tell them to set up leader in primary and follower in secondary 
+
+To ....:
+
+1. Create a `pxc-single-node` service instance in your primary foundation by doing the following:
     
     1. Log into the PCF deployment for your primary foundation by running the following command:
       
@@ -37,20 +44,20 @@ To set up a Leader-Follower service instance of MySQL for PCF across multiple fo
         ```
         Where `PRIMARY-API-URL` is the API endpoint for the primary foundation. 
 
-    1. Create a service instance of topology `pxc-single-node` by running the following command:
+    1. Create a primary service instance by running the following command:
 
         ```
-        cf create-service p.mysql PLAN SERVICE-INSTANCE
+        cf create-service p.mysql PLAN PRIMARY-INSTANCE
         ```
 
         Where:
-        - `PLAN` is the name of the MySQL for PCF PXC single node plan you want to use.
-        - `SERVICE-INSTANCE` is a name you choose to identify the service instance.
+        - `PLAN` is the name of the MySQL for PCF `pxc-single-node` plan you want to use.
+        - `PRIMARY-INSTANCE` is a name you choose to identify the service instance.
         This name appears under `service` in output from `cf services`. 
         
-        **Note**: Don't name it `leader` because it will get confusing when you fail over.
+        <p class="note"><strong>Note:</strong> Do not name your service instance it `leader` because it will get confusing when you fail over.
 
-    1. (Optional) Watch the progress of the service instance creation by entering the following command and wait for the `last operation` for
+    1. (Optional) Watch the progress of the service instance creation by running the following command and waiting for the `last operation` for
     your instance to show as `create succeeded`.
 
         ```
@@ -71,90 +78,97 @@ To set up a Leader-Follower service instance of MySQL for PCF across multiple fo
 
     If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-1. Create a service instance of topology `pxc-single-node` in your **secondary** foundation by repeating the above step, replacing references to **PRIMARY** with **SECONDARY**. 
+1. Create a `pxc-single-node` service instance in your secondary foundation by repeating the above step and replacing references to primary with secondary. 
 
-**The following steps assume that you will set up the leader instance as the `primary-node` in the primary foundation, and the follower instance as the `follower-node` in the secondary foundation.**
+### <a id='create-service-key'></a>Create Leader-Follower Service Instance Service Key
+
+The following steps assume that you have set up the leader service instance as the `primary-node` in the primary foundation, and the follower service instance as the `secondary-node` in the secondary foundation.
+In [Create Leader-Follower Service Instance](#create-multi-dc)
+
+Otherwise reverse it?
     
-1. Create a service key for the follower service instance in your secondary foundation by running the following command:
+1. Create a service key for the service instance in your secondary foundation by running the following command:
 
     ```
-    cf create-service-key FOLLOWER-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "host-info"}
+    cf create-service-key SECONDARY-INSTANCE SERVICE-KEY -c '{"replication-request": "host-info"}
     ```
     Where: 
-    + `FOLLOWER-INSTANCE` is name of the follower service instance you created in step 1b above. 
-    + `SERVICE-KEY-NAME` is a name you choose for the service key. 
+    + `SECONDARY-INSTANCE` is name of the secondary service instance you created in step 2 of [Create Leader-Follower Service Instance](#create-multi-dc), above. 
+    + `SERVICE-KEY` is a name you choose for the service key. 
     
-    **Note**: This is a special service key that should only be used for establishing replication between a decoupled leader-follower instance.
+    <p class="note"><strong>Note:</strong> You should only use this service key for establishing replication between a decoupled leader-follower service instance.</p>
     
-1. View the `replication-credentials` for your follower service key by running the following command:
+1. View the `replication-credentials` for your service key by running the following command:
 
     ```
-    cf service-key FOLLOWER-INSTANCE SERVICE-KEY-NAME
+    cf service-key SECONDARY-INSTANCE SERVICE-KEY
     ```
     Where: 
-    + `FOLLOWER-INSTANCE` is the name of the follower service instance you created in step 1b above. 
-    + `SERVICE-KEY-NAME` is the name of the follower service key you created in step 3 above. 
+    + `SECONDARY-INSTANCE` is name of the secondary service instance you created in step 2 of [Create Leader-Follower Service Instance](#create-multi-dc), above.
+    + `SERVICE-KEY` is the name of the service key you created in step 1 above. 
     
     For example:
     
-    <pre class="terminal">$ cf service-key my-follower rep-key
+    <pre class="terminal">$ cf service-key secondary-node rep-key
       Getting key rep-key for service instance my-follower as user@example.com...
 
       {
         "replication-credentials": {
-          "hostname": "FOLLOWER.bosh",
-          "ip": "FOLLOWER_IP",
+          "hostname": "secondary.bosh",
+          "ip": "10.0.19.12",
           "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
         }
       }</pre>
 1. Record the output of the above command.
-1. Log into the PCF deployment for your leader service instance by running the following command:
+1. Log into the PCF deployment for your primary foundation by running the following command:
 
     ```
-    cf login API-URL
+    cf login PRIMARY-API-URL
     ```
-    Where `API-URL` is the API endpoint for the deployment for your leader service instance.  
+    Where `PRIMARY-API-URL` is the API endpoint for the primary foundation. 
 
-1. Update your leader service instance with the follower `replication-credentials` by running the 
+1. Update your primary service instance with the secondary service key `replication-credentials` by running the 
 following command:
     
     ```
-    cf update-service LEADER-INSTANCE -c REPLICATION-CREDS
+    cf update-service PRIMARY-INSTANCE -c REPLICATION-CREDS
     ```
-    Where `REPLICATION-CREDS` is the output you recorded in step 5 above. 
+    Where:
+    + `PRIMARY-INSTANCE` is name of the primary service instance you created in step 1 of [Create Leader-Follower Service Instance](#create-multi-dc), above
+    + `REPLICATION-CREDS` is the output you recorded in step 3 above. 
     
     For example:
-    <pre class="terminal">cf update-service my-leader -c {"replication-credentials":{
-      "hostname": "q-n3s3y1.q-g1188.bosh",
+    <pre class="terminal">cf update-service primary-node -c {"replication-credentials":{
+      "hostname": "secondary.bosh",
       "ip": "10.0.18.12",
       "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
       }
     }</pre>
-1. Create a service key for your leader service instance by running the following command:
+1.  Create a service key for the service instance in your primary foundation by running the following command:
 
     ```
-    cf create-service-key LEADER-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "credentials"}
+    cf create-service-key PRIMARY-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "credentials"}
     ```
     Where: 
-    + `LEADER-INSTANCE` is the name of the leader service instance you created in step 1b above. 
+    + `PRIMARY-INSTANCE` is name of the primary service instance you created in step 1 of [Create Leader-Follower Service Instance](#create-multi-dc), above
     + `SERVICE-KEY-NAME` is a name you choose for the service key. 
-1. View the `replication-credentials` for your leader service key by running the following command:
+1. View the `replication-credentials` for your service key by running the following command:
 
     ```
-    cf service-key LEADER-INSTANCE SERVICE-KEY-NAME
+    cf service-key PRIMARY-INSTANCE SERVICE-KEY-NAME
     ```
     Where: 
-    + `LEADER-INSTANCE` is the name of the leader service instance you created in step 1b above. 
-    + `SERVICE-KEY-NAME` is the name of the leader service key you created in step 7 above. 
+    + `PRIMARY-INSTANCE` is name of the primary service instance you created in step 1 of [Create Leader-Follower Service Instance](#create-multi-dc), above
+    + `SERVICE-KEY-NAME` is the name of the primary service key you created in step 6 above. 
     
     For example:
     
-    <pre class="terminal">$ cf service-key my-leader rep-key
-      Getting key rep-key for service instance my-leader as user@example.com...
+    <pre class="terminal">$ cf service-key primary-node rep-key
+      Getting key rep-key for service instance primary as user@example.com...
 
       {
         "replication-credentials": {
-          "hostname": "q-n3s3y1.q-g1181.bosh",
+          "hostname": "primary.bosh",
           "ip": "10.0.17.12",
           "password": "a22aaa2a2a2aaaaa",
           "port": 3306,
@@ -164,24 +178,25 @@ following command:
       }</pre>
     
 1. Record the output of the above command.
-1. Log into the PCF deployment for your follower service instance by running the following command:
+1. Log into the PCF deployment for your secondary foundation by running the following command:
 
     ```
-    cf login API-URL
+    cf login SECONDARY-API-URL
     ```
-    Where `API-URL` is the API endpoint for the deployment for your follower service instance. 
+    Where `SECONDARY-API-URL` is the API endpoint for the secondary foundation. 
     
-1. Update your follower service instance with the leader `replication-credentials` by 
-running the following command:
+1. Update your secondary service instance with the primary service key `replication-credentials` by running the following command:
 
     ```
-    cf update-service FOLLOWER-INSTANCE -c REPLICATION-CREDS
+    cf update-service SECONDARY-INSTANCE -c REPLICATION-CREDS
     ```
-    Where `REPLICATION-CREDS` is the output you recorded in step 10 above. 
+    Where 
+    + `SECONDARY-INSTANCE` is name of the secondary service instance you created in step 2 of [Create Leader-Follower Service Instance](#create-multi-dc), above
+    + `REPLICATION-CREDS` is the output you recorded in step 8 above. 
     
     For example:
-    <pre class="terminal"> cf update-service my-follower -c {"replication-credentials":{
-      "hostname": "q-n3s3y1.q-g1181.bosh",
+    <pre class="terminal"> cf update-service secondary-node -c {"replication-credentials":{
+      "hostname": "primary.bosh",
       "ip": "10.0.17.12",
       "password": "a22aaa2a2a2aaaaa",
       "port": 3306,
