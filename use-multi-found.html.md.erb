@@ -53,7 +53,7 @@ Before you use MySQL for PCF across multiple foundations, you have the following
 Set up a leader-follower service instance of MySQL for PCF across multiple foundations by doing the following:
 
 1. [Create a Leader-Follower Service Instance](#create-multi-dc)
-1. [Create Service Keys for `<%= vars.single_leader_plan %>` Service Instances](#create-service-key)
+1. [Create Service Keys for <%= vars.single_leader_plan %> Service Instances](#create-service-key)
 
 ### <a id='create-multi-dc'></a>Create a Leader-Follower Service Instance
 
@@ -110,7 +110,7 @@ Create a leader-follower service instance by doing the following:
 
 1. Create a `<%= vars.single_leader_plan %>` service instance in your secondary foundation by repeating step 1, above, and replacing references to primary with secondary. 
 
-### <a id='create-service-key'></a>Create Service Keys for `<%= vars.single_leader_plan %>` Service Instances
+### <a id='create-service-key'></a>Create Service Keys for <%= vars.single_leader_plan %> Service Instances
 
 After you create the leader and follower `<%= vars.single_leader_plan %>` service instances, you must create service keys. You should only use these service keys for establishing replication between `<%= vars.single_leader_plan %>` service instances. 
 
