@@ -19,7 +19,7 @@ You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-con
 To use MySQL for PCF with your PCF apps, you need:
 
 * Decide what type of plan you want from the following options: single node, leader-follower, and highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
-* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).  
+* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).
 * A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 * A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the PCF installation
@@ -119,14 +119,14 @@ For example:
 ## <a id='create'></a>Create a Service Instance
 
 On-demand services are created asynchronously, not immediately.
-The `watch` command shows you when your service instance is ready to bind and use. 
+The `watch` command shows you when your service instance is ready to bind and use.
 
 To create an instance of the MySQL for PCF service, do one of the following:
 
-+ If you are creating a single node, leader-follower, or highly available cluster service instance within one foundation, 
++ If you are creating a single node, leader-follower, or highly available cluster service instance within one foundation,
 do the procedure in [Create a MySQL for PCF Service Instance](#create-mysql), below.
-+ If you are deploying a leader-follower service instance across multiple foundations, 
-do the procedure in [Set up a Leader-Follower Across Multiple Foundations](./use-multi-found.html#set-up-multi-dc). 
++ If you are deploying a leader-follower service instance across multiple foundations,
+do the procedure in [Set Up a Leader-Follower across Multiple Foundations](./use-multi-found.html#set-up-multi-dc). 
 
 ### <a id='create-mysql'></a>Create a MySQL for PCF Service Instance
 
@@ -207,7 +207,7 @@ To access the MySQL service from your app:
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
-  
+
 ###<a id="share"></a> Share Service Instances
 
 In MySQL for PCF, you can share service instances between different orgs and spaces.
@@ -216,22 +216,22 @@ For more information about sharing service instances,
 see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/sharing-instances.html).
 
 ###<a id="schema"></a>Create and Use Custom Schemas
-  
+
   MySQL for PCF v2.3 and later supports multiple custom schemas.
   You can use custom schemas with apps that share a MySQL service instance to isolate app data by schema.
-  By default, service bindings use the default schema `service_instance_db`. 
-  
+  By default, service bindings use the default schema `service_instance_db`.
+
   To use custom schemas in your apps do the following:
-  
-  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation. 
+
+  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
   <br><br>
     For more information about the `CREATE DATABASE` SQL statement, see [
     13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
-    
-  2. To modify your app to use your custom schema, do one of the following: 
-    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema. 
+
+  2. To modify your app to use your custom schema, do one of the following:
+    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema.
     + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP_SERVICES`.
-    
+
     For more information about the environment variable credentials hash `VCAP_SERVICES`, see [MySQL Environment Variables](./reference.html).
   3. Push your app using `cf push`.
 
@@ -317,7 +317,7 @@ that the instance no longer exists:
     ```
     watch cf service SERVICE-INSTANCE
     ```
-    
+
 ## <a id="logging"></a> Access MySQL Metrics for On-Demand Service Instances
 
 <%= partial '../../p-mysql/odb/log-cache-cli-plugin' %>

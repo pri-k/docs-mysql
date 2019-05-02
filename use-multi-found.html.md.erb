@@ -1,11 +1,11 @@
 ---
-title: Using MySQL for PCF Across Multiple Foundations 
+title: Using MySQL for PCF across Multiple Foundations
 owner: MySQL
 ---
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) 
-across multiple foundations. 
+This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF)
+across multiple foundations.
 
 <!-- LINK OUT TO DEF OF PXC SINGLE NODE, PRIMARY / SECONDARY   -->
 <!-- WHAT HAPPENS IF THEY MESS THIS UP - T-SHOOTING -->
@@ -13,22 +13,22 @@ across multiple foundations.
 <!-- THERE WILL BE MORE PROCEDURES ON THIS PAGE -->
 
 <!-- SOME OF THIS COULD BE IN AN ARCH DOC -->
-## <a id="overview"></a>Overview 
+## <a id="overview"></a>Overview
 
-In MySQL for PCF v2.6 and later, you can deploy two `<%= vars.single_leader_plan %>`service instances 
+In MySQL for PCF v2.6 and later, you can deploy two `<%= vars.single_leader_plan %>`service instances
 in separate BOSH deployments across multiple foundations to create a leader-follower topology.
-  
-In the multiple foundation context, the two `<%= vars.single_leader_plan %>`service instances are 
+
+In the multiple foundation context, the two `<%= vars.single_leader_plan %>`service instances are
 referred to as a leader-follower service instance.
-This leader-follower typology enables you to spread a leader-follower service instance across orgs, spaces, 
+This leader-follower typology enables you to spread a leader-follower service instance across orgs, spaces,
 foundations, or data centers.
 
-<p class="note"><strong>Note:</strong> A leader-follower service instance deployed across multiple 
-  foundations is different from the standard leader-follower plan that MySQL for PCF offers. 
-  For information about the standard leader-follower plan, 
+<p class="note"><strong>Note:</strong> A leader-follower service instance deployed across multiple
+  foundations is different from the standard leader-follower plan that MySQL for PCF offers.
+  For information about the standard leader-follower plan,
   see <a href="./about-leader-follower.html">About Leader-Follower</a>.</p>
 
-Operators can configure multiple foundations to be in the same data center 
+Operators can configure multiple foundations to be in the same data center
 or spread across multiple data centers. This is useful for the following use cases:
 
 * Active-Passive Disaster Recovery strategy
@@ -38,17 +38,17 @@ or spread across multiple data centers. This is useful for the following use cas
 <!-- ### Terminology -->
 <!-- * Primary Foundation -->
 <!-- * Secondary Foundation -->
-  
+
 For more information about multiple foundation architecture, see [SOME LINK TO ARCH PAGE]().
 
 ## <a id="prereq"></a>Prerequisites
 
-Before you use MySQL for PCF across multiple foundations, you have the following:
+Before you use MySQL for PCF across multiple foundations, you must have the following:
 
-+ Operator enable access to the `<%= vars.single_leader_plan %>` plan 
-+ An operator configured multiple foundation architecture including a primary and secondary foundation 
++ Access to the `<%= vars.single_leader_plan %>` plan
++ An operator configured multiple foundation architecture including a primary and secondary foundation
 
-## <a id='set-up-multi-dc'></a>Set up a Leader-Follower Service Instance Across Multiple Foundations
+## <a id='set-up-multi-dc'></a>Set Up a Leader-Follower Service Instance across Multiple Foundations
 
 Set up a leader-follower service instance of MySQL for PCF across multiple foundations by doing the following:
 
@@ -57,20 +57,27 @@ Set up a leader-follower service instance of MySQL for PCF across multiple found
 
 ### <a id='create-multi-dc'></a>Create a Leader-Follower Service Instance
 
-To create a leader-follower service instance across multiple foundations, you must create `<%= vars.single_leader_plan %>` service instances in your primary and secondary foundations.
+To create a leader-follower service instance across multiple foundations, you
+must create a `<%= vars.single_leader_plan %>` service instance in two different
+foundations.
 
-You should create the leader `<%= vars.single_leader_plan %>` service instance in your primary foundation and the follower `<%= vars.single_leader_plan %>` service instance in your secondary foundation.
+Pivotal recommends that you create the leader `<%= vars.single_leader_plan %>` service instance
+in your primary foundation and the follower `<%= vars.single_leader_plan %>`
+service instance in your secondary foundation.
 
 Create a leader-follower service instance by doing the following:
 
 1. Create a `<%= vars.single_leader_plan %>` service instance in your primary foundation by doing the following:
-    
-    1. Log into the PCF deployment for your primary foundation by running the following command:
-      
+
+    1. Log in to the PCF deployment for your primary foundation by running the following command:
+
         ```
         cf login PRIMARY-API-URL
         ```
-        Where `PRIMARY-API-URL` is the API endpoint for the primary foundation. 
+        Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
+        <br><br>
+        For example:
+        <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
 
     1. Create a primary service instance by running the following command:
 
@@ -81,23 +88,26 @@ Create a leader-follower service instance by doing the following:
         Where:
         - `PLAN` is the name of the MySQL for PCF `<%= vars.single_leader_plan %>` plan you want to use.
         - `PRIMARY-INSTANCE` is a name you choose to identify the service instance.
-        This name appears under `service` in output from `cf services`. 
-        
+        This name appears under `service` in output from `cf services`.
+
         For example:
-        
+
         <pre class="terminal">$ cf create-service p.mysql db-small primary-node<br>
         Creating service primary-node in org my-org / space my-space as user<span>@</span>example.com...
         OK</pre>
-        
-        <p class="note"><strong>Note:</strong> Do not name your service instance <code>leader</code> or <code>follower</code>. If you trigger a failover, the service instances in your primary and secondary foundations switch roles.</p>
+
+        <p class="note"><strong>Note:</strong> Do not name your service instance
+          <code>leader</code> or <code>follower</code>. If you trigger a failover,
+          the service instances in your primary and secondary foundations switch roles.</p>
 
     1. (Optional) Watch the progress of the service instance creation by running the following command:
 
         ```
         watch cf services
         ```
-        
+
         Wait for the `last operation` for your instance to show as `create succeeded`.
+        <br><br>
         For example:
 
         <pre class="terminal">$ watch cf services<br>
@@ -108,40 +118,51 @@ Create a leader-follower service instance by doing the following:
       </pre>
         If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
-1. Create a `<%= vars.single_leader_plan %>` service instance in your secondary foundation by repeating step 1, above, and replacing references to primary with secondary. 
+1. Create a `<%= vars.single_leader_plan %>` service instance in your secondary
+foundation by repeating step 1, above, and replacing references to primary with secondary.
 
 ### <a id='create-service-key'></a>Create Service Keys for <%= vars.single_leader_plan %> Service Instances
 
-After you create the leader and follower `<%= vars.single_leader_plan %>` service instances, you must create service keys. You should only use these service keys for establishing replication between `<%= vars.single_leader_plan %>` service instances. 
+After you create the leader and follower `<%= vars.single_leader_plan %>` service instances, you must create service keys.
+You only use these service keys for establishing replication between `<%= vars.single_leader_plan %>` service instances.
 
-The following steps assume that you have created the leader `<%= vars.single_leader_plan %>` service instance in the primary foundation and the follower `<%= vars.single_leader_plan %>` service instance in the secondary foundation. You created these service instances in [Create a Leader-Follower Service Instance](#create-multi-dc), above. 
+The following steps assume that you have created the leader `<%= vars.single_leader_plan %>`
+service instance in the primary foundation and the follower `<%= vars.single_leader_plan %>`
+service instance in the secondary foundation. You created these service instances in
+[Create a Leader-Follower Service Instance](#create-multi-dc), above.
 
 Create the service keys for your `<%= vars.single_leader_plan %>` service instances by doing the following:
-    
+
 1. Create a service key for the service instance in your secondary foundation by running the following command:
 
     ```
     cf create-service-key SECONDARY-INSTANCE SERVICE-KEY -c '{"replication-request": "host-info"}
     ```
-    Where: 
-    + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above. 
-    + `SERVICE-KEY` is a name you choose for the service key. 
-    
-    
-    
+    Where:
+    + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
+    step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    + `SERVICE-KEY` is a name you choose for the service key.
+    <br><br>
+    For example:
+    <pre class="terminal">cf create-service-key secondary-node rep-key -c '{"replication-request": "credentials" }'
+        Creating service key rep-key for service instance secondary-node as user<span>@</span>example.com...
+        OK
+    </pre>
+
 1. View the `replication-credentials` for your service key by running the following command:
 
     ```
     cf service-key SECONDARY-INSTANCE SERVICE-KEY
     ```
-    Where: 
-    + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
-    + `SERVICE-KEY` is the name of the service key you created in step 1, above. 
-    
+    Where:
+    + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
+    step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    + `SERVICE-KEY` is the name of the service key you created in step 1, above.
+
     For example:
-    
+
     <pre class="terminal">$ cf service-key secondary-node rep-key
-      Getting key rep-key for service instance my-follower as user@example.com...
+      Getting key rep-key for service instance secondary-node as user@example.com...
 
       {
         "replication-credentials": {
@@ -151,49 +172,63 @@ Create the service keys for your `<%= vars.single_leader_plan %>` service instan
         }
       }</pre>
 1. Record the output of the above command.
-1. Log into the PCF deployment for your primary foundation by running the following command:
+1. Log in to the PCF deployment for your primary foundation by running the following command:
 
     ```
     cf login PRIMARY-API-URL
     ```
-    Where `PRIMARY-API-URL` is the API endpoint for your primary foundation. 
+    Where `PRIMARY-API-URL` is the API endpoint for your primary foundation.
+    <br><br>
+    For example:
+    <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
 
-1. Update your primary service instance with the secondary service key by running the 
+1. Update your primary service instance with the secondary service key by running the
 following command:
-    
+
     ```
     cf update-service PRIMARY-INSTANCE -c REPLICATION-CREDS
     ```
     Where:
-    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
-    + `REPLICATION-CREDS` is the output you recorded in step 3, above. 
-    
+    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
+    step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    + `REPLICATION-CREDS` is the output you recorded in step 3, above.
+
     For example:
-    <pre class="terminal">cf update-service primary-node -c {"replication-credentials":{
-      "hostname": "secondary.bosh",
-      "ip": "10.0.18.12",
-      "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
-      }
+    <pre class="terminal">cf update-service primary-node -c {"replication-credentials":{ \
+      "hostname": "secondary.bosh", \
+      "ip": "10.0.18.12", \
+      "uuid": "ab12cd34-5678-91e2-345f-67891h234567" \
+      } \
     }</pre>
-1.  Create a service key for the service instance in your primary foundation by running the following command:
+1.  Create a service key for the service instance in your primary foundation by
+    running the following command:
 
     ```
     cf create-service-key PRIMARY-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "credentials"}
     ```
-    Where: 
-    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
-    + `SERVICE-KEY-NAME` is a name you choose for the service key. 
+    Where:
+    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
+    step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    + `SERVICE-KEY-NAME` is a name you choose for the service key.
+    <br><br>
+    For example:
+    <pre class="terminal">cf create-service-key primary-node rep-key -c '{"replication-request": "credentials" }'
+        Creating service key rep-key for service instance primary-node as user<span>@</span>example.com...
+        OK
+    </pre>
+    <p class="note"><strong>Note:</strong> The <code>-c </code> flag is different than the one in step 1.</p>
 1. View the `replication-credentials` for your service key by running the following command:
 
     ```
     cf service-key PRIMARY-INSTANCE SERVICE-KEY-NAME
     ```
-    Where: 
-    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
-    + `SERVICE-KEY-NAME` is the name of the primary service key you created in step 6, above. 
-    
+    Where:
+    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in step 1
+    of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    + `SERVICE-KEY-NAME` is the name of the primary service key you created in step 6, above.
+
     For example:
-    
+
     <pre class="terminal">$ cf service-key primary-node rep-key
       Getting key rep-key for service instance primary as user@example.com...
 
@@ -207,15 +242,18 @@ following command:
           "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
         }
       }</pre>
-    
+
 1. Record the output of the above command.
-1. Log into the PCF deployment for your secondary foundation by running the following command:
+1. Log in to the PCF deployment for your secondary foundation by running the following command:
 
     ```
     cf login SECONDARY-API-URL
     ```
-    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation. 
-    
+    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation.
+    <br><br>
+    For example:
+    <pre class="terminal">$ cf login https<span>:</span>//secondary.example.com</pre>
+
 1. Update your secondary service instance with the primary service key by running the following command:
 
     ```
@@ -223,16 +261,15 @@ following command:
     ```
     Where:
     + `SECONDARY-INSTANCE` is name of the secondary service instance you created in step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
-    + `REPLICATION-CREDS` is the output you recorded in step 8, above. 
-    
+    + `REPLICATION-CREDS` is the output you recorded in step 8, above.
+
     For example:
-    <pre class="terminal"> cf update-service secondary-node -c {"replication-credentials":{
-      "hostname": "primary.bosh",
-      "ip": "10.0.17.12",
-      "password": "a22aaa2a2a2aaaaa",
-      "port": 3306,
-      "username": "6bf07ae455a14064a9073cec8696366c",
-      "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
-      }
+    <pre class="terminal"> cf update-service secondary-node -c {"replication-credentials":{ \
+      "hostname": "primary.bosh", \
+      "ip": "10.0.17.12", \
+      "password": "a22aaa2a2a2aaaaa", \
+      "port": 3306, \
+      "username": "6bf07ae455a14064a9073cec8696366c", \
+      "uuid": "zy98xw76-5432-19v8-765u-43219t876543" \
+      } \
     }</pre>
-    
