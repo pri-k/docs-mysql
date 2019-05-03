@@ -61,31 +61,36 @@
 #### <a id="connections"></a> Connections
 
 <table>
-   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin_v2 %>/net/connections<br><br></th></tr>
+   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin_v2 %>/net/max_connections<br><br>
+     <%= vars.mysql_metrics_origin_v2 %>/net/max_used_connections</th></tr>
    <tr>
       <th width="25%">Description</th>
-      <td>The rate of connections to the server, shown as connections per second.<br><br>
+      <td>The maximum number of connections used over the maximum permitted number of simultaneous client connections.<br><br>
 
-      <strong>Use</strong>: If the number of connections drastically changes or if apps are unable to connect, there might be  a network or app issue.</p>
+      <strong>Use</strong>: If the number of connections drastically changes or if apps are unable 
+      to connect, there might be a network or app issue.</p>
       <strong>Origin</strong>: Doppler/Firehose<br>
       <strong>Type</strong>: count<br>
       <strong>Frequency</strong>: 30 s<br>
    </tr>
    <tr>
       <th>Recommended measurement</th>
-      <td>(Number of connections / Max connections) over last 1 minute</td>
+      <td><code>max_used_connections</code> / <code>max_connections</code></td>
    </tr>
    <tr>
       <th>Recommended alert thresholds</th>
-      <td><strong>Yellow warning</strong>: &gt; 80 <br>
-      <strong>Red critical</strong>: &gt; 90</td>
+      <td><strong>Yellow warning</strong>: &gt; 80 % <br>
+      <strong>Red critical</strong>: &gt; 90 %</td>
    </tr>
    <tr>
       <th>Recommended response</th>
-      <td>When approaching 100% of max connections, apps may be experiencing times when they cannot connect to the database.
-          The connections/second for a service instance vary based on application instances and app utilization.
-          If this metric is met or exceeded for an extended period of time, 
-          monitor app usage to ensure everything is behaving as expected.
+      <td>If this measurement mets or exceeds 80% with linear growth, 
+          increase the value of <code>max_connections</code>. <br><br> If this measurement mets or exceeds 
+          80% with exponential growth, monitor app usage to ensure everything 
+          is behaving as expected. <br><br>
+          When approaching 100% of max connections, apps may be experiencing times when they 
+          cannot connect to the database.
+          The connections/second for a service instance vary based on app instances and app utilization.
       </td>
    </tr>
 </table>
