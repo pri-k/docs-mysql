@@ -86,7 +86,11 @@
     },
     
     {
-      metric: '/net/connections' ,
+      metric: <<~DESC,
+        /net/max_connections<br><br>
+        /p.mysql/net/max_used_connections
+      DESC
+       
       description: <<~DESC,
         The rate of connections to the server, shown as connections per second.<br><br>
 
@@ -96,15 +100,21 @@
         <strong>Frequency</strong>: 30 s
       DESC
 
-      measurement: 	'(Number of connections / Max connections) over last 1 minute',
-      alert: <<~DESC,
-        <strong>Yellow warning</strong>: &gt; 80 <br>
-        <strong>Red critical</strong>: &gt; 90
+      measurement: <<~DESC,	
+        <code>max_used_connections</code> / <code>max_connections</code>
       DESC
-      response: 'When approaching 100% of max connections, apps may be experiencing times when they cannot connect to the database.
-          The connections/second for a service instance vary based on application instances and app utilization.
-          If this metric is met or exceeded for an extended period of time,
-          monitor app usage to ensure everything is behaving as expected.',
+      
+      alert: <<~DESC,
+        <strong>Yellow warning</strong>: &gt; 80 %<br>
+        <strong>Red critical</strong>: &gt; 90 %
+      DESC
+      response: 'If this measurement mets or exceeds 80% with linear growth, 
+          increase the value of <code>max_connections</code>. <br><br> If this measurement mets or exceeds 
+          80% with exponential growth, monitor app usage to ensure everything 
+          is behaving as expected. <br><br>
+          When approaching 100% of max connections, apps may be experiencing times when they 
+          cannot connect to the database.
+          The connections/second for a service instance vary based on app instances and app utilization.',
       id: 'connections',
       header: 'Connections'
     },
