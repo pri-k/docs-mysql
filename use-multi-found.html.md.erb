@@ -4,7 +4,7 @@ owner: MySQL
 ---
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF)
+This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) for replication
 across multiple foundations.
 
 <!-- LINK OUT TO DEF OF PXC SINGLE NODE, PRIMARY / SECONDARY   -->
@@ -12,13 +12,12 @@ across multiple foundations.
 <!-- ADD LINKS BACK TO NORMAL USING DOC? -->
 <!-- THERE WILL BE MORE PROCEDURES ON THIS PAGE -->
 
-<!-- SOME OF THIS COULD BE IN AN ARCH DOC -->
 ## <a id="overview"></a>Overview
 
 In MySQL for PCF v2.6 and later, you can deploy two `<%= vars.single_leader_plan %>`service instances
 in separate BOSH deployments across multiple foundations to create a leader-follower topology.
   
-In the multiple foundation context, the two `<%= vars.single_leader_plan %>`service instances are 
+In the multi-foundation context, the two `<%= vars.single_leader_plan %>`service instances are 
 referred to as a decoupled leader-follower service instance.
 
 <p class="note"><strong>Note:</strong> A decoupled leader-follower service instance deployed across multiple 
@@ -26,25 +25,14 @@ referred to as a decoupled leader-follower service instance.
   For information about the coupled leader-follower plan, 
   see <a href="./about-leader-follower.html">About Leader-Follower</a>.</p>
 
-Operators can configure multiple foundations to be in the same data center
-or spread across multiple data centers. This is useful for the following use cases:
-
-* Active-Passive Disaster Recovery strategy
-* Active-Active Disaster Recovery strategy
-* Off-Platform Access
-
-<!-- ### Terminology -->
-<!-- * Primary Foundation -->
-<!-- * Secondary Foundation -->
-
-For more information about multiple foundation architecture, see [SOME LINK TO ARCH PAGE]().
+For more information about multi-foundation architecture, see [About Multi-Foundation Replication](./about-multi-found.html).
 
 ## <a id="prereq"></a>Prerequisites
 
 Before you use MySQL for PCF across multiple foundations, you must have the following:
 
 + Access to the `<%= vars.single_leader_plan %>` plan
-+ An operator configured multiple foundation architecture including a primary and secondary foundation
++ An operator configured multi-foundation architecture
 
 ## <a id='set-up-multi-dc'></a>Set Up a Leader-Follower Service Instance across Multiple Foundations
 
