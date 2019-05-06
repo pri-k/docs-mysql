@@ -14,6 +14,9 @@ replication using MySQL for Pivotal Cloud Foundry (PCF).
 
 ##<a id='overview'></a> Overview
 
+<!-- Quick reasons why you would want to use this and what it is. Super summary of
+the About page-->
+
 For more information about multi-foundation architecture, 
 see [About Multi-Foundation Replication](./about-multi-found.html).
 
@@ -26,10 +29,10 @@ To create and configure PCF foundations for multi-foundation replication, do the
 1. Determine the multi-foundation topology you want to use. You can use one of the following:
       + **Passive-Active:** Pivotal recommends this topology for most apps. 
       If you use passive-active typology, you must create a primary foundation and a secondary foundation. 
-      For more information, see [Active-Passive Topology](#active-passive). 
+      For more information, see [Active-Passive Topology](./about-multi-found.html#active-passive). 
       + **Active-Active:** Pivotal recommends this topology for apps with critical workloads 
       that require high app uptime. If you use active-active typology, you must create two primary foundations. 
-      For more information, see [Active-Active Topology](#active-active). 
+      For more information, see [Active-Active Topology](./about-multi-found.html#active-active). 
 
 1. Create two PCF foundations with identical release versions. The foundations should also have as similar as possible configurations and capacity. 
 
@@ -40,12 +43,13 @@ To create and configure PCF foundations for multi-foundation replication, do the
 After two PCF foundations are created, you can enable multi-foundation replication by 
 doing the following:
 
+1. A operator [DOES THINGS]. See [Required Networking Rules for Multi-Foundation Replication](./about.html#multi-found-ports).
+
+1. A operator [DOES THINGS]. See [Preparing for TLS](./prepare-tls.html).
+
 1. An operator configures a <%= vars.single_leader_plan %> plan on both foundations. See
 [Configure Service Plans](./install-config.html#active).
 
 1. A developer creates and configures <%= vars.single_leader_plan %> service instances in both foundations. 
 See [Using MySQL for PCF](./use.html) 
 and [Using MySQL for PCF across Multiple Foundations](./use-multi-found.html).
-
-
-      
