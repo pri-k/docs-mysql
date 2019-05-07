@@ -1,5 +1,5 @@
 ---
-title: Using MySQL for PCF across Multiple Foundations
+title: Using MySQL for PCF Multi-Foundation Replication
 owner: MySQL
 ---
 <strong><%= modified_date %></strong>
@@ -12,6 +12,7 @@ across multiple foundations.
 <!-- ADD LINKS BACK TO NORMAL USING DOC? -->
 <!-- THERE WILL BE MORE PROCEDURES ON THIS PAGE -->
 <!-- IF YOU UPDATE PLAN TO SOMETHING TRHAT IS NOT PXC-SINGLE-NODE BAD STUFF HAPPENS -->
+<!-- UPDATE UPDATE-SERVICE COMMAND TO INCLUDE `replication-role:follower`? CHECK WHEN ACCEPTED #163158711 -->
 
 ## <a id="overview"></a>Overview
 
@@ -39,8 +40,11 @@ Before you use MySQL for PCF across multiple foundations, you must have the foll
 
 Set up a leader-follower service instance of MySQL for PCF across multiple foundations by doing the following:
 
-1. [Create a Leader-Follower Service Instance](#create-multi-dc)
-1. [Create Service Keys for <%= vars.single_leader_plan %> Service Instances](#create-service-key)
+1. [Confirm the MySQL for PCF Service Availability](use.html#marketplace)
+1. [Create a Leader-Follower Service Instance](#create-multi-dc), below
+1. [Create Service Keys for <%= vars.single_leader_plan %> Service Instances](#create-service-key), below  
+1. [Bind a Leader-Follower Service Instance to Your App](#bind), below
+5. [Use the MySQL Service in Your App](use.html#call)
 
 ### <a id='create-multi-dc'></a>Create a Leader-Follower Service Instance
 
@@ -227,7 +231,8 @@ following command:
           "port": 3306,
           "username": "6bf07ae455a14064a9073cec8696366c",
           "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
-        }
+        },
+        "replication-role": "follower"
       }</pre>
 
 1. Record the output of the above command.
@@ -252,30 +257,58 @@ following command:
 
     For example:
     <pre class="terminal"> cf update-service secondary-node -c {"replication-credentials":{ \
-      "hostname": "primary.bosh", \
-      "ip": "10.0.17.12", \
-      "password": "a22aaa2a2a2aaaaa", \
-      "port": 3306, \
-      "username": "6bf07ae455a14064a9073cec8696366c", \
-      "uuid": "zy98xw76-5432-19v8-765u-43219t876543" \
-      } \
+        "hostname": "primary.bosh", \
+        "ip": "10.0.17.12", \
+        "password": "a22aaa2a2a2aaaaa", \
+        "port": 3306, \
+        "username": "6bf07ae455a14064a9073cec8696366c", \
+        "uuid": "zy98xw76-5432-19v8-765u-43219t876543" \
+      }, \
+      "replication-role": "follower" \
     }</pre>
     
-## <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
+### <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
 
-<%# Do you just have to run `cf bind-service APP SERVICE-INSTANCE` 
-in both foundations with their respective service instances? %>
+For an app to use a multi-foundation leader-follower service instance, you must bind the app to 
+your primary and secondary service instances. You must do this after every time you run `cf push`.
 
-## <a id='use'></a>Use a Leader-Follower Service Instance in Your App
+To bind an app to a leader-follower service instance, do the following:
 
-## <a id='manage'></a>Manage a Leader-Follower Service Instance
+1. Bind your app to your primary service instance by doing the following:
+    1. Log in to the PCF deployment for your primary foundation by running the following command:
 
-### <a id='unbind'></a>Unbind App from a Leader-Follower Service Instance
+      ```
+      cf login PRIMARY-API-URL
+      ```
+      Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
+      <br><br>
+      For example:
+      <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
+    
+    1. Push your app into the same space as the leader-follower service instance by running the following
+    command:
+    
+      ```
+      cf push
+      ```
+    
+    1. Bind your app to your primary service instance by running the following command:
 
-<%# Do you just have to run `cf unbind-service APP SERVICE-INSTANCE` 
-in both foundations with their respective service instances? %>
+      ```
+      cf bind-service APP PRIMARY-SERVICE-INSTANCE
+      ```
+      Where: 
+      - `APP` is the app you want to use the leader-follower service instance.<br>
+      - `PRIMARY-INSTANCE` is the name of the primary service instance you created in
+      step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
 
-### <a id='unbind'></a>Delete App from a Leader-Follower Service Instance
-
-<%# Do you just have to run `cf delete-service SERVICE-INSTANCE` 
-in both foundations with their respective service instances? %>
+      For example:
+      <pre class="terminal">
+      $ cf bind-service my-app primary-node<br>
+      Binding service primary-node to my-app in org my-org / space my-space as user<span>@</span>example.com...
+      OK
+      TIP: Use 'cf push' to ensure your env variable changes take effect
+      </pre>
+    
+1. Bind your app to your secondary service instance by repeating step 1, above, 
+and replacing references to primary with secondary.
