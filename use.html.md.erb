@@ -6,13 +6,35 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) service for their
-PCF apps. MySQL provides a relational database for apps and devices.
+PCF apps. 
+
+
+## <a id='overview'></a>Overview
+
+MySQL provides a relational database for apps and devices.
 
 These procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
-see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html).
+see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks using a graphical UI.
 
-You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks using a graphical UI.
+To use MySQL in a PCF app:
 
+1. Check the service availability in the Marketplace,
+   and see if there is an existing instance of MySQL for PCF in your space.
+
+    See [Confirm the MySQL for PCF Service Availability](#marketplace), below.
+
+2. If there is no existing instance or you want to use a different one,
+   create an instance of the MySQL for PCF service in the same space as the app.
+
+    See [Create a Service Instance](#create), below.
+
+4. Bind the app to the MySQL for PCF service instance, to enable the app to use MySQL.
+
+    See [Bind a Service Instance to Your App](#bind), below.
+
+5. Call the MySQL for PCF service in your app code, and then re-push your app into the space.
+
+    See [Use the MySQL Service in Your App](#call), below.
 
 ## <a id="prereqs"></a>Prerequisites
 
@@ -33,33 +55,7 @@ in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 * To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
 
 
-## <a id='process'></a>The Process for Using MySQL for PCF in Your App
 
-To use MySQL in a PCF app:
-
-1. Check the service availability in the Marketplace,
-   and see if there is an existing instance of MySQL for PCF in your space.
-
-    See [Confirm the MySQL for PCF Service Availability](#marketplace), below.
-
-2. If there is no existing instance or you want to use a different one,
-   create an instance of the MySQL for PCF service in the same space as the app.
-
-    See [Create a Service Instance](#create), below.
-
-3. Push your app into the same space as the MySQL for PCF service instance,
-   using `cf push`.
-
-    For information about `cf push`,
-   see [Push](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#push).
-
-4. Bind the app to the MySQL for PCF service instance, to enable the app to use MySQL.
-
-    See [Bind a Service Instance to Your App](#bind), below.
-
-5. Call the MySQL for PCF service in your app code, and then re-push your app into the space.
-
-    See [Use the MySQL Service in Your App](#call), below.
 
 
 
@@ -170,27 +166,34 @@ your instance to show as `create succeeded`.
 
 ## <a id="bind"></a>Bind a Service Instance to Your App
 
-For an app to use a service, you must bind the app to a service instance. Do this after you push or re-push the app using `cf push`.
+For an app to use a service, you must bind the app to a service instance.  You must do this after every time you run `cf push`.
 
-To bind an app to a MySQL for PCF instance run the following command:
+To push and bind an app to a MySQL for PCF instance run the following command:
 
-```
-cf bind-service APP SERVICE-INSTANCE
-```
+1. Push your app into the same space as your MySQL for PCF service instance by running the following command:
+  
+    ```
+    cf push
+    ```
+    
+1. Bind your app to a MySQL for PCF instance run the following command:
+  
+    ```
+    cf bind-service APP SERVICE-INSTANCE
+    ```
 
-Where:<br>
+    Where:<br>
+    - `APP` is the app you want to use the MySQL service instance.<br>
+    - `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
-- `APP` is the app you want to use the MySQL service instance.<br>
-- `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
+    For example:
 
-For example:
-
-<pre class="terminal">
-$ cf bind-service my-app my-instance<br>
-Binding service mydb to my-app in org my-org / space test as user<span>@</span>example.com...
-OK
-TIP: Use 'cf push' to ensure your env variable changes take effect
-</pre>
+    <pre class="terminal">
+    $ cf bind-service my-app my-instance<br>
+    Binding service mydb to my-app in org my-org / space test as user<span>@</span>example.com...
+    OK
+    TIP: Use 'cf push' to ensure your env variable changes take effect
+    </pre>
 
 ## <a id="call"></a>Use the MySQL Service in Your App
 
@@ -238,467 +241,6 @@ see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/servi
     For more information about the environment variable credentials hash `VCAP_SERVICES`, see [MySQL Environment Variables](./reference.html).
   3. Push your app using `cf push`.
 
-## <a id="manage"></a> Manage Service Instances
-
-This section describes tasks you do over the life cycle of your apps and data:
-
-+ Moving your data to a different plan.
-+ Removing an app's access to a service it no longer needs.
-+ Deleting a service instance that is not used.
-
-### <a id="update"></a>Update a Service Instance to a Larger Plan
-
-As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
-This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
-the database will be unavailable for several minutes.
-
-<p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
-  to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
-  
-<p class="note warning"><strong>Warning:</strong> If you are using multi-foundation replication, you must not update <%= vars.single_leader_plan %> plan to another plan. If you do this, your replication breaks.</p>
-
-To update a service instance to a larger plan, run the following command:
-
-```
-cf update-service SERVICE-INSTANCE -p PLAN
-```
-
-Where `PLAN` is the plan you want to upgrade the service instance to.
-
-For example:
-
-<pre class="terminal">
-$ cf update-service my-instance -p db-large
-</pre>
-
-
-### <a id="unbind"></a>Unbind an App from a Service Instance
-
-To stop an app from using a service it no longer needs, run the following command to unbind the app from the service:
-
-```
-cf unbind-service APP SERVICE-INSTANCE
-```
-
-Where:<br>
-
-- `APP` is the app you want to stop using the MySQL service instance. <br>
-- `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
-
-For example:
-
-<pre class="terminal">
-$ cf unbind-service my-app my-instance<br>
-Unbinding app my-app from service my-instance in org my-org / space my-space as user<span>@</span>example.com...
-OK
-</pre>
-
-### <a id="delete"></a>Delete a Service Instance
-
-You cannot delete a service instance that an app is bound to.
-
-To delete a service instance, do the following:
-
-1. Run the following command:
-
-    ```
-    cf delete-service SERVICE-INSTANCE
-    ```
-
-    Where `SERVICE-INSTANCE` is the name of the service to delete.
-    <br><br>
-    For example:
-
-    <pre class="terminal">
-    $ cf delete-service my-instance<br>
-    Are you sure you want to delete the service my-instance ? y
-    Deleting service my-service in org my-org / space my-space as user<span>@</span>example.com...
-    OK
-    </pre>
-
-1. Enter the following command and wait for a `Service instance not found` error indicating
-that the instance no longer exists:
-
-    ```
-    watch cf service SERVICE-INSTANCE
-    ```
-
-## <a id="logging"></a> Access MySQL Metrics for On-Demand Service Instances
-
-<%= partial '../../p-mysql/odb/log-cache-cli-plugin' %>
-
-##<a id='establish-tls'></a> Establish a TLS Connection to a Service Instance
-
-You can use `mysql` to establish a TLS connection to a MySQL for PCF service instance that has TLS
-enabled. For more information about how to enable TLS for a service instance, see [Using TLS](using-tls.html).
-
-To establish a TLS connection to a service instance, do the following:
-
-1. Create a new service key for the service instance with TLS enabled. For example:
-  <pre class="terminal">$ cf create-service-key my-service-instance my-tls-service-key
-  {
-   "hostname": "q-n3s3y1.q-g693.bosh",
-   "jdbcUrl": "jdbc:mysql<span>://</span>q-n3s3y1.q-g693.bosh:3306/service\_instance\_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026=true",
-   "name": "service\_instance\_db",
-   "password": "a22aaa2a2a2aaaaa",
-   "port": 3306,
-   "tls": {
-    "cert": {
-     "ca": "-----BEGIN CERTIFICATE-----\...n-----END CERTIFICATE-----\n"
-    }
-   },
-   "uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>q-n3s3y1.q-g693.bosh:3306/service\_instance\_db?reconnect=true",
-   "username": "6bf07ae455a14064a9073cec8696366c"
-  }
-  </pre>
-  If the service key does not have a CA certificate under `tls.cert.ca`, the service key may be stale.
-  Create a new one.
-
-1. Copy the contents of the CA certificate under `tls.cert.ca` and paste it into a file. For example:
-  <pre class="terminal">$ pbpaste > root.pem</pre>
-
-1. Record the values for `username`, `password`, and `hostname`.
-
-1. Use `mysql` to establish a TLS connection to the MySQL instance.
-  Run the following command:
-  <pre><code>mysql --host=HOSTNAME \
-    --user=USERNAME \
-    --password=PASSWORD \
-    --ssl-ca=root.pem \
-    --ssl-verify-server-cert</code></pre>
-  <br>
-  Where:
-    * `HOSTNAME` is the value for `hostname` retrieved above.
-    * `USERNAME` is the value for `username` retrieved above.
-    * `PASSWORD` is the value for `password` retrieved above.
-  <br><br>
-  For example:
-    <pre class="terminal">
-    $ mysql --hostname=q-n3s3y1.q-g693.bosh \
-      --user=6bf07ae455a14064a9073cec8696366c \
-      --password=a22aaa2a2a2aaaaa \
-      --ssl-ca=root.pem \
-      --ssl-verify-server-cert
-    </pre>
-
-##<a id='remote-connection'></a>Establish a Connection to a Service Instance From Outside Your PCF Deployment
-
-If you want to connect to a MySQL service instance from outside the PCF deployment
-where your MySQL for PCF service instance is located, you can do one of the following:
-
-+ [Connect Using an SSH Tunnel](#ssh-tunnel)
-+ [Connect Using an IP Address](#ip-address)
-
-You may want to use an SSH tunnel or IP address for establishing a connection when:
-
-+ Connecting from a local workstation. For more information, see [MySQL for PCF Tools](#mysql-for-pcf-tools).
-+ Connecting from an external PCF deployment.
-+ Connecting from a legacy app that is not in a PCF deployment.
-+ Taking a manual backup to be stored locally.
-  For more information, see [Manual Backup](./backup-and-restore.html#manual-backup).
-
-###<a id='ssh-tunnel'></a> Connect Using an SSH Tunnel
-
-Any app deployed within a PCF deployment can resolve BOSH DNS hostnames and forward
-traffic to MySQL service instances using an SSH tunnel.
-
-#### Prerequisite
-
-To connect using an SSH tunnel, you must have SSH access to app containers.
-For more information, see [Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
-
-#### Procedure
-
-To connect to a MySQL instance using an SSH tunnel, follow the procedures in
-[Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/2-3/devguide/deploy-apps/ssh-services.html)
-
-###<a id='ip-address'></a> Connect Directly to an IP Address
-
-You can also connect remotely to the MySQL service instance by directly using its IP address.
-
-You can obtain the IP address, using one the following methods:
-
-+  Using cf SSH. For more information, see
-[Obtain the IP Address Using cf SSH](#ip-address-cf-ssh).
-
-+  Using the DNS Lookup app. For more information, see
-[Obtain the IP Address Using the DNS Lookup App](#ip-address-lookup).
-
-+  Using the BOSH CLI. For more information, see
-[Obtain the IP Address Using the BOSH CLI](#ip-address-bosh).
-
-<p class="note"><strong>Note:</strong> By connecting to the MySQL service instance directly using its
-IP address, the client is responsible to handle cases in which the IP address of the service
-instance will change transparently. This can happen when a VM is recreated, or during a failover.</p>
-
-####<a id='ip-address-cf-ssh'></a> Obtain the IP Address Using cf SSH
-
-If you have limited access to the platform you can obtain the IP address through
-cf SSH.
-
-##### Prerequisites
-
-To obtain the IP address using cf SSH, you must have the following:
-
-+ SSH access to app containers. For more information, see
-[Configuring SSH Access for PCF](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
-
-+ An app deployed on the same deployment as the MySQL service instance.
-
-##### Procedure
-
-To obtain the IP address using cf SSH, follow these steps:
-
-1. To retrieve your service key, run the following command:
-
-    ```
-    cf service-keys SERVICE-INSTANCE
-    ```
-    Where `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
-
-1. To obtain the BOSH DNS hostname of the MySQL service instance, run the following command:
-
-    ```
-    cf service-key SERVICE-INSTANCE SERVICE-KEY
-    ```
-
-     For example:
-
-    <pre class="terminal">
-    $ cf service-key my-mysql my-service-key
-    Getting key my-service-key for service instance my-mysql as admin...
-
-    {
-     "hostname": "q-n1a2b3.q-c456.bosh",
-     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?user=my_unique_name\u0026password=123456789",
-     "name": "cf_e2d148a8_1baa_4961_b314_2431f57037e5",
-     "password": "123456789",
-     "port": 3306,
-     "uri": "mysql://my_unique_name:123456789@10.10.10.5:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?reconnect=true",
-     "username": "myuser"
-    }
-    </pre>
-
-1. Record the value of `hostname`.
-
-1. To SSH into the app, run the following command:
-
-    ```
-    $ cf ssh APP-NAME
-    ```
-
-    Where `APP-NAME` is the name of your app deployed on the same deployment as
-    the MySQL service instance.
-
-1. To obtain the IP address of the service instance, run the following command:
-
-    ```
-    $ dig +short BOSH-DNS-HOSTNAME
-    ```
-    Where `BOSH-DNS-HOSTNAME` is the BOSH DNS hostname that you retrieved from step 2.
-
-     The output of the command is the IP address.
-
-####<a id='ip-address-lookup'></a> Obtain the IP Address Using the DNS Lookup App
-
-![DNS Lookup App](dns-lookup-app.png)
-
-If your deployment has app SSH disabled, you can deploy the DNS Lookup app to your
-deployment. The DNS Lookup app resolves BOSH DNS hostnames.
-
-For more information, see the [dns-lookup](https://github.com/menicosia/dns-lookup)
-repository in GitHub.
-
-####<a id='ip-address-bosh'></a> Obtain the IP Address Using the BOSH CLI
-
-If you have access to the BOSH CLI, you can obtain the IP address through it.
-
-#### Prerequisite
-
-To connect using the BOSH CLI, you must have have access to the BOSH CLI. Ask
-your operator for access to the BOSH CLI.
-
-#### Procedure
-
-To connect using the BOSH CLI, follow these steps:
-
-1. To obtain the credentials and IP address needed to use the BOSH CLI, follow
-the procedure in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather).
-
-1. To SSH into your Ops Manager VM, follow the procedure in
-[Log in to the Ops Manager VM with SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh)
-for your IaaS.
-
-1. To log in to your BOSH Director, follow the procedure in
-[Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
-
-1. To obtain the MySQL service instance GUID, run the following command:
-
-      ```
-      cf service SERVICE-INSTANCE --guid
-      ```
-
-      Where `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
-
-1. To use the BOSH CLI to view the IP address, run one of the following
-commands depending on your topology:
-    + If your MySQL service instance topology is single node or highly available
-    (HA) cluster, run the following command:
-
-        ```
-        bosh -d service-instance_GUID instance
-        ```
-
-        Where `GUID` is the GUID of the service instance retrieved above. <br><br>
-
-        If you are using an HA cluster, record the IP address of any of your instances.<br><br>
-
-        For example:
-        <pre class="terminal">$ bosh -d service-instance\_b2e92d56-27e2-407e-90e0-c34612c10dba \
-            instances
-      Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
-
-        Task 21409. Done
-
-        Deployment 'service-instance_0b26c8d1-2795-438e-bcbf-339e77daf88e'
-
-        Instance                                    Process State  AZ  IPs
-        mysql/1373022d-4eab-46d3-8fd1-a12067edf597  running        z2  10.0.17.14
-
-        1 instances
-
-        Succeeded
-        </pre>
-    + If your MySQL service instance topology is leader-follower, run the following
-    command:
-
-        ```
-        bosh -d service-instance_GUID run-errand inspect
-        ```
-
-        Record the IP address for the instance marked `Role: leader`. <br><br>
-
-        For example:
-        <pre class="terminal">
-        Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-        Exit Code  0
-        Stdout     2018/04/03 18:08:46 Started executing command: inspect
-                  2018/04/03 18:08:46
-                  IP Address: 10.0.8.11
-                  Role: leader
-                  Read Only: false
-                  Replication Configured: false
-                  Replication Mode: async
-                  Has Data: true
-                  GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-                  2018/04/03 18:08:46 Successfully executed command: inspect
-        Stderr     -
-        <br>
-        Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
-        Exit Code  0
-        Stdout     2018/04/03 18:08:46 Started executing command: inspect
-                  2018/04/03 18:08:46
-                  IP Address: 10.0.8.10
-                  Role: follower
-                  Read Only: true
-                  Replication Configured: true
-                  Replication Mode: async
-                  Has Data: true
-                  GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-                  2018/04/03 18:08:46 Successfully executed command: inspect
-        </pre>
-
-
-
-
-## <a id="dev-tools"></a>MySQL for PCF Tools
-
-The following tools let developers access their MySQL for PCF databases.
-
-### <a id="mysqlweb"></a>Pivotal MySQLWeb Database Management App
-
-The Pivotal MySQLWeb app provides a web-based UI for managing MySQL for PCF databases.
-The free app lets you view and operate on tables, indexes, constraints, and other database structures,
-and directly execute SQL commands.
-
-![Pivotal MySQLWeb](mysqlweb.png)
-
-You can run the Pivotal MySQLWeb app in two ways:
-
-* Standalone on your own machine
-* Deployed to PCF
-
-If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically
-bind to a specific service instance.
-
-See the Pivotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLWeb) and
-[demo video](https://drive.google.com/file/d/0B2wmRcJj8XF-SXloNFNNaGJXbFk/view),
-for how to install and run Pivotal MySQLWeb.
-
-### <a id="plugin"></a>cf CLI MySQL Plugin
-
-To connect to your MySQL for PCF databases from a command line, use the cf CLI MySQL plugin.
-The plugin lets you:
-
-* Inspect databases for debugging
-* Manually adjust database schema or contents in development environments
-* Dump and restore databases
-
-To install the cf CLI MySQL plugin, run the following:
-
-<pre class="terminal">
-$ cf install-plugin -r "CF-Community" mysql-plugin
-</pre>
-
-For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.
-
-### <a id="desktop"></a> Use Desktop Tools
-
-You can connect your MySQL for PCF databases to a desktop tool, such as MySQL Workbench
-or Sequel Pro, if you have the credentials for your MySQL service instance.
-
-If you do not have credentials for your MySQL service instance, follow the procedure in
-[Create Read-only Access Credentials](././customize-access.html).
-
-To connect your databases to a desktop tool do the following:
-
-1. To retrieve the credentials from your MySQL service instance service key, run the following
-command:
-
-    ```
-    cf service-key SERVICE-INSTANCE MYSQL-SERVICE-KEY
-    ```
-    Where:
-      * `SERVICE-INSTANCE` is the name of your service instance.
-      * `KEY-NAME` is the name of your service key.
-
-    For example:
-
-    <pre class="terminal">
-      $ cf service-key mydb mykey1<br>
-      {
-        "hostname": "q-n3s3y1.q-g693.bosh",
-        "jdbcUrl": "jdbc:mysql<span>://</span>q-n3s3y1.q-g693.bosh:3306/service_instance_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026=true",
-        "name": "service\_instance\_db",
-        "password": "a22aaa2a2a2aaaaa",
-        "port": 3306,
-        "uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>q-n3s3y1.q-g693.bosh:3306/service_instance_db?reconnect=true",
-        "username": "6bf07ae455a14064a9073cec8696366c"
-      }
-    </pre>
-
-1. Record the values for the following:
-    * `hostname`
-    * `name`
-    * `password`
-    * `port`
-    * `username`
-
-1. Configure an SSH tunnel using the values for `hostname` and `port` that you recorded in the above step.
-   For information on configuring an SSH tunnel,
-   see [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/2-3/devguide/deploy-apps/ssh-services.html#ssh-tunnel).
-
-1. Configure a connection in your desktop tool using the values for `hostname`, `name`, `password`, `port`, and `username` that you recorded in the above step.
 
 ## <a id="example-app"></a>Example App
 
