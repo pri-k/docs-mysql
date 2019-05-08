@@ -277,38 +277,38 @@ To bind an app to a leader-follower service instance, do the following:
 1. Bind your app to your primary service instance by doing the following:
     1. Log in to the PCF deployment for your primary foundation by running the following command:
 
-      ```
-      cf login PRIMARY-API-URL
-      ```
-      Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
-      <br><br>
-      For example:
-      <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
-    
+        ```
+        cf login PRIMARY-API-URL
+        ```
+        Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
+        <br><br>
+        For example:
+        <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
+      
     1. Push your app into the same space as the leader-follower service instance by running the following
     command:
-    
-      ```
-      cf push
-      ```
-    
+      
+        ```
+        cf push
+        ```
+      
     1. Bind your app to your primary service instance by running the following command:
 
-      ```
-      cf bind-service APP PRIMARY-SERVICE-INSTANCE
-      ```
-      Where: 
-      - `APP` is the app you want to use the leader-follower service instance.<br>
-      - `PRIMARY-INSTANCE` is the name of the primary service instance you created in
-      step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+        ```
+        cf bind-service APP PRIMARY-SERVICE-INSTANCE
+        ```
+        Where: 
+        - `APP` is the app you want to use the leader-follower service instance.<br>
+        - `PRIMARY-INSTANCE` is the name of the primary service instance you created in
+        step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
 
-      For example:
-      <pre class="terminal">
-      $ cf bind-service my-app primary-node<br>
-      Binding service primary-node to my-app in org my-org / space my-space as user<span>@</span>example.com...
-      OK
-      TIP: Use 'cf push' to ensure your env variable changes take effect
-      </pre>
+        For example:
+        <pre class="terminal">
+        $ cf bind-service my-app primary-node<br>
+        Binding service primary-node to my-app in org my-org / space my-space as user<span>@</span>example.com...
+        OK
+        TIP: Use 'cf push' to ensure your env variable changes take effect
+        </pre>
     
 1. Bind your app to your secondary service instance by repeating step 1, above, 
 and replacing references to primary with secondary.
