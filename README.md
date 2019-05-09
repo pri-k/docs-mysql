@@ -5,16 +5,16 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 
 ## Which branch to use?
 
-**Note**: Provide instructions in your PRs to indicate which branches you want Docs to apply your commits to. 
+**Note**: Provide instructions in your PRs to indicate which branches you want Docs to apply your commits to.
 
 | Branch name | Use for… |
-|-------------| ------|
+|-------------| -------|
 | master      | "edge" branch for 2.x, publishes to https://docs-pcf-staging.cfapps.io/p-mysql/2-n/|
 | 2.5         | v2.5.x |
-| 2.4         | v2.4.x | 
-| 2.3         | v2.3.x | 
-| 2.2         | v2.2.x |  
-| 2.1         | v2.1.x — Now PDFed: https://docs.pivotal.io/archives/mysql-docs-2.1.pdf | 
+| 2.4         | v2.4.x |
+| 2.3         | v2.3.x |
+| 2.2         | v2.2.x — Now PDFed: https://docs.pivotal.io/archives/mysql-docs-2.2.pdf |
+| 2.1         | v2.1.x — Now PDFed: https://docs.pivotal.io/archives/mysql-docs-2.1.pdf |
 | 2.0         | v2.0.x — Now PDFed: https://docs.pivotal.io/archives/mysql-docs-2.0.pdf |
 | 1.11        | There are no plans for a v1.11. However, because it publishes to the edge branch, you could use it to stage big changes for the v1.10.x without worrying they'll go to production prematurely. |
 | 1.10        | v1.10.x |
@@ -43,7 +43,7 @@ This is a word list for terminology and word usage specific to the MySQL for PCF
 
 ## Steps for local development
 ```
-$ git clone git@github.com:pivotal-cf/docs-layout-repo 
+$ git clone git@github.com:pivotal-cf/docs-layout-repo
 $ git clone git@github.com:pivotal-cf/docs-mysql
 $ cd docs-mysql && git checkout <branch> && cd -
 $ git clone git@github.com:pivotal-cf/docs-book-mysql
