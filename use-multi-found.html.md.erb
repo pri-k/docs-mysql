@@ -36,7 +36,7 @@ Before you use MySQL for PCF across multiple foundations, you must have the foll
 + Access to the `<%= vars.single_leader_plan %>` plan
 + An operator configured multi-foundation architecture
 
-## <a id='set-up-multi-dc'></a>Set Up a Leader-Follower Service Instance across Multiple Foundations
+## <a id='create-multi-dc'></a>Create a Leader-Follower Service Instance across Multiple Foundations
 
 Set up a leader-follower service instance of MySQL for PCF across multiple foundations by doing the following:
 
@@ -45,6 +45,8 @@ Set up a leader-follower service instance of MySQL for PCF across multiple found
 1. [Create Service Keys for <%= vars.single_leader_plan %> Service Instances](#create-service-key), below  
 1. [Bind a Leader-Follower Service Instance to Your App](#bind), below
 5. [Use the MySQL Service in Your App](use.html#call)
+
+After you create a leader-follower service instance across multiple foundations, you can manage it over the life cycle of your apps and data. For instructions on how to create a MySQL for PCF service instance, see [Managing MySQL for PCF](./manage.html).
 
 ### <a id='create-multi-dc'></a>Create a Leader-Follower Service Instance
 
