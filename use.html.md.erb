@@ -11,12 +11,7 @@ PCF apps.
 
 ## <a id='overview'></a>Overview
 
-MySQL provides a relational database for apps and devices.
-
-These procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
-see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks using a graphical UI.
-
-To use MySQL in a PCF app:
+MySQL for PCF provides a relational database for apps and devices. To use MySQL for PCF in an app, do the following:
 
 1. Check the service availability in the Marketplace,
    and see if there is an existing instance of MySQL for PCF in your space.
@@ -36,7 +31,10 @@ To use MySQL in a PCF app:
 
     See [Use the MySQL Service in Your App](#call), below.
     
-After you create a MySQL for PCF service instance, you can manage it over the life cycle of your apps and data. For instructions on how to create a MySQL for PCF service instance, see [Managing MySQL for PCF](./manage.html).
+After you create a MySQL for PCF service instance, you can manage it over the life cycle of your apps and data. See [Manage Service Instances](#manage), below. 
+
+The below procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
+see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks using a graphical UI.
 
 ## <a id="prereqs"></a>Prerequisites
 
@@ -55,10 +53,6 @@ in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
    - the [Cloud Foundry Command-Line Interface](http://docs.pivotal.io/pivotalcf/cf-cli/install-go-cli.html) (cf CLI)
    - the Linux [watch](http://www.linfo.org/watch.html) command
 * To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
-
-
-
-
 
 
 ## <a id='marketplace'></a>Confirm the MySQL for PCF Service Availability
@@ -242,6 +236,97 @@ see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/servi
 
     For more information about the environment variable credentials hash `VCAP_SERVICES`, see [MySQL Environment Variables](./reference.html).
   3. Push your app using `cf push`.
+  
+
+## <a id="manage"></a>Manage a Service Instance 
+
+You can manage service instances in the following ways:
+
++ Move your data to a different plan. See [Update a Service Instance to a Larger Plan](#update), below.
++ Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
++ Delete a service instance that is not used. See [Delete a Service Instance](#delete), below. 
++ Use the Log Cache CLI plugin to access MySQL metrics. See [Access MySQL Metrics for On-Demand Service Instances](#logging), below.  
+  
+### <a id="update"></a>Update a Service Instance to a Larger Plan
+
+As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
+This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
+the database will be unavailable for several minutes.
+
+<p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
+  to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
+  
+<p class="note warning"><strong>Warning:</strong> If you are using multi-foundation replication, you must not update <%= vars.single_leader_plan %> plan to another plan. If you do this, your replication breaks.</p>
+
+To update a service instance to a larger plan, run the following command:
+
+```
+cf update-service SERVICE-INSTANCE -p PLAN
+```
+
+Where `PLAN` is the plan you want to upgrade the service instance to.
+
+For example:
+
+<pre class="terminal">
+$ cf update-service my-instance -p db-large
+</pre>
+
+
+### <a id="unbind"></a>Unbind an App from a Service Instance
+
+To stop an app from using a service it no longer needs, run the following command to unbind the app from the service:
+
+```
+cf unbind-service APP SERVICE-INSTANCE
+```
+
+Where:<br>
+
+- `APP` is the app you want to stop using the MySQL service instance. <br>
+- `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
+
+For example:
+
+<pre class="terminal">
+$ cf unbind-service my-app my-instance<br>
+Unbinding app my-app from service my-instance in org my-org / space my-space as user<span>@</span>example.com...
+OK
+</pre>
+
+### <a id="delete"></a>Delete a Service Instance
+
+You cannot delete a service instance that an app is bound to.
+
+To delete a service instance, do the following:
+
+1. Run the following command:
+
+    ```
+    cf delete-service SERVICE-INSTANCE
+    ```
+
+    Where `SERVICE-INSTANCE` is the name of the service to delete.
+    <br><br>
+    For example:
+
+    <pre class="terminal">
+    $ cf delete-service my-instance<br>
+    Are you sure you want to delete the service my-instance ? y
+    Deleting service my-service in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    </pre>
+
+1. Enter the following command and wait for a `Service instance not found` error indicating
+that the instance no longer exists:
+
+    ```
+    watch cf service SERVICE-INSTANCE
+    ```
+
+### <a id="logging"></a> Access MySQL Metrics for On-Demand Service Instances
+
+  <%= partial '../../p-mysql/odb/log-cache-cli-plugin' %>
 
 
 ## <a id="example-app"></a>Example App

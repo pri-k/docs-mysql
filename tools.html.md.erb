@@ -1,0 +1,102 @@
+---
+title: Using MySQL for PCF Tools
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic provides instructions for tools developers can use to 
+access their MySQL for PCF databases.
+
+## <a id="overview"></a>Overview 
+
+The following tools let developers access their MySQL for PCF databases:
+
++ [Pivotal MySQLWeb Database Management App](#mysqlweb), below
++ [cf CLI MySQL Plugin](#plugin), below
++ [Desktop Tools](#desktop), below
+
+## <a id="mysqlweb"></a>Pivotal MySQLWeb Database Management App
+
+The Pivotal MySQLWeb app provides a web-based UI for managing MySQL for PCF databases.
+The free app lets you view and operate on tables, indexes, constraints, and other database structures,
+and directly execute SQL commands.
+
+![Pivotal MySQLWeb](mysqlweb.png)
+
+You can run the Pivotal MySQLWeb app in two ways:
+
+* Standalone on your own machine
+* Deployed to PCF
+
+If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically
+bind to a specific service instance.
+
+See the Pivotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLWeb) and
+[demo video](https://drive.google.com/file/d/0B2wmRcJj8XF-SXloNFNNaGJXbFk/view),
+for how to install and run Pivotal MySQLWeb.
+
+## <a id="plugin"></a>cf CLI MySQL Plugin
+
+To connect to your MySQL for PCF databases from a command line, use the cf CLI MySQL plugin.
+The plugin lets you:
+
+* Inspect databases for debugging
+* Manually adjust database schema or contents in development environments
+* Dump and restore databases
+
+To install the cf CLI MySQL plugin, run the following:
+
+<pre class="terminal">
+$ cf install-plugin -r "CF-Community" mysql-plugin
+</pre>
+
+For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-mysql-plugin) repository.
+
+## <a id="desktop"></a> Desktop Tools
+
+You can connect your MySQL for PCF databases to a desktop tool, such as MySQL Workbench
+or Sequel Pro, if you have the credentials for your MySQL service instance.
+
+If you do not have credentials for your MySQL service instance, follow the procedure in
+[Create Read-only Access Credentials](././customize-access.html).
+
+To connect your databases to a desktop tool do the following:
+
+1. To retrieve the credentials from your MySQL service instance service key, run the following
+command:
+
+    ```
+    cf service-key SERVICE-INSTANCE MYSQL-SERVICE-KEY
+    ```
+    Where:
+      * `SERVICE-INSTANCE` is the name of your service instance.
+      * `KEY-NAME` is the name of your service key.
+
+    For example:
+
+    <pre class="terminal">
+      $ cf service-key mydb mykey1<br>
+      {
+        "hostname": "q-n3s3y1.q-g693.bosh",
+        "jdbcUrl": "jdbc:mysql<span>://</span>q-n3s3y1.q-g693.bosh:3306/service_instance_db?user=6bf07ae455a14064a9073cec8696366c\u0026password=a22aaa2a2a2aaaaa\u0026=true",
+        "name": "service\_instance\_db",
+        "password": "a22aaa2a2a2aaaaa",
+        "port": 3306,
+        "uri": "mysql<span>://</span>6bf07ae455a14064a9073cec8696366c:a22aaa2a2a2aaaaa<span>@</span>q-n3s3y1.q-g693.bosh:3306/service_instance_db?reconnect=true",
+        "username": "6bf07ae455a14064a9073cec8696366c"
+      }
+    </pre>
+
+1. Record the values for the following:
+    * `hostname`
+    * `name`
+    * `password`
+    * `port`
+    * `username`
+
+1. Configure an SSH tunnel using the values for `hostname` and `port` that you recorded in the above step.
+   For information on configuring an SSH tunnel,
+   see [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/2-3/devguide/deploy-apps/ssh-services.html#ssh-tunnel).
+
+1. Configure a connection in your desktop tool using the values for `hostname`, `name`, `password`, `port`, and `username` that you recorded in the above step.
