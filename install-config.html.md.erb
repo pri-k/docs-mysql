@@ -44,6 +44,8 @@ To create an ASG for MySQL for PCF, do the following:<br>
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
 
+1. Click **Create Networks**.
+
 1. Find the network that has **Service Network** checked, and find the **CIDR** that you can use in your ASGs.
     </br>
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
@@ -451,7 +453,6 @@ perform the following steps:
 
 1. Ensure that you have configured the PAS tile to support securing service instance credentials in runtime CredHub.
    See [Step 1: Configure the PAS Tile](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html#pas-config).
-1. Ensure that you have created an ASG that opens port `8884`. See [Create an Application Security Group for MySQL for PCF](#asg) above.
 1. Click **Security**.
 1. Select the **Enable Secure Service Instance Credentials** checkbox.
 1. Click **Save**.
