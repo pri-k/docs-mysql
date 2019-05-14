@@ -29,22 +29,20 @@ Before you download and install the MySQL for PCF tile, complete the following p
 + [Enable the BOSH Resurrector](#resurrector)
 + [(Optional) Preparing for TLS](prepare-tls.html):
 Only required if you want to enable TLS.
-+ [(Optional) Preparing for Multi-Foundation Replication](): Only required if you 
++ [(Optional) Preparing for Multi-Foundation Replication](): Only required if you
 want to replicate data across multiple foundations.
 
 ### <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
-To let apps running on Cloud Foundry communicate with the MySQL service network, you must create an Application Security Group (ASG).
+To let apps running on Cloud Foundry communicate with the MySQL service network,
+you must create an Application Security Group (ASG).
 
-The ASG allows smoke tests to run when you first install the MySQL for PCF service and allows apps to access the service after it is installed.
+The ASG allows smoke tests to run when you first install the MySQL for PCF service
+and allows apps to access the service after it is installed.
 
-The example below follows [this procedure](http://docs.pivotal.io/pivotalcf/1-11/concepts/asg.html#asg-individual) to create an ASG.
-
-To create an ASG for MySQL for PCF, do the following:</br>
+To create an ASG for MySQL for PCF, do the following:<br>
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
-
-1. Click **Create Networks**.</br>
 
 1. Find the network that has **Service Network** checked, and find the **CIDR** that you can use in your ASGs.
     </br>
@@ -61,10 +59,6 @@ To create an ASG for MySQL for PCF, do the following:</br>
       }
     ]
     ```
-    If you want to store your service instance credentials in runtime CredHub,
-    you must also open port `8844` in addition to performing the steps
-    in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
-    Modify the JSON file above to include `"ports": "3306,8844"`.
 
 1. Use the CF CLI and the JSON file that you created to create an ASG called `p.mysql`:
 
@@ -77,6 +71,10 @@ To create an ASG for MySQL for PCF, do the following:</br>
      ```
     $ cf bind-running-security-group p.mysql
     ```
+
+For more information,
+see [Create ASGs](http://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual).
+
 
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
