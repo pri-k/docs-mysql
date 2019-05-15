@@ -40,9 +40,7 @@ see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide
 
 To use MySQL for PCF with your PCF apps, you need:
 
-* Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster, and <%= vars.single_leader_plan %>.
-<%= vars.single_leader_plan %> is used to deploy a leader-follower service instance across multiple foundations. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
-* If you intend to use a <%= vars.single_leader_plan %> plan for deploying a leader-follower service instance across multiple foundations, review the limitations associated with this topology. See [Multi-Foundation Replication Limitations](./about-multi-found.html#limitations).
+* Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
 * If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).
 * A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
@@ -115,16 +113,6 @@ For example:
 On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use.
 
-To create an instance of the MySQL for PCF service, do one of the following:
-
-+ If you are creating a single node, leader-follower, or highly available cluster service instance within one foundation,
-do the procedure in [Create a MySQL for PCF Service Instance](#create-mysql), below.
-+ If you are deploying a leader-follower service instance across multiple foundations,
-  called a decoupled leader-follower service,
-do the procedure in [Create a Multi-Foundation Leader-Follower Service Instance](./use-multi-found.html#create-multi-dc). 
-
-### <a id='create-mysql'></a>Create a MySQL for PCF Service Instance
-
 To create an instance of the MySQL for PCF service, do the following:
 
 1. Create a service instance by running the following command:
@@ -172,7 +160,7 @@ To push and bind an app to a MySQL for PCF instance run the following command:
     cf push
     ```
     
-1. Bind your app to a MySQL for PCF instance run the following command:
+1. Bind your app to a MySQL for PCF instance by running the following command:
   
     ```
     cf bind-service APP SERVICE-INSTANCE
@@ -190,6 +178,13 @@ To push and bind an app to a MySQL for PCF instance run the following command:
     OK
     TIP: Use 'cf push' to ensure your env variable changes take effect
     </pre>
+    
+1. Restart your app by running the following command:
+  
+    ```
+    cf restart APP 
+    ```
+    Where `APP` is the app you want to use the MySQL service instance.
 
 ## <a id="call"></a>Use the MySQL Service in Your App
 
@@ -255,8 +250,6 @@ the database will be unavailable for several minutes.
 
 <p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
   to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
-  
-<p class="note warning"><strong>Warning:</strong> If you are using multi-foundation replication, you must not update <%= vars.single_leader_plan %> plan to another plan. If you do this, your replication breaks.</p>
 
 To update a service instance to a larger plan, run the following command:
 

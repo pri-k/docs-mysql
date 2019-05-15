@@ -29,8 +29,6 @@ Before you download and install the MySQL for PCF tile, complete the following p
 + [Enable the BOSH Resurrector](#resurrector)
 + [(Optional) Preparing for TLS](prepare-tls.html):
 Only required if you want to enable TLS.
-+ [(Optional) Preparing for Multi-Foundation Replication](): Only required if you
-want to replicate data across multiple foundations.
 
 ### <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
@@ -152,7 +150,6 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
 ###<a id="active"></a> Configure Service Plans
 
 <%= partial "./galera_beta" %>
-<%= partial "./multi_found_beta" %>
 
 MySQL for PCF enables you to configure as many as nine service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
@@ -164,8 +161,6 @@ a single node plan. This is because you can only restore to a single node plan. 
 directly to a leader-follower plan. Ensure that the persistent disk in the single node plan is as
 least as large as the persistent disk of your largest leader-follower plan. For more information on restoring services instances,
 see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>. </p>
-
-<%# ADD INFO ABOUT HOW TO CONFIGURE THE NEW PLAN %>
 
 Perform the following steps for each plan that you want to use in your PCF deployment:
 
