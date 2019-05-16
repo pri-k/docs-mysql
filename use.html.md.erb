@@ -6,7 +6,7 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) service for their
-PCF apps. 
+PCF apps.
 
 
 ## <a id='overview'></a>Overview
@@ -30,11 +30,14 @@ MySQL for PCF provides a relational database for apps and devices. To use MySQL 
 5. Call the MySQL for PCF service in your app code, and then re-push your app into the space.
 
     See [Use the MySQL Service in Your App](#call), below.
-    
-After you create a MySQL for PCF service instance, you can manage it over the life cycle of your apps and data. See [Manage Service Instances](#manage), below. 
+
+After you create a MySQL for PCF service instance, you can manage it over the life cycle of your apps and data. See [Manage Service Instances](#manage), below.
 
 The below procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
-see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html). You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks using a graphical UI.
+see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html).
+You can also use Apps Manager to do the same tasks using a graphical UI.
+For more information, see
+[Managing Apps and Service Instances Using Apps Manager](https://docs.pivotal.io/pivotalcf/console/manage-apps.html)
 
 ## <a id="prereqs"></a>Prerequisites
 
@@ -121,7 +124,7 @@ To create an instance of the MySQL for PCF service, do one of the following:
 do the procedure in [Create a MySQL for PCF Service Instance](#create-mysql), below.
 + If you are deploying a leader-follower service instance across multiple foundations,
   called a decoupled leader-follower service,
-do the procedure in [Create a Multi-Foundation Leader-Follower Service Instance](./use-multi-found.html#create-multi-dc). 
+do the procedure in [Create a Multi-Foundation Leader-Follower Service Instance](./use-multi-found.html#create-multi-dc).
 
 ### <a id='create-mysql'></a>Create a MySQL for PCF Service Instance
 
@@ -167,13 +170,13 @@ For an app to use a service, you must bind the app to a service instance.  You m
 To push and bind an app to a MySQL for PCF instance run the following command:
 
 1. Push your app into the same space as your MySQL for PCF service instance by running the following command:
-  
+
     ```
     cf push
     ```
-    
-1. Bind your app to a MySQL for PCF instance run the following command:
-  
+
+1. Bind your app to a MySQL for PCF instance by running the following command:
+
     ```
     cf bind-service APP SERVICE-INSTANCE
     ```
@@ -191,6 +194,13 @@ To push and bind an app to a MySQL for PCF instance run the following command:
     TIP: Use 'cf push' to ensure your env variable changes take effect
     </pre>
 
+1. Restart your app by running the following command:
+
+    ```
+    cf restart APP
+    ```
+    Where `APP` is the app you want to use the MySQL service instance.
+
 ## <a id="call"></a>Use the MySQL Service in Your App
 
 To access the MySQL service from your app:
@@ -205,17 +215,56 @@ To access the MySQL service from your app:
 
     Where `APP-NAME` is the name of the app bound to the MySQL for PCF instance.
 
-1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app.
+1. In the output, note the connection strings listed in the
+`VCAP_SERVICES` > `credentials` object for the app. For information about
+`VCAP_SERVICES`, see [MySQL Environment Variables](#vcap).
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
 
-###<a id="share"></a> Share Service Instances
+###<a id="vcap"></a>MySQL Environment Variables
+Apps running in Cloud Foundry gain access to bound service instances
+through an environment variable credentials hash called `VCAP_SERVICES`.
+This environment variable includes the credentials that apps
+use to access service instances.
 
-In MySQL for PCF, you can share service instances between different orgs and spaces.
-To share service instances, the `service_instance_sharing` flag must be enabled by your operator.
-For more information about sharing service instances,
-see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/sharing-instances.html).
+For example:
+
+```
+{
+  "p.mysql": [
+    {
+      "label": "p.mysql",
+      "name": "my-instance",
+      "plan": "db-medium",
+      "provider": null,
+      "syslog_drain_url": null,
+      "tags": [
+        "mysql"
+      ],
+      "credentials": {
+        "hostname": "10.0.0.20",
+        "jdbcUrl": "jdbc:mysql://10.0.0.20:3306/service_instance_db?user=fefcbe8360854a18a7994b870e7b0bf5\u0026password=z9z6eskdbs1rhtxt",
+        "name": "service_instance_db",
+        "password": "z9z6eskdbs1rhtxt",
+        "port": 3306,
+        "uri": "mysql://fefcbe8360854a18a7994b870e7b0bf5:z9z6eskdbs1rhtxt@10.0.0.20:3306/service_instance_db?reconnect=true",
+        "username": "fefcbe8360854a18a7994b870e7b0bf5"
+      },
+      "volume_mounts": []
+    }
+  ]
+}
+```
+
+You can search for your service by the `name` given when the service instance was created.
+You can also search using the `tags` or `label` properties.
+The `credentials` property can be used to provide access to the MySQL protocol.
+
+`VCAP_SERVICES` is only modified when an app is bound to a service instance.
+If you modify your service instance,
+you must `cf unbind-service`, `cf bind-service` and `cf restage`
+your app to apply the changes to `VCAP_SERVICES`.
 
 ###<a id="schema"></a>Create and Use Custom Schemas
 
@@ -236,17 +285,17 @@ see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/servi
 
     For more information about the environment variable credentials hash `VCAP_SERVICES`, see [MySQL Environment Variables](./reference.html).
   3. Push your app using `cf push`.
-  
 
-## <a id="manage"></a>Manage a Service Instance 
+
+## <a id="manage"></a>Manage a Service Instance
 
 You can manage service instances in the following ways:
 
 + Move your data to a different plan. See [Update a Service Instance to a Larger Plan](#update), below.
 + Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
-+ Delete a service instance that is not used. See [Delete a Service Instance](#delete), below. 
-+ Use the Log Cache CLI plugin to access MySQL metrics. See [Access MySQL Metrics for On-Demand Service Instances](#logging), below.  
-  
++ Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
++ Use the Log Cache CLI plugin to access MySQL metrics. See [Access MySQL Metrics for On-Demand Service Instances](#logging), below.
+
 ### <a id="update"></a>Update a Service Instance to a Larger Plan
 
 As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
@@ -255,7 +304,7 @@ the database will be unavailable for several minutes.
 
 <p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
   to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
-  
+
 <p class="note warning"><strong>Warning:</strong> If you are using multi-foundation replication, you must not update <%= vars.single_leader_plan %> plan to another plan. If you do this, your replication breaks.</p>
 
 To update a service instance to a larger plan, run the following command:
