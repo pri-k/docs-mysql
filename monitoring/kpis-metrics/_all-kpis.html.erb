@@ -84,6 +84,28 @@
         id: 'ephemeral-used',
         header: 'Ephemeral Disk Used'
     },
+
+      {
+        metric: '/performance/cpu_utilization_percent',
+        description:<<~DESC,
+        CPU time being consumed by the MySQL service. <br ><br>
+        <strong>Use</strong>: A node that experiences context switching or high CPU usage will become unresponsive. This also affects the ability of the node to report metrics. <br>
+        <strong>Origin</strong>: Doppler/Firehose<br>
+        <strong>Type</strong>: Percent<br>
+        <strong>Frequency</strong>: 30 s (default)<br>
+         DESC
+         
+         measurement:'Average over last 10 minutes',
+         alert: <<~DESC,
+         <strong>Yellow warning:</strong> > 80
+         <strong>Red critical:</strong> > 90
+         DESC
+         
+         response: 'Determine what is using so much CPU. If it is from normal processes, update the service instance to use a plan with larger CPU capacity.
+',
+         id:'cpu-utilization-percent',
+         header: 'CPU Utilization Percent'
+      },
     
     {
       metric: <<~DESC,
@@ -120,12 +142,11 @@
     },
     
     {
-      metric: '/performance/questions' ,
+      metric: '/performance/queries_delta' ,
       description: <<~DESC,
-        The rate of statements executed by the server, shown as queries per second.<br><br>
+        The number of statements executed by the server over the last 30 seconds.<br><br>
 
-        <strong>Use</strong>: The server should always be processing some queries,
-        if just as part of the internal automation.
+        <strong>Use</strong>: The server should always be processing some queries. If the server does not process any queries, the server is non-functional.
         <br><br>
         <strong>Origin</strong>: Doppler/Firehose<br>
         <strong>Type</strong>: count<br>
@@ -134,13 +155,12 @@
 
       measurement: 	'Average over last 2 minutes',
       alert: <<~DESC,
-        <strong>Yellow warning</strong>: 0 for 90 s<br>
-        <strong>Red critical</strong>: 0 for 120 s
+        <strong>Red critical</strong>: 0
       DESC
       response: 'Investigate the MySQL server logs, such as the audit log, to understand
         why query rate changed and determine appropriate action.',
-      id: 'questions',
-      header: 'Questions'
+      id: 'queries-delta',
+      header: 'Queries Delta'
     },
         
     {
