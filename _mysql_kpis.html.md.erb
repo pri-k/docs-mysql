@@ -95,6 +95,35 @@
    </tr>
 </table>
 
+#### <a id="cpu-utilization-percent"></a> CPU Utilization Percent
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> <%= vars.mysql_metrics_origin_v2 %>/performance/cpu_utilization_percent<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>CPU time being consumed by the MySQL service.<br><br>
+
+      <strong>Use</strong>: A node that experiences context switching or high CPU usage will become unresponsive. This also affects the ability of the node to report metrics.
+      <br><br>
+      <strong>Origin</strong>: Doppler/Firehose<br>
+      <strong>Type</strong>: Percent<br>
+      <strong>Frequency</strong>: 30 s (default)
+   </tr>
+   <tr>
+      <th>Recommended measurement</th>
+      <td>Average over last 10 minutes</td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <strong>Yellow warning</strong>: > 80</td>
+      <strong>Red critical</strong>: > 90</td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>Determine what is using so much CPU. If it is from normal processes, update the service instance to use a plan with larger CPU capacity.</td>
+   </tr>
+</table>
+
 #### <a id="open-files"></a> Queries Delta
 
 <table>
