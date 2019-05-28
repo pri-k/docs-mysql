@@ -205,17 +205,43 @@ To access the MySQL service from your app:
 
     Where `APP-NAME` is the name of the app bound to the MySQL for PCF instance.
 
-1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app.
+1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app. For information about `VCAP_SERVICES`, see [VCAP_SERVICES](#vcap), below. 
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
+  
+###<a id="vcap"></a>VCAP_SERVICES
 
-###<a id="share"></a> Share Service Instances
+Apps running in Pivotal Cloud Foundry gain access to the bound service instances through an environment variable credentials hash called `VCAP_SERVICES`. An example hash is show below:
 
-In MySQL for PCF, you can share service instances between different orgs and spaces.
-To share service instances, the `service_instance_sharing` flag must be enabled by your operator.
-For more information about sharing service instances,
-see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/sharing-instances.html).
+<pre><code>
+{
+  "p.mysql": [{
+    "label": "p.mysql",
+    "name": "my-instance",
+    "plan": "db-medium",
+    "provider": null,
+    "syslog_drain_url": null,
+    "tags": [
+     "mysql"
+    ],
+    "credentials": {
+      "hostname": "10.0.0.20",
+      "jdbcUrl": "jdbc:mysql://10.0.0.20:3306/service_instance_db?user=fefcbe8360854a18a7994b870e7b0bf5\u0026password=z9z6eskdbs1rhtxt",
+      "name": "service_instance_db",
+      "password": "z9z6eskdbs1rhtxt",
+      "port": 3306,
+      "uri": "mysql://fefcbe8360854a18a7994b870e7b0bf5:z9z6eskdbs1rhtxt@10.0.0.20:3306/service_instance_db?reconnect=true",
+      "username": "fefcbe8360854a18a7994b870e7b0bf5"
+    },
+    "volume_mounts": []
+   }
+}
+</code></pre>
+
+You can search for your service using the `name` given when the service instance was created or  using the `tags` or `label` properties. The `credentials` section provides access to the MySQL protocol. 
+
+`VCAP_SERVICES` is only modified when the app is bound to a service instance. If you want to modify `VCAP_SERVICES`, you must run `cf unbind-service`, `cf bind-service` and `cf restage`.
 
 ###<a id="schema"></a>Create and Use Custom Schemas
 
