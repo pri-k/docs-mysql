@@ -191,6 +191,13 @@ To push and bind an app to a MySQL for PCF instance run the following command:
     TIP: Use 'cf push' to ensure your env variable changes take effect
     </pre>
 
+1. Restart your app by running the following command:
+
+    ```
+    cf restart APP
+    ```
+    Where `APP` is the app you want to use the MySQL service instance.
+
 ## <a id="call"></a>Use the MySQL Service in Your App
 
 To access the MySQL service from your app:
@@ -205,14 +212,17 @@ To access the MySQL service from your app:
 
     Where `APP-NAME` is the name of the app bound to the MySQL for PCF instance.
 
-1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app. For information about `VCAP_SERVICES`, see [VCAP_SERVICES](#vcap), below. 
+1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap), below. 
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
   
-###<a id="vcap"></a>VCAP_SERVICES
+###<a id="vcap"></a>MySQL Environment Variables
 
-Apps running in Pivotal Cloud Foundry gain access to the bound service instances through an environment variable credentials hash called `VCAP_SERVICES`. An example hash is show below:
+Apps running in Pivotal Cloud Foundry gain access to the bound service instances through an environment variable credentials hash called `VCAP_SERVICES`. This environment variable includes the credentials that apps
+use to access service instances.
+
+For example:
 
 <pre><code>
 {
@@ -239,9 +249,12 @@ Apps running in Pivotal Cloud Foundry gain access to the bound service instances
 }
 </code></pre>
 
-You can search for your service using the `name` given when the service instance was created or  using the `tags` or `label` properties. The `credentials` section provides access to the MySQL protocol. 
+You can search for your service using the `name` given when the service instance was created. You can also search using the `tags` or `label` properties. 
+The `credentials` property can be used to provide access to the MySQL protocol.
 
-`VCAP_SERVICES` is only modified when the app is bound to a service instance. If you want to modify `VCAP_SERVICES`, you must run `cf unbind-service`, `cf bind-service` and `cf restage`.
+`VCAP_SERVICES` is only modified when the app is bound to a service instance. If you modify your service instance,
+you must `cf unbind-service`, `cf bind-service` and `cf restage`
+your app to apply the changes to `VCAP_SERVICES`.
 
 ###<a id="schema"></a>Create and Use Custom Schemas
 
