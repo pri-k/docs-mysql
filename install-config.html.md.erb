@@ -31,19 +31,17 @@ Only required if you want to enable TLS.
 
 To let apps running on Cloud Foundry communicate with the MySQL service network,
 you must create an Application Security Group (ASG).
-
 The ASG allows smoke tests to run when you first install the MySQL for PCF service
 and allows apps to access the service after it is installed.
 
-To create an ASG for MySQL for PCF, do the following:<br>
+To create an ASG for MySQL for PCF, do the following:
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
 
-1. Click **Create Networks**.</br>
+1. Click **Create Networks**.
     ![Create Networks page](opsman-dir-networks.png)
 
 1. Find the network that has **Service Network** checked, and find the **CIDR** that you can use in your ASGs.
-    <br>
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
 
 1. Using the CIDR that you found in the above step, create a JSON file `mysql-asg.json` with the configuration below:
