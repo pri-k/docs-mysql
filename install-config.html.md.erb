@@ -39,9 +39,11 @@ To create an ASG for MySQL for PCF, do the following:
 1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
 
 1. Click **Create Networks**.
+
     ![Create Networks page](opsman-dir-networks.png)
 
 1. Find the network that has **Service Network** checked, and find the **CIDR** that you can use in your ASGs.
+
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
 
 1. Using the CIDR that you found in the above step, create a JSON file `mysql-asg.json` with the configuration below:
