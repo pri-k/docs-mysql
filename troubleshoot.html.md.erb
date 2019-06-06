@@ -567,7 +567,7 @@ Succeeded
   <li> Delete at least one audit log file with <code>rm</code> </li>
 
   <li> Update your service instance to a larger plan. For more information,
-    see <a href= "https://docs.pivotal.io/p-mysql/2-4/use.html#update">Update a Service Instance to a Larger Plan</a> </li>
+    see <a href= "https://docs.pivotal.io/p-mysql/use.html#update">Update a Service Instance to a Larger Plan</a> </li>
 </ol>
 
 <h3><a id="unresponsive"></a> Unresponsive Node in a Highly Available Cluster</h3>
@@ -925,7 +925,7 @@ To manually force a node to rejoin the cluster, do the following:
 <ol>
   <li>
     To SSH into the node, follow the procedure in
-    <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
+    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
   </li>
   <li>
     To become root, run the following command:
@@ -954,11 +954,11 @@ To manually force a node to rejoin the cluster, do the following:
   <li>To log in to the BOSH Director VM, do the following procedures:
     <ol>
       <li>To gather the information needed to log in to the BOSH Director VM,
-        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
+        see <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
       <li>To log in to the Ops Manager VM,
-        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
+        see <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
       <li>To log in to the BOSH Director VM,
-        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
+        see <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
     </ol>
   </li>
   <li> To identify and re-create the unresponsive node with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a> and run
@@ -978,9 +978,9 @@ To check the replication status, do the following:
 <li>To log in to the BOSH Director VM, do the following procedures:
   <ol>
     <li>To gather the information needed to log in to the BOSH Director VM,
-      see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
+      see <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
     <li>To log in to the Ops Manager VM,
-      see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
+      see <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
   </ol></li>
   <li> To create a dummy database in the first node, run the following command:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>
