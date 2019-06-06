@@ -5,7 +5,6 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-
 This topic provides instructions to operators of Pivotal Cloud Foundry (PCF)
 about how to install, configure, and deploy the MySQL for PCF v2.5 tile.  The
 MySQL for PCF v2.5 service lets PCF developers create and use their own MySQL
@@ -78,7 +77,7 @@ For more information, see [Create ASGs](http://docs.pivotal.io/pivotalcf/concept
 
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
-The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html)
+The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector)
 increases the availability of MySQL for PCF by restarting and resuming MySQL service in the following ways:
 
 - Reacts to hardware failure and network disruptions by restarting VMs on active, stable hosts
@@ -96,8 +95,8 @@ do the following:
 
 4. Click **Save**.
 
-For general information about the BOSH Resurrector,
-see [Using BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling)
+For more information,
+see the [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector) section of the _Using BOSH Resurrector and vSphere HA_ topic.
 
 ## <a id="install"></a> Download and Install the Tile
 
@@ -442,11 +441,11 @@ To enable TLS for the MySQL service, perform the following steps:
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
 If you want to store your service instance credentials
-in runtime [CredHub](https://docs.pivotal.io/pivotalcf/2-0/credhub/) instead of the Cloud Controller Database (CCDB),
+in runtime [CredHub](https://docs.pivotal.io/pivotalcf/credhub/#runtime) instead of the Cloud Controller Database (CCDB),
 perform the following steps:
 
 1. Ensure that you have configured the PAS tile to support securing service instance credentials in runtime CredHub.
-   See [Step 1: Configure the PAS Tile](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html#pas-config).
+   See [Step 1: Configure the PAS Tile](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html#pas-config).
 1. Ensure that you have created an ASG that opens port `8844`. See [Create an Application Security Group for MySQL for PCF](#asg) above.
 1. Click **Security**.
 1. Select the **Enable Secure Service Instance Credentials** checkbox.
