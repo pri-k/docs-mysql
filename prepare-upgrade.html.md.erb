@@ -9,27 +9,26 @@ This topic explains how to prepare for upgrading the MySQL for Pivotal Cloud Fou
 
 ## <a id="deprecated-bindings"></a>Overview
 
-Before you upgrade your MySQL for PCF service, you must remove all bindings that use IP addresses.
-Do the upgrade procedures on this page well in advance of upgrading the MySQL for PCF tile.
-This is because for MySQL for PCF v2.5 and later you must use BOSH DNS for bindings.
+MySQL for PCF v2.5 requires service bindings to use BOSH DNS and does not support service bindings that use IP addresses.
+But apps that use older versions of the MySQL service may bind to their instances by IP address.
 
-If app or service key bindings are found to use IP addresses,
-you have to wait for developers to unbind, rebind, and restart those apps
-before you can upgrade the MySQL for PCF tile.
+To avoid failure and app downtime when upgrading to MySQL for PCF to v2.5,
+all apps that bind to the service by IP address must be re-bound and restarted before you upgrade.
 
-If you do not remove these bindings, your upgrade fails.
+To give developers time to unbind, rebind, and restart their apps,
+perform the upgrade procedures on this page well in advance of upgrading the MySQL for PCF tile.
 
 ## <a id="check-bindings"></a> Check for Bindings with IP Addresses
 
-To check if your app or service key bindings uses IP addresses, do the following:
+To check for running app or service key bindings that use IP addresses, do the following:
 
-1. To record the BOSH deployment name for your MySQL service broker, run the following command:
+1. Run the following command and record the BOSH deployment name for your MySQL service broker:
 
     ```
   bosh deployments
     ```
 
-1. To search for bindings that use IP addresses, run the following command:
+1. Run the following command to list current bindings that use IP addresses:
 
     ```
     bosh -d pivotal-mysql-GUID run-errand find-deprecated-bindings
@@ -41,13 +40,13 @@ To check if your app or service key bindings uses IP addresses, do the following
 
     <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings</pre>
 
-1. Check the `REASON` column in the output table for `no dns`.
-If it appears, do the procedures in [Remove Deprecated Bindings](#remove-bindings) below.
+1. Perform the [Remove Deprecated Bindings](#remove-bindings) procedure below
+for any apps or service keys that list `no dns` in the `REASON` column of the output table.
 
 ## <a id="remove-bindings"></a> Remove Deprecated Bindings
 
 Some of the following steps require coordination with your app developers.
-To remove deprecated bindings, you must do the following:
+To remove deprecated bindings, do the following:
 
 1. Upgrade your service instances to be compatible with BOSH DNS.
 See [Upgrade Service Instance](#upgrade-bindings) below.
@@ -58,17 +57,17 @@ See [Replace Deprecated Bindings](#replace-bindings) below.
 
 To upgrade your service instances, operators must do the following:
 
-1. Notify the developers who own the apps listed in the error output table above
+1. Notify the developers who own the apps listed by the `find-deprecated-bindings`above
 that you will be upgrading all service instances, which can impact app connectivity to the database.
-1. To log in to the BOSH Director, do the procedure in
+1. Log in to the BOSH Director by following the procedure in
 [Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
-1. To locate the BOSH deployment name for your MySQL service broker, run the following command:
+1. Locate the BOSH deployment name for your MySQL service broker, by running the following command:
 
     ```
     bosh deployments
     ```
 1. Record the BOSH deployment name for the MySQL service broker, which looks like `pivotal-mysql-GUID`.
-1. To upgrade all service instances, run the following command:
+1. Upgrade all service instances by running the following command:
 
     ```
     bosh -d pivotal-mysql-GUID run-errand upgrade-all-service-instances
