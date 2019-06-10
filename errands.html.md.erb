@@ -39,10 +39,10 @@ The `find-deprecated-bindings` errand lists apps and service keys that are depre
 
 + They use IP addresses instead of DNS.  This unsupported in PCF v2.5.
 + They do not require TLS.  This is deprecated in PCF v2.5.  
-Pivotal recommends that operators configure bindings to require TLS,
-in the MySQL tile **Security** pane > **TLS Options**.
+  Pivotal recommends that operators configure bindings to require TLS.
+  For how to require TLS, see [Configure Security](install-config.html#security).
 
-Run the `find-deprecated-bindings` errand before upgrading to MySQL for PCF v2.5.
+Before you upgrade to MySQL for PCF v2.5, you run the `find-deprecated-bindings` errand.
 The errand exits whether or not a deprecated or unsupported binding is found.
 
 See below example of the errand output:
@@ -76,6 +76,8 @@ Stdout     +---------------------------+--------------------------------------+-
            +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
 </pre>
 
+For information about using this errand,
+see [Check for Bindings with IP Addresses](https://docs-pcf-staging.cfapps.io/p-mysql/2-5/prepare-upgrade.html#check-bindings).
 
 ### <a id="smoke-tests"></a>smoke-tests
 
