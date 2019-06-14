@@ -23,13 +23,17 @@ For product versions and upgrade paths, see the
 
 ## <a id="255"></a>v2.5.5
 
-**Release Date:**  June 13, 2019
+**Release Date:**  June 14, 2019
 
 ### Resolved Issue
 
-This release has the following fix:
+This release fixes the following issue:
 
-* Smoke tests on MySQL for PCF now take the app domain as configured in the PAS tile.
+* The issue where smoke tests failed because MySQL for PCF used the wrong apps domain.
+  Now smoke tests on MySQL for PCF always use the correct app domain, the domain that is configured
+  in Pivotal Application Service (PAS).
+  For information about setting **Apps Domain** in the PAS tile,
+  see [Configure Domains](https://docs.pivotal.io/pivotalcf/2-5/customizing/configure-pas.html#domains).
 
 ## <a id="254"></a>v2.5.4
 
