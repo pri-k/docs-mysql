@@ -32,14 +32,14 @@ go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Ste
 
 ## <a id="246"></a>v2.4.6
 
-**Release Date:**  Jun 13, 2019
-  
+**Release Date:**  June 13, 2019
+
 ### Resolved Issue
 
-This release fixes a bug, so that:
+This release has the following fix:
 
-* Smoke-tests consistently uses the PAS apps domain
- 
+* `smoke-tests` errands consistently use the PAS apps domain
+
 ## <a id="245"></a>v2.4.5
 
 **Release Date:**  April 5, 2019
@@ -51,7 +51,7 @@ Updated dependencies in this release:
 * Updates Service Backups to v18.2.0. This update includes the following:
   * `smoke-tests` errands can be used in environments that use
   custom Java buildpacks with OracleJDK.
-  
+
 ### Resolved Issue
 
 This release fixes a known issue, so that:
@@ -124,7 +124,7 @@ New features and changes in this release:
 * The `find-non-tls-bindings` BOSH errand has been enhanced to also search for IP-based bindings and service keys.
 The errand has been renamed to `find-deprecated-bindings`.
 * The `find-deprecated-bindings` BOSH errand has clearer error messaging to more easily determine the cause of failure.
-* The AWS S3 Access Key ID and Secret Access Key fields in the Backups configuration pane in Ops Manager
+* The Amazon S3 Access Key ID and Secret Access Key fields in the Backups configuration pane in Ops Manager
 are no longer shown in plaintext.
 * Backup secrets are redacted.
 
@@ -133,7 +133,7 @@ are no longer shown in plaintext.
 This release fixes the following issues:
 
 * Fixes an issue where smoke tests fail if Service Plan Access is set to manual.
-* An attempt to install MySQL for PCF 2.4 with an incompatible version of PCF will fail fast
+* An attempt to install MySQL for PCF 2.4 with an incompatible version of PCF fails fast
 when the tile is staged, rather than when MySQL smoke tests are run.
 
 ## <a id="240"></a>v2.4.0
@@ -151,8 +151,8 @@ New features and changes in this release:
 
 **Improvements due to BOSH DNS**
 
-<p class="note warning"><strong> Important:</strong> For your app to reliably connect to MySQL over BOSH DNS,
-you must make sure that your app, or the MySQL client library that the app uses,
+<p class="note warning"><strong>Warning:</strong> For your app to reliably connect to MySQL over BOSH DNS,
+ensure that your app, or the MySQL client library that the app uses,
 retries in the case of DNS timeouts.</p>
 
 * Developers now connect to a service instance using its BOSH DNS hostname,
