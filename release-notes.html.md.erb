@@ -25,9 +25,9 @@ For product versions and upgrade paths, see the
 
 **Release Date:**  June 13, 2019
 
-### Resolved Issues
+### Resolved Issue
 
-This release fixes known issues, so that:
+This release has the following fix:
 
 * Smoke tests on MySQL for PCF now take the app domain as configured in the PAS tile.
 
@@ -49,7 +49,7 @@ New features and changes in this release:
   Previously, backups were run as an admin.
   * Updates Percona XtraDB Cluster to v5.7.25-31.35.
   For more information,
-  see [pxc-release v0.15.0](https://github.com/cloudfoundry-incubator/pxc-release/releases/tag/v0.15.0).
+  see [pxc-release v0.15.0](https://github.com/cloudfoundry-incubator/pxc-release/releases/tag/v0.15.0) in GitHub.
 
 ### Resolved Issues
 
@@ -133,9 +133,9 @@ New features and changes in this release:
 
 MySQL for PCF now supports three deployment topologies. In addition to single
 node and leader-follower service plans, operators can offer an HA cluster
-service plan. For information on how to configure an HA cluster plan, see
+service plan. For information about how to configure an HA cluster plan, see
 [Configure Service Plans](./install-config.html#active). For
-information on availability criteria for each topology, see
+information about availability criteria for each topology, see
 [Availability Options](./availability-options.html).
 
 Features of HA clusters include:
@@ -143,16 +143,16 @@ Features of HA clusters include:
 - Multiple deployments of HA clusters can be provisioned on demand.
 - Developers can view a dashboard to see the state of each node in an HA cluster.
   For more information, see [Monitor Node Health Using the Dashboard](./monitor-health.html#dashboard).
-- Connections to HA clusters are secured via TLS.
+- Connections to HA clusters are secured through TLS.
 - Monitoring, diagnostics, and backups are performed from a jumpbox VM.
-  For information on how to configure this VM,
+  For information about how to configure this VM,
   see [Configure Service Plans](./install-config.html#active).
 	- The jumpbox VM runs a replication canary that continuously tests replication health of cluster nodes.
           For more information, see [Replication Canary](./replication-canary.html).
 	- Operators can run diagnostics, such as disk usage, on an HA cluster by running `mysql-diag` on the jumpbox VM.
           For more information, see [Running mysql-diag](./mysql-diag.html).
 	- Like single node and leader-follower, configuring automatic backups is required.
-          For information on how to configure automated backups,
+          For information about how to configure automated backups,
           see [Configure Backups](./install-config.html#backups).
           For instructions to perform a manual backup and restore,
           see [Backing Up and Restoring On-Demand MySQL for PCF](./backup-and-restore.html).
