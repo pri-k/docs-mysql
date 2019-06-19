@@ -52,6 +52,11 @@ owner: MySQL
         <li><a href="#recreate-VM">Re-create a Corrupted VM in a Highly Available Cluster</a></li>
         <li><a href="#check-replication">Check Replication Status in a Highly Available Cluster</a></li>
       </ul>
+    <li><a href="#tools">Tools for Troubleshooting</a>
+      <ul>
+        <li><a href="#download-logs">download-logs</a></li>
+        <li><a href="#mysql-diag">mysql-diag</a></li>
+      </ul>
     </li>
     <li><a href="#kb">Knowledge Base (Community)</a></li>
     <li><a href="#support">File a Support Ticket</a></li>
@@ -597,9 +602,8 @@ node automatically rejoins only if one node has left the cluster. Consult your I
 to reduce your network latency.</li>
 <li><strong>MySQL Process Failure:</strong>
 If the MySQL process crashes, <code>monit</code> and BOSH should restore the process.
-If the process is not restored, consult error logs using the <code>download-logs</code> tool.
-For more information, see <a href="https://github.com/cloudfoundry-incubator/pxc-release/blob/master/scripts/download-logs">download-logs</a>
-in the <code>pxc-release</code> GitHub repository.
+If the process is not restored, run the <code>download-logs</code> tool and consult the error logs it generates.
+For more information, see the <a href="#download-logs">download-logs</a> section below.
 </li>
 <li><strong>Firewall Rule Change:</strong>
 If your firewall rules change, it might prevent a node from communicating with the rest of the cluster.
@@ -840,8 +844,6 @@ If your cluster is experiencing downtime or in a degraded state, Pivotal recomme
 gathering information to diagnose the type of failure the cluster is experiencing with the following
 workflow:
 
-   <%# BELOW LINK TO download-logs WILL CHANGE WHEN INCLUDED WITH MYSQL V2 RELEASE. WILL BE FILE PATH? %>
-
 <ol>
   <li>Consult solutions for common errors. See <a href="#ha-errors">Highly Available Cluster Troubleshooting Errors</a> above.
   </li>
@@ -856,20 +858,19 @@ workflow:
   </li>
 
   <li> Run <code>download-logs</code> against each node in your MySQL cluster, MySQL proxies, and
-    jumpbox VM. You must run <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible. <br><br>
-   For more information, see <a href="https://github.com/cloudfoundry/cf-mysql-release/blob/develop/scripts/download-logs">download-logs</a> in the <code>cf-mysql-release</code> GitHub repository.
-
-   <br><br>
+    jumpbox VM. You must run <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible. <br>
+    For more information, see the <a href="#download-logs">download-logs</a> section below.
+   <br>
     <p class="note"><strong>Note:</strong> Pivotal recommends that you use the <code>-X</code> flag to get the complete set of available logs.
     However, if your cluster processes a high volume of transactions, the complete set might be too
     large and you can omit this flag to fetch the essential set of logs.</li>
 
 <li> If you are uncertain about the recovery steps to take, submit a ticket through <a href="https://support.pivotal.io/">Pivotal Support</a>. When you submit a ticket provide the following information:
   <ul>
-    <li><strong>mysql-diag output:</strong> The ouput summary of the network, disk, and replication state.
+    <li><strong>mysql-diag output:</strong> A summary of the network, disk, and replication state.  The <a href="./mysql-diag.html">Running mysql-diag</a> topic explains how to run <strong>mysql-diag</strong>.
     </li>
-    <li><strong>download-logs logs:</strong> Logs about your MySQL cluster, MySQL proxies,
-      and jumpbox VM. </li>
+    <li><strong>download-logs logs:</strong> Logs from your MySQL cluster, MySQL proxies,
+      and jumpbox VM. The <a href="#download-logs"">download-logs</a> section below explains how to run <strong>download-logs</strong>.</li>
     <li><strong>Deployment environment:</strong> The environment that MySQL for PCF is running in such
       as Pivotal Application Service (PAS) or a service tile.</li>
     <li><strong>Version numbers:</strong> The versions of the installed Ops Manager, PAS,
@@ -1020,6 +1021,48 @@ To verify that the other nodes contain the same dummy data do the following for 
 <li> If each MySQL server instance does not return the same result, before proceeding further or making any changes to your deployment, contact <a href="https://support.pivotal.io/">Pivotal Support</a> <br>
 If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.</li>
 </ol>
+
+<a id="tools"></a><h2>Tools for Troubleshooting</h2>
+
+Troubleshooting techniques described above use the following tools.
+
+<h3><a id="download-logs"></a>download-logs</h3>
+
+`download-logs` is a script that you can run from your Ops Manager VM to aggregate logs from your MySQL cluster nodes, MySQL proxies, and with highly available clusters, the jumpbox VM.
+
+Do the following to run the `download-logs` script:
+
+1. Download and unpack the `download-logs` script from the
+[MySQL for PCF page](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
+
+1. From Ops Manager, open your **BOSH Director** tile > **Credentials** tab.
+
+1. Click **Bosh Commandline Credentials** > **Link to Credential**. A short plaintext file opens.
+
+1. From the plaintext file, record the values listed for `BOSH_CLIENT`, `BOSH_CLIENT_SECRET`, `BOSH_CA_CERT`, and `BOSH_ENVIRONMENT`.
+
+1. From the BOSH CLI, run `bosh deployments` and record the name of the BOSH deployment that deployed MySQL for PCF.
+
+1. Perform the steps [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather) and [SSH into Ops Manager]("https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh") of _Advanced Troubleshooting with the BOSH CLI_ to SSH into the Ops Manager VM.
+
+1. File transfer or copy-paste the `download-logs` script to a working directory on the Ops Manager VM.
+
+1. Set local environment variables to the same BOSH variable values that you recorded earlier, including `BOSH_DEPLOYMENT` for the deployment name.  For example:
+
+    <pre class="terminal">$ BOSH_CLIENT=ops_manager BOSH_CLIENT_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY BOSH_CA_CERT=/var/tempest/workspaces/default/root_ca_certificate BOSH_ENVIRONMENT=10.0.0.5 BOSH_DEPLOYMENT=pivotal-mysql-14c4
+    </pre>
+    
+1. Run the `download-logs` script, passing the output directory to the `-o` flag:
+    ```
+    ./download-logs -o .
+    ```
+
+1. The script saves a compressed file of logs combined from all MySQL VMs under a filename of the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
+
+
+<h3><a id="mysql-diag"></a>mysql-diag</h3>
+
+`mysql-diag` outputs the current status of a highly available (HA) MySQL cluster in PCF and suggests recovery actions if the cluster fails. For more information, see the [Running mysql-diag](./mysql-diag.html) topic.
 
 <a id="kb"></a><h2>Knowledge Base (Community)</h2>
 
