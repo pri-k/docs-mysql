@@ -22,12 +22,33 @@ New features and changes in this release:
 certificate authorities automatically rotate when
 an operator runs `upgrade-all-service-instances`. The new certificates and CAs do
 not expire for 5 years. 
-<p class="note warning"><strong>Warning:</strong> If you do not run <code>upgrade-all-service-instances</code> your certificates can expire. This can cause issues with backups, services bindings, and highly available clusters. </p>
+<p class="note warning"><strong>Warning:</strong> If you do not run <code>upgrade-all-service-instances</code>
+    your certificates can expire. This can cause issues with backups, services bindings, and highly available clusters. </p>
 
++ Galera (soon to be renamed to HA Clusters) now compatible with plug-ins for Encryption at Rest
+
++ We’ve made improvements to better handle empty data directory on initialization
+
++ We've made significant progress in moving to BPM (BOSH Process Manager). This
+is a significant departure from how jobs are launched
+
++ We've configured new MySQL properties to improve performance of Galera plans
+
++ Bumped the Percona Server version to v5.7.24-26
+
++ Bumped the Golang version to 1.12.x
+
+### Resolved Issues
+
++ Resolved an issue which enables Java applications to use Galera plans, with or without enabling TLS
+
++ Resolved issue with the internal diagnostic and backup components of Galera plans to make troubleshooting easier and more accurate
+
++ Resolved an issue so that the drain script no longer times out
 
 ### Known Issues
 
-There are no known issues for this release.
+There are no known issues for this release
 
 ### Compatibility
 
@@ -40,7 +61,7 @@ This release uses the following component versions:
 </tr>
 <tr>
     <td>Stemcell</td>
-    <td><a href="https://docs.pivotal.io/pivotalcf/stemcells/stemcells.html#170-line">Xenial 170.x</a></td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/2-6/stemcells/stemcells.html#315-line">315.x</a></td>
 </tr>
 </table>
 
