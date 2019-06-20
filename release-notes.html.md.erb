@@ -5,8 +5,8 @@ Owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older vX.x
-.x version, upgrade to the latest vX.x.x version before upgrading to the latest vX.x.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older v2.5
+.x version, upgrade to the latest v2.5.x version before upgrading to the latest v2.6.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
@@ -25,30 +25,29 @@ not expire for 5 years.
 <p class="note warning"><strong>Warning:</strong> If you do not run <code>upgrade-all-service-instances</code>
     your certificates can expire. This can cause issues with backups, services bindings, and highly available clusters. </p>
 
-+ Galera (soon to be renamed to HA Clusters) now compatible with plug-ins for Encryption at Rest
++ Galera (soon to be renamed to HA Clusters) is compatible with plug-ins for Encryption at Rest.
 
-+ We’ve made improvements to better handle empty data directory on initialization
++ Handling is improved for empty data directories on initialization.
 
-+ We've made significant progress in moving to BPM (BOSH Process Manager). This
-is a significant departure from how jobs are launched
++ MySQL for PCF relies significantly more on [BPM](https://bosh.io/docs/bpm/bpm/) (BOSH Process Manager) for how it launches jobs.
 
-+ We've configured new MySQL properties to improve performance of Galera plans
++ New MySQL property configurations improve performance of Galera plans.
 
-+ Bumped the Percona Server version to v5.7.24-26
++ Percona Server version is bumped to v5.7.24-26.
 
-+ Bumped the Golang version to 1.12.x
++ Golang version is bumped to 1.12.x.
 
 ### Resolved Issues
 
-+ Resolved an issue which enables Java applications to use Galera plans, with or without enabling TLS
++ Java apps can use Galera plans with or without enabling TLS.
 
-+ Resolved issue with the internal diagnostic and backup components of Galera plans to make troubleshooting easier and more accurate
++ Internal diagnostic and backup components of Galera plans make troubleshooting easier and more accurate.
 
-+ Resolved an issue so that the drain script no longer times out
++ The drain script no longer times out.
 
 ### Known Issues
 
-There are no known issues for this release
+There are no known issues for this release.
 
 ### Compatibility
 
