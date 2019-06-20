@@ -22,22 +22,25 @@ New features and changes in this release:
 certificate authorities automatically rotate when
 an operator runs `upgrade-all-service-instances`. The new certificates and CAs do
 not expire for 5 years. 
-<p class="note warning"><strong>Warning:</strong> If you do not run <code>upgrade-all-service-instances</code>
+<p class="note warning"><strong>Warning:</strong> If you do not run <code>upgrade-all-service-instances</code>,
     your certificates can expire. This can cause issues with backups, services bindings, and highly available clusters. </p>
 
-+ Galera (soon to be renamed to HA Clusters) is compatible with plug-ins for Encryption at Rest.
++ Galera (soon to be renamed to HA Clusters) is compatible with plugins for Encryption at Rest.
 
 + Handling is improved for empty data directories on initialization.
 
-+ MySQL for PCF relies significantly more on [BPM](https://bosh.io/docs/bpm/bpm/) (BOSH Process Manager) for how it launches jobs.
++ MySQL for PCF relies significantly more on bpm (BOSH Process Manager) for how it launches jobs.
+  For general information about bpm, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
 
 + New MySQL property configurations improve performance of Galera plans.
 
-+ Percona Server version is bumped to v5.7.24-26.
++ The Percona Server version is updated to v5.7.24-26.
 
-+ Golang version is bumped to 1.12.x.
++ The golang version is updated to v1.12.x.
 
 ### Resolved Issues
+
+This release has the following fixes:
 
 + Java apps can use Galera plans with or without enabling TLS.
 
