@@ -1028,26 +1028,36 @@ Troubleshooting techniques described above use the following tools.
 
 <h3><a id="download-logs"></a>download-logs</h3>
 
-`download-logs` is a script that you can run from your Ops Manager VM to aggregate logs from your MySQL cluster nodes, MySQL proxies, and with highly available clusters, the jumpbox VM.
+`download-logs` is a script that you can run from your Ops Manager VM to aggregate logs
+from your MySQL cluster nodes, MySQL proxies, and, with highly available clusters, the jumpbox VM.
 
 Do the following to run the `download-logs` script:
 
-1. Download and unpack the `download-logs` script from the
-[MySQL for PCF page](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
+1. Download and unpack the `download-logs` script from 
+   [MySQL for PCF](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
 
 1. From Ops Manager, open your **BOSH Director** tile > **Credentials** tab.
 
 1. Click **Bosh Commandline Credentials** > **Link to Credential**. A short plaintext file opens.
 
-1. From the plaintext file, record the values listed for `BOSH_CLIENT`, `BOSH_CLIENT_SECRET`, `BOSH_CA_CERT`, and `BOSH_ENVIRONMENT`.
+4. From the plaintext file, record the values listed for the following:
+  + `BOSH_CLIENT`
+  + `BOSH_CLIENT_SECRET`
+  + `BOSH_CA_CERT`
+  + `BOSH_ENVIRONMENT`
 
 1. From the BOSH CLI, run `bosh deployments` and record the name of the BOSH deployment that deployed MySQL for PCF.
 
-1. Perform the steps [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather) and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of _Advanced Troubleshooting with the BOSH CLI_ to SSH into the Ops Manager VM.
+1. SSH into your Ops Manager VM.
+   For information on how to do this,
+   see [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
+   and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
 
 1. File transfer or copy-paste the `download-logs` script to a working directory on the Ops Manager VM.
 
-1. Set local environment variables to the same BOSH variable values that you recorded earlier, including `BOSH_DEPLOYMENT` for the deployment name.  For example:
+1. Set local environment variables to the same BOSH variable values that you recorded earlier,
+   including `BOSH_DEPLOYMENT` for the deployment name.
+   For example:
 
     <pre class="terminal">$ BOSH_CLIENT=ops_manager BOSH_CLIENT_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY BOSH_CA_CERT=/var/tempest/workspaces/default/root_ca_certificate BOSH_ENVIRONMENT=10.0.0.5 BOSH_DEPLOYMENT=pivotal-mysql-14c4
     </pre>
@@ -1057,12 +1067,14 @@ Do the following to run the `download-logs` script:
     ./download-logs -o .
     ```
 
-1. The script saves a compressed file of logs combined from all MySQL VMs under a filename of the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
+1. The script saves a compressed file of logs combined from all MySQL VMs.
+   The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 
 
 <h3><a id="mysql-diag"></a>mysql-diag</h3>
 
-`mysql-diag` outputs the current status of a highly available (HA) MySQL cluster in PCF and suggests recovery actions if the cluster fails. For more information, see the [Running mysql-diag](./mysql-diag.html) topic.
+`mysql-diag` outputs the current status of a highly available (HA) MySQL cluster in PCF and suggests recovery actions if the cluster fails.
+For more information, see [Running mysql-diag](./mysql-diag.html).
 
 <a id="kb"></a><h2>Knowledge Base (Community)</h2>
 
