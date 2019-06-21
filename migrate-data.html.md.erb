@@ -30,7 +30,7 @@ The workflows described in this topic support the following use cases:
 + Migrating from an off-platform database to MySQL for PCF v2.x.
 + Migrating from one availability zone (AZ) to another.
 
-### <a id='how'></a>How the migrate Command Works
+## <a id='how'></a>How the migrate Command Works
 
 The `migrate` command performs a streaming `mysqldump` and restore to migrate
 data from your source MySQL database to a target MySQL for PCF v2 instance. This
@@ -50,6 +50,44 @@ and gives it the same name as the source MySQL service instance name.
 
 The command also appends `-old` to the source service instance name, whether it is another PCF MySQL service instance or a user-provided service created locally
 to help migrate an off-platform database.
+
+### <a id='security'></a>Security
+
+The `migrate` command supports connections over TLS. If TLS is configured in
+source and target MySQL instances, the channel through which data is streamed
+will be secured via TLS.
+
+For information on how to configure TLS in your service instance, see [Securing Service Instance Credentials with Runtime Credhub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html).
+
+### <a id='output'></a>Command Output
+
+If migration is successful, the `migrate` command output includes a
+<code>Migration completed successfully</code> message, as shown in this example:
+<pre class="terminal">
+$ cf mysql-tools migrate my-instance db-small
+2018/04/24 11:31:19 Creating new service instance "my-instance" for service p.mysql using plan db-small
+2018/04/24 11:41:01 Unpacking assets for migration to /var/folders/dm/66n2j9xx02l8vs58q2whz4080000gn/T/migrate_app_101341527
+2018/04/24 11:41:02 Started to push app
+Done uploading
+2018/04/24 11:41:09 Successfully pushed app
+2018/04/24 11:41:10 Successfully bound app to v1 instance
+2018/04/24 11:41:12 Successfully bound app to v2 instance
+2018/04/24 11:41:12 Starting migration app
+2018/04/24 11:41:25 Started to run migration task
+2018/04/24 11:41:27 Migration completed successfully
+2018/04/24 11:41:29 Cleaning up...
+</pre>
+
+If the migration is not successful, an error message appears.
+
+### <a id='debugging'></a>Debugging
+
+For debugging, you can optionally add the `--no-cleanup` flag to the `migrate` command.
+
+If a migration fails, this flag preserves the app that runs the migration task
+and the newly-created service instances.
+However, if a migration succeeds, the migration app is deleted
+even when the `migrate` command included `--no-cleanup`.
 
 ## <a id='prepare'></a>Prerequisites
 
@@ -117,42 +155,6 @@ Do the following to install the `mysql-tools` cf CLI plugin:
        cf mysql-tools migrate [-h] [--no-cleanup] &lt;v1-service-instance&gt; &lt;plan-type&gt;
        cf mysql-tools version
     </pre>
-
-### <a id='security'></a>Security
-
-The `migration` command supports connections over TLS. If TLS is configured in
-source and target MySQL instances, the channel through which data is streamed
-will be secured via TLS.
-
-For information on how to configure TLS in your service instance, see [Securing Service Instance Credentials with Runtime Credhub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html).
-
-### <a id='debugging'></a>Debugging
-
-For debug purposes, optionally add the `--no-cleanup` flag.
-This flag preserves the app that runs the migration task and the newly created service instances
-if the migration is not successful. However, if a migration succeeds, the migration app is cleaned
-even if the <code>--no-cleanup</code> flag is provided.
-
-An error message appears if the migration is not successful.
-If the migration **is** successful, a <code>Migration completed successfully</code> message appears
-in the messages returned to you after you run the migration command, as show in the example below.
-This message is the best indication that your migration process was successfully completed.
-
-For example:
-<pre class="terminal">
-$ cf mysql-tools migrate my-instance db-small
-2018/04/24 11:31:19 Creating new service instance "my-instance" for service p.mysql using plan db-small
-2018/04/24 11:41:01 Unpacking assets for migration to /var/folders/dm/66n2j9xx02l8vs58q2whz4080000gn/T/migrate_app_101341527
-2018/04/24 11:41:02 Started to push app
-Done uploading
-2018/04/24 11:41:09 Successfully pushed app
-2018/04/24 11:41:10 Successfully bound app to v1 instance
-2018/04/24 11:41:12 Successfully bound app to v2 instance
-2018/04/24 11:41:12 Starting migration app
-2018/04/24 11:41:25 Started to run migration task
-2018/04/24 11:41:27 Migration completed successfully
-2018/04/24 11:41:29 Cleaning up...
-</pre>
 
 ## <a id='source-access'></a>Set Up Source Access
 
