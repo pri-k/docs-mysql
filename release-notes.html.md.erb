@@ -18,21 +18,25 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 New features and changes in this release:
 
-+ When upgrading from MySQL for PCF v2.5 to v2.6, internal certificates and
-certificate authorities automatically rotate when
-an operator runs `upgrade-all-service-instances`. The new certificates and CAs do
-not expire for 5 years. 
-<p class="note warning"><strong>Warning:</strong> If you do not run <code>upgrade-all-service-instances</code>,
-    your certificates can expire. This can cause issues with backups, services bindings, and highly available clusters. </p>
++ By default, upgrading to MySQL for PCF v2.6 automatically rotates internal certificates and certificate authorities (CAs) to new ones that do not expire for 5 years.
+  <p class="note warning"><strong>Warning:</strong> Letting certificates and CAs expire can cause service bindings and backups to fail. </p>
+  - To guarantee that the certificates and CAs rotate, do one of the following:
+      - Before the upgrade, make sure that the **Post-Deploy Errands** > **Upgrade all On-demand MySQL Service Instances** dropdown is set to **Default (On)** in the MySQL v2 tile **Errands** pane.
+      - After the upgrade, run the `upgrade-all-service-instances` errand, as described in
+      [upgrade-all-service-instances](./errands.html#upgrade-all-service-instances).
+  - Upgrading to v2.6 does not rotate all the internal certificates and CAs used by highly available (HA) cluster plans. Whether the upgrade completes the rotation depends on which plans you have installed, as follows:
+      - **If you have HA cluster plans**: Upgrading to v2.7, when it is available, will complete
+      the rotation of all certificates and CAs.
+      - **If you have only single node and leader-follower plans**: Upgrading to v2.6 rotates all certificates and CAs.
 
-+ Galera (soon to be renamed to HA Clusters) is compatible with plugins for Encryption at Rest.
++ HA cluster plans (formerly named Galera) are compatible with plugins for Encryption at Rest.
 
 + Handling is improved for empty data directories on initialization.
 
 + MySQL for PCF relies significantly more on bpm (BOSH Process Manager) for how it launches jobs.
   For general information about bpm, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
 
-+ New MySQL property configurations improve performance of Galera plans.
++ New MySQL property configurations improve performance of HA cluster plans.
 
 + The Percona Server version is updated to v5.7.24-26.
 
@@ -42,9 +46,9 @@ not expire for 5 years.
 
 This release has the following fixes:
 
-+ Java apps can use Galera plans with or without enabling TLS.
++ Java apps can use HA cluster plans with or without enabling TLS.
 
-+ Internal diagnostic and backup components of Galera plans make troubleshooting easier and more accurate.
++ Internal diagnostic and backup components of HA cluster plans make troubleshooting easier and more accurate.
 
 + The drain script no longer times out.
 
