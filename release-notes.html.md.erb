@@ -20,7 +20,7 @@ New features and changes in this release:
 
 + By default, upgrading to MySQL for PCF v2.6 automatically rotates internal certificates and certificate authorities (CAs) to new ones that do not expire for 5 years.
   <p class="note warning"><strong>Warning:</strong> Letting certificates and CAs expire can cause service bindings and backups to fail. </p>
-  - To guarantee that the certificates and CAs rotate, do one of the following:
+  - To ensure that the certificates and CAs rotate, do one of the following:
       - Before the upgrade, make sure that the **Post-Deploy Errands** > **Upgrade all On-demand MySQL Service Instances** dropdown is set to **Default (On)** in the MySQL v2 tile **Errands** pane.<br>
       ![Upgrade All Instances Errand](upgrade-all-instances-errand.png)
       - After the upgrade, run the `upgrade-all-service-instances` errand, as described in
