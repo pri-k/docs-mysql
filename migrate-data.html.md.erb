@@ -192,14 +192,14 @@ To set up service instance sharing for your source database, do the following:
 1. Share the source MySQL service instance to your target org and space.
 
     ```
-    cf share-service SOURCE_MYSQL_INSTANCE -o TARGET_ORG -s TARGET_SPACE
+    cf share-service SOURCE-MYSQL-INSTANCE -o TARGET-ORG -s TARGET-SPACE
     ```
 
 1. Verify that you can access the source service instance from the target org/space.
    First, run the following command to target your target org and space:
 
     ```
-    cf target -o TARGET_ORG -s TARGET_SPACE
+    cf target -o TARGET-ORG -s TARGET-SPACE
     ```
 1. Then, run the following command to ensure your source service instance was
    shared successfully.
