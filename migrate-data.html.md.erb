@@ -23,7 +23,7 @@ To migrate data from a source MySQL instance to a new target MySQL instance in P
 The command only migrates views and does not migrate triggers, routines, or events.
 To manually migrate triggers, routines,	or events, contact <a href="https://pivotal.io/support">Pivotal Support</a>.</p>
 
-### <a id='use-cases'></a>Use Cases
+## <a id='use-cases'></a>Use Cases
 
 The workflows described in this topic support the following use cases:
 
@@ -49,7 +49,7 @@ command skips the following system schemas:
 Additionally, the migration skips MySQL stored routines, events, and triggers.
 Users must migrate these types of data manually.
 
-The `migrate` command creates a new MySQL for PCF v2 instance in the target space,
+The `migrate` command creates a new MySQL for PCF v2 instance in the target space
 and gives it the same name as the source MySQL service instance name.
 
 The command also appends `-old` to the source service instance name, whether it is another PCF MySQL service instance or a user-provided service created locally
@@ -59,9 +59,10 @@ to help migrate an off-platform database.
 
 The `migrate` command supports connections over TLS. If TLS is configured in
 source and target MySQL instances, the channel through which data is streamed
-will be secured via TLS.
+is secured via TLS.
 
-For information on how to configure TLS in your service instance, see [Securing Service Instance Credentials with Runtime Credhub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html).
+For information on how to configure TLS in your service instance,
+see [Securing Service Instance Credentials with Runtime Credhub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html).
 
 ### <a id='output'></a>Command Output
 
@@ -86,7 +87,7 @@ If the migration is not successful, an error message appears.
 
 ### <a id='debugging'></a>Debugging
 
-For debugging, you can optionally add the `--no-cleanup` flag to the `migrate` command.
+For debugging, you can add the optional `--no-cleanup` flag to the `migrate` command.
 
 If a migration fails, this flag preserves the app that runs the migration task
 and the newly-created service instances.
@@ -102,7 +103,7 @@ To perform the procedures in this topic, you must have the following:
   * a MySQL for PCF v1 service instance
   * a MySQL for PCF v2 service instance
   * a non-Pivotal MySQL database
-* MySQL for PCF v2.x installed in the target PCF environment you wish to migrate to.
+* MySQL for PCF v2.x installed in the target PCF environment you want to migrate to.
 * A MySQL for PCF service plan available in the targeted Org and Space you want
   to migrate your data to. The service plan should have the correct topology and
   resources for your target database. 
@@ -115,7 +116,8 @@ To perform the procedures in this topic, you must have the following:
 ### <a id='sizing'></a>Resource Planning
 
 Make sure the MySQL for PCF v2 service plan that you use for your
-migration target has your preferred VM type and persistent disk size. When there is not enough space on disk to store the data, migration fails.
+migration target has your preferred VM type and persistent disk size.
+When there is not enough space on disk to store the data, migration fails.
 
 The service plan that you select for your target service instance should have a persistent disk that is:
 
@@ -123,7 +125,7 @@ The service plan that you select for your target service instance should have a 
   * **HA Cluster**: Two times larger than the size of the source data.
 
 <p class="note warning"><strong>WARNING</strong>: Migrating large datasets can take several hours.
-Migration of the data is linear, and depends on the hardware being used.
+Migration of the data is linear and depends on the hardware being used.
 For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
 Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
 
@@ -168,12 +170,12 @@ How you enable this access depends on where the source database is located relat
 * **Migrating Within an Org and Space**: The `migrate` command can access the source without any preparation.
 Continue to [Migrate Data](#migrate-data).
 * **Migrating Across Spaces**: If the source database is in a different space from the target,
-enable access through service-instance sharing, as described in [Source Access Across Spaces](#across-spaces), below.
+enable access through service-instance sharing, as described in [Source Access across Spaces](#across-spaces), below.
 * **Migrating from Off-Platform**: If the source database is in a different PCF foundation from the target, or not on any PCF foundation,
 create a user-provided service that accesses the remote database,
 as described in [Source Access Off-Platform](#off-platform), below.
 
-### <a id='across-spaces'></a>Source Access Across Spaces
+### <a id='across-spaces'></a>Source Access across Spaces
 
 If your source MySQL service instance is in a different development space from your target org and space,
 you can migrate your data by enabling service instance sharing for the source database.
@@ -258,7 +260,7 @@ After seeing that your user-provided service instance was created, continue to [
 
 ## <a id='migrate-data'></a>Migrate Data
 
-Once your source database is accessible to your destination space, perform the following steps to migrate your data:
+When your source database is accessible to your destination space, perform the following steps to migrate your data:
 
 1. If your source MySQL service instance is running on PCF, do the following to stop all traffic to the service instance, by stopping and unbinding all apps
 that use it:
@@ -316,7 +318,7 @@ For example, `db-small`.
     cf mysql-tools migrate SOURCE-INSTANCE V2-PLAN
     ```
     Where:
-    * `SOURCE-INSTANCE` is the name of your source MySQL service instance,
+    * `SOURCE-INSTANCE` is the name of your source MySQL service instance
      or user-provided service instance.
     * `V2-PLAN` is the name of the service plan that you chose above.
 
