@@ -9,7 +9,6 @@ owner: MySQL
   <ul>
     <li><a href="#errors">Troubleshooting Errors</a>
       <ul>
-        <li><a href="#deprecated-service-bindings">Deprecated Service Bindings Found (Upgrade Error)</a></li>
         <li><a href="#install-fail">Failed Install</a></li>
         <li><a href="#cannot-create-delete">Cannot Create or Delete Service Instances</a></li>
         <li><a href="#timeouts">Broker Request Timeouts</a></li>
@@ -71,69 +70,6 @@ For information on temporary MySQL for PCF service interruptions, see <a href=".
 <a id="errors"></a><h2>Troubleshooting Errors</h2>
 
 This section provides information on how to troubleshooting specific errors or error messages.
-
-<a id="deprecated-service-bindings"></a><h3>Deprecated Service Bindings Found (Upgrade Error)</h3>
-
-This problem happens when upgrading to MySQL for PCF v2.5 if there are service bindings that are still using IP addresses.
-
-<h4>Symptom</h4>
-
-You see in the Ops Manager installation pane that the upgrade process fails at the following step:
-
-<%= image_tag("error-step.png") %>
-
-The error output in the logs contains a table of bindings or service keys which must be updated.
-
-<pre class="terminal">
-Stdout    +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          |          SERVICE          |             SERVICE GUID             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no dns: hostname="10.0.8.5" |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept-tls      | AppBinding        | no dns: hostname="10.0.8.6" |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | test-cli           | ServiceKeyBinding | no dns: hostname="10.0.8.6" |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-
-Errand 'validate-before-upgrade-instances' completed with error (exit code 1)
-Exit code 1
-Stderr     2018/12/18 02:51:51 Deprecated service instances found, try upgrade it manually before upgrading tile
-</pre>
-
-<h4>Explanation</h4>
-
-In MySQL for PCF v2.5, if you run <code>upgrade-all-service-instances</code> while there
-are service bindings that use IP addresses, app downtime can occur. This is
-because bindings are still directing apps to connect with IP addresses, but the
-TLS certificate is signed with a DNS hostname. This prevents apps that validate
-the server hostname in the TLS certificate from establishing a TLS connection
-to the database.
-<br><br>
-In MySQL for PCF v2.5, the <code>validate-before-upgrade-instances</code> errand checks
-that there are no service bindings or service keys using IP addresses, and, if
-there are, outputs the above error and prevents the
-<code>upgrade-all-service-instances</code> errand from running.
-<br><br>
-For general information about errands, including the <code>upgrade-all-service-instances</code> errand, see <a href="./errands.html">MySQL for PCF Errands</a>.
-
-
-<h4>Solution</h4>
-
-To solve this issue, do the following:
-<ol>
-  <li>Do the procedures in <a href="./upgrade.html#remove-bindings">Remove Deprecated Bindings</a>.<br>
-  After you restart all of your apps, your apps can connect to the database and resume service.
-  However, your Ops Manager installation is still in a failed state.</li>
-  <li>To finish the installation, do the following:
-    <ol>
-      <li>In the Ops Manager Installation Dashboard, click <strong>Review Pending Changes</strong>.</li>
-      <li>In the <strong>Review Pending Changes</strong> pane, ensure that the
-        <strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong>
-        and <strong>Upgrade all On-demand MySQL Service Instances</strong> errands are selected.</li>
-      <li>After reviewing the pending changes, click <strong>Apply Changes</strong> to complete the installation.</li>
-    </ol>
-  </li>
-</ol>
 
 <a id="install-fail"></a><h3>Failed Install</h3>
 
