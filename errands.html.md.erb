@@ -35,15 +35,11 @@ For example:
 
 ### <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
-The `find-deprecated-bindings` errand lists apps and service keys that are deprecated or unsupported in PCF v2.5 because of either of the following: 
-
-+ They use IP addresses instead of DNS.  This unsupported in PCF v2.5.
-+ They do not require TLS.  This is deprecated in PCF v2.5.  
+The `find-deprecated-bindings` errand lists apps and service keys that are deprecated in PCF v<%= vars.current_minor_version %> because they do not require TLS.
 Pivotal recommends that operators configure bindings to require TLS,
 in the MySQL tile **Security** pane > **TLS Options**.
 
-Run the `find-deprecated-bindings` errand before upgrading to MySQL for PCF v2.5.
-The errand exits whether or not a deprecated or unsupported binding is found.
+The errand exits whether or not a deprecated binding is found.
 
 See below example of the errand output:
 
@@ -70,9 +66,7 @@ Stdout     +---------------------------+--------------------------------------+-
            |          SERVICE          |             SERVICE GUI             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
            +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
            | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no tls                      |
-           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no dns: hostname="10.0.8.6" |
-           | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no dns: hostname="10.0.8.5" |
-           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept-tls      | AppBinding        | no dns: hostname="10.0.8.6" |
+           | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no tls
            +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
 </pre>
 
