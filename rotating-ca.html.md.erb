@@ -8,26 +8,28 @@ owner: MySQL
 This topic describes how to check expiration dates and rotate certificate authority (CA) certificates
 and other certificates used by MySQL for PCF.
 
-If you are using TLS for MySQL for PCF, you provided a CA certificate to BOSH CredHub when performing the procedures in [Preparing for TLS](prepare-tls.html).
-Operators must rotate these CA certificates before the certificates expire or if they are compromised. 
+If you are using TLS for MySQL for PCF, you provided a CA certificate to BOSH
+CredHub when performing the procedures in [Preparing for TLS](prepare-tls.html).
+Operators must rotate these CA certificates before the certificates expire or if they are compromised.
 
-<p class="note warning"><strong>WARNING</strong>: Do not attempt to rotate a CA certificate on your own.
+<p class="note warning"><strong>Warning</strong>: Do not attempt to rotate a CA certificate on your own.
 Contact <a href="https://support.pivotal.io">Pivotal Support</a>
 and perform the following procedures with their help.</p>
 
 ## <a id="credhub"></a> Access BOSH CredHub
 
-Pivotal Cloud Foundry (PCF) stores some of its internal CA and non-CA certificates 
-in the [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh) credentials store.
+Pivotal Cloud Foundry (PCF) stores some of its internal CA and non-CA certificates
+in the BOSH CredHub credentials store.
+For more information, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
 
 Many certificate management functions start with accessing BOSH CredHub
 and running CredHub CLI commands.
 To do this, you must gather information from the BOSH Director
-and then use it to log into CredHub from the Ops Manager VM.
+and then use it to log in to CredHub from the Ops Manager VM.
 The procedure runs as follows:
 
-1. If the CredHub CLI is not installed on your machine, follow the installation
-instructions in the [CredHub CLI GitHub repository](https://github.com/cloudfoundry-incubator/credhub-cli).
+1. If the CredHub CLI is not installed on your local machine, follow the installation
+instructions in the [credhub-cli](https://github.com/cloudfoundry-incubator/credhub-cli) repository in GitHub.
 
 1. In the Ops Manager Installation Dashboard, click the **BOSH Director** tile.
 
@@ -48,12 +50,14 @@ instructions in the [CredHub CLI GitHub repository](https://github.com/cloudfoun
   The `BOSH_CLIENT` is the BOSH CredHub client name and the `BOSH_CLIENT_SECRET` is
   the BOSH CredHub client secret.
 
-1. Record the information needed to log in to the BOSH Director VM by following the procedure in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather).
+1. Record the information needed to log in to the BOSH Director VM by following the procedure in
+[Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather).
 
-1. Log in to the Ops Manager VM by following the procedure in [Log in to the Ops Manager VM with SSH](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh).
+1. Log in to the Ops Manager VM by following the procedure in
+[Log in to the Ops Manager VM with SSH](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh).
 
 1. From the Ops Manager VM, set the API target of the CredHub CLI to your BOSH
-CredHub server by running the following: 
+CredHub server by running the following:
 
     ```
     credhub api https://BOSH-DIRECTOR:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate
@@ -71,9 +75,10 @@ CredHub server by running the following:
     credhub login --client-name=CREDHUB-CLIENT-NAME --client-secret=CREDHUB-CLIENT-SECRET
     ```
     Where:<br>
-    * `CREDHUB-CLIENT-NAME` is the value you recorded for `BOSH_CLIENT` in step 4 in
-    [Find the CredHub Credentials](#credhub-creds) above.
-    * `CREDHUB-CLIENT-SECRET` is the value you recorded for `BOSH_CLIENT_SECRET` in step 4 in [Find the CredHub Credentials](#credhub-creds) above.
+    * `CREDHUB-CLIENT-NAME` is the value you recorded for `BOSH_CLIENT` in step 5
+    of this procedure.
+    * `CREDHUB-CLIENT-SECRET` is the value you recorded for `BOSH_CLIENT_SECRET`
+    in step 5 of this procedure.
     <br><br>
     For example:
     <pre class="terminal">
@@ -88,7 +93,8 @@ To check certificate expiration dates, do the following:
 
 1. Log in to CredHub, following the [Access BOSH CredHub](#credhub) procedure above.
 
-1. Run the following command:
+1. Run the following command to retrieve the certificate from CredHub, parse its JSON structure,
+decrypt it, and finds its `Validity` properties:
 
     ```
     credhub get -n CREDENTIAL-NAME -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
@@ -101,9 +107,9 @@ To check certificate expiration dates, do the following:
               Not Before: Jan 23 19:04:58 2019 GMT
               Not After : Jan 23 19:04:58 2020 GMT
     </pre>
-  - This command retrieves the certificate from CredHub, parses its JSON structure, decrypts it, and finds its `Validity` properties.
-  - For a list of MySQL for PCF credentials, see the Knowledge Base article
-  [Rotating MySQL Certificates while upgrading to MySQL for PCF 2.6.x](https://community.pivotal.io/s/article/rotating-mysql-certificates-in-upgrading-to-mysql-2-6-x).
+  For a list of MySQL for PCF credentials, see
+  [Rotating MySQL Certificates while upgrading to MySQL for PCF 2.6.x](https://community.pivotal.io/s/article/rotating-mysql-certificates-in-upgrading-to-mysql-2-6-x)
+  in the Pivotal Support knowledge base.
 
 1. The command output lists the expiration date as `Not After`.
 
@@ -120,25 +126,25 @@ To rotate CA certificates, you must do the following:
 
 To add a new CA Certificate to Ops Manager, do the following:
 
-<p class="note warning"><strong>WARNING</strong>: This procedure involves restarting
+<p class="note warning"><strong>Warning</strong>: This procedure involves restarting
 all of the VMs in your PCF deployment to apply a CA certificate. The
 operation can take a long time to complete.</p>
 
-1. Follow the [Access BOSH CredHub](#credhub) procedure above to log into BOSH CredHub.
+1. Follow the [Access BOSH CredHub](#credhub) procedure above to log in to BOSH CredHub.
 
 1. Do one of the following, based on whether you want to generate a new CA certificate or use an existing one:
   <p class="note"><strong>Note</strong>: Your PCF deployment can have
   multiple CA certificates.
    Pivotal recommends using a dedicated CA certificate for each service.</p>
     * **Generate a new certificate**: If you do not have a CA certificate run the following:
-    
+
         ```
-        credhub regenerate --name="/services/tls_ca" 
-        ```  
+        credhub regenerate --name="/services/tls_ca"
+        ```
     * **Use an existing certificate**: Create
     a new file called `root.pem` with the contents of the certificate.
     Then run the following command:
-    
+
         ```
         credhub set \
             --name="/services/tls_ca" \
@@ -159,19 +165,23 @@ by running the following command:
     ```
 
 1. Copy the output.
+
 1. Navigate to the **Installation Dashboard** in Ops Manager and select the BOSH Director tile.
 Click **Security**.
-1. Append the contents of the new CA certificate to the old CA certificate under **Trusted Certificates**. Do not remove the old CA certificate. Click **Save**.
+
+1. Append the contents of the new CA certificate to the old CA certificate under **Trusted Certificates**.
+Do not remove the old CA certificate. Click **Save**.
+
 1. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
-This restarts all the VMs in your PCF deployment and applies your CA certificate. 
+This restarts all the VMs in your PCF deployment and applies your CA certificate.
 
 ### <a id="regenerate"></a> Regenerate Internal Certificates
 
 To regenerate your internal certificates and redeploy your service instances, follow the procedure below:
 
-1. Follow the [Access BOSH CredHub](#credhub) procedure above to log into BOSH CredHub.
-    
-1. To regenerate all certificates signed by the old CA certificate, run the following
+1. Follow the [Access BOSH CredHub](#credhub) procedure above to log in to BOSH CredHub.
+
+1. To regenerate all certificates signed by the old CA certificate, run the following:
 
     ```
     curl "https://BOSH-DIRECTOR/api/v1/bulk-regenerate"" -X POST \
@@ -179,39 +189,44 @@ To regenerate your internal certificates and redeploy your service instances, fo
     -H "authorization: bearer $(credhub --token)"\
     -H 'content-type: application/json'
     ```
-    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM. 
-    
-1. To redeploy all service instances with the new certificates, run the following: 
+    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM.
+
+1. To redeploy all service instances with the new certificates, run the following:
 
     ```
-    bosh -d p-mysql-GUID run-errand upgrade-all-service-instances  
+    bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
     ```
     Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
 
 
 ### <a id='rebind'></a> Rebind Your App
-If your apps do not use the trusted store to validate server certificates, developers must re-bind apps to the service instance to receive the updated CA certificate. Apps not written in Java and Spring do not use the trusted store.
 
-If you are rotating your CA certificate because it was compromised, you must remove your old CA certificate before rebinding your app. If you have not removed your old CA certificate, see [Remove Old the CA Certificate](#remove) below.
+If your apps do not use the trusted store to validate server certificates, developers
+ must re-bind apps to the service instance to receive the updated CA certificate.
+ Apps not written in Java and Spring do not use the trusted store.
+
+If you are rotating your CA certificate because it was compromised, you must remove
+your old CA certificate before rebinding your app.
+If you have not removed your old CA certificate, see [Remove Old the CA Certificate](#remove) below.
 
 To re-bind your app, do the following:
 
 1. To stop your app, run the following command:
-	
-	```	
+
+	```
 	cf stop YOUR-APP
 	```
-	Where `YOUR-APP` is the name of your app. 
-	
+	Where `YOUR-APP` is the name of your app.
+
 1. To unbind your app from the service instance, run the following command:
-	
+
 	```
 	cf unbind-service YOUR-APP YOUR-SERVICE-INSTANCE
 	```
 	Where:
 	+ `YOUR-APP` is the name of your app.
 	+ `YOUR-SERVICE-INSTANCE` is the name of your service instance.
-	
+
 1. To re-bind your app to the service instance, run the following command:
 
 	```
@@ -221,25 +236,30 @@ To re-bind your app, do the following:
 	+ `YOUR-APP` is the name of your app.
 	+ `YOUR-SERVICE-INSTANCE` is the name of your service instance.
 1. To restage your app, run the following command:
-	
+
 	```
 	cf restage YOUR-APP
 	```
-	Where `YOUR-APP` is the name of your app. 
+	Where `YOUR-APP` is the name of your app.
 
-                                   
+
 ### <a id="remove"></a> Remove Old the CA Certificate
 
-<p class="note warning"><strong>WARNING!</strong> This procedure involves restarting
+<p class="note warning"><strong>Warning: </strong> This procedure involves restarting
 	all of the VMs in your PCF deployment to apply a CA certificate. The
 	operation can take a long time to complete.</p>
 
-After your apps have reconnected to service instances with certificates generated by the new CA, do the following to remove the old CA certificate:
+After your apps have reconnected to service instances with certificates generated
+by the new CA, do the following to remove the old CA certificate:
 
-1. Navigate to the **Installation Dashboard** in Ops Manager and click the BOSH Director tile. Click **Security**.
+1. Navigate to the **Installation Dashboard** in Ops Manager and click the BOSH
+Director tile. Click **Security**.
 
 1. Remove the old CA certificate in Trusted Certificates and click **Save**.
 
-1. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**. This restarts all the VMs in your deployment.   
+1. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
+This restarts all the VMs in your deployment.
 
-1. If you are rotating your CA certificate because it was compromised, you must rebind your apps to update the CA certificate. See [Rebind Your App](#rebind) above.
+1. If you are rotating your CA certificate because it was compromised, you must
+rebind your apps to update the CA certificate. See [Rebind Your App](#rebind) above.
+
