@@ -99,7 +99,7 @@ decrypt it, and finds its `Validity` properties:
     ```
     credhub get -n CREDENTIAL-NAME -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
     ```
-    Where: `CREDENTIAL-NAME` is the name of the credential you are checking.<br />
+    Where: `CREDENTIAL-NAME` is the name of the credential you are checking.<br /><br>
     For example:
     <pre class="terminal">
     $ credhub get -n /dedicated-mysql-broker/agent_ca -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
