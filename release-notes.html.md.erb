@@ -10,6 +10,33 @@ Pivotal recommends that you upgrade to the latest version of your current minor 
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
+## <a id="262"></a> v2.6.2
+
+**Release Date: July 19, 2019**
+
+### Known Issues
+
+There are no known issues for this release.
+
+### Features
+
+New features and changes in this release:
+
++ MySQL for PCF v2.6.2 bumps the global service instance limit to 500 instances.
++ Better error messaging when attempting to do `cf bind-service` on a service instances that is on an older version than the MySQL service broker.
++ Renames "Galera [BETA]" service plan type to "HA Cluster [BETA]".
++ Bumps the service instance limit for "HA Cluster [BETA]" service plan types to 50 instances.
++ Bumps AWS CLI version used by automatic backups to support non-public AWS regions and external object stores that require the v4 signature.
++ Allows developers to bind their app to a custom schema in the database. 
+
+### Bug Fixes
+
++ Fixes bug where the smoke tests CF app respects the `apps_domain` configured in the PAS tile.
+
+### Dependency Updates
+
++ Bumps Golang version to v1.12.
+
 ## <a id="260"></a> v2.6.0
 
 **Release Date: June 19, 2019**
