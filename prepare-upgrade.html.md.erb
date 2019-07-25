@@ -28,7 +28,8 @@ To check for running app or service key bindings that use IP addresses, do the f
   bosh deployments
     ```
 
-1. Run the following command to list current bindings that use IP addresses:
+1. Run the following command, which lists bindings that use IP addresses
+or do not use TLS:
 
     ```
     bosh -d pivotal-mysql-GUID run-errand find-deprecated-bindings
@@ -67,51 +68,21 @@ To check for running app or service key bindings that use IP addresses, do the f
                +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
     </pre>
 
-1. Perform the [Remove Deprecated Bindings](#remove-bindings) procedure below
+1. Perform the [Remove IP-Based Bindings](#remove-bindings) procedure below
 for any apps or service keys that list `no dns` in the `REASON` column of the output table.
-For example output, see [find-deprecated-bindings](errands.html#find-deprecated-bindings).
+  <p class="note"><strong>Note</strong>: You do not need to replace bindings listed as <code>no tls</code>.</p>
 
-## <a id="remove-bindings"></a> Remove Deprecated Bindings
+## <a id="remove-bindings"></a> Remove IP-Based Bindings
 
 Some of the following steps require coordination with your app developers.
 To remove deprecated bindings, do the following:
 
+1. Have developers replace their IP-based service bindings with bindings that use BOSH DNS.
+See [Re-Bind Apps to Use DNS](#rebind-apps) below.
 1. Upgrade your service instances to be compatible with BOSH DNS.
-See [Upgrade Service Instance](#upgrade-bindings) below.
-1. Replace deprecated service bindings to use BOSH DNS.
-See [Replace Deprecated Bindings](#replace-bindings) below.
+See [Upgrade Service Instances](#upgrade-instances) below.
 
-### <a id="upgrade-bindings"></a> Upgrade Service Instances
-
-To upgrade your service instances, operators must do the following:
-
-1. Notify the developers who own the apps listed by the `find-deprecated-bindings`above
-that you will be upgrading all service instances, which can impact app connectivity to the database.
-1. Log in to the BOSH Director by following the procedure in
-[Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
-1. Locate the BOSH deployment name for your MySQL service broker, by running the following command:
-
-    ```
-    bosh deployments
-    ```
-1. Record the BOSH deployment name for the MySQL service broker, which looks like `pivotal-mysql-GUID`.
-1. Upgrade all service instances by running the following command:
-
-    ```
-    bosh -d pivotal-mysql-GUID run-errand upgrade-all-service-instances
-    ```
-
-    Where `pivotal-mysql-GUID` is the value you recorded in the previous step.
-
-1. Notify your developers that, at this time, they will see that apps that do
-hostname validation cannot establish a TLS connection to the database.
-These apps will output an error similar the following example:
-
-    <pre class="terminal">
-    failed to perform TLS handshake with host "10.0.8.5:3306": x509: certificate is valid for 127.0.0.1, not 10.0.8.5
-    </pre>
-
-### <a id="replace-bindings"></a> Replace Deprecated Bindings
+### <a id="rebind-apps"></a> Re-Bind Apps to Use DNS
 
 To replace your deprecated service bindings with new service bindings that use DNS hostnames,
 developers must do the following for each binding listed in the log error above:
@@ -141,3 +112,33 @@ developers must do the following for each binding listed in the log error above:
      ```
 
 1. Ensure that `no dns` does not appear in the `REASON` column in the output table.
+
+### <a id="upgrade-instances"></a> Upgrade Service Instances
+
+To upgrade your service instances, operators must do the following:
+
+1. Notify the developers who own the apps listed by the `find-deprecated-bindings`above
+that you will be upgrading all service instances, which can impact app connectivity to the database.
+1. Log in to the BOSH Director by following the procedure in
+[Log in to the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
+1. Locate the BOSH deployment name for your MySQL service broker, by running the following command:
+
+    ```
+    bosh deployments
+    ```
+1. Record the BOSH deployment name for the MySQL service broker, which looks like `pivotal-mysql-GUID`.
+1. Upgrade all service instances by running the following command:
+
+    ```
+    bosh -d pivotal-mysql-GUID run-errand upgrade-all-service-instances
+    ```
+
+    Where `pivotal-mysql-GUID` is the value you recorded in the previous step.
+
+1. Notify your developers that, at this time, they will see that apps that do
+hostname validation cannot establish a TLS connection to the database.
+These apps will output an error similar the following example:
+
+    <pre class="terminal">
+    failed to perform TLS handshake with host "10.0.8.5:3306": x509: certificate is valid for 127.0.0.1, not 10.0.8.5
+    </pre>
