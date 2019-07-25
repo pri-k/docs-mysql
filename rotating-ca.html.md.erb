@@ -120,7 +120,7 @@ To rotate CA certificates, you must do the following:
 1. [Add a New CA Certificate](#add)
 1. [Regenerate Internal Certificates](#regenerate)
 1. [Rebind Your App](#rebind)
-1. [Remove Old the CA Certificate](#remove)
+1. [Remove the Old CA Certificate](#remove)
 
 ### <a id="add"></a> Add a New CA Certificate
 
@@ -207,7 +207,7 @@ If your apps do not use the trusted store to validate server certificates, devel
 
 If you are rotating your CA certificate because it was compromised, you must remove
 your old CA certificate before rebinding your app.
-If you have not removed your old CA certificate, see [Remove Old the CA Certificate](#remove) below.
+If you have not removed your old CA certificate, see [Remove the Old CA Certificate](#remove) below.
 
 To re-bind your app, do the following:
 
@@ -243,7 +243,7 @@ To re-bind your app, do the following:
 	Where `YOUR-APP` is the name of your app.
 
 
-### <a id="remove"></a> Remove Old the CA Certificate
+### <a id="remove"></a> Remove the Old CA Certificate
 
 <p class="note warning"><strong>Warning: </strong> This procedure involves restarting
 	all of the VMs in your PCF deployment to apply a CA certificate. The
