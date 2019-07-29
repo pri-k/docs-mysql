@@ -172,14 +172,16 @@ Click **Security**.
 1. Append the contents of the new CA certificate to the old CA certificate under **Trusted Certificates**.
 Do not remove the old CA certificate. Click **Save**.
 
-1. Navigate back to the **Installation Dashboard**.
+1. Ensure that the **Upgrade all On-demand MySQL Service Instances** errand is checked:
 
-1. Click **Review Pending Changes**.
+  1. Navigate back to the **Installation Dashboard**.
 
-1. Click **ERRANDS**.
+  1. Click **Review Pending Changes**.
 
-1. Ensure that the **Upgrade all On-demand MySQL Service Instances** errand is checked.
-![Select errands to run during deployment](select-errands.png)
+  1. Click **ERRANDS**.
+
+  1. Select **Upgrade all On-demand MySQL Service Instances**.
+    ![Select errands to run during deployment](select-errands.png)
 
 1. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
 This restarts all the VMs in your PCF deployment and applies your CA certificate.
