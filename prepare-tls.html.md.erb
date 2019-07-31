@@ -70,6 +70,10 @@ For information about how to rotate your CA certificate, see
 
 Follow the procedures below to generate and add a CA certificate.
 
+<p class="note"><strong>Note:</strong> If you are using Ops Manager v2.6 or later,
+you do not need to generate the CA certificate because the certificate is provided by Ops Manager.
+The steps that Ops Manager v2.6 users can skip are marked below.</p>
+
 
 ###<a id='credhub-creds'></a> Find the CredHub Credentials in Ops Manager
 
@@ -105,9 +109,7 @@ To find the BOSH CredHub client name and client secret, do the following:
 To generate and add the CA Certificate to Ops Manager, do the following:
 
 1. From the Ops Manager VM, set the API target of the CredHub CLI to your BOSH
-CredHub server.
-    <br><br>
-    Run the following command:
+CredHub server by running the following command:
 
     ```
     credhub api https://BOSH-DIRECTOR:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate
@@ -120,9 +122,7 @@ CredHub server.
     $ credhub api http<span>s:</span>//10.0.0.5:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate
     </pre>
 
-1. Log in to CredHub.
-    <br><br>
-    Run the following command:
+2. Log in to CredHub by running the following command:
 
     ```
     credhub login --client-name=CREDHUB-CLIENT-NAME --client-secret=CREDHUB-CLIENT-SECRET
@@ -139,16 +139,16 @@ CredHub server.
     	--client-name=credhub \
     	--client-secret=abcdefghijklm123456789
     </pre>
-1. Use the CredHub CLI to check whether a services CA certificate already is present.
-	<br><br>
-	 Run following command:
+
+3. If you are using Ops Manager v2.6 or later, go to step 5.
+   Otherwise, find out if a services CA certificate already is present by running the following command:
 
   	```
   	credhub get --name="/services/tls_ca"
   	```
-  If you already have a certificate at the `services/tls_ca` path, skip step 4.
+  If you already have a certificate at the `services/tls_ca` path, go to step 5.
 
-1. Use the CredHub CLI to generate a CA certificate or provide an existing one.
+4. Use the CredHub CLI to generate a CA certificate or provide an existing one.
     <p class="note"><strong>Note</strong>: Your PCF deployment can have
 			multiple CA certificates.
        Pivotal recommends a dedicated CA certificate for services.</p>
@@ -173,20 +173,20 @@ CredHub server.
             --private=ERKSOSMFF...
         </pre>
 
-1. Use the BOSH CLI v2 to extract the `certificate` portion from the CA certificate and print it.
-    Run the following command:
+5. Use the BOSH CLI v2 to extract the `certificate` portion from the CA certificate and print it
+    by running the following command:
 
     ```
     bosh2 int <(credhub get \
     --name=/services/tls_ca) \
     --path /value/certificate
     ```
-1. Copy the output.
-1. Navigate to the Ops Manager **Installation Dashboard** and select the BOSH Director tile.
+6. Copy the output.
+7. Navigate to the Ops Manager **Installation Dashboard** and select the BOSH Director tile.
 Click **Security**.
-1. Paste the contents of the CA certificate into **Trusted Certificates** and
+8. Paste the contents of the CA certificate into **Trusted Certificates** and
  click **Save**.
-1. After preparing your environment for TLS, you must enable TLS in the tile
+9. After preparing your environment for TLS, you must enable TLS in the tile
 configuration while installing MySQL for PCF:
     * **Existing Installation**: If you have already installed the MySQL for PCF
 		tile, perform the procedures
