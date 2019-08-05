@@ -22,12 +22,12 @@ There are no known issues for this release.
 
 New features and changes in this release:
 
-+ MySQL for PCF v2.6.2 bumps the global service instance limit to 500 instances.
++ MySQL for PCF v2.6.2 updates the global service instance limit to 500 instances.
 + Better error messaging when attempting to do `cf bind-service` on a service instances that is on an older version than the MySQL service broker.
-+ Renames "Galera [BETA]" service plan type to "HA Cluster [BETA]".
-+ Bumps the service instance limit for "HA Cluster [BETA]" service plan types to 50 instances.
-+ Bumps AWS CLI version used by automatic backups to support non-public AWS regions and external object stores that require the v4 signature.
-+ Allows developers to bind their app to a custom schema in the database. 
++ Renames **Galera [BETA]** service plan type to **HA Cluster [BETA]**.
++ Updates the service instance limit for highly available (HA) cluster service plan types to 50 instances.
++ Updates AWS CLI version used by automatic backups to support non-public AWS regions and external object stores that require the v4 signature.
++ Enables developers to bind their app to a custom schema in the database. 
 
 ### Bug Fixes
 
@@ -35,7 +35,7 @@ New features and changes in this release:
 
 ### Dependency Updates
 
-+ Bumps Golang version to v1.12.
++ Updates Golang version to v1.12.
 
 ## <a id="260"></a> v2.6.1
 
@@ -49,19 +49,10 @@ New features and changes in this release:
 
 New features and changes in this release:
 
-+ By default, upgrading to MySQL for PCF v2.6 automatically rotates internal certificates and certificate authorities (CAs) to new ones that do not expire for 5 years.
-  <p class="note warning"><strong>Warning:</strong> Letting certificates and CAs expire can cause service bindings and backups to fail. </p>
-  - To ensure that the certificates and CAs rotate, do one of the following:
-      - Before the upgrade, make sure that the **Post-Deploy Errands** > **Upgrade all On-demand MySQL Service Instances** dropdown is set to **Default (On)** in the MySQL v2 tile **Errands** pane.<br>
-      ![Upgrade All Instances Errand](upgrade-all-instances-errand.png)
-      - After the upgrade, run the `upgrade-all-service-instances` errand, as described in
-      [upgrade-all-service-instances](./errands.html#upgrade-all-service-instances).
-  - Upgrading to v2.6 does not rotate all the internal certificates and CAs used by highly available (HA) cluster plans. Whether the upgrade completes the rotation depends on which plans you have installed, as follows:
-      - **If you have HA cluster plans**: Upgrading to v2.7, when it is available, will complete
-      the rotation of all certificates and CAs.
-      - **If you have only single node and leader-follower plans**: Upgrading to v2.6 rotates all certificates and CAs.
++ By default, upgrading to MySQL for PCF v2.6 automatically rotates internal certificates and certificate authority (CA) certificates to new ones that do not expire for 5 years. For more information, see [Managing Certificates](./rotating-ca.html).
+  <p class="note warning"><strong>Warning:</strong> If internal certificates and CA certificates expire, service bindings and backups can fail. </p>
 
-+ HA cluster plans (formerly named Galera) are compatible with plugins for Encryption at Rest.
++ HA cluster plans are compatible with plugins for Encryption at Rest.
 
 + Handling is improved for empty data directories on initialization.
 
