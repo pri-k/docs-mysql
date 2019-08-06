@@ -11,22 +11,24 @@ and other certificates used by MySQL for PCF.
 ## <a id="overview"></a> Overview
 
 Operators must rotate internal certificates and CA certificates before they expire or if they are compromised.
-When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates the internal certificates and CA certificates for single node and leader-follower plans. The new certificates do not expire for 5 years.
+When you upgrade to MySQL for PCF v2.6,
+MySQL for PCF automatically rotates the internal certificates and CA certificates
+for single node and leader-follower service instances. The new certificates do not expire for 5 years.
 
 For more information, see [Rotate Certificates Automatically](#automatic) below.
 
 You must manually rotate the certificates that MySQL for PCF does not automatically rotate.
 MySQL for PCF v2.6 does not automatically rotate the following:
 
-+ Internal certificates and CA certificates for highly available (HA) cluster plans
-+ TLS certificates. If you are using TLS for MySQL for PCF,
++ Internal certificates and CA certificates for highly available (HA) clusters
++ TLS CA certificates. If you are using TLS for MySQL for PCF,
 you provided this certificate to BOSH CredHub when you did the procedures
 in [Preparing for TLS](prepare-tls.html).
 
 For more information about MySQL for PCF certificates, see [MySQL for PCF Certificates](#mysql-cert)
 below.
 
-To manually rotate your certificates, do the following:
+To manually rotate certificates, do the following:
 
 1. [Access BOSH CredHub](#credhub)
 1. [Check Expiration Dates](#check)
@@ -140,7 +142,8 @@ of your service instance, do the procedure in
 
 ## <a id="automatic"></a> Rotate Certificates Automatically
 
-When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates the internal certificates and CA certificates for single node and leader-follower plans.
+When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically
+rotates the internal certificates and CA certificates for single node and leader-follower service instances.
 
 To ensure that the internal certificates and CA certificates rotate, do one of the following:
 
