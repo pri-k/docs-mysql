@@ -144,9 +144,8 @@ To ensure that the internal certificates and CA certificates rotate, do one of t
     1. Run the `upgrade-all-service-instances` errand. See
           [upgrade-all-service-instances](./errands.html#upgrade-all-service-instances).
 
-For a list of MySQL for PCF certificates, see
-[Rotating MySQL Certificates while upgrading to MySQL for PCF 2.6.x](https://community.pivotal.io/s/article/rotating-mysql-certificates-in-upgrading-to-mysql-2-6-x)
-in the Pivotal Support knowledge base.
+For a list of MySQL for PCF certificates,
+see [MySQL for PCF Certificates](#mysql-certs) above.
 
 ## <a id="credhub"></a> Access BOSH CredHub
 
@@ -241,9 +240,8 @@ To check certificate expiration dates, do the following:
     The above command retrieves the certificate from CredHub, parses its JSON structure,
     decrypts it, and finds its `Validity` properties. The expiration date for the certificate is the value of  `Not After`.<br><br>
 
-    For a list of MySQL for PCF certificates, see
-    [Rotating MySQL Certificates while upgrading to MySQL for PCF 2.6.x](https://community.pivotal.io/s/article/rotating-mysql-certificates-in-upgrading-to-mysql-2-6-x)
-    in the Pivotal Support knowledge base.
+    For a list of MySQL for PCF certificates,
+    see [MySQL for PCF Certificates](#mysql-certs) above.
 
 ##<a id='rotate'></a> Rotate Certificates Manually
 
