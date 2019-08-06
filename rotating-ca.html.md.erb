@@ -205,12 +205,12 @@ To regenerate your internal certificates and redeploy your service instances, fo
 1. To regenerate all certificates signed by the old CA certificate, run the following:
 
     ```
-    curl "https://BOSH-DIRECTOR/api/v1/bulk-regenerate"" -X POST \
-    -d '{ "signed_by": "/services/tls_ca" }'\
-    -H "authorization: bearer $(credhub --token)"\
+    curl "https://BOSH-DIRECTOR:8844/api/v1/bulk-regenerate"" -X POST \
+    -d '{ "signed_by": "/services/tls_ca" }' \
+    -H "authorization: $(credhub --token)" \
     -H 'content-type: application/json'
     ```
-    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM.
+    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM. In this case, you're talking to the BOSH Director's [Credhub to perform `bulk-regenerate`](https://credhub-api.cfapps.io/version/master/#_bulk_regenerate_credentials), but the BOSH Director's IP is used because the Director's Credhub is co-located on the same VM, just on a different port.
 
 1. To redeploy all service instances with the new certificates, run the following:
 
