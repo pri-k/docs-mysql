@@ -11,15 +11,20 @@ and other certificates used by MySQL for PCF.
 ## <a id="overview"></a> Overview
 
 Operators must rotate internal certificates and CA certificates before they expire or if they are compromised.
-When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates the internal certificates and CA certificates for single node and leader-follower plans. The new certificates do not expire for 5 years. 
+When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates the internal certificates and CA certificates for single node and leader-follower plans. The new certificates do not expire for 5 years.
 
-For more information, see [Rotate Certificates Automatically](#automatic).
+For more information, see [Rotate Certificates Automatically](#automatic) below.
 
 You must manually rotate the certificates that MySQL for PCF does not automatically rotate.
 MySQL for PCF v2.6 does not automatically rotate the following:
 
 + Internal certificates and CA certificates for highly available (HA) cluster plans
-+ TLS certificates. If you are using TLS for MySQL for PCF, you provided this certificate to BOSH CredHub when you did the procedures in [Preparing for TLS](prepare-tls.html).  
++ TLS certificates. If you are using TLS for MySQL for PCF,
+you provided this certificate to BOSH CredHub when you did the procedures
+in [Preparing for TLS](prepare-tls.html).
+
+For more information about MySQL for PCF certificates, see [MySQL for PCF Certificates](#mysql-cert)
+below.
 
 To manually rotate your certificates, do the following:
 
@@ -31,9 +36,99 @@ To manually rotate your certificates, do the following:
 Contact <a href="https://support.pivotal.io">Pivotal Support</a>
 and perform the following procedures with their help.</p>
 
-## <a id="automatic"></a> Rotate Certificates Automatically 
+### <a id="mysql-certs"></a> MySQL for PCF Certificates
 
-When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates the internal certificates and CA certificates for single node and leader-follower plans. 
+The following table lists MySQL for PCF certificates:
+
+<table>
+  <tr>
+    <th width="57%"">Certificate</th>
+    <th>Rotated by MySQL for PCF?</th>
+  </tr>
+
+  <tr>
+    <td><code>/pivotal_mysql_GUID/agent_ca</code></td>
+      <td>Yes</td>
+  </tr>
+
+  <tr>
+    <td><code>/pivotal_mysql_GUID/agent_client_ssl</code></td>
+    <td>Yes</td>
+  </tr>
+
+  <tr>
+    <td><code>/pivotal_mysql_GUID/agent_server_ssl</code></td>
+    <td>Yes</td>
+  </tr>
+
+    <tr>
+      <td><code>/service_instance_GUID/agent_ca</code></td>
+      <td>Yes</td>
+    </tr>
+
+    <tr>
+      <td><code>/service_instance_GUID/lf_agent_client_ssl</code></td>
+      <td>Yes</td>
+    </tr>
+
+    <tr>
+      <td><code>/service_instance_GUID/lf_agent_server_ssl</code></td>
+      <td>Yes</td>
+    </tr>
+
+      <tr>
+        <td><code>/service_instance_GUID/agent_client_ssl</code></td>
+        <td>Yes</td>
+      </tr>
+
+      <tr>
+        <td><code>/service_instance_GUID/agent_server_ssl</code></td>
+        <td>Yes</td>
+      </tr>
+
+      <tr>
+        <td><code>streaming_backup_ca</code></td>
+        <td>Yes</td>
+      </tr>
+
+      <tr>
+        <td><code>streaming_backup_server_cert</code></td>
+        <td>Yes</td>
+      </tr>
+
+      <tr>
+        <td><code>pxc_tls_ca</code></td>
+        <td>No</td>
+      </tr>
+
+      <tr>
+        <td><code>pxc_tls_server</code></td>
+        <td>No</td>
+      </tr>
+
+      <tr>
+        <td><code>pxc_internal</code></td>
+        <td>No</td>
+      </tr>
+
+      <tr>
+        <td><code>/services/tls_ca</code></td>
+        <td>No</td>
+      </tr>
+
+      <tr>
+        <td><code>mysql_tls</code></td>
+        <td>Nos</td>
+      </tr>
+</table>
+
+In the above table, `GUID` is the GUID for the service instance. To find the GUID
+of your service instance, do the procedure in
+[Find Information about Your Service Instance](./troubleshoot-instances.html#instance).
+
+## <a id="automatic"></a> Rotate Certificates Automatically
+
+When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates the internal certificates and CA certificates for single node and leader-follower plans.
 
 To ensure that the internal certificates and CA certificates rotate, do one of the following:
 
@@ -41,14 +136,14 @@ To ensure that the internal certificates and CA certificates rotate, do one of t
     1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry v2** tile.
     1. Click **Errands**.
     1. Under **Post-Deploy Errands**, ensure that **Upgrade all On-demand MySQL Service Instances** is set to **Default (On)**.
-  
+
           ![Upgrade All Instances Errand](upgrade-all-instances-errand.png)
     1. Click **Save.**
-          
+
 + **If you have already upgraded to MySQL for PCF v2.6,** do the following:
-    1. Run the `upgrade-all-service-instances` errand. See 
+    1. Run the `upgrade-all-service-instances` errand. See
           [upgrade-all-service-instances](./errands.html#upgrade-all-service-instances).
-          
+
 For a list of MySQL for PCF certificates, see
 [Rotating MySQL Certificates while upgrading to MySQL for PCF 2.6.x](https://community.pivotal.io/s/article/rotating-mysql-certificates-in-upgrading-to-mysql-2-6-x)
 in the Pivotal Support knowledge base.
@@ -142,10 +237,10 @@ To check certificate expiration dates, do the following:
               Not Before: Jan 23 19:04:58 2019 GMT
               Not After : Jan 23 19:04:58 2020 GMT
     </pre>
-    
+
     The above command retrieves the certificate from CredHub, parses its JSON structure,
     decrypts it, and finds its `Validity` properties. The expiration date for the certificate is the value of  `Not After`.<br><br>
-    
+
     For a list of MySQL for PCF certificates, see
     [Rotating MySQL Certificates while upgrading to MySQL for PCF 2.6.x](https://community.pivotal.io/s/article/rotating-mysql-certificates-in-upgrading-to-mysql-2-6-x)
     in the Pivotal Support knowledge base.
@@ -203,12 +298,12 @@ by running the following command:
 
 4. Record the output.
 
-5. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile. 
+5. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
 
 6. Click **Security**.
 
 6. Append the contents of the new CA certificate to the old CA certificate under **Trusted Certificates**.
-Do not remove the old CA certificate. 
+Do not remove the old CA certificate.
 
 1. Click **Save**.
 
@@ -222,7 +317,7 @@ Do not remove the old CA certificate.
 
   1. Select **Upgrade all On-demand MySQL Service Instances**.
     ![Select errands to run during deployment](select-errands.png)
-    
+
     <p class="note"><strong>Note:</strong> If you do not select <strong>Upgrade all On-demand MySQL Service Instances</strong>,
     you must manually run the <code>upgrade-all-services-instances</code> errand after applying changes.
     To manually run this errand, see <a href="#regenerate">Regenerate Internal Certificates</a> below.</p>
@@ -309,7 +404,7 @@ After your apps have reconnected to service instances with certificates generate
 by the new CA, do the following to remove the old CA certificate:
 
 1. Navigate to the **Installation Dashboard** in Ops Manager and click the **BOSH
-Director** tile. 
+Director** tile.
 
 1. Click **Security**.
 
