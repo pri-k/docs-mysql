@@ -11,12 +11,16 @@ and other certificates used by MySQL for PCF.
 ## <a id="overview"></a> Overview
 
 If you are using TLS for MySQL for PCF,
-you provided this certificate to BOSH CredHub when you did the procedures
+you provided a CA certificate to BOSH CredHub when you did the procedures
 in [Preparing for TLS](prepare-tls.html).
-Operators must rotate these CA certificates
-before the certificates expire or if they are compromised.
+Operators must rotate this CA certificate
+before the certificate expires or if it is compromised.
 
-To rotate your certificates, do the following:
+In MySQL for PCF v2.5, you cannot rotate internal certificates and CA certificates.
+To rotate these certificates, you must upgrade to MySQL for PCF v2.6. If these
+certificates expire, service bindings and backups can fail.
+
+To rotate a TLS CA certificate, do the following:
 
 1. [Access BOSH CredHub](#credhub)
 1. [Check Expiration Dates](#check)
@@ -165,6 +169,10 @@ CredHub server by running the following command:
 
 ## <a id="check"></a> Check Expiration Dates
 
+You cannot rotate internal certificates and CA certificates. If your internal
+certificates are about to expire, you must upgrade to MySQL for PCF v2.6 to rotate
+them.
+
 To check certificate expiration dates, do the following:
 
 1. Log in to CredHub by doing the procedure in [Access BOSH CredHub](#credhub) above.
@@ -194,7 +202,6 @@ To check certificate expiration dates, do the following:
 To rotate CA certificates, you must do the following:
 
 1. [Add a New CA Certificate](#add)
-2. [Regenerate Internal Certificates](#regenerate)
 3. [Rebind Your App](#rebind)
 4. [Remove the Old CA Certificate](#remove)
 
@@ -251,48 +258,7 @@ Do not remove the old CA certificate.
 
 1. Click **Save**.
 
-7. (Optional) Distribute the new CA certificate to your VMs and regenerate each server certificate using the new CA by doing the following:
-
-  1. Navigate back to the **Installation Dashboard**.
-
-  1. Click **Review Pending Changes**.
-
-  1. Click **ERRANDS**.
-
-  1. Select **Upgrade all On-demand MySQL Service Instances**.
-    ![Select errands to run during deployment](select-errands.png)
-
-    <p class="note"><strong>Note:</strong> If you do not select <strong>Upgrade all On-demand MySQL Service Instances</strong>,
-    you must manually run the <code>upgrade-all-services-instances</code> errand after applying changes.
-    To manually run this errand, see <a href="#regenerate">Regenerate Internal Certificates</a> below.</p>
-
 8. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
-
-### <a id="regenerate"></a> Regenerate Internal Certificates
-
-<p class="note"><strong>Note:</strong> The following procedure manually runs the <code>upgrade-all-service-instances</code> errand. If you selected the <strong>Upgrade all On-demand MySQL Service Instances</strong> in <a href="#add">Add a New CA Certificate</a> above, skip the following procedure. </p>
-
-To regenerate your internal certificates and redeploy your service instances, do the following:
-
-1. Log in to CredHub by doing the procedure in [Access BOSH CredHub](#credhub) above.
-
-1. Regenerate all certificates signed by the old CA certificate by running the following command:
-
-    ```
-    curl "https://BOSH-DIRECTOR/api/v1/bulk-regenerate"" -X POST \
-    -d '{ "signed_by": "/services/tls_ca" }'\
-    -H "authorization: bearer $(credhub --token)"\
-    -H 'content-type: application/json'
-    ```
-    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM.
-
-1. Redeploy all service instances with the new certificates by running the following command:
-
-    ```
-    bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
-    ```
-    Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-
 
 ### <a id='rebind'></a> Rebind Your App
 
