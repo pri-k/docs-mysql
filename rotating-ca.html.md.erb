@@ -227,9 +227,9 @@ To check certificate expiration dates, do the following:
 1. Run the following command:
 
     ```
-    credhub get -n CREDENTIAL-NAME -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
+    credhub get -n CERTIFICATE-NAME -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
     ```
-    Where `CREDENTIAL-NAME` is the name of the credential you are checking.<br /><br>
+    Where `CERTIFICATE-NAME` is the name of the certificate you are checking.<br /><br>
     For example:
     <pre class="terminal">
     $ credhub get -n /services/tls_ca -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
