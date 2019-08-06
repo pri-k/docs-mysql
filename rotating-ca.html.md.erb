@@ -16,7 +16,7 @@ When you upgrade to MySQL for PCF v2.7, MySQL for PCF
 automatically rotates internal certificates and CA certificates.
 The new certificates do not expire for five years.
 
-For more information, see [Rotate Certificates Automatically](#automatic).
+For more information, see [Rotate Certificates Automatically](#automatic) below.
 
 MySQL for PCF v2.7 does not automatically rotate TLS certificates managed by Ops Manager.
 If you are using TLS for MySQL for PCF,
@@ -222,9 +222,9 @@ To check certificate expiration dates, do the following:
 1. Run the following command:
 
     ```
-    credhub get -n CREDENTIAL-NAME -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
+    credhub get -n CERTIFICATE-NAME -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
     ```
-    Where `CREDENTIAL-NAME` is the name of the credential you are checking.<br /><br>
+    Where `CERTIFICATE-NAME` is the name of the certificate you are checking.<br /><br>
     For example:
     <pre class="terminal">
     $ credhub get -n /services/tls_ca -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
