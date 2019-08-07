@@ -10,18 +10,19 @@ Pivotal recommends that you upgrade to the latest version of your current minor 
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
-## <a id="XXX"></a> v2.6.x
+## <a id="270"></a> v2.7.0
 
-**Release Date: XX X, XXX**
+**Release Date: August 7, 2019**
 
 ### Features
 
-New features and changes in this release:
+* When you upgrade to MySQL for PCF v2.7, MySQL for PCF automatically rotates internal certificates and certificate authority (CA) certificates. The new certificates do not expire for 5 years. 
+* Automatic backups are now compatible with AWS CLI  v1.16.189
 
 
-### Known Issues
+### High CVE fix
 
-There are no known issues for this release.
+* Bumps the CF CLI version to v6.46
 
 ### Compatibility
 
@@ -34,15 +35,7 @@ This release uses the following component versions:
 </tr>
 <tr>
     <td>Stemcell</td>
-    <td>vX.x.x</td>
-</tr>
-<tr>
-    <td>Component2-That-Is-Not-Percona-Or-Golang</td>
-    <td>vX.x.x</td>
-</tr>
-<tr>
-    <td>Component3-That-Is-Not-Percona-Or-Golang</td>
-    <td>vX.x.x</td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/2-6/stemcells/stemcells.html#315-line">315.x</a></td>
 </tr>
 </table>
 
