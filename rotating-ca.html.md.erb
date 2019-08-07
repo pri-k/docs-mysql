@@ -5,26 +5,29 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to check expiration dates and rotate certificate authority (CA) certificates
-and other certificates used by MySQL for PCF.
+This topic describes how to check expiration dates and rotate certificates used by MySQL for PCF.
 
 ## <a id="overview"></a> Overview
 
-If you are using TLS for MySQL for PCF,
+MySQL for PCF uses the following certificates:
+
++ **TLS certificates managed by the operator:** If you are using TLS for MySQL for PCF,
 you provided a CA certificate to BOSH CredHub when you did the procedures
 in [Preparing for TLS](prepare-tls.html).
-Operators must rotate this CA certificate
+Operators must rotate this TLS CA certificate
 before the certificate expires or if it is compromised.
-
-In MySQL for PCF v2.4, you cannot rotate internal certificates and CA certificates.
++ **Internal certificates managed by MySQL for PCF:** In MySQL for PCF v2.4, you cannot rotate internal certificates and CA certificates.
 To rotate these certificates, you must upgrade to MySQL for PCF v2.6. If these
-certificates expire, service bindings and backups can fail.
+certificates expire, service bindings and backups can fail. To check the expiration date of your internal
+certificates, see [Check Expiration Date](#check) below.
 
-To rotate a TLS CA certificate, do the following:
+ <p class="note warning"><strong>Warning:</strong> If your internal certificates expire, service bindings and backups can fail. </p>
+
+To rotate the TLS certificates, do the following:
 
 1. [Access BOSH CredHub](#credhub)
 1. [Check Expiration Dates](#check)
-1. [Rotate Certificates](#rotate)
+1. [Rotate TLS Certificates](#rotate)
 
 <p class="note warning"><strong>Warning</strong>: Do not attempt to rotate a CA certificate on your own.
 Contact <a href="https://support.pivotal.io">Pivotal Support</a>
@@ -37,6 +40,17 @@ The following table lists MySQL for PCF certificates:
 <table>
   <tr>
     <th>Certificate</th>
+  </tr>
+  <tr>
+    <th>TLS Certificates</th>
+  </tr>
+
+  <tr>
+    <td><code>/services/tls_ca</code></td>
+  </tr>
+
+  <tr>
+    <td><code>mysql_tls</code></td>
   </tr>
   <tr>
     <th>Internal Certificates</th>
@@ -79,18 +93,6 @@ The following table lists MySQL for PCF certificates:
 
       <tr>
         <td><code>streaming_backup_server_cert</code></td>
-      </tr>
-
-      <tr>
-        <th>TLS Certificates</th>
-      </tr>
-
-      <tr>
-        <td><code>/services/tls_ca</code></td>
-      </tr>
-
-      <tr>
-        <td><code>mysql_tls</code></td>
       </tr>
 </table>
 
@@ -169,9 +171,14 @@ CredHub server by running the following command:
 
 ## <a id="check"></a> Check Expiration Dates
 
-You cannot rotate internal certificates and CA certificates. If your internal
+You can check the expiration date for TLS and internal certificates. However, you can only 
+rotate TLS certificates in MySQL for PCF v2.4. See [Rotate TLS Certificates](#rotate). 
+
+You cannot rotate internal certificates. If your internal
 certificates are about to expire, you must upgrade to MySQL for PCF v2.6 to rotate
 them.
+
+ <p class="note warning"><strong>Warning:</strong> If your internal certificates expire, service bindings and backups can fail.</p>
 
 To check certificate expiration dates, do the following:
 
@@ -197,7 +204,7 @@ To check certificate expiration dates, do the following:
     For a list of MySQL for PCF certificates,
     see [MySQL for PCF Certificates](#mysql-certs) above.
 
-##<a id='rotate'></a> Rotate Certificates
+##<a id='rotate'></a> Rotate TLS Certificates
 
 To rotate CA certificates, you must do the following:
 
