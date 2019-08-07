@@ -5,8 +5,9 @@ Owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older vX.x
-.x version, upgrade to the latest vX.x.x version before upgrading to the latest vX.x.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor line,
+then upgrade to the latest available version of the new minor line. For example, if you use an older v2.6.x
+version, upgrade to the latest v2.6.x version before upgrading to the latest v2.7.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
@@ -16,13 +17,20 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 ### Features
 
-* When you upgrade to MySQL for PCF v2.7, MySQL for PCF automatically rotates internal certificates and certificate authority (CA) certificates. The new certificates do not expire for 5 years. 
-* Automatic backups are now compatible with AWS CLI  v1.16.189
+New features and changes in this release:
+
+* When you upgrade to MySQL for PCF v2.7, MySQL for PCF automatically rotates internal certificates
+  and certificate authority (CA) certificates.
+  The new certificates do not expire for 5 years.
+
+* Automatic backups are now compatible with the AWS CLI v1.16.189.
 
 
-### High CVE fix
+### Security Fix
 
-* Bumps the CF CLI version to v6.46
+This release includes the following security update:
+
+* Updates the cf CLI to v6.46
 
 ### Compatibility
 
