@@ -17,8 +17,7 @@ in [Preparing for TLS](prepare-tls.html).
 Operators must rotate this TLS CA certificate
 before the certificate expires or if it is compromised.
 + **Internal certificates managed by MySQL for PCF:** In MySQL for PCF v2.3, you cannot rotate internal certificates and CA certificates.
-To rotate these certificates, you must upgrade to MySQL for PCF v2.6. If these
-certificates expire, service bindings and backups can fail. To check the expiration date of your internal
+To rotate these certificates, you must upgrade to MySQL for PCF v2.6. To check the expiration date of your internal
 certificates, see [Check Expiration Date](#check) below.
 
  <p class="note warning"><strong>Warning:</strong> If your internal certificates expire, service bindings and backups can fail. </p>
