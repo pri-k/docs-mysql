@@ -105,7 +105,7 @@ The following table lists MySQL for PCF certificates:
       <tr>
         <td><code>pxc_internal</code></td>
         <td>Yes</td>
-      </tr>  
+      </tr>
 </table>
 
 In the above table, `GUID` is the GUID for the service instance. To find the GUID
@@ -203,7 +203,7 @@ CredHub server by running the following command:
 
 ## <a id="check"></a> Check Expiration Dates
 
-You can check the expiration date for TLS and internal certificates. 
+You can check the expiration date for TLS and internal certificates.
 
 To check certificate expiration dates, do the following:
 
@@ -325,7 +325,7 @@ To regenerate your internal certificates and redeploy your service instances, do
     -H "authorization: $(credhub --token)" \
     -H 'content-type: application/json'
     ```
-    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM. In this case, you're talking to the BOSH Director's [Credhub to perform `bulk-regenerate`](https://credhub-api.cfapps.io/version/master/#_bulk_regenerate_credentials), but the BOSH Director's IP is used because the Director's Credhub is co-located on the same VM, just on a different port.
+    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM. 
 
 1. Redeploy all service instances with the new certificates by running the following command:
 
