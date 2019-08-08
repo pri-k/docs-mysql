@@ -17,7 +17,7 @@ you provided a CA certificate to BOSH CredHub when you did the procedures	in [Pr
 + **Internal certificates managed by MySQL for PCF:** When you upgrade to MySQL for PCF v2.6,
 MySQL for PCF automatically rotates the internal certificates and CA certificates
 for single node and leader-follower service instances. The new certificates do not expire for 5 years.
-MySQL for PCF does not rotate certificates for highly available (HA) clusters service instances. For more information, see [Rotate Certificates Automatically](#automatic) below.
+MySQL for PCF v2.6 does not rotate certificates for highly available (HA) clusters service instances. To rotate these certificates, you must upgrade to MySQL for PCF v2.7. For more information, see [Rotate Certificates Automatically](#automatic) below.
 
 For more information about MySQL for PCF certificates, see [MySQL for PCF Certificates](#mysql-cert)
 below.
@@ -228,7 +228,9 @@ CredHub server by running the following command:
 
 ## <a id="check"></a> Check Expiration Dates
 
-You can check the expiration date for TLS and internal certificates. 
+You can check the expiration date for TLS and internal certificates. However, you can only rotate TLS, single node, and leader-follower certificates in MySQL for PCF v2.6. See [Rotate TLS Certificates](#rotate) below.
+
+You cannot rotate internal HA cluster certificates. If your internal HA clutster certificates are about to expire, you must upgrade to MySQL for PCF v2.7 to rotate them.
 
 To check certificate expiration dates, do the following:
 
