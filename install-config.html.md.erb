@@ -163,14 +163,12 @@ Perform the following steps for each plan that you want to use in your PCF deplo
 
 1. Click the section for the plan. For example, **Plan 1**.
 
-1. Select the plan for your desired topology. 
+1. Select the plan for your desired topology.
 
     <%= image_tag("plan-types-2.7.png", :alt => "image shows four plan types and inactive.", :width => "300") %>
 
-    If you want information about the Multi-Datacenter Leader Follower beta plan,
-    contact <%= vars.support_link %>.
 
-    Click the tabs below to show an example of each plan:
+    The tabs below expand to show an example screenshot of each plan:
 
     <style>
     .tab {
@@ -183,7 +181,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
     .tab button {
         background-color: inherit;
         float: left;
-        border: none;
+        border: inherit;
         outline: none;
         cursor: pointer;
         padding: ;
@@ -238,7 +236,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
       <!- Tab headers and links ->
       <button class="tablinks" onclick="openDocs(event, 'tab1')">Single Node</button>
       <button class="tablinks" onclick="openDocs(event, 'tab2')">Leader-Follower</button>
-      <button class="tablinks" onclick="openDocs(event, 'tab3')">Galera [BETA]</button>
+      <button class="tablinks" onclick="openDocs(event, 'tab3')">HA Cluster [BETA]</button>
     </div>
 
 
@@ -252,6 +250,9 @@ Perform the following steps for each plan that you want to use in your PCF deplo
       <img src="./images/ha-plan.png">
     </div>
 
+    <p class="note"><strong>Note:</strong>
+    If you want information about the Multi-Datacenter Leader Follower beta plan,
+    contact <%= vars.support_link %>.</p>
 
 
 
@@ -488,7 +489,7 @@ Follow the steps below to enable different types of monitoring and logging avail
 
 1. Click **Monitoring**.
 
-    <%= image_tag("monitoring.png", :alt => "The metrics polling interval defaults to 30 
+    <%= image_tag("monitoring.png", :alt => "The metrics polling interval defaults to 30
         and the min is 10.", :width => "300") %>
 
 1. Configure the fields as follows:
