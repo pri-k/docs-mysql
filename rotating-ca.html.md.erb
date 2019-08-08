@@ -52,6 +52,10 @@ The following table lists MySQL for PCF certificates:
     <td>No</td>
   </tr>
   <tr>
+    <td><code>mysql_server_tls</code></td>
+    <td>No</td>
+  </tr>
+  <tr>
     <th colspan="2">Internal Certificates</th>
   </tr>
   <tr>
@@ -87,23 +91,23 @@ The following table lists MySQL for PCF certificates:
         <td>Yes</td>
       </tr>
       <tr>
-        <td><code>streaming_backup_ca</code></td>
+        <td><code>/service_instance_GUID/streaming_backup_ca</code></td>
         <td>Yes</td>
       </tr>
       <tr>
-        <td><code>streaming_backup_server_cert</code></td>
+        <td><code>/service_instance_GUID/streaming_backup_server_cert</code></td>
         <td>Yes</td>
       </tr>
       <tr>
-        <td><code>pxc_tls_ca</code></td>
+        <td><code>/service_instance_GUID/pxc_tls_ca</code></td>
         <td>Yes</td>
       </tr>
       <tr>
-        <td><code>pxc_tls_server</code></td>
+        <td><code>/service_instance_GUID/pxc_tls_server</code></td>
         <td>Yes</td>
       </tr>
       <tr>
-        <td><code>pxc_internal</code></td>
+        <td><code>/service_instance_GUID/pxc_internal</code></td>
         <td>Yes</td>
       </tr>  
 </table>
