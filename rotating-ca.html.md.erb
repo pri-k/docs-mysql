@@ -41,7 +41,7 @@ The following table lists MySQL for PCF certificates:
     <th width="75%"">Certificate</th>
     <th>Rotated by MySQL for PCF?</th>
   </tr>
-  
+
   <tr>
     <th colspan="2">TLS Certificates</th>
   </tr>
@@ -55,12 +55,12 @@ The following table lists MySQL for PCF certificates:
     <td><code>mysql_tls</code></td>
     <td>No</td>
   </tr>
-  
+
   <tr>
     <td><code>mysql_server_tls</code></td>
     <td>No</td>
   </tr>
-  
+
   <tr>
     <th colspan="2">Internal HA Certificates</th>
   </tr>
@@ -351,9 +351,9 @@ To regenerate your internal certificates and redeploy your service instances, do
 1. Regenerate all certificates signed by the old CA certificate by running the following command:
 
     ```
-    curl "https://BOSH-DIRECTOR/api/v1/bulk-regenerate"" -X POST \
-    -d '{ "signed_by": "/services/tls_ca" }'\
-    -H "authorization: bearer $(credhub --token)"\
+    curl "https://BOSH-DIRECTOR:8844/api/v1/bulk-regenerate" -X POST \
+    -d '{ "signed_by": "/services/tls_ca" }' \
+    -H "authorization: $(credhub --token)" \
     -H 'content-type: application/json'
     ```
     Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM.
