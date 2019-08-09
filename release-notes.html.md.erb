@@ -48,8 +48,8 @@ There are no known issues for this release.
 
 New features and changes in this release:
 
-+ When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates internal certificates and certificate authority (CA) certificates. The new certificates do not expire for 5 years. For more information, see [Managing Certificates](./rotating-ca.html).
-  <p class="note warning"><strong>Warning:</strong> If internal certificates and CA certificates expire, service bindings and backups can fail. </p>
++ When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically rotates internal certificates for single node and leader-follower service instances. The new certificates do not expire for 5 years. MySQL for PCF does not automatically rotate TLS certificates or certificates for HA cluster service instances during upgrades. For more information, see [Managing Certificates](./rotating-ca.html).
+  <p class="note warning"><strong>Warning:</strong> If internal certificates and CA certificates expire, service bindings and backups fail. </p>
 
 + HA cluster plans are compatible with plugins for Encryption at Rest.
 
