@@ -320,12 +320,12 @@ To regenerate your internal certificates and redeploy your service instances, do
 1. Regenerate all certificates signed by the old CA certificate by running the following command:
 
     ```
-    curl "https://BOSH-DIRECTOR:8844/api/v1/bulk-regenerate"" -X POST \
+    curl "https://BOSH-DIRECTOR:8844/api/v1/bulk-regenerate" -X POST \
     -d '{ "signed_by": "/services/tls_ca" }' \
     -H "authorization: $(credhub --token)" \
     -H 'content-type: application/json'
     ```
-    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM. 
+    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM.
 
 1. Redeploy all service instances with the new certificates by running the following command:
 
