@@ -14,7 +14,7 @@ MySQL for PCF uses the following types of certificates:
 + **TLS certificates managed by the operator:** If you are using TLS for MySQL for PCF,
 you provided a CA certificate to BOSH CredHub when you did the procedures	in [Preparing for TLS](prepare-tls.html). Operators must manually rotate this TLS CA certificate before the certificate expires or if it is compromised.
 
-+ **Internal certificates managed by MySQL for PCF:** When you upgrade to MySQL for PCF v2.7,
++ **Internal certificates managed by MySQL for PCF:** When you upgrade to MySQL for PCF v2.8,
 MySQL for PCF automatically rotates your internal certificates. The new certificates do not expire for 5 years.
 For more information, see [Rotate Certificates Automatically](#automatic) below.
 
@@ -114,12 +114,12 @@ of your service instance, do the procedure in
 
 ## <a id="automatic"></a> Rotate Certificates Automatically
 
-When you upgrade to MySQL for PCF v2.7, MySQL for PCF automatically
+When you upgrade to MySQL for PCF v2.8, MySQL for PCF automatically
 rotates internal certificates and CA certificates.
 
 To ensure that the internal certificates and CA certificates rotate, do one of the following:
 
-+ **If you have not upgraded to MySQL for PCF v2.7,** do the following:
++ **If you have not upgraded to MySQL for PCF v2.8,** do the following:
     1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry v2** tile.
     1. Click **Errands**.
     1. Under **Post-Deploy Errands**, ensure that **Upgrade all On-demand MySQL Service Instances** is set to **Default (On)**.
@@ -127,7 +127,7 @@ To ensure that the internal certificates and CA certificates rotate, do one of t
           ![Upgrade All Instances Errand](upgrade-all-instances-errand.png)
     1. Click **Save.**
 
-+ **If you have already upgraded to MySQL for PCF v2.7,** do the following:
++ **If you have already upgraded to MySQL for PCF v2.8 without the Upgrade all On-demand MySQL Service Instances errand on,** do the following:
     1. Run the `upgrade-all-service-instances` errand. See
           [upgrade-all-service-instances](./errands.html#upgrade-all-service-instances).
 
