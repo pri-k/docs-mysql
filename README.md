@@ -23,7 +23,7 @@ Docs for MySQL for [Pivotal Cloud Foundry](https://network.pivotal.io/products/p
 
 ## Partials
 
-Cross-product partials for **MySQL for PCF** are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-services-partials) repo.
+Cross-product partials for **MySQL for PCF** are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-partials) repo.
 
 Previously, these partials were sourced from the v018.x branch of the [On Demand Service Broker SDK](https://github.com/pivotal-cf/docs-on-demand-service-broker/tree/v0.18.x) content repo.
 
