@@ -3,21 +3,6 @@ title: Monitoring and KPIs for On-Demand MySQL for PCF
 owner: MySQL
 ---
 
-<div class="quick-links">
-    <ul>
-        <li><a href="#metrics">About Metrics</a></li>
-        <li><a href="#access">Access MySQL Metrics</a></li>
-        <li><a href="#kpi">KPIs for MySQL Service Instances</a></li>
-        <li><a href="#component-metrics">Component Metrics</a></li>
-          <ul>
-            <li><a href="#mysql-metrics">MySQL Metrics </a></li>
-            <li><a href="#disk-metrics">Disk Metrics </a></li>
-            <li><a href="#l-f-metrics">Leader-Follower Metrics </a></li>
-              <li><a href="#ha-metrics">Highly Available Cluster Metrics </a></li>
-          </ul>
-    </ul>
-</div>
-
 <strong><%= modified_date %></strong>
 
 This topic explains how to monitor the health of the MySQL for Pivotal Cloud
@@ -27,11 +12,13 @@ Foundry (PCF) service using the logs, metrics, and Key Performance Indicators
 For general information about logging and metrics in PCF, see
 [Logging and Metrics](http://docs.pivotal.io/pivotalcf/loggregator/index.html).
 
-<h2> <a id="metrics"></a>About Metrics </h2>
+## <a id="metrics"></a>About Metrics
 
-Metrics are regularly-generated log messages that report measured component states. The default metrics polling interval is 30 seconds for MySQL instances and 60 seconds for the service broker. 
+Metrics are regularly-generated log messages that report measured component states.
+The default metrics polling interval is 30 seconds for MySQL instances and 60 seconds for the service broker.
 
-You can configure the interval for MySQL instance in the **Configure Monitoring** pane in the MySQL for PCF tile. For more information, see [Configure Monitoring](./install-config.html#monitoring).
+You can configure the interval for MySQL instance in the **Configure Monitoring** pane
+in the MySQL for PCF tile. For more information, see [Configure Monitoring](./install-config.html#monitoring).
 
 Metrics are long, single lines of text that follow the format:
 
@@ -39,13 +26,12 @@ Metrics are long, single lines of text that follow the format:
 origin:"p.mysql" eventType:ValueMetric timestamp:1496776477930669688 deployment:"service-instance_2b5a001f-2bf3-460c-aee6-fd2253f9fb0c" job:"mysql" index:"b09df494-b731-4d06-a4b0-c2985ceedf4c" ip:"10.0.8.4" valueMetric:<name:"/p.mysql/performance/open_files" value:24 unit:"file" >
 ```
 
-<h2> <a id="access"></a>Access MySQL Metrics </h2>
-
+## <a id="access"></a>Access MySQL Metrics
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
   <%= partial '../../p-mysql/odb/log-cache-cli-plugin' %>
 
-<h2> <a id="kpi"></a>KPIs for MySQL Service Instances</h2>
+## <a id="kpi"></a>KPIs for MySQL Service Instances
 
 Key Performance Indicators (KPIs) for MySQL for PCF are metrics that developers
 find most useful for monitoring their MySQL service instances to ensure smooth operation.
@@ -66,7 +52,7 @@ For a list of all the MySQL for PCF component metrics, see [Component Metrics](#
 
 <%= partial 'monitoring/kpis-metrics/all-kpis' %>
 
-<h2> <a id="component-metrics"></a> Component Metrics </h2>
+## <a id="component-metrics"></a>Component Metrics
 
 In addition to the above KPIs, the MySQL service emits the followings metrics
 that can be used for monitoring and alerting:
@@ -76,25 +62,25 @@ that can be used for monitoring and alerting:
   + [Leader-Follower Metrics](#l-f-metrics)
   + [Highly Available Cluster Metrics](#ha-metrics)
 
-<h3> <a id="mysql-metrics"></a> MySQL Metrics </h3>
+### <a id="mysql-metrics"></a>MySQL Metrics
 
 All MySQL for PCF service instances emit the following metrics:
 
 <%= partial 'monitoring/kpis-metrics/mysql-metrics' %>
 
-<h3> <a id="disk-metrics"></a> Disk Metrics </h3>
+### <a id="disk-metrics"></a>Disk Metrics
 
 All MySQL for PCF services emit the following disk usage metrics:
 
 <%= partial 'monitoring/kpis-metrics/disk-metrics' %>
 
-<h3> <a id="l-f-metrics"></a> Leader-Follower Metrics </h3>
+### <a id="l-f-metrics"></a>Leader-Follower Metrics
 
-Leader-follower VMs emit the followings metrics: 
+Leader-follower VMs emit the followings metrics:
 
 <%= partial 'monitoring/kpis-metrics/l-f-metrics' %>
 
-<h3><a id="ha-metrics"></a> Highly Available Cluster Metrics</h3>
+### <a id="ha-metrics"></a>Highly Available Cluster Metrics
 
 HA clusters emit the followings metrics:
 
