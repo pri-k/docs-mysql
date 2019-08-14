@@ -106,7 +106,7 @@ To perform the procedures in this topic, you must have the following:
 * MySQL for PCF v2.x installed in the target PCF environment you want to migrate to.
 * A MySQL for PCF service plan available in the targeted Org and Space you want
   to migrate your data to. The service plan should have the correct topology and
-  resources for your target database. 
+  resources for your target database.
   Talk to your operator to determine which service plan is appropriate.
   For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
 
@@ -180,12 +180,7 @@ as described in [Source Access Off-Platform](#off-platform), below.
 If your source MySQL service instance is in a different development space from your target org and space,
 you can migrate your data by enabling service instance sharing for the source database.
 
-<p class="note"><strong>Note</strong>: If you are using PCF v2.3 or later,
-  service instance sharing for MySQL for PCF v2 is enabled by default. If you
-  are using PCF v2.2 or v2.1, you may require an administrator to enable this
-  feature. For more information, see
-<a href="https://docs.pivotal.io/pivotalcf/devguide/services/sharing-instances.html#enabling">
-  Enabling Service Instance Sharing in Cloud Foundry</a>.</p>
+<p class="note"><strong>Note:</strong> Service instance sharing for MySQL for PCF v2 is enabled by default.</p>
 
 To set up service instance sharing for your source database, do the following:
 
@@ -234,7 +229,7 @@ To create a user-provided service instance to access the off-platform database, 
   - `username` and `password`: Database account credentials
   - `port`: Typically `3306`
   - `uri`: Query string for database access
-  
+
 1. Create a Cloud Foundry user-provided service instance that accesses the off-platform database:
 
     ```
@@ -252,10 +247,10 @@ To create a user-provided service instance to access the off-platform database, 
    Creating user provided service migrating-db in org my-org / space my-space as admin...
    OK
    </p>
-   
+
     <p class="note"><strong>Note</strong>: <code>cf cups</code> is a shortcut
-    for the <code>cf create-user-provided-service</code> command.</p> 
-    
+    for the <code>cf create-user-provided-service</code> command.</p>
+
 After seeing that your user-provided service instance was created, continue to [Migrate Data](#migrate-data), below.
 
 ## <a id='migrate-data'></a>Migrate Data
@@ -267,10 +262,10 @@ that use it:
 
     <p class="note"><strong>Note</strong>: To retrieve a list of bound apps, run <code>cf services</code> and see the <code>bound apps</code> column.</p>
 
-    1. Use the cf CLI to target and log in to your PCF deployment.	
+    1. Use the cf CLI to target and log in to your PCF deployment.
     For example:
     <pre class="terminal">
-    $ cf target api.example.com	
+    $ cf target api.example.com
     $ cf login
     </pre>
     When prompted, enter your credentials and target the org and space where the service instance is located.
