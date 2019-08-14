@@ -19,7 +19,7 @@ You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-con
 To use MySQL for PCF with your PCF apps, you need:
 
 * Decide what type of plan you want from the following options: single node, leader-follower, and highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
-* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).  
+* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).
 * A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 * A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the PCF installation
@@ -198,7 +198,7 @@ To access the MySQL service from your app:
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
-  
+
 ###<a id="share"></a> Share Service Instances
 
 In MySQL for PCF, you can share service instances between different orgs and spaces.
@@ -207,22 +207,22 @@ For more information about sharing service instances,
 see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/sharing-instances.html).
 
 ###<a id="schema"></a>Create and Use Custom Schemas
-  
-  MySQL for PCF v2.3 and later supports multiple custom schemas.
+
+  MySQL for PCF supports multiple custom schemas.
   You can use custom schemas with apps that share a MySQL service instance to isolate app data by schema.
-  By default, service bindings use the default schema `service_instance_db`. 
-  
+  By default, service bindings use the default schema `service_instance_db`.
+
   To use custom schemas in your apps do the following:
-  
-  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation. 
+
+  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
   <br><br>
     For more information about the `CREATE DATABASE` SQL statement, see [
     13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
-    
-  2. To modify your app to use your custom schema, do one of the following: 
-    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema. 
+
+  2. To modify your app to use your custom schema, do one of the following:
+    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema.
     + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP_SERVICES`.
-    
+
     For more information about the environment variable credentials hash `VCAP_SERVICES`, see [MySQL Environment Variables](./reference.html).
   3. Push your app using `cf push`.
 
@@ -308,7 +308,7 @@ that the instance no longer exists:
     ```
     watch cf service SERVICE-INSTANCE
     ```
-    
+
 ##<a id='establish-tls'></a> Establish a TLS Connection to a Service Instance
 
 You can use `mysql` to establish a TLS connection to a MySQL for PCF service instance that has TLS
