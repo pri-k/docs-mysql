@@ -42,9 +42,8 @@ New features and changes in this release:
 
 This release has the following fix:
 
-+ All leader-follower service instances now run automatic backups.  
-
-<!-- We fixed a regression to automatic backups for leader-follower plans such that all service instances of this topology will now have backups running locally. -->
++ Automatic backups for leader-follower service instances now work correctly. 
+Previously, a regression caused the leader or follower node to take a backup of the peer node rather than itself.
 
 ### Known Issues
 
