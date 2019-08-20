@@ -13,7 +13,6 @@ before upgrading to the latest v2.5.x version.
 For product versions and upgrade paths, see the
 [Product Compatibility Matrix](http://docs.pivotal.io/compatibility-matrix.pdf).
 
-<!-- If you do not do this than your installation is like stuck. Does count as a breaking change or warning? -->
 <p class="note breaking"><strong>Breaking Change: </strong>
   All service bindings created using MySQL for Pivotal Cloud Foundry (PCF) v2.3
   or earlier use IP addresses. Any bindings created using v2.3 or earlier must
@@ -25,28 +24,45 @@ For product versions and upgrade paths, see the
 
 **Release Date:**  Aug 20, 2019
 
-### New Feature
+### Security Fixes
 
-+ Bumps Percona Server to the latest version 5.7.26-29.
+This release includes the following security fix:
 
-### High CVE fix
++ Updates the cf CLI to v6.46. This update fixes the following CVEs: 
+  + High [CVE-2019-3781: CF CLI does not sanitize user's password in verbose/trace/debug](https://pivotal.io/security/cve-2019-3781)
+  + Medium [CVE-2019-3800: CF CLI writes the client id and secret to config file](https://pivotal.io/security/cve-2019-3800)
 
-+ Bumps CF CLI to the version 6.46 which contains a high CVE fix to redact passwords and tokens.
+### Features
 
+New features and changes in this release:
 
-### Bug fix
++ Updates Percona Server to v5.7.26-29.
 
-+ We fixed a regression to automatic backups for leader-follower plans such that all service instances of this topology will now have backups running locally.
+### Resolved Issue
+
+This release has the following fix:
+
++ All leader-follower service instances now run automatic backups.  
+
+We fixed a regression to automatic backups for leader-follower plans such that all service instances of this topology will now have backups running locally.
+
+### Known Issues
+
+There are no known issues for this release.
 
 ## <a id="256"></a>v2.5.6
 
 **Release Date:**  July 19, 2019
 
-### New Features
+### Features
 
-This release includes the following feature:
+New features and changes in this release:
 
-+ Bumps AWS CLI version used by automatic backups to support non-public AWS regions and external object stores that require the v4 signature.
++ Updates the AWS CLI version. Automatic backups use this version to support non-public AWS regions and external object stores that require the v4 signature.
+
+### Known Issues
+
+There are no known issues for this release.
 
 ## <a id="255"></a>v2.5.5
 
@@ -62,6 +78,10 @@ This release fixes the following issue:
   in Pivotal Application Service (PAS).
   For information about setting **Apps Domain** in the PAS tile,
   see [Configure Domains](https://docs.pivotal.io/pivotalcf/2-5/customizing/configure-pas.html#domains).
+  
+### Known Issues
+
+There are no known issues for this release.
 
 ## <a id="254"></a>v2.5.4
 
@@ -82,6 +102,10 @@ New features and changes in this release:
   * Updates Percona XtraDB Cluster to v5.7.25-31.35.
   For more information,
   see [pxc-release v0.15.0](https://github.com/cloudfoundry-incubator/pxc-release/releases/tag/v0.15.0) in GitHub.
+  
+### Known Issues
+
+There are no known issues for this release.
 
 ### Resolved Issues
 
@@ -195,8 +219,6 @@ While in beta, the following limitations exist for HA clusters:
 - Restoring from backups is a manual process.
   For more information, see [Restore an HA Cluster Instance](./backup-and-restore.html#runHA).
 - HA clusters cannot integrate with [Vormetric Transparent Encryption for PCF](https://docs.pivotal.io/partners/vormetric-transparent-encryption/).
-
-<!-- Add new link when topic is done -->
 
 **Highly available clusters are for advanced use cases only.**
 In addition to higher infrastructure cost,
