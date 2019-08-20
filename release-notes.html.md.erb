@@ -21,6 +21,23 @@ For product versions and upgrade paths, see the
   use DNS hostnames. For more information, see
   <a href="./prepare-upgrade.html">Preparing for Upgrading MySQL for PCF</a>.</p>
 
+## <a id="257"></a>v2.5.7
+
+**Release Date:**  Aug 20, 2019
+
+### New Feature
+
++ Bumps Percona Server to the latest version 5.7.26-29.
+
+### High CVE fix
+
++ Bumps CF CLI to the version 6.46 which contains a high CVE fix to redact passwords and tokens.
+
+
+### Bug fix
+
++ We fixed a regression to automatic backups for leader-follower plans such that all service instances of this topology will now have backups running locally.
+
 ## <a id="256"></a>v2.5.6
 
 **Release Date:**  July 19, 2019
