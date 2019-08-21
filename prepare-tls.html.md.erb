@@ -161,6 +161,16 @@ CredHub server by running the following command:
 			--is-ca \
             --common-name="rootCA"
 		</pre>
+          When using `credhub generate` in the example above, the default valid duration is 365 days. A longer validity can be specified with `--duration`. Here's an example of generating a CA certificate lasting 5 years:
+		<pre class="terminal">
+		$ credhub generate \
+			--name="/services/tls_ca" \
+			--type="certificate" \
+			--is-ca \
+            --common-name="rootCA" \
+	    --duration=1825
+		</pre>
+
     * If you have an existing CA certificate that you want to use, create
 		a new file called `root.pem` with the contents of the certificate.
       Then run the following command, specifying the path to `root.pem` and
@@ -177,7 +187,7 @@ CredHub server by running the following command:
     by running the following command:
 
     ```
-    bosh2 int <(credhub get \
+    bosh int <(credhub get \
     --name=/services/tls_ca) \
     --path /value/certificate
     ```
