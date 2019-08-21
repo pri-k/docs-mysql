@@ -10,6 +10,35 @@ Pivotal recommends that you upgrade to the latest version of your current minor 
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
+## <a id="263"></a>v2.6.3
+
+**Release Date:**  Aug 20, 2019
+
+### Security Fixes
+
+This release includes the following security fix:
+
++ Updates the cf CLI to v6.46. This update fixes the following CVEs: 
+  + High [CVE-2019-3781: CF CLI does not sanitize user's password in verbose/trace/debug](https://pivotal.io/security/cve-2019-3781)
+  + Medium [CVE-2019-3800: CF CLI writes the client id and secret to config file](https://pivotal.io/security/cve-2019-3800)
+
+### Features
+
+New features and changes in this release:
+
++ Updates Percona Server to v5.7.26-29.
+
+### Resolved Issue
+
+This release has the following fix:
+
++ Automatic backups for leader-follower service instances now work correctly. 
+Previously, a regression caused the leader or follower node to take a backup of their peer node rather than itself.
+
+### Known Issues
+
+There are no known issues for this release.
+
 ## <a id="262"></a> v2.6.2
 
 **Release Date: July 19, 2019**
