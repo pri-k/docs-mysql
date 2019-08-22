@@ -117,11 +117,15 @@ The following table lists the MySQL for PCF server defaults.
             When enabled on the <a href="./install-config.html#monitoring">
             MySQL Monitoring pane</a>,
 <<<<<<< HEAD
+<<<<<<< HEAD
             logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql-audit-log</code> 
 =======
             logs are written as CSVs to <code>/var/vcap/store/mysql_audit_logs</code>
 >>>>>>> 53df1d1... add correct audit logs path [#167933741]
             as well as a remote syslog drain if it is enabled.
+=======
+            logs are written as JSONs to <code>/var/vcap/store/mysql_audit_logs/mysql_server_audit.log</code>.
+>>>>>>> 28bea62... fix path name [#167933741]
         </td>
     </tr>
     <tr>
