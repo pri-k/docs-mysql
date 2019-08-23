@@ -5,7 +5,7 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<div class="quick-links">
+<div>
   <ul>
     <li><a href="#errors">Troubleshooting Errors</a>
       <ul>
@@ -1081,7 +1081,7 @@ from your MySQL cluster nodes, MySQL proxies, and, with highly available cluster
 
 Do the following to run the `download-logs` script:
 
-1. Download and unpack the `download-logs` script from 
+1. Download and unpack the `download-logs` script from
    [MySQL for PCF](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
 
 1. From Ops Manager, open your **BOSH Director** tile > **Credentials** tab.
@@ -1109,7 +1109,7 @@ Do the following to run the `download-logs` script:
 
     <pre class="terminal">$ BOSH_CLIENT=ops_manager BOSH_CLIENT_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY BOSH_CA_CERT=/var/tempest/workspaces/default/root_ca_certificate BOSH_ENVIRONMENT=10.0.0.5 BOSH_DEPLOYMENT=pivotal-mysql-14c4
     </pre>
-    
+
 1. Run the `download-logs` script, passing the output directory to the `-o` flag:
     ```
     ./download-logs -o .
