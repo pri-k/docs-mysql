@@ -857,24 +857,22 @@ workflow:
     However, if your cluster processes a high volume of transactions, the complete set might be too
     large and you can omit this flag to fetch the essential set of logs.</li>
 
-<li> If you are uncertain about the recovery steps to take, submit a ticket through <a href="https://support.pivotal.io/">Pivotal Support</a>. When you submit a ticket provide the following information:
-  <ul>
-    <li><strong>mysql-diag output:</strong> A summary of the network, disk, and replication state.  The <a href="./mysql-diag.html">Running mysql-diag</a> topic explains how to run <strong>mysql-diag</strong>.
-    </li>
-    <li><strong>download-logs logs:</strong> Logs from your MySQL cluster, MySQL proxies,
-      and jumpbox VM. The <a href="#download-logs"">download-logs</a> section below explains how to run <strong>download-logs</strong>.</li>
-    <li><strong>Deployment environment:</strong> The environment that MySQL for PCF is running in such
-      as Pivotal Application Service (PAS) or a service tile.</li>
-    <li><strong>Version numbers:</strong> The versions of the installed Ops Manager, PAS,
-      and MySQL for PCF</li>
-  </ul>
-
-</li>
+  <li> If you are uncertain about the recovery steps to take, submit a ticket through <a href="https://support.pivotal.io/">Pivotal Support</a>. When you submit a ticket provide the following information:
+    <ul>
+      <li><strong>mysql-diag output:</strong> A summary of the network, disk, and replication state.  The <a href="./mysql-diag.html">Running mysql-diag</a> topic explains how to run <strong>mysql-diag</strong>.
+      </li>
+      <li><strong>download-logs logs:</strong> Logs from your MySQL cluster, MySQL proxies,
+        and jumpbox VM. The <a href="#download-logs"">download-logs</a> section below explains how to run <strong>download-logs</strong>.</li>
+      <li><strong>Deployment environment:</strong> The environment that MySQL for PCF is running in such
+        as Pivotal Application Service (PAS) or a service tile.</li>
+      <li><strong>Version numbers:</strong> The versions of the installed Ops Manager, PAS,
+        and MySQL for PCF</li>
+    </ul>
+  </li>
+</ol>
 
 <p class="note warning">
-  <strong>Warning:</strong> Do not attempt to resolve cluster issues by reconfiguring
-  the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this
-  document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.
+  <strong>Warning:</strong> Do not attempt to resolve cluster issues by reconfiguring the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.
 </p>
 
 ### <a id="manual-force"></a>Force a Node to Rejoin a Highly Available Cluster Manually
