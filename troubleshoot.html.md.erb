@@ -70,46 +70,47 @@ put the service instance into a safe topology, and then rerun the <code>configur
 This example shows one outcome that the <code>inspect</code> errand can return:
 
 <ol>
-<li>Use the <code>inspect</code> errand to retrieve relevant information about the two VMs:
-<pre class="terminal">
-$ bosh -e my-env -d my-dep run-errand inspect
-[...]
-Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: false
-         Read Only: true
-         GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-         Replication Configured: false<br /><br />
-Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-         Replication Configured: true<br /><br />
-2 errand(s)<br />
-Succeeded
-</pre>
-In the above scenario, the first instance is missing data but does not have replication configured. The second instance
-has data, and also has replication configured. The instructions below resolve this by copying data to the first instance,
-and resuming replication.</li>
-<li>Take a backup of the second instance using the <a href="backup-and-restore.html#manual-backup">Manual Backup</a> steps.</li>
-<li>Restore the backup artifact to the first instance using the <a href="backup-and-restore.html#restore">Manual Restore</a> steps.<br><br>
-	At this point, the instances have equivalent data.</li>
-<li> Run the <code>configure-leader-follower</code> errand to reconfigure replication:
-<code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER </code>
-<pre class="terminal">
-$ bosh -e my-env -d my-dep \
-  run-errand configure-leader-follower \
-  --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
-</pre></li>
+  <li>Use the <code>inspect</code> errand to retrieve relevant information about the two VMs:
+  <pre class="terminal">
+  $ bosh -e my-env -d my-dep run-errand inspect
+  [...]
+  Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/11 18:25:54 Started executing command: inspect
+           2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+           2017/12/11 18:25:54
+           Has Data: false
+           Read Only: true
+           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+           Replication Configured: false<br /><br />
+  Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/11 18:25:54 Started executing command: inspect
+           2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+           2017/12/11 18:25:54
+           Has Data: true
+           Read Only: true
+           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+           Replication Configured: true<br /><br />
+  2 errand(s)<br />
+  Succeeded
+  </pre>
+  In the above scenario, the first instance is missing data but does not have replication configured. The second instance
+  has data, and also has replication configured. The instructions below resolve this by copying data to the first instance,
+  and resuming replication.</li>
+  <li>Take a backup of the second instance using the <a href="backup-and-restore.html#manual-backup">Manual Backup</a> steps.</li>
+  <li>Restore the backup artifact to the first instance using the <a href="backup-and-restore.html#restore">Manual Restore</a> steps.<br><br>
+  	At this point, the instances have equivalent data.</li>
+  <li> Run the <code>configure-leader-follower</code> errand to reconfigure replication:
+  <code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER </code>
+  <pre class="terminal">
+  $ bosh -e my-env -d my-dep \
+    run-errand configure-leader-follower \
+    --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
+  </pre></li>
+</ol>
 
 ### <a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)
 
