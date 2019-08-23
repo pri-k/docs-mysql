@@ -5,105 +5,47 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<div>
-  <ul>
-    <li><a href="#errors">Troubleshooting Errors</a>
-      <ul>
-        <li><a href="#install-fail">Failed Install</a></li>
-        <li><a href="#cannot-create-delete">Cannot Create or Delete Service Instances</a></li>
-        <li><a href="#timeouts">Broker Request Timeouts</a></li>
-        <li><a href="#cannot-bind">Cannot Bind to or Unbind from Service Instances</a></li>
-        <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
-        <li><a href="#upgrade-all-fails">Upgrade All Instances Fails</a></li>
-        <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
-        <li><a href="#unable-to-determine">Unable to Determine Leader and Follower (Errand Error)</a></li>
-        <li><a href="#both-writable">Both Leader and Follower Instances Are Writable (Errand Error)</a></li>
-        <li><a href="#both-read-only">Both Leader and Follower Instances Are Read-Only</a></li>
-        <li><a href="#persistent-disk">Persistent Disk is Full</a></li>
-        <li><a href="#unresponsive">Unresponsive Node in a Highly Available Cluster</a> </li>
-        <li><a href="#replication-errors">Many Replication Errors in Logs for Highly Available Clusters</a></li>
-      </ul>
-    </li>
-    <li><a href="#components">Troubleshooting Components</a>
-      <ul>
-        <li><a href="#bosh">BOSH Problems</a></li>
-        <li><a href="#bosh-config">Configuration</a></li>
-        <li><a href="#auth">Authentication</a></li>
-        <li><a href="#network">Networking</a></li>
-        <li><a href="#quotas">Quotas</a></li>
-        <li><a href="#failing-jobs">Failing Jobs and Unhealthy Instances</a></li>
-        <li><a href="#az-region-fail">AZ or Region Failure</a></li>
-      </ul>
-    </li>
-    <li><a href="#techniques">Techniques for Troubleshooting</a>
-      <ul>
-        <li><a href="#parse-error">Parse a Cloud Foundry (CF) Error Message</a></li>
-        <li><a href="#bosh-cf-access">Access Broker and Instance Logs and VMs</a></li>
-        <li><a href="#broker-errands">Run Service Broker Errands to Manage Brokers and Instances</a></li>
-        <li><a href="#detect-orphans">Detect Orphaned Service Instances</a></li>
-        <li><a href="#instance-creds">Retrieve Admin and Read-Only Admin Credentials for a Service Instance</a></li>
-        <li><a href="#reinstall">Reinstall a Tile</a></li>
-        <li><a href="#view-resources">View Resource Saturation and Scaling</a></li>
-        <li><a href="#id-instance-owner">Identify Service Instance Owner</a></li>
-        <li><a href="#monitor-quota">Monitor Quota Saturation and Service Instance Count</a>    </li>
-        <li><a href="#trouble-ha">Techniques for Troubleshooting Highly Available Clusters</a></li>
-        <li><a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a></li>
-        <li><a href="#recreate-VM">Re-create a Corrupted VM in a Highly Available Cluster</a></li>
-        <li><a href="#check-replication">Check Replication Status in a Highly Available Cluster</a></li>
-      </ul>
-    <li><a href="#tools">Tools for Troubleshooting</a>
-      <ul>
-        <li><a href="#download-logs">download-logs</a></li>
-        <li><a href="#mysql-diag">mysql-diag</a></li>
-      </ul>
-    </li>
-    <li><a href="#kb">Knowledge Base (Community)</a></li>
-    <li><a href="#support">File a Support Ticket</a></li>
-  </ul>
-</div>
-
-
 This topic provides operators with basic instructions for troubleshooting on-demand MySQL for PCF.
 
 For information on temporary MySQL for PCF service interruptions, see <a href="./upgrade.html#interruptions">Service Interruptions</a>.
 
-<a id="errors"></a><h2>Troubleshooting Errors</h2>
+## <a id="errors"></a> Troubleshooting Errors
 
 This section provides information on how to troubleshooting specific errors or error messages.
 
-<a id="install-fail"></a><h3>Failed Install</h3>
+### <a id="install-fail"></a> Failed Install
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-install-fail' %>
 
-<a id="cannot-create-delete"></a><h3>Cannot Create or Delete Service Instances</h3>
+### <a id="cannot-create-delete"></a> Cannot Create or Delete Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-cannot-create-delete' %>
 
-<a id="timeouts"></a><h3>Broker Request Timeouts</h3>
+### <a id="timeouts"></a> Broker Request Timeouts
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-timeouts' %>
 
-<a id="cannot-bind"></a><h3>Cannot Bind to or Unbind from Service Instances</h3>
+### <a id="cannot-bind"></a> Cannot Bind to or Unbind from Service Instances
 
-<a id="instance-not-exist"></a><h4>Instance Does Not Exist</h4>
+#### <a id="instance-not-exist"></a> Instance Does Not Exist
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-instance-not-exist' %>
 
-<a id="other-errors"></a><h4>Other Errors</h4>
+#### <a id="other-errors"></a> Other Errors
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-other-errors' %>
 
-<a id="cannot-connect"></a><h3>Cannot Connect to a Service Instance</h3>
+### <a id="cannot-connect"></a> Cannot Connect to a Service Instance
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
@@ -112,32 +54,32 @@ This section provides information on how to troubleshooting specific errors or e
 Service instances can also become temporarily inaccessible during upgrades and VM or network failures.
 See <a href="./upgrade.html#interruptions">Service Interruptions</a> for more information.
 
-<a id="upgrade-all-fails"></a><h3>Upgrade All Instances Fails</h3>
+### <a id="upgrade-all-fails"></a> Upgrade All Instances Fails
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-upgrade-all-fails' %>
 
-<a id="missing-logs"></a><h3>Missing Logs and Metrics</h3>
+### <a id="missing-logs"></a> Missing Logs and Metrics
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-missing-logs' %>
 
-<a id="unable-to-determine"></a><h3>Unable to Determine Leader and Follower (Errand Error)</h3>
+### <a id="unable-to-determine"></a> Unable to Determine Leader and Follower (Errand Error)
 
 This problem happens when the <code>configure-leader-follower</code> errand fails because it cannot determine the VM roles.
 
-<h4>Symptom</h4>
+#### Symptom
 The <code>configure-leader-follower</code> errand exits with <code>1</code> and the errand logs contain the following:
 
 <pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
 
-<h4>Explanation</h4>
+#### Explanation
 Something has happened to the instances, such as a failure or manual intervention. As a result, there is not enough
 information available to determine the correct state and topology without operator intervention to resolve the issue.
 
-<h4>Solution</h4>
+#### Solution
 
 Use the <code>inspect</code> errand to determine which instance should be the leader.
 Then, using the <a href="./about-leader-follower.html#errands">orchestration</a> errands and backup/restore, you can
@@ -188,18 +130,18 @@ $ bosh -e my-env -d my-dep \
   --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
 </pre></li>
 
-<h3><a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)</h3>
+### <a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)
 
 This problem happens when the <code>configure-leader-follower</code> errand fails
 because both VMs are writable and the VMs might hold differing data.
 
-<h4>Symptom</h4>
+#### Symptom
 
 The <code>configure–leader-follower</code> errand exits with <code>1</code> and the errand logs contain the following:<br><br>
 
 <pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
 
-<h4>Explanation</h4>
+#### Explanation
 
 MySQL for PCF tries to ensure that there is only one writable instance of the leader-follower pair at any given time.
 However, in certain situations, such as
@@ -209,7 +151,7 @@ to be writable.
 The service instances remain in this state until an operator resolves the issue to ensure that the correct instance is
 promoted and reduce the potential for data divergence.
 
-<h4>Solution</h4>
+#### Solution
 
 <ol>
 <li> Use the <code>inspect</code> errand to retrieve the GTID Executed set for each VM:
@@ -284,23 +226,23 @@ Succeeded</pre></li>
 </li>
 </ol>
 
-<h3><a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only</h3>
+### <a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only
 
 In a leader-follower topology, the leader VM is writable and
 the follower VM is read-only. However if both VMs are read only, apps cannot write to the database.
 
 
-<h4>Symptom</h4>
+#### Symptom
 
 Developers report that apps cannot write to the database.
 
-<h4>Explanation</h4>
+#### Explanation
 
 This problem happens if the leader VM fails and the BOSH Resurrector is enabled.
 When the leader is resurrected, it is set as read-only.
 
 
-<h4>Solution</h4>
+#### Solution
 
 <ol>
     <li> Use the <code>inspect</code> errand to confirm that both VMs are in a read-only state:
@@ -346,17 +288,17 @@ $ bosh -e my-env -d my-dep \
     </li>
 </ol>
 
-<h3><a id="persistent-disk"></a>Persistent Disk is Full</h3>
+### <a id="persistent-disk"></a>Persistent Disk is Full
 
 If your persistent disk is full, apps become inoperable. In this state, read,
 write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.
 
-<h4>Symptom</h4>
+#### Symptom
 
 Developers report that read, write, and cf CLI operations do not work.
 Developers cannot upgrade to a larger MySQL service plan to free up disk space.
 
-<h4>Explanation</h4>
+#### Explanation
 
 This problem happens if your persistent disk is full. When you use the BOSH CLI to
 target your deployment, you see that instances are at 100% persistent disk
@@ -365,7 +307,7 @@ usage.
 Available disk space can be increased by deleting audit log files.
 After deleting audit logs, you can then upgrade to a larger MySQL service plan.
 
-<h4>Solution</h4>
+#### Solution
 
 The solution to this problem is to confirm that your persistent disk is full, and then delete an
 audit log file to free up disk space.
@@ -527,9 +469,9 @@ Succeeded
     see <a href= "https://docs.pivotal.io/p-mysql/use.html#update">Update a Service Instance to a Larger Plan</a> </li>
 </ol>
 
-<h3><a id="unresponsive"></a> Unresponsive Node in a Highly Available Cluster</h3>
+### <a id="unresponsive"></a> Unresponsive Node in a Highly Available Cluster
 
-<h4>Symptom</h4>
+#### Symptom
 
 A client connected to a MySQL cluster node reports the following error:
 <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
@@ -537,7 +479,7 @@ A client connected to a MySQL cluster node reports the following error:
 Some clients might instead return the following:
 <pre class="terminal">unknown error</pre>
 
-<h4>Explanation</h4>
+#### Explanation
 
 If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster,
 the node stops accepting writes.
@@ -545,7 +487,7 @@ If the connection to this node is made through the proxy,
 the proxy automatically re-routes further connections to a different node.
 <br><br>
 
-<h4>Solutions</h4>
+#### Solutions
 A node can become unresponsive for a number of reasons. For solutions, see the following:
 <ul>
 <li><strong>Network Latency</strong>:
@@ -591,11 +533,11 @@ cluster data on the node. For more information, see
 </li>
 </ul>
 
-<h3><a id="replication-errors"></a> Many Replication Errors in Logs for Highly Available Clusters</h3>
+### <a id="replication-errors"></a> Many Replication Errors in Logs for Highly Available Clusters
 
 This problem happens when there are errors in SQL statements.
 
-<h4>Symptom</h4>
+#### Symptom
 
 You see many replication errors in the MySQL logs, like the following:
 
@@ -603,7 +545,7 @@ You see many replication errors in the MySQL logs, like the following:
 160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
 160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'</pre>
 
-<h4>Explanation and Solution</h4>
+#### Explanation and Solution
 
 For solutions for replication errors in MySQL log files, see the table below.
 
@@ -631,69 +573,69 @@ For solutions for replication errors in MySQL log files, see the table below.
 If you see replication errors, but no <code>ALTER TABLE</code> or persistent disk or memory issues,
 you can ignore the replication errors.
 
-<a id="components"></a><h2>Troubleshooting Components</h2>
+## <a id="components"></a> Troubleshooting Components
 
 This section provides guidance on checking for and fixing issues in on-demand service components.
 
 
 
-<a id="bosh"></a><h3>BOSH Problems</h3>
+### <a id="bosh"></a> BOSH Problems
 
-<a id="large-queue"></a><h4>Large BOSH Queue</h4>
+#### <a id="large-queue"></a> Large BOSH Queue
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-large-queue' %>
 
-<a id="bosh-config"></a><h3>Configuration</h3>
+### <a id="bosh-config"></a> Configuration
 
-<a id="bosh-instance-fail"></a><h4>Service instances in failing state</h4>
+#### <a id="bosh-instance-fail"></a> Service instances in failing state
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-bosh-instance-fail' %>
 
-<a id="auth"></a><h3>Authentication</h3>
+### <a id="auth"></a> Authentication
 
-<a id="uaa-change"></a><h4>UAA Changes</h4>
+#### <a id="uaa-change"></a> UAA Changes
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-uaa-change' %>
 
-<a id="network"></a><h3>Networking</h3>
+### <a id="network"></a> Networking
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-network' %>
 
-<a id="broker-to-instances"></a><h4>Validate Service Broker Connectivity to Service Instances</h4>
+#### <a id="broker-to-instances"></a> Validate Service Broker Connectivity to Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-broker-to-instances' %>
 
-<a id="app-to-instances"></a><h4>Validate App Access to Service Instance</h4>
+#### <a id="app-to-instances"></a> Validate App Access to Service Instance
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-app-to-instances' %>
 
-<a id="quotas"></a><h3>Quotas</h3>
+### <a id="quotas"></a> Quotas
 
-<a id="plan-quotas"></a><h4>Plan Quota issues</h4>
+#### <a id="plan-quotas"></a> Plan Quota Issues
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-plan-quotas' %>
 
-<a id="global-quotas"></a><h4>Global Quota Issues</h4>
+#### <a id="global-quotas"></a> Global Quota Issues
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-global-quotas' %>
 
-<a id="failing-jobs"></a><h3>Failing Jobs and Unhealthy Instances</h3>
+### <a id="failing-jobs"></a> Failing Jobs and Unhealthy Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
@@ -703,76 +645,76 @@ A failing process or failing VM might come back automatically after a temporary 
 See <a href="./interruptions.html#process-fail">VM Process Failure</a> and
 <a href="./interruptions.html#vm-fail">VM Failure</a>.
 
-<a id="az-region-fail"></a><h3>AZ or Region Failure</h3>
+### <a id="az-region-fail"></a> AZ or Region Failure
 
 Failures at the IaaS level, such as Availability Zone (AZ) or region  failures, can interrupt service and require manual restoration. See <a href="./interruptions.html#az-fail">AZ Failure</a>
 and <a href="./interruptions.html#region-fail">Region Failure</a>.
 
-<a id="techniques"></a><h2>Techniques for Troubleshooting</h2>
+## <a id="techniques"></a> Techniques for Troubleshooting
 
 Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
 
-<a id="parse-error"></a><h3>Parse a Cloud Foundry (CF) Error Message</h3>
+### <a id="parse-error"></a> Parse a Cloud Foundry (CF) Error Message
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
 
-<a id="bosh-cf-access"></a><h3>Access Broker and Instance Logs and VMs</h3>
+### <a id="bosh-cf-access"></a> Access Broker and Instance Logs and VMs
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-bosh-cf-access' %>
 
-<a id="access-broker"></a><h4>Access Broker Logs and VM(s)</h4>
+#### <a id="access-broker"></a> Access Broker Logs and VM(s)
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-access-broker' %>
 
-<a id="access-instance"></a><h4>Access Service Instance Logs and VMs</h4>
+#### <a id="access-instance"></a> Access Service Instance Logs and VMs
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-access-instance' %>
 
-<a id="broker-errands"></a><h3>Run Service Broker Errands to Manage Brokers and Instances</h3>
+### <a id="broker-errands"></a> Run Service Broker Errands to Manage Brokers and Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-broker-errands' %>
 
-<a id="register-broker"></a><h4>Register Broker</h4>
+#### <a id="register-broker"></a> Register Broker
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' %>
 
-<a id="deregister-broker"></a><h4>Deregister Broker</h4>
+#### <a id="deregister-broker"></a> Deregister Broker
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-deregister-broker' %>
 
-<a id="upgrade-all"></a><h4>Upgrade All Service Instances</h4>
+#### <a id="upgrade-all"></a> Upgrade All Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
-<a id="delete-all"></a><h4>Delete All Service Instances</h4>
+#### <a id="delete-all"></a> Delete All Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-delete-all' %>
 
-<a id="detect-orphans"></a><h3>Detect Orphaned Service Instances</h3>
+### <a id="detect-orphans"></a> Detect Orphaned Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-detect-orphans' %>
 
-<a id="instance-creds"></a><h3>Retrieve Admin and Read-Only Admin Credentials for a Service Instance</h3>
+### <a id="instance-creds"></a> Retrieve Admin and Read-Only Admin Credentials for a Service Instance
 
 To retrieve the admin and read-only admin credentials for a service instance from BOSH CredHub, perform the following steps:
 
@@ -836,29 +778,29 @@ To retrieve the admin and read-only admin credentials for a service instance fro
 </li>
 </ol>
 
-<a id="reinstall"></a><h3>Reinstall a Tile</h3>
+### <a id="reinstall"></a> Reinstall a Tile
 
 To reinstall the MySQL for PCF tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a> in the Pivotal Support knowledge base.
 
-<a id="view-resources"></a><h3>View Resource Saturation and Scaling</h3>
+### <a id="view-resources"></a> View Resource Saturation and Scaling
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-view-resources' %>
 
-<a id="id-instance-owner"></a><h3>Identify Service Instance Owner</h3>
+### <a id="id-instance-owner"></a> Identify Service Instance Owner
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-id-instance-owner' %>
 
-<a id="monitor-quota"></a><h3>Monitor Quota Saturation and Service Instance Count</h3>
+### <a id="monitor-quota"></a> Monitor Quota Saturation and Service Instance Count
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-monitor-quota' %>
 
-<h3><a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters</h3>
+### <a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters
 
 If your cluster is experiencing downtime or in a degraded state, Pivotal recommends
 gathering information to diagnose the type of failure the cluster is experiencing with the following
@@ -903,7 +845,7 @@ workflow:
   the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this
   document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
 
-<h3><a id="manual-force"></a>Force a Node to Rejoin a Highly Available Cluster Manually</h3>
+### <a id="manual-force"></a>Force a Node to Rejoin a Highly Available Cluster Manually
 
 If a detached node fails to rejoin the cluster after a configured grace period, you can manually
 force the node to rejoin the cluster. This procedure removes all the data on the node,
@@ -944,7 +886,7 @@ To manually force a node to rejoin the cluster, do the following:
   </li>
   </ol>
 
-<h3><a id="recreate-VM"></a>Re-create a Corrupted VM in a Highly Available Cluster</h3>
+### <a id="recreate-VM"></a>Re-create a Corrupted VM in a Highly Available Cluster
 
   To re-create a corrupted VM, do the following:
   <ol>
@@ -965,7 +907,7 @@ To manually force a node to rejoin the cluster, do the following:
   </li>
   </ol>
 
-<h3><a id="check-replication"></a>Check Replication Status in a Highly Available Cluster</h3>
+### <a id="check-replication"></a>Check Replication Status in a Highly Available Cluster
 
 If you see stale data in your cluster, you can check whether replication is
 functioning normally.
@@ -1042,11 +984,11 @@ To verify that the other nodes contain the same dummy data do the following for 
 If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.</li>
 </ol>
 
-<a id="tools"></a><h2>Tools for Troubleshooting</h2>
+## <a id="tools"></a> Tools for Troubleshooting
 
 Troubleshooting techniques described above use the following tools.
 
-<h3><a id="download-logs"></a>download-logs</h3>
+### <a id="download-logs"></a>download-logs
 
 `download-logs` is a script that you can run from your Ops Manager VM to aggregate logs
 from your MySQL cluster nodes, MySQL proxies, and, with highly available clusters, the jumpbox VM.
@@ -1091,18 +1033,18 @@ Do the following to run the `download-logs` script:
    The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 
 
-<h3><a id="mysql-diag"></a>mysql-diag</h3>
+### <a id="mysql-diag"></a> mysql-diag
 
 `mysql-diag` outputs the current status of a highly available (HA) MySQL cluster in PCF and suggests recovery actions if the cluster fails.
 For more information, see [Running mysql-diag](./mysql-diag.html).
 
-<a id="kb"></a><h2>Knowledge Base (Community)</h2>
+## <a id="kb"></a> Knowledge Base (Community)
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-kb' %>
 
-<a id="support"></a><h2>File a Support Ticket</h2>
+## <a id="support"></a> File a Support Ticket
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
