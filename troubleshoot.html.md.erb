@@ -542,9 +542,11 @@ This problem happens when there are errors in SQL statements.
 
 You see many replication errors in the MySQL logs, like the following:
 
-<pre class="terminal">160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
+<pre class="terminal">
+  160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
 160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
-160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'</pre>
+160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
+</pre>
 
 #### Explanation and Solution
 
