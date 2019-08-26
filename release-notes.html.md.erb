@@ -29,16 +29,22 @@ go to <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial"> Ste
   use BOSH DNS hostnames.
   For more information, see <a href="./upgrade.html#change-networking">Update Networking Rules</a>.
 </p>
-
+ 
 ## <a id="247"></a>v2.4.7
 
 **Release Date:**  July 19, 2019
 
-### New Features
+### Features
 
 This release includes the following feature:
 
 + Bumps AWS CLI version used by automatic backups to support non-public AWS regions and external object stores that require the v4 signature.
+
+### Known Issues
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 ## <a id="246"></a>v2.4.6
 
@@ -54,6 +60,12 @@ This release fixes the following issue:
   in Pivotal Application Service (PAS).
   For information about setting **Apps Domain** in the PAS tile,
   see [Configure Domains](https://docs.pivotal.io/pivotalcf/2-5/customizing/configure-pas.html#domains).
+  
+### Known Issues
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 
 ## <a id="245"></a>v2.4.5
@@ -75,6 +87,12 @@ This release fixes a known issue, so that:
 * Azure backups support on-premise blob storage.
   For more information,
   see the **Blob Store Base URL** field in [Option 4: Back Up to Azure Storage](./backup-and-restore.html#azure).
+  
+### Known Issues
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 ## <a id="244"></a>v2.4.4
 
@@ -96,6 +114,11 @@ This release fixes the following issue:
   This issue prevented TLS connection for Spring Cloud Services, Scheduler for PCF,
   and Spring apps that used the MariaDB Connector/J.
 
+### Known Issues
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 ## <a id="243"></a>v2.4.3
 
@@ -120,6 +143,7 @@ and the Java API, which leads to the following limitations:
   in their Spring apps to connect to a MySQL service instance.
   Pivotal recommends developers configure their apps to use the
   [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
+<%= partial "disable-plan-ki" %>
 
 ### Security Fixes
 
@@ -151,6 +175,12 @@ This release fixes the following issues:
 * Fixes an issue where smoke tests fail if Service Plan Access is set to manual.
 * An attempt to install MySQL for PCF 2.4 with an incompatible version of PCF fails fast
 when the tile is staged, rather than when MySQL smoke tests are run.
+
+### Known Issues
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 ## <a id="240"></a>v2.4.0
 
@@ -233,7 +263,9 @@ nstalled PCF version has Credhub, but secure service credentials is not enabled.
 
 ### Known Issues
 
-There are no known issues for this release.
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 ### Compatibility
 
