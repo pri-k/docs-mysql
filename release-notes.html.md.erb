@@ -31,6 +31,12 @@ This release fixes a known issue, so that:
 * Azure backups support on-premise blob storage.
   For more information,
   see the **Blob Store Base URL** field in [Option 4: Back Up to Azure Storage](./backup-and-restore.html#azure).
+  
+## Known Issue
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 ## <a id="234"></a>v2.3.4
 
@@ -42,6 +48,12 @@ This release includes the following security fixes:
 
 * Updates golang to v1.11.4 to address [CVE-2018-16873](https://github.com/golang/go/issues/29230).
 * Updates Percona Server to v5.7.24-26 to address [CVE-2018-3133](http://www.aqdog.com/vulns/vulnsmanagent/vulnsDetails?id=20093&cve_id=CVE-2018-3133).
+
+## Known Issue
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
 
 ### Compatibility
 
@@ -64,10 +76,11 @@ This release uses the following component versions:
 
 ### Known Issues
 
-All releases up to and including MySQL for PCF v2.3.3 have the following issue:
+This release has the following issues:
 
 * Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
   To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand.
+<%= partial "disable-plan-ki" %>
 
 ### Security Fixes
 
@@ -113,15 +126,21 @@ disabled and Credhub is enabled on the deployment.
 * The `mysql-restore` command now completely cleans up pre-existing MySQL users with column or
 table level privileges in the database.
 
+## Known Issue
+
+This release has the following issue:
+
+<%= partial "disable-plan-ki" %>
+
 ## <a id="231"></a>v2.3.1
 
 **Release Date: June 22, 2018**
 
-### Known Issues
+## Known Issues
 
-All releases up to and including MySQL for PCF v2.3.2 have the following issue:
+This release has the following issues:
 
-MySQL for PCF v2.3.0 and v2.3.1 have the following issue:
+<%= partial "disable-plan-ki" %>
 
 - The `mysqldump --all-databases` step when doing a [manual backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup) will not work due to a MySQL user permissions issue.
 
@@ -143,9 +162,9 @@ This release fixes the following issue:
 
 **Release Date: June 1, 2018**
 
-### Known Issues and Limitations
+### Known Issues
 
-This release has the following issues and limitations:
+This release has the following issues:
 
 * After upgrading to MySQL for PCF v2.3.0, developers cannot create new bindings
   to a service instance that has not also been upgraded.
@@ -157,6 +176,8 @@ instance credentials are enabled. For more information, see the
 [Cloud Foundry CLI MySQL Plugin](https://github.com/andreasf/cf-mysql-plugin) GitHub
 repository and [Configure Security](install-config.html#security) in
 _Installing and Configuring MySQL for PCF_.
+<%= partial "disable-plan-ki" %>
+- The `mysqldump --all-databases` step when doing a [manual backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup) will not work due to a MySQL user permissions issue.
 
 ### Features
 
