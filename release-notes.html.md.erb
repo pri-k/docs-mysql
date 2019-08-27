@@ -21,8 +21,7 @@ Updated dependencies in this release:
 
 * Updates Service Backups to v18.2.0. This update includes the following:
   * `smoke-tests` errands can be used in environments that use
-  custom Java buildpacks with OracleJDK.
- for PCF Release Notes_.
+  custom Java buildpacks with OracleJDK for PCF Release Notes.
   
 ### Resolved Issue
 
@@ -80,6 +79,7 @@ This release has the following issues:
 
 * Service instances **cannot** be upgraded individually using the `cf update-service` CLI command.
   To upgrade service instances after a tile upgrade, operators must run the `upgrade-all-service-instances` BOSH errand.
+
 <%= partial "disable-plan-ki" %>
 
 ### Security Fixes
@@ -176,7 +176,9 @@ instance credentials are enabled. For more information, see the
 [Cloud Foundry CLI MySQL Plugin](https://github.com/andreasf/cf-mysql-plugin) GitHub
 repository and [Configure Security](install-config.html#security) in
 _Installing and Configuring MySQL for PCF_.
+
 <%= partial "disable-plan-ki" %>
+
 - The `mysqldump --all-databases` step when doing a [manual backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup) will not work due to a MySQL user permissions issue.
 
 ### Features
