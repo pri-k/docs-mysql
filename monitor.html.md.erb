@@ -34,20 +34,20 @@ For a list of general KPIs that apply to all instances, and not specifically to 
 
 For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysql-metrics).
 
-<%= partial './mysql_kpis' %>
+<%= partial '../../p-mysql/partials/mysql/mysql_kpis' %>
 
 ### <a id="bosh"></a> BOSH System Health Metrics
 
 <!-- Parital in https://github.com/pivotal-cf/docs-services-partials -->
 
-<%= partial '../../p-mysql/odb/bosh_health_metrics' %>
+<%= partial '../../p-mysql/partials/services/bosh_health_metrics' %>
 
 All BOSH-deployed components generate the following system health metrics; these metrics also serve as KPIs for the MySQL for PCF service.
 
-<%= partial './bosh_metrics' %>
+<%= partial '../../p-mysql/partials/mysql/bosh_metrics' %>
 
 ## <a id="mysql-metrics"></a> All MySQL Metrics
 
 In addition to the above KPIs, the MySQL service emits the followings metrics that can be used for monitoring and alerting.
 
-<%= partial './mysql_metrics' %>
+<%= partial '../../p-mysql/partials/mysql/mysql_metrics' %>
