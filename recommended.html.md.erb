@@ -38,18 +38,37 @@ Redeploying MySQL for PCF for configuration changes or upgrades will result in M
 The persistent disk receives and temporarily stores and encrypts MySQL backups.
 This results in increased disk usage while backups are being processed.
 For single-node and leader-follower service plans, backups are processed on the MySQL VM.
-For highly available (HA) clusters, backups are processed on the jumpbox VM. 
+For highly available (HA) clusters, backups are processed on the jumpbox VM.
 
-When enabling backups for single node and leader-follower service plans,
-choose MySQL persistent disk sizes that are three times larger than the maximum amount of data
-that an app developer using that plan will need.
+In addition to backups, the persistent disk also stores InnoDB redo logs. These logs use
+a static amount of disk size. On single node and leader-follower persistent disks,
+the logs use 512 MB of space. On HA cluster persistent disks, the logs use 2 GB of space.
 
-When enabling backups for HA cluster service plans, choose jumpbox persistent disk sizes
-that are two times larger than the maximum amount of data that an app developer using that plan will need. 
+When enabling backups for single node and leader-follower service plans, use the
+following formula to choose MySQL persistent disk sizes:
+
+```
+3 * (maximum amount of app data) + 512 MB
+```
+
+When enabling backups for HA cluster service plans, use the following formula to
+choose jumpbox persistent disk sizes:
+
+```
+2 * (maximum amount of app data) + 2 GB
+```
+
+Use the following formula to choose HA cluster node persistent disk sizes:
+
+```
+(maximum amount of app data) + 2 GB
+```
 
 The following diagram shows how persistent disk space is used in the single-node and leader-follower topologies
-and in the HA cluster topology. 
+and in the HA cluster topology.
 
-<!-- Edit corresponding disk-lf-ha.html file in draw.io to update diagram -->
+<!-- Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing -->
 
-![Persistent Disk diagram](disk-lf-ha.png)
+<a href="./images/disk-lf-ha.png" target="_blank">
+  <img alt="Persistent Disk diagram" src="./images/disk-lf-ha.png"/>
+</a>
