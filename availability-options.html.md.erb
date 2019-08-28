@@ -5,7 +5,7 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes and contrasts the three topologies for MySQL and explains the kind of 
+This topic describes and contrasts the three topologies for MySQL and explains the kind of
 availability each provides.
 
 ## <a id="three-topologies"></a> Three Topologies
@@ -21,8 +21,8 @@ The three topologies offered in MySQL for PCF v2.5 are as follows:
 
 + Highly available (HA) cluster—This three-VM plus jumpbox cluster uses a patched Galera Cluster, Percona XtraDB Cluster (PXC) to provide the greatest availability of the three topologies. For more information, see [About Highly Available Clusters](./about-ha.html).
 
-    <%= partial "./galera_beta" %>
-    
+    <%= partial "../../p-mysql/partials/mysql/galera_beta" %>
+
 
 ## <a id="pros-and-cons"></a> Pros and Cons
 
@@ -39,14 +39,14 @@ which one is best for your developers.
             <li>Apps can share the same data-set</li>
             <li>Straightforward operator experience</li>
             <li>Easy for the developer</li>
-          </ul>    
+          </ul>
        </td>
       <td>
           <ul>
             <li>No redundancy</li>
             <li>All data since last backup can be lost</li>
             <li>Data recovery requires restore from backup</li>
-          </ul>    
+          </ul>
        </td>
   </tr>
   <tr><td>Leader-follower</td><td>two</td>
@@ -55,14 +55,14 @@ which one is best for your developers.
             <li>Two copies of the data</li>
             <li>Apps can share the same data-set</li>
             <li>Data recovery is faster than single node</li>
-          </ul>    
+          </ul>
        </td>
       <td>
           <ul>
             <li>Less flexible tuning than single node</li>
             <li>Developers require some technical understanding</li>
             <li>Operator must initiate failover</li>
-          </ul>    
+          </ul>
        </td>
   </tr>
   <tr><td>Highly available cluster</td><td>three and a jumpbox VM</td>
@@ -70,7 +70,7 @@ which one is best for your developers.
           <ul>
             <li>Tightest RPO and RTO.<br>
                 See <a href="#rpo-and-rto">RPOs and RTOs</a> below.</li>
-          </ul>    
+          </ul>
        </td>
       <td>
           <ul>
@@ -78,7 +78,7 @@ which one is best for your developers.
             <li>Less flexible tuning than single node</li>
             <li>Developers require moderate technical understanding</li>
             <li>Apps cannot share the same data-set</li>
-          </ul>    
+          </ul>
        </td>
   </tr>
 </table>
