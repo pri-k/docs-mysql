@@ -33,14 +33,22 @@ Redeploying MySQL for PCF for configuration changes or upgrades will result in M
 ##<a id="persistent"></a> MySQL Persistent Disk Usage
 
 The MySQL persistent disk receives and temporarily stores and encrypts MySQL backups.
-This results in increased disk usage while backups are being processed. 
+This results in increased disk usage while backups are being processed.
 
-When enabling backups for singler-node and leader-follower service plans,
-choose MySQL persistent disk sizes that are three times larger than 
-the maximum amount of data an app developer using that plan will need.
+In addition to backups, the persistent disk also stores InnoDB redo logs. These logs use
+a static 512 MB of disk space.
 
-The following diagram shows how persistent disk space is used.
+When enabling backups for single node and leader-follower service plans, use the
+following formula to choose MySQL persistent disk sizes:
 
-<!-- Edit corresponding disk-sn-lf.html file in draw.io to update diagram -->
+```
+3 * (maximum amount of app data) + 512 MB
+```
 
-![Persistent Disk diagram](disk-sn-lf.png)
+The following diagram shows how persistent disk space is used:
+
+<!-- Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing -->
+
+<a href="./images/disk-sn-lf.png" target="_blank">
+  <img alt="Persistent Disk diagram" src="./images/disk-sn-lf.png"/>
+</a>
