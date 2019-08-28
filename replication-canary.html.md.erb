@@ -5,36 +5,36 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<%= partial "./galera_beta" %>
+<%= partial "../../p-mysql/partials/mysql/galera_beta" %>
 
-This topic describes the replication canary for an highly available (HA) cluster in MySQL 
-for Pivotal Cloud Foundry (PCF). The replication canary runs on the jumpbox VM and 
-monitors an HA cluster to ensure that replication is working. 
+This topic describes the replication canary for an highly available (HA) cluster in MySQL
+for Pivotal Cloud Foundry (PCF). The replication canary runs on the jumpbox VM and
+monitors an HA cluster to ensure that replication is working.
 
 ## <a id="overview"></a>Overview
 
-The replication canary writes to a private dataset in the cluster and then attempts to read the 
-written data from each node. It pauses between reads and writes to ensure that the write-sets have 
-been replicated. The private dataset does not use a significant amount of disk capacity. 
+The replication canary writes to a private dataset in the cluster and then attempts to read the
+written data from each node. It pauses between reads and writes to ensure that the write-sets have
+been replicated. The private dataset does not use a significant amount of disk capacity.
 
-When replication fails, the canary cannot read the data from all the nodes and does the 
+When replication fails, the canary cannot read the data from all the nodes and does the
 following:
 
-  - Sends a message that replication has failed to a configured email address. 
+  - Sends a message that replication has failed to a configured email address.
   See [Sample Notification Email](#sample-canary) below.
   - Disables client access to the cluster. See [Determine If the Cluster Is Accessible](#access) below.
 
-  <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost. 
-    Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of 
+  <p class='note warning'><strong>Warning:</strong> When replication fails, data can be lost.
+    Contact <a href="https://support.pivotal.io">Pivotal Support</a> immediately in the case of
     replication failure.</p>
 
 ## <a id="sample-canary"></a>Sample Notification Email
 
-If the canary detects replication failure, it immediately sends an email through the 
-Pivotal Application Service (PAS) notification service. You must have configured email notifications in 
+If the canary detects replication failure, it immediately sends an email through the
+Pivotal Application Service (PAS) notification service. You must have configured email notifications in
 PAS for the replication canary to send emails.
 
-For more information about configuring email notifications, see the _Configure Email Notifications_ 
+For more information about configuring email notifications, see the _Configure Email Notifications_
 procedure for your IaaS in the [Pivotal Cloud Foundry](https://docs.pivotal.io/pivotalcf) documentation.
 
 The notification service sends emails similar to the following:
@@ -45,16 +45,16 @@ Subject: CF Notification: p-mysql Replication Canary, alert 417
 This message was sent directly to your email address.
 
 {alert-code 417}
-This is an email to notify you that the MySQL service's replication canary 
-has detected an unsafe cluster condition in which replication is not 
+This is an email to notify you that the MySQL service's replication canary
+has detected an unsafe cluster condition in which replication is not
 performing as expected across all nodes.
 ```
 
-## <a id="access"></a> Determine If the Cluster Is Accessible 
+## <a id="access"></a> Determine If the Cluster Is Accessible
 
-When the canary detects replication failure, it disables connections to the database cluster through 
-the proxies. When the replication issue is resolved, the canary automatically restores client access to the 
-cluster. You can determine if the canary disabled cluster access by observing the cluster using 
+When the canary detects replication failure, it disables connections to the database cluster through
+the proxies. When the replication issue is resolved, the canary automatically restores client access to the
+cluster. You can determine if the canary disabled cluster access by observing the cluster using
 the Switchboard API.
 
 To determine if cluster access is disabled, do the following:
@@ -66,16 +66,16 @@ To determine if cluster access is disabled, do the following:
     ```
     curl https://USERNAME:PASSWORD@N-HOSTNAME/v0/cluster
     ```
-    
+
     Where:
     + `USERNAME` is the `username` you recorded in step 1.
     + `PASSWORD` is the `password` you recorded in step 1.
     + `N` is 0, 1, or 2 depending on the proxy you want to connect to.
     + `HOSTNAME` is the `hostname` you recorded in step 1.
-        
+
     For example:
     <pre class="terminal">
-    $ curl https&#58;//abcdefghijklmno&#58;012345678912345&#64;0-proxy&#46;123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com/v0/cluster       
+    $ curl https&#58;//abcdefghijklmno&#58;012345678912345&#64;0-proxy&#46;123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com/v0/cluster
     [
       {
         "currentBackendIndex":0,
@@ -85,10 +85,10 @@ To determine if cluster access is disabled, do the following:
       }
     ]
     </pre>
-    
+
     When cluster access is disabled, `trafficEnabled` is set to false.
-    
-If you must restore client access to the cluster while replication is failing, contact 
+
+If you must restore client access to the cluster while replication is failing, contact
 [Pivotal Support](https://support.pivotal.io).
 
 For more information about the Switchboard API, see [Monitoring Node Health](monitor-health.html).

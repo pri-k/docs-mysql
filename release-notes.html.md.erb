@@ -49,7 +49,7 @@ Previously, a regression caused the leader or follower node to take a backup of 
 
 This release has the following issue:
 
-<%= partial "disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
 ## <a id="256"></a>v2.5.6
 
@@ -65,7 +65,7 @@ New features and changes in this release:
 
 This release has the following issue:
 
-<%= partial "disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
 ## <a id="255"></a>v2.5.5
 
@@ -86,7 +86,7 @@ This release fixes the following issue:
 
 This release has the following issue:
 
-<%= partial "disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
 ## <a id="254"></a>v2.5.4
 
@@ -128,7 +128,7 @@ This release has the following issues:
   If you have the Scheduler for PCF tile installed, MySQL for PCF must have
   **TLS Options** set to **Optional** or **Not Configured**.
   
-<%= partial "disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
 ## <a id="253"></a>v2.5.3
 
@@ -142,9 +142,9 @@ This release has the following issues:
   If you have the Scheduler for PCF tile installed, MySQL for PCF must have
   **TLS Options** set to **Optional** or **Not Configured**.
   
-<%= partial "disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
-<%= partial 'ha_cluster_backup_ki' %>
+<%= partial '../../p-mysql/partials/mysql/ha_cluster_backup_ki' %>
 
 * Java apps are not able to establish a connection to an HA cluster service
   instance if TLS is disabled.
@@ -176,9 +176,9 @@ This release has the following issues:
   - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J in their Spring apps to connect to a MySQL service instance.
   Pivotal recommends developers configure their apps to use the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
 
-<%= partial 'ha_cluster_backup_ki' %>
+<%= partial '../../p-mysql/partials/mysql/ha_cluster_backup_ki' %>
 
-<%= partial "disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
 ### Features
 
@@ -192,7 +192,7 @@ New features and changes in this release:
 
 ####<a name="ha-cluster"></a>Highly Available (HA) Cluster Service Plans
 
-<%= partial "./galera_beta" %>
+<%= partial "../../p-mysql/partials/mysql/galera_beta" %>
 
 MySQL for PCF now supports three deployment topologies. In addition to single
 node and leader-follower service plans, operators can offer an HA cluster
