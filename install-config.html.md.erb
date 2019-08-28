@@ -284,15 +284,14 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>Only for highly available cluster plans. Select a VM type for the MySQL jumpbox node.
             This VM is also called `mysql-monitor`.</td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
-        <td>Select a disk size. This disk stores the MySQL messages.
-          <ul><li>Single node or leader-follower plans: Select a disk size three times larger than the disk you intend to provide to developers.</li>
-            <li>Highly available cluster plans: Select a disk size that is the same size you intend to provide to developers.</li></ul>
-        <p class="note"><strong>Note</strong>: For backups to work properly, follow these
-          sizing recommendations.
-                For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</p>
+        <td>Select a disk size. This disk stores the MySQL data.<br>
+            For sizing recommendations,
+            see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
     </td></tr>
     <tr><td><strong>Jumpbox Persistent Disk</strong></td>
-        <td>Only for highly available cluster plans. Select a disk size. This disk stores backups. This must be twice the size of the MySQL persistent disk.</td></tr>
+        <td>Only for highly available cluster plans. <br> Select a disk size.
+          This disk stores backups. <br> For sizing recommendations,
+          see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
         <td> BOSH deploys your service instances to these availability zones (AZ). If more than one AZ is selected, BOSH will randomize which AZ to place each VM.
     <ul><li>Single node plans: Select one AZ for service instances of this plan to be deployed.</li>
