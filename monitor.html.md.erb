@@ -54,21 +54,21 @@ For a list of general KPIs that apply to all instances, and not specifically to 
 
 For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysql-metrics).
 
-<%= partial './mysql_kpis' %>
+<%= partial '../../p-mysql/partials/mysql/mysql_kpis_v1' %>
 
 <h3> <a name="bosh"></a>BOSH Health Metrics</h3>
 
 All BOSH-deployed components generate the following component metrics; these component metrics also serve as KPIs for the MySQL for PCF service.
 
-<%= partial './bosh_metrics' %>
+<%= partial '../../p-mysql/partials/mysql/bosh_metrics_v1' %>
 
 <h3> <a name="mysql-metrics"></a>MySQL-Specific Metrics</h3>
 
-<%= partial './mysql_metrics' %>
+<%= partial '../../p-mysql/partials/mysql/mysql_metrics_v1' %>
 
 <h3> <a name="galera-metrics"></a>Galera-Specific Metrics</h3>
 
-<%= partial './galera_metrics' %>
+<%= partial '../../p-mysql/partials/mysql/galera_metrics_v1' %>
 
 For more information on monitoring PCF, see [Monitoring Pivotal Cloud Foundry](https://docs.pivotal.io/pivotalcf/monitoring/index.html).
 
