@@ -993,15 +993,15 @@ To verify that the other nodes contain the same dummy data do the following for 
   <li>To query the dummy table, do the following:
     <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
-    When prompted for a password, provide the <code>password</code> value recorded in step 1.
+  When prompted for a password, provide the <code>password</code> value recorded in step 1.
   </li>
   <li>
-    <p>To verify that the node contains the same three rows of dummy data as the other nodes, run the following command:</p>
+  To verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
 
     <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
-    <p>When prompted for a password, provide the <code>password</code> value recorded in step 1.
-    Verify that the above command returns output similar to the following:</p>
+  When prompted for a password, provide the <code>password</code> value recorded in step 1.
+  Verify that the above command returns output similar to the following:
     <pre class="terminal">
     +----+----------------------+
     | id | info                 |
