@@ -976,9 +976,8 @@ To check the replication status, do the following:
   <p>To query the table and verify that the three rows of dummy data exist on the first node, run the following:</p>
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
-    <p>When prompted for a password, provide the <code>password</code> value recorded in step 1.
-    <br>
-    The above command returns output similar to the following:</p>
+  When prompted for a password, provide the <code>password</code> value recorded in step 1.<br>
+  The above command returns output similar to the following:
     <pre class="terminal">
     +----+----------------------+
     | id | info                 |
