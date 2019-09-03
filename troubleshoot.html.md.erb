@@ -973,12 +973,12 @@ To check the replication status, do the following:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
   </li>
   <li>
-  To query the table and verify that the three rows of dummy data exist on the first node, run the following:
+  <p>To query the table and verify that the three rows of dummy data exist on the first node, run the following:</p>
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
-    When prompted for a password, provide the <code>password</code> value recorded in step 1.
+    <p>When prompted for a password, provide the <code>password</code> value recorded in step 1.
     <br>
-    The above command returns output similar to the following:
+    The above command returns output similar to the following:</p>
     <pre class="terminal">
     +----+----------------------+
     | id | info                 |
@@ -990,19 +990,19 @@ To check the replication status, do the following:
 </li>
 <li>
 To verify that the other nodes contain the same dummy data do the following for each of the remaining MySQL server IP addresses:</li>
-<ol>
+<ul>
   <li>To query the dummy table, do the following:
     <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
     When prompted for a password, provide the <code>password</code> value recorded in step 1.
   </li>
   <li>
-    To  verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
+    <p>To verify that the node contains the same three rows of dummy data as the other nodes, run the following command:</p>
 
     <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
-    When prompted for a password, provide the <code>password</code> value recorded in step 1.
-    Verify that the above command returns output similar to the following:
+    <p>When prompted for a password, provide the <code>password</code> value recorded in step 1.
+    Verify that the above command returns output similar to the following:</p>
     <pre class="terminal">
     +----+----------------------+
     | id | info                 |
@@ -1012,7 +1012,7 @@ To verify that the other nodes contain the same dummy data do the following for 
     | 10 | even more dummy data |
     +----+----------------------+</pre>
   </li>
-</ol>
+</ul>
 <li> If each MySQL server instance does not return the same result, before proceeding further or making any changes to your deployment, contact <a href="https://support.pivotal.io/">Pivotal Support</a> <br>
 If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.</li>
 </ol>
