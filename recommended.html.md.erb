@@ -37,32 +37,52 @@ Redeploying MySQL for PCF for configuration changes or upgrades will result in M
 
 The persistent disk receives and temporarily stores and encrypts MySQL backups.
 This results in increased disk usage while backups are being processed.
-For single-node and leader-follower service plans, backups are processed on the MySQL VM.
+For single node and leader-follower service plans, backups are processed on the MySQL VM.
 For highly available (HA) clusters, backups are processed on the jumpbox VM.
 
 In addition to backups, the persistent disk also stores InnoDB redo logs. These logs use
-a static amount of disk size. On single node and leader-follower persistent disks,
-the logs use 512 MB of space. On HA cluster persistent disks, the logs use 2 GB of space.
+a static amount of disk size.
 
-When enabling backups for single node and leader-follower service plans, use the
-following formula to choose MySQL persistent disk sizes:
+Use the following table to determine the amount of persistent disk space you need
+to set when you configure a service plan.
+For instructions for configuring service plans,
+see [Configure Service Plans](./install-config.html#active).
+<table>
+  <tr>
+    <th>Persistent Disk</th>
+    <th width=35%>Modifier for Copied Backups, Compression, and Encryption</th>
+    <th>InnoDB Redo Logs</th>
+    <th>Total Disk Size&#42;</th>
+  </tr>
+  <tr>
+    <td><strong>Single Node</strong></td>
+    <td>3</td>
+    <td>512 MB</td>
+    <td>3N + 512 MB</td>
+  </tr>
 
-```
-3 * (maximum amount of app data) + 512 MB
-```
+  <tr>
+    <td><strong>Leader-Follower</strong></td>
+    <td>3</td>
+    <td>512 MB</td>
+    <td>3N + 512 MB</td>
+  </tr>
 
-When enabling backups for HA cluster service plans, use the following formula to
-choose jumpbox persistent disk sizes:
+  <tr>
+    <td><strong>HA Cluster Jumpbox</strong></td>
+    <td>2</td>
+    <td>2 GB</td>
+    <td>2N + 2 GB</td>
+  </tr>
 
-```
-2 * (maximum amount of app data) + 2 GB
-```
-
-Use the following formula to choose HA cluster node persistent disk sizes:
-
-```
-(maximum amount of app data) + 2 GB
-```
+  <tr>
+    <td><strong>HA Cluster Node</strong></td>
+    <td><i>n/a</i></td>
+    <td>2 GB</td>
+    <td>N + 2 GB</td>
+  </tr>
+</table>
+&#42; In the **Total Disk Size** formula, `N` is the maximum amount of app data a developer needs.
 
 The following diagram shows how persistent disk space is used in the single-node and leader-follower topologies
 and in the HA cluster topology:
