@@ -34,18 +34,39 @@ Redeploying MySQL for PCF for configuration changes or upgrades will result in M
 
 The MySQL persistent disk receives and temporarily stores and encrypts MySQL backups.
 This results in increased disk usage while backups are being processed.
+Backups are processed on the MySQL VM.
 
 In addition to backups, the persistent disk also stores InnoDB redo logs. These logs use
-a static 512 MB of disk space.
+a static amount of disk size.
 
-When enabling backups for single node and leader-follower service plans, use the
-following formula to choose MySQL persistent disk sizes:
+Use the following table to determine the amount of persistent disk space you need
+to set when you configure a service plan.
+For instructions for configuring service plans,
+see [Configure Service Plans](./install-config.html#active).
+<table>
+  <tr>
+    <th>Persistent Disk</th>
+    <th width=35%>Modifier for Copied Backups, Compression, and Encryption</th>
+    <th>InnoDB Redo Logs</th>
+    <th>Total Disk Size&#42;</th>
+  </tr>
+  <tr>
+    <td><strong>Single Node</strong></td>
+    <td>3</td>
+    <td>512 MB</td>
+    <td>3N + 512 MB</td>
+  </tr>
 
-```
-3 * (maximum amount of app data) + 512 MB
-```
+  <tr>
+    <td><strong>Leader-Follower</strong></td>
+    <td>3</td>
+    <td>512 MB</td>
+    <td>3N + 512 MB</td>
+  </tr>
+</table>
+&#42; In the **Total Disk Size** formula, `N` is the maximum amount of app data a developer needs.
 
-The following diagram shows how persistent disk space is used:
+The following diagram shows how persistent disk space is used in the single node and leader-follower topologies:
 
 <!-- Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing -->
 
