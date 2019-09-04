@@ -154,36 +154,29 @@ CredHub server by running the following command:
        Pivotal recommends a dedicated CA certificate for services.</p>
 	* If you do not have a CA certificate, use the CredHub CLI to generate one.
           Enter the following command:
-		<pre class="terminal">
-		$ credhub generate \
-			--name="/services/tls_ca" \
-			--type="certificate" \
-			--is-ca \
-            --common-name="rootCA"
-		</pre>
-          When using `credhub generate` in the example above, the default valid duration is 365 days. A longer validity can be specified with `--duration`. Here's an example of generating a CA certificate lasting 5 years:
-		<pre class="terminal">
-		$ credhub generate \
-			--name="/services/tls_ca" \
-			--type="certificate" \
-			--is-ca \
-            --common-name="rootCA" \
-	    --duration=1825
-		</pre>
+			<pre class="terminal">$ credhub generate \
+				--name="/services/tls\_ca" \
+				--type="certificate" \
+				--is-ca \
+	            --common-name="rootCA" \
+				</pre>
 
-    * If you have an existing CA certificate that you want to use, create
-		a new file called `root.pem` with the contents of the certificate.
-      Then run the following command, specifying the path to `root.pem` and
-			the private key for the certificate:
-        <pre class="terminal">
-        $ credhub set \
-            --name="/services/tls_ca" \
-            --type="certificate" \
-            --certificate=./root.pem \
-            --private=ERKSOSMFF...
-        </pre>
+		<p class=note><strong>Note:</strong> When you run the above command,
+			the generated certificate is valid for one year by default.
+		You can use the <code>--duration</code> flag to set the validity to a specific period.
+		For example, if you add <code>--duration=1825</code> to the above command,
+		the generated certificate is valid for five years.</p>
+	* If you have an existing CA certificate that you want to use, create
+	a new file called `root.pem` with the contents of the certificate.
+	  Then run the following command, specifying the path to `root.pem` and
+		the private key for the certificate:
+	    <pre class="terminal">$ credhub set \
+	        --name="/services/tls_ca" \
+	        --type="certificate" \
+	        --certificate=./root.pem \
+	        --private=ERKSOSMFF...</pre>
 
-5. Use the BOSH CLI v2 to extract the `certificate` portion from the CA certificate and print it
+5. Use the BOSH CLI to extract the `certificate` portion from the CA certificate and print it
     by running the following command:
 
     ```
