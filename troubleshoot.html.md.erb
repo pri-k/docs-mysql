@@ -928,7 +928,7 @@ To check the replication status, do the following:
       see <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
   </ol></li>
   <li> To create a dummy database in the first node, run the following command:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify\_healthy;"</pre>
     Where:
     <ul>
       <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
@@ -939,15 +939,15 @@ To check the replication status, do the following:
   </li>
   <li>
   To create a dummy table in the dummy database, do the following:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='InnoDB';"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "create table dummy\_table (id int not null primary key auto_increment, info text) engine='InnoDB';"</pre>
   </li>
   <li>
   To insert some data into the dummy table, run the following command:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "insert into dummy\_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
   </li>
   <li>
   <p>To query the table and verify that the three rows of dummy data exist on the first node, run the following:</p>
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
 
   When prompted for a password, provide the <code>password</code> value recorded in step 1.<br>
   The above command returns output similar to the following:
@@ -964,14 +964,14 @@ To check the replication status, do the following:
 To verify that the other nodes contain the same dummy data do the following for each of the remaining MySQL server IP addresses:</li>
 <ul>
   <li>To query the dummy table, do the following:
-    <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
+    <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy_table;"</pre>
 
   When prompted for a password, provide the <code>password</code> value recorded in step 1.
   </li>
   <li>
   To verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
 
-  <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
+  <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
 
   When prompted for a password, provide the <code>password</code> value recorded in step 1.
   Verify that the above command returns output similar to the following:
