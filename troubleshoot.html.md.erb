@@ -401,8 +401,8 @@ Follow the steps below:
       instance id, run the
     following command:
     <br>
-    <pre>bosh -d service-instance_service-instance-guid instances</pre>
-    where <code>service-instance-guid</code> is the guid you recorded in
+    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
+    where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
     step 1.<br>
     <br>
     for example:
@@ -1105,7 +1105,7 @@ To check the replication status, do the following:
   </li>
   <li>
     To create a dummy database in the first node, run the following command:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>
+    <pre>mysql -h first-node-ip-address -u your-identity -p -e "create database verify_healthy;"</pre>
     Where:
     <ul>
       <li>
@@ -1120,7 +1120,7 @@ To check the replication status, do the following:
   </li>
   <li>
     To create a dummy table in the dummy database, do the following:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='innodb';"</pre>
+    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='innodb';"</pre>
   </li>
   <li>
     To insert data into the dummy table, run the following command:
@@ -1130,7 +1130,7 @@ To check the replication status, do the following:
     <p>
       To query the table and verify that the three rows of dummy data exist on the first node, run the following:
     </p>
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
+    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "select * from dummy_table;"</pre>
 
     When prompted for a password, provide the <code>password</code>
     value recorded in step 1.<br>
