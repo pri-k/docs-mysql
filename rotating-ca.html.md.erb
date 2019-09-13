@@ -7,7 +7,7 @@ owner: MySQL
 
 This topic describes how to check expiration dates and rotate certificates used by MySQL for PCF.
 
-## <a id="overview"></a> Overview
+## <a id="overview"></a> Types of Certificates
 
 MySQL for PCF uses the following types of certificates:
 
@@ -16,25 +16,21 @@ you provided a CA certificate to BOSH CredHub when you did the procedures
 in [Preparing for TLS](prepare-tls.html).
 Operators must rotate this TLS CA certificate
 before the certificate expires or if it is compromised.
-+ **Internal certificates managed by MySQL for PCF:** In MySQL for PCF v2.4, you cannot rotate internal certificates and CA certificates.
-To rotate these certificates, you must upgrade to MySQL for PCF v2.6. To check the expiration date of your internal
-certificates, see [Check Expiration Date](#check) below.
++ **Internal certificates managed by MySQL for PCF:** In MySQL for PCF v2.4, you cannot rotate internal certificates.
+To rotate these certificates, you must upgrade to MySQL for PCF v2.6. See <a href="https://docs.pivotal.io/p-mysql/2-6/upgrade.html">Upgrading MySQL for PCF</a>. 
+To check the expiration date of your internal
+certificates, see [Check Expiration Date](#credhub) below.
 
- <p class="note warning"><strong>Warning:</strong> If your internal certificates expire, service bindings and backups can fail. </p>
-
-To rotate the TLS certificates, do the following:
-
-1. [Access BOSH CredHub](#credhub)
-1. [Check Expiration Dates](#check)
-1. [Rotate TLS Certificates](#rotate)
+For more information about MySQL for PCF certificates, see [Certificates Used by MySQL for PCF](#mysql-certs) below.
 
 <p class="note warning"><strong>Warning</strong>: Do not attempt to rotate a CA certificate on your own.
 Contact <a href="https://support.pivotal.io">Pivotal Support</a>
-and perform the following procedures with their help.</p>
+and perform the following procedures with their help.
+</p>
 
-### <a id="mysql-certs"></a> MySQL for PCF Certificates
+### <a id="mysql-certs"></a> Certificates Used by MySQL for PCF
 
-The following table lists MySQL for PCF certificates:
+The following table lists the certificates used by MySQL for PCF:
 
 <table>
   <tr>
@@ -104,16 +100,19 @@ In the above table, `GUID` is the GUID for the service instance. To find the GUI
 of your service instance, do the procedure in
 [Find Information about Your Service Instance](./troubleshoot-instances.html#instance).
 
-## <a id="credhub"></a> Access BOSH CredHub
+## <a id="credhub"></a> Check Expiration Dates
 
-Pivotal Cloud Foundry (PCF) stores some of its internal CA and non-CA certificates
-in the BOSH CredHub credentials store.
-For more information, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
+Pivotal Cloud Foundry (PCF) stores the certificates used by MySQL for PCF
+and then use the credentials to log in to CredHub from the Ops Manager VM. You can use the CredHub API to check the expiration date for the certificates used by MySQL for PCF. 
+However, you can only rotate the TLS CA certificate in MySQL for PCF v2.4. See [Rotate the TLS CA Certificate](#rotate) below. 
 
-To access the BOSH CredHub credentials store, you must retrieve credentials from BOSH Director
-and then use the credentials to log in to CredHub from the Ops Manager VM.
+<p class="note warning"><strong>Warning:</strong> If your internal certificates expire, service bindings and backups can fail.</p>
 
-To access the BOSH CredHub, do the following:
+To use the CredHub API, you must retrieve credentials from BOSH Director and then use the credentials to log in to CredHub from the Ops Manager VM.
+
+For more information about CredHub, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
+
+To check certificate expiration dates:
 
 1. If the CredHub CLI is not installed on your local machine, install the CredHub CLI by doing the instructions in [credhub-cli](https://github.com/cloudfoundry-incubator/credhub-cli) on GitHub.
 
@@ -173,20 +172,6 @@ CredHub server by running the following command:
     --client-secret=abcdefghijklm123456789
     </pre>
 
-## <a id="check"></a> Check Expiration Dates
-
-You can check the expiration date for TLS and internal certificates. However, you can only 
-rotate TLS certificates in MySQL for PCF v2.4. See [Rotate TLS Certificates](#rotate) below. 
-
-You cannot rotate internal certificates. If your internal
-certificates are about to expire, you must upgrade to MySQL for PCF v2.6 to rotate
-them.
-
- <p class="note warning"><strong>Warning:</strong> If your internal certificates expire, service bindings and backups can fail.</p>
-
-To check certificate expiration dates, do the following:
-
-1. Log in to CredHub by doing the procedure in [Access BOSH CredHub](#credhub) above.
 
 1. Run the following command:
 
@@ -206,31 +191,37 @@ To check certificate expiration dates, do the following:
     decrypts it, and finds its `Validity` properties. The expiration date for the certificate is the value of  `Not After`.<br><br>
 
     For a list of MySQL for PCF certificates,
-    see [MySQL for PCF Certificates](#mysql-certs) above.
+    see [Certificates Used by MySQL for PCF](#mysql-certs) above.
+1. If any of your certificates are about to expire or have expired, do one of the following: 
+  * **If your TLS certificates are about to expire or have expired,** do the procedures in [Rotate the TLS CA Certificate](#tls) below.<br><br>
+  * **If your internal certificates are about to expire or have expired,** you must upgrade to MySQL for PCF v2.6. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-6/upgrade.html).
 
-##<a id='rotate'></a> Rotate TLS Certificates
+##<a id='rotate'></a> Rotate the TLS CA Certificate
+
+This following procedures rotate a TLS CA certificate. You cannot rotate your internal certificates with these procedures. To rotate internal certificates, upgrade to MySQL for PCF v2.6. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-6/upgrade.html).
 
 To rotate CA certificates, you must do the following:
 
 1. [Add a New CA Certificate](#add)
 3. [Rebind Your App](#rebind)
-4. [Remove the Old CA Certificate](#remove)
+4. [Remove the Old TLS CA Certificate](#remove)
 
-### <a id="add"></a> Add a New CA Certificate
-
-To add a new CA Certificate to Ops Manager, do the following:
+### <a id="add"></a> Add a New TLS CA Certificate
 
 <p class="note warning"><strong>Warning</strong>: This procedure involves restarting
 all of the VMs in your PCF deployment to apply a CA certificate. The
-operation can take a long time to complete.</p>
+operation can take a long time to complete.
+</p>
 
-1. Log in to CredHub by doing the procedure in [Access BOSH CredHub](#credhub) above.
+To add a new TLS CA Certificate to Ops Manager:
 
-2. Set the CA certificate by doing one of the following:
+1. Log in to CredHub by doing steps 1 through 9 in [Check Expiration Dates](#credhub) above.
+
+2. Set the TLS CA certificate by doing one of the following:
   <p class="note"><strong>Note</strong>: Your PCF deployment can have
   multiple CA certificates.
    Pivotal recommends using a dedicated CA certificate for each service.</p>
-    * **If you do not have a CA certificate:** generate a new certificate by running the following command:
+    * **If you do not have a TLS CA certificate:** generate a new certificate by running the following command:
 
         ```
         credhub regenerate --name="/services/tls_ca"
@@ -249,7 +240,7 @@ operation can take a long time to complete.</p>
       Where:
       * `PEM-PATH` is the path to the `root.pem` file.
       * `CERT-KEY` is the private key for the certificate.
-3. Extract and output the `certificate` portion from the CA certificate
+3. Extract and output the `certificate` portion from the TLS CA certificate
 by running the following command:
 
     ```
@@ -264,24 +255,43 @@ by running the following command:
 
 6. Click **Security**.
 
-6. Append the contents of the new CA certificate to the old CA certificate under **Trusted Certificates**.
-Do not remove the old CA certificate.
+6. Append the contents of the new TLS CA certificate to the old CA certificate under **Trusted Certificates**.
+Do not remove the old TLS CA certificate.
 
 1. Click **Save**.
 
 8. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
+  
+### <a id="remove"></a> Remove the Old CA Certificate
+
+<p class="note warning"><strong>Warning: </strong> This procedure involves restarting
+	all of the VMs in your PCF deployment to apply a CA certificate. The
+	operation can take a long time to complete.</p>
+
+If you are rotating your TLS CA certificate because it was compromised, you must remove
+your old TLS CA certificate before rebinding your app.
+
+To remove the old TLS CA certificate:
+
+1. Navigate to the **Installation Dashboard** in Ops Manager and click the **BOSH
+Director** tile.
+
+1. Click **Security**.
+
+1. Delete the old TLS CA certificate in **Trusted Certificates**.
+
+1. Click **Save**.
+
+1. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
+This restarts all the VMs in your deployment.
 
 ### <a id='rebind'></a> Rebind Your App
 
-If your apps do not use the trusted store to validate server certificates, developers
- must re-bind apps to the service instance to receive the updated CA certificate.
+If your apps do not use the trusted store to validate certificates, developers
+ must rebind apps to the service instance to receive the updated TLS CA certificate.
  Apps not written in Java and Spring do not use the trusted store.
 
-If you are rotating your CA certificate because it was compromised, you must remove
-your old CA certificate before rebinding your app.
-If you have not removed your old CA certificate, do the procedure in [Remove the Old CA Certificate](#remove) below.
-
-To re-bind your app, do the following:
+To rebind your app:
 
 1. Stop your app by running the following command:
 
@@ -313,28 +323,3 @@ To re-bind your app, do the following:
 	cf restage YOUR-APP
 	```
 	Where `YOUR-APP` is the name of your app.
-
-
-### <a id="remove"></a> Remove the Old CA Certificate
-
-<p class="note warning"><strong>Warning: </strong> This procedure involves restarting
-	all of the VMs in your PCF deployment to apply a CA certificate. The
-	operation can take a long time to complete.</p>
-
-After your apps have reconnected to service instances with certificates generated
-by the new CA, do the following to remove the old CA certificate:
-
-1. Navigate to the **Installation Dashboard** in Ops Manager and click the **BOSH
-Director** tile.
-
-1. Click **Security**.
-
-1. Delete the old CA certificate in **Trusted Certificates**.
-
-1. Click **Save**.
-
-1. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
-This restarts all the VMs in your deployment.
-
-1. If you are rotating your CA certificate because it was compromised, you must
-rebind your apps to update the CA certificate. See [Rebind Your App](#rebind) above.
