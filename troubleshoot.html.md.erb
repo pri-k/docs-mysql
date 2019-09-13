@@ -655,8 +655,7 @@ To retrieve the admin and read-only admin credentials for a service instance fro
   <li>Set the API target of the CredHub CLI to your BOSH CredHub server.
     <br><br>
     Run the following command:
-    <pre><code>credhub api https<span>:</span>//bosh-director:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</code></pre>
-    <br>
+    <pre><code>credhub api https://BOSH-DIRECTOR:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</code></pre>    <br>
     Where
     <code>BOSH-DIRECTOR</code>
     is the IP address of the BOSH Director VM.
@@ -669,8 +668,8 @@ To retrieve the admin and read-only admin credentials for a service instance fro
     <br><br>
     Run the following command:
     <pre><code>credhub login \
-  --client-name=credhub-client-name \
-  --client-secret=credhub-client-secret</code></pre>
+    --client-name=CREDHUB-CLIENT-NAME \
+    --client-secret=CREDHUB-CLIENT-SECRET</code></pre>
     Where:
     <ul>
       <li>
