@@ -336,7 +336,7 @@ In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) op
 
 #### Symptom
 
-Developers report thatread, write, and cf CLI operations do not work.
+Developers report that read, write, and cf CLI operations do not work.
 Developers cannot upgrade to a larger MySQL service plan to free up disk space.
 
 #### Explanation
@@ -394,18 +394,18 @@ Follow the steps below:
   succeeded</pre>
   </li>
   <li>
-    to retrieve and record the instance id of your service instance, follow the
-    procedure below that correponds with your vm topology:
+    To retrieve and record the instance ID of your service instance, follow the
+    procedure below that corresponds with your VM topology:
     <ul>
-    <li>if you are using single node mysql vms, to retrieve and record the
-      instance id, run the
+    <li>If you are using single node MySQL VMs, to retrieve and record the
+      instance ID, run the
     following command:
     <br>
-    <pre>bosh -d service-instance_service-instance-guid instances</pre>
-    where <code>service-instance-guid</code> is the guid you recorded in
+    <pre>bosh -d service-instance_service-instance-GUID instances</pre>
+    where <code>service-instance-GUID</code> is the GUID you recorded in
     step 1.<br>
     <br>
-    for example:
+    For example:
     <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef
   instances
   using environment '34.237.123.534' as client 'admin'
@@ -1105,7 +1105,7 @@ To check the replication status, do the following:
   </li>
   <li>
     To create a dummy database in the first node, run the following command:
-    <pre>mysql -h first-node-ip-address -u your-identity -p -e "create database verify_healthy;"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>
     Where:
     <ul>
       <li>
@@ -1120,7 +1120,7 @@ To check the replication status, do the following:
   </li>
   <li>
     To create a dummy table in the dummy database, do the following:
-    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='innodb';"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='innodb';"</pre>
   </li>
   <li>
     To insert data into the dummy table, run the following command:
@@ -1130,7 +1130,7 @@ To check the replication status, do the following:
     <p>
       To query the table and verify that the three rows of dummy data exist on the first node, run the following:
     </p>
-    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "select * from dummy_table;"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
     When prompted for a password, provide the <code>password</code>
     value recorded in step 1.<br>
@@ -1148,7 +1148,7 @@ To check the replication status, do the following:
     To verify that the other nodes contain the same dummy data do the following for each of the remaining MySQL server IP addresses:
     <ul>
       <li>To query the dummy table, do the following:
-        <pre class="terminal">mysql -h next-node-ip-address -u your-identity -p -d verify_healthy -e "select * from dummy_table;"</pre>
+        <pre class="terminal">mysql -h next-node-ip-address -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
         When prompted for a password, provide the
         <code>password</code>
@@ -1157,7 +1157,7 @@ To check the replication status, do the following:
       <li>
         To verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
 
-        <pre class="terminal">mysql -h next-node-ip-address -u your-identity -p -d verify_healthy -e "select * from dummy_table;"</pre>
+        <pre class="terminal">mysql -h next-node-ip-address -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
 
         When prompted for a password, provide the
         <code>password</code>
