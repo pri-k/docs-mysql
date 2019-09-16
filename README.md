@@ -36,11 +36,18 @@ This is a word list for terminology and word usage specific to the MySQL for PCF
 
 | Word | Explanation |
 |------|-------------|
+| CA certificate | A primary(?) certificate that is signed by a certificate authority. |
+| certificate | generic word, there are TLS certificates, internal certificates, CA certificates |
 | highly available cluster | No need to capitalize. Don't mix with "high availability cluster" or Galera. Galeria happens to be the technology right now, but highly available cluster is the topology. You can abbreviate to HA cluster after spelling out on first use. Don't use "HAC". |
+| internal certificate | These are certificates managed by MySQL for PCF. There are many of these. They get rotated with upgrades. |
 | leader-follower | It seems that we always hyphenate it. But we don't capitalize it. |
 | MySQL database cluster node | Only applies to Galera clusters. Spell out like this at first use, then opt for "node" on the rest of the page. |
 | node | See above. The old proxy page used: MySQL node, server node, MySQL servers, cluster back-ends, Backend database cluster node, database node VM, proxy instance, proxy. But, only two things are referred to here, nodes and proxies. |
 | proxy | Use proxy consistently instead of alternating between "proxy instance" and "proxy". |
+| TLS certificates | Certificates needed if you use TLS; there are two or three of these. One is the TLS CA certificate. |
+| TLS CA certificate | The CA certificated used for TLS. You can add your own or use the one that Ops Manager provides. |
+
+
 
 
 ## Steps for local development
