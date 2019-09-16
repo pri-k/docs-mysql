@@ -185,8 +185,8 @@ CredHub server by running the following command:
     --client-secret=abcdefghijklm123456789
     </pre>
 
-
-1. Run the following command:
+1. For each certificate in the [Certificates Used by MySQL for PCF](#mysql-certs) list above, 
+   run the following command:
 
     ```
     credhub get -n CERTIFICATE-NAME -j | jq -r .value.ca | openssl x509 -text -noout | grep -A 2 "Validity"
@@ -201,10 +201,10 @@ CredHub server by running the following command:
     </pre>
 
     The above command retrieves the certificate from CredHub, parses its JSON structure,
-    decrypts it, and finds its `Validity` properties. The expiration date for the certificate is the value of  `Not After`.<br><br>
+    decrypts it, and finds its `Validity` properties.
+    The expiration date for the certificate is the value of `Not After`.
+    The expiration date can be different for different certificates.<br><br>
 
-    For a list of MySQL for PCF certificates,
-    see [Certificates Used by MySQL for PCF](#mysql-certs) above.
 1. If any of your certificates are about to expire or have expired, do one of the following: 
   * **If your TLS certificates are about to expire or have expired,** do the procedures in [Rotate the TLS CA Certificate](#tls) below.<br><br>
   * **If your internal certificates are about to expire or have expired,** you must upgrade to MySQL for PCF v2.6. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-6/upgrade.html).
