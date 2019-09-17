@@ -5,354 +5,289 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<div class="quick-links">
-  <ul>
-    <li><a href="#errors">Troubleshooting Errors</a>
-      <ul>
-        <li><a href="#deprecated-service-bindings">Deprecated Service Bindings Found (Upgrade Error)</a></li>
-        <li><a href="#install-fail">Failed Install</a></li>
-        <li><a href="#cannot-create-delete">Cannot Create or Delete Service Instances</a></li>
-        <li><a href="#timeouts">Broker Request Timeouts</a></li>
-        <li><a href="#cannot-bind">Cannot Bind to or Unbind from Service Instances</a></li>
-        <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
-        <li><a href="#upgrade-all-fails">Upgrade All Instances Fails</a></li>
-        <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
-        <li><a href="#unable-to-determine">Unable to Determine Leader and Follower (Errand Error)</a></li>
-        <li><a href="#both-writable">Both Leader and Follower Instances Are Writable (Errand Error)</a></li>
-        <li><a href="#both-read-only">Both Leader and Follower Instances Are Read-Only</a></li>
-        <li><a href="#persistent-disk">Persistent Disk is Full</a></li>
-        <li><a href="#unresponsive">Unresponsive Node in a Highly Available Cluster</a> </li>
-        <li><a href="#replication-errors">Many Replication Errors in Logs for Highly Available Clusters</a></li>
-      </ul>
-    </li>
-    <li><a href="#components">Troubleshooting Components</a>
-      <ul>
-        <li><a href="#bosh">BOSH Problems</a></li>
-        <li><a href="#bosh-config">Configuration</a></li>
-        <li><a href="#auth">Authentication</a></li>
-        <li><a href="#network">Networking</a></li>
-        <li><a href="#quotas">Quotas</a></li>
-        <li><a href="#failing-jobs">Failing Jobs and Unhealthy Instances</a></li>
-        <li><a href="#az-region-fail">AZ or Region Failure</a></li>
-      </ul>
-    </li>
-    <li><a href="#techniques">Techniques for Troubleshooting</a>
-      <ul>
-        <li><a href="#parse-error">Parse a Cloud Foundry (CF) Error Message</a></li>
-        <li><a href="#bosh-cf-access">Access Broker and Instance Logs and VMs</a></li>
-        <li><a href="#broker-errands">Run Service Broker Errands to Manage Brokers and Instances</a></li>
-        <li><a href="#detect-orphans">Detect Orphaned Service Instances</a></li>
-        <li><a href="#instance-creds">Retrieve Admin and Read-Only Admin Credentials for a Service Instance</a></li>
-        <li><a href="#reinstall">Reinstall a Tile</a></li>
-        <li><a href="#view-resources">View Resource Saturation and Scaling</a></li>
-        <li><a href="#id-instance-owner">Identify Service Instance Owner</a></li>
-        <li><a href="#monitor-quota">Monitor Quota Saturation and Service Instance Count</a>    </li>
-        <li><a href="#trouble-ha">Techniques for Troubleshooting Highly Available Clusters</a></li>
-        <li><a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a></li>
-        <li><a href="#recreate-VM">Re-create a Corrupted VM in a Highly Available Cluster</a></li>
-        <li><a href="#check-replication">Check Replication Status in a Highly Available Cluster</a></li>
-      </ul>
-    </li>
-    <li><a href="#kb">Knowledge Base (Community)</a></li>
-    <li><a href="#support">File a Support Ticket</a></li>
-  </ul>
-</div>
-
-
 This topic provides operators with basic instructions for troubleshooting on-demand MySQL for PCF.
+For information about temporary MySQL for PCF service interruptions, see
+<a href="./upgrade.html#interruptions">Service Interruptions</a>.
 
-For information on temporary MySQL for PCF service interruptions, see <a href="./upgrade.html#interruptions">Service Interruptions</a>.
-
-<a id="errors"></a><h2>Troubleshooting Errors</h2>
+## <a id="errors"></a> Troubleshooting Errors
 
 This section provides information on how to troubleshooting specific errors or error messages.
 
-<a id="deprecated-service-bindings"></a><h3>Deprecated Service Bindings Found (Upgrade Error)</h3>
-
-This problem happens when upgrading to MySQL for PCF v2.5 if there are service bindings that are still using IP addresses.
-
-<h4>Symptom</h4>
-
-You see in the Ops Manager installation pane that the upgrade process fails at the following step:
-
-<%= image_tag("error-step.png") %>
-
-The error output in the logs contains a table of bindings or service keys which must be updated.
-
-<pre class="terminal">
-Stdout    +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          |          SERVICE          |             SERVICE GUID             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no dns: hostname="10.0.8.5" |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept-tls      | AppBinding        | no dns: hostname="10.0.8.6" |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-          | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | test-cli           | ServiceKeyBinding | no dns: hostname="10.0.8.6" |
-          +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-
-Errand 'validate-before-upgrade-instances' completed with error (exit code 1)
-Exit code 1
-Stderr     2018/12/18 02:51:51 Deprecated service instances found, try upgrade it manually before upgrading tile
-</pre>
-
-<h4>Explanation</h4>
-
-In MySQL for PCF v2.5, if you run <code>upgrade-all-service-instances</code> while there
-are service bindings that use IP addresses, app downtime can occur. This is
-because bindings are still directing apps to connect with IP addresses, but the
-TLS certificate is signed with a DNS hostname. This prevents apps that validate
-the server hostname in the TLS certificate from establishing a TLS connection
-to the database.
-<br><br>
-In MySQL for PCF v2.5, the <code>validate-before-upgrade-instances</code> errand checks
-that there are no service bindings or service keys using IP addresses, and, if
-there are, outputs the above error and prevents the
-<code>upgrade-all-service-instances</code> errand from running.
-<br><br>
-For general information about errands, including the <code>upgrade-all-service-instances</code> errand, see <a href="./errands.html">MySQL for PCF Errands</a>.
+### <a id="install-fail"></a> Failed Install
 
 
-<h4>Solution</h4>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-To solve this issue, do the following:
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-install-fail' %>
+
+### <a id="cannot-create-delete"></a> Cannot Create or Delete Service Instances
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-cannot-create-delete' %>
+
+###<a id="timeouts"></a> Broker Request Timeouts
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-timeouts' %>
+
+###<a id="cannot-bind"></a> Cannot Bind to or Unbind from Service Instances
+
+#### <a id="instance-not-exist"></a> Instance Does Not Exist
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-instance-not-exist' %>
+
+####<a id="other-errors"></a> Other Errors
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-other-errors' %>
+
+###<a id="cannot-connect"></a> Cannot Connect to a Service Instance
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-cannot-connect' %>
+
+Service instances can also become temporarily inaccessible during upgrades and VM or network failures. See
+<a href="./upgrade.html#interruptions">Service Interruptions</a> for more information.
+
+###<a id="upgrade-all-fails"></a>Upgrade All Instances Fails
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-upgrade-all-fails' %>
+
+###<a id="missing-logs"></a> Missing Logs and Metrics
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-missing-logs' %>
+
+###<a id="unable-to-determine"></a>Unable to Determine Leader and Follower (Errand Error)
+
+This problem happens when the <code>configure-leader-follower</code>
+errand fails because it cannot determine the VM roles.
+
+#### Symptom
+
+The <code>configure-leader-follower</code> errand exits with <code>1</code>
+and the errand logs contain the following:
+
+<pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
+
+#### Explanation
+
+Something has happened to the instances, such as a failure or manual intervention.
+As a result, there is not enough information available to determine the correct state
+and topology without operator intervention to resolve the issue.
+
+#### Solution
+
+Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the
+<a href="./about-leader-follower.html#errands">orchestration</a>
+errands and backup/restore, you can put the service instance into a safe topology, and then rerun the
+<code>configure-leader-follower</code> errand. This is shown in the example below.
+This example shows one outcome that the <code>inspect</code> errand can return:
+
 <ol>
-  <li>Do the procedures in <a href="./upgrade.html#remove-bindings">Remove Deprecated Bindings</a>.<br>
-  After you restart all of your apps, your apps can connect to the database and resume service.
-  However, your Ops Manager installation is still in a failed state.</li>
-  <li>To finish the installation, do the following:
+  <li>Use the
+    <code>inspect</code>
+    errand to retrieve relevant information about the two VMs:
+    <pre class="terminal">
+  $ bosh -e my-env -d my-dep run-errand inspect
+  [...]
+  Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/11 18:25:54 Started executing command: inspect
+           2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+           2017/12/11 18:25:54
+           Has Data: false
+           Read Only: true
+           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+           Replication Configured: false<br /><br />
+  Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/11 18:25:54 Started executing command: inspect
+           2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+           2017/12/11 18:25:54
+           Has Data: true
+           Read Only: true
+           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+           Replication Configured: true<br /><br />
+  2 errand(s)<br />
+  Succeeded
+  </pre>
+    In the above scenario, the first instance is missing data but does not have replication configured. The second instance has data, and also has replication configured. The instructions below resolve this by copying data to the first instance, and
+    resuming replication.</li>
+  <li>Take a backup of the second instance using the
+    <a href="backup-and-restore.html#manual-backup">Manual Backup</a>
+    steps.</li>
+  <li>Restore the backup artifact to the first instance using the
+    <a href="backup-and-restore.html#restore">Manual Restore</a>
+    steps.<br><br>
+    At this point, the instances have equivalent data.</li>
+  <li>
+    Run the <code>configure-leader-follower</code> errand to reconfigure replication:
+    <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code></pre>
+    For example:
+    <pre class="terminal">$ bosh -e my-env -d my-dep \
+    run-errand configure-leader-follower \
+    --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
+  </li>
+</ol>
+
+###<a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)
+
+This problem happens when the<code>configure-leader-follower</code>
+
+errand fails because both VMs are writable and the VMs might hold differing data.
+#### Symptom
+
+The <code>configure–leader-follower</code> errand exits with <code>1</code>
+and the errand logs contain the following:
+
+<pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
+
+#### Explanation
+
+MySQL for PCF tries to ensure that there is only one writable instance of the
+leader-follower pair at any given time. However, in certain situations, such as
+network partitions, or manual intervention outside of the provided bosh
+errands, it is possible for both instances to be writable.
+The service instances remain in this state until an operator resolves the issue
+to ensure that the correct instance is promoted and reduce the potential for data divergence.
+
+#### Solution
+
+<ol>
+  <li>
+    Use the
+    <code>inspect</code> errand to retrieve the GTID Executed set for each VM:
+
+    <pre class="terminal">$ bosh -e my-env -d my-dep run-errand inspect
+  [...]
+  Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/11 18:25:54 Started executing command: inspect
+           2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
+           2017/12/11 18:25:54
+           Has Data: true
+           Read Only: false
+           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-23
+           Replication Configured: false<br /><br />
+  Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+  Exit Code  0
+  Stdout     -
+  Stderr     2017/12/11 18:25:54 Started executing command: inspect
+           2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
+           2017/12/11 18:25:54
+           Has Data: true
+           Read Only: false
+           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+           Replication Configured: false<br /><br />
+  2 errand(s)<br />
+  Succeeded
+</pre>
+    If the GTID Executed sets for both instances are the same, continue to Step 2. If they are different, continue to Step 4.</li>
+  <li>Look at the value of GTID Executed for both instances.
+    <ul>
+      <li>If the range after the GUID is equivalent, either instance can be made read-only, as described in Step 3.</li>
+      <li>If one instance has a range that is a subset of the other, the instance with the subset should must be made read-only, as described in Step 3.</li>
+    </ul>
+  </li>
+  <li>Based on the information you gathered in the step above, run the
+    <code>make-read-only</code>
+    errand to make the appropriate instance read-only:
+    <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE</code></pre>
+    For example:
+    <pre class="terminal">$ bosh -e my-env -d my-dep \
+        run-errand make-read-only \
+        --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+      [...]
+      succeeded</pre>
+  </li>
+  <li>If the GTID Executed sets are neither equivalent nor subsets, data has diverged and you must determine what data has diverged as part of the procedure below:
     <ol>
-      <li>In the Ops Manager Installation Dashboard, click <strong>Review Pending Changes</strong>.</li>
-      <li>In the <strong>Review Pending Changes</strong> pane, ensure that the
-        <strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong>
-        and <strong>Upgrade all On-demand MySQL Service Instances</strong> errands are selected.</li>
-      <li>After reviewing the pending changes, click <strong>Apply Changes</strong> to complete the installation.</li>
+      <li>Use the
+        <code>make-read-only</code>
+        errand to set both instances to read-only to prevent further data divergence.
+        <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-INSTANCE</code></pre>
+        For example:
+        <pre class="terminal">$ bosh -e my-env -d my-dep \
+            run-errand make-read-only \
+            --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+            [...]
+            succeeded</pre>
+      </li>
+      <li>Take a backup of both instances using the
+        <a href="backup-and-restore.html#manual-backup">Manual Backup</a>
+        steps.</li>
+      <li>Manually inspect the data on each instance to determine the discrepancies and put the data on the instance that is further ahead---this instance has the higher GTID Executed set, and will be the new leader.</li>
+      <li>Migrate all appropriate data to the new leader instance.</li>
+      <li>After putting all data on the leader, ssh onto the follower:
+        <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT ssh mysql/GUID-OF-FOLLOWER</code></pre>
+        For example:
+        <pre class="terminal">$ bosh -e my-env -d my-dep ssh mysql/e0b94ade-0114-4d49-a929-ce1616d8beda</pre>
+      </li>
+      <li>Become root with the command
+        <code>sudo su</code>.<br></li>
+      <li>Stop the mysql process with the command
+        <code>monit stop mysql</code>.</li>
+      <li>Delete the data directory of the follower with the command
+        <code>rm -rf /var/vcap/store/mysql</code>.</li>
+      <li>Start the mysql process with the command
+        <code>monit start mysql</code>.</li>
+      <li>Use the
+        <code>configure-leader-follower</code>
+        errand to copy the leader's data to the follower and resume replication:
+        <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code></pre>
+        For example:
+        <pre class="terminal">$ bosh -e my-env -d my-dep \
+          run-errand configure-leader-follower \
+          --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
+      </li>
     </ol>
   </li>
 </ol>
 
-<a id="install-fail"></a><h3>Failed Install</h3>
+###<a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only
 
-<%= partial '../../p-mysql/odb/tshoot-err-install-fail' %>
+In a leader-follower topology, the leader VM is writable and the follower VM is read-only.
+However if both VMs are read only, apps cannot write to the database.
 
-<a id="cannot-create-delete"></a><h3>Cannot Create or Delete Service Instances</h3>
-
-<%= partial '../../p-mysql/odb/tshoot-err-cannot-create-delete' %>
-
-<a id="timeouts"></a><h3>Broker Request Timeouts</h3>
-
-<%= partial '../../p-mysql/odb/tshoot-err-timeouts' %>
-
-<a id="cannot-bind"></a><h3>Cannot Bind to or Unbind from Service Instances</h3>
-
-<a id="instance-not-exist"></a><h4>Instance Does Not Exist</h4>
-
-<%= partial '../../p-mysql/odb/tshoot-err-instance-not-exist' %>
-
-<a id="other-errors"></a><h4>Other Errors</h4>
-
-<%= partial '../../p-mysql/odb/tshoot-err-other-errors' %>
-
-<a id="cannot-connect"></a><h3>Cannot Connect to a Service Instance</h3>
-
-<%= partial '../../p-mysql/odb/tshoot-err-cannot-connect' %>
-
-Service instances can also become temporarily inaccessible during upgrades and VM or network failures.
-See <a href="./upgrade.html#interruptions">Service Interruptions</a> for more information.
-
-<a id="upgrade-all-fails"></a><h3>Upgrade All Instances Fails</h3>
-
-<%= partial '../../p-mysql/odb/tshoot-err-upgrade-all-fails' %>
-
-<a id="missing-logs"></a><h3>Missing Logs and Metrics</h3>
-
-<%= partial '../../p-mysql/odb/tshoot-err-missing-logs' %>
-
-<a id="unable-to-determine"></a><h3>Unable to Determine Leader and Follower (Errand Error)</h3>
-
-This problem happens when the <code>configure-leader-follower</code> errand fails because it cannot determine the VM roles.
-
-<h4>Symptom</h4>
-The <code>configure-leader-follower</code> errand exits with <code>1</code> and the errand logs contain the following:
-
-<pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
-
-<h4>Explanation</h4>
-Something has happened to the instances, such as a failure or manual intervention. As a result, there is not enough
-information available to determine the correct state and topology without operator intervention to resolve the issue.
-
-<h4>Solution</h4>
-
-Use the <code>inspect</code> errand to determine which instance should be the leader.
-Then, using the <a href="./about-leader-follower.html#errands">orchestration</a> errands and backup/restore, you can
-put the service instance into a safe topology, and then rerun the <code>configure-leader-follower</code> errand.
-This is shown in the example below.
-
-This example shows one outcome that the <code>inspect</code> errand can return:
-
-<ol>
-<li>Use the <code>inspect</code> errand to retrieve relevant information about the two VMs:
-<pre class="terminal">
-$ bosh -e my-env -d my-dep run-errand inspect
-[...]
-Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: false
-         Read Only: true
-         GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-         Replication Configured: false<br /><br />
-Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-         Replication Configured: true<br /><br />
-2 errand(s)<br />
-Succeeded
-</pre>
-In the above scenario, the first instance is missing data but does not have replication configured. The second instance
-has data, and also has replication configured. The instructions below resolve this by copying data to the first instance,
-and resuming replication.</li>
-<li>Take a backup of the second instance using the <a href="backup-and-restore.html#manual-backup">Manual Backup</a> steps.</li>
-<li>Restore the backup artifact to the first instance using the <a href="backup-and-restore.html#restore">Manual Restore</a> steps.<br><br>
-	At this point, the instances have equivalent data.</li>
-<li> Run the <code>configure-leader-follower</code> errand to reconfigure replication:
-<code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER </code>
-<pre class="terminal">
-$ bosh -e my-env -d my-dep \
-  run-errand configure-leader-follower \
-  --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
-</pre></li>
-
-<h3><a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)</h3>
-
-This problem happens when the <code>configure-leader-follower</code> errand fails
-because both VMs are writable and the VMs might hold differing data.
-
-<h4>Symptom</h4>
-
-The <code>configure–leader-follower</code> errand exits with <code>1</code> and the errand logs contain the following:<br><br>
-
-<pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
-
-<h4>Explanation</h4>
-
-MySQL for PCF tries to ensure that there is only one writable instance of the leader-follower pair at any given time.
-However, in certain situations, such as
-network partitions, or manual intervention outside of the provided bosh errands, it is possible for both instances
-to be writable.
-
-The service instances remain in this state until an operator resolves the issue to ensure that the correct instance is
-promoted and reduce the potential for data divergence.
-
-<h4>Solution</h4>
-
-<ol>
-<li> Use the <code>inspect</code> errand to retrieve the GTID Executed set for each VM:
-<pre class="terminal">
-$ bosh -e my-env -d my-dep run-errand inspect
-[...]
-Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: false
-         GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-23
-         Replication Configured: false<br /><br />
-Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: false
-         GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-         Replication Configured: false<br /><br />
-2 errand(s)<br />
-Succeeded
-</pre>
-If the GTID Executed sets for both instances are the same, continue to Step 2. If they are different, continue to Step 4.</li>
-<li>Look at the value of GTID Executed for both instances.
-    <ul><li>If the range after the GUID is equivalent, either instance can be made read-only, as described in Step 3.</li>
-    <li>If one instance has a range that is a subset of the other, the instance with the subset should be made read-only, as
-      described in Step 3.</li></ul></li>
-<li>Based on the information you gathered in the step above, run the <code>make-read-only</code> errand to make the appropriate instance read-only:
-<code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE
-</code>
-<pre class="terminal">
-$ bosh -e my-env -d my-dep \
-  run-errand make-read-only \
-  --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-[...]
-Succeeded
-</pre></li>
-<li>If the GTID Executed sets are neither equivalent nor subsets,
-   data has diverged and you must determine what data has diverged as part of the procedure below:
-   <ol>
-	<li>Use the <code>make-read-only</code> errand to set both instances to read-only to prevent further data divergence.
-    <code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-INSTANCE </code>
-<pre class="terminal">$ bosh -e my-env -d my-dep \
-  run-errand make-read-only \
-  --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-[...]
-Succeeded</pre></li>
-	<li>Take a backup of both instances using the <a href="backup-and-restore.html#manual-backup">Manual Backup</a> steps.</li>
-	<li>Manually inspect the data on each instance to determine the discrepancies and put the data on the instance that is
-    further ahead---this instance has the higher GTID Executed set, and will be the new leader.</li>
-	<li>Migrate all appropriate data to the new leader instance.</li>
-	<li>After putting all data on the leader, ssh onto the follower:
-    <code> bosh -e ENVIRONMENT -d DEPLOYMENT ssh mysql/GUID-OF-FOLLOWER</code>
-<pre class="terminal">$ bosh -e my-env -d my-dep ssh mysql/e0b94ade-0114-4d49-a929-ce1616d8beda</pre></li>
-	<li>Become root with the command <code>sudo su</code>.<br></li>
-	<li>Stop the mysql process with the command <code>monit stop mysql</code>.</li>
-	<li>Delete the data directory of the follower with the command <code>rm -rf /var/vcap/store/mysql</code>.</li>
-	<li>Start the mysql process with the command <code>monit start mysql</code>.</li>
-	<li>Use the <code>configure-leader-follower</code> errand to copy the leader's data to the follower and resume replication:
-    <code> bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code>
-<pre class="terminal">$ bosh -e my-env -d my-dep \
-  run-errand configure-leader-follower \
-  --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre></li>
-</ol>
-</li>
-</ol>
-
-<h3><a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only</h3>
-
-In a leader-follower topology, the leader VM is writable and
-the follower VM is read-only. However if both VMs are read only, apps cannot write to the database.
-
-
-<h4>Symptom</h4>
+#### Symptom
 
 Developers report that apps cannot write to the database.
 
-<h4>Explanation</h4>
+#### Explanation
 
 This problem happens if the leader VM fails and the BOSH Resurrector is enabled.
 When the leader is resurrected, it is set as read-only.
 
-
-<h4>Solution</h4>
+#### Solution
 
 <ol>
-    <li> Use the <code>inspect</code> errand to confirm that both VMs are in a read-only state:
-        <code>
-            bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect
-        </code>
-    </li>
-    <li>Examine the output and locate the information about the leader-follower MySQL VMs:
-<pre class="terminal">
+  <li>
+    Use the
+    <code>inspect</code>
+    errand to confirm that both VMs are in a read-only state:
+    <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect</pre>
+  </li>
+  <li>Examine the output and locate the information about the leader-follower MySQL VMs:
+    <pre class="terminal">
 Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
 Exit Code  0
 Stdout     -
@@ -376,132 +311,128 @@ Stderr     2017/12/11 18:25:54 Started executing command: inspect
 2 errand(s)<br />
 Succeeded
 </pre>
-    </li>
-    <li>
-        If Read Only is set to <code>true</code> for both VMs, make the leader writable using the following command:
-        <code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code>
-        <br><br>For example, if the second instance above is the leader:
-<pre class="terminal">
+  </li>
+  <li>
+    If Read Only is set to
+    <code>true</code>
+    for both VMs, make the leader writable using the following command:
+    <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</pre>
+    For example, if the second instance above is the leader:
+    <pre class="terminal">
 $ bosh -e my-env -d my-dep \
   run-errand configure-leader-follower \
   --instance=mysql/e0exampleade-0114-4d49-a929-cexample8beda
 </pre>
-    </li>
+  </li>
 </ol>
 
-<h3><a id="persistent-disk"></a>Persistent Disk is Full</h3>
+###<a id="persistent-disk"></a>Persistent Disk is Full
 
-If your persistent disk is full, apps become inoperable. In this state, read,
-write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.
+If your persistent disk is full, apps become inoperable.
+In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.
 
-<h4>Symptom</h4>
+#### Symptom
 
-Developers report that read, write, and cf CLI operations do not work.
+Developers report thatread, write, and cf CLI operations do not work.
 Developers cannot upgrade to a larger MySQL service plan to free up disk space.
 
-<h4>Explanation</h4>
+#### Explanation
 
-This problem happens if your persistent disk is full. When you use the BOSH CLI to
-target your deployment, you see that instances are at 100% persistent disk
-usage.
+This problem happens if your persistent disk is full.
+When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage.
 <br><br>
 Available disk space can be increased by deleting audit log files.
 After deleting audit logs, you can then upgrade to a larger MySQL service plan.
 
-<h4>Solution</h4>
+#### Solution
 
-The solution to this problem is to confirm that your persistent disk is full, and then delete an
-audit log file to free up disk space.
-When the disk is no longer full, the service instance can be upgraded to a larger plan to prevent
-the disk from becoming full again.<br><br>
+The solution to this problem is to confirm that your persistent disk is full, and then
+delete an audit log file to free up disk space. When the disk is no longer full,
+the service instance can be upgraded to a larger plan to prevent the disk from becoming full again.<br><br>
 Follow the steps below:
 
 <ol>
-  <li> To retrieve and record the GUID of your service instance, run the
-    following command:
+  <li>
+    To retrieve and record the GUID of your service instance, run the following command:
     <br>
-    <code>cf service SERVICE-INSTANCE-NAME --guid</code>
-    <br><br>
-    Where <code>SERVICE-INSTANCE-NAME</code> is the name of your service instance.
+    <pre>cf service SERVICE-INSTANCE-NAME --guid</pre>
+    Where
+    <code>SERVICE-INSTANCE-NAME</code>
+    is the name of your service instance.
     <br><br>
     For example:
     <pre class="terminal">$ cf service my-service-instance --guid
     12345678-90ab-cdef-1234-567890abcdef</pre>
-    If you do not know the name of your service instance, you can list service
-    instances in the space with <code>cf services</code>.
-  </li>
-
-  <li> To confirm that your persistent disk usage is at 100%, run the following
-    command:
-    <br>
-    <code>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</code>
-    <br><br>
-    Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in the
-    above step.<br><br>
-    For example:
-      <pre class="terminal"> $bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances --vitals
-Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
-
-Task 19243. Done
-
-Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-Instance                                    Process State  AZ  IPs         VM Created At                 Uptime           Load              CPU    CPU    CPU   CPU   Memory        Swap      System      Ephemeral   Persistent
-                                                                                                                          (1m, 5m, 15m)     Total  User   Sys   Wait  Usage         Usage     Disk Usage  Disk Usage  Disk Usage
-mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z3  10.0.18.20  Wed Sep 12 22:01:44 UTC 2018  35d 20h 54m 17s  0.02, 0.03, 0.00  -      10.2%  0.4%  0.2%  14% (1.1 GB)  0% (0 B)  54% (37i%)  11% (4i%)   7% (0i%)
-
-1 instances
-
-Succeeded
+    If you do not know the name of your service instance, you can list service instances in the space with
+    <code>cf services</code>.
   </li>
 
   <li>
-    To retrieve and record the instance ID of your service instance, follow the
-    procedure below that correponds with your VM topology:
+    To confirm that your persistent disk usage is at 100%, run the following command:
+    <br>
+    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</pre>
+    Where
+    <code>SERVICE-INSTANCE-GUID</code>
+    is the GUID you recorded in the above step.<br><br>
+    For example:
+    <pre class="terminal"> $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances --vitals
+  Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
+
+  Task 19243. Done
+
+  Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+  Instance                                    Process State  AZ  IPs         VM Created At                 Uptime           Load              CPU    CPU    CPU   CPU   Memory        Swap      System      Ephemeral   Persistent
+                                                                                                                            (1m, 5m, 15m)     Total  User   Sys   Wait  Usage         Usage     Disk Usage  Disk Usage  Disk Usage
+  mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z3  10.0.18.20  Wed Sep 12 22:01:44 UTC 2018  35d 20h 54m 17s  0.02, 0.03, 0.00  -      10.2%  0.4%  0.2%  14% (1.1 GB)  0% (0 B)  54% (37i%)  11% (4i%)   7% (0i%)
+
+  1 instances
+
+  Succeeded</pre>
+  </li>
+  <li>
+    to retrieve and record the instance id of your service instance, follow the
+    procedure below that correponds with your vm topology:
     <ul>
-    <li>If you are using single node MySQL VMs, to retrieve and record the
-      instance ID, run the
+    <li>if you are using single node mysql vms, to retrieve and record the
+      instance id, run the
     following command:
     <br>
-    <code>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</code>
-    <br><br>
-    Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
+    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
+    where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
     step 1.<br>
     <br>
-    For example:
-    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef
-      instances
-      Using environment '34.237.123.534' as client 'admin'
+    for example:
+    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
+  Using environment '34.237.123.534' as client 'admin'
 
-      Task 204. Done
+  Task 204. Done
 
-      Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+  Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
 
-      Instance                                    Process State  AZ  IPs
-      mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z2  10.244.17.3
+  Instance                                    Process State  AZ  IPs
+  mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z2  10.244.17.3
 
-      1 instances
+  1 instances
 
-      Succeeded
+  Succeeded
     </pre>
 
-  The instance ID is the value for <code>Instance</code> after <code>mysql/</code>.
-  <br><br>
-  In the above output, the instance ID of the leader VM is <code>d15419ba-fc6c-4013-b056-19f91c6b0f1d</code>.
-  <br><br>
-</li>
-  <li>If you are using leader-follower MySQL VMs, to retrieve and record the
-    leader instance ID, run the
-  following command:
-  <br>
-  <code>bosh -d service-instance_SERVICE-INSTANCE-GUID run-errand inspect</code>
-  <br><br>
-  Where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in the
-  step 1.<br>
-  <br>
-  For example:
-  <pre class="terminal">
-  $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
+    The instance ID is the value for <code>Instance</code> after <code>mysql/</code>.
+    <br><br>
+    In the above output, the instance ID of the leader VM is <code>d15419ba-fc6c-4013-b056-19f91c6b0f1d</code>.
+    <br><br>
+  </li>
+  <li>If you are using leader-follower MySQL VMs, to retrieve and record the leader instance ID, run the following command:
+    <br>
+    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID run-errand inspect</pre>
+    Where
+    <code>SERVICE-INSTANCE-GUID</code>
+    is the GUID you recorded in the step 1.<br>
+    <br>
+    For example:
+    <pre class="terminal">
+$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
   Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
   Exit Code  0
   Stdout     2018/04/03 18:08:46 Started executing command: inspect
@@ -529,125 +460,143 @@ Succeeded
             GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
             2018/04/03 18:08:46 Successfully executed command: inspect
   </pre>
-   The leader instance ID is the value for <code>Instance</code>
-   after <code>mysql/</code> corresponding with the instance marked <code>Role: leader</code> .
-   <br><br>
-   In the above output, the instance ID of the leader VM is <code>ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</code>.
- </li>
+    The leader instance ID is the value for <code>Instance</code> after <code>mysql/</code>
+    corresponding with the instance marked <code>Role: leader</code>.
+    <br><br>
+    In the above output, the instance ID of the leader VM is
+    <code>ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</code>.
+  </li>
 </ul>
+</li>
+
+<li>
+To BOSH SSH into your service instances, run the following command:
+<br>
+<pre>bosh -d service-instance_SERVICE-INSTANCE-GUID ssh mysql/INSTANCE-ID</pre>
+Where:
+<br>
+<ul>
+  <li>
+    <code>SERVICE-INSTANCE-GUID</code>
+    is the GUID you recorded in step 1.</li>
+  <li>
+    <code>INSTANCE-ID</code>
+    is the instance ID you recorded in the above step.
   </li>
+</ul>
+For example:
+<pre class="terminal">
+$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
 
-  <li> To BOSH SSH into your service instances, run the following command:
+Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+Task 19244. Done
+</pre>
+
+<li>
+  To move to the directory where your audit log files are located, run the following command:
   <br>
-  <code>bosh -d service-instance_SERVICE-INSTANCE-GUID ssh mysql/INSTANCE-ID</code>
-  <br><br>
-  Where:
-  <br>
-  <ul>
-    <li> <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
-      step 1.</li>
-    <li> <code>INSTANCE-ID</code> is the instance ID you recorded in the
-      above step. </li>
-    <br>
-    For example:
-    <pre class="terminal">
-      $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-      Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
+  <pre>cd /var/vcap/store/mysql_audit_logs/mysql_server_audit.log</pre>
+</li>
+<li>
+  Delete at least one audit log file with
+  <code>rm</code>
+</li>
 
-      Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-      Task 19244. Done
-    </pre>
-  </ul>
-  <li> To move to the directory where your audit log files are located, run the
-  following command:
-  <br>
-  <code>cd /var/vcap/sys/log/mysql/mysql-audit-log</code>
-  </li>
-  <li> Delete at least one audit log file with <code>rm</code> </li>
-
-  <li> Update your service instance to a larger plan. For more information,
-    see <a href= "https://docs.pivotal.io/p-mysql/2-4/use.html#update">Update a Service Instance to a Larger Plan</a> </li>
+<li>
+  Update your service instance to a larger plan. For more information, see
+  <a href="./use.html#update">Update a Service Instance to a Larger Plan</a>
+</li>
 </ol>
 
-<h3><a id="unresponsive"></a> Unresponsive Node in a Highly Available Cluster</h3>
+###<a id="unresponsive"></a>Unresponsive Node in a Highly Available Cluster
 
-<h4>Symptom</h4>
+#### Symptom
 
 A client connected to a MySQL cluster node reports the following error:
+
 <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
 <br>
 Some clients might instead return the following:
-<pre class="terminal">unknown error</pre>
+<pre class="terminal">
+  unknown error
+</pre>
 
-<h4>Explanation</h4>
+#### Explanation
 
-If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster,
-the node stops accepting writes.
-If the connection to this node is made through the proxy,
-the proxy automatically re-routes further connections to a different node.
+If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
+re-routes further connections to a different node.
 <br><br>
 
-<h4>Solutions</h4>
+#### Solutions
+
 A node can become unresponsive for a number of reasons. For solutions, see the following:
-<ul>
-<li><strong>Network Latency</strong>:
-If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The
-node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings
-to reduce your network latency.</li>
-<li><strong>MySQL Process Failure:</strong>
-If the MySQL process crashes, <code>monit</code> and BOSH should restore the process.
-If the process is not restored, consult error logs using the <code>download-logs</code> tool.
-For more information, see <a href="https://github.com/cloudfoundry-incubator/pxc-release/blob/master/scripts/download-logs">download-logs</a>
-in the <code>pxc-release</code> GitHub repository.
-</li>
-<li><strong>Firewall Rule Change:</strong>
-If your firewall rules change, it might prevent a node from communicating with the rest of the cluster.
-This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster
-but do not show network latency errors.
-<br><br>
-To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node
-to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change.
-Change your firewall rules to enable the unresponsive node to rejoin the cluster.
-</li>
-<li><strong>VM Failure:</strong>
-If you cannot SSH into a node and you are not detecting either network
-latency or firewall issues, your node might be down due to VM failure. To confirm that the node
-is unresponsive and re-create the VM, see <a href=#recreate-VM> Re-create a Corrupted VM in a Highly
-  Available</a> below.
-</li>
-<li><strong>Node Unable to Rejoin:</strong>
-If a detached existing node fails to join the cluster, its <code>sequence_number</code>
-might be higher than those of the nodes with quorum. A higher <code>sequence_number</code> on the
-detached node indicates that it has recent changes to the data that the primary component lacks. You can
-check this by looking at the node's error log at <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
-<br><br>
-To restore the cluster, do one the following:
-<ul>
-<li>If the detached node has a higher sequence number than the primary component, do the procedures in <a href="./bootstrapping.html">Bootstrapping</a>.</li>
 
-<li>If bootstrapping does not restore the cluster, you can manually force the node to rejoin the cluster.
-This removes all of the unsynchronized data from the detached server node and creates a new copy of the
-cluster data on the node. For more information, see
-<a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.
-<p class="note warning"><strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive
-  procedure. Only do this procedure with help from <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
-</li>
+<ul>
+  <li>
+    <strong>Network Latency</strong>: If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings to reduce your network latency.</li>
+  <li>
+    <strong>MySQL Process Failure:</strong> If the MySQL process crashes, <code>monit</code>
+    and BOSH should restore the process. If the process is not restored, run the
+    <code>download-logs</code> tool and consult the error logs it generates. For more information, see the
+    <a href="#download-logs">download-logs</a> section below.
+  </li>
+  <li>
+    <strong>Firewall Rule Change:</strong>
+    If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster but do not show network latency errors.
+    <br><br>
+    To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change. Change your firewall rules to enable the
+    unresponsive node to rejoin the cluster.
+  </li>
+  <li>
+    <strong>VM Failure:</strong>
+    If you cannot SSH into a node and you are not detecting either network latency or firewall issues, your node might be down due to VM failure. To confirm that the node is unresponsive and re-create the VM, see
+    <a href="#recreate-VM">
+      Re-create a Corrupted VM in a Highly Available</a>
+    below.
+  </li>
+  <li>
+    <strong>Node Unable to Rejoin:</strong> If a detached existing node fails to join the cluster, its
+    <code>sequence_number</code> might be higher than those of the nodes with quorum. A higher
+    <code>sequence_number</code> on the detached node indicates that it has recent changes to the
+     data that the primary component lacks. You can check this by looking at the node's error log at
+    <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
+    <br><br>
+    To restore the cluster, do one the following:
+    <ul>
+      <li>If the detached node has a higher sequence number than the primary component, do the procedures in
+        <a href="./bootstrapping.html">Bootstrapping</a>.
+      </li>
+      <li>
+        If bootstrapping does not restore the cluster, you can manually force
+        the node to rejoin the cluster. This removes all of the unsynchronized data
+        from the detached server node and creates a new copy of the cluster data on the node. For more
+        information, see <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.
+        <p class="note warning">
+          <strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only do this procedure with the assistance of
+          <a href="https://support.pivotal.io">Pivotal Support</a>.
+        </p>
+      </li>
+    </ul>
+  </li>
 </ul>
 
-<h3><a id="replication-errors"></a> Many Replication Errors in Logs for Highly Available Clusters</h3>
+###  <a id="replication-errors"></a>  Many Replication Errors in Logs for Highly Available Clusters
 
 This problem happens when there are errors in SQL statements.
 
-<h4>Symptom</h4>
+#### Symptom
 
 You see many replication errors in the MySQL logs, like the following:
 
-<pre class="terminal">160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
+<pre class="terminal">
+  160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
 160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
-160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'</pre>
+160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
+</pre>
 
-<h4>Explanation and Solution</h4>
+#### Explanation and Solution
 
 For solutions for replication errors in MySQL log files, see the table below.
 
@@ -657,157 +606,236 @@ For solutions for replication errors in MySQL log files, see the table below.
     <th>Solution</th>
   </tr>
   <tr>
-    <td><code>ALTER TABLE</code> errors</td>
-    <td>Fix the <code>ALTER TABLE</code> error.<br>
-        This error can occur when an app issues an invalid data definition statement.
-        Other nodes log this problem as a replication error because they fail to replicate the <code>ALTER TABLE</code>.</td>
+    <td>
+      <code>ALTER TABLE</code>
+      errors</td>
+    <td>Fix the
+      <code>ALTER TABLE</code>
+      error.<br>
+      This error can occur when an app issues an invalid data definition statement. Other nodes log this problem as a replication error because they fail to replicate the
+      <code>ALTER TABLE</code>.</td>
   </tr>
   <tr>
     <td>Increased persistent disk usage or running out of working memory</td>
-    <td>Decode the <code>GRA_*.log</code> files and look for errors.
-        See <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-PCF-v1-10">
-        How to decode Galera GRA log files</a> in the Pivotal Support knowledge base.
-        The GRA log files contain failing DDL statements.</td>
+    <td>Decode the
+      <code>GRA_*.log</code>
+      files and look for errors. See
+      <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-PCF-v1-10">
+        How to decode Galera GRA log files</a>
+      in the Pivotal Support knowledge base. The GRA log files contain failing DDL statements.</td>
   </tr>
-
 </table>
 
-If you see replication errors, but no <code>ALTER TABLE</code> or persistent disk or memory issues,
-you can ignore the replication errors.
+If you see replication errors, but no <code>ALTER TABLE</code>
+or persistent disk or memory issues, you can ignore the replication errors.
 
-<a id="components"></a><h2>Troubleshooting Components</h2>
+##  <a id="components"></a>  Troubleshooting Components
 
 This section provides guidance on checking for and fixing issues in on-demand service components.
 
-<!-- Partials are in https://github.com/pivotal-cf/docs-services-partials -->
+### <a id="bosh"></a> BOSH Problems
 
-<a id="bosh"></a><h3>BOSH Problems</h3>
+#### <a id="large-queue"></a> Large BOSH Queue
 
-<a id="large-queue"></a><h4>Large BOSH Queue</h4>
 
-<%= partial '../../p-mysql/odb/tshoot-comp-large-queue' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="bosh-config"></a><h3>Configuration</h3>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-large-queue' %>
 
-<a id="bosh-instance-fail"></a><h4>Service instances in failing state</h4>
 
-<%= partial '../../p-mysql/odb/tshoot-comp-bosh-instance-fail' %>
+### <a id="bosh-config"></a> Configuration
 
-<a id="auth"></a><h3>Authentication</h3>
+#### <a id="bosh-instance-fail"></a> Service instances in failing state
 
-<a id="uaa-change"></a><h4>UAA Changes</h4>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial '../../p-mysql/odb/tshoot-comp-uaa-change' %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-bosh-instance-fail' %>
 
-<a id="network"></a><h3>Networking</h3>
 
-<%= partial '../../p-mysql/odb/tshoot-comp-network' %>
+###  <a id="auth"></a>  Authentication
 
-<a id="broker-to-instances"></a><h4>Validate Service Broker Connectivity to Service Instances</h4>
+#### <a id="uaa-change"></a> UAA Changes
 
-<%= partial '../../p-mysql/odb/tshoot-comp-broker-to-instances' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="app-to-instances"></a><h4>Validate App Access to Service Instance</h4>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-uaa-change' %>
 
-<%= partial '../../p-mysql/odb/tshoot-comp-app-to-instances' %>
 
-<a id="quotas"></a><h3>Quotas</h3>
+###  <a id="network"></a>  Networking
 
-<a id="plan-quotas"></a><h4>Plan Quota issues</h4>
 
-<%= partial '../../p-mysql/odb/tshoot-comp-plan-quotas' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="global-quotas"></a><h4>Global Quota Issues</h4>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-network' %>
 
-<%= partial '../../p-mysql/odb/tshoot-comp-global-quotas' %>
 
-<a id="failing-jobs"></a><h3>Failing Jobs and Unhealthy Instances</h3>
+####  <a id="broker-to-instances"></a>  Validate Service Broker Connectivity to Service Instances
 
-<%= partial '../../p-mysql/odb/tshoot-comp-failing-jobs' %>
 
-A failing process or failing VM might come back automatically after a temporary service outage.
-See <a href="./interruptions.html#process-fail">VM Process Failure</a> and
-<a href="./interruptions.html#vm-fail">VM Failure</a>.
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="az-region-fail"></a><h3>AZ or Region Failure</h3>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-broker-to-instances' %>
 
-Failures at the IaaS level, such as Availability Zone (AZ) or region  failures, can interrupt service and require manual restoration. See <a href="./interruptions.html#az-fail">AZ Failure</a>
-and <a href="./interruptions.html#region-fail">Region Failure</a>.
 
-<a id="techniques"></a><h2>Techniques for Troubleshooting</h2>
+####  <a id="app-to-instances"></a>  Validate App Access to Service Instance
 
-Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
 
-<a id="parse-error"></a><h3>Parse a Cloud Foundry (CF) Error Message</h3>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial '../../p-mysql/odb/tshoot-tech-parse-error' %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-app-to-instances' %>
 
-<a id="bosh-cf-access"></a><h3>Access Broker and Instance Logs and VMs</h3>
 
-<%= partial '../../p-mysql/odb/tshoot-tech-bosh-cf-access' %>
+###  <a id="quotas"></a>  Quotas
 
-<a id="access-broker"></a><h4>Access Broker Logs and VM(s)</h4>
+#### <a id="plan-quotas"></a> Plan Quota Issues
 
-<%= partial '../../p-mysql/odb/tshoot-tech-access-broker' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="access-instance"></a><h4>Access Service Instance Logs and VMs</h4>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-plan-quotas' %>
 
-<%= partial '../../p-mysql/odb/tshoot-tech-access-instance' %>
 
-<a id="broker-errands"></a><h3>Run Service Broker Errands to Manage Brokers and Instances</h3>
+####  <a id="global-quotas"></a>  Global Quota Issues
 
-<%= partial '../../p-mysql/odb/tshoot-tech-broker-errands' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="register-broker"></a><h4>Register Broker</h4>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-global-quotas' %>
 
-<%= partial '../../p-mysql/odb/tshoot-tech-register-broker' %>
 
-<a id="deregister-broker"></a><h4>Deregister Broker</h4>
+###  <a id="failing-jobs"></a>  Failing Jobs and Unhealthy Instances
 
-<%= partial '../../p-mysql/odb/tshoot-tech-deregister-broker' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="upgrade-all"></a><h4>Upgrade All Service Instances</h4>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-failing-jobs' %>
 
-<%= partial '../../p-mysql/odb/tshoot-tech-upgrade-all' %>
+A failing process or failing VM might come back automatically after a temporary service outage. See
+<a href="./interruptions.html#process-fail">VM Process Failure</a>
+and <a href="./interruptions.html#vm-fail">VM Failure</a>.
 
-<a id="delete-all"></a><h4>Delete All Service Instances</h4>
+###  <a id="az-region-fail"></a>  AZ or Region Failure
 
-<%= partial '../../p-mysql/odb/tshoot-tech-delete-all' %>
+Failures at the IaaS level, such as Availability Zone (AZ) or region failures,
+can interrupt service and require manual restoration.
+See <a href="./interruptions.html#az-fail">AZ Failure</a> and <a href="./interruptions.html#region-fail">Region Failure</a>.
 
-<a id="detect-orphans"></a><h3>Detect Orphaned Service Instances</h3>
+##  <a id="techniques"></a>  Techniques for Troubleshooting
 
-<%= partial '../../p-mysql/odb/tshoot-tech-detect-orphans' %>
+Instructions on interacting with the on-demand service broker and on-demand service
+instance BOSH deployments, and on performing general maintenance and housekeeping tasks
 
-<a id="instance-creds"></a><h3>Retrieve Admin and Read-Only Admin Credentials for a Service Instance</h3>
+### <a id="parse-error"></a> Parse a Cloud Foundry (CF) Error Message
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
+
+
+###  <a id="bosh-cf-access"></a>  Access Broker and Instance Logs and VMs
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-bosh-cf-access' %>
+
+
+####  <a id="access-broker"></a>  Access Broker Logs and VM(s)
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-access-broker' %>
+
+
+####  <a id="access-instance"></a>  Access Service Instance Logs and VMs
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-access-instance' %>
+
+### <a id="broker-errands"></a> Run Service Broker Errands to Manage Brokers and Instances
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-broker-errands' %>
+
+#### <a id="register-broker"></a> Register Broker
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' %>
+
+#### <a id="deregister-broker"></a> Deregister Broker
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-deregister-broker' %>
+
+#### <a id="upgrade-all"></a> Upgrade All Service Instances
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
+
+#### <a id="delete-all"></a> Delete All Service Instances
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-delete-all' %>
+
+### <a id="detect-orphans"></a> Detect Orphaned Service Instances
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-detect-orphans' %>
+
+### <a id="instance-creds"></a> Retrieve Admin and Read-Only Admin Credentials for a Service Instance
 
 To retrieve the admin and read-only admin credentials for a service instance from BOSH CredHub, perform the following steps:
 
 <ol>
-<li>Use the cf CLI to determine the GUID associated with the service instance for which you want to retrieve credentials.
-    Run the following command:
-    <pre><code>cf service SERVICE-INSTANCE --guid</code></pre>
+  <li>Use the cf CLI to determine the GUID associated with the service instance
+    for which you want to retrieve credentials. Run the following command:
+    <pre><code>cf service service-instance --guid</code></pre>
     <br>
     Where <code>SERVICE-INSTANCE</code> is the name of the service instance.
-    <br><Br>
+    <br><br>
     For example:
     <pre class="terminal">$ cf service my-service-instance --guid
     12345678-90ab-cdef-1234-567890abcdef</pre>
-    If you do not know the name of the service instance, you can list service instances in the space with <code>cf services</code>.
-</li>
-<li>Perform the steps in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a> and <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a> of <em>Advanced Troubleshooting with the BOSH CLI to SSH into the Ops Manager VM</em>.</li>
-<li>From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI. See <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a> in <em>Advanced Troubleshooting with the BOSH CLI</em>.</li>
-<li> Follow the steps in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>, and record the values for <code>identity</code> and <code>password</code>.</li>
-<li>Set the API target of the CredHub CLI to your BOSH CredHub server.
+    If you do not know the name of the service instance, you can list service instances in the space with
+    <code>cf services</code>.
+  </li>
+  <li>Perform the steps in
+    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>
+    and
+    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a>
+    of
+    <em>Advanced Troubleshooting with the BOSH CLI to SSH into the Ops Manager VM</em>.
+  </li>
+  <li>From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI. See
+    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a>
+    in
+    <em>Advanced Troubleshooting with the BOSH CLI</em>.
+  </li>
+  <li>
+    Follow the steps in
+    <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>, and record the values for
+    <code>identity</code>
+    and
+    <code>password</code>.</li>
+  <li>Set the API target of the CredHub CLI to your BOSH CredHub server.
     <br><br>
     Run the following command:
-    <pre><code>credhub api https://BOSH-DIRECTOR:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</code></pre>
-    <br>
-    Where <code>BOSH-DIRECTOR</code> is the IP address of the BOSH Director VM.
+    <pre><code>credhub api https://BOSH-DIRECTOR:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</code></pre>    <br>
+    Where
+    <code>BOSH-DIRECTOR</code>
+    is the IP address of the BOSH Director VM.
     <br><br>
     For example:
     <pre class="terminal">$ credhub api http<span>s:</span>//10.0.0.5:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</pre>
-</li>
-<li> Log in to CredHub.
+  </li>
+  <li>
+    Log in to CredHub.
     <br><br>
     Run the following command:
     <pre><code>credhub login \
@@ -815,22 +843,39 @@ To retrieve the admin and read-only admin credentials for a service instance fro
     --client-secret=CREDHUB-CLIENT-SECRET</code></pre>
     Where:
     <ul>
-      <li><code>CREDHUB-CLIENT-NAME</code> is the <code>identity</code> you recorded in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
-      <li><code>CREDHUB-CLIENT-SECRET</code> is the <code>password</code> you recorded in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
+      <li>
+        <code>CREDHUB-CLIENT-NAME</code>
+        is the
+        <code>identity</code>
+        you recorded in
+        <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
+      <li>
+        <code>CREDHUB-CLIENT-SECRET</code>
+        is the
+        <code>password</code>
+        you recorded in
+        <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
     </ul>
     For example:
     <pre class="terminal">$ credhub login \
-        --client-name=credhub \
-        --client-secret=abcdefghijklm123456789</pre>
-</li>
-<li> Use the CredHub CLI to retrieve the credentials.
-    <ol><li> To retrieve the password for the admin user, run the following command:
-        <pre>credhub get -n /p-bosh/service-instance_GUID/admin_password</pre>
-        In the output, the password appears under <code>value</code>.</li>
-        <br>
-    <li> To retrieve the password for the read-only admin user, run the following command:
+      --client-name=credhub \
+      --client-secret=abcdefghijklm123456789</pre>
+  </li>
+  <li>
+    Use the CredHub CLI to retrieve the credentials.
+    <ul>
+      <li>
+        To retrieve the password for the admin user, run the following command:
+        <pre><code>credhub get -n /p-bosh/service-instance_GUID/admin_password</code></pre>
+        In the output, the password appears under
+        <code>value</code>.</li>
+      <br>
+      <li>
+        To retrieve the password for the read-only admin user, run the following command:
         <pre>credhub get -n /p-bosh/service-instance_GUID/read_only_admin_password</pre>
-        In the output, the password appears under <code>value</code>.</li></ol>
+        In the output, the password appears under
+        <code>value</code>.</li>
+    </ul>
     <br>
     For example:
     <pre class="terminal">$ credhub get -n /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/admin_password
@@ -839,99 +884,153 @@ To retrieve the admin and read-only admin credentials for a service instance fro
     type: password
     value: UMF2DXsqNPPlCNWMdVMcNv7RC3Wi10
     version_created_at: 2018-04-02T23:16:09Z</pre>
-</li>
+  </li>
 </ol>
 
-<a id="reinstall"></a><h3>Reinstall a Tile</h3>
 
-To reinstall the MySQL for PCF tile, see the <a href="https://discuss.pivotal.io/hc/en-us/articles/360003453534">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a> Knowledge Base article.
+###  <a id="reinstall"></a>  Reinstall a Tile
 
-<a id="view-resources"></a><h3>View Resource Saturation and Scaling</h3>
+To reinstall the MySQL for PCF tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a>
+in the Pivotal Support knowledge base.
 
-<%= partial '../../p-mysql/odb/tshoot-tech-view-resources' %>
+###  <a id="view-resources"></a>  View Resource Saturation and Scaling
 
-<a id="id-instance-owner"></a><h3>Identify Service Instance Owner</h3>
 
-<%= partial '../../p-mysql/odb/tshoot-tech-id-instance-owner' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<a id="monitor-quota"></a><h3>Monitor Quota Saturation and Service Instance Count</h3>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-view-resources' %>
 
-<%= partial '../../p-mysql/odb/tshoot-tech-monitor-quota' %>
 
-<h3><a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters</h3>
+###  <a id="id-instance-owner"></a>  Identify Service Instance Owner
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-id-instance-owner' %>
+
+
+###  <a id="monitor-quota"></a>  Monitor Quota Saturation and Service Instance Count
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-monitor-quota' %>
+
+
+###  <a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters
 
 If your cluster is experiencing downtime or in a degraded state, Pivotal recommends
-gathering information to diagnose the type of failure the cluster is experiencing with the following
-workflow:
-
-   <%# BELOW LINK TO download-logs WILL CHANGE WHEN INCLUDED WITH MYSQL V2 RELEASE. WILL BE FILE PATH? %>
+gathering information to diagnose the type of failure the cluster is experiencing with  the following workflow:
 
 <ol>
-  <li>Consult solutions for common errors. See <a href="#ha-errors">Highly Available Cluster Troubleshooting Errors</a> above.
+  <li>Consult solutions for common errors. See
+    <a href="#ha-errors">Highly Available Cluster Troubleshooting Errors</a>
+    above.
   </li>
-  <li>Use <code>mysql-diag</code> to view a summary of the network, disk, and replication state of each
-    cluster node. Depending on the output from <code>mysql-diag</code>, you might recover your cluster with the following troubleshooting techniques:
+  <li>Use
+    <code>mysql-diag</code>
+    to view a summary of the network, disk, and replication state of each cluster node. Depending on the output from
+    <code>mysql-diag</code>, you might recover your cluster with the following troubleshooting techniques:
     <ul>
-      <li>To force a node to rejoin the cluster, see <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.</li>
-      <li>To re-create a corrupted VM, see <a href="#recreate-VM">Re-create a Corrupted VM in a Highly Available Cluster</a> below.</li>
-      <li>To check if replication is working, see <a href="#check-replication">Check Replication in a Highly Available Cluster</a> below.</li>
+      <li>To force a node to rejoin the cluster, see
+        <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a>
+        below.</li>
+      <li>To re-create a corrupted VM, see
+        <a href="#recreate-VM">Re-create a Corrupted VM in a Highly Available Cluster</a>
+        below.</li>
+      <li>To check if replication is working, see
+        <a href="#check-replication">Check Replication in a Highly Available Cluster</a>
+        below.</li>
     </ul>
-  For more information about <code>mysql-diag</code>, see <a href="./mysql-diag.html">Running mysql-diag</a>.
+    For more information about
+    <code>mysql-diag</code>, see
+    <a href="./mysql-diag.html">Running mysql-diag</a>.
   </li>
 
-  <li> Run <code>download-logs</code> against each node in your MySQL cluster, MySQL proxies, and
-    jumpbox VM. You must run <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible. <br><br>
-   For more information, see <a href="https://github.com/cloudfoundry/cf-mysql-release/blob/develop/scripts/download-logs">download-logs</a> in the <code>cf-mysql-release</code> GitHub repository.
+  <li>
+    Run <code>download-logs</code> against each node in your MySQL cluster, MySQL proxies, and jumpbox VM. You must run
+    <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible.
+    <br>
+    For more information, see the <a href="#download-logs">download-logs</a>
+    section below.
+    <br>
+    <p class="note">
+      <strong>Note:</strong>
+      Pivotal recommends that you use the <code>-X</code> flag to get the complete
+      set of available logs. However, if your cluster processes a high volume of
+      transactions, the complete set might be too large and you can omit this flag
+      to fetch the essential set of logs.
+    </p>
+  </li>
 
-   <br><br>
-    <p class="note"><strong>Note:</strong> Pivotal recommends that you use the <code>-X</code> flag to get the complete set of available logs.
-    However, if your cluster processes a high volume of transactions, the complete set might be too
-    large and you can omit this flag to fetch the essential set of logs.</li>
+  <li>
+    If you are uncertain about the recovery steps to take, submit a ticket through
+    <a href="https://support.pivotal.io/">Pivotal Support</a>. When you submit a ticket provide the following information:
+    <ul>
+      <li>
+        <strong>mysql-diag output:</strong>
+        A summary of the network, disk, and replication state. The
+        <a href="./mysql-diag.html">Running mysql-diag</a>
+        topic explains how to run
+        <strong>mysql-diag</strong>.
+      </li>
+      <li>
+        <strong>download-logs logs:</strong>
+        Logs from your MySQL cluster, MySQL proxies, and jumpbox VM. The
+        <a href="#download-logs" ">download-logs</a>
+        section below explains how to run
+        <strong>download-logs</strong>.
+      </li>
+      <li>
+        <strong>Deployment environment:</strong>
+        The environment that MySQL for PCF is running in such as Pivotal Application Service (PAS) or a service tile.</li>
+      <li>
+        <strong>Version numbers:</strong>
+        The versions of the installed Ops Manager, PAS, and MySQL for PCF
+      </li>
+    </ul>
+  </li>
+</ol>
 
-<li> If you are uncertain about the recovery steps to take, submit a ticket through <a href="https://support.pivotal.io/">Pivotal Support</a>. When you submit a ticket provide the following information:
-  <ul>
-    <li><strong>mysql-diag output:</strong> The ouput summary of the network, disk, and replication state.
-    </li>
-    <li><strong>download-logs logs:</strong> Logs about your MySQL cluster, MySQL proxies,
-      and jumpbox VM. </li>
-    <li><strong>Deployment environment:</strong> The environment that MySQL for PCF is running in such
-      as Pivotal Application Service (PAS) or a service tile.</li>
-    <li><strong>Version numbers:</strong> The versions of the installed Ops Manager, PAS,
-      and MySQL for PCF</li>
-  </ul>
+<p class="note warning">
+  <strong>Warning:</strong>
+  Do not attempt to resolve cluster issues by reconfiguring the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this document. If you are unsure how to proceed, contact
+  <a href="https://support.pivotal.io/">Pivotal Support</a>.
+</p>
 
-</li>
 
-<p class="note warning"><strong>Warning:</strong> Do not attempt to resolve cluster issues by reconfiguring
-  the cluster, such as changing the number of nodes or networks. Only follow the diagnosis steps in this
-  document. If you are unsure how to proceed, contact <a href="https://support.pivotal.io/">Pivotal Support</a>.</p>
+### <a id="manual-force"></a> Force a Node to Rejoin a Highly Available Cluster Manually
 
-<h3><a id="manual-force"></a>Force a Node to Rejoin a Highly Available Cluster Manually</h3>
+If a detached node fails to rejoin the cluster after a configured grace period,
+you can manually force the node to rejoin the cluster.
+This procedure removes all the data on the node, forces the node to join the cluster,
+and creates a new copy of the cluster data on the node.
 
-If a detached node fails to rejoin the cluster after a configured grace period, you can manually
-force the node to rejoin the cluster. This procedure removes all the data on the node,
-forces the node to join the cluster, and creates a new copy of the cluster data on the node.
 
-<p class="note warning"><strong>Warning:</strong> If you manually force a node to rejoin the cluster,
-  data stored on the local node is lost. Do not force nodes to rejoin the cluster if you want to
-  preserve unsynchronized data. Only do this procedure with the assistance of
-  <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+<p class="note warning">
+  <strong>Warning:</strong>
+  If you manually force a node to rejoin the cluster, data stored on the local node is lost. Do not force nodes to rejoin the cluster if you want to preserve unsynchronized data. Only do this procedure with the assistance of
+  <a href="https://support.pivotal.io">Pivotal Support</a>.
+</p>
 
-  Before following this procedure, try to bootstrap the cluster.
-  For more information, see <a href="./bootstrapping.html">Bootstrapping</a>.
+Before following this procedure, try to bootstrap the cluster. For more information, see
+<a href="./bootstrapping.html">Bootstrapping</a>.
 <br><br>
 To manually force a node to rejoin the cluster, do the following:
 
 <ol>
   <li>
     To SSH into the node, follow the procedure in
-    <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
+    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
   </li>
   <li>
     To become root, run the following command:
     <pre> sudo su</pre>
   </li>
-  <li> To shut down the <code>mysqld</code> process on the node, run the following command:
+  <li>
+    To shut down the
+    <code>mysqld</code>
+    process on the node, run the following command:
     <pre>  monit stop galera-init </pre>
   </li>
   <li>
@@ -942,113 +1041,207 @@ To manually force a node to rejoin the cluster, do the following:
     To prepare the node before restarting, run the following command:
     <pre>  /var/vcap/jobs/pxc-mysql/bin/pre-start</pre>
   </li>
-  <li>To restart the <code>mysqld</code> process, run the following command:
+  <li>To restart the
+    <code>mysqld</code>
+    process, run the following command:
     <pre> monit start galera-init</pre>
   </li>
-  </ol>
+</ol>
 
-<h3><a id="recreate-VM"></a>Re-create a Corrupted VM in a Highly Available Cluster</h3>
 
-  To re-create a corrupted VM, do the following:
-  <ol>
+### <a id="recreate-VM"></a>Re-create a Corrupted VM in a Highly Available Cluster
+
+To re-create a corrupted VM, do the following:
+
+<ol>
   <li>To log in to the BOSH Director VM, do the following procedures:
     <ol>
-      <li>To gather the information needed to log in to the BOSH Director VM,
-        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
-      <li>To log in to the Ops Manager VM,
-        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
-      <li>To log in to the BOSH Director VM,
-        see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
+      <li>To gather the information needed to log in to the BOSH Director VM, see
+        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
+      <li>To log in to the Ops Manager VM, see
+        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
+      <li>To log in to the BOSH Director VM, see
+        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
     </ol>
   </li>
-  <li> To identify and re-create the unresponsive node with <code>bosh cloudcheck</code>, do the procedure in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a> and run
+  <li>
+    To identify and re-create the unresponsive node with
+    <code>bosh cloudcheck</code>, do the procedure in
+    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a>
+    and run
     <code>Recreate VM using last known apply spec</code>.
-    <p class="note warning"><strong>Warning:</strong> Recreating a node will clear its logs. Ensure the node is completely down before recreating it.</p>
-    <p class="note warning"><strong>Warning:</strong> Only re-create one node. Do not re-create the entire cluster. If more than one node is down, contact <a href="https://support.pivotal.io">Pivotal Support</a>.</p>
+    <p class="note warning">
+      <strong>Warning:</strong>
+      Recreating a node will clear its logs. Ensure the node is completely down before recreating it.
+    </p>
+    <p class="note warning">
+      <strong>Warning:</strong>
+      Only re-create one node. Do not re-create the entire cluster. If more than one node is down, contact
+      <a href="https://support.pivotal.io">Pivotal Support</a>.
+    </p>
   </li>
-  </ol>
+</ol>
 
-<h3><a id="check-replication"></a>Check Replication Status in a Highly Available Cluster</h3>
 
-If you see stale data in your cluster, you can check whether replication is
-functioning normally.
+### <a id="check-replication"></a>Check Replication Status in a Highly Available Cluster
+
+If you see stale data in your cluster, you can check whether replication is functioning normally.
 <br><br>
+
 To check the replication status, do the following:
+
 <ol>
-<li>To log in to the BOSH Director VM, do the following procedures:
-  <ol>
-    <li>To gather the information needed to log in to the BOSH Director VM,
-      see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
-    <li>To log in to the Ops Manager VM,
-      see <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
-  </ol></li>
-  <li> To create a dummy database in the first node, run the following command:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -e "create database verify_healthy;"</pre>
+  <li>To log in to the BOSH Director VM, do the following procedures:
+    <ol>
+      <li>To gather the information needed to log in to the BOSH Director VM, see
+        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>.
+      </li>
+      <li>To log in to the Ops Manager VM, see
+        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>.
+      </li>
+    </ol>
+  </li>
+  <li>
+    To create a dummy database in the first node, run the following command:
+    <pre>mysql -h first-node-ip-address -u your-identity -p -e "create database verify_healthy;"</pre>
     Where:
     <ul>
-      <li><code>FIRST-NODE-IP-ADDRESS</code> is the IP address of the
-      first node you recorded in step 1. </li>
-      <li><code>YOUR-IDENTITY</code> is the value of <code>identity</code>
-      that you recorded in step 1. </li>
+      <li>
+        <code>FIRST-NODE-IP-ADDRESS</code>
+        is the IP address of the first node you recorded in step 1.
+      </li>
+      <li>
+        <code>YOUR-IDENTITY</code> is the value of <code>identity</code>
+        that you recorded in step 1.
+      </li>
     </ul>
   </li>
   <li>
-  To create a dummy table in the dummy database, do the following:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='InnoDB';"</pre>
+    To create a dummy table in the dummy database, do the following:
+    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='innodb';"</pre>
   </li>
   <li>
-  To insert some data into the dummy table, run the following command:
+    To insert data into the dummy table, run the following command:
     <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
   </li>
   <li>
-  To query the table and verify that the three rows of dummy data exist on the first node, run the following:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
+    <p>
+      To query the table and verify that the three rows of dummy data exist on the first node, run the following:
+    </p>
+    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "select * from dummy_table;"</pre>
 
-    When prompted for a password, provide the <code>password</code> value recorded in step 1.
-    <br>
+    When prompted for a password, provide the <code>password</code>
+    value recorded in step 1.<br>
     The above command returns output similar to the following:
     <pre class="terminal">
-    +----+----------------------+
-    | id | info                 |
-    +----+----------------------+
-    |  4 | dummy data           |
-    |  7 | more dummy data      |
-    | 10 | even more dummy data |
-    +----+----------------------+</pre>
-</li>
-<li>
-To verify that the other nodes contain the same dummy data do the following for each of the remaining MySQL server IP addresses:</li>
-<ol>
-  <li>To query the dummy table, do the following:
-    <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
-
-    When prompted for a password, provide the <code>password</code> value recorded in step 1.
+  +----+----------------------+
+  | id | info                 |
+  +----+----------------------+
+  |  4 | dummy data           |
+  |  7 | more dummy data      |
+  | 10 | even more dummy data |
+  +----+----------------------+</pre>
   </li>
   <li>
-    To  verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
+    To verify that the other nodes contain the same dummy data do the following for each of the remaining MySQL server IP addresses:
+    <ul>
+      <li>To query the dummy table, do the following:
+        <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy_table;"</pre>
 
-    <pre>mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "select * from dummy_table;"</pre>
+        When prompted for a password, provide the
+        <code>password</code>
+        value recorded in step 1.
+      </li>
+      <li>
+        To verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
 
-    When prompted for a password, provide the <code>password</code> value recorded in step 1.
-    Verify that the above command returns output similar to the following:
-    <pre class="terminal">
+        <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
+
+        When prompted for a password, provide the
+        <code>password</code>
+        value recorded in step 1. Verify that the above command returns output similar to the following:
+        <pre class="terminal">
     +----+----------------------+
     | id | info                 |
     +----+----------------------+
     |  4 | dummy data           |
     |  7 | more dummy data      |
     | 10 | even more dummy data |
-    +----+----------------------+</pre>
+    +----+----------------------+ </pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    If each MySQL server instance does not return the same result, before proceeding
+    further or making any changes to your deployment, contact
+    <a href="https://support.pivotal.io/">Pivotal Support</a>
+    <br>
+    If each MySQL server instance returns the same result, then you can safely proceed
+    to scaling down your cluster to a single node.
   </li>
 </ol>
-<li> If each MySQL server instance does not return the same result, before proceeding further or making any changes to your deployment, contact <a href="https://support.pivotal.io/">Pivotal Support</a> <br>
-If each MySQL server instance returns the same result, then you can safely proceed to scaling down your cluster to a single node.</li>
-</ol>
 
-<a id="kb"></a><h2>Knowledge Base (Community)</h2>
 
-<%= partial '../../p-mysql/odb/tshoot-kb' %>
+##  <a id="tools"></a>  Tools for Troubleshooting
 
-<a id="support"></a><h2>File a Support Ticket</h2>
+The troubleshooting techniques described above use the following tools.
 
-<%= partial '../../p-mysql/odb/tshoot-support' %>
+### <a id="download-logs"></a>download-logs
+
+`download-logs` is a script that you can run from your Ops Manager VM to aggregate
+logs from your MySQL cluster nodes, MySQL proxies, and, with highly available clusters, the jumpbox VM.
+Do the following to run the `download-logs` script:
+
+1. Download and unpack the `download-logs` script from [MySQL for PCF](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
+
+1. From Ops Manager, open your **BOSH Director** tile > **Credentials** tab.
+
+1. Click **Bosh Commandline Credentials** > **Link to Credential**. A short plaintext file opens.
+
+4. From the plaintext file, record the values listed for the following:
+  + `BOSH_CLIENT`
+  + `BOSH_CLIENT_SECRET`
+  + `BOSH_CA_CERT`
+  + `BOSH_ENVIRONMENT`
+
+1. From the BOSH CLI, run `bosh deployments` and record the name of the BOSH deployment that deployed MySQL for PCF.
+
+1. SSH into your Ops Manager VM. For information on how to do this, see
+[Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
+and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
+
+1. File transfer or copy-paste the `download-logs` script to a working directory on the Ops Manager VM.
+
+1. Set local environment variables to the same BOSH variable values that you recorded earlier,
+including `BOSH_DEPLOYMENT` for the deployment name. For example:
+
+    <pre class="terminal">$ BOSH_CLIENT=ops_manager BOSH_CLIENT_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY BOSH_CA_CERT=/var/tempest/workspaces/default/root_ca_certificate BOSH_ENVIRONMENT=10.0.0.5 BOSH_DEPLOYMENT=pivotal-mysql-14c4</pre>
+
+1. Run the `download-logs` script, passing the output directory to the `-o` flag:
+
+    ```
+    ./download-logs -o .
+    ```
+
+1. The script saves a compressed file of logs combined from all MySQL VMs.
+The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
+
+###  <a id="mysql-diag"></a>  mysql-diag
+
+`mysql-diag` outputs the current status of a highly available (HA) MySQL cluster
+in PCF and suggests recovery actions if the cluster fails.
+For more information, see [Running mysql-diag](./mysql-diag.html).
+
+## <a id="kb"></a> Knowledge Base (Community)
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-kb' %>
+
+
+##  <a id="support"></a>  File a Support Ticket
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-support' %>

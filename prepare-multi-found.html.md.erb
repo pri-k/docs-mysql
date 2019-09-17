@@ -5,7 +5,9 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<%= partial "./multi_found_beta" %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/mysql/multi_found_beta %>
 
 This topic provides instructions to operators about how to prepare foundations for multi-foundation 
 replication using MySQL for Pivotal Cloud Foundry (PCF).
@@ -43,6 +45,8 @@ deploy both foundations on a single flat network. For example, if the leader nod
 
 1. Configure a global DNS load balancer to point to the two PCF foundations and their local load balancers. See [Configure Your GLB](https://docs.pivotal.io/pivotalcf/2-5/plan/global-dns-lb.html#configure-glb).
 
+1. Enable TLS.  A operator [DOES THINGS]. See [Preparing for TLS](./prepare-tls.html).
+
 ##<a id='workflow'></a> Workflow
 
 After two PCF foundations are created, you can enable multi-foundation replication by 
@@ -50,7 +54,7 @@ doing the following:
 
 1. A operator [DOES THINGS]. See [Required Networking Rules for Multi-Foundation Replication](./about.html#multi-found-ports).
 
-1. A operator [DOES THINGS]. See [Preparing for TLS](./prepare-tls.html).
+1. Extra cert stuff
 
 1. An operator configures a <%= vars.single_leader_plan %> plan on both foundations. See
 [Configure Service Plans](./install-config.html#active).
