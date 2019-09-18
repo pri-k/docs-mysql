@@ -13,7 +13,7 @@ This helps minimize downtime for apps that bind to your MySQL databases.
 
 For more information, see:
 
-* [About Leader-Follower](./about-leader-follower.html) 
+* [About Leader-Follower](./about-leader-follower.html)
 * [Events that Interrupt Service](./interruptions.html)
 
 ## <a id="process"></a> Leader-Follower Setup and Failover Process
@@ -36,7 +36,7 @@ The following are the high-level steps for setting up and using a leader-followe
 1. Developers bind apps to the leader in the leader-follower plan instance, using the leader's IP address.
    Data is written to the leader and asynchronously replicated on the follower.
    See [Bind a Service Instance to Your App](./use.html#bind).
-   
+
 ### Failover Process
 
 1. **Promotion**: If the leader instance fails or the operator wants to take the leader offline for maintenance,
@@ -63,19 +63,19 @@ In order to decide if a failover is needed, you must monitor leader-follower ins
 
 In monitoring the leader-follower VMs, pay attention to the following metrics:
 
-* `/p.mysql/available`: This metric records whether the MySQL VMs are responding to requests. 
+* `/p.mysql/available`: This metric records whether the MySQL VMs are responding to requests.
 Values are either 1 (available) or 0 (not available).
 
 * `/p.mysql/follower_seconds_since_leader_heartbeat`: Whenever the leader VM emits a heartbeat,
   the heartbeat is written to the leader database and replicated to the follower.
   This metric measures the number of seconds that elapses between the leader heartbeat
   and the replication of the heartbeat in the follower database,
-  so you can determine how far behind the follower is from the leader. 
+  so you can determine how far behind the follower is from the leader.
   Normal values for this metric depend on your apps.
 
 * `/p.mysql/follower_seconds_behind_master`: The follower VM copies database writes from the leader VM,
-  but takes time to apply them to its own database. 
-  This metric measures how far behind the follower VM is in applying these writes. 
+  but takes time to apply them to its own database.
+  This metric measures how far behind the follower VM is in applying these writes.
   For example, a follower VM may have copied writes from the leader VM that are timestamped up to 4:00pm,
   but it has only applied writes up to 1:00pm. Normal values for this metric depend on your apps.
 
@@ -83,24 +83,24 @@ For more information, see [KPIs for MySQL Service Instances](monitor.html#kpi4My
 
 ## <a id="errands"></a> Errands Used in Leader-Follower Failover
 
-This section describes the errands used in the [Trigger a Failover](#failover) procedures below. 
-You can also use these errands to create custom failover scripts. 
- 
+This section describes the errands used in the [Trigger a Failover](#failover) procedures below.
+You can also use these errands to create custom failover scripts.
+
 Operators use the BOSH CLI to run the errands on the deployment for a particular leader-follower service instance.
 
 The errands used in the failover procedures are:
 
-* **configure-leader-follower**: 
+* **configure-leader-follower**:
   * Configures replication on the follower and ensures the leader is writable
   * Runs after every create or update of a leader-follower instance
   * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
 
-* **make-read-only**: 
+* **make-read-only**:
   * Demotes a leader VM to a follower
   * Sets the VM to read-only, and guarantees that apps no longer write to this VM
   * Relays all in-flight transactions on this former leader VM to the follower VM, if it is accessible
 
-* **make-leader**: 
+* **make-leader**:
   * Promotes a follower VM to a leader
   * Removes replication configuration from the VM, waits for all transactions to be applied to the VM,
     and sets the VM as writable
@@ -110,7 +110,7 @@ The errands used in the failover procedures are:
 
 You might want to trigger a failover in the following scenarios:
 
-* You want to take the leader VM down to do planned maintenance. 
+* You want to take the leader VM down to do planned maintenance.
 * The performance of the leader VM degrades.
 * The leader VM fails unexpectedly.
 * The AZ where the leader VM is located goes offline unexpectedly.
@@ -126,7 +126,7 @@ To trigger a failover, follow these procedures:
 ### <a id='retrieve'></a> Retrieve Information
 
 Perform the following steps to retrieve the information necessary
-for stopping the leader and promoting the follower: 
+for stopping the leader and promoting the follower:
 
 1. Target the Cloud Controller of your PCF deployment with the Cloud Foundry Command Line Interface (cf CLI).
    For example:
@@ -137,7 +137,7 @@ for stopping the leader and promoting the follower:
 1. Retrieve the GUID of the service instance by running the following command:
     <pre><code>cf service SERVICE-INSTANCE --guid</code></pre>
     <br>
-    Where `SERVICE-INSTANCE` is the name of the leader-follower service instance. 
+    Where `SERVICE-INSTANCE` is the name of the leader-follower service instance.
   <br><br>
   For example:
   <pre class="terminal">$ cf service my-lf-instance --guid
@@ -151,13 +151,13 @@ for stopping the leader and promoting the follower:
    See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in
    <em>Advanced Troubleshooting with the BOSH CLI</em>.
 1. Use the BOSH CLI to run the `inspect` errand with the following command:
-  <pre><code>bosh2 -d service-instance\_GUID run-errand inspect</code></pre>
+  <pre><code>bosh -d service-instance\_GUID run-errand inspect</code></pre>
   <br>
   Where `GUID` is the GUID of the leader-follower service instance retrieved above.
   <br><br>
   For example:
   <pre class="terminal">
-  $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+  $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       run-errand inspect
   </pre>
 1. Examine the output and locate the information about the leader-follower MySQL VMs:
@@ -187,7 +187,7 @@ for stopping the leader and promoting the follower:
             Replication Mode: async
             Has Data: true
             GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-            2018/04/03 18:08:46 Successfully executed command: inspect  
+            2018/04/03 18:08:46 Successfully executed command: inspect
   </pre>
 1. Identify the instance marked `Role: leader`.
    This is the leader VM.
@@ -197,7 +197,7 @@ for stopping the leader and promoting the follower:
    In the above output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
 1. If you still have access to the AZ where the leader VM is located, use the BOSH CLI to determine if the leader VM is in the AZ you want to take offline.
   For example:
-  <pre class="terminal">$ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+  <pre class="terminal">$ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
     instances
     Deployment 'service-instance_f378ec82-61a4-4e66-8ed9-889c7cf5342f'
     <br>
@@ -207,7 +207,7 @@ for stopping the leader and promoting the follower:
     2 instances
   </pre>
   <p class="note"><strong>Note</strong>: The leader VM might not display its status as <code>failing</code> if you are performing planned maintenance.</p>
-  Examine the output to determine if the leader VM is in the AZ you want to take offline. 
+  Examine the output to determine if the leader VM is in the AZ you want to take offline.
 
 ### <a id='promote'></a> Promote the Follower
 
@@ -215,7 +215,7 @@ Perform the following steps to stop the leader VM and promote the follower VM to
 
 1. Stop any data from being written to the leader VM by setting it to read-only.
    Run the following command:
-   <pre><code>bosh2 -d service-instance_GUID \
+   <pre><code>bosh -d service-instance_GUID \
    run-errand make-read-only \
    --instance=mysql/INDEX
    </code></pre>
@@ -225,28 +225,28 @@ Perform the following steps to stop the leader VM and promote the follower VM to
    <li>`INDEX`: This is the index of the leader VM retrieved above.</li></ul>
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+   $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       run-errand make-read-only \
       --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
    </pre>
 1. If you still have access to the AZ where the leader VM is located, stop the leader VM, using the same values as above.
    For example:
    <pre class="terminal">
-    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+    $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       stop mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
 1. Set the follower VM as writable by running the `make-leader` errand. Use the index of the follower VM retrieved above. For example:
    <pre class="terminal">
-    $ bosh2 -d service-instance\_82dc607-710a-404e-b1b8-a7e3ea7ec063 \
+    $ bosh -d service-instance\_82dc607-710a-404e-b1b8-a7e3ea7ec063 \
       run-errand make-leader \
       --instance=mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
    </pre>
    If this command returns an error, re-run it until the follower VM has completed applying the transactions.
 
-At this point, a single instance is working but leader-follower replication has not yet been restored. 
-If you want to fail your app over to a single instance instead of restoring leader-follower, 
-skip to <a href="#unbind-rebind">Unbind and Rebind the App</a>. 
+At this point, a single instance is working but leader-follower replication has not yet been restored.
+If you want to fail your app over to a single instance instead of restoring leader-follower,
+skip to <a href="#unbind-rebind">Unbind and Rebind the App</a>.
 
-If you are triggering a failover in response to the AZ of the leader VM going offline, you can fail your app over to a single instance by performing the steps in [Unbind and Rebind the App](#unbind-rebind). 
+If you are triggering a failover in response to the AZ of the leader VM going offline, you can fail your app over to a single instance by performing the steps in [Unbind and Rebind the App](#unbind-rebind).
 But in order to restore leader-follower, you must regain access to the AZ where your leader VM is located before performing the steps in [Clean Up Former Leader VM (Optional)](#clean-up) and [Configure the New Follower](#config-follower).
 
 ### <a id='clean-up'></a>Clean Up Former Leader VM (Optional)
@@ -256,28 +256,28 @@ If you are triggering a failover in response to a failing leader VM, perform the
 1. Disable resurrection, specifying the same deployment as above.
    For example:
    <pre class="terminal">
-    $ bosh2 update-resurrection off</pre>
-1. Use the BOSH CLI to retrieve the CID of the failing former leader VM. 
-   For example: 
+    $ bosh update-resurrection off</pre>
+1. Use the BOSH CLI to retrieve the CID of the failing former leader VM.
+   For example:
    <pre class="terminal">
-    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
+    $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
       --details \
       --failing \
       --column=”VM CID” \
       --json
    </pre>
-1. Use the BOSH CLI to retrieve the disk CID of the failing former leader VM. 
-   For example: 
+1. Use the BOSH CLI to retrieve the disk CID of the failing former leader VM.
+   For example:
    <pre class="terminal">
-    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
+    $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instances \
       --details \
       --failing \
       --column=”Disk CIDs” \
       --json
    </pre>
-1. Delete the failing former leader VM. 
+1. Delete the failing former leader VM.
    Run the following command:
-   <pre><code>bosh2 -d service-instance\_GUID delete-vm vm-CID</code></pre>
+   <pre><code>bosh -d service-instance\_GUID delete-vm vm-CID</code></pre>
    <br>
    Where:
    <ul><li>`GUID`: This is the GUID of the leader-follower service instance retrieved above.</li>
@@ -285,12 +285,12 @@ If you are triggering a failover in response to a failing leader VM, perform the
    </ul>
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+   $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       delete-vm i-1db9ede6
    </pre>
 1. Orphan the disk of the failing former leader VM.
    Run the following command:
-   <pre><code>bosh2 -d service-instance\_GUID orphan-disk DISK-CID
+   <pre><code>bosh -d service-instance\_GUID orphan-disk DISK-CID
    </code></pre>
    <br>
    Where:
@@ -299,19 +299,19 @@ If you are triggering a failover in response to a failing leader VM, perform the
    </ul>
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+   $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       orphan-disk b-1db9ede6
    </pre>
    Orphaning a disk rather than deleting it preserves it for possible recovery.
-   After performing recovery operations, you can reattach the disk to a VM. BOSH deletes orphaned disks after five days by default.  
+   After performing recovery operations, you can reattach the disk to a VM. BOSH deletes orphaned disks after five days by default.
 
-### <a id='config-follower'></a> Configure the New Follower 
+### <a id='config-follower'></a> Configure the New Follower
 
 Perform the following steps to restart the former leader VM and configure it as the new follower:
 
 1. Recreate the former leader VM.
    Run the following command:
-   <pre><code>bosh2 -d service-instance\_GUID \
+   <pre><code>bosh -d service-instance\_GUID \
    recreate \
    mysql/INDEX
    </code></pre>
@@ -322,24 +322,24 @@ Perform the following steps to restart the former leader VM and configure it as 
    </ul>
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+   $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
      recreate \
-     mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd01. 
+     mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd01.
 1. Use the `configure-leader-follower` errand to set the former leader VM as a follower, using the same values as above.
    For example:
    <pre class="terminal">
-    $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+    $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       run-errand configure-leader-follower \
       --instance=mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</pre>
 1. Use the BOSH CLI to run the `inspect` errand on the deployment, using the same value as above.
    For example:
    <pre class="terminal">
-   $ bosh2 -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
+   $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
        run-errand inspect
    </pre>
    If the output displays one instance marked `Role: leader` and another instance marked `Role: follower`,
-   then leader-follower replication and high availability are resumed. 
-   The deployment should be in its original, working state. 
+   then leader-follower replication and high availability are resumed.
+   The deployment should be in its original, working state.
    You may turn resurrection back on if desired.
 
 ### <a id='unbind-rebind'></a> Unbind and Rebind the App
