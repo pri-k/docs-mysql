@@ -492,7 +492,7 @@ Perform the following steps to download the backup artifact from an AWS S3 bucke
 1. From the Ops Manager VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest.
 For example:
   <pre class="terminal">
-   $ bosh2 -e my-env \
+   $ bosh -e my-env \
    -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
    manifest > ./manifest.yml
   </pre>
@@ -576,7 +576,7 @@ to retrieve the admin password for your new service instance.
 1. From the Ops Manager VM, find and record the new instance name and GUID from BOSH:
 
     ```
-    bosh2 -e ENVIRONMENT -d DEPLOYMENT instances
+    bosh -e ENVIRONMENT -d DEPLOYMENT instances
     ```
 
 1. If you created a leader-follower service instance to restore to, do the following:
@@ -597,18 +597,18 @@ to retrieve the admin password for your new service instance.
   1. Redeploy the deployment manifest by running:
 
         ```
-        bosh2 -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
+        bosh -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
         ```
         For example:
 
         <pre class="terminal">
-        bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
         </pre>
 
 1. Copy the downloaded backup to the new service instance:
 
     ```
-    bosh2 -e my-env \
+    bosh -e my-env \
     -d my-dep scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
     ```
     Where:<br>
@@ -673,12 +673,12 @@ Instance for Restore* above, do the following:
   1. Redeploy the deployment manifest by running:
 
         ```
-        bosh2 -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
+        bosh -e ENVIRONMENT -d DEPLOYMENT deploy PATH-TO-MANIFEST.yml
         ```
         For example:
 
         <pre class="terminal">
-        bosh2 -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        bosh -e my-env -d service-instance\_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
         </pre>
 
 1. Determine if the app is currently bound to a MySQL service instance:
