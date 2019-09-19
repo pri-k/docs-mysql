@@ -246,6 +246,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
       <button class="tablinks active" onclick="openDocs(event, 'tab1')">Single Node</button>
       <button class="tablinks" onclick="openDocs(event, 'tab2')">Leader-Follower</button>
       <button class="tablinks" onclick="openDocs(event, 'tab3')">HA Cluster [BETA]</button>
+      <button class="tablinks" onclick="openDocs(event, 'tab4')"> <%= vars.single_leader_plan %> [BETA]</button>
     </div>
 
 
@@ -258,12 +259,9 @@ Perform the following steps for each plan that you want to use in your PCF deplo
     <div id="tab3" class="tabcontent">
       <img src="./images/ha-plan.png">
     </div>
-
-    <p class="note"><strong>Note:</strong>
-    If you want information about the Multi-Datacenter Leader Follower beta plan,
-    contact <%= vars.support_link %>.</p>
-
-
+    <div id="tab4" class="tabcontent">
+      <img src="./images/multi-found-plan.png">
+    </div>
 
 
 1. Configure the fields as follows:
