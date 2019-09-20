@@ -33,7 +33,7 @@ in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 
 ## <a id='process'></a>The Process for Using MySQL for PCF in Your App
 
-To use MySQL in a PCF app:
+MySQL for PCF provides a relational database for apps and devices. To use MySQL for PCF in an app:
 
 1. Check the service availability in the Marketplace,
    and see if there is an existing instance of MySQL for PCF in your space.
@@ -72,7 +72,7 @@ You can confirm both of these using the cf CLI as follows.
 
 ### <a id="check-marketplace"></a> Check Service Availability in the Marketplace
 
-To find out if a MySQL for PCF service is available in the Marketplace, do the following:
+To find out if a MySQL for PCF service is available in the Marketplace:
 
 1. Enter the following command:
 
@@ -95,7 +95,7 @@ To find out if a MySQL for PCF service is available in the Marketplace, do the f
 
 ### <a id="check-instance"></a> Check That an Instance Is Running in the Space
 
-To confirm that a MySQL for PCF instance is running in the space, do the following:
+To confirm that a MySQL for PCF instance is running in the space:
 
 1. Use the [cf CLI](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) or
 [Apps Manager](http://docs.pivotal.io/pivotalcf/customizing/console-login.html) to log in to the org and space that contains the app.
@@ -121,7 +121,7 @@ For example:
 On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use.
 
-To create an instance of the MySQL for PCF service, do the following:
+To create an instance of the MySQL for PCF service:
 
 1. Run the following command:
 
@@ -186,15 +186,7 @@ To access the MySQL service from your app:
 
 1. Verify that your app code (or the MySQL client library that the app uses) retries in the case of DNS timeouts.
 
-1. Run the following command:
-
-    ```
-    cf env APP-NAME
-    ```
-
-    Where `APP-NAME` is the name of the app bound to the MySQL for PCF instance.
-
-1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app.
+1. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap) below.
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
@@ -205,14 +197,14 @@ To access the MySQL service from your app:
   You can use custom schemas with apps that share a MySQL service instance to isolate app data by schema.
   By default, service bindings use the default schema `service_instance_db`.
 
-  To use custom schemas in your apps do the following:
+  To use custom schemas in your apps:
 
   1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
   <br><br>
     For more information about the `CREATE DATABASE` SQL statement, see [
     13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
 
-  2. To modify your app to use your custom schema, do one of the following:
+  2. To modify your app to use your custom schema:
     + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema.
     + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP_SERVICES`.
 
@@ -229,9 +221,9 @@ This section describes tasks you do over the life cycle of your apps and data:
 
 ### <a id="update"></a>Update a Service Instance to a Larger Plan
 
-As apps and their databases grow, it may be necessary to update the service instance to a larger plan.
+As apps and their databases grow, it might be necessary to update the service instance to a larger plan.
 This does not require a rebinding of your app. However, while the instance is being migrated to a new service instance,
-the database will be unavailable for several minutes.
+the database is unavailable for several minutes.
 
 <p class="note warning"><strong>WARNING:</strong> You cannot update to or from a highly available (HA) cluster plan
   to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
@@ -276,7 +268,7 @@ OK
 
 You cannot delete a service instance that an app is bound to.
 
-To delete a service instance, do the following:
+To delete a service instance:
 
 1. Run the following command:
 
