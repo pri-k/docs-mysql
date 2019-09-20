@@ -184,19 +184,11 @@ To modify your app code to access and use the MySQL service, do the following:
 1. Verify that your app code (or the MySQL client library that the app uses)
 retries in the case of DNS timeouts.
 
-1. Run the following command:
-
-    ```
-    cf env APP-NAME
-    ```
-
-    Where `APP-NAME` is the name of the app bound to the MySQL for PCF instance.
-
-1. In the output, note the connection strings listed in the `VCAP_SERVICES` > `credentials` object for the app.
+1. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap) below.
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
-  
+
 ###<a id="share"></a> Share Service Instances
 
 In MySQL for PCF, you can share service instances between different orgs and spaces.
@@ -210,14 +202,14 @@ see [Sharing Service Instances](https://docs.pivotal.io/pivotalcf/devguide/servi
   You can use custom schemas with apps that share a MySQL service instance to isolate app data by schema.
   By default, service bindings use the default schema `service_instance_db`.
 
-  To use custom schemas in your apps do the following:
+  To use custom schemas in your apps:
 
   1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
   <br><br>
     For more information about the `CREATE DATABASE` SQL statement, see [
     13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
 
-  2. To modify your app to use your custom schema, do one of the following:
+  2. To modify your app to use your custom schema:
     + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema.
     + If your app is not written in Java, modify your app to use your custom schema in the `name` credentials property for `VCAP_SERVICES`.
 
@@ -280,7 +272,7 @@ OK
 
 You cannot delete a service instance that an app is bound to.
 
-To delete a service instance, do the following:
+To delete a service instance:
 
 1. Run the following command:
 
@@ -677,4 +669,3 @@ command:
    see [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#ssh-tunnel).
 
 1. Configure a connection in your desktop tool using the values for `hostname`, `name`, `password`, `port`, and `username` that you recorded in the above step.
-
