@@ -190,3 +190,34 @@ as described in the table below.
 </table>
 
 ### <a id='multi-found-ports'></a> Required Networking Rules for Multi-Foundation Replication
+
+In addition to the networking rules required for MySQL for PCF, if you are using multi-foundation replications, the operator must ensure network rules are set up in both foundations so that connections are open
+as described in the table below.
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/mysql/multi_found_beta' %>
+
+<table class="nice">
+	<th>Source VM</th>
+	<th>Destination VM</th>
+	<th>Default TCP Port</th>
+	<th>Notes</th>
+	
+	<tr>
+		<td></td>
+		<td></td>
+		<td>3306</td>
+		<td></td>
+	</tr>
+	
+	<tr>
+		<td>Leader VM</td>
+		<td>Follower VM</td>
+		<td>8443</td>
+		<td>This port is needed to enable replication between services instance in two different
+			foundations. The communication between these VMs is two-way.</td>
+	</tr>
+
+</table>
+	
