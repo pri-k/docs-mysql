@@ -35,13 +35,14 @@ Redeploying MySQL for PCF for configuration changes or upgrades will result in M
 
 ##<a id="persistent"></a> Persistent Disk Usage
 
-The persistent disk receives and temporarily stores and encrypts MySQL backups.
+The persistent disk receives, temporarily stores and encrypts MySQL backups.
 This results in increased disk usage while backups are being processed.
 For single node and leader-follower service plans, backups are processed on the MySQL VM.
 For highly available (HA) clusters, backups are processed on the jumpbox VM.
 
-In addition to backups, the persistent disk also stores InnoDB redo logs. These logs use
-a static amount of disk size.
+In addition to backups, the persistent disk also stores InnoDB redo logs and binlogs. InnoDB redo logs use
+a static amount of disk size. Binlogs are included in your app data. If you app is write-heavy, you should 
+increase your persistent disk to accommodate the binlogs. 
 
 Use the following table to determine the amount of persistent disk space you need
 to set when you configure a service plan.
