@@ -43,7 +43,8 @@ For more information, see
 
 To use MySQL for PCF with your PCF apps, you need:
 
-* Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster and <%= vars.single_leader_plan %>. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
+* Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster, and <%= vars.single_leader_plan %>.
+<%= vars.single_leader_plan %> is used to deploy a leader-follower service instance across multiple foundations. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
 * If you intend to use a <%= vars.single_leader_plan %> plan for deploying a leader-follower service instance across multiple foundations, review the limitations associated with this topology. See [Multi-Foundation Replication Limitations](./about-multi-found.html#limitations).
 * If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).
 * A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
@@ -215,7 +216,6 @@ To access the MySQL service from your app:
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
 
-
 ###<a id="schema"></a>Create and Use Custom Schemas
 
   MySQL for PCF supports multiple custom schemas.
@@ -290,7 +290,6 @@ You can manage service instances in the following ways:
 + Move your data to a different plan. See [Update a Service Instance to a Larger Plan](#update), below.
 + Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
 + Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
-+ Use the Log Cache CLI plugin to access MySQL metrics. See [Access MySQL Metrics for On-Demand Service Instances](#logging), below.
 
 ### <a id="update"></a>Update a Service Instance to a Larger Plan
 
@@ -300,7 +299,7 @@ the database will be unavailable for several minutes.
 
 <p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
   to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
-  
+
 <p class="note warning"><strong>Warning:</strong> If you are using multi-foundation replication, you must not update <%= vars.single_leader_plan %> plan to another plan. If you do this, your replication breaks.</p>
 
 To update a service instance to a larger plan, run the following command:

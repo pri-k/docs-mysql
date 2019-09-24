@@ -16,15 +16,15 @@ across multiple foundations.
 
 ## <a id="overview"></a>Overview
 
-In MySQL for PCF v2.6 and later, you can deploy two `<%= vars.single_leader_plan %>`service instances
-in separate BOSH deployments across multiple foundations to create a leader-follower topology.
+In MySQL for PCF v2.6 and later, you can configure replication between two `<%= vars.single_leader_plan %>`service instances
+across multiple foundations to create a leader-follower topology.
   
 In the multi-foundation context, the two `<%= vars.single_leader_plan %>`service instances are 
-referred to as a decoupled leader-follower service instance.
+referred to as a loosely coupled leader-follower service instance.
 
-<p class="note"><strong>Note:</strong> A decoupled leader-follower service instance deployed across multiple 
-  foundations is different from the coupled leader-follower plan that MySQL for PCF offers. 
-  For information about the coupled leader-follower plan, 
+<p class="note"><strong>Note:</strong> A loosely coupled leader-follower service instance deployed across multiple 
+  foundations is different from the tightly coupled leader-follower plan that MySQL for PCF offers. 
+  For information about the tightly coupled leader-follower plan, 
   see <a href="./about-leader-follower.html">About Leader-Follower</a>.</p>
 
 For more information about multi-foundation architecture, see [About Multi-Foundation Replication](./about-multi-found.html).
@@ -34,19 +34,22 @@ For more information about multi-foundation architecture, see [About Multi-Found
 Before you use MySQL for PCF across multiple foundations, you must have the following:
 
 + Access to the `<%= vars.single_leader_plan %>` plan
-+ An operator configured multi-foundation architecture
++ An operator configured multi-foundation architecture. For more information, see 
+[Preparing for Multi-Foundation Replication](./prepare-multi-found.html).
 
-## <a id='set-up-multi-dc'></a>Set Up a Leader-Follower Service Instance across Multiple Foundations
+## <a id='create-multi-dc'></a>Create a Multi-Foundation Leader-Follower Service Instance
 
 Set up a leader-follower service instance of MySQL for PCF across multiple foundations by doing the following:
 
-1. [Confirm the MySQL for PCF Service Availability](use.html#marketplace)
-1. [Create a Leader-Follower Service Instance](#create-multi-dc), below
-1. [Create Service Keys for <%= vars.single_leader_plan %> Service Instances](#create-service-key), below  
-1. [Bind a Leader-Follower Service Instance to Your App](#bind), below
-5. [Use the MySQL Service in Your App](use.html#call)
+1. Check the service availability in the Marketplace to see if there is an existing instance of MySQL for PCF in your space. See [Confirm the MySQL for PCF Service Availability](use.html#marketplace).
+1. Create `<%= vars.single_leader_plan %>` service instances to configure a loosely coupled multi-foundation leader-follower service instance. See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
+1. Establish a connection between the `<%= vars.single_leader_plan %>` service instances to enable replication. See [Configure Multi-Foundation Replication](#create-service-key), below  .
+1. Bind the  `<%= vars.single_leader_plan %>` service instances to your apps. See [Bind a Leader-Follower Service Instance to Your App](#bind), below.
+5. Modify your app to use the MySQL for PCF service. [Use the MySQL Service in Your App](./use.html#call), below. 
 
-### <a id='create-multi-dc'></a>Create a Leader-Follower Service Instance
+After you create a leader-follower service instance across multiple foundations, you can manage it over the life cycle of your apps and data. For instructions on how to manage a MySQL for PCF service instance, see [Manage Service Instances](./use.html#manage).
+
+### <a id='create-service-instance'></a>Create <%= vars.single_leader_plan %> Service Instances
 
 To create a leader-follower service instance across multiple foundations, you
 must create a `<%= vars.single_leader_plan %>` service instance in two different
@@ -112,15 +115,16 @@ Create a leader-follower service instance by doing the following:
 1. Create a `<%= vars.single_leader_plan %>` service instance in your secondary
 foundation by repeating step 1, above, and replacing references to primary with secondary.
 
-### <a id='create-service-key'></a>Create Service Keys for <%= vars.single_leader_plan %> Service Instances
+### <a id='create-service-key'></a>Configure Multi-Foundation Replication
 
-After you create the leader and follower `<%= vars.single_leader_plan %>` service instances, you must create service keys.
+After you create the leader and follower `<%= vars.single_leader_plan %>` service instances, you must establish a connection between them to enable 
+replication. You do this by creating service keys with the host info of the follower instance and the credentials of the leader instance. 
 You only use these service keys for establishing replication between `<%= vars.single_leader_plan %>` service instances.
 
 The following steps assume that you have created the leader `<%= vars.single_leader_plan %>`
 service instance in the primary foundation and the follower `<%= vars.single_leader_plan %>`
 service instance in the secondary foundation. You created these service instances in
-[Create a Leader-Follower Service Instance](#create-multi-dc), above.
+[Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
 
 Create the service keys for your `<%= vars.single_leader_plan %>` service instances by doing the following:
 
@@ -131,7 +135,7 @@ Create the service keys for your `<%= vars.single_leader_plan %>` service instan
     ```
     Where:
     + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
-    step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    step 2 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
     + `SERVICE-KEY` is a name you choose for the service key.
     <br><br>
     For example:
@@ -147,7 +151,7 @@ Create the service keys for your `<%= vars.single_leader_plan %>` service instan
     ```
     Where:
     + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
-    step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    step 2 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
     + `SERVICE-KEY` is the name of the service key you created in step 1, above.
 
     For example:
@@ -181,7 +185,7 @@ following command:
     ```
     Where:
     + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
-    step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    step 1 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
     + `REPLICATION-CREDS` is the output you recorded in step 3, above.
 
     For example:
@@ -199,7 +203,7 @@ following command:
     ```
     Where:
     + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
-    step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    step 1 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
     + `SERVICE-KEY-NAME` is a name you choose for the service key.
     <br><br>
     For example:
@@ -215,7 +219,7 @@ following command:
     ```
     Where:
     + `PRIMARY-INSTANCE` is the name of the primary service instance you created in step 1
-    of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
     + `SERVICE-KEY-NAME` is the name of the primary service key you created in step 6, above.
 
     For example:
@@ -252,7 +256,7 @@ following command:
     cf update-service SECONDARY-INSTANCE -c REPLICATION-CREDS
     ```
     Where:
-    + `SECONDARY-INSTANCE` is name of the secondary service instance you created in step 2 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+    + `SECONDARY-INSTANCE` is name of the secondary service instance you created in step 2 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
     + `REPLICATION-CREDS` is the output you recorded in step 8, above.
 
     For example:
@@ -270,45 +274,55 @@ following command:
 ### <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
 
 For an app to use a multi-foundation leader-follower service instance, you must bind the app to 
-your primary and secondary service instances. You must do this after every time you run `cf push`.
+your primary and secondary service instances. For information about apps in multiple foundations, see 
+[About Multi-Foundation Replication](./about-multi-found.html).
 
 To bind an app to a leader-follower service instance, do the following:
 
 1. Bind your app to your primary service instance by doing the following:
     1. Log in to the PCF deployment for your primary foundation by running the following command:
 
-      ```
-      cf login PRIMARY-API-URL
-      ```
-      Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
-      <br><br>
-      For example:
-      <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
-    
+        ```
+        cf login PRIMARY-API-URL
+        ```
+        Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
+        <br><br>
+        For example:
+        <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
+      
     1. Push your app into the same space as the leader-follower service instance by running the following
     command:
-    
-      ```
-      cf push
-      ```
-    
+      
+        ```
+        cf push
+        ```
+      
     1. Bind your app to your primary service instance by running the following command:
 
-      ```
-      cf bind-service APP PRIMARY-SERVICE-INSTANCE
-      ```
-      Where: 
-      - `APP` is the app you want to use the leader-follower service instance.<br>
-      - `PRIMARY-INSTANCE` is the name of the primary service instance you created in
-      step 1 of [Create a Leader-Follower Service Instance](#create-multi-dc), above.
+        ```
+        cf bind-service APP PRIMARY-SERVICE-INSTANCE
+        ```
+        Where: 
+        - `APP` is the app you want to use the leader-follower service instance.<br>
+        - `PRIMARY-INSTANCE` is the name of the primary service instance you created in
+        step 1 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
 
-      For example:
-      <pre class="terminal">
-      $ cf bind-service my-app primary-node<br>
-      Binding service primary-node to my-app in org my-org / space my-space as user<span>@</span>example.com...
-      OK
-      TIP: Use 'cf push' to ensure your env variable changes take effect
-      </pre>
+        For example:
+        <pre class="terminal">
+        $ cf bind-service my-app primary-node<br>
+        Binding service primary-node to my-app in org my-org / space my-space as user<span>@</span>example.com...
+        OK
+        TIP: Use 'cf push' to ensure your env variable changes take effect
+        </pre>
+        
+    1. Restart your app by running the following command:
+    
+        ```
+        cf restart APP
+        ```
+        Where `APP` is the app you bound to the leader-follower service instance in step 2, above.
     
 1. Bind your app to your secondary service instance by repeating step 1, above, 
 and replacing references to primary with secondary.
+
+<p class="note"><strong>Note:</strong> After you bind your apps to your service instances, you must modify your apps to use the MySQL for PCF service. For instructions on how to use MySQL for PCF in your app, see <a href="./use.html#call"> Use the MySQL Service in Your App</a>.</p>
