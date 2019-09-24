@@ -5,7 +5,7 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<%= partial "./galera_beta" %>
+<%= partial "../../p-mysql/partials/mysql/galera_beta" %>
 
 This topic describes how highly available (HA) clusters work in MySQL for Pivotal
 Cloud Foundry (PCF) and contains information to help you decide whether to use
@@ -38,8 +38,10 @@ information about `mysql-diag`, see [Running mysql-diag](./mysql-diag.html).
 
 The following diagram shows an HA cluster in three availability zones (AZs):
 
-<!-- Edit corresponding ha-clusters.html file in draw.io to update diagram -->
+<!-- Edit in Google Slides: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing-->
 ![Highly Available Topology](ha-clusters.png)
+
+<a href="./images/ha-clusters.png" target="_blank">View a larger version of this diagram</a>
 
 For more information about other availability options supported by MySQL for PCF,
 see [Availability Options](availability-options.html).
@@ -173,4 +175,4 @@ For more information, see [wsrep\_max\_ws\_rows](https://www.percona.com/doc/per
 
 ## <a id="proxy"></a>MySQL Proxy
 
-<%= partial '../../p-mysql/odb/mysql-proxy' %>
+<%= partial '../../p-mysql/partials/mysql/mysql-proxy' %>

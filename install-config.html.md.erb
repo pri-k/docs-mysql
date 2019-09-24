@@ -29,25 +29,23 @@ Before you download and install the MySQL for PCF tile, complete the following p
 + [Enable the BOSH Resurrector](#resurrector)
 + [(Optional) Preparing for TLS](prepare-tls.html):
 Only required if you want to enable TLS.
-+ [(Optional) Preparing for Multi-Foundation Replication](): Only required if you
++ [(Optional) Preparing for Multi-Foundation Replication](./prepare-multi-found.html): Only required if you 
 want to replicate data across multiple foundations.
 
 ### <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
 To let apps running on Cloud Foundry communicate with the MySQL service network,
 you must create an Application Security Group (ASG).
-
 The ASG allows smoke tests to run when you first install the MySQL for PCF service
 and allows apps to access the service after it is installed.
 
-To create an ASG for MySQL for PCF, do the following:<br>
+To create an ASG for MySQL for PCF, do the following:
 
 1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
 
 1. Click **Create Networks**.
 
 1. Find the network that has **Service Network** checked, and find the **CIDR** that you can use in your ASGs.
-    </br>
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
 
 1. Using the CIDR that you found in the above step, create a JSON file `mysql-asg.json` with the configuration below:
@@ -80,7 +78,7 @@ see [Create ASGs](http://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individ
 
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
-The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html)
+The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector)
 increases the availability of MySQL for PCF by restarting and resuming MySQL service in the following ways:
 
 - Reacts to hardware failure and network disruptions by restarting VMs on active, stable hosts
@@ -98,8 +96,8 @@ do the following:
 
 4. Click **Save**.
 
-For general information about the BOSH Resurrector,
-see [Using BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#enabling)
+For more information,
+see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector).
 
 ## <a id="install"></a> Download and Install the Tile
 
@@ -151,13 +149,19 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
 
 ###<a id="active"></a> Configure Service Plans
 
-<%= partial "./galera_beta" %>
-<%= partial "./multi_found_beta" %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial "../../p-mysql/partials/mysql/galera_beta" %>
+
+<%= partial '../../p-mysql/partials/mysql/multi_found_beta' %>
 
 MySQL for PCF enables you to configure as many as nine service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
 By default, plans 1–3 are active and plans 4–9 are inactive. The procedures below describe how to change these defaults.
+
+<p class="note warning"><strong>Warning:</strong> You must not set <strong>Plan 1</strong> to <strong>Inactive</strong>. If you deactivate <strong>Plan 1</strong>, your installation
+fails when you apply changes.</p>
 
 <p class="note warning"><strong>Warning:</strong> You must configure one of your service plans as
 a single node plan. This is because you can only restore to a single node plan. You cannot restore
@@ -165,13 +169,16 @@ directly to a leader-follower plan. Ensure that the persistent disk in the singl
 least as large as the persistent disk of your largest leader-follower plan. For more information on restoring services instances,
 see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>. </p>
 
-<%# ADD INFO ABOUT HOW TO CONFIGURE THE NEW PLAN %>
-
 Perform the following steps for each plan that you want to use in your PCF deployment:
 
 1. Click the section for the plan. For example, **Plan 1**.
 
-1. Select the plan for your desired topology. Click the tabs below to show an example of each plan:
+1. Select the plan for your desired topology.
+
+    <%= image_tag("plan-types-2.7.png", :alt => "image shows four plan types and inactive.", :width => "300") %>
+
+
+    The tabs below expand to show an example screenshot of each plan:
 
     <style>
     .tab {
@@ -184,7 +191,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
     .tab button {
         background-color: inherit;
         float: left;
-        border: none;
+        border: inherit;
         outline: none;
         cursor: pointer;
         padding: ;
@@ -237,13 +244,14 @@ Perform the following steps for each plan that you want to use in your PCF deplo
 
     <div class="tab">
       <!- Tab headers and links ->
-      <button class="tablinks" onclick="openDocs(event, 'tab1')">Single Node</button>
+      <button class="tablinks active" onclick="openDocs(event, 'tab1')">Single Node</button>
       <button class="tablinks" onclick="openDocs(event, 'tab2')">Leader-Follower</button>
-      <button class="tablinks" onclick="openDocs(event, 'tab3')">Galera [BETA]</button>
+      <button class="tablinks" onclick="openDocs(event, 'tab3')">HA Cluster [BETA]</button>
+      <button class="tablinks" onclick="openDocs(event, 'tab4')"> <%= vars.single_leader_plan %> [BETA]</button>
     </div>
 
 
-    <div id="tab1" class="tabcontent">
+    <div id="tab1" class="tabcontent" style="display:block">
       <img src="./images/single-node-plan.png">
     </div>
     <div id="tab2" class="tabcontent">
@@ -252,9 +260,9 @@ Perform the following steps for each plan that you want to use in your PCF deplo
     <div id="tab3" class="tabcontent">
       <img src="./images/ha-plan.png">
     </div>
-
-
-
+    <div id="tab4" class="tabcontent">
+      <img src="./images/multi-found-plan.png">
+    </div>
 
 
 1. Configure the fields as follows:
@@ -287,15 +295,14 @@ Perform the following steps for each plan that you want to use in your PCF deplo
         <td>Only for highly available cluster plans. Select a VM type for the MySQL jumpbox node.
             This VM is also called `mysql-monitor`. </td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
-        <td>Select a disk size. This disk stores the MySQL data.
-          <ul><li>Single node or leader-follower plans: Select a disk size three times larger than the maximum size of the data developers will store in it.</li>
-            <li>Highly available cluster plans: Select a disk size that is the same size you intend to provide to developers.</li></ul>
-        <p class="note"><strong>Note</strong>: For backups to work properly, follow these
-          sizing recommendations.
-                For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</p>
+        <td>Select a disk size. This disk stores the MySQL data.<br>
+            For sizing recommendations,
+            see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
     </td></tr>
     <tr><td><strong>Jumpbox Persistent Disk</strong></td>
-        <td>Only for highly available cluster plans. Select a disk size. This disk stores backups. This must be twice the size of the MySQL persistent disk.</td></tr>
+        <td>Only for highly available cluster plans. <br> Select a disk size.
+          This disk stores backups. <br> For sizing recommendations,
+          see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
         <td> BOSH deploys your service instances to these availability zones (AZ). If more than one AZ is selected, BOSH will randomize which AZ to place each VM.
     <ul><li>Single node plans: Select one AZ for service instances of this plan to be deployed.</li>
@@ -308,7 +315,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
   </table>
 1. Click **Save**.
 
-<p class="note warning"><strong>Warning:</strong>: If you expect your developers
+<p class="note warning"><strong>Warning:</strong> If you expect your developers
   to upgrade from one plan to another, do not place the plans in separate AZs.
   For example, if you create Plan 1 in AZ1 and Plan 2 in AZ2, developers receive
   an error and cannot continue if they try to upgrade from Plan 1 to Plan 2. This
@@ -338,7 +345,7 @@ and to set the total number of service instances allowed across all plans.
 
 1. Click **Settings**.
 
-    ![global-settings](global-settings.png)
+    <%= image_tag("global-settings.png", :alt => "global-settings.", :width => "300") %>
 
 1. Configure the fields as follows:
   <table>
@@ -366,7 +373,7 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
 
 1. Click **Mysql Configuration**
 
-    ![mysql-config](mysql-config.png)
+    <%= image_tag("mysql-config.png", :alt => "mysql-config.", :width => "300") %>
 
 1. Configure the fields as follows:
 
@@ -397,11 +404,12 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
 
 Follow the steps below to configure automated backups:
 
-<p class="note"><strong>Note:</strong> As of v2.2.0, the MySQL for PCF tile no longer includes the option to disable automated backups. You must configure automated backups.</p>
+<p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.</p>
 
 1. Click **Backups**.
 
-    ![backups](backups.png)
+    <%= image_tag("backups.png", :alt => "The radio buttons for backup configuration are
+        Ceph or Amazon S3, SCP, GCS, and Azure.", :width => "200") %>
 
 1. Consult [About Automated Backups](backup-and-restore.html#overview) in <em>Backing Up and Restoring</em> to learn about how automated backups work.
 
@@ -439,17 +447,17 @@ To enable TLS for the MySQL service, perform the following steps:
 1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
 1. Click **Security**.
 1. Under **TLS Options**, select one of the following:
-1. **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
-1. **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
+  *  **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
+  * **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
 <p class="note warning"><strong>Warning:</strong> Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
 1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html).
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
-If you want to store your service instance credentials
-in runtime [CredHub](https://docs.pivotal.io/pivotalcf/2-0/credhub/) instead of the Cloud Controller Database (CCDB),
-perform the following steps:
+You can store your service instance credentials in runtime CredHub instead of the Cloud Controller Database (CCDB).
+For more information about runtime CredHub, see [CredHub](https://docs.pivotal.io/pivotalcf/credhub/).
+To do so, do the following steps:
 
 1. Ensure that you have configured the PAS tile to support securing service instance credentials in runtime CredHub.
    See [Step 1: Configure the PAS Tile](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html#pas-config).
@@ -488,7 +496,8 @@ Follow the steps below to enable different types of monitoring and logging avail
 
 1. Click **Monitoring**.
 
-    ![monitoring](monitoring.png)
+    <%= image_tag("monitoring.png", :alt => "The metrics polling interval defaults to 30
+        and the min is 10.", :width => "300") %>
 
 1. Configure the fields as follows:
   <table>
@@ -504,6 +513,9 @@ Follow the steps below to enable different types of monitoring and logging avail
     <tr><td><strong>Enable Server Activity Logging</strong></td>
         <td>Select this checkbox to record who connects to the servers and what queries are processed using the Percona Audit Log Plugin.
             For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a>.
+            <p class="note"><strong>Note:</strong> Audit logs are not forwarded to the syslog server.
+              This is because audit logs can contain personally identifying information (PII) and secrets.
+              The logs are stored in <code>/var/vcap/store/mysql\_audit\_logs/mysql\_server\_audit.log</code>.</p>
            </td></tr>
     <tr><td><strong>Enable Read Only Admin User</strong></td>
         <td>Select this checkbox to create a read-only admin user, `roadmin`, on each service instance.
@@ -523,7 +535,7 @@ Follow the steps below to enable system logging for the MySQL broker and service
 
 1. Click **Yes**.
 
-    ![syslog](syslog.png)
+    <%= image_tag("syslog.png", :alt => "Fields for configuring syslog.", :width => "550") %>
 
 1. Configure the fields as follows:
   <table>
@@ -555,7 +567,7 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
 
 1. Click the **Service Instance Upgrades** tab.
 
-    ![Service Instance Upgrades section](service-instance-upgrades.png)
+    <%= image_tag("service-instance-upgrades.png", :alt => "Service instance upgrades section.", :width => "300") %>
 
 1. Configure the fields as follows:
   <table>
@@ -589,7 +601,7 @@ MySQL for PCF can run errands to manage the broker and service instances at the 
 - **Post-Deploy Errands:** Run when you click **Apply Changes**.
 - **Pre-Delete Errands:** Run before you delete the MySQL for PCF tile.
 
-![Errands](errands.png)
+  <%= image_tag("errands.png", :alt => "Errand list for MySQL for PCF.", :width => "250") %>
 
 By default, MySQL for PCF runs the following errands:
 

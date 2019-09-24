@@ -27,7 +27,7 @@ MySQL for PCF supports the following VM topologies:
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
 
-    <%= partial "./galera_beta" %>
+    <%= partial "../../p-mysql/partials/mysql/galera_beta" %>
 
 ## <a id='snapshot'></a> Product Snapshot
 
@@ -38,11 +38,11 @@ The following table provides version and version-support information about MySQL
 <th>Details</th>
 <tr>
   <td>Version</td>
-  <td>2.6.0</td>
+  <td>2.8.0</td>
 </tr>
 <tr>
   <td>Release date</td>
-  <td>Month XX, 2019</td>
+  <td>XX X, 2019</td>
 </tr>
 <tr>
   <td>Software component version</td>
@@ -50,11 +50,11 @@ The following table provides version and version-support information about MySQL
 </tr>
 <tr>
   <td>Compatible Ops Manager version(s)</td>
-  <td>2.3, 2.4, and 2.5</td>
+  <td>XXX</td>
 </tr>
 <tr>
   <td>Compatible Pivotal Application Service (PAS) version(s)</td>
-  <td>2.3, 2.4, and 2.5</td>
+  <td>XXX</td>
 </tr>
 <tr>
   <td>IaaS support</td>
@@ -75,7 +75,7 @@ instances are provisioned and allows for efficient and seamless resource use for
 Additionally, both the operator and app developer can configure essential MySQL settings.
 
 The MySQL for PCF on-demand service leverages the on-demand service broker. For general information about the on-demand service
-broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/0-15/)
+broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/).
 
 ### <a id="service"></a>On-Demand Service Plan
 
@@ -95,7 +95,6 @@ Review the following table to determine if MySQL for PCF has the features needed
 <tr><td>On-Demand, Dedicated-VM plans</td><td>MySQL for PCF provides On-Demand VM plans.</td><td><a href="./about.html">Architecture</a></td></tr>
 <tr><td>Customizable plans</td><td>For the On-Demand Plan, the operator can customize the VM, disk size, and availability zone.</td><td><a href="./install-config.html#active">Configuring</a></td></tr>
 <tr><td>Custom schemas</td><td>MySQL for PCF supports custom schemas. Using custom schemas allows for apps that share a MySQL service instance to isolate app data by schema.</td><td><a href="./use.html#schema">Create and Use Custom Schemas</a></td></tr>
-<tr><td>Share Service Instances</td><td>MySQL for PCF supports sharing service instances between different orgs and spaces.</td><td><a href="https://docs.pivotal.io/pivotalcf/devguide/services/sharing-instances.html">Sharing Service Instances</a></td></tr>
 
 <tr><th colspan=2>Installation and Upgrades</th><th>More Information</th></tr>
 <tr><td>Product upgrades</td><td>MySQL for PCF can be upgraded within the v2.x tile series.</td>

@@ -1,22 +1,25 @@
 ---
-title: Monitoring Node Health (HA Cluster)
+title: Monitoring Node Health
 owner: MySQL
 ---
 
-<%= partial '../../p-mysql/odb/mysql-tile-proxy-toc' %>
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/mysql/mysql-tile-proxy-toc' %>
 
 <strong><%= modified_date %></strong>
 
-<%= partial "./galera_beta" %>
+<%= partial "../../p-mysql/partials/mysql/galera_beta" %>
 
-This topic describes how to obtain the health status for each node 
+This topic describes how to obtain the health status for each node
 in a MySQL database cluster node in a highly available (HA) cluster plan.
 
 If you cannot write or connect to your app, you should
-check the health status of your nodes. You can observe the health status of nodes through a proxy 
-using the Switchboard dashboard or API endpoint. You can also view the number of client connections 
-routed through a proxy to each node. 
+check the health status of your nodes. You can observe the health status of nodes through a proxy
+using the Switchboard dashboard or API endpoint. You can also view the number of client connections
+routed through a proxy to each node.
 For more information about proxies, see [MySQL Proxy](./about-ha.html#proxy).
 
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial '../../p-mysql/odb/mysql-monitor-health' %>
+<%= partial '../../p-mysql/partials/mysql/mysql-monitor-health' %>

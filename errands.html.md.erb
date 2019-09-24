@@ -9,7 +9,7 @@ This topic describes how to use the BOSH CLI to run service broker
 errands. Errands can manage service brokers and run mass operations on service
 instances created by brokers.
 
-## <a id="errand"></a> Run the Errand
+## <a id="errand"></a> Run an Errand
 
 Locate the BOSH deployment name for your MySQL service broker by entering the following
 command:
@@ -35,53 +35,13 @@ For example:
 
 ### <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
-The `find-deprecated-bindings` errand searches for and outputs a list of apps and service keys that: 
-
-+ Use IP addresses instead of DNS
-+ Do not use TLS
+The `find-deprecated-bindings` errand lists apps and service keys that are deprecated in PCF v<%= vars.current_minor_version %> because they do not require TLS.
+Pivotal recommends that operators configure bindings to require TLS,
+in the MySQL tile **Security** pane > **TLS Options**.
 
 The errand exits whether or not a deprecated binding is found.
-You run this errand before upgrading to MySQL for PCF v2.5.
-You cannot have bindings that use IP address in v2.5.
-As an operator, you can configure bindings to require TLS.
 
-Consult the table below to see whether or not an app or service key appears
-in the output of the `find-deprecated-bindings` errand: 
-<table class="nice">
-  <tr>
-    <th colspan ="2">Does the app or service key have...</th>
-    <th rowspan="2" width=50%><br>The app or service key appears in table?<br><br></th>
-  </tr>
-  <tr>
-    <th width=25%>BOSH DNS</th>
-    <th width=25%>TLS</th>
-  </tr>
-
-  <tr>
-      <td>True</td>
-      <td>True</td>
-      <td>No</td>
-  </tr>
-  <tr>
-      <td>True</td>
-      <td>False</td>
-      <td>Yes</td>
-  </tr>
-  <tr>
-  <td>False</td>
-  <td>True</td>
-  <td>Yes</td>
-  </tr>
-  <tr>
-    <td>False</td>
-    <td>False</td>
-    <td>Yes</td>
-  </tr>
-
-</table>
-
-
-See below an example of the errand output:
+See below example of the errand output:
 
 <pre class="terminal">
 $ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings
@@ -106,9 +66,7 @@ Stdout     +---------------------------+--------------------------------------+-
            |          SERVICE          |             SERVICE GUI             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
            +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
            | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no tls                      |
-           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no dns: hostname="10.0.8.6" |
-           | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no dns: hostname="10.0.8.5" |
-           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept-tls      | AppBinding        | no dns: hostname="10.0.8.6" |
+           | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no tls
            +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
 </pre>
 
@@ -120,18 +78,18 @@ and configured correctly and can perform the basic functions of creating and
 removing service instances. If this errand runs successfully, MySQL for PCF is
 installed successfully.
 
-<!-- Partials are in https://github.com/pivotal-cf/docs-services-partials -->
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 ### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
-<%= partial '../../p-mysql/odb/tshoot-tech-upgrade-all' %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
 For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instances).
 
 
 <!-- a id="orphan-deployments"></a -->
 
-<!-- %= partial '../../p-mysql/odb/tshoot-tech-detect-orphans' % -->
+<!-- %= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-detect-orphans' % -->
 
 
 ## <a id="deprecated-errands"></a> Deprecated Errands
@@ -141,7 +99,7 @@ For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instanc
 <!-- Why should you not use it? -->
 **Do not use.**
 
-<!-- %= partial '../../p-mysql/odb/tshoot-tech-register-broker' % -->
+<!-- %= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' % -->
 
 ### <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
 
@@ -152,4 +110,4 @@ For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instanc
 
 <!-- a id="delete-all"></a><h4>Delete All Service Instances</h4 -->
 
-<!-- %= partial '../../p-mysql/odb/tshoot-tech-delete-all' % -->
+<!-- %= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-delete-all' % -->

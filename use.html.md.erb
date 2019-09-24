@@ -118,15 +118,9 @@ For example:
 On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use.
 
-To create an instance of the MySQL for PCF service, do one of the following:
-
-+ If you are creating a single node, leader-follower, or highly available cluster service instance within one foundation,
-do the procedure in [Create a MySQL for PCF Service Instance](#create-mysql), below.
-+ If you are deploying a leader-follower service instance across multiple foundations,
+<p class="note"><strong>Note:</strong> If you are deploying a leader-follower service instance across multiple foundations,
   called a decoupled leader-follower service,
-do the procedure in [Create a Multi-Foundation Leader-Follower Service Instance](./use-multi-found.html#create-multi-dc).
-
-### <a id='create-mysql'></a>Create a MySQL for PCF Service Instance
+do the procedure in <a href="./use-multi-found.html#set-up-multi-dc">Set Up a Leader-Follower across Multiple Foundations</a>.</p>
 
 To create an instance of the MySQL for PCF service, do the following:
 
@@ -221,49 +215,10 @@ To access the MySQL service from your app:
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
-  
-###<a id="vcap"></a>MySQL Environment Variables
-
-Apps running in Pivotal Cloud Foundry gain access to the bound service instances through an environment variable credentials hash called `VCAP_SERVICES`. This environment variable includes the credentials that apps
-use to access service instances.
-
-For example:
-
-<pre><code>
-{
-  "p.mysql": [{
-    "label": "p.mysql",
-    "name": "my-instance",
-    "plan": "db-medium",
-    "provider": null,
-    "syslog_drain_url": null,
-    "tags": [
-     "mysql"
-    ],
-    "credentials": {
-      "hostname": "10.0.0.20",
-      "jdbcUrl": "jdbc:mysql://10.0.0.20:3306/service_instance_db?user=fefcbe8360854a18a7994b870e7b0bf5\u0026password=z9z6eskdbs1rhtxt",
-      "name": "service_instance_db",
-      "password": "z9z6eskdbs1rhtxt",
-      "port": 3306,
-      "uri": "mysql://fefcbe8360854a18a7994b870e7b0bf5:z9z6eskdbs1rhtxt@10.0.0.20:3306/service_instance_db?reconnect=true",
-      "username": "fefcbe8360854a18a7994b870e7b0bf5"
-    },
-    "volume_mounts": []
-   }
-}
-</code></pre>
-
-You can search for your service using the `name` given when the service instance was created. You can also search using the `tags` or `label` properties. 
-The `credentials` property can be used to provide access to the MySQL protocol.
-
-`VCAP_SERVICES` is only modified when the app is bound to a service instance. If you modify your service instance,
-you must `cf unbind-service`, `cf bind-service` and `cf restage`
-your app to apply the changes to `VCAP_SERVICES`.
 
 ###<a id="schema"></a>Create and Use Custom Schemas
 
-  MySQL for PCF v2.3 and later supports multiple custom schemas.
+  MySQL for PCF supports multiple custom schemas.
   You can use custom schemas with apps that share a MySQL service instance to isolate app data by schema.
   By default, service bindings use the default schema `service_instance_db`.
 
@@ -335,7 +290,6 @@ You can manage service instances in the following ways:
 + Move your data to a different plan. See [Update a Service Instance to a Larger Plan](#update), below.
 + Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
 + Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
-+ Use the Log Cache CLI plugin to access MySQL metrics. See [Access MySQL Metrics for On-Demand Service Instances](#logging), below.
 
 ### <a id="update"></a>Update a Service Instance to a Larger Plan
 
@@ -413,15 +367,3 @@ that the instance no longer exists:
     ```
     watch cf service SERVICE-INSTANCE
     ```
-
-### <a id="logging"></a> Access MySQL Metrics for On-Demand Service Instances
-
-  <%= partial '../../p-mysql/odb/log-cache-cli-plugin' %>
-
-
-## <a id="example-app"></a>Example App
-
-To help app developers get started with MySQL for PCF, Pivotal provides an example app, which can be downloaded [here][example-app].
-Instructions are in the README.
-
-[example-app]:mysql-example-app.tgz
