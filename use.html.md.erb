@@ -195,7 +195,8 @@ To access the MySQL service from your app:
 
 1. Verify that your app code (or the MySQL client library that the app uses) retries in the case of DNS timeouts.
 
-1. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap) below.
+1. Locate the connection strings listed in the	
+`VCAP_SERVICES` > `credentials` object for your app. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap) below.
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
