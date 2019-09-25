@@ -1,29 +1,29 @@
 ---
-title: MySQL for Pivotal Cloud Foundry
+title: MySQL for Pivotal Platform
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
 
-This guide describes setting up and using MySQL for Pivotal Cloud Foundry (PCF) as an on-demand service.
+This guide describes setting up and using <%= vars.product_name %> as an on-demand service.
 
-## <a id='AboutTile'></a>About MySQL for PCF
+## <a id='AboutTile'></a>About <%= vars.product_name %>
 
-MySQL for PCF enables PCF app developers to provision and use a MySQL database with a
+<%= vars.product_name %> enables <%= vars.platform_name %> app developers to provision and use a MySQL database with a
 single command.
 
-The MySQL for PCF product delivers dedicated instances on demand, "Database as a Service", to PCF users.
+The <%= vars.product_name %> product delivers dedicated instances on demand, "Database as a Service", to <%= vars.platform_name %> users.
 When installed, the tile deploys and maintains a single Service Broker that is
-responsible for PCF integration.
+responsible for <%= vars.platform_name %> integration.
 The service is configured with sane defaults, following the principle of least
 surprise for a general-use relational database service.
 
-MySQL for PCF supports the following VM topologies:
+<%= vars.product_name %> supports the following VM topologies:
 
   + Single node.
   + Leader-follower. For more information, see [About Leader-Follower](./about-leader-follower.html).
-  + Highly available (HA) cluster. For highly available clusters, MySQL for PCF uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
+  + Highly available (HA) cluster. For highly available clusters, <%= vars.product_name %> uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
 
@@ -31,7 +31,7 @@ MySQL for PCF supports the following VM topologies:
 
 ## <a id='snapshot'></a> Product Snapshot
 
-The following table provides version and version-support information about MySQL for PCF.
+The following table provides version and version-support information about <%= vars.product_name %>.
 
 <table class="nice">
 <th>Element</th>
@@ -49,11 +49,11 @@ The following table provides version and version-support information about MySQL
   <td>Percona Server 5.7.20-21</td>
 </tr>
 <tr>
-  <td>Compatible Ops Manager version(s)</td>
+  <td>Compatible Pivotal Ops Manager version(s)</td>
   <td>2.7, 2.6, 2.5, and 2.4</td>
 </tr>
 <tr>
-  <td>Compatible Pivotal Application Service (PAS) version(s)</td>
+  <td>Compatible <%= vars.app_runtime_full %> version(s)</td>
   <td>2.7, 2.6, 2.5, and 2.4</td>
 </tr>
 <tr>
@@ -68,18 +68,18 @@ The following table provides version and version-support information about MySQL
 
 ##<a id="intro"></a> On-Demand Service
 
-MySQL for PCF uses on-demand service, which provides dedicated instances of
+<%= vars.product_name %> uses on-demand service, which provides dedicated instances of
 MySQL that app developers can provision on-demand from the command line or Apps Manager.
-The MySQL for PCF on-demand service gives flexibility in how and when
+The <%= vars.product_name %> on-demand service gives flexibility in how and when
 instances are provisioned and allows for efficient and seamless resource use for both the operator and app developer.
 Additionally, both the operator and app developer can configure essential MySQL settings.
 
-The MySQL for PCF on-demand service leverages the on-demand service broker. For general information about the on-demand service
-broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/0-15/)
+The <%= vars.product_name %> on-demand service leverages the on-demand service broker. For general information about the on-demand service
+broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/).
 
 ### <a id="service"></a>On-Demand Service Plan
 
-MySQL for PCF offers on-demand plans as the `p.mysql` service in the MySQL for PCF tile.
+<%= vars.product_name %> offers on-demand plans as the `p.mysql` service in the <%= vars.product_name %> tile.
 The plans can be configured in any way that you see fit.
 
 Operators can update certain plan settings after the plans have been created.
@@ -88,51 +88,52 @@ Operators should not decrease the disk size because this can cause data loss in 
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
-Review the following table to determine if MySQL for PCF has the features needed to support your enterprise.
+Review the following table to determine if <%= vars.product_name %> has the features needed to support your enterprise.
 
 <table border="1" class="nice">
 <tr><th colspan=2>Plans and Instances</th><th>More Information</th></tr>
-<tr><td>On-Demand, Dedicated-VM plans</td><td>MySQL for PCF provides On-Demand VM plans.</td><td><a href="./about.html">Architecture</a></td></tr>
+<tr><td>On-Demand, Dedicated-VM plans</td><td><%= vars.product_name %> provides On-Demand VM plans.</td><td><a href="./about.html">Architecture</a></td></tr>
 <tr><td>Customizable plans</td><td>For the On-Demand Plan, the operator can customize the VM, disk size, and availability zone.</td><td><a href="./install-config.html#active">Configuring</a></td></tr>
-<tr><td>Custom schemas</td><td>MySQL for PCF supports custom schemas. Using custom schemas allows for apps that share a MySQL service instance to isolate app data by schema.</td><td><a href="./use.html#schema">Create and Use Custom Schemas</a></td></tr>
+<tr><td>Custom schemas</td><td><%= vars.product_name %> supports custom schemas. Using custom schemas allows for apps that share a MySQL service instance to isolate app data by schema.</td><td><a href="./use.html#schema">Create and Use Custom Schemas</a></td></tr>
 
 <tr><th colspan=2>Installation and Upgrades</th><th>More Information</th></tr>
-<tr><td>Product upgrades</td><td>MySQL for PCF can be upgraded within the v2.x tile series.</td>
-   <td><a href="./upgrade.html">Upgrading MySQL for PCF</a></td></tr>
-<tr><td>Deployment Smoke Tests</td><td>MySQL for PCF installation and upgrade runs
+<tr><td>Product upgrades</td><td><%= vars.product_name %> can be upgraded within the v2.x tile series.</td>
+   <td><a href="./upgrade.html">Upgrading <%= vars.product_name %></a></td></tr>
+<tr><td>Deployment Smoke Tests</td><td><%= vars.product_name %> installation and upgrade runs
       a post deployment BOSH errand that validates basic MySQL operations.</td>
   <td></td></tr>
 
 <tr><th colspan=2>Maintenance and Backups</th><th>More Information</th></tr>
-<tr><td>Operational Monitoring and Logging</td><td>MySQL for PCF provides metrics for monitoring On-Demand plan usage and quotas, as well as MySQL component metrics. Additionally, MySQL for PCF provides syslog redirection to external log ingestors.</td>
-  <td><a href="./monitor.html">Monitoring MySQL for PCF</a></td></tr>
-<tr><td>Backup and Restore</td><td>MySQL for PCF includes automatic backups on a configurable schedule to a variety of destinations, as well as a simple restore process.
-</td><td><a href="./backup-and-restore.html">Manual Backup and Restore of MySQL for PCF</a></td></tr>
+<tr><td>Operational Monitoring and Logging</td><td><%= vars.product_name %> provides metrics for monitoring On-Demand plan usage and quotas, as well as MySQL component metrics. Additionally, <%= vars.product_name %> provides syslog redirection to external log ingestors.</td>
+  <td><a href="./monitor.html">Monitoring <%= vars.product_name %></a></td></tr>
+<tr><td>Backup and Restore</td><td><%= vars.product_name %> includes automatic backups on a configurable schedule to a variety of destinations, as well as a simple restore process.
+</td><td><a href="./backup-and-restore.html">Manual Backup and Restore of <%= vars.product_name %></a></td></tr>
 
 <tr><th colspan=2>Scale and Availability</th><th>More Information</th></tr>
-<tr><td>On-Demand Plan</td><td>MySQL for PCF provides up to 200 on-demand instances across all plans</td><td></td></tr>
+<tr><td>On-Demand Plan</td><td><%= vars.product_name %> provides up to 200 on-demand instances across all plans</td><td></td></tr>
 <tr><td>Ability to Scale Up / Down</td><td>Operators can scale VMs up, but not down</td><td><a href="./install-config.html">Configuring</a></td></tr>
-<tr><td>Rolling Deployments</td><td>MySQL for PCF supports rolling deployments when using HA clusters;
+<tr><td>Rolling Deployments</td><td><%= vars.product_name %> supports rolling deployments when using HA clusters;
       the service is unavailable during upgrades.</td>
   <td><a href="./upgrade.html">Upgrades</a></td></tr>
-<tr><td>AZ Support</td><td>MySQL for PCF can be deployed to multiple zones to increase availability during unplanned outages of a zone.</td>
-  <td><a href="#other-notes">About Multiple AZs in MySQL for PCF</a></td></tr>
+<tr><td>AZ Support</td><td><%= vars.product_name %> can be deployed to multiple zones to increase availability during unplanned outages of a zone.</td>
+  <td><a href="#other-notes">About Multiple AZs in <%= vars.product_name %></a></td></tr>
 
 <tr><th colspan=2>Encryption</th><th>More Information</th></tr>
 <tr>
   <td>Transport Layer Security (TLS)</td>
-  <td>MySQL for PCF supports TLS. Enabling TLS provisions a MySQL server with a certificate so that apps and clients can establish an encrypted connection with the data service.</td>
+  <td><%= vars.product_name %> supports TLS. Enabling TLS provisions a MySQL server with a certificate so that apps and clients can establish an encrypted connection with the data service.</td>
   <td><a href="./prepare-tls.html">Preparing for TLS</a></td>
 </tr>
+<tr>
 <td>Encrypted Communication in Transit</td>
-<td>MySQL for PCF has been tested successfully with the BOSH IPsec Add-on.</td>
+<td><%= vars.product_name %> has been tested successfully with the BOSH IPsec Add-on.</td>
   <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">Securing Data in Transit with the IPsec Add-on</a></td></tr>
-<tr><td>Encrypted Data at Rest</td><td>MySQL for PCF enables integration with commercial vendors for full-disk encryption at rest.</td><td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
+<tr><td>Encrypted Data at Rest</td><td><%= vars.product_name %> enables integration with commercial vendors for full-disk encryption at rest.</td><td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
 </table>
 
-## <a id="other-notes"></a>About Multiple AZs in MySQL for PCF
+## <a id="other-notes"></a>About Multiple AZs in <%= vars.product_name %>
 
-MySQL for PCF supports configuring multiple AZs.
+<%= vars.product_name %> supports configuring multiple AZs.
 However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
 
 * You can assign on-demand plans to any of the configured availability zones.
@@ -144,4 +145,4 @@ Choosing two AZs for the single-node plan does not increase the number of AZs as
 
 ##<a id="feedback"></a> Feedback
 
-Please provide any bugs, feature requests, or questions to [the Pivotal Cloud Foundry Feedback list](mailto:pivotal-cf–feedback@pivotal.io).
+Please provide any bugs, feature requests, or questions to [the <%= vars.platform_name %> Feedback list](mailto:pivotal-cf–feedback@pivotal.io).

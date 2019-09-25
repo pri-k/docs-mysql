@@ -35,7 +35,7 @@ For example:
 
 ### <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
-The `find-deprecated-bindings` errand lists apps and service keys that are deprecated in PCF v<%= vars.current_minor_version %> because they do not require TLS.
+The `find-deprecated-bindings` errand lists apps and service keys that are deprecated in <%= vars.platform_name %> v<%= vars.current_minor_version %> because they do not require TLS.
 Pivotal recommends that operators configure bindings to require TLS,
 in the MySQL tile **Security** pane > **TLS Options**.
 
@@ -75,7 +75,7 @@ Stdout     +---------------------------+--------------------------------------+-
 
 This errand performs a test to validate that the service broker has been installed
 and configured correctly and can perform the basic functions of creating and
-removing service instances. If this errand runs successfully, MySQL for PCF is
+removing service instances. If this errand runs successfully, <%= vars.product_name %> is
 installed successfully.
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
@@ -84,7 +84,7 @@ installed successfully.
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
-For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instances).
+For more information, see [Upgrading <%= vars.product_name %>](upgrade.html#upgrade-instances).
 
 
 <!-- a id="orphan-deployments"></a -->
@@ -106,7 +106,7 @@ For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instanc
 <!-- Why should you not use it? -->
 **Do not use.**
 
-<!-- This errand is run by Ops Manager only when deleting MySQL for PCF. Running this errand removes all service instances and their data. -->
+<!-- This errand is run by Ops Manager only when deleting <%= vars.product_name %>. Running this errand removes all service instances and their data. -->
 
 <!-- a id="delete-all"></a><h4>Delete All Service Instances</h4 -->
 
