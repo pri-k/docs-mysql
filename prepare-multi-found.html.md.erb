@@ -9,7 +9,7 @@ owner: MySQL
 
 <%= partial "../../p-mysql/partials/mysql/multi_found_beta" %>
 
-This topic provides instructions to operators about how to prepare foundations for multi-foundation 
+This topic provides instructions to operators about how to prepare foundations for multi-foundation
 replication using MySQL for Pivotal Cloud Foundry (PCF).
 
 ##<a id='overview'></a> Overview
@@ -17,43 +17,43 @@ replication using MySQL for Pivotal Cloud Foundry (PCF).
 <!-- Quick reasons why you would want to use this and what it is. Super summary of
 the About page-->
 
-For more information about multi-foundation architecture, 
+For more information about multi-foundation architecture,
 see [About Multi-Foundation Replication](./about-multi-found.html).
 
 ##<a id='prerequisites'></a> Prerequisites
 
-Before multi-foundation replication can be configure for MySQL for PCF, you must 
-have two PCF foundations. 
-Confirm that you have done the following:
+Before multi-foundation replication can be configure for MySQL for PCF, you must
+confirm you have done the following:
+
+1. Created two PCF foundations with identical release versions.
+The foundations should also have as similar as possible configurations and capacity.
 
 1. Set up the multi-foundation disaster recovery plan for your foundations, using one of the following:
-      + **Active-Passive:** Pivotal recommends this topology for most apps. 
-      If you use active-passive disaster recovery plan, you must create a primary foundation and a secondary foundation. 
-      For more information, see [Active-Passive Topology](./about-multi-found.html#active-passive). 
-      + **Active-Active:** Pivotal recommends this topology for apps with critical workloads 
-      that require high app uptime. If you use active-active typology, you must create two primary foundations. 
-      For more information, see [Active-Active Topology](./about-multi-found.html#active-active). 
-      
-1. Created two PCF foundations with identical release versions. The foundations should also have as similar as possible configurations and capacity. 
+      + **Active-Passive:** Pivotal recommends this topology for most apps.
+      If you use active-passive disaster recovery plan, you must create a primary foundation and a secondary foundation.
+      For more information, see [Active-Passive Topology](./about-multi-found.html#active-passive).
+      + **Active-Active:** Pivotal recommends this topology for apps with critical workloads
+      that require high app uptime. If you use active-active typology, you must create two primary foundations.
+      For more information, see [Active-Active Topology](./about-multi-found.html#active-active).
 
-1. Deployed both foundations on a single flat network. 
-For example, if the leader node is assigned an IP address such as 10.0.0.1, 
-then leader and the follower must connect to each other on that IP address. 
+1. Deployed both foundations on a single flat network.
+For example, if the leader node is assigned an IP address such as 10.0.0.1,
+then leader and the follower must connect to each other on that IP address.
 
-1. Configured a global DNS load balancer to point to the two PCF foundations 
-and their local load balancers. 
+1. Configured a global DNS load balancer to point to the two PCF foundations
+and their local load balancers.
 See [Configure Your GLB](https://docs.pivotal.io/pivotalcf/plan/global-dns-lb.html#configure-glb).
 
 ##<a id='enable'></a> Enable Multi-Foundation Replication
 
-After two PCF foundations are created, you can enable multi-foundation replication by 
+After two PCF foundations are created, you can enable multi-foundation replication by
 doing the following:
 
-1. Configure networking rules. 
+1. Configure networking rules.
 See [Required Networking Rules for Multi-Foundation Replication](./about.html#multi-found-ports).
 
 1. Enable TLS for both foundations. When you paste the contents of your TLS CA certificate in [Preparing for TLS](./prepare-tls.html), paste both TLS CA certificates as shown below:
-    
+
     ![On the Security pane in the MySQL tile, a TLS CA certificate for the two different foundation are in the Trusted Certificates field.](./images/multi-found-ca.png)
 
 1. Configure a <%= vars.single_leader_plan %> plan on both foundations. See
