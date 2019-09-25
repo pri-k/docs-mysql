@@ -29,7 +29,7 @@ In HA topology, the MySQL for PCF service uses the following:
 * Three MySQL servers running [Percona XtraDB](https://www.percona.com/software/mysql-database/percona-xtradb-cluster)
 as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync.
 
-* Three Switchboard proxies that are colocated on the MySQL nodes. The proxies
+* Three Switchboard proxies that are co-located on the MySQL nodes. The proxies
 gracefully handle failure of nodes which enables fast failover to other nodes
 within the cluster. For more information, see [MySQL Proxy](#proxy).
 
