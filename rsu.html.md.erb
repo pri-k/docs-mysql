@@ -9,7 +9,7 @@ This topic describes how to run a Rolling Schema Upgrade (RSU).
 RSU is a method for processing schema upgrades.
 During a RSU, nodes are desynchronized from your highly available (HA) cluster so that schema upgrades
 do not block the rest of the nodes. Operators can then manually apply data
-definition language (DDL) statements to the desynchronized nodes individually. If you want to run a RSU, contact your operator and request them to do the procedures in this topic. 
+definition language (DDL) statements to the desynchronized nodes individually. If you want to run a RSU, contact your operator and request them to do the procedures in this topic.
 
 For more information about RSU, see [wsrep\_OSU\_method](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_OSU_method)
 in the Percona XtraDB Cluster documentation.
@@ -37,7 +37,7 @@ See [Check Ephemeral Disk Size](#ephemeral-disk).
 
 ###<a id="check-eph"></a>Check Ephemeral Disk Size
 
-Running a RSU on a large table can fill up your ephemeral disk. MySQL for PCF
+Running a RSU on a large table can fill up your ephemeral disk. <%= vars.product_name %>
 cannot function properly if there is not sufficient free space on file systems.
 Before running a RSU, confirm that your ephemeral disk is large enough to run the
 upgrade.
@@ -84,7 +84,7 @@ To retrieve the IDs for your nodes, do the following:
 	```
 	cf service MY-INSTANCE --guid
 	```
-	Where `YOUR-INSTANCE` is the name of your MySQL for PCF service instance.
+	Where `YOUR-INSTANCE` is the name of your <%= vars.product_name %> service instance.
 	Record the guid returned in the output.
 
 1. To identify the nodes in your HA cluster, run the following command:
@@ -99,8 +99,8 @@ To retrieve the IDs for your nodes, do the following:
 To run a RSU to apply a new schema on each node in your deployment, do the following:
 
 1. To BOSH SSH into your node, do the procedure in
-[BOSH SSH](https://docs.pivotal.io/pivotalcf/2-3/customizing/trouble-advanced.html#bosh-ssh)
-in the Pivotal Cloud Foundry documentation.
+[BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh)
+in the <%= vars.platform_name %> documentation.
 
 1. To set enable ` global read_only` as an admin user, run the following command:
 

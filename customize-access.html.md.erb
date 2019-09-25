@@ -5,17 +5,17 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers to customize access credentials and privileges for MySQL for Pivotal Cloud Foundry (PCF) service instances.
+This topic provides instructions for developers to customize access credentials and privileges for <%= vars.product_name %> service instances.
 
 These procedures use the Cloud Foundry Command Line Interface (cf CLI).
 You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks
 using a graphical UI.
 
-For information about using MySQL for PCF, see [Using MySQL for PCF](./use.html).
+For information about using <%= vars.product_name %>, see [Using <%= vars.product_name %>](./use.html).
 
 ## <a id="read-only"></a>Create Read-only Access Credentials 
 
-MySQL for PCF lets space developers create read-only credentials to give to users who need read-only access to the database.
+<%= vars.product_name %> lets space developers create read-only credentials to give to users who need read-only access to the database.
 You can create credentials by using the cf CLI to create a new [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
 
 To create and find read-only credentials for an existing service instance, do the following:
@@ -59,7 +59,7 @@ service key.</p>
 
 ## <a id="username"></a>Create Credentials for a Custom Username
 
-If you have users that want to access the database with a specific username, MySQL for PCF lets space developers create custom
+If you have users that want to access the database with a specific username, <%= vars.product_name %> lets space developers create custom
 usernames for service keys or service bindings.
 You can create credentials by using the cf CLI to create a new [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
 

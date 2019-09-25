@@ -130,7 +130,7 @@ To trigger a failover, follow these procedures:
 Perform the following steps to retrieve the information necessary
 for stopping the leader and promoting the follower:
 
-1. Target the Cloud Controller of your PCF deployment with the Cloud Foundry Command Line Interface (cf CLI).
+1. Target the Cloud Controller of your <%= vars.platform_name %> deployment with the Cloud Foundry Command Line Interface (cf CLI).
    For example:
   <pre class="terminal">$ cf api api.pcf.example.com</pre>
 1. Log in:
@@ -148,7 +148,7 @@ for stopping the leader and promoting the follower:
   If you do not know the name of the service instance, you can list service instances in the space with `cf services`.
 1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
    and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of
-   <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Ops Manager VM.
+   <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the Pivotal Ops Manager VM.
 1. From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI.
    See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in
    <em>Advanced Troubleshooting with the BOSH CLI</em>.

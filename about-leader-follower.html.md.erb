@@ -5,7 +5,7 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how the leader-follower topology works in MySQL for Pivotal Cloud Foundry (PCF)
+This topic describes how the leader-follower topology works in <%= vars.product_name %>
 and contains information to help users decide whether to enable or use leader-follower.
 
 ## <a id='about-lf'></a> About Leader-Follower
@@ -18,7 +18,7 @@ and a follower VM in another AZ.
 
 By default, any data that is written to the leader is asynchronously replicated to
 the follower.
-MySQL for PCF also supports synchronous replication ("sync").
+<%= vars.product_name %> also supports synchronous replication ("sync").
 
 In sync replication, data does not get committed to the leader node until the
 follower acknowledges the commit and can replicate it. By default, the timeout for sync replication is set to approximately 292 million years. This means that the leader always waits for the follower to confirm receipt of the
@@ -69,7 +69,7 @@ With three AZs, the MySQL VMs are deployed to two AZs, and the broker is deploye
 
 ### <a id="networking"></a> Networking Rules
 
-In addition to the standard networking rules needed for MySQL for PCF,
+In addition to the standard networking rules needed for <%= vars.product_name %>,
 the operator must ensure leader-follower-specific network rules are also set up as follows:
 
 - Leader-follower VMs bidirectionally communicate with each other over port 8008 for orchestration.
@@ -86,7 +86,7 @@ see [Using Leader-Follower Topology For Availability](./maintain-leader-follower
 
 ## <a id="failover"></a>About Failover
 
-MySQL for PCF focuses on data consistency rather than availability.
+<%= vars.product_name %> focuses on data consistency rather than availability.
 Therefore, it does not trigger failover automatically,
 but relies on operators to trigger a failover.
 When an operator triggers a failover, app traffic is sent to the follower.
@@ -95,10 +95,10 @@ For more information, see [Trigger a Failover](./maintain-leader-follower.html#f
 
 ## <a id="errands"></a>About Leader-Follower Errands
 
-MySQL for PCF automates orchestrating the standard lifecycle of creating, updating,
+<%= vars.product_name %> automates orchestrating the standard lifecycle of creating, updating,
 and deleting leader-follower service instances.
 
-In addition, MySQL for PCF provides three leader-follower errands.
+In addition, <%= vars.product_name %> provides three leader-follower errands.
 An operator can use them to control the lifecycle of a leader-follower service instance
 and manually intervene, when necessary, without being an expert at MySQL.
 

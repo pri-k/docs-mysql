@@ -5,20 +5,20 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to check expiration dates and rotate certificates used by MySQL for PCF.
+This topic describes how to check expiration dates and rotate certificates used by <%= vars.product_name %>.
 
 ## <a id="overview"></a> Types of Certificates
 
-MySQL for PCF uses the following types of certificates:
+<%= vars.product_name %> uses the following types of certificates:
 
-+ **TLS certificates managed by the operator:** If you are using TLS for MySQL for PCF,
++ **TLS certificates managed by the operator:** If you are using TLS for <%= vars.product_name %>,
 you provided a CA certificate to BOSH CredHub when you did the procedures	in [Preparing for TLS](prepare-tls.html). Operators must manually rotate this TLS CA certificate before the certificate expires or if it is compromised.
 
-+ **Internal certificates managed by MySQL for PCF:** When you upgrade to MySQL for PCF v2.8,
-MySQL for PCF automatically rotates your internal certificates. The new certificates do not expire for 5 years.
++ **Internal certificates managed by <%= vars.product_name %>:** When you upgrade to <%= vars.product_name %> v2.8,
+<%= vars.product_name %> automatically rotates your internal certificates. The new certificates do not expire for 5 years.
 For more information, see [Rotate Internal Certificates](#internal) below.
 
-For a list of the certificates used by MySQL for PCF, see [Certificates Used by MySQL for PCF](#mysql-certs)
+For a list of the certificates used by <%= vars.product_name %>, see [Certificates Used by <%= vars.product_name %>](#mysql-certs)
 below.
 
 <p class="note warning"><strong>Warning</strong>: Do not attempt to rotate a CA certificate on your own.
@@ -26,14 +26,14 @@ Contact <a href="https://support.pivotal.io">Pivotal Support</a>
 and perform the following procedures with their help.
 </p>
 
-## <a id="mysql-certs"></a> Certificates Used by MySQL for PCF
+## <a id="mysql-certs"></a> Certificates Used by <%= vars.product_name %>
 
-The following table lists the certificates used by MySQL for PCF:
+The following table lists the certificates used by <%= vars.product_name %>:
 
 <table>
   <tr>
     <th width="75%"">Certificate</th>
-    <th>Rotated by MySQL for PCF?</th>
+    <th>Rotated by <%= vars.product_name %>?</th>
   </tr>
   <tr>
     <th colspan="2">TLS Certificates</th>
@@ -109,10 +109,10 @@ of your service instance, do the procedure in
 
 ## <a id="credhub"></a> Check Expiration Dates
 
-Pivotal Cloud Foundry (PCF) stores the certificates used by MySQL for PCF
-in the BOSH CredHub credentials store. You can use the CredHub API to check the expiration date for the certificates used by MySQL for PCF. For more information, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
+<%= vars.platform_name %> stores the certificates used by <%= vars.product_name %>
+in the BOSH CredHub credentials store. You can use the CredHub API to check the expiration date for the certificates used by <%= vars.product_name %>. For more information, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
 
-To use the CredHub API, you must retrieve credentials from BOSH Director and then use the credentials to log in to CredHub from the Ops Manager VM. 
+To use the CredHub API, you must retrieve credentials from BOSH Director and then use the credentials to log in to CredHub from the Pivotal Ops Manager VM.
 
 To check certificate expiration dates:
 
@@ -174,7 +174,7 @@ CredHub server by running the following command:
     --client-secret=abcdefghijklm123456789
     </pre>
 
-1. For each certificate in the [Certificates Used by MySQL for PCF](#mysql-certs) list above, 
+1. For each certificate in the [Certificates Used by <%= vars.product_name %>](#mysql-certs) list above,
    run the following command:
 
     ```
@@ -214,7 +214,7 @@ To manually rotate the TLS CA certificate:
 ### <a id="add"></a> Add a New TLS CA Certificate
 
 <p class="note warning"><strong>Warning</strong>: This procedure involves restarting
-all of the VMs in your PCF deployment. The operation can take a long time to complete.
+all of the VMs in your <%= vars.platform_name %> deployment. The operation can take a long time to complete.
 </p>
 
 To add a new TLS CA Certificate to Ops Manager:
@@ -222,7 +222,7 @@ To add a new TLS CA Certificate to Ops Manager:
 1. Log in to CredHub by doing steps 1 through 9 in [Check Expiration Dates](#credhub) above.
 
 2. Set the TLS CA certificate by doing one of the following:
-  <p class="note"><strong>Note</strong>: Your PCF deployment can have
+  <p class="note"><strong>Note</strong>: Your <%= vars.platform_name %> deployment can have
   multiple CA certificates.
    Pivotal recommends using a dedicated CA certificate for each service.</p>
     * **If you do not have a TLS CA certificate:** generate a new certificate by running the following command:
@@ -305,11 +305,11 @@ To regenerate your internal certificates and redeploy your service instances:
     bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
     ```
     Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-    
+
 ### <a id="remove"></a> Remove the Old TLS CA Certificate
 
 <p class="note warning"><strong>Warning: </strong> This procedure involves restarting
-	all of the VMs in your PCF deployment. The operation can take a long time to complete.
+	all of the VMs in your <%= vars.platform_name %> deployment. The operation can take a long time to complete.
 </p>
 
 If you are rotating your TLS CA certificate because it was compromised, you must remove
@@ -368,31 +368,31 @@ To rebind your app:
 	```
 	Where `YOUR-APP` is the name of your app.
 
-## <a id="internal"></a> Rotate Internal Certificates 
+## <a id="internal"></a> Rotate Internal Certificates
 
-When you upgrade to MySQL for PCF v2.8, MySQL for PCF automatically
+When you upgrade to <%= vars.product_name %> v2.8, <%= vars.product_name %> automatically
 rotates all internal certificates. The new certificates do not expire for 5 years.
-The below commands upgrade all of your MySQL for service instances and distribute the new certificates to your service instances.  
+The below commands upgrade all of your MySQL for service instances and distribute the new certificates to your service instances.
 
 To ensure that the internal certificates rotate, do one of the following:
 
-+ **If you have not yet upgraded to MySQL for PCF v2.8,** do the following:
-    1. Navigate to the Ops Manager Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry v2** tile.
++ **If you have not yet upgraded to <%= vars.product_name %> v2.8,** do the following:
+    1. Navigate to the Ops Manager Installation Dashboard and click the **<%= vars.product_name %> v2** tile.
     1. Click **Errands**.
     1. Under **Post-Deploy Errands**, ensure that **Upgrade all On-demand MySQL Service Instances** is set to **Default (On)**.
 
           ![Upgrade All Instances Errand](upgrade-all-instances-errand.png)
     1. Click **Save.**
-    
-    For instructions for upgrading to MySQL for PCF v2.8, see [Upgrading MySQL for PCF](./upgrade.html).<br><br>
 
-+ **If you have already upgraded to MySQL for PCF v2.8 without the Upgrade all On-demand MySQL Service Instances errand on,** run the following command:
+    For instructions for upgrading to <%= vars.product_name %> v2.8, see [Upgrading <%= vars.product_name %>](./upgrade.html).<br><br>
+
++ **If you have already upgraded to <%= vars.product_name %> v2.8 without the Upgrade all On-demand MySQL Service Instances errand on,** run the following command:
 
     ```
     bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
     ```
-    
+
     Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
     <br><br>
-    For a list of certificates used by MySQL for PCF,
-    see [Certificates Used by MySQL for PCF](#mysql-certs) above.
+    For a list of certificates used by <%= vars.product_name %>,
+    see [Certificates Used by <%= vars.product_name %>](#mysql-certs) above.

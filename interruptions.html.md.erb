@@ -5,20 +5,20 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic explains events in the lifecycle of a MySQL for Pivotal Cloud Foundry (PCF) service instance that may cause temporary service interruptions.
+This topic explains events in the lifecycle of a <%= vars.product_name %> service instance that may cause temporary service interruptions.
 
 ## <a id='service-update'></a>Stemcell or Service Update
 
-An operator updates a stemcell version or their version of MySQL for PCF.
+An operator updates a stemcell version or their version of <%= vars.product_name %>.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. The service should resume within 10-15 minutes.
+- <strong>Impact:</strong> Apps lose access to the MySQL service while <%= vars.platform_name %> updates the service instance they are bound to. The service should resume within 10-15 minutes.
 - <strong>Required Actions:</strong> None. If the update deploys successfully, apps reconnect automatically.
 
 ## <a id='change-plan'></a>Plan Change
 
 A developer changes their service instance to provide a different service plan, using `cf update-service` or Apps Manager.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. The service should resume within 10-15 minutes.
+- <strong>Impact:</strong> Apps lose access to the MySQL service while <%= vars.platform_name %> updates the service instance they are bound to. The service should resume within 10-15 minutes.
 - <strong>Required Actions:</strong> None. If the plan change deploys successfully, apps reconnect automatically.
 
 ## <a id='process-fail'></a>VM Process Failure
@@ -28,12 +28,12 @@ A process, like the MySQL server, crashes on the service instance VM.
 - <strong>Impact:</strong>
   - BOSH (monit) brings the process back automatically.
   - Depending on the process and what it was doing, the service may experience 60-120 seconds of downtime.
-  - Until the process resumes, apps may be unable to use MySQL, metrics or logging may stop, and other features may be interrupted. 
+  - Until the process resumes, apps may be unable to use MySQL, metrics or logging may stop, and other features may be interrupted.
 - <strong>Required Actions:</strong> None. If the process resumes cleanly and without manual intervention, apps reconnect automatically.
 
 ## <a id='vm-fail'></a>VM Failure
 
-A MySQL for PCF VM fails and goes offline due to either a virtualization problem or a host hardware problem.
+A <%= vars.product_name %> VM fails and goes offline due to either a virtualization problem or a host hardware problem.
 
 - <strong>Impact:</strong>
   - If the [BOSH Resurrector](https://bosh.io/docs/resurrector.html) is enabled (recommended), BOSH should detect the failure, recreate the VM, and reattach the same persistent disk and IP address.
@@ -41,15 +41,15 @@ A MySQL for PCF VM fails and goes offline due to either a virtualization problem
   - If the Resurrector is not enabled, some IaaSes such as vSphere have similar resurrection or HA features.
   - Apps cannot connect to MySQL until the VM is recreated and the My SQL server process is resumed.
   - Based on prior experience with BOSH Resurrector, typical downtime is 8-10 minutes.
-- <strong>Required Actions:</strong> 
-  - If the VM is part of a leader-follower pair, when the VM comes back, it is read-only. 
-  Therefore, run the **configure-leader-follower** errand to ensure the leader VM is writable. 
+- <strong>Required Actions:</strong>
+  - If the VM is part of a leader-follower pair, when the VM comes back, it is read-only.
+  Therefore, run the **configure-leader-follower** errand to ensure the leader VM is writable.
   For more information, see [Leader-Follower Errands](./maintain-leader-follower.html#errands).
   - If the VM is not part of a leader-follower pair, when the VM comes back, no further action is required for the app developer to continue operations.
 
 ## <a id='az-fail'></a>AZ Failure
 
-An Availability Zone (AZ) goes offline entirely or loses connectivity to other AZs (net split). This causes service interruption in multi-AZ PCF deployments where [Diego](http://docs.pivotal.io/pivotalcf/concepts/diego/diego-auction.html) has placed multiple instances of a MySQL-using app in different AZs.
+An Availability Zone (AZ) goes offline entirely or loses connectivity to other AZs (net split). This causes service interruption in multi-AZ <%= vars.platform_name %> deployments where [Diego](http://docs.pivotal.io/pivotalcf/concepts/diego/diego-auction.html) has placed multiple instances of a MySQL-using app in different AZs.
 
 - <strong>Impact:</strong>
   - Some app instances may still be able to connect and continue operating.
@@ -59,9 +59,9 @@ An Availability Zone (AZ) goes offline entirely or loses connectivity to other A
 
 ## <a id='region-fail'></a>Region Failure
 
-- <strong>Example:</strong> An entire region fails, bringing PCF platform components offline.
+- <strong>Example:</strong> An entire region fails, bringing <%= vars.platform_name %> components offline.
 
 - <strong>Impact:</strong>
-  - The entire PCF platform needs to be brought back up manually.
+  - The entire <%= vars.platform_name %> needs to be brought back up manually.
   - Downtime: Unknown
 - <strong>Required Actions:</strong> Each service instance may need to be [restored individually](./backup-and-restore.html#restore) depending on the restored state of the platform.

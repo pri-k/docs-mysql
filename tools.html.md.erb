@@ -1,16 +1,16 @@
 ---
-title: Using Management Tools for MySQL for PCF
+title: Using Management Tools for MySQL for Pivotal Platform
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for tools developers can use to 
-access their MySQL for PCF databases.
+This topic provides instructions for tools developers can use to
+access their <%= vars.product_name %> databases.
 
-## <a id="overview"></a>Overview 
+## <a id="overview"></a>Overview
 
-You can access your MySQL for PCF databases by using the following tools: 
+You can access your <%= vars.product_name %> databases by using the following tools:
 
 + [Pivotal MySQLWeb Database Management App](#mysqlweb), below
 + [cf CLI MySQL Plugin](#plugin), below
@@ -18,7 +18,7 @@ You can access your MySQL for PCF databases by using the following tools:
 
 ## <a id="mysqlweb"></a>Pivotal MySQLWeb Database Management App
 
-The Pivotal MySQLWeb app provides a web-based UI for managing MySQL for PCF databases.
+The Pivotal MySQLWeb app provides a web-based UI for managing <%= vars.product_name %> databases.
 The free app lets you view and operate on tables, indexes, constraints, and other database structures,
 and directly execute SQL commands.
 
@@ -27,9 +27,9 @@ and directly execute SQL commands.
 You can run the Pivotal MySQLWeb app in two ways:
 
 * Standalone on your own machine
-* Deployed to PCF
+* Deployed to <%= vars.platform_name %>
 
-If you deploy Pivotal MySQLWeb to PCF, you can configure it in the deployment manifest to automatically
+If you deploy Pivotal MySQLWeb to <%= vars.platform_name %>, you can configure it in the deployment manifest to automatically
 bind to a specific service instance.
 
 See the Pivotal MySQLWeb [code repo](https://github.com/pivotal-cf/PivotalMySQLWeb) and
@@ -38,7 +38,7 @@ for how to install and run Pivotal MySQLWeb.
 
 ## <a id="plugin"></a>cf CLI MySQL Plugin
 
-To connect to your MySQL for PCF databases from a command line, use the cf CLI MySQL plugin.
+To connect to your <%= vars.product_name %> databases from a command line, use the cf CLI MySQL plugin.
 The plugin lets you:
 
 * Inspect databases for debugging
@@ -55,7 +55,7 @@ For more information, see the [cf-mysql-plugin](https://github.com/andreasf/cf-m
 
 ## <a id="desktop"></a> Desktop Tools
 
-You can connect your MySQL for PCF databases to a desktop tool, such as MySQL Workbench
+You can connect your <%= vars.product_name %> databases to a desktop tool, such as MySQL Workbench
 or Sequel Pro, if you have the credentials for your MySQL service instance.
 
 If you do not have credentials for your MySQL service instance, follow the procedure in
