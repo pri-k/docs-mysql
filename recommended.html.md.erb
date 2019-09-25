@@ -1,5 +1,5 @@
 ---
-title: MySQL for PCF Recommended Usage and Limitations
+title: MySQL for Pivotal Platform Recommended Usage and Limitations
 owner: MySQL
 ---
 
@@ -24,14 +24,14 @@ For information on setting limits and calculating costs for on-demand service in
 
 ##<a id="azs"></a> Availability Using Multiple AZs
 
-MySQL for PCF supports configuring multiple availability zones. At a minimum, Pivotal recommends using two availability
+<%= vars.product_name %> supports configuring multiple availability zones. At a minimum, Pivotal recommends using two availability
 zones, one for the broker and one for the MySQL VMs. If you plan to configure leader-follower, Pivotal recommends three availability zones as described in the
 [About Leader-Follower](./about-leader-follower.html) page. If you plan to configure highly available clusters, Pivotal recommends three availability zones as described in the
 [About Highly Available Clusters](./about-ha.html) page.
 
 ##<a id="downtime"></a> Downtime During Redeploys
 
-Redeploying MySQL for PCF for configuration changes or upgrades will result in MySQL being inaccessible to apps for a brief period of time.
+Redeploying <%= vars.product_name %> for configuration changes or upgrades will result in MySQL being inaccessible to apps for a brief period of time.
 
 ##<a id="persistent"></a> Persistent Disk Usage
 
@@ -42,7 +42,7 @@ For highly available (HA) clusters, backups are processed on the jumpbox VM.
 
 In addition to backups, the persistent disk also stores InnoDB redo logs and binlogs. InnoDB redo logs use
 a static amount of disk size. If your app is write-heavy,
-increase your persistent disk to accommodate the binlogs. 
+increase your persistent disk to accommodate the binlogs.
 
 Use the following table to determine the amount of persistent disk space you need
 to set when you configure a service plan.

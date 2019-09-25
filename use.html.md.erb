@@ -1,37 +1,37 @@
 ---
-title: Using MySQL for PCF
+title: Using MySQL for Pivotal Platform
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) service for their
-PCF apps.
+This topic provides instructions for developers using the <%= vars.product_name %> service for their
+<%= vars.platform_name %> apps.
 
 
 ## <a id='overview'></a>Overview
 
-MySQL for PCF provides a relational database for apps and devices. To use MySQL for PCF in an app:
+<%= vars.product_name %> provides a relational database for apps and devices. To use <%= vars.product_name %> in an app:
 
 1. Check the service availability in the Marketplace,
-   and see if there is an existing instance of MySQL for PCF in your space.
+   and see if there is an existing instance of <%= vars.product_name %> in your space.
 
-    See [Confirm the MySQL for PCF Service Availability](#marketplace), below.
+    See [Confirm the <%= vars.product_name %> Service Availability](#marketplace), below.
 
 2. If there is no existing instance or you want to use a different one,
-   create an instance of the MySQL for PCF service in the same space as the app.
+   create an instance of the <%= vars.product_name %> service in the same space as the app.
 
     See [Create a Service Instance](#create), below.
 
-4. Bind the app to the MySQL for PCF service instance, to enable the app to use MySQL.
+4. Bind the app to the <%= vars.product_name %> service instance, to enable the app to use MySQL.
 
     See [Bind a Service Instance to Your App](#bind), below.
 
-5. Call the MySQL for PCF service in your app code, and then re-push your app into the space.
+5. Call the <%= vars.product_name %> service in your app code, and then re-push your app into the space.
 
     See [Use the MySQL Service in Your App](#call), below.
 
-After you create a MySQL for PCF service instance, you can manage it over the life cycle of your apps and data. See [Manage Service Instances](#manage), below.
+After you create a <%= vars.product_name %> service instance, you can manage it over the life cycle of your apps and data. See [Manage Service Instances](#manage), below.
 
 The below procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
 see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html).
@@ -41,13 +41,13 @@ For more information, see
 
 ## <a id="prereqs"></a>Prerequisites
 
-To use MySQL for PCF with your PCF apps, you need:
+To use <%= vars.product_name %> with your <%= vars.platform_name %> apps, you need:
 
 * Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
 * If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html#limitations).
-* A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
+* A <%= vars.platform_name %> installation with [<%= vars.product_name %>](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
-* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the PCF installation
+* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the <%= vars.platform_name %> installation
 * A local machine with the following installed:
    - a browser
    - a shell
@@ -56,9 +56,9 @@ in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 * To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
 
 
-## <a id='marketplace'></a>Confirm the MySQL for PCF Service Availability
+## <a id='marketplace'></a>Confirm the <%= vars.product_name %> Service Availability
 
-For an app to use the MySQL for PCF service, both of the following must be true:
+For an app to use the <%= vars.product_name %> service, both of the following must be true:
 
 * The service must be available in the Marketplace for its space.
 * An instance of the service must exist in its space.
@@ -67,7 +67,7 @@ You can confirm both of these using the cf CLI as follows.
 
 ### <a id="check-marketplace"></a> Check Service Availability in the Marketplace
 
-To find out if a MySQL for PCF service is available in the Marketplace:
+To find out if a <%= vars.product_name %> service is available in the Marketplace:
 
 1. Enter the following command:
 
@@ -75,7 +75,7 @@ To find out if a MySQL for PCF service is available in the Marketplace:
     cf marketplace
     ```
 
-1. If the output lists `p.mysql` in the `service` column, MySQL for PCF is available.
+1. If the output lists `p.mysql` in the `service` column, <%= vars.product_name %> is available.
    If it is not available, ask your operator to install it.
 
     <pre class="terminal">
@@ -90,7 +90,7 @@ To find out if a MySQL for PCF service is available in the Marketplace:
 
 ### <a id="check-instance"></a> Check That an Instance Is Running in the Space
 
-To confirm that a MySQL for PCF instance is running in the space:
+To confirm that a <%= vars.product_name %> instance is running in the space:
 
 1. Use the [cf CLI](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) or
 [Apps Manager](http://docs.pivotal.io/pivotalcf/customizing/console-login.html) to log in to the org and space that contains the app.
@@ -99,7 +99,7 @@ To confirm that a MySQL for PCF instance is running in the space:
     ```
     cf services
     ```
-1. Any `p.mysql` listings in the `service` column are service instances of MySQL for PCF in the space.
+1. Any `p.mysql` listings in the `service` column are service instances of <%= vars.product_name %> in the space.
 <br><br>
 For example:
     <pre class="terminal">
@@ -116,7 +116,7 @@ For example:
 On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use.
 
-To create an instance of the MySQL for PCF service:
+To create an instance of the <%= vars.product_name %> service:
 
 1. Create a service instance by running the following command:
 
@@ -125,7 +125,7 @@ To create an instance of the MySQL for PCF service:
     ```
 
     Where:
-    - `PLAN` is the name of the MySQL for PCF plan you want to use.
+    - `PLAN` is the name of the <%= vars.product_name %> plan you want to use.
     - `SERVICE-INSTANCE` is a name you choose to identify the service instance.
     This name appears under `service` in output from `cf services`.
 
@@ -155,15 +155,15 @@ your instance to show as `create succeeded`.
 
 For an app to use a service, you must bind the app to a service instance.  You must do this after every time you run `cf push`.
 
-To push and bind an app to a MySQL for PCF instance run the following command:
+To push and bind an app to a <%= vars.product_name %> instance run the following command:
 
-1. Push your app into the same space as your MySQL for PCF service instance by running the following command:
+1. Push your app into the same space as your <%= vars.product_name %> service instance by running the following command:
 
     ```
     cf push
     ```
 
-1. Bind your app to a MySQL for PCF instance by running the following command:
+1. Bind your app to a <%= vars.product_name %> instance by running the following command:
 
     ```
     cf bind-service APP SERVICE-INSTANCE
@@ -195,7 +195,7 @@ To access the MySQL service from your app:
 
 1. Verify that your app code (or the MySQL client library that the app uses) retries in the case of DNS timeouts.
 
-1. Locate the connection strings listed in the	
+1. Locate the connection strings listed in the
 `VCAP_SERVICES` > `credentials` object for your app. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap) below.
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
@@ -204,7 +204,7 @@ To access the MySQL service from your app:
 
 ###<a id="schema"></a>Create and Use Custom Schemas
 
-  MySQL for PCF supports multiple custom schemas.
+  <%= vars.product_name %> supports multiple custom schemas.
   You can use custom schemas with apps that share a MySQL service instance to isolate app data by schema.
   By default, service bindings use the default schema `service_instance_db`.
 
@@ -226,7 +226,7 @@ To access the MySQL service from your app:
   3. Push your app using `cf push`.
 
 ###<a id="vcap"></a>MySQL Environment Variables
-Apps running in Cloud Foundry gain access to bound service instances
+Apps running in <%= vars.platform_name %> gain access to bound service instances
 through an environment variable credentials hash called `VCAP_SERVICES`.
 This environment variable includes the credentials that apps
 use to access service instances.
@@ -284,7 +284,7 @@ This does not require a rebinding of your app. However, while the instance is be
 the database is unavailable for several minutes.
 
 <p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
-  to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in MySQL for PCF</a>.</p>
+  to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in <%= vars.product_name %></a>.</p>
 
 To update a service instance to a larger plan, run the following command:
 

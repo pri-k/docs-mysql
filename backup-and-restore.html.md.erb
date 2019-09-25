@@ -1,11 +1,11 @@
 ---
-title: Backing Up and Restoring On-Demand MySQL for PCF
+title: Backing Up and Restoring On-Demand MySQL for Pivotal Platform
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to configure automated backups for MySQL for Pivotal Cloud Foundry (PCF),
+This topic describes how to configure automated backups for <%= vars.product_name %>,
 and how to manually restore a MySQL service instance from a backup.
 
 <p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.</p>
@@ -18,11 +18,11 @@ Automated backups do the following:
 - Periodically create and upload backups suitable for restoring all of the databases used by the service instance.
 - Operate without locking apps out of the database; no downtime.
 - Include a metadata file that contains the critical details of the backup, including the calendar time of the backup.
-- Encrypt backups within the MySQL for PCF VM; unencrypted data is never transported outside the MySQL for PCF deployment.
+- Encrypt backups within the <%= vars.product_name %> VM; unencrypted data is never transported outside the <%= vars.product_name %> deployment.
 
 ### <a id="understanding-metadata"></a> Backup Files and Metadata
 
-When MySQL for PCF runs a backup, it uploads two files with Unix epoch-timestamped filenames of the form `mysql-backup-TIMESTAMP`:
+When <%= vars.product_name %> runs a backup, it uploads two files with Unix epoch-timestamped filenames of the form `mysql-backup-TIMESTAMP`:
 
   * The encrypted data backup file `mysql-backup-TIMESTAMP.tar.gpg`
   * A metadata file `mysql-backup-TIMESTAMP.txt`
@@ -56,24 +56,24 @@ Within this file, the most important items are the `start_time` and the `server_
 The backup process does not interrupt MySQL service, but backups only reflect transactions that completed before their `start_time`.
 
 <p class="note"><strong>Note</strong>: Although both <code>compressed</code> and <code>encrypted</code> show as <code>N</code> in this file,
-the backup uploaded by MySQL for PCF is both compressed and encrypted. This is a known issue.</p>
+the backup uploaded by <%= vars.product_name %> is both compressed and encrypted. This is a known issue.</p>
 
 ### <a id="enable-backups"></a> About Configuring Automated Backups
 
-MySQL for PCF automatically backs up databases to external storage.
+<%= vars.product_name %> automatically backs up databases to external storage.
 
 * **How and where**---There are four options for how automated backups transfer backup data and where the data saves to:
-  - [Option 1: Back up with SCP](#scp)---MySQL for PCF runs an SCP command that secure-copies backups to a VM
-    or physical machine operating outside of PCF.
+  - [Option 1: Back up with SCP](#scp)---<%= vars.product_name %> runs an SCP command that secure-copies backups to a VM
+    or physical machine operating outside of <%= vars.platform_name %>.
     SCP stands for secure copy protocol, and offers a way to securely transfer files between two hosts.
-    The operator provisions the backup machine separately from their PCF installation.
+    The operator provisions the backup machine separately from their <%= vars.platform_name %> installation.
     This is the fastest option.
-  - [Option 2: Back up to Ceph or S3](#ceph-or-s3)---MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
+  - [Option 2: Back up to Ceph or S3](#ceph-or-s3)---<%= vars.product_name %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
     that saves backups to an S3 bucket,
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
-  - [Option 3: Back up to GCS](#gcs)---MySQL for PCF runs an [GCS](https://cloud.google.com/storage/) SDK
+  - [Option 3: Back up to GCS](#gcs)---<%= vars.product_name %> runs an [GCS](https://cloud.google.com/storage/) SDK
     that saves backups to an Google Cloud Storage bucket.
-  - [Option 4: Back up to Azure Storage](#azure)---MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
+  - [Option 4: Back up to Azure Storage](#azure)---<%= vars.product_name %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
     SDK that saves backups to an Azure storage account.
 
 * **When**---Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
@@ -93,24 +93,24 @@ To back up your database using SCP, complete the following procedures:
 
 ### <a id="scp-keys"></a> Create a Public and Private Key Pair
 
-MySQL for PCF accesses a remote host as a user with a private key for authentication.
-Pivotal recommends that this user and key pair be solely for MySQL for PCF.
+<%= vars.product_name %> accesses a remote host as a user with a private key for authentication.
+Pivotal recommends that this user and key pair be solely for <%= vars.product_name %>.
 
-1. Determine the remote host that you will be using to store backups for MySQL for PCF.
+1. Determine the remote host that you will be using to store backups for <%= vars.product_name %>.
    Ensure that the MySQL service instances can access the remote host.
 
-    <p class="note"><strong>Note</strong>: Pivotal recommends using a VM outside the PCF deployment for the destination of SCP backups.
+    <p class="note"><strong>Note</strong>: Pivotal recommends using a VM outside the <%= vars.platform_name %> deployment for the destination of SCP backups.
        As a result you might need to enable public IPs for the MySQL VMs. </p>
 
-1. (Recommended) Create a new user for MySQL for PCF on the destination VM.
+1. (Recommended) Create a new user for <%= vars.product_name %> on the destination VM.
 
 1. (Recommended) Create a new public and private key pair for authenticating as the above user on the destination VM.
 
 ### <a id="configure-scp"></a> Configure Backups in Ops Manager
 
-Use Ops Manager to configure MySQL for PCF to backup using SCP.
+Use Ops Manager to configure <%= vars.product_name %> to backup using SCP.
 
-1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
+1. In Ops Manager, open the <%= vars.product_name %> tile **Backups** pane.
 
 1. Select **SCP**.<br/>
     ![SCP Backup Configuration Form](scp-backups.png)
@@ -120,7 +120,7 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
     * **Private Key**---Enter the private key that you created above.
         The public key should be stored for ssh and scp access on the destination VM.
     * **Hostname**---Enter the IP or DNS entry that should be used to access the destination VM.
-    * **Destination Directory**---Enter the directory in which MySQL for PCF should upload backups.
+    * **Destination Directory**---Enter the directory in which <%= vars.product_name %> should upload backups.
     * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
         to take backups of each service instance.
     * **Fingerprint**---Enter the fingerprint of the destination VM's public key.
@@ -128,7 +128,7 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you have done the following:
           - Added all users who need to be notified about failed backups to System org and System space</li>
-          - Configured Email Notifications in Pivotal Application Service (PAS),
+          - Configured Email Notifications in <%= vars.app_runtime_full %>,
           see <em>Configure Email Notifications</em> for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
@@ -145,14 +145,14 @@ To back up your database on Ceph or Amazon S3, complete the following procedures
 
 ### <a id="access-key-aws"></a> Create a Policy and Access Key
 
-MySQL for PCF accesses your S3 store through a user account.
-Pivotal recommends that this account be solely for MySQL for PCF.
+<%= vars.product_name %> accesses your S3 store through a user account.
+Pivotal recommends that this account be solely for <%= vars.product_name %>.
 You must apply a minimal policy that lets the user account upload backups to your S3 store.
 
-1. Create a policy for your MySQL for PCF user account.
+1. Create a policy for your <%= vars.product_name %> user account.
 
     <br>Policy creation varies depending on the S3 provider.
-        Follow the relevant procedure to give MySQL for PCF the following permissions:<br><br>
+        Follow the relevant procedure to give <%= vars.product_name %> the following permissions:<br><br>
       * List and upload to buckets
       * (Optional) Create buckets in order to use buckets that do not already exist
 
@@ -181,15 +181,15 @@ You must apply a minimal policy that lets the user account upload backups to you
 }
 </pre>
 
-1. (Recommended) Create a new user for MySQL for PCF and record its Access Key ID and Secret Access Key, the user credentials.
+1. (Recommended) Create a new user for <%= vars.product_name %> and record its Access Key ID and Secret Access Key, the user credentials.
 
-1. Attach the policy you created to the AWS user account that MySQL for PCF will use to access S3 (**IAM** > **Policies** > **Policy Actions** > **Attach**).
+1. Attach the policy you created to the AWS user account that <%= vars.product_name %> will use to access S3 (**IAM** > **Policies** > **Policy Actions** > **Attach**).
 
 ### <a id="configure-aws"></a> Configure Backups in Ops Manager
 
-Use Ops Manager to connect MySQL for PCF to your S3 account.
+Use Ops Manager to connect <%= vars.product_name %> to your S3 account.
 
-1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
+1. In Ops Manager, open the <%= vars.product_name %> tile **Backups** pane.
 
 1. Select **Ceph or Amazon S3**.
 
@@ -212,7 +212,7 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
       * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you done the following:
           * Added all users who need to be notified about failed backups to System org and System space</li>
-          * Configured Email Notifications in PAS,
+          * Configured Email Notifications in <%= vars.app_runtime %>,
           see <em>Configure Email Notifications</em> for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
@@ -229,20 +229,20 @@ To back up your database on Google Cloud Storage (GCS), complete the following p
 
 ### <a id="access-key"></a> Create a Policy and Access Key
 
-MySQL for PCF accesses your GCS store through a service account.
-Pivotal recommends that this account be solely for MySQL for PCF.
+<%= vars.product_name %> accesses your GCS store through a service account.
+Pivotal recommends that this account be solely for <%= vars.product_name %>.
 You must apply a minimal policy that lets the user account upload backups to your GCS store.
 
-1. In the GCS console, create a new service account for MySQL for PCF: **IAM and Admin** > **Service Accounts** > **Create Service Account**.<br><br>
+1. In the GCS console, create a new service account for <%= vars.product_name %>: **IAM and Admin** > **Service Accounts** > **Create Service Account**.<br><br>
 
-      MySQL for PCF needs the following permissions for this account:
+      <%= vars.product_name %> needs the following permissions for this account:
       * List and upload to buckets
       * (Optional) Create buckets in order to use buckets that do not already exist
 
 
-1. Enter a unique name in the **Service account name** field, such as `MySQL-for-PCF`.
+1. Enter a unique name in the **Service account name** field, such as `MySQL-for-<%= vars.platform_name %>`.
 
-1. In the **Roles** dropdown, grant the `MySQL-for-PCF` service account the **Storage Admin** role.
+1. In the **Roles** dropdown, grant the `MySQL-for-<%= vars.platform_name %>` service account the **Storage Admin** role.
 
 1. Check the **Furnish a new private key** box so that a new key is created and downloaded.
 
@@ -250,9 +250,9 @@ You must apply a minimal policy that lets the user account upload backups to you
 
 ### <a id="configure-gcs"></a> Configure Backups in Ops Manager
 
-Use Ops Manager to connect MySQL for PCF to your GCS account.
+Use Ops Manager to connect <%= vars.product_name %> to your GCS account.
 
-1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
+1. In Ops Manager, open the <%= vars.product_name %> tile **Backups** pane.
 
 1. Select **GCS**.
 
@@ -267,7 +267,7 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you done the following:
           * Added all users who need to be notified about failed backups to System org and System space
-          * Configured Email Notifications in PAS. For more information see **Configure Email Notifications** for your IaaS:
+          * Configured Email Notifications in <%= vars.app_runtime %>. For more information see **Configure Email Notifications** for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
@@ -278,7 +278,7 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
 
 Complete the following steps to back up your database to your Azure Storage account.
 
-1. In Ops Manager, open the MySQL for PCF tile **Backups** pane.
+1. In Ops Manager, open the <%= vars.product_name %> tile **Backups** pane.
 
 1. Select **Azure**.
 
@@ -295,7 +295,7 @@ Complete the following steps to back up your database to your Azure Storage acco
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you done the following:
           * Added all users who need to be notified about failed backups to System org and System space</li>
-          * Configured Email Notifications in PAS,
+          * Configured Email Notifications in <%= vars.app_runtime %>,
           see <em>Configure Email Notifications</em> for your IaaS:
            <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
            <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
@@ -305,14 +305,14 @@ Complete the following steps to back up your database to your Azure Storage acco
 
 ## <a id="manual-backup"></a> Manual Backup
 
-MySQL for PCF v2.4 disables remote admin access to MySQL databases.
+<%= vars.product_name %> v2.4 disables remote admin access to MySQL databases.
 To access your MySQL database to perform a manual backup, you must create a service key for each service instance you want to back up.
 
 This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
 
-Perform the following steps to back up your MySQL for PCF data manually:
+Perform the following steps to back up your <%= vars.product_name %> data manually:
 
-1. Use the Cloud Foundry Command Line Interface (cf CLI) to target the Cloud Controller of your PCF deployment with `cf api api.YOUR-SYSTEM-DOMAIN`.
+1. Use the Cloud Foundry Command Line Interface (cf CLI) to target the Cloud Controller of your <%= vars.platform_name %> deployment with `cf api api.YOUR-SYSTEM-DOMAIN`.
    For example:
   <pre class="terminal">$ cf api api.sys.cf-example.com</pre>
   For more information about installing and using the cf CLI, see the [cf CLI documentation](https://docs.pivotal.io/pivotalcf/cf-cli/index.html).
@@ -366,7 +366,7 @@ Perform the following steps to back up your MySQL for PCF data manually:
     * `username`: The username for the user that can be used to perform backups of the service instance database
 
 1. Connect to the database, by either using an SSH tunnel, or by connecting directly to its IP address.
-For more information, see [Establish a Connection to a Service Instance from Outside Your PCF Deployment](./use.html#remote-connection).
+For more information, see [Establish a Connection to a Service Instance from Outside Your <%= vars.platform_name %> Deployment](./use.html#remote-connection).
 
 1. To view a list of your databases, run the following command:
 <pre><code>mysql --user=USERNAME --password=PASSWORD \
@@ -418,10 +418,10 @@ For more information, see [Establish a Connection to a Service Instance from Out
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 
-Restoring MySQL for PCF from backup is a manual process primarily intended for disaster recovery.
-Restoring a MySQL for PCF service instance replaces all of its data and running state.
+Restoring <%= vars.product_name %> from backup is a manual process primarily intended for disaster recovery.
+Restoring a <%= vars.product_name %> service instance replaces all of its data and running state.
 
-To restore a MySQL for PCF instance from an offsite backup, download the backup and restore to a new instance by following these procedures:
+To restore a <%= vars.product_name %> instance from an offsite backup, download the backup and restore to a new instance by following these procedures:
 
 + [Retrieve Backup Encryption Key](#retrieve-key)
 + [Download the Backup Artifact](#download)

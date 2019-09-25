@@ -1,12 +1,12 @@
 ---
-title: Troubleshooting MySQL for PCF
+title: Troubleshooting MySQL for Pivotal Platform
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic provides operators with basic instructions for troubleshooting on-demand MySQL for PCF.
-For information about temporary MySQL for PCF service interruptions, see
+This topic provides operators with basic instructions for troubleshooting on-demand <%= vars.product_name %>.
+For information about temporary <%= vars.product_name %> service interruptions, see
 <a href="./upgrade.html#interruptions">Service Interruptions</a>.
 
 ## <a id="errors"></a> Troubleshooting Errors
@@ -162,7 +162,7 @@ and the errand logs contain the following:
 
 #### Explanation
 
-MySQL for PCF tries to ensure that there is only one writable instance of the
+<%= vars.product_name %> tries to ensure that there is only one writable instance of the
 leader-follower pair at any given time. However, in certain situations, such as
 network partitions, or manual intervention outside of the provided bosh
 errands, it is possible for both instances to be writable.
@@ -620,7 +620,7 @@ For solutions for replication errors in MySQL log files, see the table below.
     <td>Decode the
       <code>GRA_*.log</code>
       files and look for errors. See
-      <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-PCF-v1-10">
+      <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-pcf-v1-10">
         How to decode Galera GRA log files</a>
       in the Pivotal Support knowledge base. The GRA log files contain failing DDL statements.</td>
   </tr>
@@ -812,7 +812,7 @@ To retrieve the admin and read-only admin credentials for a service instance fro
     of
     <em>Advanced Troubleshooting with the BOSH CLI to SSH into the Ops Manager VM</em>.
   </li>
-  <li>From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI. See
+  <li>From the Pivotal Ops Manager VM, log in to your BOSH Director with the BOSH CLI. See
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a>
     in
     <em>Advanced Troubleshooting with the BOSH CLI</em>.
@@ -890,7 +890,7 @@ To retrieve the admin and read-only admin credentials for a service instance fro
 
 ###  <a id="reinstall"></a>  Reinstall a Tile
 
-To reinstall the MySQL for PCF tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a>
+To reinstall the <%= vars.product_name %> tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a>
 in the Pivotal Support knowledge base.
 
 ###  <a id="view-resources"></a>  View Resource Saturation and Scaling
@@ -983,10 +983,10 @@ gathering information to diagnose the type of failure the cluster is experiencin
       </li>
       <li>
         <strong>Deployment environment:</strong>
-        The environment that MySQL for PCF is running in such as Pivotal Application Service (PAS) or a service tile.</li>
+        The environment that <%= vars.product_name %> is running in such as <%= vars.app_runtime_full %> or a service tile.</li>
       <li>
         <strong>Version numbers:</strong>
-        The versions of the installed Ops Manager, PAS, and MySQL for PCF
+        The versions of the installed Ops Manager, PAS, and <%= vars.product_name %>
       </li>
     </ul>
   </li>
@@ -1192,7 +1192,7 @@ The troubleshooting techniques described above use the following tools.
 logs from your MySQL cluster nodes, MySQL proxies, and, with highly available clusters, the jumpbox VM.
 Do the following to run the `download-logs` script:
 
-1. Download and unpack the `download-logs` script from [MySQL for PCF](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
+1. Download and unpack the `download-logs` script from [<%= vars.product_name %>](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
 
 1. From Ops Manager, open your **BOSH Director** tile > **Credentials** tab.
 
@@ -1204,7 +1204,7 @@ Do the following to run the `download-logs` script:
   + `BOSH_CA_CERT`
   + `BOSH_ENVIRONMENT`
 
-1. From the BOSH CLI, run `bosh deployments` and record the name of the BOSH deployment that deployed MySQL for PCF.
+1. From the BOSH CLI, run `bosh deployments` and record the name of the BOSH deployment that deployed <%= vars.product_name %>.
 
 1. SSH into your Ops Manager VM. For information on how to do this, see
 [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
@@ -1229,7 +1229,7 @@ The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 ###  <a id="mysql-diag"></a>  mysql-diag
 
 `mysql-diag` outputs the current status of a highly available (HA) MySQL cluster
-in PCF and suggests recovery actions if the cluster fails.
+in <%= vars.platform_name %> and suggests recovery actions if the cluster fails.
 For more information, see [Running mysql-diag](./mysql-diag.html).
 
 ## <a id="kb"></a> Knowledge Base (Community)

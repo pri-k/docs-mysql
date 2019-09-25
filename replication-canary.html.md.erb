@@ -8,7 +8,7 @@ owner: MySQL
 <%= partial "../../p-mysql/partials/mysql/galera_beta" %>
 
 This topic describes the replication canary for an highly available (HA) cluster in MySQL
-for Pivotal Cloud Foundry (PCF). The replication canary runs on the jumpbox VM and
+for <%= vars.platform_name %>. The replication canary runs on the jumpbox VM and
 monitors an HA cluster to ensure that replication is working.
 
 ## <a id="overview"></a>Overview
@@ -31,11 +31,11 @@ following:
 ## <a id="sample-canary"></a>Sample Notification Email
 
 If the canary detects replication failure, it immediately sends an email through the
-Pivotal Application Service (PAS) notification service. You must have configured email notifications in
-PAS for the replication canary to send emails.
+<%= vars.app_runtime_full %> notification service. You must have configured email notifications in
+<%= vars.app_runtime %> for the replication canary to send emails.
 
 For more information about configuring email notifications, see the _Configure Email Notifications_
-procedure for your IaaS in the [Pivotal Cloud Foundry](https://docs.pivotal.io/pivotalcf) documentation.
+procedure for your IaaS in the [<%= vars.platform_name %>](https://docs.pivotal.io/pivotalcf) documentation.
 
 The notification service sends emails similar to the following:
 
