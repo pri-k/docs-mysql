@@ -32,7 +32,7 @@ To enable TLS on existing service instances, do one of the following:
 
 ### <a id='prereq'></a> Prerequisites
 
-To enable TLS for service instances, the operator must do the following:
+To enable TLS for service instances, an operator must:
 
 * Complete the procedure in [Preparing for TLS](prepare-tls.html).
 * Enable TLS in the tile configuration when doing the procedure in [Configure Security](install-config.html#security).
@@ -53,7 +53,7 @@ you must rebind your Spring apps in order to re-establish connections to your se
 
 If your app is bound to an existing service instance, you must re-bind it after enabling TLS for the instance.
 
-To re-bind your app, do the following:
+To re-bind your app:
 
 1. To stop your app, run the following command:
 
@@ -98,7 +98,7 @@ and specify the CA component when initiating the connection to the database.
 It contains runtime-specific information about the app, including metadata supplied by each of the services that are bound to that app.
 The metadata includes the information needed to connect to the service, such as hostnames, usernames, and passwords.
 
-To activate TLS for your app, do the following:
+To activate TLS for your app:
 
 1. Modify your app to retrieve the hostname, username, password, database name, and CA certificate
    for the bound <%= vars.product_name %> service instance from the `VCAP_SERVICES` environment variable.
@@ -153,7 +153,7 @@ To activate TLS for your app, do the following:
 You can use `mysql` to establish a TLS connection to a <%= vars.product_name %> service instance that has TLS
 enabled. For more information about how to enable TLS for a service instance, see [Enable TLS](#enable), above.
 
-To establish a TLS connection to a service instance, do the following:
+To establish a TLS connection to a service instance:
 
 1. Create a new service key for the service instance with TLS enabled. For example:
   <pre class="terminal">$ cf create-service-key my-service-instance my-tls-service-key
