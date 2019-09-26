@@ -29,7 +29,7 @@ origin:"p.mysql" eventType:ValueMetric timestamp:1496776477930669688 deployment:
 ## <a id="access"></a>Access MySQL Metrics
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-  <%= partial '../../p-mysql/partials/services/log-cache-cli-plugin' %>
+  <%= partial vars.path_to_partials + '/services/log-cache-cli-plugin' %>
 
 ## <a id="kpi"></a>KPIs for MySQL Service Instances
 
@@ -66,22 +66,22 @@ that can be used for monitoring and alerting:
 
 All <%= vars.product_name %> service instances emit the following metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/mysql-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/mysql-metrics' %>
 
 ### <a id="disk-metrics"></a>Disk Metrics
 
 All <%= vars.product_name %> services emit the following disk usage metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/disk-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/disk-metrics' %>
 
 ### <a id="l-f-metrics"></a>Leader-Follower Metrics
 
 Leader-follower VMs emit the followings metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/l-f-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/l-f-metrics' %>
 
 ### <a id="ha-metrics"></a>Highly Available Cluster Metrics
 
 HA clusters emit the followings metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/ha-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/ha-metrics' %>
