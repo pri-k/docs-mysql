@@ -12,10 +12,11 @@ This guide describes setting up and using <%= vars.product_name %> as an on-dema
 
 ## <a id='AboutTile'></a>About <%= vars.product_name %>
 
-<%= vars.product_name %> enables <%= vars.platform_name %> app developers to provision and use a MySQL database with a
-single command.
+<%= vars.product_name %> enables <%= vars.platform_name %> app developers to provision and 
+use a MySQL database with a single command.
 
-The <%= vars.product_name %> product delivers dedicated instances on demand, "Database as a Service", to <%= vars.platform_name %> users.
+<%= vars.product_name %> delivers dedicated instances on demand, "Database as a Service", 
+to <%= vars.platform_name %> users. 
 When installed, the tile deploys and maintains a single Service Broker that is
 responsible for <%= vars.platform_name %> integration.
 The service is configured with sane defaults, following the principle of least
@@ -28,8 +29,11 @@ surprise for a general-use relational database service.
   + Highly available (HA) cluster. For highly available clusters, <%= vars.product_name %> uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
+  + Multi&#8209;Datacenter leader follower. For more information, 
+  see [About Multi-Foundation Replication](./about-multi-found.html)
 
     <%= partial "../../p-mysql/partials/mysql/galera_beta" %>
+    <%= partial "../../p-mysql/partials/mysql/multi_found_beta" %>
 
 ## <a id='snapshot'></a> Product Snapshot
 
@@ -40,11 +44,11 @@ The following table provides version and version-support information about <%= v
 <th>Details</th>
 <tr>
   <td>Version</td>
-  <td>2.8.0</td>
+  <td>2.7.1</td>
 </tr>
 <tr>
   <td>Release date</td>
-  <td>XX X, 2019</td>
+  <td>XXX X, 2019</td>
 </tr>
 <tr>
   <td>Software component version</td>
@@ -52,11 +56,11 @@ The following table provides version and version-support information about <%= v
 </tr>
 <tr>
   <td>Compatible Pivotal Ops Manager version(s)</td>
-  <td>XXX</td>
+  <td>2.7, 2.6, 2.5, and 2.4</td>
 </tr>
 <tr>
   <td>Compatible <%= vars.app_runtime_full %> version(s)</td>
-  <td>XXX</td>
+  <td>2.7. 2.6, 2.5, and 2.4</td>
 </tr>
 <tr>
   <td>IaaS support</td>
@@ -77,7 +81,7 @@ instances are provisioned and allows for efficient and seamless resource use for
 Additionally, both the operator and app developer can configure essential MySQL settings.
 
 The <%= vars.product_name %> on-demand service leverages the on-demand service broker. For general information about the on-demand service
-broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/).
+broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/0-15/)
 
 ### <a id="service"></a>On-Demand Service Plan
 
@@ -146,4 +150,4 @@ Choosing two AZs for the single-node plan does not increase the number of AZs as
 
 ##<a id="feedback"></a> Feedback
 
-Please provide any bugs, feature requests, or questions to [the <%= vars.platform_name %> Feedback list](mailto:pivotal-cf–feedback@pivotal.io).
+Please provide any bugs, feature requests, or questions to [the <%= vars.product_name %> Feedback list](mailto:pivotal-cf–feedback@pivotal.io).

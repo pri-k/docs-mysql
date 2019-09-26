@@ -8,7 +8,7 @@ owner: MySQL
 This topic describes how to configure automated backups for <%= vars.product_name %>,
 and how to manually restore a MySQL service instance from a backup.
 
-<p class="note"><strong>Note:</strong> As of v2.2.0, the MySQL for PCF tile no longer includes the option to disable automated backups. You must configure automated backups.</p>
+<p class="note"><strong>Note:</strong> <%= vars.product_old %> v2.2.0 and later and <%= vars.product_name %> 2.7 and later, does not includee the option to disable automated backups. You must configure automated backups.</p>
 <p class="note"><strong>Note:</strong> Pivotal recommends that you always configure a single instance plan in order to streamline the restore process for leader-follower plans.</p>
 
 ## <a id="overview"></a>About Automated Backups
@@ -89,7 +89,7 @@ SCP enables the operator to use any desired storage solution on the destination 
 To back up your database using SCP, complete the following procedures:
 
 + [Create a Public and Private Key Pair](#scp-keys)
-+ [Configure Backups in Ops Manager](#configure-scp)
++ [Configure Backups in Pivotal Ops Manager](#configure-scp)
 
 ### <a id="scp-keys"></a> Create a Public and Private Key Pair
 
@@ -106,7 +106,7 @@ Pivotal recommends that this user and key pair be solely for <%= vars.product_na
 
 1. (Recommended) Create a new public and private key pair for authenticating as the above user on the destination VM.
 
-### <a id="configure-scp"></a> Configure Backups in Ops Manager
+### <a id="configure-scp"></a> Configure Backups in Pivotal Ops Manager
 
 Use Ops Manager to configure <%= vars.product_name %> to backup using SCP.
 

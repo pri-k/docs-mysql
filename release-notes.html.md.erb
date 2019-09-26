@@ -3,48 +3,32 @@ title: Release Notes
 Owner: MySQL
 ---
 
-<%= partial '../../p-mysql/partials/branding-change'%>
-<%= partial '../../p-mysql/partials/pcf-name-change'%>
-
 <strong><%= modified_date %></strong>
 
-Pivotal recommends that you upgrade to the latest version of your current minor line, then upgrade to the latest available version of the new minor line. For example, if you use an older vX.x
-.x version, upgrade to the latest vX.x.x version before upgrading to the latest vX.x.x version.
+Pivotal recommends that you upgrade to the latest version of your current minor line,
+then upgrade to the latest available version of the new minor line. For example, if you use an older v2.6.x
+version, upgrade to the latest v2.6.x version before upgrading to the latest v2.7.x version.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
-## <a id="XXX"></a> v2.6.x
+## <a id="2-7-1"></a> v2.7.1
 
-**Release Date: XX X, XXX**
+**Release Date: XX XX, 2019**
 
 ### Features
 
 New features and changes in this release:
 
-+ When upgrading from MySQL for PCF v2.5 to v2.6, internal certificates and
-certificate authorities automatically rotate when
-an operator runs `upgrade-all-service-instances`. The new certificates and CAs do
-not expire for 5 years. 
-<p class="note warning"><strong>Warning:</strong> If you do not run <code>upgrade-all-service-instances</code> your certificates can expire. This can cause issues with backups, services bindings, and highly available clusters. </p>
+### Security Fix
 
+This release includes the following security update:
 
-### Security Fixes
+### Known Issue
 
-This release includes the following security fixes:
+This release has the following issues:
 
-
-### Fixed Issues
-
-This release fixes the following issue:
-
-
-### Known Issues
-
-This release has the following known issues:
-
-or
-
-There are no known issues for this release.
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
 
 ### Compatibility
 
@@ -57,15 +41,57 @@ This release uses the following component versions:
 </tr>
 <tr>
     <td>Stemcell</td>
-    <td>vX.x.x</td>
+    <td>XXX</td>
+</tr>
+</table>
+
+
+## <a id="2-7-0"></a> v2.7.0
+
+**Release Date: August 7, 2019**
+
+### Features
+
+New features and changes in this release:
+
+* When you upgrade to <%= vars.product_name %> v2.7, <%= vars.product_name %> automatically rotates internal certificates
+  and certificate authority (CA) certificates.
+  The new certificates do not expire for 5 years. For more information,
+  see [Managing Certificates](./rotating-ca.html).
+
+* Automatic backups are now compatible with the AWS CLI v1.16.189,
+  which defaults to Amazon S3 Signature Version 4 for S3 buckets when no other configuration is provided.
+
+
+### Security Fix
+
+This release includes the following security update:
+
+###Fixed Issues
+
+This release fixes the following issue:
+
+* Updates the cf CLI to v6.46
+
+### Known Issue
+
+This release has the following issues:
+
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
+
+### Compatibility
+
+This release uses the following component versions:
+
+<table border="1" class="nice">
+<tr>
+    <th>Component</th>
+    <th>Version</th>
 </tr>
 <tr>
-    <td>Component2-That-Is-Not-Percona-Or-Golang</td>
-    <td>vX.x.x</td>
-</tr>
-<tr>
-    <td>Component3-That-Is-Not-Percona-Or-Golang</td>
-    <td>vX.x.x</td>
+    <td>Stemcell</td>
+    <td><a href="https://docs.pivotal.io/pivotalcf/2-6/stemcells/stemcells.html#315-line">315.x</a></td>
 </tr>
 </table>
 

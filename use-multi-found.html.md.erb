@@ -1,10 +1,10 @@
 ---
-title: Using MySQL for PCF Multi-Foundation Replication
+title: Using MySQL for Pivotal Platform Multi-Foundation Replication
 owner: MySQL
 ---
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers using the MySQL for Pivotal Cloud Foundry (PCF) for replication
+This topic provides instructions for developers using the <%= vars.product_name %> for replication
 across multiple foundations.
 
 <!-- LINK OUT TO DEF OF PXC SINGLE NODE, PRIMARY / SECONDARY ETC  -->
@@ -16,14 +16,14 @@ across multiple foundations.
 
 ## <a id="overview"></a>Overview
 
-In MySQL for PCF v2.6 and later, you can configure replication between two `<%= vars.single_leader_plan %>`service instances
+In <%= vars.product_name %> v2.7 and later, you can configure replication between two `<%= vars.single_leader_plan %>`service instances
 across multiple foundations to create a leader-follower topology.
   
 In the multi-foundation context, the two `<%= vars.single_leader_plan %>`service instances are 
 referred to as a loosely coupled leader-follower service instance.
 
 <p class="note"><strong>Note:</strong> A loosely coupled leader-follower service instance deployed across multiple 
-  foundations is different from the tightly coupled leader-follower plan that MySQL for PCF offers. 
+  foundations is different from the tightly coupled leader-follower plan that <%= vars.product_name %> offers. 
   For information about the tightly coupled leader-follower plan, 
   see <a href="./about-leader-follower.html">About Leader-Follower</a>.</p>
 
@@ -31,7 +31,7 @@ For more information about multi-foundation architecture, see [About Multi-Found
 
 ## <a id="prereq"></a>Prerequisites
 
-Before you use MySQL for PCF across multiple foundations, you must have the following:
+Before you use <%= vars.product_name %> across multiple foundations, you must have the following:
 
 + Access to the `<%= vars.single_leader_plan %>` plan
 + An operator configured multi-foundation architecture. For more information, see 
@@ -39,15 +39,15 @@ Before you use MySQL for PCF across multiple foundations, you must have the foll
 
 ## <a id='create-multi-dc'></a>Create a Multi-Foundation Leader-Follower Service Instance
 
-Set up a leader-follower service instance of MySQL for PCF across multiple foundations by doing the following:
+Set up a leader-follower service instance of <%= vars.product_name %> across multiple foundations by doing the following:
 
-1. Check the service availability in the Marketplace to see if there is an existing instance of MySQL for PCF in your space. See [Confirm the MySQL for PCF Service Availability](use.html#marketplace).
+1. Check the service availability in the Marketplace to see if there is an existing instance of <%= vars.product_name %> in your space. See [Confirm the <%= vars.product_name %> Service Availability](use.html#marketplace).
 1. Create `<%= vars.single_leader_plan %>` service instances to configure a loosely coupled multi-foundation leader-follower service instance. See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
 1. Establish a connection between the `<%= vars.single_leader_plan %>` service instances to enable replication. See [Configure Multi-Foundation Replication](#create-service-key), below  .
 1. Bind the  `<%= vars.single_leader_plan %>` service instances to your apps. See [Bind a Leader-Follower Service Instance to Your App](#bind), below.
-5. Modify your app to use the MySQL for PCF service. [Use the MySQL Service in Your App](./use.html#call), below. 
+5. Modify your app to use the <%= vars.product_name %> service. [Use the MySQL Service in Your App](./use.html#call), below. 
 
-After you create a leader-follower service instance across multiple foundations, you can manage it over the life cycle of your apps and data. For instructions on how to manage a MySQL for PCF service instance, see [Manage Service Instances](./use.html#manage).
+After you create a leader-follower service instance across multiple foundations, you can manage it over the life cycle of your apps and data. For instructions on how to manage a <%= vars.product_name %> service instance, see [Manage Service Instances](./use.html#manage).
 
 ### <a id='create-service-instance'></a>Create <%= vars.single_leader_plan %> Service Instances
 
@@ -80,7 +80,7 @@ Create a leader-follower service instance by doing the following:
         ```
 
         Where:
-        - `PLAN` is the name of the MySQL for PCF `<%= vars.single_leader_plan %>` plan you want to use.
+        - `PLAN` is the name of the <%= vars.product_name %> `<%= vars.single_leader_plan %>` plan you want to use.
         - `PRIMARY-INSTANCE` is a name you choose to identify the service instance.
         This name appears under `service` in output from `cf services`.
 
@@ -325,4 +325,4 @@ To bind an app to a leader-follower service instance, do the following:
 1. Bind your app to your secondary service instance by repeating step 1, above, 
 and replacing references to primary with secondary.
 
-<p class="note"><strong>Note:</strong> After you bind your apps to your service instances, you must modify your apps to use the MySQL for PCF service. For instructions on how to use MySQL for PCF in your app, see <a href="./use.html#call"> Use the MySQL Service in Your App</a>.</p>
+<p class="note"><strong>Note:</strong> After you bind your apps to your service instances, you must modify your apps to use the <%= vars.product_name %> service. For instructions on how to use <%= vars.product_name %> in your app, see <a href="./use.html#call"> Use the MySQL Service in Your App</a>.</p>
