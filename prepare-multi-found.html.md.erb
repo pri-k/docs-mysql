@@ -36,9 +36,9 @@ The foundations should also have as similar as possible configurations and capac
       that require high app uptime. If you use active-active typology, you must create two primary foundations.
       For more information, see [Active-Active Topology](./about-multi-found.html#active-active).
 
-1. Deployed both foundations on a single flat network.
-For example, if the leader node is assigned an IP address such as 10.0.0.1,
-then leader and the follower must connect to each other on that IP address.
+1. Deployed both foundations on a single flat network. For example, the leader and follower nodes must be
+able to connect to each other on their respective IP addresses. You must ensure that the CIDR ranges for the leader
+and follower nodes do not overlap. 
 
 1. Configured a global DNS load balancer to point to the two PCF foundations
 and their local load balancers.
