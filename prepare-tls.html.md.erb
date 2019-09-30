@@ -47,19 +47,18 @@ container's operating system.
 
 The following workflow describes enabling TLS for <%= vars.product_name %>:
 
-<ol>
-<li>An operator provides a CA certificate to CredHub by performing the procedures
-	in <a href="#provide-generate-pcf">Provide or Generate a CA Certificate</a> below.</li>
-<li>An operator enables TLS in the tile configuration while installing <%= vars.product_name %>.
-    See <a href="install-config.html#security">Configure Security</a>.</li>
-<li>A developer enables TLS for an existing service instance.
-    See <a href="using-tls.html">Using TLS</a>.</li>
-<li>A developer modifies their app to communicate securely with the MySQL server:
-    <ul><li>For Java and Spring apps, see
-			<a href="using-tls.html#activate-spring">Activate TLS for Java and Spring Apps</a>.</li>
-    <li>For all other apps, see <a href="using-tls.html#activate-non-spring">Activate TLS for Non-Spring Apps</a>.</li>
-</li>
-</ol>
+1. An operator provides a CA certificate to CredHub. If you are using multi-foundation
+replication, you must do this for both foundations. See [Provide or Generate a CA Certificate](#provide-generate-pcf) below.
+1. An operator enables TLS in the tile configuration while installing <%= vars.product_name %>.
+If you are using multi-foundation replication, you must do this for both foundations. See [Configure Security](./install-config.html#security).
+1. A developer enables TLS for an existing service instance. See [Using TLS](./using-tls.html).
+1. A developer modifies their app to communicate securely with the MySQL server:
+   * For Java and Spring apps, see [Activate TLS for Java and Spring Apps](using-tls.html#activate-spring).
+   * or all other apps, see [Activate TLS for Non-Spring Apps](using-tls.html#activate-non-spring]).
+
+
+ <p class="note"><strong>Note</strong>: If you are using multi-foundation replication,
+	you must configure TLS.</p>
 
 <p class="note"><strong>Note</strong>: An operator must also rotate the CA
 	certificate if it expires or if it becomes compromised.
@@ -190,6 +189,8 @@ CredHub server.
 Click **Security**.
 1. Paste the contents of the CA certificate into **Trusted Certificates** and
  click **Save**.
+ <p class="note"><strong>Note:</strong> If you using multi-foundation replication, you must
+ paste the CA certificates for both foundations into <strong>Trusted Certificates</strong>.</p>
 9. After preparing your environment for TLS, you must enable TLS in the tile
 configuration while installing <%= vars.product_name %>:
     * **Existing Installation**: If you have already installed the <%= vars.product_name %>
