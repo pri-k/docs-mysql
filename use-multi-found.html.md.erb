@@ -34,9 +34,9 @@ For more information about multi-foundation architecture, see [About Multi-Found
 
 Before you use <%= vars.product_name %> across multiple foundations, you must have:
 
-+ Access to the <%= vars.single_leader_plan %> plan
-+ An operator configured multi-foundation architecture. For more information, see
-[Preparing for Multi-Foundation Replication](./prepare-multi-found.html).
++ Access to the <%= vars.single_leader_plan %> plan.
++ An operator configured multi-foundation architecture.
+For more information, see [Preparing for Multi-Foundation Replication](./prepare-multi-found.html).
 
 ## <a id='create-multi-dc'></a>Create a Multi-Foundation Leader-Follower Service Instance
 
@@ -46,12 +46,12 @@ To set up a leader-follower service instance of <%= vars.product_name %> across 
 See [Confirm the <%= vars.product_name %> Service Availability](use.html#marketplace).
 1. Create <%= vars.single_leader_plan %> service instances to configure a loosely coupled multi-foundation leader-follower service instance.
 See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
-1. Establish a connection between the `<%= vars.single_leader_plan %>` service instances to enable replication.
+1. Establish a connection between the <%= vars.single_leader_plan %> service instances to enable replication.
 See [Configure Multi-Foundation Replication](#create-service-key), below.
 1. Bind the  <%= vars.single_leader_plan %> service instances to your apps.
 See [Bind a Leader-Follower Service Instance to Your App](#bind), below.
 5. Modify your app to use the <%= vars.product_name %> service.
-See [Use the MySQL Service in Your App](./use.html#call), below.
+See [Use the MySQL Service in Your App](./use.html#call).
 
 After you create a leader-follower service instance across multiple foundations,
 you can manage it over the life cycle of your apps and data.
