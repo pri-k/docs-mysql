@@ -286,8 +286,8 @@ following command:
 ### <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
 
 For an app to use a multi-foundation leader-follower service instance, you must bind your app to
-your primary service instance. If you want to use an active-active topology, you must your bind app
-to the secondary service instance in addition to the primary service instance.
+your primary service instance in your primary foundation. If you want to use an active-active topology,
+you must additionally bind your app to the secondary service instance in your secondary foundation addition.
 
 For information about apps in multiple foundations, see
 [About Multi-Foundation Replication](./about-multi-found.html).
@@ -336,8 +336,8 @@ To bind an app to a leader-follower service instance:
     ```
     Where `APP` is the app you bound to the leader-follower service instance in step 2, above.
 
-1. (Optional) If you are using an active-active topology, you must bind your app to your secondary service instance.
-To do this, repeat the above steps and replace references to primary with secondary.
+1. (Optional) If you are using an active-active topology, you must bind the same app to your secondary service instance
+in your secondary foundation. To do this, repeat the above steps and replace references to primary with secondary.
 
 <p class="note"><strong>Note:</strong> After you bind an app to your service instances,
   you must modify the app to use the <%= vars.product_name %> service.
