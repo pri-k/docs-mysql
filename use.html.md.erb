@@ -34,7 +34,7 @@ MySQL for PCF provides a relational database for apps and devices. To use MySQL 
 After you create a MySQL for PCF service instance, you can manage it over the life cycle of your apps and data. See [Manage Service Instances](#manage), below.
 
 The below procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
-see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/devguide/services/managing-services.html).
+see [Managing Service Instances with the cf CLI](http://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html).
 You can also use Apps Manager to do the same tasks using a graphical UI.
 For more information, see
 [Managing Apps and Service Instances Using Apps Manager](https://docs.pivotal.io/pivotalcf/console/manage-apps.html)
@@ -195,7 +195,7 @@ To access the MySQL service from your app:
 
 1. Verify that your app code (or the MySQL client library that the app uses) retries in the case of DNS timeouts.
 
-1. Locate the connection strings listed in the	
+1. Locate the connection strings listed in the
 `VCAP_SERVICES` > `credentials` object for your app. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap) below.
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
