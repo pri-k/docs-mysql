@@ -127,14 +127,9 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
         This helps to detect any changes to the destination VM.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
           Also verify that you have done the following:
-          - Added all users who need to be notified about failed backups to System org and System space</li>
-          - Configured Email Notifications in Pivotal Application Service (PAS),
-          see <em>Configure Email Notifications</em> for your IaaS:
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
+          - Added all users who need to be notified about failed backups to System org and System space
+          - Configured Email Notifications in PAS.
+            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
 
 ## <a id="ceph-or-s3"></a> Option 2: Back Up to Ceph or S3
 
@@ -210,15 +205,10 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
       * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
           to take backups of each service instance.
       * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you done the following:
-          * Added all users who need to be notified about failed backups to System org and System space</li>
-          * Configured Email Notifications in PAS,
-          see <em>Configure Email Notifications</em> for your IaaS:
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
+          Also verify that you have done the following:
+          * Added all users who need to be notified about failed backups to System org and System space
+          * Configured Email Notifications in PAS.
+            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
 
 ## <a id="gcs"></a> Option 3: Back Up to GCS
 
@@ -265,14 +255,10 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
     * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
         to take backups of each service instance.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you done the following:
+          Also verify that you have done the following:
           * Added all users who need to be notified about failed backups to System org and System space
-          * Configured Email Notifications in PAS. For more information see **Configure Email Notifications** for your IaaS:
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
+          * Configured Email Notifications in PAS.
+            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
 
 ## <a id="azure"></a> Option 4: Back Up to Azure Storage
 
@@ -293,15 +279,10 @@ Complete the following steps to back up your database to your Azure Storage acco
         To use an on-premise blob storage, enter the hostname of the blob storage.
     * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you done the following:
-          * Added all users who need to be notified about failed backups to System org and System space</li>
-          * Configured Email Notifications in PAS,
-          see <em>Configure Email Notifications</em> for your IaaS:
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/cloudform-er-config.html#smtp">AWS</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/azure-er-config.html#smtp">Azure</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/gcp-er-config.html#smtp">GCP</a>,
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/openstack-er-config.html#smtp">OpenStack</a>, or
-           <a href="https://docs.pivotal.io/pivotalcf/customizing/config-er-vmware.html#smtp">vSphere</a>.
+          Also verify that you have done the following:
+          * Added all users who need to be notified about failed backups to System org and System space
+          * Configured Email Notifications in PAS.
+            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
 
 ## <a id="manual-backup"></a> Manual Backup
 
