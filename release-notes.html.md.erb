@@ -24,21 +24,24 @@ New features and changes in this release:
 
 * <%= vars.product_name %> supports a beta <%= vars.single_leader_plan %> service plan. This plan has the 
 following features:
-    + Replication across two routable <%= vars.app_runtime_full %> foundations secured over mTLS. The primary node in a foundation only trusts the secondary node in another foundation.
-    + The ability to bind and push apps to a primary node a foundation and optionally, to a secondary node in another foundation. 
-    <p class="note warning"><strong>Warning:</strong> <%= vars.single_leader_plan %> are for advanced use cases only. If you are interested in testing <%= vars.single_leader_plan %> service plans,
+    + Replication across two routable <%= vars.app_runtime_full %> foundations secured over mTLS. 
+    The primary node in a foundation only trusts the secondary node in another foundation.
+    + The ability to bind and push apps to a primary node in a foundation and a secondary node in another foundation. 
+    <p class="note warning"><strong>Warning:</strong> <%= vars.single_leader_plan %> are for advanced use cases only. \
+      If you are interested in testing <%= vars.single_leader_plan %> service plans,
     contact <a href="https://pivotal.io/support"> Pivotal Support</a>. 
   </p>
-* Updates Percona Server to v5.7.26-29.
 * Highly available (HA) cluster plans are now in general availability (GA). 
+* Updates Percona Server to v5.7.26-29.
 * Updates pxc-release to 0.20.0.
 * Updates envoy to v1.11.1.
 
-### Security Fix
+### Security Fixes
 
-This release includes the following security update:
+This release includes the following security fix:
 
-* Updates the bpm-release to v1.1.3. This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
+* Updates bpm-release to v1.1.3. 
+This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
 
 ### Resolved Issues
 
@@ -47,9 +50,11 @@ This release has the following fixes:
 * You can now share MySQL for Pivotal Platform service instances across orgs and spaces using `cf share-service`.
 * Certificate rotation now works reliably with BOSH. 
 
-### Known Issue
+### Known Issues
 
-There are no known issues for this release.
+This release has the following issue:
+
++ <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
 ## <a id="2-7-0"></a> v2.7.0
 
@@ -68,13 +73,13 @@ New features and changes in this release:
   which defaults to Amazon S3 Signature Version 4 for S3 buckets when no other configuration is provided.
 
 
-### Security Fix
+### Security Fixes
 
-This release includes the following security update:
+This release includes the following security fix:
 
 * Updates the cf CLI to v6.46
 
-### Known Issue
+### Known Issues
 
 This release has the following issues:
 
