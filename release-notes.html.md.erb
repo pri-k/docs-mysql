@@ -25,31 +25,37 @@ For product versions and upgrade paths, see the
 
 **Release Date:**  Oct 10, 2019
 
-### Features
-New features and changes in this release:
-
-* Bumps PXC to the latest version.
-* Certificate rotation does not rely on BOSH converge variables.
-
-### Security Fixes
+### Security Fix
 
 This release includes the following security fix:
 
-* Updates the BPM to v1.1.3 which contains the fix for [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
+* Updates bpm-release to v1.1.3. 
+This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
 
-### Resolved Issue
+### Feature
 
-This release has the following fix:
+New feature and change in this release:
 
-* Addressing a regression introduced in an older version, you can now 
-create service instances that are shareable across orgs and spaces using `cf share-service`
-for all Service Plans, agnostic of topology.
+* Updates pxc-release to 0.20.0.
+
+### Resolved Issues
+
+This release has the following fixes:
+
+* You can now share MySQL for Pivotal Platform service instances across orgs and spaces using `cf share-service`.
+* Certificate rotation now works reliably with BOSH. 
+
+### Known Issue
+
+This release has the following issue:
+
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 
 ## <a id="2-5-7"></a>v2.5.7
 
 **Release Date:**  Aug 20, 2019
 
-### Security Fixes
+### Security Fix
 
 This release includes the following security fix:
 
@@ -57,9 +63,9 @@ This release includes the following security fix:
   + High [CVE-2019-3781: CF CLI does not sanitize user's password in verbose/trace/debug](https://pivotal.io/security/cve-2019-3781)
   + Medium [CVE-2019-3800: CF CLI writes the client id and secret to config file](https://pivotal.io/security/cve-2019-3800)
 
-### Features
+### Feature
 
-New features and changes in this release:
+New feature and change in this release:
 
 + Updates Percona Server to v5.7.26-29.
 
@@ -70,7 +76,7 @@ This release has the following fix:
 + Automatic backups for leader-follower service instances now work correctly.
 Previously, a regression caused the leader or follower node to take a backup of its peer node rather than itself.
 
-### Known Issue
+### Known Issues
 
 This release has the following issues:
 
@@ -97,13 +103,13 @@ The following components are compatible with this release:
 
 **Release Date:**  July 19, 2019
 
-### Features
+### Feature
 
-New features and changes in this release:
+New feature and change in this release:
 
 + Updates the AWS CLI version. Automatic backups use this version to support non-public AWS regions and external object stores that require the v4 signature.
 
-### Known Issue
+### Known Issues
 
 This release has the following issues:
 
@@ -125,7 +131,7 @@ This release fixes the following issue:
   For information about setting **Apps Domain** in the PAS tile,
   see [Configure Domains](https://docs.pivotal.io/pivotalcf/2-5/customizing/configure-pas.html#domains).
 
-### Known Issue
+### Known Issues
 
 This release has the following issue:
 
