@@ -22,39 +22,33 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 New features and changes in this release:
 
+* <%= vars.product_name %> supports a beta <%= vars.single_leader_plan %> service plan. This plan has the 
+following features:
+    + Replication across two routable <%= vars.app_runtime_full %> foundations secured over mTLS. The primary node in a foundation only trusts the secondary node in another foundation.
+    + The ability to bind and push apps to a primary node a foundation and optionally, to a secondary node in another foundation. 
+    <p class="note warning"><strong>Warning:</strong> <%= vars.single_leader_plan %> are for advanced use cases only. If you are interested in testing <%= vars.single_leader_plan %> service plans,
+    contact <a href="https://pivotal.io/support"> Pivotal Support</a>. 
+  </p>
 * Updates Percona Server to v5.7.26-29.
-* GA Highly Available (HA) Cluster topology in the Service Plan configuration
-* Bumps PXC to the latest version.
-* Bumps envoy to v1.1.
-* Introduces a new topology in Service Plan configuration called Multi Datacenter Leader-Follower [BETA]
-which can be used for replication across two routable PAS foundations for the operator to configure and enable
-* When made available through cf marketplace, the developer can configure replication across two PAS foundations
-with the Multi Datacenter 
-Leader-Follower [BETA] plan such that the replication channel across foundations is secured over 
-mTLS and the leader in one PAS foundation trusts only its configured follower in another PAS foundation.
-* The developer can push and bind applications to the leader in the same foundation, and 
-optionally push and bind applications to the follower in the second foundation.
-
-Note: If you are interested in testing, please contact support for guidance on pre-requisites and how-to.
-
+* Highly available (HA) cluster plans are now in general availability (GA). 
+* Updates pxc-release to 0.20.0.
+* Updates envoy to v1.3.1.
 
 ### Security Fix
 
 This release includes the following security update:
 
-* Updates the BPM to v1.1.3 which contains the fix for [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
+* Updates the bpm-release to v1.1.3. This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
 
 ### Resolved Issues
 
 This release has the following fixes:
 
-* Addressing a regression introduced in an older version, you can now 
-create service instances that are shareable across orgs and spaces using `cf share-service`
-for all Service Plans, agnostic of topology.
-* Automatic backups for leader-follower service instances now work correctly. 
-Previously, a regression caused the leader or follower node to take a backup of its peer 
-node rather than itself.
+* You can now share MySQL for Pivotal Platform service instances across orgs and spaces using `cf share-service`.
 
+### Known Issue
+
+There are no known issues for this release.
 
 ## <a id="2-7-0"></a> v2.7.0
 
