@@ -14,48 +14,6 @@ version, upgrade to the latest v2.6.x version before upgrading to the latest v2.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
-## <a id="2-7-1"></a> v2.7.1
-
-**Release Date: October 10, 2019**
-
-### Features
-
-New features and changes in this release:
-
-* Updates Percona Server to v5.7.26-29.
-* GA Highly Available (HA) Cluster topology in the Service Plan configuration
-* Bumps PXC to the latest version.
-* Bumps envoy to v1.1.
-* Introduces a new topology in Service Plan configuration called Multi Datacenter Leader-Follower [BETA]
-which can be used for replication across two routable PAS foundations for the operator to configure and enable
-* When made available through cf marketplace, the developer can configure replication across two PAS foundations
-with the Multi Datacenter 
-Leader-Follower [BETA] plan such that the replication channel across foundations is secured over 
-mTLS and the leader in one PAS foundation trusts only its configured follower in another PAS foundation.
-* The developer can push and bind applications to the leader in the same foundation, and 
-optionally push and bind applications to the follower in the second foundation.
-
-Note: If you are interested in testing, please contact support for guidance on pre-requisites and how-to.
-
-
-### Security Fix
-
-This release includes the following security update:
-
-* Updates the BPM to v1.1.3 which contains the fix for [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
-
-### Resolved Issues
-
-This release has the following fixes:
-
-* Addressing a regression introduced in an older version, you can now 
-create service instances that are shareable across orgs and spaces using `cf share-service`
-for all Service Plans, agnostic of topology.
-* Automatic backups for leader-follower service instances now work correctly. 
-Previously, a regression caused the leader or follower node to take a backup of its peer 
-node rather than itself.
-
-
 ## <a id="2-7-0"></a> v2.7.0
 
 **Release Date: August 7, 2019**
