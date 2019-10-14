@@ -210,12 +210,12 @@ To access the MySQL service from your app:
 
   To use custom schemas in your apps:
 
-  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
+  1. Create a custom schema using the MySQL client by doing the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
   <br><br>
     For more information about the `CREATE DATABASE` SQL statement, see [
     13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
 
-  2. To modify your app to use your custom schema:
+  2. Modify your app to use your custom schema by doing one of the following:
     + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema.
     + If your app is not written in Java,
       modify your app to use your custom schema in the `name`
@@ -223,6 +223,18 @@ To access the MySQL service from your app:
 
     For more information about the environment variable credentials hash `VCAP_SERVICES`,
     see [MySQL Environment Variables](#vcap), below.
+    
+  1. Bind your app to the custom schema by running the following command:
+      
+      ```
+      cf bind-service APP SERVICE-INSTANCE -c '{"schema":"CUSTOM-SCHEMA"}'"
+      ```
+      
+    Where:
+    - `APP` is the app you want to use the custom schema.
+    - `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
+    - `CUSTOM-SCHEMA` is the name of your custom schema. 
+  
   3. Push your app using `cf push`.
 
 ###<a id="vcap"></a>MySQL Environment Variables
