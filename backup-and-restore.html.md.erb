@@ -392,7 +392,7 @@ For more information, see [Establish a Connection to a Service Instance from Out
     * `sys`
 
 1. To back up the databases remaining in the list, run the following command for each database:
-<pre><code>mysqldump --single-transaction --user=USERNAME --password=PASSWORD \
+<pre><code>mysqldump --set-gtid-purged=off --single-transaction --user=USERNAME --password=PASSWORD \
 --host=MYSQL-IP \
 --databases DB-NAME > BACKUP.sql
 </code></pre>
@@ -403,16 +403,18 @@ For more information, see [Establish a Connection to a Service Instance from Out
     * `MYSQL-IP` is the MySQL IP address.
     * `DB-NAME` is the name of the database.
     * `BACKUP` is a name you create for the backup file. Use a different filename for each backup.
+    
+    The `--set-gtid-purged=off` flag enables you to restore the backup without admin privileges. <br><br> 
 
     For example:
     <pre class="terminal">
-    $ mysqldump --single-transaction --user=abcdefghijklm --password=123456789 \
+    $ mysqldump --set-gtid-purged=off --single-transaction --user=abcdefghijklm --password=123456789 \
     --host=10.10.10.5 \
     --databases canary\_db > canary\_db.sql
     </pre>
 
     For more information about the mysqldump utility, see
-    [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html) in the
+    [mysqldump](https://dev.mysql.com/doc/refman/en/mysqldump.html) in the
     [MySQL Documentation](https://dev.mysql.com/doc/).
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
