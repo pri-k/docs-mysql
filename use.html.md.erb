@@ -210,21 +210,24 @@ To access the MySQL service from your app:
   By default, service bindings use the default schema `service_instance_db`.
 
   To use custom schemas in your apps:
-
-  1. To create a custom schema using the MySQL client, do the procedures in [3.3.1 Creating and Selecting a Database](https://dev.mysql.com/doc/refman/en/creating-database.html) in the MySQL documentation.
-  <br><br>
-    For more information about the `CREATE DATABASE` SQL statement, see [
-    13.1.12 CREATE DATABASE Syntax](https://dev.mysql.com/doc/refman/en/create-database.html).
-
-  2. To modify your app to use your custom schema:
-    + If your app is written in Java, construct a `jdbcUrl` that uses your custom schema.
-    + If your app is not written in Java,
-      modify your app to use your custom schema in the `name`
-      credentials property for `VCAP_SERVICES`.
-
-    For more information about the environment variable credentials hash `VCAP_SERVICES`,
-    see [MySQL Environment Variables](#vcap), below.
-  3. Push your app using `cf push`.
+    
+  1. Bind your app to the custom schema by running the following command:
+      
+      ```
+      cf bind-service APP SERVICE-INSTANCE -c '{"schema":"CUSTOM-SCHEMA"}'"
+      ```
+      
+    Where:
+    - `APP` is the app you want to use the custom schema.
+    - `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
+    - `CUSTOM-SCHEMA` is the name of your custom schema.
+    
+  1. Restart your app by running the following command:
+    
+    ```
+    cf restart APP
+    ```
+    Where `APP` is the app you want to use the custom schema.
 
 ###<a id="vcap"></a>MySQL Environment Variables
 Apps running in <%= vars.platform_name %> gain access to bound service instances
