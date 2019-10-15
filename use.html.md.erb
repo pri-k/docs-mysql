@@ -277,7 +277,7 @@ your app to apply the changes to `VCAP_SERVICES`.
 You can manage service instances in the following ways:
 
 + Move your data to a different plan. See [Update a Service Instance to a Larger Plan](#update), below.
-+ Share service instances between orgs and spaces. See [](), below.
++ Share service instances between orgs and spaces. See [Share Service Instances](#share), below.
 + Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
 + Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
 
@@ -313,35 +313,35 @@ For more information about service instance sharing, see [Sharing Service Instan
 
 To share a service instance:
 
-1. Target the source org and space for the service instances you want to share by running:
+1. Target the source org and space for the service instance you want to share by running:
   
     ```
-    cf target -o ORG-1 -s SPACE-1
+    cf target -o SOURCE-ORG -s SOURCE-SPACE
     ```
     
     Where:
-    + `ORG-1` is the source org for your service instance.
-    + `SPACE-1` is the source space for your service instance. 
+    + `SOURCE-ORG` is the source org for your service instance.
+    + `SOURCE-SPACE` is the source space for your service instance. 
     
-2. Share your service instances to the destination org and space by running:
+2. Share your service instance to the destination org and space by running:
 
     ```
-    cf share-service SERVICE-INSTANCE -o ORG-2 -s SPACE-2
+    cf share-service SERVICE-INSTANCE -o DESTINATION-ORG -s DESTINATION-SPACE
     ```
     
     Where:
     + `SERVICE-INSTANCE` is the service instance you want to share. 
-    + `ORG-2` is the destination org for the service instance.
-    + `SPACE-2` is the destination space for the service instance.
+    + `DESTINATION-ORG` is the destination org for the service instance.
+    + `DESTINATION-SPACE` is the destination space for the service instance.
 1. Target the destination org and space by running:
 
     ```
-    cf target -o ORG-2 -s SPACE-2
+    cf target -o DESTINATION-ORG -s DESTINATION-SPACE
     ```
     
     Where:
-    + `ORG-2` is the destination org for the service instance.
-    + `SPACE-2` is the destination space for the service instance.
+    + `DESTINATION-ORG` is the destination org for the service instance.
+    + `DESTINATION-SPACE` is the destination space for the service instance.
   
 1. Confirm the service instance was shared by running: 
 

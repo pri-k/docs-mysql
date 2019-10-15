@@ -168,42 +168,24 @@ The `migrate` command must be able to access the source database.
 How you enable this access depends on where the source database is located relative to the target, as follows:
 
 * **Migrating Within an Org and Space**: The `migrate` command can access the source without any preparation.
-Continue to [Migrate Data](#migrate-data).
+Continue to [Migrate Data](#migrate-data), below.
 * **Migrating Across Spaces**: If the source database is in a different space from the target,
-enable access through service-instance sharing, as described in [Source Access across Spaces](#across-spaces), below.
+enable access through service instance sharing. See [Source Access across Spaces](#across-spaces), below.
 * **Migrating from Off-Platform**: If the source database is in a different PCF foundation from the target, or not on any PCF foundation,
-create a user-provided service that accesses the remote database,
-as described in [Source Access Off-Platform](#off-platform), below.
+create a user-provided service that accesses the remote database. See [Source Access Off-Platform](#off-platform), below.
 
 ### <a id='across-spaces'></a>Source Access across Spaces
 
 If your source MySQL service instance is in a different development space from your target org and space,
-you can migrate your data by enabling service instance sharing for the source database.
+you can migrate your data by sharing the service instance to the target org and space.
+Service instance sharing is enabled by default.
 
-<p class="note"><strong>Note:</strong> Service instance sharing for MySQL for PCF v2 is enabled by default.</p>
+To share a source MySQL service instances to your target org and space:
 
-To set up service instance sharing for your source database, do the following:
+1. Do in the procedure in [Share Service Instances](./use.html#share).
 
-1. Share the source MySQL service instance to your target org and space.
+1. Continue to [Migrate Data](#migrate-data), below.
 
-    ```
-    cf share-service SOURCE-MYSQL-INSTANCE -o TARGET-ORG -s TARGET-SPACE
-    ```
-
-1. Verify that you can access the source service instance from the target org/space.
-   First, run the following command to target your target org and space:
-
-    ```
-    cf target -o TARGET-ORG -s TARGET-SPACE
-    ```
-1. Then, run the following command to ensure your source service instance was
-   shared successfully.
-
-    ```
-    cf services
-    ```
-
-After verifying that your source database service instance is in the `cf services` output, continue to [Migrate Data](#migrate-data), below.
 
 ### <a id='off-platform'></a>Source Access Off-Platform
 
