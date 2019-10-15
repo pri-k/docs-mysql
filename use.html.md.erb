@@ -311,7 +311,7 @@ Service instance sharing is enabled by default.
 
 For more information about service instance sharing, see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/2-7/devguide/services/sharing-instances.html).
 
-For example, if you have a service instance in Org A Space 1, and would like to share it to Org B Space 2, follow these steps:
+To share a service instance:
 
 1. Target the source org and space for the service instances you want to share by running:
   
@@ -320,8 +320,8 @@ For example, if you have a service instance in Org A Space 1, and would like to 
     ```
     
     Where:
-    + `ORG-1`
-    + `SPACE-1`
+    + `ORG-1` is the source org for your service instance.
+    + `SPACE-1` is the source space for your service instance. 
     
 2. Share your service instances to the destination org and space by running:
 
@@ -330,9 +330,9 @@ For example, if you have a service instance in Org A Space 1, and would like to 
     ```
     
     Where:
-    + `SERVICE-INSTANCE`
-    + `ORG-2`
-    + `SPACE-2`
+    + `SERVICE-INSTANCE` is the service instance you want to share. 
+    + `ORG-2` is the destination org for the service instance.
+    + `SPACE-2` is the destination space for the service instance.
 1. Target the destination org and space by running:
 
     ```
@@ -340,8 +340,8 @@ For example, if you have a service instance in Org A Space 1, and would like to 
     ```
     
     Where:
-    + `ORG-2`
-    + `SPACE-2`
+    + `ORG-2` is the destination org for the service instance.
+    + `SPACE-2` is the destination space for the service instance.
   
 1. Confirm the service instance was shared by running: 
 
