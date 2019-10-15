@@ -310,7 +310,7 @@ $ cf update-service my-instance -p db-large
 In <%= vars.product_name %> you can share service instances between different orgs and spaces using `cf share-service`.
 Service instance sharing is enabled by default.
 
-For more information about service instance sharing, see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/2-7/devguide/services/sharing-instances.html).
+For more information about service instance sharing, see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/devguide/services/sharing-instances.html).
 
 To share a service instance:
 
@@ -339,10 +339,6 @@ To share a service instance:
     ```
     cf target -o DESTINATION-ORG -s DESTINATION-SPACE
     ```
-    
-    Where:
-    + `DESTINATION-ORG` is the destination org for the service instance.
-    + `DESTINATION-SPACE` is the destination space for the service instance.
   
 1. Confirm the service instance was shared by running: 
 
