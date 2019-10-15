@@ -217,8 +217,10 @@ To access the MySQL service from your app:
 This section describes tasks you do over the life cycle of your apps and data:
 
 + Moving your data to a different plan.
++ Share a service instance between  orgs and spaces.
 + Removing an app's access to a service it no longer needs.
 + Deleting a service instance that is not used.
+
 
 ### <a id="update"></a>Update a Service Instance to a Larger Plan
 
@@ -242,6 +244,53 @@ For example:
 <pre class="terminal">
 $ cf update-service my-instance -p db-large
 </pre>
+
+###<a id="share"></a> Share Service Instances
+
+In MySQL for PCF you can share service instances between different orgs and spaces using `cf share-service`.
+Service instance sharing is enabled by default.
+
+For more information about service instance sharing, see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/2-7/devguide/services/sharing-instances.html).
+
+To share a service instance:
+
+1. Target the source org and space for the service instances you want to share by running:
+  
+    ```
+    cf target -o ORG-1 -s SPACE-1
+    ```
+    
+    Where:
+    + `ORG-1` is the source org for your service instance.
+    + `SPACE-1` is the source space for your service instance. 
+    
+2. Share your service instances to the destination org and space by running:
+
+    ```
+    cf share-service SERVICE-INSTANCE -o ORG-2 -s SPACE-2
+    ```
+    
+    Where:
+    + `SERVICE-INSTANCE` is the service instance you want to share. 
+    + `ORG-2` is the destination org for the service instance.
+    + `SPACE-2` is the destination space for the service instance.
+1. Target the destination org and space by running:
+
+    ```
+    cf target -o ORG-2 -s SPACE-2
+    ```
+    
+    Where:
+    + `ORG-2` is the destination org for the service instance.
+    + `SPACE-2` is the destination space for the service instance.
+  
+1. Confirm the service instance was shared by running: 
+
+    ```
+    cf service SERVICE-INSTANCE
+    ```
+    
+    Where `SERVICE-INSTANCE` is the service instance you shared. 
 
 
 ### <a id="unbind"></a>Unbind an App from a Service Instance
@@ -294,6 +343,8 @@ that the instance no longer exists:
     ```
     watch cf service SERVICE-INSTANCE
     ```
+    
+
 
 ##<a id='establish-tls'></a> Establish a TLS Connection to a Service Instance
 
