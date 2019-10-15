@@ -277,6 +277,7 @@ your app to apply the changes to `VCAP_SERVICES`.
 You can manage service instances in the following ways:
 
 + Move your data to a different plan. See [Update a Service Instance to a Larger Plan](#update), below.
++ Share service instances between orgs and spaces. See [](), below.
 + Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
 + Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
 
@@ -303,6 +304,55 @@ For example:
 $ cf update-service my-instance -p db-large
 </pre>
 
+###<a id="share"></a> Share Service Instances
+
+In <%= vars.product_name %> you can share service instances between different orgs and spaces using `cf share-service`.
+
+<p class="note"><strong>Note:</strong> Service instance sharing for <%= vars.product_name %> v2 is enabled by default.</p>
+
+To share service instances:
+
+For example, if you have a service instance in Org A Space 1, and would like to share it to Org B Space 2, follow these steps:
+
+1. Target the source org and space for the service instances you want to share by running:
+  
+    ```
+    cf target -o ORG-1 -s SPACE-1
+    ```
+    
+    Where:
+    + `ORG-1`
+    + `SPACE-1`
+    
+2. Share your service instances to the destination org and space by running:
+
+    ```
+    cf share-service SERVICE-INSTANCE -o ORG-2 -s SPACE-2
+    ```
+    
+    Where:
+    + `SERVICE-INSTANCE`
+    + `ORG-2`
+    + `SPACE-2`
+1. Target the destination org and space by running:
+
+    ```
+    cf target -o ORG-2 -s SPACE-2
+    ```
+    
+    Where:
+    + `ORG-2`
+    + `SPACE-2`
+  
+1. Confirm the service instance was shared by running: 
+
+    ```
+    cf service SERVICE-INSTANCE
+    ```
+    
+    Where `SERVICE-INSTANCE`
+
+For more information about service instance sharing, see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/2-7/devguide/services/sharing-instances.html).
 
 ### <a id="unbind"></a>Unbind an App from a Service Instance
 
