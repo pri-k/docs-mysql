@@ -287,7 +287,7 @@ Complete the following steps to back up your database to your Azure Storage acco
 
 ## <a id="manual-backup"></a> Manual Backup
 
-<%= vars.product_name %> v2.4 disables remote admin access to MySQL databases.
+<%= vars.product_name %> disables remote admin access to MySQL databases.
 To access your MySQL database to perform a manual backup, you must create a service key for each service instance you want to back up.
 
 This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
