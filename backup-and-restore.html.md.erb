@@ -286,7 +286,7 @@ Complete the following steps to back up your database to your Azure Storage acco
 
 ## <a id="manual-backup"></a> Manual Backup
 
-MySQL for PCF v2.4 disables remote admin access to MySQL databases.
+MySQL for PCF disables remote admin access to MySQL databases.
 To access your MySQL database to perform a manual backup, you must create a service key for each service instance you want to back up.
 
 This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
