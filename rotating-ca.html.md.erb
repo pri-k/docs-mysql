@@ -113,6 +113,24 @@ In the above table, `GUID` is the GUID for the service instance. To find the GUI
 of your service instance, do the procedure in
 [Find Information about Your Service Instance](./troubleshoot-instances.html#instance).
 
+## <a id="workflow"></a> Workflow
+
+Depending on which of your certificates are expiring, you must complete different procedures. 
+The following flowchart describes the workflow for rotating certificate:
+
+![A flowchart that explains the workflow for rotating certs.](./images/rotate-certs.png)
+
+<a href="./images/rotate-certs.png" target="_blank">View a larger version of this flowchart</a>
+
+To rotate your certificates:
+
+1. Determine which of your certificates are expiring. See [Check Expiration Dates](#credhub) below.
+1. If any of your certificates are about to expire or have expired, do one of the following: 
+  * **If your TLS certificates are about to expire or have expired,** do the procedures in [Rotate the TLS CA Certificate](#tls) below.<br><br>
+  * **If your internal certificates are about to expire or have expired,** you must upgrade to MySQL for PCF v2.6. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-6/upgrade.html).
+
+
+
 ## <a id="credhub"></a> Check Expiration Dates
 
 Pivotal Cloud Foundry (PCF) stores the certificates used by MySQL for PCF
