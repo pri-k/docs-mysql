@@ -8,7 +8,7 @@ owner: MySQL
 This topic describes how to provide an existing CA certificate to BOSH CredHub
 and how to generate a new CA certificate with BOSH CredHub, if you do not already have one.
 
-<p class="note"><strong>Note</strong>: If you are using multi-foundation replication,
+<p class="note"><strong>Note</strong>: If you are using <%= vars.single_leader_plan_lc %>,
 	you must configure TLS.
 </p>
 
@@ -52,10 +52,9 @@ container's operating system.
 
 The following workflow describes enabling TLS for <%= vars.product_name %>:
 
-1. An operator provides a CA certificate to CredHub. If you are using multi-foundation
-replication, you must do this for both foundations. See [Provide or Generate a CA Certificate](#provide-generate-pcf) below.
+1. An operator provides a CA certificate to CredHub. If you are using <%= vars.single_leader_plan_lc %>, you must do this for both foundations. See [Provide or Generate a CA Certificate](#provide-generate-pcf) below.
 1. An operator enables TLS in the tile configuration while installing <%= vars.product_name %>.
-If you are using multi-foundation replication, you must do this for both foundations. See [Configure Security](./install-config.html#security).
+If you are using <%= vars.single_leader_plan_lc %>, you must do this for both foundations. See [Configure Security](./install-config.html#security).
 1. A developer enables TLS for an existing service instance. See [Using TLS](./using-tls.html).
 1. A developer modifies their app to communicate securely with the MySQL server:
    * For Java and Spring apps, see [Activate TLS for Java and Spring Apps](using-tls.html#activate-spring).
@@ -193,7 +192,7 @@ CredHub server.
 1. Navigate to the Ops Manager **Installation Dashboard** and select the BOSH Director tile.
 Click **Security**.
 1. Paste the contents of the CA certificate into **Trusted Certificates** and
- click **Save**.<br> If you using multi-foundation replication, you must
+ click **Save**.<br> If you using <%= vars.single_leader_plan_lc %>, you must
  paste the CA certificates for both foundations into **Trusted Certificates**.
 
 9. After preparing your environment for TLS, you must enable TLS in the tile

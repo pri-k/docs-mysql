@@ -29,8 +29,8 @@ Before you download and install the <%= vars.product_name %> tile, complete the 
 + [Enable the BOSH Resurrector](#resurrector)
 + [(Optional) Preparing for TLS](prepare-tls.html):
 Only required if you want to enable TLS.
-+ [(Optional) Preparing for Multi-Foundation Replication](./prepare-multi-found.html): Only required if you 
-want to replicate data across multiple foundations.
++ [(Optional) Preparing for <%= vars.single_leader_plan %>](./prepare-multi-site.html): Only required if you
+want to replicate data across multiple foundations or data centers.
 
 ### <a id="asg"></a> Create an Application Security Group for <%= vars.product_name %>
 
@@ -258,12 +258,12 @@ Perform the following steps for each plan that you want to use in your <%= vars.
       <img src="./images/ha-plan.png">
     </div>
     <div id="tab4" class="tabcontent">
-      <img src="./images/multi-found-plan.png">
+      <img src="./images/multi-site-plan.png">
     </div>
 
 
 1. Configure the fields as follows:
-    <p class="note"><strong>Note:</strong> If you want to replicate data across multiple foundations, 
+    <p class="note"><strong>Note:</strong> If you want to replicate data across multiple foundations or data centers,
     you must configure a <%= vars.single_leader_plan %> plan in both foundations using the same configurations.</p>
   <table>
     <tr><th>Field</th><th>Description</th></tr>

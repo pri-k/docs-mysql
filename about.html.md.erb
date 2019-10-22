@@ -189,13 +189,13 @@ as described in the table below.
 	</tr>
 </table>
 
-### <a id='multi-found-ports'></a> Required Networking Rules for Multi-Foundation Replication
+### <a id='multi-site-ports'></a> Required Networking Rules for <%= vars.single_leader_plan %>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial '../../p-mysql/partials/mysql/multi_found_beta' %>
 
-If you are using multi-foundation replication, you must ensure the networking rules required for all <%= vars.product_name %>
+If you are using <%= vars.single_leader_plan_lc %>, you must ensure the networking rules required for all <%= vars.product_name %>
 service instances and the connection described in the table below are set up in both foundations.
 
 <table class="nice">
@@ -203,7 +203,7 @@ service instances and the connection described in the table below are set up in 
 	<th>Destination VM</th>
 	<th>Default TCP Port</th>
 	<th>Notes</th>
-		
+
 	<tr>
 		<td>Leader VM</td>
 		<td>Follower VM</td>
@@ -213,4 +213,3 @@ service instances and the connection described in the table below are set up in 
 	</tr>
 
 </table>
-	

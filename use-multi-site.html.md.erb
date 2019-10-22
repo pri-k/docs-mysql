@@ -1,11 +1,11 @@
 ---
-title: Using MySQL for Pivotal Platform Multi-Foundation Replication
+title: Using MySQL for Pivotal Platform Multi-Site Replication
 owner: MySQL
 ---
 <strong><%= modified_date %></strong>
 
 This topic provides instructions for developers using the <%= vars.product_name %> for replication
-across multiple foundations.
+across multiple foundations or data centers.
 
 <!-- LINK OUT TO DEF OF PXC SINGLE NODE, PRIMARY / SECONDARY ETC  -->
 <!-- WHAT HAPPENS IF THEY MESS THIS UP - T-SHOOTING? -->
@@ -17,50 +17,50 @@ across multiple foundations.
 ## <a id="overview"></a>Overview
 
 In <%= vars.product_name %> v2.7 and later, you can configure replication between two <%= vars.single_leader_plan %> service instances
-across multiple foundations to create a leader-follower topology.
+across multiple foundations or data centers to create a leader-follower topology.
 
-In the multi-foundation context, the two <%= vars.single_leader_plan %> service instances are
+In a <%= vars.single_leader_plan_lc %> context, the two <%= vars.single_leader_plan %> service instances are
 referred to as a loosely coupled leader-follower service instance.
 
 <p class="note"><strong>Note:</strong> A loosely coupled leader-follower service instance deployed across multiple
-  foundations is different from the tightly coupled leader-follower plan that <%= vars.product_name %> offers.
+  foundations or data centers is different from the tightly coupled leader-follower plan that <%= vars.product_name %> offers.
   For information about the tightly coupled leader-follower plan,
   see <a href="./about-leader-follower.html">About Leader-Follower</a>.
 </p>
 
-For more information about multi-foundation architecture, see [About Multi-Foundation Replication](./about-multi-found.html).
+For more information about multi-site architecture, see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
 
 ## <a id="prereq"></a>Prerequisites
 
-Before you use <%= vars.product_name %> across multiple foundations, you must have:
+Before you use <%= vars.product_name %> across multiple foundations or data centers, you must have:
 
 + Access to the <%= vars.single_leader_plan %> plan
-+ A multi-foundation architecture configured by a operator
-For more information configuring a multi-foundation architecture, see [Preparing for Multi-Foundation Replication](./prepare-multi-found.html).
++ A multi-site architecture configured by a operator
+For more information configuring a multi-site architecture, see [Preparing for <%= vars.single_leader_plan %>](./prepare-multi-site.html).
 
 ## <a id='create-multi-dc'></a>Create a Multi-Foundation Leader-Follower Service Instance
 
-To set up a leader-follower service instance of <%= vars.product_name %> across multiple foundations:
+To set up a leader-follower service instance of <%= vars.product_name %> across multiple foundations or data centers:
 
 1. Check the service availability in the Marketplace to see if there is an existing instance of <%= vars.product_name %> in your space.
 See [Confirm the <%= vars.product_name %> Service Availability](use.html#marketplace).
-1. Create <%= vars.single_leader_plan %> service instances to configure a loosely coupled multi-foundation leader-follower service instance.
+1. Create <%= vars.single_leader_plan %> service instances to configure a loosely coupled multi-site leader-follower service instance.
 See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
 1. Establish a connection between the <%= vars.single_leader_plan %> service instances to enable replication.
-See [Configure Multi-Foundation Replication](#create-service-key), below.
+See [Configure <%= vars.single_leader_plan %>](#create-service-key), below.
 1. Bind the  <%= vars.single_leader_plan %> service instances to your apps.
 See [Bind a Leader-Follower Service Instance to Your App](#bind), below.
 5. Modify your app to use the <%= vars.product_name %> service.
 See [Use the MySQL Service in Your App](./use.html#call).
 
-After you create a leader-follower service instance across multiple foundations,
+After you create a leader-follower service instance across multiple foundations or data centers,
 you can manage it over the life cycle of your apps and data.
 For instructions on how to manage a <%= vars.product_name %> service instance,
 see [Manage Service Instances](./use.html#manage).
 
 ### <a id='create-service-instance'></a>Create <%= vars.single_leader_plan %> Service Instances
 
-To create a leader-follower service instance across multiple foundations, you
+To create a leader-follower service instance across multiple foundations or data centers, you
 must create a <%= vars.single_leader_plan %> service instance in two different
 foundations.
 
@@ -124,7 +124,7 @@ To create a leader-follower service instance:
 1. Create a <%= vars.single_leader_plan %> service instance in your secondary
 foundation by repeating step 1, above, and replacing references to primary with secondary.
 
-### <a id='create-service-key'></a>Configure Multi-Foundation Replication
+### <a id='create-service-key'></a>Configure <%= vars.single_leader_plan %>
 
 After you create the leader and follower <%= vars.single_leader_plan %> service instances,
 you must establish a connection between them to enable
@@ -297,12 +297,12 @@ following command:
 
 ### <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
 
-For an app to use a multi-foundation leader-follower service instance, you must bind your app to
+For an app to use a multi-site leader-follower service instance, you must bind your app to
 your primary service instance in your primary foundation. If you want to use an active-active topology,
 you must additionally bind your app to the secondary service instance in your secondary foundation.
 
-For information about apps in multiple foundations, see
-[About Multi-Foundation Replication](./about-multi-found.html).
+For information about apps in multiple foundations or data centers, see
+[About <%= vars.single_leader_plan %>](./about-multi-site.html).
 
 To bind an app to a leader-follower service instance:
 
