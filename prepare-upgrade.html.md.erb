@@ -5,22 +5,26 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic explains how to prepare for upgrading the MySQL for Pivotal Cloud Foundry (PCF) service and existing service instances.
+This topic explains how to prepare for upgrading the MySQL for Pivotal Cloud Foundry (PCF) service
+and existing service instances.
 
 ## <a id="deprecated-bindings"></a>Overview
 
-MySQL for PCF v2.5 requires service bindings to use BOSH DNS and does not support service bindings that use IP addresses.
-But apps that use older versions of the MySQL service may bind to their instances by IP address.
+MySQL for PCF v2.5 requires app and service-key bindings to use BOSH DNS
+and does not support bindings that use IP addresses.
+But, apps that use older versions of the MySQL service may bind to their instances using an IP address.
 
 To avoid failure and app downtime when upgrading to MySQL for PCF to v2.5,
-all apps that bind to the service by IP address must be re-bound and restarted before you upgrade.
+all apps that bind to the service using an IP address must be re-bound and restarted before you upgrade.
+
+<%# WHAT HAPPENS WITH SERVICE KEYS? DOES JUST TLS FAIL OR DO OTHER THINGS HAPPEN?%>
 
 To give developers time to unbind, rebind, and restart their apps,
 perform the upgrade procedures on this page well in advance of upgrading the MySQL for PCF tile.
 
 ## <a id="check-bindings"></a> Check for Bindings with IP Addresses
 
-To check for running app or service key bindings that use IP addresses, do the following:
+To check for running app or service-key bindings that use IP addresses, do the following:
 
 1. Run the following command and record the BOSH deployment name for your MySQL service broker:
 
@@ -68,19 +72,59 @@ or do not use TLS:
                +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
     </pre>
 
-1. Perform the [Remove IP-Based Bindings](#remove-bindings) procedure below
+1.Do the [Remove IP-Based Bindings](#remove-bindings) procedure below
 for any apps or service keys that list `no dns` in the `REASON` column of the output table.
   <p class="note"><strong>Note</strong>: You do not need to replace bindings listed as <code>no tls</code>.</p>
 
 ## <a id="remove-bindings"></a> Remove IP-Based Bindings
 
-Some of the following steps require coordination with your app developers.
-To remove deprecated bindings, do the following:
+<%# WE ARE DELETING THE SERVICE KEY HERE RIGHT? NOT THE SERVICE-KEY BINDING? %>
+
+Some of the following steps require coordination with your app developers. You must remove both
+the app bindings and service keys that use IP addresses.
+
+
+
+To remove deprecated app bindings, do the following:
 
 1. Have developers replace their IP-based service bindings with bindings that use BOSH DNS.
 See [Re-Bind Apps to Use DNS](#rebind-apps) below.
 1. Upgrade your service instances to be compatible with BOSH DNS.
 See [Upgrade Service Instances](#upgrade-instances) below.
+
+To remove deprecated service keys, do the following:
+
+<%# IS THIS THE BASIC PROCEDURE? %>
+
+1. Delete the service key. See [LINK](). <%# cf delete-service-key %>
+1. Recreate the service key to use TLS. See
+[Establish a TLS Connection to a Service Instance](./use.html#establish-tls).
+1. Rebind the service key. See [LINK](). <%# SAME AS BELOW? %>
+1. Upgrade service instances? See [LINK](). <%# SAME AS BELOW? %>
+1. Restage? See [LINK](). <%# cf restage %>
+
+### <a id="recreate-key"></a> Recreate Service Keys
+
+<%# a warning that the service key will now be a bosh dns address %>
+
+<%#  Link to how to use this from outside the platform
+LINK TO [Obtain the IP Address Using the DNS Lookup App](./use.html#ip-address-lookup) %>
+
+<p class="note warning"><strong>Warning:</strong> When you delete a service key, you lose the triggers,
+  routines, and events created by the user. If you want to keep your triggers, routines, or events,
+contact <a href="https://pivotal.io/support">Pivotal Support</a>.</p>
+
+1. Delete the service key by running:
+
+    ```
+    cf delete-service-key SERVICE-INSTANCE SERVICE-KEY
+    ```
+    Where:
+    + `SERVICE-INSTANCE`
+    + `SERVICE-KEY`
+
+1. Recreate the service key to use TLS by doing the procedure in
+[Establish a TLS Connection to a Service Instance](./use.html#establish-tls).
 
 ### <a id="rebind-apps"></a> Re-Bind Apps to Use DNS
 
