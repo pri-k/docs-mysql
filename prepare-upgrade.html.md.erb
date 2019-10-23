@@ -10,30 +10,31 @@ and existing service instances.
 
 ## <a id="deprecated-bindings"></a>Overview
 
-MySQL for PCF v2.5 requires app and service-key bindings to use BOSH DNS
+MySQL for PCF v2.5 requires app bindings and service keys to use BOSH DNS
 and does not support bindings that use IP addresses.
 However, apps that use MySQL for PCF v2.4 and earlier service instances can
 bind to their instances using an IP address.
 
 To avoid failure and app downtime when upgrading to MySQL for PCF to v2.5,
 all apps that bind to the service using an IP address must be re-bound and restarted before you upgrade.
-You must also recreate all service keys that use IP addresses.
+You must also re-create all service keys that use IP addresses.
 
-To give developers time to unbind, rebind, and restart their apps,
-perform the upgrade procedures on this page well in advance of upgrading the MySQL for PCF tile.
+To give developers time to update their apps and service keys,
+do the upgrade procedures on this page in advance of upgrading the MySQL for PCF tile.
 
 ## <a id="check-bindings"></a> Check for Bindings with IP Addresses
 
-To check for running app or service-key bindings that use IP addresses, do the following:
+To check for apps or service keys that use IP addresses:
 
-1. Run the following command and record the BOSH deployment name for your MySQL service broker:
+1. Locate the BOSH deployment name for your MySQL service broker by running:
 
     ```
-  bosh deployments
+    bosh deployments
     ```
+1. Record the BOSH deployment name for the MySQL service broker. This looks like `pivotal-mysql-GUID`.
 
-1. Run the following command, which lists bindings that use IP addresses
-or do not use TLS:
+1. Confirm which apps or service keys are using IP addresses
+or do not use TLS by running:
 
     ```
     bosh -d pivotal-mysql-GUID run-errand find-deprecated-bindings
@@ -85,15 +86,15 @@ for any apps or service keys that list `no dns` in the `REASON` column of the ou
 Some of the following steps require coordination with your app developers.
 You must remove any app bindings and service keys that use IP addresses.
 
-To remove deprecated app bindings and service keys, do the following:
+To remove deprecated app bindings and service keys:
 
 1. **If you have deprecated app bindings,** developers must
 replace their IP-based app bindings with bindings that use BOSH DNS.
 They must do this for every app binding that is deprecated.
 See [Re-Bind Apps to Use DNS](#rebind-apps) below.
 1. **If you have deprecated service keys,** operators must replace their IP-based service keys
-with bindings that use BOSH DNS. They must do this for every service key that is deprecated.
-See [Recreate Service Keys](#recreate-key) below.
+with keys that use BOSH DNS. They must do this for every service key that is deprecated.
+See [Re-create Service Keys](#recreate-key) below.
 1. Upgrade your service instances to be compatible with BOSH DNS.
 See [Upgrade Service Instances](#upgrade-instances) below.
 
@@ -128,10 +129,10 @@ developers must do the following for each app binding listed in the log error ab
      Confirm that `no dns` does not appear in the `REASON` column in the output table for
      the app binding.
 
-### <a id="recreate-key"></a> Recreate Service Keys
+### <a id="recreate-key"></a> Re-create Service Keys
 
 To replace your deprecated service keys with new service keys that use DNS hostnames,
-operators must do the following for each service-key binding listed in the log error above:
+operators must do the following for each service key listed in the log error above:
 
 1. Delete the service key by running:
 
@@ -139,7 +140,7 @@ operators must do the following for each service-key binding listed in the log e
     cf delete-service-key SERVICE-INSTANCE SERVICE-KEY
     ```
 
-1. Recreate the service key by running:
+1. Re-create the service key by running:
 
     ```
     cf create-service-key SERVICE-INSTANCE SERVICE-KEY
@@ -153,8 +154,8 @@ operators must do the following for each service-key binding listed in the log e
      Confirm that `no dns` does not appear in the `REASON` column in the output table
      for the service key.
 
-1. Update connection strings that use the service key. For example, connection strings for
-    apps that are not managed by your PCF deployment.
+1. Notify your developers that they must update connection strings that use the service key.
+    For example, connection strings for apps that are not managed by your PCF deployment.
     <p class="note"><strong>Note:</strong> If you have any apps that cannot resolve
     BOSH DNS hostnames, you can use the DNS Lookup app to resolve the hostnames to IP addresses.
     See <a href="./use.html#ip-address-lookup">DNS Lookup App</a>.
@@ -162,7 +163,7 @@ operators must do the following for each service-key binding listed in the log e
 
 ### <a id="upgrade-instances"></a> Upgrade Service Instances
 
-To upgrade your service instances, operators must do the following:
+To upgrade your service instances, operators must :
 
 1. Notify the developers who own the apps and service keys listed by the `find-deprecated-bindings` above
 that you are upgrading all service instances. This can impact connectivity to the database.
