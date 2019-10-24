@@ -15,6 +15,10 @@ and does not support bindings that use IP addresses.
 However, apps that use MySQL for PCF v2.4 and earlier service instances can
 bind to their instances using an IP address.
 
+<p class="note"><strong>Note:</strong>
+In this topic, the app bindings and service keys that use IP addresses instead of BOSH DNS are referred to as <em>deprecated</em>.
+</p>
+
 To avoid failure and app downtime when upgrading to MySQL for PCF to v2.5,
 all apps that bind to the service using an IP address must be re-bound and restarted before you upgrade.
 You must also re-create all service keys that use IP addresses.
