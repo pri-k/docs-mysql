@@ -574,15 +574,15 @@ This section configures the `upgrade-all-service-instances` errand, which <%= va
     <tr>
         <td><strong>Number of simultaneous upgrades</strong></td>
         <td>Enter the maximum number of service instances that will be in an upgrading state at the same time.
-        The minimum value is 0 and the maximum is 1 less than the number of BOSH workers.
+        The minimum value is 0 and the maximum is 1 less than the number of BOSH workers. Increasing this value reduces the runtime of service instance upgrades.  
         <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, navigate to the BOSH Director tile, click <strong>Director Config</strong> and locate the **Director Workers** field.</p>
         </td>
     </tr>
     <tr><td><strong>Number of upgrade canary instances</td>
-        <td>Enter the number of service instances to upgrade first before upgrading the rest of the instances.</td>
+        <td>Enter the number of service instances to upgrade first before upgrading the rest of the instances. Increasing this value enables service instances upgrades to fail faster.</td>
     </tr>
     <tr><td><strong>BOSH Upgrade Timeout</td>
-        <td>Enter the amount of time in seconds to wait for BOSH to respond before timing out when upgrading service instances.</td>
+        <td>Enter the amount of time in seconds to wait for BOSH to respond before timing out when upgrading service instances. Increasing this value enables service instances upgrades to fail faster.</td>
     </tr>
 </table>
 
