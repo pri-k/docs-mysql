@@ -3,27 +3,6 @@ title: Monitoring the MySQL Service
 owner: MySQL
 ---
 
-<div class="quick-links">
-  <ul>
-    <li><a href="#mysql-for-pcf-metrics">Metrics</a></li>
-    <li><a href="#kpi">Key Performance Indicators</a></li>
-    <ul>
-       <li><a href="#kpi4MySQL">MySQL for PCF KPIs</a></li>
-       <li><a href="#bosh">BOSH Health Metrics</a></li>
-       <li><a href="#mysql-metrics">MySQL-Specific Metrics</a></li>
-       <li><a href="#galera-metrics">Galera-Specific Metrics</a></li>
-    </ul>
-    <li><a href="#repcanary">Replication Canary</a></li>
-    <ul>
-       <li><a href="#overview-canary">How it Works</a></li>
-       <li><a href="#sample-canary">Sample Notification Email</a></li>
-       <li><a href="#access">Cluster Access</a></li>
-       <li><a href="#enable-canary">Enable the Replication Canary</a></li>
-       <li><a href="#disable-canary">Disable the Replication Canary</a></li>
-    </ul>
-  </ul>
-</div>
-
 This document describes the metrics that are produced by MySQL for PCF, and everything you need to know about the Replication Canary. For information about the Interruptor, see [Using the Interruptor](interruptor.html).
 
 ## <a name="mysql-for-pcf-metrics"></a>Metrics
@@ -34,7 +13,7 @@ The metrics polling interval defaults to 30 seconds. You can change this interva
 
 ![Metrics Polling Interval](images/metrics_polling.png)
 
-Third-party monitoring tools can consume MySQL for PCF's metrics using an nozzle to monitor MySQL performance and health. For more information, see this section 
+Third-party monitoring tools can consume MySQL for PCF's metrics using an nozzle to monitor MySQL performance and health. For more information, see this section
 on [nozzles](https://docs.pivotal.io/tiledev/nozzle.html). For an example Datadog configuration that displays some of the significant metrics outlined below, see the [CF Redis and MySQL example dashboards](https://github.com/pivotal-cf/metrics-datadog-dashboard). Pivotal does not endorse or provide support for any third party solution.
 
 ## <a name="kpi"></a>Key Performance Indicators
@@ -46,7 +25,7 @@ Pivotal recommends that operators continue to fine-tune the alert measures to th
 Pivotal also recommends that operators expand beyond this guidance and create new, installation-specific monitoring
 metrics, thresholds, and alerts based on learning from their own installations.
 
-<h3> <a name="kpi4MySQL"></a>MySQL for PCF KPIs</h3>
+### <a name="kpi4MySQL"></a>MySQL for PCF KPIs
 
 This section lists the KPIs that are specific for MySQL for PCF.
 
@@ -54,21 +33,261 @@ For a list of general KPIs that apply to all instances, and not specifically to 
 
 For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysql-metrics).
 
-<%= partial '../../p-mysql/partials/mysql/mysql_kpis_v1' %>
+#### <a id="server-heartbeat"></a> Server Availability
 
-<h3> <a name="bosh"></a>BOSH Health Metrics</h3>
+|| **<%= vars.mysql_metrics_origin %>/available** |
+| --- | --- |
+| **Description** | The MySQL Server is currently responding to requests, which indicates that the server is running.<br><br> **Use:** This metric is especially useful in single-node mode, where cluster metrics are not relevant. If the server does not emit heartbeats, it is offline.<br><br>**Origin:** Doppler/Firehose<br> **Type:** boolean<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | Average over the last 5 minutes |
+| **Recommended alert thresholds** | **Yellow warning:** N/A<br> **Red critical:** < 1  |
+| **Recommended response** | Run `mysql-diag` and check the MySQL Server logs for errors.  |
+
+#### <a id="wsrep-ready"></a> Galera WSREP Ready
+
+|| **<%= vars.mysql_metrics_origin %>/galera/wsrep_ready** |
+| --- | --- |
+| **Description** | Shows whether each cluster node can accept queries. Returns only 0 or 1. When this metric is 0, almost all queries to that node fail with the error:<br> ```ERROR 1047 (08501) Unknown Command```<br><br> **Use:** Discover when nodes of a cluster have been unable to communicate and, thus, unable to accept transactions.<br><br>**Origin:** Doppler/Firehose<br> **Type:** boolean<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | Average of values of each cluster node, over the last 5 minutes |
+| **Recommended alert thresholds** | **Yellow warning:** < 1.0<br> **Red critical:** 0 (cluster is down)  |
+| **Recommended response** | - Run `mysql-diag` and check the MySQL Server logs for errors.<br> - Make sure there has been no infrastructure event that affects intra-cluster communication.<br>- Ensure that `wsrep_ready` has not been set to off by using the query:<br>```SHOW STATUS LIKE 'wsrep_ready';``` |
+
+
+#### <a id="wsrep-cluster-size"></a> Galera WSREP Cluster Size
+
+|| **<%= vars.mysql_metrics_origin %>/galera/wsrep\_cluster\_size** |
+| --- | --- |
+| **Description** | The number of cluster nodes with which each node is communicating normally.<br><br> **Use:** When running in a multi-node configuration, this metric indicates if each member of the cluster is communicating normally with all other nodes.<br><br>**Origin:** Doppler/Firehose<br> **Type:** count<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | (Average of the values of each node / cluster size), over the last 5 minutes |
+| **Recommended alert thresholds** | **Yellow warning:** < 3.0 (availability compromised)<br> **Red critical:** < 1.0 (cluster unavailable) |
+| **Recommended response** | Run `mysql-diag` and check the MySQL Server logs for errors.  |
+
+
+#### <a id="wsrep-cluster-status"></a> Galera WSREP Cluster Status
+
+|| **<%= vars.mysql_metrics_origin %>/galera/wsrep\_cluster\_status** |
+| --- | --- |
+| **Description** | Shows the primary status of the cluster component that the node is in.<br>Values are:<br> - Primary = 1<br> - Non-primary = 0<br> - Disconnected = -1<br> See [Galera Cluster Status Variables](https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/) in the MariaDB documentation. <br><br> **Use:** Any value other than "Primary" indicates that the node is part of a nonoperational component. This occurs in cases of multiple membership changes that result in a loss of quorum.<br><br>**Origin:** Doppler/Firehose<br> **Type:** integer (see above)<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | Sum of each of the nodes, over the last 5 minutes |
+| **Recommended alert thresholds** | **Yellow warning:** < 3 <br> **Red critical:** < 1  |
+| **Recommended response** | - Check node status to ensure that they are all in working order and able to receive write-sets.<br> - Run `mysql-diag` and check the MySQL Server logs for errors.  |
+
+
+#### <a id="disk-free"></a> Persistent and Ephemeral Disk Used
+
+|| **<%= vars.mysql_metrics_origin %>/system/persistent\_disk\_used\_percent**<br>**<%= vars.mysql_metrics_origin %>/system/ephemeral\_disk\_used\_percent** |
+| --- | --- |
+| **Description** | The percentage of disk used on the persistent and ephemeral file systems. <br><br> **Use:** MySQL cannot function correctly if there isn't sufficient free space on the file systems. Use these metrics to ensure that you have disks large enough for your user base.<br><br>**Origin:** Doppler/Firehose<br> **Type:** Percent<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | Max of persistent disk used of all of nodes<br>and<br>Maximum ephemeral disk used of all nodes |
+| **Recommended alert thresholds** | **Yellow warning:** > 80% <br> **Red critical:** > 90%  |
+| **Recommended response** | - Audit plan allocation by your users, recommend deletion of unused service instances.<br> - Redeploy with larger disks. |
+
+#### <a id="broker-plans-allocated"></a> Service Plans Allocated
+
+|| **<%= vars.mysql_metrics_origin %>/broker/disk\_allocated\_service\_plans** |
+| --- | --- |
+| **Description** |  The number of megabytes allocated by the broker for all service plans, current and allocated. <br><br> **Use:** The service broker will not allow new service instances to be created if there isn't sufficient unreserved space remaining on the persistent disk. <br><br>**Origin:** Doppler/Firehose<br> **Type:** Megabytes<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | disk allocated / persistent disk size  |
+| **Recommended alert thresholds** | **Yellow warning:** < 80% <br> **Red critical:** < 90%  |
+| **Recommended response** | - Audit plan allocation by your users, recommend deletion of unused service instances.<br> - Redeploy with larger persistent disks |
+
+#### <a id="connections"></a> Connections
+
+|| **<%= vars.mysql_metrics_origin %>/net/connections** |
+| --- | --- |
+| **Description** | Connections per second made to the server.<br><br> **Use:** If the number of connections drastically changes or if apps are unable to connect, there might be a network or app issue.<br><br> **Origin:** Doppler/Firehose<br> **Type:** count<br> **Frequency:** 30 s (default) |
+| **Recommended measurement** | The maximum number of connections of any node / `max connections`, over last 1 minute |
+| **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
+| **Recommended response** | When connections per second approaches `max connections`, apps might experience times when they cannot connect to the database. The number of connections per second for the cluster varies based on application instances and app utilization. If this threshold is met or exceeded for an extended period of time, monitor app usage to ensure everything is behaving as expected. |
+
+
+#### <a id="questions"></a> Questions
+
+|| **<%= vars.mysql_metrics_origin %>/performance/questions** |
+| --- | --- |
+| **Description** | The number of statements executed by the server, excluding statements executed within stored programs.<br><br> **Use:** The cluster should always be processing some queries, if just as part of the internal automation. <br><br> **Origin:** Firehose<br> **Envelope Type:** Gauge<br> **Unit:** count<br>**Frequency:** 30 s (default) |
+| **Recommended measurement** | Change in number between the current and previous polling period |
+| **Recommended alert thresholds** | **Yellow warning:** 0 for 90 s <br>**Red critical:** 0 for 120 s|
+| **Recommended response** | If the rate is ever zero for an extended time, run `mysql-diag` and investigate the MySQL server logs to understand why query rate changed and determine appropriate action. |
+
+
+### <a name="bosh"></a>BOSH Health Metrics
 
 All BOSH-deployed components generate the following component metrics; these component metrics also serve as KPIs for the MySQL for PCF service.
 
-<%= partial '../../p-mysql/partials/mysql/bosh_metrics_v1' %>
+#### <a id="ram"></a> RAM
 
-<h3> <a name="mysql-metrics"></a>MySQL-Specific Metrics</h3>
+|| **system.mem.percent** |
+| --- | --- |
+| **Description** | RAM being consumed by the MySQL cluster node.<br><br> **Use:** MySQL increases its memory usage as the data set increases. This is normal, as much of that RAM is used to buffer IO. As long as there is enough remaining RAM for other processes on the instance, the MySQL server should be OK.<br><br> **Origin:** JMX Bridge or BOSH HM<br> **Type:** percentage<br> **Frequency:** 60 s |
+| **Recommended measurement** | Average over the last 10 minutes |
+| **Recommended alert thresholds** | **Yellow warning:** > 95%<br> **Red critical:** > 99% |
+| **Recommended response** | Update the cluster to use VMs that offer more RAM. |
 
-<%= partial '../../p-mysql/partials/mysql/mysql_metrics_v1' %>
 
-<h3> <a name="galera-metrics"></a>Galera-Specific Metrics</h3>
+#### <a id="cpu"></a> CPU
 
-<%= partial '../../p-mysql/partials/mysql/galera_metrics_v1' %>
+|| **system.cpu.percent** |
+| --- | --- |
+| **Description** | CPU time being consumed by the MySQL cluster.<br><br> **Use:** A node that experiences context switching or high CPU usage will become unresponsive. This also affects the ability of the node to report metrics.<br><br> **Origin:** JMX Bridge or BOSH HM<br>**Type:** percent<br> **Frequency:** 60 s |
+| **Recommended measurement** | Average over the last 10 minutes |
+| **Recommended alert thresholds** | **Yellow warning:** > 80%<br> **Red critical:** > 90% |
+| **Recommended response** | Determine what is using so much CPU. If it is from normal processes, update the service instance to use a VM with larger CPU capacity. |
+
+
+#### <a id="persistent-disk"></a> Persistent Disk
+
+|| **persistent.disk.percent** |
+| --- | --- |
+| **Description** | Persistent disk being consumed by the MySQL cluster nodes.<br><br> **Use:** If the persistent disk fills up, MySQL will be unable to process queries and recovery is difficult.<br><br> **Origin:** JMX Bridge or BOSH HM<br> **Type:** percent<br> **Frequency:** 60 s |
+| **Recommended measurement** | Average over the last 10 minutes |
+| **Recommended alert thresholds** | **Yellow warning:** > 75%<br> **Red critical:** > 90% |
+| **Recommended response** | Update the deployment with larger persistent disks. This process might take some time, because the data is copied from the original persistent disk to a new one. For more information, see [Redeploying with Larger Persistent Disks](./configuring.html#disk).|
+
+
+### <a name="mysql-metrics"></a>MySQL-Specific Metrics
+
+| **Data Source** | **Description** | **Metric Unit** |
+| --- | --- | --- |
+| `<%= vars.mysql_metrics_origin %>/available` | Indicates if the local database server is available and responding. | boolean |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_used` | The number of KB used on the persistent disk. | KB |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_used_percent` | The percentage of persistent disk used by both the system and user applications. | percent |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_free` | The number of KB available on the persistent disk. | KB |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_inodes_used` | The number of inodes used on the persistent disk. | count |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_inodes_used_percent` | The percentage of persistent disk inodes used by both the system and user applications. | percent |
+| `<%= vars.mysql_metrics_origin %>/system/persistent_disk_inodes_free` | The number of inodes available on the persistent disk. | count |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_used` | The number of KB used on the ephemeral disk. | KB |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_used_percent` | The percentage of ephemeral disk used by both the system and user applications. | percent |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_free` | The number of KB available on the ephemeral disk. | KB |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_inodes_used` | The number of inodes used on the ephemeral disk. | count |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_inodes_used_percent` | The percentage of ephemeral disk inodes used by both the system and user applications. | percent |
+| `<%= vars.mysql_metrics_origin %>/system/ephemeral_disk_inodes_free` | The number of inodes available on the ephemeral disk. | count |
+| `<%= vars.mysql_metrics_origin %>/broker/disk_allocated_service_plans` | The number of MB allocated by the broker for all service plans, current and allocated. | MB |
+| `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_free` | The number of free pages in the InnoDB Buffer Pool. | pages |
+| `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_total` | The total number of pages in the InnoDB Buffer Pool. | pages |
+| `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_pages_data` | The number of pages in the InnoDB Buffer pool containing data. The number includes both dirty and clean pages. | pages |
+| `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_used` | The number of used pages in the InnoDB Buffer Pool. | pages |
+| `<%= vars.mysql_metrics_origin %>/innodb/buffer_pool_utilization` | The utilization of the InnoDB Buffer Pool. | fraction |
+| `<%= vars.mysql_metrics_origin %>/innodb/data_reads` | The number of data reads. | reads/second |
+| `<%= vars.mysql_metrics_origin %>/innodb/data_writes` | The number of data writes. | writes/second |
+| `<%= vars.mysql_metrics_origin %>/innodb/mutex_os_waits` | The number of mutex OS waits. | events/second |
+| `<%= vars.mysql_metrics_origin %>/innodb/mutex_spin_rounds` | The number of mutex spin rounds. | events/second |
+| `<%= vars.mysql_metrics_origin %>/innodb/mutex_spin_waits` | The number of mutex spin waits. | events/second |
+| `<%= vars.mysql_metrics_origin %>/innodb/os_log_fsyncs` | The number of fsync writes to the log file. | writes/second |
+| `<%= vars.mysql_metrics_origin %>/innodb/row_lock_time` | Time spent in acquiring row locks. | milliseconds |
+| `<%= vars.mysql_metrics_origin %>/innodb/row_lock_waits` | The number of times per second a row lock had to be waited for. | events/second |
+| `<%= vars.mysql_metrics_origin %>/net/connections` | The number of connections to the server. | connection/second |
+| `<%= vars.mysql_metrics_origin %>/net/max_connections` | The maximum number of connections that have been in use simultaneously since the server started. | connections |
+| `<%= vars.mysql_metrics_origin %>/performance/com_delete` | The number of delete statements. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/com_delete_multi` | The number of delete-multi statements. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/com_insert` | The number of insert statements. | query/second |
+| `<%= vars.mysql_metrics_origin %>/performance/com_insert_select` | The number of insert-select statements. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/com_replace_select` | The number of replace-select statements. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/com_select` | The number of select statements. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/com_update` | The number of update statements. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/com_update_multi` | The number of update-multi statements. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/cpu_time` | Total CPU time used. Introduced with MariaDB 5.3; emitted in <%= vars.product_old %> v1 but not in <%= vars.product_name %> v2. | numeric |
+| `<%= vars.mysql_metrics_origin %>/performance/cpu_utilization_percent` | The percent of the CPU in use by all processes on the MySQL node. | percent utilization, from 0-100 |
+| `<%= vars.mysql_metrics_origin %>/performance/created_tmp_disk_tables` | The number of internal on-disk temporary tables created each second by the server while executing statements. | table/second |
+| `<%= vars.mysql_metrics_origin %>/performance/created_tmp_files` | The number of temporary files created each second. | files/second |
+| `<%= vars.mysql_metrics_origin %>/performance/created_tmp_tables` | The number of internal temporary tables created each second by the server while executing statements. | tables/second |
+| `<%= vars.mysql_metrics_origin %>/performance/open_files` | The number of open files. | files |
+| `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | tables |
+| `<%= vars.mysql_metrics_origin %>/performance/open_table_definitions` | The number of currently cached table definitions (FRM files). | count |
+| `<%= vars.mysql_metrics_origin %>/performance/qcache_hits` | The number of query cache hits. | hits/second |
+| `<%= vars.mysql_metrics_origin %>/performance/questions` | The number of statements executed by the server. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/queries` | The number of statements executed by the server, excluding `COM_PING` and `COM_STATISTICS`. Differs from `Questions` in that it also counts statements executed within stored programs. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/slow_queries` | The number of slow queries. | queries/second |
+| `<%= vars.mysql_metrics_origin %>/performance/table_locks_waited` | The total number of times that a request for a table lock could not be granted immediately and a wait was needed. | number |
+| `<%= vars.mysql_metrics_origin %>/performance/threads_connected` | The number of currently open connections. | connections |
+| `<%= vars.mysql_metrics_origin %>/performance/threads_running` | The number of threads that are not sleeping. | threads |
+| `<%= vars.mysql_metrics_origin %>/performance/max_connections` | The maximum permitted number of simultaneous client connections. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/open_files_limit` | The number of files that the operating system permits [ **mysqld** ](https://dev.mysql.com/doc/refman/5.6/en/mysqld.html "4.3.1 mysqld — The MySQL Server") to open. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/open_tables` | The number of tables that are open. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/open_tables_definitions` | The number of currently cached table definitions (FRM files). | count |
+| `<%= vars.mysql_metrics_origin %>/performance/opened_tables` | The number of tables that have been opened. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/opened_table_definitions` | The number of FRM files that have been cached. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/queries` | The number of statements executed by the service, which resets to zero when the MySQL process is restarted. | integer |
+| `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
+| `<%= vars.mysql_metrics_origin %>/performance/queries_delta` | The change in the `/performance/queries` metric since the last time it was emitted. | integer greater than zero |
+| `<%= vars.mysql_metrics_origin %>/variables/max_connections` | The maximum permitted number of simultaneous client connections. | connections |
+| `<%= vars.mysql_metrics_origin %>/variables/open_files_limit` | The number of files that the operating system permits mysqld to open. | files |
+| `<%= vars.mysql_metrics_origin %>/variables/read_only` | Whether the server is in read-only mode. | boolean |
+
+### <a name="galera-metrics"></a>Galera-Specific Metrics
+
+<table>
+	<tr>
+     <th width="130px"><strong>Data Source</strong></th>
+     <th width="380px"><strong>Description</strong></th>
+  	 <th><strong>Metric Unit</strong>
+  	 </th>
+  	</tr>
+ <tbody>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_ready</code></td>
+ 	<td>Shows whether the node can accept queries.</td>
+ 	<td>boolean</td>
+ </tr>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_cluster_size</code></td>
+ 	<td>The current number of nodes in the Galera cluster.</td>
+ 	<td>nodes</td>
+ </tr>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_cluster_status</code></td>
+ 	<td>Shows the primary status of the cluster component that the node is in.
+ 		Possible values are:
+ 		<ul>
+ 			<li>Primary = 1</li>
+ 			<li>Non-primary = 0</li>
+ 			<li>Disconnected = -1</li>
+ 		</ul>
+ 	    See <a href="https://mariadb.com/kb/en/mariadb/galera-cluster-status-variables/">Galera Cluster Status Variables</a>
+ 	    in the <i>MariaDB Documentation</i>. </td>
+ 	<td>State ID
+ 	</td>
+ </tr>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_flow_control_paused</code></td>
+ 	<td>Fraction of time that replication was paused due to flow control since the
+ 		server started or last <code>FLUSH STATUS</code>.
+ 	    This metric is a measure of how much replication lag is slowing down the cluster.</td>
+ 	<td>float</td>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_flow_control_sent</code></td>
+ 	<td>Number of <code>FC_PAUSE</code> or flow control pause events sent by this node. Unlike many status variables,
+ 	the counter for this metric does not reset every time you run the query. </td>
+ 	<td>count</td>
+ </tr>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_local_recv_queue_avg</code></td>
+ 	<td>Shows the average size of the local received queue since the last status query.</td>
+ 	<td>float</td>
+ </tr>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_local_send_queue_avg</code></td>
+ 	<td>Shows the average size of the local sent queue since the last status query.</td>
+ 	<td>float</td>
+ </tr>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_local_index</code></td>
+ 	<td>This node index in the cluster (base 0). </td>
+ 	<td>int</td>
+ </tr>
+ <tr>
+ 	<td><code><%= vars.mysql_metrics_origin %>/galera/wsrep_local_state</code></td>
+ 	<td>The local state of the node. Possible states include:
+ 		<ul>
+ 			<li>1 = <code>JOINING</code></li>
+ 			<li>2 = <code>DONOR/DESYNCED</code></li>
+ 			<li>3 = <code>JOINED</code></li>
+ 			<li>4 = <code>SYNCED</code></li>
+ 		</ul>
+ 	</td>
+ 	<td>int</td>
+</tr>
+</tbody>
+</table>
 
 For more information on monitoring PCF, see [Monitoring Pivotal Cloud Foundry](https://docs.pivotal.io/pivotalcf/monitoring/index.html).
 

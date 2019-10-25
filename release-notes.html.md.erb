@@ -101,7 +101,12 @@ Release Date: April 6, 2018
             - Unable to render templates for job 'streaming-mysql-backup-tool'. Errors are:
               - Error filling in template 'streaming-mysql-backup-tool.yml.erb' (line 8: Can't find property '["cf-mysql-backup.endpoint_credentials.username"]')
 
-<%= partial '../../p-mysql/partials/mysql/mariadb_ctrl_issue_v1' %>
+- **Known Issue:** More than one `mariadb_ctrl` process can run at the same time.
+This can lead to:
+      - One `mariadb_ctrl` process killing another `mariadb_ctrl` process
+      - `mariadb_ctrl` processes waiting indefinitely for MySQl to start
+      - Other issues when starting `mariadb_ctrl` processes
+
 
 ## <a id="1-10-12"></a>v1.10.12
 
@@ -112,7 +117,12 @@ Release Date: February 23, 2018
 
     For more information, see [pivotal.io/security](https://pivotal.io/security).
 
-<%= partial '../../p-mysql/partials/mysql/mariadb_ctrl_issue_v1' %>
+- **Known Issue:** More than one `mariadb_ctrl` process can run at the same time.
+This can lead to:
+      - One `mariadb_ctrl` process killing another `mariadb_ctrl` process
+      - `mariadb_ctrl` processes waiting indefinitely for MySQl to start
+      - Other issues when starting `mariadb_ctrl` processes
+
 
 ## <a id="1-10-11"></a>v1.10.11
 
@@ -128,7 +138,12 @@ Release Date: February 7, 2018
 - **Bug fix:** `mysql-diag` now fails quickly when VMs in the cluster are not available
 - **Bug fix:** replication-canary causes high memory usage spikes because it overwrites logs files rather than appends
 
-<%= partial '../../p-mysql/partials/mysql/mariadb_ctrl_issue_v1' %>
+- **Known Issue:** More than one `mariadb_ctrl` process can run at the same time.  
+This can lead to:
+      - One `mariadb_ctrl` process killing another `mariadb_ctrl` process
+      - `mariadb_ctrl` processes waiting indefinitely for MySQl to start
+      - Other issues when starting `mariadb_ctrl` processes
+
 
 ## <a id="1-10-10"></a>v1.10.10
 
@@ -137,7 +152,12 @@ Release Date: January 24, 2018
 - Update to stemcell 3445.24 to address:
   - [USN-3540-2: Linux (Xenial HWE) vulnerability](http://www.ubuntu.com/usn/usn-3540-2/)
 
-<%= partial '../../p-mysql/partials/mysql/mariadb_ctrl_issue_v1' %>
+- **Known Issue:** More than one `mariadb_ctrl` process can run at the same time.
+This can lead to:
+      - One `mariadb_ctrl` process killing another `mariadb_ctrl` process
+      - `mariadb_ctrl` processes waiting indefinitely for MySQl to start
+      - Other issues when starting `mariadb_ctrl` processes
+
 
 ## <a id="1-10-9"></a>v1.10.9
 
@@ -151,7 +171,12 @@ Release Date: January 19, 2018
 
     For more information, see [pivotal.io/security](https://pivotal.io/security).
 
-<%= partial '../../p-mysql/partials/mysql/mariadb_ctrl_issue_v1' %>
+- **Known Issue:** More than one `mariadb_ctrl` process can run at the same time.
+This can lead to:
+      - One `mariadb_ctrl` process killing another `mariadb_ctrl` process
+      - `mariadb_ctrl` processes waiting indefinitely for MySQl to start
+      - Other issues when starting `mariadb_ctrl` processes
+
 
 ## <a id="1-10-8"></a>v1.10.8
 
