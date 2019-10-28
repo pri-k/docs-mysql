@@ -113,7 +113,7 @@ of your service instance, do the procedure in
 
 ## <a id="workflow"></a> Workflow
 
- Depending on which of your certificates are expiring, you must complete different procedures. 
+ Depending on which of your certificates are expiring, you must complete different procedures.
  The following flowchart describes the workflow for rotating certificate:
 
 ![A flowchart that explains the workflow for rotating certs.](./images/rotate-certs.png)
@@ -125,7 +125,7 @@ To rotate your certificates:
 1. Determine which of your certificates are expiring. See [Check Expiration Dates](#credhub) below.
 1.  If any of your certificates are about to expire or have expired, do one of the following:
   * **If your TLS certificates are about to expire or have expired,**
-    do the procedures in [Rotate the TLS CA Certificate](#tls) below.
+    do the procedures in [Rotate TLS Certificates](#tls) below.
     This rotates both the TLS certificates and the internal certificates.
   * **If only your internal certificates are about to expire or have expired,** do the procedure in [Rotate Internal Certificates ](#internal) below.
 
@@ -218,12 +218,12 @@ CredHub server by running the following command:
 
 1. If any of your certificates are about to expire or have expired, do one of the following:
   * **If your TLS certificates are about to expire or have expired,**
-    do the procedures in [Rotate the TLS CA Certificate](#tls) below.
+    do the procedures in [Rotate TLS Certificates](#tls) below.
     This rotates both the TLS certificates and the internal certificates.
   * **If only your internal certificates are about to expire or have expired,** 
     do the procedure in [Rotate Internal Certificates ](#internal) below.
 
-##<a id='tls'></a> Rotate the TLS CA Certificate
+##<a id='tls'></a> Rotate TLS Certificates
 
 This following procedures rotate a TLS CA certificate and regenerate the certificates signed by the TLS CA certificate.
 
