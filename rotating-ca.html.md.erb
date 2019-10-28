@@ -139,8 +139,8 @@ of your service instance, do the procedure in
 
 ## <a id="workflow"></a> Workflow
 
-Depending on which of your certificates are expiring, you must complete different procedures. 
-The following flowchart describes the workflow for rotating certificate:
+ Depending on which of your certificates are expiring, you must complete different procedures.
+ The following flowchart describes the workflow for rotating certificate:
 
 ![A flowchart that explains the workflow for rotating certs.](./images/rotate-certs.png)
 
@@ -151,7 +151,7 @@ To rotate your certificates:
 1. Determine which of your certificates are expiring. See [Check Expiration Dates](#credhub) below.
 1. If any of your certificates are about to expire or have expired, do one of the following:
   * **If your TLS certificates are about to expire or have expired,**
-    do the procedures in [Rotate the TLS CA Certificate](#tls) below.
+    do the procedures in [Rotate TLS Certificates](#tls) below.
     This rotates both the TLS certificates and the internal certificates.<br><br>
   * **If your internal certificates for single node or leader-follower service instances are about to expire or have expired,** do the procedure in [Rotate Internal Certificates](#internal) below.<br><br>
   * **If only your internal certificates for HA clusters are about to expire or have expired,** upgrade to MySQL for PCF v2.7.
@@ -224,7 +224,7 @@ CredHub server by running the following command:
     --client-secret=abcdefghijklm123456789
     </pre>
 
-1. For each certificate in the [Certificates Used by MySQL for PCF](#mysql-certs) list above, 
+1. For each certificate in the [Certificates Used by MySQL for PCF](#mysql-certs) list above,
    run the following command:
 
     ```
@@ -246,13 +246,13 @@ CredHub server by running the following command:
 
 1. If any of your certificates are about to expire or have expired, do one of the following:
   * **If your TLS certificates are about to expire or have expired,**
-    do the procedures in [Rotate the TLS CA Certificate](#tls) below.
+    do the procedures in [Rotate TLS Certificates](#tls) below.
     This rotates both the TLS certificates and the internal certificates.<br><br>
   * **If your internal certificates for single node or leader-follower service instances are about to expire or have expired,** do the procedure in [Rotate Internal Certificates](#internal) below.<br><br>
   * **If only your internal certificates for HA clusters are about to expire or have expired,** upgrade to MySQL for PCF v2.7.
     See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-7/upgrade.html).
 
-##<a id='tls'></a> Rotate the TLS CA Certificate
+##<a id='tls'></a> Rotate TLS Certificates
 
 This following procedures rotate a TLS CA certificate and regenerate the certificates signed by the TLS CA certificate. Only the certificates for single node and leader-follower service instances are rotated. To rotate certificates for HA clusters, upgrade to MySQL for PCF v2.7. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-7/upgrade.html).
 
@@ -358,7 +358,7 @@ To regenerate your internal certificates and redeploy your service instances:
     bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
     ```
     Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-    
+
 ### <a id="remove"></a> Remove the Old CA Certificate
 
 <p class="note warning"><strong>Warning: </strong> This procedure involves restarting
@@ -421,11 +421,11 @@ To rebind your app:
 	```
 	Where `YOUR-APP` is the name of your app.
 
-## <a id="internal"></a> Rotate Internal Certificates 
+## <a id="internal"></a> Rotate Internal Certificates
 
 When you upgrade to MySQL for PCF v2.6, MySQL for PCF automatically
 rotates the internal certificates single node and leader-follower service instances. The new certificates do not expire for 5 years.
-The below commands upgrade all of your MySQL for service instances and distribute the new certificates to your service instances. 
+The below commands upgrade all of your MySQL for service instances and distribute the new certificates to your service instances.
 
 To ensure that the internal certificates rotate, do one of the following:
 
@@ -442,8 +442,8 @@ To ensure that the internal certificates rotate, do one of the following:
     ```
     bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
     ```
-    
+
     Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-    
+
     For a list of certificates used by MySQL for PCF,
       see [Certificates Used by MySQL for PCF](#mysql-certs) above.
