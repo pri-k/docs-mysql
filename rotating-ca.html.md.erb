@@ -17,7 +17,7 @@ in [Preparing for TLS](prepare-tls.html).
 Operators must rotate this TLS CA certificate
 before the certificate expires or if it is compromised.
 + **Internal certificates managed by MySQL for PCF:** In MySQL for PCF v2.5, you cannot rotate internal certificates.
-To rotate these certificates, you must upgrade to MySQL for PCF v2.6. See <a href="https://docs.pivotal.io/p-mysql/2-6/upgrade.html">Upgrading MySQL for PCF</a>. 
+To rotate these certificates, you must upgrade to MySQL for PCF v2.6. See <a href="https://docs.pivotal.io/p-mysql/2-6/upgrade.html">Upgrading MySQL for PCF</a>.
 To check the expiration date of your internal
 certificates, see [Check Expiration Date](#credhub) below.
 
@@ -48,11 +48,11 @@ The following table lists the certificates used by MySQL for PCF:
   <tr>
     <td><code>mysql_tls</code></td>
   </tr>
-  
+
   <tr>
     <td><code>mysql_server_tls</code></td>
   </tr>
-  
+
   <tr>
     <th>Internal Certificates</th>
   </tr>
@@ -115,8 +115,8 @@ of your service instance, do the procedure in
 
 ## <a id="workflow"></a> Workflow
 
-Depending on which of your certificates are expiring, you must complete different procedures. 
-The following flowchart describes the workflow for rotating certificate:
+ Depending on which of your certificates are expiring, you must complete different procedures.
+ The following flowchart describes the workflow for rotating certificate:
 
 ![A flowchart that explains the workflow for rotating certs.](./images/rotate-certs.png)
 
@@ -125,8 +125,8 @@ The following flowchart describes the workflow for rotating certificate:
 To rotate your certificates:
 
 1. Determine which of your certificates are expiring. See [Check Expiration Dates](#credhub) below.
-1. If any of your certificates are about to expire or have expired, do one of the following: 
-  * **If your TLS certificates are about to expire or have expired,** do the procedures in [Rotate the TLS CA Certificate](#tls) below.<br><br>
+1. If any of your certificates are about to expire or have expired, do one of the following:
+  * **If your TLS certificates are about to expire or have expired,** do the procedures in [Rotate TLS Certificates](#tls) below.<br><br>
   * **If your internal certificates are about to expire or have expired,** you must upgrade to MySQL for PCF v2.6. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-6/upgrade.html).
 
 
@@ -134,8 +134,8 @@ To rotate your certificates:
 ## <a id="credhub"></a> Check Expiration Dates
 
 Pivotal Cloud Foundry (PCF) stores the certificates used by MySQL for PCF
-and then use the credentials to log in to CredHub from the Ops Manager VM. You can use the CredHub API to check the expiration date for the certificates used by MySQL for PCF. 
-However, you can only rotate the TLS CA certificate in MySQL for PCF v2.5. See [Rotate the TLS CA Certificate](#rotate) below. 
+and then use the credentials to log in to CredHub from the Ops Manager VM. You can use the CredHub API to check the expiration date for the certificates used by MySQL for PCF.
+However, you can only rotate the TLS CA certificate in MySQL for PCF v2.5. See [Rotate TLS Certificates](#rotate) below.
 
 <p class="note warning"><strong>Warning:</strong> If your internal certificates expire, service bindings and backups can fail.</p>
 
@@ -203,7 +203,7 @@ CredHub server by running the following command:
     --client-secret=abcdefghijklm123456789
     </pre>
 
-1. For each certificate in the [Certificates Used by MySQL for PCF](#mysql-certs) list above, 
+1. For each certificate in the [Certificates Used by MySQL for PCF](#mysql-certs) list above,
    run the following command:
 
     ```
@@ -223,11 +223,11 @@ CredHub server by running the following command:
     The expiration date for the certificate is the value of `Not After`.
     The expiration date can be different for different certificates.<br><br>
 
-1. If any of your certificates are about to expire or have expired, do one of the following: 
-  * **If your TLS certificates are about to expire or have expired,** do the procedures in [Rotate the TLS CA Certificate](#tls) below.<br><br>
+1. If any of your certificates are about to expire or have expired, do one of the following:
+  * **If your TLS certificates are about to expire or have expired,** do the procedures in [Rotate TLS Certificates](#tls) below.<br><br>
   * **If your internal certificates are about to expire or have expired,** you must upgrade to MySQL for PCF v2.6. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-6/upgrade.html).
 
-##<a id='rotate'></a> Rotate the TLS CA Certificate
+##<a id='rotate'></a> Rotate TLS Certificates
 
 This following procedures rotate a TLS CA certificate. You cannot rotate your internal certificates with these procedures. To rotate internal certificates, upgrade to MySQL for PCF v2.6. See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-6/upgrade.html).
 
@@ -292,7 +292,7 @@ Do not remove the old TLS CA certificate.
 1. Click **Save**.
 
 8. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
-  
+
 ### <a id="remove"></a> Remove the Old CA Certificate
 
 <p class="note warning"><strong>Warning: </strong> This procedure involves restarting
