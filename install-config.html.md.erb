@@ -434,7 +434,12 @@ Follow the steps below to configure the security settings for the MySQL service.
 
 To enable TLS for the MySQL service, perform the following steps:
 
-1. Ensure that you have performed the procedures in [Preparing for TLS](prepare-tls.html).
+
+1. Do the procedures in [Preparing for TLS](prepare-tls.html) if one of these conditions applies to you:
+    * You are using Ops Manager v2.5 or earlier
+    * You are using Ops Manager v2.6 or later and are not using the certificate
+    provided by Ops Manager.
+
 1. Click **Security**.
 1. Under **TLS Options**, select one of the following:
   *  **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
@@ -564,7 +569,7 @@ This section configures the `upgrade-all-service-instances` errand, which <%= va
     <tr>
         <td><strong>Number of simultaneous upgrades</strong></td>
         <td>Enter the maximum number of service instances that will be in an upgrading state at the same time.
-        The minimum value is 0 and the maximum is 1 less than the number of BOSH workers. Increasing this value reduces the runtime of service instance upgrades.  
+        The minimum value is 0 and the maximum is 1 less than the number of BOSH workers. Increasing this value reduces the runtime of service instance upgrades.
         <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, navigate to the BOSH Director tile, click <strong>Director Config</strong> and locate the **Director Workers** field.</p>
         </td>
     </tr>
