@@ -381,8 +381,10 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
             For more information, see <a href="./change-default.html#configuring">Optional Parameters for the MySQL for PCF Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
         <td>Select this checkbox to enable data downloading from the client's local file system.
-            For more information about local data loading capability,
-            see [Security Issues with LOAD DATA LOCAL](https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html) in the MySQL 5.7 Reference Manual.
+            Pivotal recommends against selecting this checkbox. Before you enable local in-file,
+            review the security issues associated with <code>LOCAL DATA LOCAL</code>.
+            See the
+            [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html).
     </td></tr>
     <tr><td><strong>Wait Timeout</strong></td>
         <td>Set the time in seconds that MySQL waits to close inactive connections. For more information, see <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_wait_timeout">wait_timeout</a> in the MySQL 5.7 Reference Manual.
