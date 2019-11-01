@@ -129,7 +129,9 @@ For more information,
 see [wsrep\_auto\_increment\_control](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_auto_increment_control)
 in the Percona XtraDB Cluster documentation.
 
-- HA clusters sets developers to `READ ONLY` when using auto increment variables.
+- Users cannot change the session behavior of auto-increment variables.
+This is because the HA cluster controls the behavior of these variables.
+For example, if an app runs `SET SESSION auto_increment_increment`, the cluster ignores the change.
 
 - In InnoDB, some transactions can cause deadlocks. You can minimize deadlocks in
 your apps by rewriting transactions and SQL statements. For more information about
