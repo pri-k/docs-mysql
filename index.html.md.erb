@@ -134,17 +134,17 @@ Review the following table to determine if <%= vars.product_name %> has the feat
 <tr><td>Encrypted Data at Rest</td><td><%= vars.product_name %> enables integration with commercial vendors for full-disk encryption at rest.</td><td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
 </table>
 
-## <a id="other-notes"></a>About Multiple AZs in <%= vars.product_name %>
+## <a id="other-notes"></a>About Availability Zones
 
-<%= vars.product_name %> supports configuring multiple AZs.
+<%= vars.product_name %> supports configuring multiple availability zones (AZs).
 However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
 
-* You can assign on-demand plans to any of the configured availability zones.
-* You can select two AZs
-for the multi-node plans to increase the availability.
-Choosing three AZs for multi-node plans does not increase the number of AZs assigned to three.
-* You can select one AZ for the single-node plan.
-Choosing two AZs for the single-node plan does not increase the number of AZs assigned to two.
+* You can assign on-demand plans to any of the configured AZs.
+* BOSH randomly deploys service instances across configured AZs.
+  This minimizes the impact of an AZ outage and removes single points
+  of failure,
+* For all <%= vars.product_name %> plans, select three AZs.
+Choosing three AZs does not increase the number of AZs assigned to service instances to three.
 
 ##<a id="feedback"></a> Feedback
 
