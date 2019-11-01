@@ -19,21 +19,24 @@ nodes simultaneously or not written at all if replication fails even on a single
 With three nodes, HA clusters are highly available and automatically resilient to failure.
 This is because if a node loses contact with the other two nodes, the other two nodes can
 remain in contact and continue to accept transactions. Because the number of nodes is odd,
-the two nodes can assume they represent the primary component. For more information about cluster availability, see
+the two nodes can assume they represent the primary component.
+For more information about cluster availability, see
 [Percona XtraDB Cluster: Quorum and Availability of the cluster](https://www.percona.com/blog/2015/06/12/percona-xtradb-cluster-quorum-availability-cluster/)
 in the Percona XtraDB Cluster documentation.
 
 In HA topology, the <%= vars.product_name %> service uses the following:
 
-* Three MySQL servers running [Percona XtraDB](https://www.percona.com/software/mysql-database/percona-xtradb-cluster)
+* Three MySQL servers running
+[Percona XtraDB](https://www.percona.com/software/mysql-database/percona-xtradb-cluster)
 as the MySQL engine and [Galera](http://galeracluster.com) to keep them in sync.
 
 * Three Switchboard proxies that are colocated on the MySQL nodes. The proxies
 gracefully handle failure of nodes which enables fast failover to other nodes
 within the cluster. For more information, see [MySQL Proxy](#proxy).
 
-* A jumpbox VM called `mysql-monitor` for monitoring, diagnosing and backing up MySQL nodes. You can run the `mysql-diag` tool on the `mysql-monitor` VM to view the status of your cluster nodes. For more
-information about `mysql-diag`, see [Running mysql-diag](./mysql-diag.html).
+* A jumpbox VM called `mysql-monitor` for monitoring, diagnosing and backing up MySQL nodes.
+You can run the `mysql-diag` tool on the `mysql-monitor` VM to view the status of your cluster nodes.
+For more information about `mysql-diag`, see [Running mysql-diag](./mysql-diag.html).
 
 The following diagram shows an HA cluster in three availability zones (AZs):
 
@@ -59,10 +62,11 @@ For more information, see [Resource Usage Planning for On-Demand Plans](./recomm
 
 ### <a id="avail-zones"></a> Availability Zones
 
-To minimize impact of an AZ outage and to remove single points
+To minimize impact of an availability zone (AZ) outage and to remove single points
 of failure, Pivotal recommends that you provision three AZs if using HA deployments.
 With three AZs, nodes are deployed to separate AZs.
 
+For more information, see [About Availability Zones](./index.html#other-notes).
 
 ### <a id="network-req"></a> Networking Rules
 In addition to the standard networking rules needed for <%= vars.product_name %>, the operator
@@ -121,7 +125,8 @@ in the Percona XtraDB Cluster documentation.
 
 - By default, auto-increment variables are not sequential and each node has gaps
 in IDs. This prevents auto-increment replication conflicts across the cluster.
-For more information, see [wsrep\_auto\_increment\_control](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_auto_increment_control)
+For more information,
+see [wsrep\_auto\_increment\_control](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_auto_increment_control)
 in the Percona XtraDB Cluster documentation.
 
 - HA clusters sets developers to `READ ONLY` when using auto increment variables.
@@ -140,7 +145,8 @@ result of the implicit table locks that are used when running table partition co
 - Round-trip latency between database nodes must be less than five seconds.
 Latency exceeding this results in a network partition. If more than half of the
 nodes are partitioned, the cluster loses quorum and becomes unusable until manually
-bootstrapped. For more information about bootstrapping HA clusters, see [Bootstrapping](./bootstrapping.html).
+bootstrapped. For more information about bootstrapping HA clusters,
+see [Bootstrapping](./bootstrapping.html).
 
 ## <a id="server"></a> MySQL Server Defaults for HA Components
 This section describes some defaults that <%= vars.product_name %> applies to HA components.
@@ -160,7 +166,7 @@ in the Percona XtraDB Cluster documentation.
 
 By default, HA clusters splits large `Load Data` commands into small manageable units.
 This deviates from the standard behavior for MySQL.
-For more information, see [wsrep\_load\_data\_splitting] (https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_load_data_splitting)
+For more information, see [wsrep\_load\_data\_splitting](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/wsrep-system-index.html#wsrep_load_data_splitting)
 in the Percona XtraDB Cluster documentation.
 
 ### Maximum Transaction Sizes
