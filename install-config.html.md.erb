@@ -307,7 +307,7 @@ Perform the following steps for each plan that you want to use in your <%= vars.
           This disk stores backups. <br> For sizing recommendations,
           see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
-        <td> BOSH deploys your service instances to the selected availability zones (AZ).
+        <td> BOSH deploys your service instances to the selected availability zones (AZs).
           If more than one AZ is selected, BOSH randomizes which AZ to place each VM. <br>
           For more information, see <a href="./index.html#other-notes">About Availability Zones</a>.
         </td></tr>
@@ -571,7 +571,7 @@ This section configures the `upgrade-all-service-instances` errand, which <%= va
     <tr>
         <td><strong>Number of simultaneous upgrades</strong></td>
         <td>Enter the maximum number of service instances that will be in an upgrading state at the same time.
-        The minimum value is 0 and the maximum is 1 less than the number of BOSH workers. Increasing this value reduces the runtime of service instance upgrades.  
+        The minimum value is 0 and the maximum is 1 less than the number of BOSH workers. Increasing this value reduces the runtime of service instance upgrades.
         <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, navigate to the BOSH Director tile, click <strong>Director Config</strong> and locate the **Director Workers** field.</p>
         </td>
     </tr>
