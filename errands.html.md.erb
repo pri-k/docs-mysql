@@ -33,7 +33,7 @@ For example:
 
 <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
 
-### <a id="find-deprecated-bindings"></a>find-deprecated-bindings
+## <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
 The `find-deprecated-bindings` errand lists apps and service keys that are deprecated in <%= vars.platform_name %> v<%= vars.current_minor_version %> because they do not require TLS.
 Pivotal recommends that operators configure bindings to require TLS,
@@ -71,7 +71,7 @@ Stdout     +---------------------------+--------------------------------------+-
 </pre>
 
 
-### <a id="smoke-tests"></a>smoke-tests
+## <a id="smoke-tests"></a>smoke-tests
 
 This errand performs a test to validate that the service broker has been installed
 and configured correctly and can perform the basic functions of creating and
@@ -80,7 +80,7 @@ installed successfully.
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
+## <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
@@ -92,22 +92,16 @@ For more information, see [Upgrading <%= vars.product_name %>](upgrade.html#upgr
 <!-- %= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-detect-orphans' % -->
 
 
-## <a id="deprecated-errands"></a> Deprecated Errands
+## <a id="register-broker"></a>register-broker 
 
-<!-- ### <a id="register-broker"></a>register-broker NOT DEPRECATED ##169355910 -->
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' %>
 
-<!-- Why should you not use it? -->
-<!-- **Do not use.** -->
+<!--
+## <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
 
-<!-- %= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' % -->
 
-### <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
+This errand is run by Ops Manager only when deleting <%= vars.product_name %>. Running this errand removes all service instances and their data. 
 
-<!-- Why should you not use it? -->
-**Do not use.**
+### <a id="delete-all"></a>Delete All Service Instances
 
-<!-- This errand is run by Ops Manager only when deleting <%= vars.product_name %>. Running this errand removes all service instances and their data. -->
-
-<!-- a id="delete-all"></a><h4>Delete All Service Instances</h4 -->
-
-<!-- %= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-delete-all' % -->
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-delete-all' %> -->
