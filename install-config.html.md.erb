@@ -15,7 +15,7 @@ service instances on demand.
 
 Ops Manager admins can use Role-Based Access Control (RBAC) to manage which
 operators can make deployment changes, view credentials, and manage user roles in Ops Manager.
-Your role permissions might not allow you to do every procedure in this topic.
+Your role permissions might not permit you to do every procedure in this topic.
 
 For more information about roles in Ops Manager, see
     <a href="https://docs.pivotal.io/pivotalcf/opsguide/config-rbac.html#about">
@@ -27,7 +27,10 @@ Before you install the <%= vars.product_name %> tile, you must:
 
 + [Create an App Security Group for <%= vars.product_name %>](#asg).
 + [Enable the BOSH Resurrector](#resurrector).
-+ [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS.
++ [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS and one of these conditions applies to you:
+    * You are using Ops Manager v2.5 or earlier.
+    * You are using Ops Manager v2.6 or later and are not using the certificate
+    provided by Ops Manager.
 
 ### <a id="asg"></a> Create an App Security Group for <%= vars.product_name %>
 
@@ -323,7 +326,8 @@ For each plan that you want to use in your <%= vars.platform_name %> deployment:
   an error and cannot continue if they try to upgrade from Plan 1 to Plan 2. This
   prevents them from losing their data by orphaning their disk in AZ1.<br><br>
   To learn how to manually migrate the data from one AZ to another, see
-  <a href="https://docs.pivotal.io/p-mysql/migrate-data.html">Migrating Data in <%= vars.product_name %></a>.</p>
+  <a href="https://docs.pivotal.io/p-mysql/migrate-data.html">Migrating Data in <%= vars.product_name %></a>.
+</p>
 
 ###<a id="inactive"></a> (Optional) Deactivate Service Plan
 
@@ -334,7 +338,8 @@ To deactivate a service plan:
     1. Under **Service Plan Access**, select **Disable**.
     1. Click **Save**.
     1. Return to the Ops Manager Installation Dashboard and click **Apply Changes** to redeploy.
-    1. When the <%= vars.platform_name %> deployment has redeployed, use the cf CLI or Apps Manager to delete all existing service instances on the service plan.
+    1. When the <%= vars.platform_name %> deployment has redeployed, 
+    use the cf CLI or Apps Manager to delete all existing service instances on the service plan.
     1. Return to the <%= vars.product_name %> tile configuration.
 1. Click the section for the plan. For example, **Plan 2**.
 1. Click **Inactive**.
@@ -352,9 +357,9 @@ To configure global settings for all service instances:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Provide public IP addresses to all Service VMs</strong></td>
-        <td>Select this checkbox:<ul>
-            <li>If the service instances need an external backup, blobstore, or syslog storage</li>
-            <li>If you have configured BOSH to use an external blobstore.</li></ul>
+        <td>Select this checkbox if either of the following apply:<ul>
+            <li>Your service instances need an external backup, blobstore, or syslog storage</li>
+            <li>You have configured BOSH to use an external blobstore</li></ul>
             </td></tr>
     <tr><td><strong>Maximum service instances</strong></td>
         <td>Enter the global quota for all on-demand instances summed across every on-demand plan.
@@ -397,13 +402,13 @@ To set MySQL defaults and enable developers to customize their instances:
             See the <a href="https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html">MySQL documentation</a>.
     </td></tr>
     <tr><td><strong>Wait Timeout</strong></td>
-        <td>Set the time in seconds that MySQL waits to close inactive connections. For more information about <code>wait\_timeout</code>, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_wait_timeout">MySQL documentation</a>.
+        <td>Enter the amount of time in seconds that MySQL waits to close inactive connections. For more information about <code>wait\_timeout</code>, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_wait_timeout">MySQL documentation</a>.
     </td></tr>
   </table>
 
 ###<a id="backups"></a> Configure Backups
 
-Follow the steps below to configure automated backups:
+To configure automated backups:
 
 <p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.</p>
 
@@ -412,35 +417,35 @@ Follow the steps below to configure automated backups:
     <%= image_tag("backups.png", :alt => "The radio buttons for backup configuration are
         Ceph or Amazon S3, SCP, GCS, and Azure.", :width => "200") %>
 
-1. Consult [About Automated Backups](backup-and-restore.html#overview) in <em>Backing Up and Restoring</em> to learn about how automated backups work.
+1. Consult [About Automated Backups](backup-and-restore.html#overview) to learn about how automated backups work.
 
-1. Select a **Backup configuration** and perform the steps in the appropriate section of <em>Backing Up and Restoring</em>:
-  - [Option 1: Back up with SCP](backup-and-restore.html#scp)---<%= vars.product_name %> runs an SCP command that secure-copies backups to a VM
-    or physical machine operating outside of <%= vars.platform_name %>.
-    SCP stands for secure copy protocol, and offers a way to securely transfer files between two hosts.
-    The operator provisions the backup machine separately from their <%= vars.platform_name %> installation.
-    This is the fastest option.
-  - [Option 2: Back up to Ceph or S3](backup-and-restore.html#ceph-or-s3)---<%= vars.product_name %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
+1. Select a **Backup configuration** and do the procedure for your storage solution in _Backing Up and Restoring_:
+  * **Ceph or Amazon S3:** <%= vars.product_name %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
     that saves backups to an S3 bucket,
-    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
-  - [Option 3: Back up to GCS](backup-and-restore.html#gcs)---<%= vars.product_name %> runs an [GCS](https://cloud.google.com/storage/) SDK <%# The link name must be "GCP documentation". %>
-    that saves backups to an Google Cloud Storage bucket.
-  - [Option 4: Back up to Azure Storage](backup-and-restore.html#azure)---<%= vars.product_name %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
-    SDK that saves backups to an Azure storage account.
+    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.<br>
+    For instructions about using Ceph or Amazon S3 for backups, see [Back up to Ceph or S3](./backup-and-restore.html#ceph-or-s3).<br><br>
+  * **SCP:** <%= vars.product_name %> runs an Secure Copy Protocol (SCP) command that secure-copies backups to a VM
+    or physical machine operating outside of <%= vars.platform_name %>. This is the fastest option. <br>
+    SCP enables you to securely transfer files between two hosts.
+    You can provision the backup machine separately from your <%= vars.platform_name %> installation.
+     <br>For instructions about using SCP for backups, see [Back up with SCP](backup-and-restore.html#scp).<br><br>
+  * **GSC:** <%= vars.product_name %> runs a [Google Cloud Storage (GCS)](https://cloud.google.com/storage/) SDK 
+    that saves backups to an GCS bucket. <br>For instructions about using GCS for backups, see [Back up to GCS](backup-and-restore.html#gcs). <br><br>
+  * **Azure:** <%= vars.product_name %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
+    SDK that saves backups to an Azure storage account.<br>For instructions about using Azure for backups, see [Back up to Azure Storage](backup-and-restore.html#azure).
 
 ###<a id="security"></a> Configure Security
 
-Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:<%# To introduce steps just write "To do x:" %>
+To configure the security settings for the MySQL service, do one or both:
 
-* To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below.
-* To store your service instance credentials<%# "binding credentials" is preferred. %> in runtime CredHub,
-  perform the procedure in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
+* To enable TLS for the MySQL service, see [Configure TLS](#security-tls) below.
+* To store your service instance credentials in runtime CredHub, see [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
 
 ![security](security.png)
 
 ####<a id="security-tls"></a> Configure TLS
 
-To enable TLS for the MySQL service, perform the following steps:<%# To introduce steps just write "To do x:" %>
+To enable TLS for the MySQL service:
 
 
 1. Do the procedures in [Preparing for TLS](prepare-tls.html) if one of these conditions applies to you:
@@ -449,53 +454,65 @@ To enable TLS for the MySQL service, perform the following steps:<%# To introduc
     provided by Ops Manager.
 
 1. Click **Security**.
-1. Under **TLS Options**, select one of the following:<%# To introduce steps just write "To do x:" %>
+1. Under **TLS Options**, select one of the following:
   *  **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
-  * **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
+  * **Required**: This enables developers to configure their MySQL service VMs to use TLS and requires all MySQL service VMs to only accept secure connections.
 <p class="note warning"><strong>Warning:</strong> Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
 1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html).
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
-You can store your service instance credentials<%# "binding credentials" is preferred. %> in runtime CredHub instead of the Cloud Controller Database<%# "Cloud Controller database" is preferred. %> (CCDB).
+You can store your service instance credentials in runtime CredHub instead of the Cloud Controller database (CCDB).
 For more information about runtime CredHub, see [CredHub](https://docs.pivotal.io/pivotalcf/credhub/).
-To do so, do the following steps:<%# To introduce steps just write "To do x:" %>
 
-1. Ensure that you have configured the <%= vars.app_runtime %> tile to support securing service instance credentials<%# "binding credentials" is preferred. %> in runtime CredHub.
+To store your service instance credentials in runtime CredHub:
+
+1. Ensure that you have configured the <%= vars.app_runtime %> tile to support securing service instance credentials in runtime CredHub.
    For instructions, see [Step 1: Configure the <%= vars.app_runtime %> Tile](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html#pas-config).
 1. Click **Security**.
 1. Select the **Enable Secure Service Instance Credentials** checkbox.
 1. Click **Save**.
-1. After deploying the tile, notify the developers that they must unbind and rebind any existing service instances bindings if they want to use secure service instance credentials<%# "binding credentials" is preferred. %>. Perform the following steps:<%# To introduce steps just write "To do x:" %>
+1. After deploying the tile, notify the developers that they must unbind and rebind any existing service instances bindings if they want to use secure service instance credentials. Developers must:
 
-    1. Unbind the service instance from the app.
-    For example:
-    <pre class="terminal">$ cf unbind-service my-app my-service-instance</pre>
-    1. Rebind the service instance to the app.
-    For example:
-    <pre class="terminal">$ cf bind-service my-app my-service-instance</pre>
-    1. Restart the app to apply the new service instance binding. For example:
-    <pre class="terminal">$ cf restart my-app</pre>
-    1. Print the `VCAP_SERVICES` environment variable to verify that the new service instance binding includes CredHub pointers.
-    For example:
-    <pre class="terminal">$ cf env my-app
-    Getting env variables for app my-app in org system / space example as admin...
-    OK
-    System-Provided:
-    {
-     "VCAP_SERVICES": {
-      "p.mysql": [
-       {
-        "credentials": {
-         "credhub-ref": "/c/548966e5-e333-4d65-8773-7b4e3bb6ca97/4a246b0b-83bb-46d0-b8ac-35a93374ae67/caf6e32e-7361-4869-9a57-54ab8ae67b3f/credentials"
-        },
-    [...]
-    </pre>
+    1. Unbind the service instance from the app by running:
+        
+        ```
+        cf unbind-service APP SERVICE-INSTANCE
+        ```
+    1. Rebind the service instance to the app by running:
+    
+        ```
+        cf bind-service PP SERVICE-INSTANCE
+        ```
+    1. Restart the app to apply the new binding by running:
+    
+        ```
+        cf restart APP 
+        ```
+    1. Verify that the binding includes CredHub pointers in the `VCAP_SERVICES` environment variable by running:
+        
+        ```
+        cf env APP 
+        ```
+        For example:
+        <pre class="terminal">$ cf env my-app
+        Getting env variables for app my-app in org system / space example as admin...
+        OK
+        System-Provided:
+        {
+         "VCAP_SERVICES": {
+          "p.mysql": [
+           {
+            "credentials": {
+             "credhub-ref": "/c/548966e5-e333-4d65-8773-7b4e3bb6ca97/4a246b0b-83bb-46d0-b8ac-35a93374ae67/caf6e32e-7361-4869-9a57-54ab8ae67b3f/credentials"
+            },
+        [...]
+        </pre>
 
 ###<a id="monitoring"></a> Configure Monitoring
 
-Follow the steps below to enable different types of monitoring and logging available in the MySQL service.
+To enable monitoring and logging in the MySQL service:
 
 1. Click **Monitoring**.
 
@@ -506,32 +523,36 @@ Follow the steps below to enable different types of monitoring and logging avail
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Metrics Polling Interval</strong></td>
-        <td>Set this time, in seconds, to determine the frequency that the monitor polls for metrics.
+        <td>Enter the amount of time in seconds for the frequency that the monitor polls for metrics.
             All service instances emit metrics about the health and status of the MySQL server.</td></tr>
     <tr><td><strong>Enable User Statistics Logging</strong></td>
-        <td>Select this checkbox to better understand server activity and identify sources of load on a MySQL server.
-            For more information about user statistics, see <a href="https://www.percona.com/doc/percona-server/5.7/diagnostics/user_stats.html">
-            User Statistics Documentation</a>.
+        <td>Select this checkbox to collect user statistics. You can use these statistics to better
+          understand server activity and identify load sources.
+            For more information about user statistics, see the <a href="https://www.percona.com/doc/percona-server/5.7/diagnostics/user_stats.html">MySQl documentation</a>.
             </td></tr>
     <tr><td><strong>Enable Server Activity Logging</strong></td>
         <td>Select this checkbox to record who connects to the servers and what queries are processed using the Percona Audit Log Plugin.
-            For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a> <%# The link name must be "Percona documentation". %>.
-            <p class="note"><strong>Note:</strong> MySQL audit logs are not forwarded to the syslog server because they can contain personally identifying information (PII) and secrets.<br />
-            You can use the <a href="https://community.pivotal.io/s/article/script-to-download-mysql-logs-for-pas-tile-ha-clusters"<code>download-logs</code></a> script to retrieve the logs, which each MySQL cluster node VM stores in <code>/var/vcap/store/mysql\_audit\_logs/</code>.</p>
+            For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona documentation</a>
+            <p class="note"><strong>Note:</strong> MySQL audit logs are not forwarded to the syslog server because they can contain personally identifying information (PII) and secrets.<br>
+            You can use the <a href="https://community.pivotal.io/s/article/script-to-download-mysql-logs-for-pas-tile-ha-clusters"<code>download-logs</code></a> script to retrieve the logs, which each MySQL cluster node VM stores in <code>/var/vcap/store/mysql\_audit\_logs/</code>.
+          </p>
            </td></tr>
     <tr><td><strong>Enable Read Only Admin User</strong></td>
-        <td>Select this checkbox to create a read-only admin user, `roadmin`<%# Do not use Markdown tags inside HTML tags. %>, on each service instance.
+        <td>Select this checkbox to create a read-only admin user, named <code>roadmin</code>, on each service instance.
             This user can be used for auditing and monitoring without risking
-            mutating or changing any data, because the `roadmin`<%# Do not use Markdown tags inside HTML tags. %> user cannot make changes.
+            mutating or changing any data. This is because <code>roadmin</code> cannot make changes to data.
             <br><br>
-            To retrieve the credentials for the `roadmin`<%# Do not use Markdown tags inside HTML tags. %> user, see [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds)<%# Do not use Markdown tags inside HTML tags. %>. The read-only admin user is always `roadmin`<%# Do not use Markdown tags inside HTML tags. %>, but the password varies by service instance.</td></tr>
+            For instructions about retrieving the credentials for <code>roadmin</code>, see <a href="./troubleshoot.html#instance-creds">Retrieve Admin and Read-Only Admin Credentials for a Service Instance</a>.
+            The read-only admin user is always named <code>roadmin</code>, however, the password varies by service instance.</td></tr>
   </table>
 
 1. Click **Save**.
 
 ###<a id="syslog"></a> Configure System Logging
 
-Follow the steps below to enable system logging for the MySQL broker and service instance VMs. Logs use RFC5424 format.
+System logs use RFC5424 format.
+
+To enable system logging for the MySQL broker and service instance VMs:
 
 1. Click **Syslog**.
 
@@ -544,41 +565,52 @@ Follow the steps below to enable system logging for the MySQL broker and service
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr>
         <td><strong>Address</strong></td>
-        <td>Enter the address or host of the syslog server for sending logs, for example,
+        <td>Enter the IP address or hostname of the syslog server for sending logs. For example:
             <code>logmanager.example.com</code>.</td></tr>
     <tr><td><strong>Port</strong></td>
-        <td>Enter the port of the syslog server for sending logs, for example, <code>29279</code>.</td></tr>
+        <td>Enter the port of the syslog server for sending logs. For example: <code>29279</code>.</td></tr>
     <tr><td><strong>Transport Protocol</strong></td>
-        <td>Select the protocol over which you want system logs. Pivotal recommends using TCP.</td></tr>
+        <td>Select the protocol you want to use to send system logs. Pivotal recommends using TCP.</td></tr>
     <tr><td><strong>Enable TLS</strong></td>
     <td>If you select TCP, you can also select to send logs encrypted over TLS.</td></tr>
     <tr><td><strong>Permitted Peer</strong></td>
-        <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, for example, <code>*.example.com</strong></td></tr>
+        <td>Enter either:
+          <ul>
+            <li>The accepted fingerprint in SHA1 format.</li>
+            <li>The name of the remote peer. For example: <code>*.example.com</code>.</li>
+          </ul>
+        </td></tr>
     <tr><td><strong>SSL Certificate</strong></td>
-        <td>Enter the SSL Certificate(s)<%# Do not combine a singular and a plural. Maybe write "one or more" instead. %> for the syslog server. This ensures the logs are transported securely.</td></tr>
+        <td>Enter the SSL certificates for the syslog server. This ensures the logs are transported securely.</td></tr>
   </table>
-  <p class="note"><strong>IMPORTANT</strong>: If your syslog server is external to <%= vars.platform_name %>, you might need to select
-            <strong>Provide public IP addresses to all Service VMs</strong> on the <strong>Settings</strong> page.<p>
+  <p class="note"><strong>Note:</strong> If your syslog server is external to <%= vars.platform_name %>, 
+    you might need to select 
+    <strong>Provide public IP addresses to all Service VMs</strong> on the <strong>Settings</strong> page.
+    See <a href="#global">Configure Global Settings</a> above. 
+  <p>
 
 1. Click **Save**.
 
 ###<a id="service-instance-upgrades"></a> Configure Service Instance Upgrades
 
-Follow the steps below to configure service instance upgrades.
-This section configures the `upgrade-all-service-instances` errand, which <%= vars.product_name %> uses to upgrade service instances.
+This section configures the `upgrade-all-service-instances` errand. 
+<%= vars.product_name %> uses this errand to upgrade service instances.
 
-1. Click the **Service Instance Upgrades** tab<%# Just declare the UI element in bold: do not tell the reader where it sits on the screen. %>.
+To configure service instance upgrades.
 
-    <%= image_tag("service-instance-upgrades.png", :alt => "Service instance upgrades section.", :width => "300") %>
+1. Click **Service Instance Upgrades**.
+
+    <%= image_tag("service-instance-upgrades.png", :alt => "Service instance upgrades section.") %>
 
 1. Configure the fields as follows:
   <table>
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr>
         <td><strong>Number of simultaneous upgrades</strong></td>
-        <td>Enter the maximum number of service instances that will<%# Avoid "will": present tense is preferred. %> be in an upgrading state at the same time.
+        <td>Enter the maximum number of service instances that can upgrade at the same time.
         The minimum value is 0 and the maximum is 1 less than the number of BOSH workers. Increasing this value reduces the runtime of service instance upgrades.
-        <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, navigate to the BOSH Director tile, click <strong>Director Config</strong> and locate the **Director Workers**<%# Do not use Markdown tags inside HTML tags. %> field.</p>
+        <p class="note"><strong>Note:</strong> To determine the number of BOSH workers, navigate to <strong>BOSH Director</strong> > <strong>Director Config</strong> and locate the value of <strong>Director Workers</strong>.
+        </p>
         </td>
     </tr>
     <tr><td><strong>Number of upgrade canary instances</td>
@@ -595,49 +627,20 @@ This section configures the `upgrade-all-service-instances` errand, which <%= va
 
 ###<a id="errands"></a> (Optional) Review Errands
 
-You do not need to change the default configuration for errands in the **Errands** tab<%# Just declare the UI element in bold: do not tell the reader where it sits on the screen. %>.
-
-<p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must set the <b>Delete All Service Instances and Deregister Broker</b> errand to <b>On</b>.</p>
-
-Errands are scripts that run to do various tasks.
-<%= vars.product_name %> can run errands to manage the broker and service instances at the following points:
-
-- **Post-Deploy Errands:** Run when you click **Apply Changes**.
-- **Pre-Delete Errands:** Run before you delete the <%= vars.product_name %> tile.
-
-  <%= image_tag("errands.png", :alt => "Errand list for MySQL for Pivotal Platform.", :width => "250") %>
-
-By default, <%= vars.product_name %> runs the following errands:
-
-<table>
-    <tr>
-        <th><strong>Post-Deploy Errands</strong></th>
-        <td>
-            <ul>
-                <li><strong>Register On-demand MySQL Broker</strong>:
-                    Registers a broker with the Cloud Controller and lists it in the Marketplace.</li>
-                <li><strong>Smoke Tests</strong>: Validates basic MySQL operations.</li>
-                <li><strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong>:
-                    Checks if service instances have app bindings or service keys using IP addresses, or have a TLS certificate that is signed with an IP address. If true, the installation will<%# Avoid "will": present tense is preferred. %> fail.</li>
-                <li><strong>Upgrade all On-demand MySQL Service Instances</strong>:
-                    Upgrades existing instances of a service to its latest installed version.</li>
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <th><strong>Pre-Delete Errand</strong></th>
-        <td>
-            <ul>
-                <li><strong>Delete All Service Instances and Deregister Broker</strong>:
-                    Deletes all service instances and deregisters the broker.</li>
-            </ul>
-        </td>
-    </tr>
-</table>
+Errands are scripts that run at specfic times to do various tasks.
+<%= vars.product_name %> can run errands to manage the broker and service instances.
+You do not need to change the default configurations for errands.
 
 <p class="note warning"><strong>Warning:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does
-necessary cleanup tasks when you delete the <%= vars.product_name %> tile. Setting this errand to <strong>Off</strong> can cause
-problems when attempting to reinstall the tile. Pivotal recommends that you do not set this errand to <strong>Off</strong>.</p>
+necessary cleanup tasks when you delete the <%= vars.product_name %> tile or re-define plans. Setting this errand to <strong>Off</strong> can cause
+problems when attempting to reinstall the tile or re-define plans. Pivotal recommends that you do not set this errand to <strong>Off</strong>.
+</p>
+
+<%= vars.product_name %> uses the following types of errands:
+
+
+* **Post-Deploy Errands:** These errands run when you click **Apply Changes**.
+* **Pre-Delete Errands:** These errands run before you delete the <%= vars.product_name %> tile.
 
 <%= vars.product_name %> also uses errands to configure leader-follower service instances.
 For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands Used in Leader-Follower Failover</a>.
@@ -646,7 +649,54 @@ You can use errands when troubleshooting the broker or service instances.
 For more information about using errands for troubleshooting, see [Run Service
 Broker Errands to Manage Brokers and Instances](./troubleshoot.html#broker-errands).
 
+    
+To review errands:
 
+1. Click **Errands**.
+
+    <%= image_tag("errands.png", :alt => "Errand list for MySQL for Pivotal Platform.", :width => "250") %>
+    
+1. Review the settings for the following erands:
+  <table>
+    <tr>
+      <th>Errand</th>
+      <th>Description</th>
+    </tr>
+    
+    <tr>
+      <th colspan="2" style="text-align:center;">Post-Deploy Errands</th>
+    </tr>
+    
+    <tr>
+      <td><strong>Register On-demand MySQL Broker</strong></td>
+      <td>Registers a broker with the Cloud Controller and lists it in the Marketplace.</td>
+    </tr>
+    
+    <tr>
+      <td><strong>Smoke Tests</strong></td>
+      <td>Validates basic MySQL operations.</td>
+    </tr>
+    
+    <tr>
+      <td><strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong></td>
+      <td>Checks if service instances have app bindings or service keys using IP addresses or have a TLS certificate that is signed with an IP address. If either is true, the installation fails.</td>
+    </tr>
+    
+    <tr>
+      <td><strong>Upgrade all On-demand MySQL Service Instances</strong></td>
+      <td>Upgrades existing instances of a service to its latest installed version.</td>
+    </tr>
+    
+    <tr>
+      <th colspan="2" style="text-align:center;">Pre-Delete Errands</th>
+    </tr>
+    
+    <tr>
+      <td><strong>Delete All Service Instances and Deregister Broker</strong></td>
+      <td>Deletes all service instances and deregisters the broker.</td>
+    </tr>
+  </table>
+  
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
 For information about the Xenial stemcells that are compatible with <%= vars.product_name %>,
@@ -655,7 +705,7 @@ see [Release Notes](./release-notes.html) or [Pivotal Network](https://network.p
 Follow the steps below to verify your stemcell version and apply all changes:
 
 1. Click **Stemcell Library**.
-    For more information about using the Stemcell<%# Lowercase is preferred unless "stemcell" starts a sentence or is in a title. %> Library, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html).
+    For more information about using the **Stemcell Library**, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html).
 
 1. Verify and, if necessary, import a new stemcell version.
 
