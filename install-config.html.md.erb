@@ -6,47 +6,47 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 
-This topic provides instructions to operators of <%= vars.platform_name %>
+This topic provides instructions to <%= vars.platform_name %> operators
 about how to install, configure, and deploy the <%= vars.product_name %> tile.  The
-<%= vars.product_name %> service lets <%= vars.platform_name %> developers create and use their own MySQL
+<%= vars.product_name %> service enables <%= vars.platform_name %> developers to create and use MySQL
 service instances on demand.
 
 ## <a id="rbac"></a>Role-Based Access in Pivotal Ops Manager
 
-Ops Manager administrators can use Role-Based Access Control (RBAC) to manage which
+Ops Manager admins can use Role-Based Access Control (RBAC) to manage which
 operators can make deployment changes, view credentials, and manage user roles in Ops Manager.
-Therefore, your role permissions might not allow you to perform every procedure in this operator guide.
+Your role permissions might not allow you to do every procedure in this topic.
 
 For more information about roles in Ops Manager, see
     <a href="https://docs.pivotal.io/pivotalcf/opsguide/config-rbac.html#about">
-        Understand Roles in Ops Manager</a>.</p>
+        Roles in Ops Manager</a>.</p>
 
-## <a id="prereq"></a> Prepare Your Ops Manager and <%= vars.platform_name %> Installation for <%= vars.product_name %>
+## <a id="prereq"></a> Prerequisites
 
-Before you download and install the <%= vars.product_name %> tile, complete the following procedures:
+Before you install the <%= vars.product_name %> tile, you must:
 
-+ [Create an Application Security Group for <%= vars.product_name %>](#asg)
-+ [Enable the BOSH Resurrector](#resurrector)
-+ [(Optional) Preparing for TLS](prepare-tls.html):
-Only required if you want to enable TLS.
++ [Create an App Security Group for <%= vars.product_name %>](#asg).
++ [Enable the BOSH Resurrector](#resurrector).
++ [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS.
 
-### <a id="asg"></a> Create an Application Security Group for <%= vars.product_name %>
+### <a id="asg"></a> Create an App Security Group for <%= vars.product_name %>
 
-To let apps running on <%= vars.platform_name %> communicate with the MySQL service network,
-you must create an Application Security Group (ASG).
-The ASG allows smoke tests to run when you first install the <%= vars.product_name %> service
-and allows apps to access the service after it is installed.
+To enable apps running on <%= vars.platform_name %> to communicate with the MySQL service network,
+you must create an App Security Group (ASG).
+The ASG enables smoke tests to run when you first install the <%= vars.product_name %> service
+and apps to access the service after it is installed.
 
-To create an ASG for <%= vars.product_name %>, do the following:
+To create an ASG for <%= vars.product_name %>:
 
-1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
+1. Navigate to **Ops Manager Installation Dashboard** > **BOSH Director**.
 
 1. Click **Create Networks**.
 
-1. Find the network that has **Service Network** checked, and find the **CIDR** that you can use in your ASGs.
+1. Find the network that has **Service Network** checked and record the **CIDR**.
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
+    <%# This checkbox does not exist. annotate screenshot or crop it to make more clear  %>
 
-1. Using the CIDR that you found in the above step, create a JSON file `mysql-asg.json` with the configuration below:
+1. Create a JSON file named `mysql-asg.json` using the below template:
 
     ```json
     [
@@ -57,35 +57,40 @@ To create an ASG for <%= vars.product_name %>, do the following:
       }
     ]
     ```
+    Where `CIDR` is the CIDR you recorded in the above step.
 
-1. Use the CF CLI and the JSON file that you created to create an ASG called `p.mysql`:
+1. Create an ASG by running: 
 
     ```
     $ cf create-security-group p.mysql ./mysql-asg.json
     ```
 
-1. Bind the ASG to the appropriate space or, to give all started apps access, bind to the `default-running` ASG set:
+1. Bind the ASG to all running apps by running:
 
      ```
     $ cf bind-running-security-group p.mysql
     ```
 
-For more information, see [Create ASGs](http://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual).
+For more information about ASGs, 
+see [App Security Groups](http://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual).
 
 
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
-The [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector)
-increases the availability of <%= vars.product_name %> by restarting and resuming MySQL service in the following ways:
+Pivotal recommends enabling the BOSH Resurrector when installing <%= vars.product_name %>. 
+The BOSH Resurrector increases the availability of <%= vars.product_name %> by restarting and resuming MySQL service
+in the following ways:
 
-- Reacts to hardware failure and network disruptions by restarting VMs on active, stable hosts
+- Reacts to hardware failures and network disruptions by restarting VMs on active, stable hosts
 - Detects operating system failures by continuously monitoring VMs and restarting them as required
 - Continuously monitors the BOSH Agent running on each service instance VM and restarts the VM as required
 
-Pivotal recommends enabling the BOSH Resurrector when installing <%= vars.product_name %>. To enable the BOSH Resurrector,
-do the following:
+For more information about the BOSH Resurrector, 
+see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector).
 
-1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
+ To enable the BOSH Resurrector:
+
+1. Navigate to **Ops Manager Installation Dashboard** > **BOSH Director**.
 
 2. Click **Director Config**.
 
@@ -93,16 +98,15 @@ do the following:
 
 4. Click **Save**.
 
-For more information,
-see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector).
+## <a id="install"></a> Download and Import the Tile
 
-## <a id="install"></a> Download and Install the Tile
+To download and import the <%= vars.product_name %> tile:
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/pivotal-mysql/).
 
-1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file.
+1. Navigate to the **Ops Manager Installation Dashboard** and click **Import a Product** to upload the product file.
 
-1. Under the **Import a Product** button, click **+** next to the version number of <%= vars.product_name %>.
+1. Under **Import a Product**, click **+** next to the version number of <%= vars.product_name %>.
    This adds the tile to your staging area.
 
 1. Click the newly-added **<%= vars.product_name %>** tile to open its configuration panes.
@@ -112,11 +116,11 @@ see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector
 ## <a id="config-on-demand"></a> Configure the Tile
 
 Follow the steps below to configure the <%= vars.product_name %> service.
-<%= vars.product_name %> has service plans that deploy dedicated MySQL service instances on demand.
 
 ###<a id="azs"></a> Configure AZs and Networks
 
-Follow the steps below to choose an availability zone (AZ) to run the service broker and to select networks.
+To configure an availability zone (AZ) to run the service broker 
+and networks for the broker and MySQL service instances:
 
 1. Click **Assign AZs and Networks**.
 
@@ -130,17 +134,19 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
     <tr><td><strong>Network</strong></td>
         <td>Select a subnet for the MySQL broker. This is typically the same subnet
             that includes the <%= vars.app_runtime_full %> component VMs.<br>
-            This network is represented by the Default Network in this <a href="./about.html#on-demand">picture</a>.
+            This network is represented by the Default Network in diagram in <a href="./about.html#on-demand">Default Network and Service Network</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
-        <td>Select the subnet for the on-demand service instances, the Services Network in this <a href="./about.html#on-demand">picture</a>.
-            <br >
+        <td>Select the subnet for the on-demand service instances. 
+          This network is represented by the Service Network in diagram in <a href="./about.html#on-demand">Default Network and Service Network</a>.
+            <br><br>
             If you are adding IPsec to encrypt MySQL communication, Pivotal recommends that you deploy MySQL to its own network
             to avoid conflicts with services that are not IPsec compatible.
          </td></tr>
   </table>
-    <p class="note"><strong>IMPORTANT</strong>: You cannot change the regions or networks
-    after you click **Apply Changes** in the <a href="#apply-changes">final step</a> below.</p>
+    <p class="note warning"><strong>Warning:</strong> You cannot change the regions or networks
+    after you <strong>Apply Changes</strong>.
+  </p>
 
 1. Click **Save**.
 
@@ -154,16 +160,20 @@ Each service plan has a corresponding section in the tile configuration, such as
 
 By default, plans 1–3 are active and plans 4–9 are inactive. The procedures below describe how to change these defaults.
 
-<p class="note warning"><strong>Warning:</strong> You must not set <strong>Plan 1</strong> to <strong>Inactive</strong>. If you deactivate <strong>Plan 1</strong>, your installation
-fails when you apply changes.</p>
+<p class="note warning"><strong>Warning:</strong> 
+  You must not set <strong>Plan 1</strong> to <strong>Inactive</strong>. 
+  If you deactivate <strong>Plan 1</strong>, your installation fails when you apply changes.
+</p>
 
 <p class="note warning"><strong>Warning:</strong> You must configure one of your service plans as
 a single node plan. This is because you can only restore to a single node plan. You cannot restore
 directly to a leader-follower plan. Ensure that the persistent disk in the single node plan is as
-least as large as the persistent disk of your largest leader-follower plan. For more information on restoring services instances,
-see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>. </p>
+least as large as the persistent disk of your largest leader-follower plan. 
+For more information about restoring services instances,
+see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>.
+</p>
 
-Perform the following steps for each plan that you want to use in your <%= vars.platform_name %> deployment:
+For each plan that you want to use in your <%= vars.platform_name %> deployment:
 
 1. Click the section for the plan. For example, **Plan 1**.
 
@@ -181,7 +191,7 @@ Perform the following steps for each plan that you want to use in your <%= vars.
         background-color: #f1f1f1;
     }
 
-    /* Style the buttons that are used to open the tab content */
+    /* Style the buttons that are used to open the tabcontent */
     .tab button {
         background-color: inherit;
         float: left;
@@ -193,7 +203,7 @@ Perform the following steps for each plan that you want to use in your <%= vars.
     }
 
     /* Change background color of buttons on hover */
-    .tab button:hover {
+    .tab button :hover {
         background-color: #ddd;
     }
 
@@ -245,13 +255,13 @@ Perform the following steps for each plan that you want to use in your <%= vars.
 
 
     <div id="tab1" class="tabcontent" style="display:block">
-      <img src="./images/single-node-plan.png">
+      <img src="./images/single-node-plan.png"> 
     </div>
     <div id="tab2" class="tabcontent">
-      <img src="./images/leader-follower-plan.png">
+      <img src="./images/leader-follower-plan.png"> 
     </div>
     <div id="tab3" class="tabcontent">
-      <img src="./images/ha-plan.png">
+      <img src="./images/ha-plan.png"> 
     </div>
 
 
@@ -260,13 +270,14 @@ Perform the following steps for each plan that you want to use in your <%= vars.
     <tr><th>Field</th><th>Description</th></tr>
     <tr><td><strong>Service Plan Access</strong></td>
         <td>Select one of the following options:<br>
-            <ul><li>**Enable (Default)**---Gives access to all orgs,
+            <ul><li> <strong>Enable (Default):</strong> Gives access to all orgs
               and displays the service plan to all developers in the Marketplace.
                 </li>
-                <li>**Disable**---Disables access to all orgs, and hides the service plan to all developers in the Marketplace.
+                <li><strong>Disable:</strong> Disables access to all orgs and hides the service plan 
+                  to all developers in the Marketplace.
                   This disables creating new service instances of this plan.
                 </li>
-                <li>**Manual**---Lets you manually control service access with the cf CLI.
+                <li><strong>Manual:</strong> Lets you manually control service access with the cf CLI.
                     For more information, see <a href="./service-plan.html">Controlling Access to Service Plans by Org</a>.
                 </li>
         </ul></td></tr>
@@ -280,25 +291,26 @@ Perform the following steps for each plan that you want to use in your <%= vars.
     <tr><td><strong>Plan Quota</strong></td>
         <td>Enter the maximum number of service instances that can exist at one time.
           If the plan quota field is blank, the plan quota is set to the global quota by default.
-           If you have selected the highly available cluster plan, the Plan Quota maximum is 5.</td></tr>
+          If you have selected the highly available cluster plan, the Plan Quota maximum is 5. <br>
+        For information about the global quota, see <a href="./set-quotas.html">Setting Limits for On-Demand Service Instances</a>.</td></tr>
     <tr><td><strong>Paid Plan</strong></td>
         <td>Check this box to indicate that this service plan is paid.</td></tr>
     <tr><td><strong>MySQL VM Type</strong></td>
         <td>Select a VM type for the MySQL nodes.</td></tr>
     <tr><td><strong>Jumpbox VM Type</strong></td>
         <td>Only for highly available cluster plans. Select a VM type for the MySQL jumpbox node.
-            This VM is also called `mysql-monitor`. </td></tr>
+            This VM is also called <code>mysql-monitor</code>. </td></tr>
     <tr><td><strong>MySQL Persistent Disk</strong></td>
         <td>Select a disk size. This disk stores the MySQL data.<br>
             For sizing recommendations,
             see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
     </td></tr>
     <tr><td><strong>Jumpbox Persistent Disk</strong></td>
-        <td>Only for highly available cluster plans. <br> Select a disk size.
+        <td>Only for highly available cluster plans. Select a disk size.
           This disk stores backups. <br> For sizing recommendations,
           see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</td></tr>
     <tr><td><strong>MySQL Availability Zone(s)</strong></td>
-        <td> BOSH deploys your service instances to the selected availability zones (AZs).
+        <td> BOSH deploys your service instances to the selected AZs.
           If more than one AZ is selected, BOSH randomizes which AZ to place each VM. <br>
           For more information, see <a href="./index.html#other-notes">About Availability Zones</a>.
         </td></tr>
@@ -315,9 +327,9 @@ Perform the following steps for each plan that you want to use in your <%= vars.
 
 ###<a id="inactive"></a> (Optional) Deactivate Service Plan
 
-Follow the steps below to deactivate a service plan:
+To deactivate a service plan:
 
-1. If the service plan has existing service instances, perform the following steps:
+1. If the service plan has existing service instances:
     1. Click the section for the plan. For example, **Plan 2**.
     1. Under **Service Plan Access**, select **Disable**.
     1. Click **Save**.
@@ -330,8 +342,7 @@ Follow the steps below to deactivate a service plan:
 
 ###<a id="global"></a> Configure Global Settings
 
-Follow the steps below to determine if service instances are assigned public IP addresses
-and to set the total number of service instances allowed across all plans.
+To configure global settings for all service instances:
 
 1. Click **Settings**.
 
@@ -359,7 +370,7 @@ and to set the total number of service instances allowed across all plans.
 
 ###<a id="mysql"></a> Configure MySQL
 
-Follow the steps below to set MySQL defaults and enable developers to customize their instances:
+To set MySQL defaults and enable developers to customize their instances:
 
 1. Click **Mysql Configuration**
 
@@ -371,24 +382,22 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Enable Lower Case Table Names</strong></td>
         <td>Select this checkbox to store all table names in lowercase.
-            Selecting this sets the MySQL server system variable `lower_case_table_names` to 1 on all <%= vars.product_name %> instances
-        by default. To allow developers to override this default, see the checkbox below.
-            For more information, see
-          [lower\_case\_table\_names](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names)
-          in the MySQL documentation.
+            This sets the MySQL server system variable 
+            <code>lower\_case\_table\_names</code> to <code>1</code> on all <%= vars.product_name %> instances by default. <br>
+            To permit developers to override this default, see the checkbox below. <br>
+            For more information about <code>lower\_case\_table\_names</code> , see the <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names">MySQL documentation</a>.
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
-        <td>Select this checkbox to allow developers to override the default <strong>Enable Lower Case Table Names</strong> value set above, when they are creating a new service instance.
+        <td>Select this checkbox to permit developers to override the configured default <strong>Enable Lower Case Table Names</strong> value when they are creating a new service instance.
             For more information, see <a href="./change-default.html#configuring">Optional Parameters for the <%= vars.product_name %> Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
-        <td>Select this checkbox to enable data downloading from the client's local file system.
-            Pivotal recommends against selecting this checkbox. Before you enable local in-file,
-            review the security issues associated with <code>LOCAL DATA LOCAL</code>.
-            See the
-            [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html).
+        <td>Select this checkbox to enable data downloading from the local file system of the client.
+            Pivotal discourages selecting this checkbox. Before you enable local in-file,
+            review the security issues associated with <code>LOAD DATA LOCAL</code>.
+            See the <a href="https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html">MySQL documentation</a>.
     </td></tr>
     <tr><td><strong>Wait Timeout</strong></td>
-        <td>Set the time in seconds that MySQL waits to close inactive connections. For more information, see <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_wait_timeout">wait_timeout</a> in the MySQL 5.7 Reference Manual.
+        <td>Set the time in seconds that MySQL waits to close inactive connections. For more information about <code>wait\_timeout</code>, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_wait_timeout">MySQL documentation</a>.
     </td></tr>
   </table>
 
@@ -414,24 +423,24 @@ Follow the steps below to configure automated backups:
   - [Option 2: Back up to Ceph or S3](backup-and-restore.html#ceph-or-s3)---<%= vars.product_name %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
     that saves backups to an S3 bucket,
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
-  - [Option 3: Back up to GCS](backup-and-restore.html#gcs)---<%= vars.product_name %> runs an [GCS](https://cloud.google.com/storage/) SDK
+  - [Option 3: Back up to GCS](backup-and-restore.html#gcs)---<%= vars.product_name %> runs an [GCS](https://cloud.google.com/storage/) SDK <%# The link name must be "GCP documentation". %>
     that saves backups to an Google Cloud Storage bucket.
   - [Option 4: Back up to Azure Storage](backup-and-restore.html#azure)---<%= vars.product_name %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
     SDK that saves backups to an Azure storage account.
 
 ###<a id="security"></a> Configure Security
 
-Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:
+Follow the steps below to configure the security settings for the MySQL service. Do one or both of the following:<%# To introduce steps just write "To do x:" %>
 
 * To enable TLS for the MySQL service, perform the procedure in [Configure TLS](#security-tls) below.
-* To store your service instance credentials in runtime CredHub,
+* To store your service instance credentials<%# "binding credentials" is preferred. %> in runtime CredHub,
   perform the procedure in [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
 
 ![security](security.png)
 
 ####<a id="security-tls"></a> Configure TLS
 
-To enable TLS for the MySQL service, perform the following steps:
+To enable TLS for the MySQL service, perform the following steps:<%# To introduce steps just write "To do x:" %>
 
 
 1. Do the procedures in [Preparing for TLS](prepare-tls.html) if one of these conditions applies to you:
@@ -440,7 +449,7 @@ To enable TLS for the MySQL service, perform the following steps:
     provided by Ops Manager.
 
 1. Click **Security**.
-1. Under **TLS Options**, select one of the following:
+1. Under **TLS Options**, select one of the following:<%# To introduce steps just write "To do x:" %>
   *  **Optional**: This enables developers to configure their MySQL service VMs to use TLS.
   * **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
 <p class="note warning"><strong>Warning:</strong> Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
@@ -449,16 +458,16 @@ To enable TLS for the MySQL service, perform the following steps:
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
-You can store your service instance credentials in runtime CredHub instead of the Cloud Controller Database (CCDB).
+You can store your service instance credentials<%# "binding credentials" is preferred. %> in runtime CredHub instead of the Cloud Controller Database<%# "Cloud Controller database" is preferred. %> (CCDB).
 For more information about runtime CredHub, see [CredHub](https://docs.pivotal.io/pivotalcf/credhub/).
-To do so, do the following steps:
+To do so, do the following steps:<%# To introduce steps just write "To do x:" %>
 
-1. Ensure that you have configured the <%= vars.app_runtime %> tile to support securing service instance credentials in runtime CredHub.
+1. Ensure that you have configured the <%= vars.app_runtime %> tile to support securing service instance credentials<%# "binding credentials" is preferred. %> in runtime CredHub.
    For instructions, see [Step 1: Configure the <%= vars.app_runtime %> Tile](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html#pas-config).
 1. Click **Security**.
 1. Select the **Enable Secure Service Instance Credentials** checkbox.
 1. Click **Save**.
-1. After deploying the tile, notify the developers that they must unbind and rebind any existing service instances bindings if they want to use secure service instance credentials. Perform the following steps:
+1. After deploying the tile, notify the developers that they must unbind and rebind any existing service instances bindings if they want to use secure service instance credentials<%# "binding credentials" is preferred. %>. Perform the following steps:<%# To introduce steps just write "To do x:" %>
 
     1. Unbind the service instance from the app.
     For example:
@@ -506,16 +515,16 @@ Follow the steps below to enable different types of monitoring and logging avail
             </td></tr>
     <tr><td><strong>Enable Server Activity Logging</strong></td>
         <td>Select this checkbox to record who connects to the servers and what queries are processed using the Percona Audit Log Plugin.
-            For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a>.
+            For more information, see the <a href="https://www.percona.com/doc/percona-server/5.7/management/audit_log_plugin.html">Percona Documentation</a> <%# The link name must be "Percona documentation". %>.
             <p class="note"><strong>Note:</strong> MySQL audit logs are not forwarded to the syslog server because they can contain personally identifying information (PII) and secrets.<br />
             You can use the <a href="https://community.pivotal.io/s/article/script-to-download-mysql-logs-for-pas-tile-ha-clusters"<code>download-logs</code></a> script to retrieve the logs, which each MySQL cluster node VM stores in <code>/var/vcap/store/mysql\_audit\_logs/</code>.</p>
            </td></tr>
     <tr><td><strong>Enable Read Only Admin User</strong></td>
-        <td>Select this checkbox to create a read-only admin user, `roadmin`, on each service instance.
+        <td>Select this checkbox to create a read-only admin user, `roadmin`<%# Do not use Markdown tags inside HTML tags. %>, on each service instance.
             This user can be used for auditing and monitoring without risking
-            mutating or changing any data, because the `roadmin` user cannot make changes.
+            mutating or changing any data, because the `roadmin`<%# Do not use Markdown tags inside HTML tags. %> user cannot make changes.
             <br><br>
-            To retrieve the credentials for the `roadmin` user, see [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds). The read-only admin user is always `roadmin`, but the password varies by service instance.</td></tr>
+            To retrieve the credentials for the `roadmin`<%# Do not use Markdown tags inside HTML tags. %> user, see [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds)<%# Do not use Markdown tags inside HTML tags. %>. The read-only admin user is always `roadmin`<%# Do not use Markdown tags inside HTML tags. %>, but the password varies by service instance.</td></tr>
   </table>
 
 1. Click **Save**.
@@ -546,7 +555,7 @@ Follow the steps below to enable system logging for the MySQL broker and service
     <tr><td><strong>Permitted Peer</strong></td>
         <td>Enter either the accepted fingerprint, in SHA1, or the name of the remote peer, for example, <code>*.example.com</strong></td></tr>
     <tr><td><strong>SSL Certificate</strong></td>
-        <td>Enter the SSL Certificate(s) for the syslog server. This ensures the logs are transported securely.</td></tr>
+        <td>Enter the SSL Certificate(s)<%# Do not combine a singular and a plural. Maybe write "one or more" instead. %> for the syslog server. This ensures the logs are transported securely.</td></tr>
   </table>
   <p class="note"><strong>IMPORTANT</strong>: If your syslog server is external to <%= vars.platform_name %>, you might need to select
             <strong>Provide public IP addresses to all Service VMs</strong> on the <strong>Settings</strong> page.<p>
@@ -558,7 +567,7 @@ Follow the steps below to enable system logging for the MySQL broker and service
 Follow the steps below to configure service instance upgrades.
 This section configures the `upgrade-all-service-instances` errand, which <%= vars.product_name %> uses to upgrade service instances.
 
-1. Click the **Service Instance Upgrades** tab.
+1. Click the **Service Instance Upgrades** tab<%# Just declare the UI element in bold: do not tell the reader where it sits on the screen. %>.
 
     <%= image_tag("service-instance-upgrades.png", :alt => "Service instance upgrades section.", :width => "300") %>
 
@@ -567,9 +576,9 @@ This section configures the `upgrade-all-service-instances` errand, which <%= va
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr>
         <td><strong>Number of simultaneous upgrades</strong></td>
-        <td>Enter the maximum number of service instances that will be in an upgrading state at the same time.
+        <td>Enter the maximum number of service instances that will<%# Avoid "will": present tense is preferred. %> be in an upgrading state at the same time.
         The minimum value is 0 and the maximum is 1 less than the number of BOSH workers. Increasing this value reduces the runtime of service instance upgrades.
-        <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, navigate to the BOSH Director tile, click <strong>Director Config</strong> and locate the **Director Workers** field.</p>
+        <p class="note"><strong>Note</strong>: To determine the number of BOSH workers, navigate to the BOSH Director tile, click <strong>Director Config</strong> and locate the **Director Workers**<%# Do not use Markdown tags inside HTML tags. %> field.</p>
         </td>
     </tr>
     <tr><td><strong>Number of upgrade canary instances</td>
@@ -586,7 +595,7 @@ This section configures the `upgrade-all-service-instances` errand, which <%= va
 
 ###<a id="errands"></a> (Optional) Review Errands
 
-You do not need to change the default configuration for errands in the **Errands** tab.
+You do not need to change the default configuration for errands in the **Errands** tab<%# Just declare the UI element in bold: do not tell the reader where it sits on the screen. %>.
 
 <p class="note"><strong>IMPORTANT:</strong> In order to re-define plans later, you must set the <b>Delete All Service Instances and Deregister Broker</b> errand to <b>On</b>.</p>
 
@@ -609,7 +618,7 @@ By default, <%= vars.product_name %> runs the following errands:
                     Registers a broker with the Cloud Controller and lists it in the Marketplace.</li>
                 <li><strong>Smoke Tests</strong>: Validates basic MySQL operations.</li>
                 <li><strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong>:
-                    Checks if service instances have app bindings or service keys using IP addresses, or have a TLS certificate that is signed with an IP address. If true, the installation will fail.</li>
+                    Checks if service instances have app bindings or service keys using IP addresses, or have a TLS certificate that is signed with an IP address. If true, the installation will<%# Avoid "will": present tense is preferred. %> fail.</li>
                 <li><strong>Upgrade all On-demand MySQL Service Instances</strong>:
                     Upgrades existing instances of a service to its latest installed version.</li>
             </ul>
@@ -646,7 +655,7 @@ see [Release Notes](./release-notes.html) or [Pivotal Network](https://network.p
 Follow the steps below to verify your stemcell version and apply all changes:
 
 1. Click **Stemcell Library**.
-    For more information about using the Stemcell Library, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html).
+    For more information about using the Stemcell<%# Lowercase is preferred unless "stemcell" starts a sentence or is in a title. %> Library, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html).
 
 1. Verify and, if necessary, import a new stemcell version.
 
