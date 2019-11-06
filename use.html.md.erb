@@ -277,27 +277,38 @@ your app to apply the changes to `VCAP_SERVICES`.
 
 You can manage service instances in the following ways:
 
-+ Move your data to a different plan. See [Update a Service Instance to a Larger Plan](#update), below.
++ Move your data to a different plan. See [Update a Service Instance](#update), below.
 + Share service instances between orgs and spaces. See [Share Service Instances](#share), below.
 + Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
 + Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
 
-### <a id="update"></a>Update a Service Instance to a Larger Plan
+### <a id="update"></a>Update a Service Instance
 
-As apps and their databases grow, it might be necessary to update the service instance to a larger plan.
-This does not require a rebinding of your app or service keys. However, while the instance is being migrated to a new service instance,
+You can update a service instance using `cf update-service` to do the following:
+
++ Migrate data from a single-node plan to a leader-follower plan.
++ Migrate data from a leader-follower plan to a single-node plan.
++ Migrate data to a larger plan of the same topology.
+You cannot update a service instance to a smaller plan.
++ Change the default parameters for an existing service instance.
+See [Change Default Parameters on an Existing Service Instance](./change-default.html# updating).
+
+
+
+<p class="note warning"><strong>Warning:</strong> You cannot use <code>cf update-service</code> to migrate data between a HA cluster plan and a plan of another topology.
+If you want to do this, you must use the <code>cf mysql-tools</code> plugin instead. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in <%= vars.product_name %></a>.
+</p>
+
+When you update a service instance, you do not need to rebind your app or service keys. However, while the data is being migrated to the new service instance,
 the database is unavailable for several minutes.
 
-<p class="note warning"><strong>Warning:</strong> You cannot update to or from a highly available (HA) cluster plan
-  to a plan that uses a single-node or leader-follower topology using the <code>update-service</code> command. To update to or from HA cluster plan, you must migrate your data to a new service instance using the <code>cf mysql-tools</code>  plugin. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in <%= vars.product_name %></a>.</p>
-
-To update a service instance to a larger plan, run the following command:
+To update a service instance:
 
 ```
 cf update-service SERVICE-INSTANCE -p PLAN
 ```
 
-Where `PLAN` is the plan you want to upgrade the service instance to.
+Where `PLAN` is the plan you want to update the service instance to.
 
 For example:
 
