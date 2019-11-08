@@ -97,7 +97,7 @@ For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instanc
 
 
 
-## <a id="register-broker"></a>register-broker 
+## <a id="register-broker"></a>register-broker
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' %>
 
@@ -105,8 +105,8 @@ For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instanc
 ## <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
 
 
-This errand is run by Ops Manager only when deleting <%= vars.product_name %>. 
-Running this errand removes all service instances and their data. 
+Ops Manager runs this errand only when deleting <%= vars.product_name %>. 
+Running this errand removes all service instances and their data.
 
 <p class="note warning"><strong>Warning:</strong> Use extreme caution when running this errand. You should only use it when you want to destroy all of the on-demand service instances and deregister the broker from Cloud Foundry.</p>
 
