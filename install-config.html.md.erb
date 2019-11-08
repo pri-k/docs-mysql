@@ -80,8 +80,9 @@ see [App Security Groups](http://docs.pivotal.io/pivotalcf/concepts/asg.html#asg
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
 Pivotal recommends enabling the BOSH Resurrector when installing <%= vars.product_name %>. 
-The BOSH Resurrector increases the availability of <%= vars.product_name %> by restarting and resuming MySQL service
-in the following ways:
+The BOSH Resurrector increases the availability of <%= vars.product_name %> by restarting and resuming MySQL service.
+
+The BOSH Resurrector does the following:
 
 - Reacts to hardware failures and network disruptions by restarting VMs on active, stable hosts
 - Detects operating system failures by continuously monitoring VMs and restarting them as required
@@ -117,7 +118,7 @@ To download and import the <%= vars.product_name %> tile:
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
-Follow the steps below to configure the <%= vars.product_name %> service.
+To configure the <%= vars.product_name %> tile, do the procedures below.
 
 ###<a id="azs"></a> Configure AZs and Networks
 
@@ -437,8 +438,8 @@ To configure automated backups:
 
 To configure the security settings for the MySQL service, do one or both:
 
-* To enable TLS for the MySQL service, see [Configure TLS](#security-tls) below.
-* To store your service instance credentials in runtime CredHub, see [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
+* Enable TLS for the MySQL service. See [Configure TLS](#security-tls) below.
+* Store your service instance credentials in runtime CredHub. See [Configure Secure Service Instance Credentials](#security-service-instance-creds) below.
 
 ![security](security.png)
 
@@ -549,9 +550,7 @@ To enable monitoring and logging in the MySQL service:
 
 ###<a id="syslog"></a> Configure System Logging
 
-System logs use RFC5424 format.
-
-To enable system logging for the MySQL broker and service instance VMs:
+To enable RFC 5424 system logging for the MySQL broker and service instance VMs:
 
 1. Click **Syslog**.
 
@@ -698,19 +697,16 @@ To review errands:
   
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
-For information about the Xenial stemcells that are compatible with <%= vars.product_name %>,
-see [Release Notes](./release-notes.html) or [Pivotal Network](https://network.pivotal.io/).
-
-Follow the steps below to verify your stemcell version and apply all changes:
+To verify your stemcell version and apply all changes:
 
 1. Click **Stemcell Library**.
     For more information about using the **Stemcell Library**, see [Importing and Managing Stemcells](https://docs.pivotal.io/pivotalcf/opsguide/managing-stemcells.html).
 
 1. Verify and, if necessary, import a new stemcell version.
 
-1. <a name="apply-changes"></a>In the Ops Manager Dashboard, do the following to complete the installation:
+1. Navigate to **Ops Manager Dashboard** > **Review Pending Changes**.
 
-    1. Click **Review Pending Changes**.
-    For more information about this Ops Manager page, see
-    [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
-    1. Click **Apply Changes**.
+1. Click **Apply Changes**.
+    
+For information about the Xenial stemcells that are compatible with <%= vars.product_name %>,
+see [Release Notes](./release-notes.html) or [Pivotal Network](https://network.pivotal.io/).
