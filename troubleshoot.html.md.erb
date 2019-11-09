@@ -13,6 +13,41 @@ For information about temporary <%= vars.product_name %> service interruptions, 
 
 This section provides information on how to troubleshooting specific errors or error messages.
 
+
+<table>
+  <th colspan=2 ></th>
+  <tr>
+    <td>STMPTOM</td>
+    <td>
+      <pre class="terminal">
+    $ bosh -e my-env -d my-dep run-errand inspect
+    [...]
+    Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
+    Exit Code  0
+    Stdout     -
+    Stderr     2017/12/11 18:25:54 Started executing command: inspect
+             2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+             2017/12/11 18:25:54
+             Has Data: false
+             Read Only: true
+             GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+             Replication Configured: false<br /><br />
+    Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+    Exit Code  0
+    Stdout     -
+    Stderr     2017/12/11 18:25:54 Started executing command: inspect
+             2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+             2017/12/11 18:25:54
+             Has Data: true
+             Read Only: true
+             GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+             Replication Configured: true<br /><br />
+    2 errand(s)<br />
+    Succeeded
+    </pre></td>
+  </tr>
+</table>
+
 ### <a id="install-fail"></a> Failed Install
 
 
@@ -80,18 +115,16 @@ Service instances can also become temporarily inaccessible during upgrades and V
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "unable-to-determine",
     description: "Unable to Determine Leader and Follower",
-    symptom: <<~DESC,
-    
-      This problem happens when the <code>configure-leader-follower</code>
-      errand fails because it cannot determine the VM roles.
-        
-      The <code>configure-leader-follower</code> errand exits with <code>1</code>
-      and the errand logs contain the following:
+    symptom: <<~DESC,  
+    This problem happens when the <code>configure-leader-follower</code>
+    errand fails because it cannot determine the VM roles. <br> <br>
+      
+    The <code>configure-leader-follower</code> errand exits with <code>1</code>
+    and the errand logs contain the following: <br> <br>
 
-      <pre class="terminal">
-        $ Unable to determine leader and follower based on transaction history.
-      </pre>
-      DESC
+    <pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
+    DESC
+    
     cause: <<~DESC, 
     
       Something has happened to the instances, such as a failure or manual intervention.
@@ -104,20 +137,20 @@ Service instances can also become temporarily inaccessible during upgrades and V
     Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the
     <a href="./about-leader-follower.html#errands">orchestration</a>
     errands and backup/restore, you can put the service instance into a safe topology, and then rerun the
-    <code>configure-leader-follower</code> errand. This is shown in the example below.
-    This example shows one outcome that the <code>inspect</code> errand can return:
+    <code>configure-leader-follower</code> errand. This is shown in the example below.<br><br>
+    This example shows one outcome that the <code>inspect</code> errand can return: <br><br>
 
     <ol>
       <li>Use the
         <code>inspect</code>
-        errand to retrieve relevant information about the two VMs:
+        errand to retrieve relevant information about the two VMs:<br><br>
         <pre class="terminal">
       $ bosh -e my-env -d my-dep run-errand inspect
       [...]
       Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
       Exit Code  0
       Stdout     -
-      Stderr     2017/12/11 18:25:54 Started executing command: inspect
+      Stderr   2017/12/11 18:25:54 Started executing command: inspect
                2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
                2017/12/11 18:25:54
                Has Data: false
@@ -127,8 +160,9 @@ Service instances can also become temporarily inaccessible during upgrades and V
       Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
       Exit Code  0
       Stdout     -
-      Stderr     2017/12/11 18:25:54 Started executing command: inspect
-               2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+      Stderr   2017/12/11 18:25:54 Started executing command: inspect
+               2017/12/11 18:25:54 
+               Started GET https<span>:</span>//127.0.0.1:8443/status
                2017/12/11 18:25:54
                Has Data: true
                Read Only: true
@@ -137,6 +171,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
       2 errand(s)<br />
       Succeeded
       </pre>
+      <br><br>
         In the above scenario, the first instance is missing data but does not have replication configured. The second instance has data, and also has replication configured. The instructions below resolve this by copying data to the first instance, and
         resuming replication.</li>
       <li>Take a backup of the second instance using the
@@ -144,20 +179,23 @@ Service instances can also become temporarily inaccessible during upgrades and V
         steps.</li>
       <li>Restore the backup artifact to the first instance using the
         <a href="backup-and-restore.html#restore">Manual Restore</a>
-        steps.<br><br>
+        steps.<br>
         At this point, the instances have equivalent data.</li>
       <li>
         Run the <code>configure-leader-follower</code> errand to reconfigure replication:
-        <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code></pre>
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower &#92;
+          --instance=mysql/GUID-OF-LEADER</pre>
         For example:
-        <pre class="terminal">$ bosh -e my-env -d my-dep \
-        run-errand configure-leader-follower \
-        --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
+        
+        <pre class="terminal">$ bosh -e my-env -d my-dep run-errand configure-leader-follower &#92;
+          --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
       </li>
     </ol>
     DESC
       
 } %>
+
+
 
 ###<a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)
 
