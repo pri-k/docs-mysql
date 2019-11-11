@@ -48,7 +48,7 @@ To create an ASG for <%= vars.product_name %>:
 1. Click your services network and record the **CIDR**.
     ![Reserved IP Ranges](opsman-dir-reserved-ips.png)
 
-1. Create a JSON file named `mysql-asg.json` using the below template:
+1. Create a JSON file named `mysql-asg.json` using the template below:
 
     ```json
     [
@@ -59,7 +59,7 @@ To create an ASG for <%= vars.product_name %>:
       }
     ]
     ```
-    Where `CIDR` is the CIDR you recorded in the above step.
+    Where `CIDR` is the CIDR that you recorded in the above step.
 
 1. Create an ASG by running: 
 
@@ -416,7 +416,7 @@ To configure automated backups:
     <%= image_tag("backups.png", :alt => "The radio buttons for backup configuration are
         Ceph or Amazon S3, SCP, GCS, and Azure.", :width => "200") %>
 
-1. Consult [About Automated Backups](backup-and-restore.html#overview) to learn about how automated backups work.
+1. To learn how automated backups work, see [About Automated Backups](backup-and-restore.html#overview).
 
 1. Select a **Backup configuration** and do the procedure for your storage solution in _Backing Up and Restoring_:
   * **Ceph or Amazon S3:** <%= vars.product_name %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
