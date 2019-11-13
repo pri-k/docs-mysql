@@ -9,9 +9,24 @@ This topic provides information about the defaults that MySQL for Pivotal Cloud
 Foundry (PCF) applies to its Percona Server components. This topic also provides
 instructions for how to use optional parameters to change certain server defaults.
 
-## <a id="defaults"></a> Server Defaults for <%= vars.product_name %>
+## <a id="defaults"></a> Server Defaults for MySQL for PCF
 
-The following table lists the <%= vars.product_name %> server defaults for all service plans.
+This section lists the server defaults for MySQL for PCF service plans.
+Most of the server defaults are the same for all service plans. However,
+some server defaults differ depending on the service plan.
+
+For server defaults that are:
+
++ Common to all plans, see [Server Defaults for All Plans](#all) below.
++ Specific to single node and leader-follower plans,
+see [Server Defaults for Single Node and Leader-Follower Plans](#sn-l-f) below.
++ Specific to highly available (HA) cluster plans,
+see [Server Defaults for Highly Available Cluster Plans](#ha) below.
+
+### <a id="all"></a> Server Defaults for All Plans
+
+The following table lists the MySQL for PCF server defaults that are common
+to all service plans.
 
 <table>
     <th>Name</th>
@@ -126,10 +141,10 @@ The following table lists the <%= vars.product_name %> server defaults for all s
     </tr>
 </table>
 
-## <a id="sn-l-f"></a> Server Defaults for Single Node and Leader-Follower Plans
+### <a id="sn-l-f"></a> Server Defaults for Single Node and Leader-Follower Plans
 
-The following table lists the <%= vars.product_name %> server defaults for single node 
-and leader-follower service plans.
+In addition to the server defaults that are common to all plans, single node
+and leader-follower plans use the server defaults listed in the following table.
 
 <table>
     <th>Name</th>
@@ -148,7 +163,7 @@ and leader-follower service plans.
         <td><code>myisam-recover-options</code></td>
         <td>BACKUP, FORCE</td>
         <td>
-            This setting enables <%= vars.product_name %> to recover from most MyISAM problems
+            This setting enables MySQL for PCF to recover from most MyISAM problems
             without human intervention. For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
@@ -159,7 +174,7 @@ and leader-follower service plans.
         <td><code>event-scheduler</code></td>
         <td>ON</td>
         <td>
-            <%= vars.product_name %> enables the event scheduler so users can create and use
+            MySQL for PCF enables the event scheduler so users can create and use
             events in their dedicated service instances.
         </td>
     </tr>
@@ -167,9 +182,9 @@ and leader-follower service plans.
         <td><strong>InnoDB Log File Size</strong></td>
         <td><code>innodb-log-file-size</code></td>
         <td>256&nbsp;MB</td>
-        <td><%= vars.product_name %> clusters default to a log-file size of 256&nbsp;MB.</td>
+        <td>MySQL for PCF clusters default to a log-file size of 256&nbsp;MB.</td>
     </tr>
-     
+
     <tr>
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
@@ -179,9 +194,10 @@ and leader-follower service plans.
 </table>
 
 
-## <a id="ha"></a> Server Defaults for Highly Available Cluster Plans
+### <a id="ha"></a> Server Defaults for Highly Available Cluster Plans
 
-The following table lists the <%= vars.product_name %> server defaults for highly available cluster service plans.
+In addition to the server defaults that are common to all plans,
+HA cluster plans use the server defaults listed in the following table.
 
 <table>
     <th>Name</th>
@@ -200,7 +216,7 @@ The following table lists the <%= vars.product_name %> server defaults for highl
         <td><code>myisam-recover-options</code></td>
         <td>OFF</td>
         <td>
-            This setting enables <%= vars.product_name %> to recover from most MyISAM problems
+            This setting enables MySQL for PCF to recover from most MyISAM problems
             without human intervention. For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
@@ -211,7 +227,7 @@ The following table lists the <%= vars.product_name %> server defaults for highl
         <td><code>event-scheduler</code></td>
         <td>OFF</td>
         <td>
-            <%= vars.product_name %> enables the event scheduler so users can create and use
+            MySQL for PCF enables the event scheduler so users can create and use
             events in their dedicated service instances.
         </td>
     </tr>
@@ -219,9 +235,9 @@ The following table lists the <%= vars.product_name %> server defaults for highl
         <td><strong>InnoDB Log File Size</strong></td>
         <td><code>innodb-log-file-size</code></td>
         <td>1024&nbsp;MB</td>
-        <td><%= vars.product_name %> clusters default to a log-file size of 256&nbsp;MB.</td>
+        <td>MySQL for PCF clusters default to a log-file size of 256&nbsp;MB.</td>
     </tr>
-     
+
     <tr>
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
