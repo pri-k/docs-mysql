@@ -5,7 +5,10 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers to customize access credentials and privileges for <%= vars.product_name %> service instances.
+## <a id="overview"></a> Overview
+
+This topic provides instructions for developers to customize access credentials and privileges for
+<%= vars.product_name %> service instances.
 
 These procedures use the Cloud Foundry Command Line Interface (cf CLI).
 You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks
@@ -13,35 +16,34 @@ using a graphical UI.
 
 For information about using <%= vars.product_name %>, see [Using <%= vars.product_name %>](./use.html).
 
-## <a id="read-only"></a>Create Read-only Access Credentials 
+## <a id="read-only"></a> Create Read-only Access Credentials
 
-<%= vars.product_name %> lets space developers create read-only credentials to give to users who need read-only access to the database.
-You can create credentials by using the cf CLI to create a new [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
+<%= vars.product_name %> enables space developers to create read-only credentials to give to users who need
+read-only access to the database.
+You can create credentials by using the cf CLI to create a new
+[service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
 
-To create and find read-only credentials for an existing service instance, do the following:
+To create and find read-only credentials for an existing service instance:
 
- 1. Run the following command to create a new service key for a service instance, specifying it to be read-only:
+ 1. Create a new read-only service key for a service instance by running:
 
     <code>cf create-service-key SERVICE-INSTANCE KEY-NAME -c '{ "read-only": true }'</code>
 
-    Where:
+    Where <code>SERVICE-INSTANCE</code> is the name of the service instance and <code>KEY-NAME</code> is what
+    you want to call the key.
 
-    <code>SERVICE-INSTANCE</code>: The name of the service instance
-
-    <code>KEY-NAME</code>: What you want to call the key
-
-    For example,
+    For example:
 
     <pre class="terminal">
     $ cf create-service-key mydb mykey1 -c '{ "read-only": true }'
     Creating service key mykey1 for service instance mydb as admin...
     OK</pre>
 
- 1. Run the following command to retrieve the read-only credentials from the service key:
+ 1. Retrieve the read-only credentials from the service key by running:
 
-    <code> cf service-key SERVICE-INSTANCE KEY-NAME</code>
+    <code>cf service-key SERVICE-INSTANCE KEY-NAME</code>
 
-    For example, 
+    For example,
     <pre class="terminal">
     $ cf service-key mydb mykey1</br>
     {
@@ -54,32 +56,35 @@ To create and find read-only credentials for an existing service instance, do th
      "username": "abcdefghijklm"
     }</pre>
 
-<p class="note"><strong>Note</strong>: Any user with access to create a service key may provision a fully privileged
-service key.</p>
+<p class="note"><strong>Note:</strong> Any user with access to create a service key can provision a fully
+  privileged service key.</p>
 
-## <a id="username"></a>Create Credentials for a Custom Username
+## <a id="username"></a> Create Credentials for a Custom Username
 
-If you have users that want to access the database with a specific username, <%= vars.product_name %> lets space developers create custom
-usernames for service keys or service bindings.
-You can create credentials by using the cf CLI to create a new [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
+<%= vars.product_name %> lets space developers create custom usernames for service keys or service bindings.
+This is useful if you have users that want to access the database with a specific username.
+You can create credentials by using the cf CLI to create a new
+[service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
 
-To create and find custom username credentials for an existing service instance, do the following:
+To create and find custom username credentials for an existing service instance:
 
- 1. Create a new service key for a service-instance, specifying a username:
+ 1. Create a new service key and username for a service-instance by running:
 
     <code>$ cf create-service-key SERVICE-INSTANCE KEY-NAME -c '{ "username": NEW-USER-NAME }'</code>
 
-    For example,
+    For example:
+
     <pre class="terminal">
     $ cf create-service-key mydb mykey2  -c '{ "username": myuser }'
     Creating service key mykey2 for service instance mydb as admin...
     OK</pre>
 
- 1. Run the following command to retrieve the credentials from the service key.
+ 1. Retrieve the credentials from the service key by running:
 
     <code>cf service-key SERVICE-INSTANCE KEY-NAME</code>
 
-    For example,
+    For example:
+
     <pre class="terminal">
     $ cf service-key mydb mykey2</br>
     {
@@ -92,5 +97,5 @@ To create and find custom username credentials for an existing service instance,
      "username": "myuser"
     }</pre>
 
-<p class="note"><strong>Note</strong>: Any user with access to create a service key may provision a fully privileged
-service key.</p>
+<p class="note"><strong>Note:</strong> Any user with access to create a service key can provision a fully
+  privileged service key.</p>
