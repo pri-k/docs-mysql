@@ -1,0 +1,104 @@
+---
+title: About Data Migration in MySQL for Pivotal Platform
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic explains how data migration works in <%= vars.product_full %>. 
+
+Read this topic before you do in the procedures on 
+[Migrating Data in <%= vars.product_short %>](./migrate-data.html).
+
+
+## <a id='overview'></a>The migrate Command
+
+You can use the `mysql-tools` CLI plugin to migrate MySQL data with the `migrate` command.
+The `migrate` command does a streaming `mysqldump` and restore to migrate data from 
+your source MySQL database to a target <%= vars.product_name %> v2 instance. 
+You run the `migrate` command from your target org and space.
+
+The command:
+
+  1. Creates a new <%= vars.product_name %> v2 service instance in the target space 
+  with the same name as the source MySQL service instance name.
+  1. Copies the source data over to the new service instance.
+  1. Appends `-old` to the source service instance name, whether it is another <%= vars.platform_name %> MySQL service instance or a user-provided service created locally to migrate an off-platform database.
+  
+<p class="note warning"><strong>Warning:</strong> The <code>migrate</code> command does not migrate all stored programs.
+The command only migrates views and does not migrate triggers, routines, or events.
+To manually migrate triggers, routines,	or events, contact <a href="https://pivotal.io/support">Pivotal Support</a>.</p>
+
+The `migrate` command skips the following system schemas:
+
+- `cf_metadata`
+- `information_schema`
+- `mysql`
+- `performance_schema`
+- `sys`
+
+<!-- IF POSSIBLE DESCRIBE ABOVE -->
+  
+## <a id='use-cases'></a>Use Cases
+
+The `migrate` command supports most migration use cases, including the following:
+
++ Migrating from a single-node or leader-follower plan to highly available (HA) cluster plan.
++ Migrating from an HA cluster plan to single-node or leader-follower plan.
++ Migrating from an off-platform database to <%= vars.product_name %> v2.x.
++ Migrating from one availability zone (AZ) to another.
++ Migrating from the deprecated
+  [<%= vars.product_old %> v1.x](https://docs.pivotal.io/p-mysql/1-10/) to <%= vars.product_name %> v2.x.
+  
+<table>
+  <tr>
+    <th>Migrating from...</th>
+    <th>To...</th>
+  </tr>
+</table>
+
+
+## <a id='security'></a>Security
+
+The `migrate` command supports connections over TLS. If TLS is configured in
+source and target MySQL instances, the channel through which data is streamed
+is secured via TLS.
+
+For information on how to configure TLS in your service instance,
+see [Securing Service Instance Credentials with Runtime Credhub](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html).
+
+<!-- MAYBE CHANGE LINK TO OUR MYSQL DOCS -->
+
+## <a id='output'></a>Command Output
+
+If migration is successful, the `migrate` command output includes a
+<code>Migration completed successfully</code> message, as shown in this example:
+<pre class="terminal">
+$ cf mysql-tools migrate my-instance db-small
+2018/04/24 11:31:19 Creating new service instance "my-instance" for service p.mysql using plan db-small
+2018/04/24 11:41:01 Unpacking assets for migration to /var/folders/dm/66n2j9xx02l8vs58q2whz4080000gn/T/migrate_app_101341527
+2018/04/24 11:41:02 Started to push app
+Done uploading
+2018/04/24 11:41:09 Successfully pushed app
+2018/04/24 11:41:10 Successfully bound app to v1 instance
+2018/04/24 11:41:12 Successfully bound app to v2 instance
+2018/04/24 11:41:12 Starting migration app
+2018/04/24 11:41:25 Started to run migration task
+2018/04/24 11:41:27 Migration completed successfully
+2018/04/24 11:41:29 Cleaning up...
+</pre>
+
+If the migration is not successful, an error message appears.
+
+<!-- PUT THIS IN THE PROCEDURE AS AN EXAMPLE OUTPUT -->
+
+## <a id='debugging'></a>Debugging
+
+For debugging, you can add the optional `--no-cleanup` flag to the `migrate` command.
+
+If a migration fails, this flag preserves the app that runs the migration task
+and the newly-created service instances.
+However, if a migration succeeds, the migration app is deleted
+even when the `migrate` command included `--no-cleanup`.
+
+<!-- PUT THIS IN THE PROCEDURE AS AN OPTIONAL FLAG. DOES THIS TAKE UP MORE TIME OR MORE SPACE-->
