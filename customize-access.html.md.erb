@@ -5,10 +5,10 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-## <a id="overview"></a> Overview
-
 This topic provides instructions for developers to customize access credentials and privileges for
 <%= vars.product_name %> service instances.
+
+## <a id="overview"></a> Overview
 
 These procedures use the Cloud Foundry Command Line Interface (cf CLI).
 You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks
@@ -27,10 +27,7 @@ To create and find read-only credentials for an existing service instance:
 
  1. Create a new read-only service key for a service instance by running:
 
-    <code>cf create-service-key SERVICE-INSTANCE KEY-NAME -c '{ "read-only": true }'</code><br><br>
-
-    Where <code>SERVICE-INSTANCE</code> is the name of the service instance and <code>KEY-NAME</code> is what
-    you want to call the key.<br><br>
+    <code>cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "read-only": true }'</code><br><br>
 
     For example:
 
@@ -41,7 +38,7 @@ To create and find read-only credentials for an existing service instance:
 
  1. Retrieve the read-only credentials from the service key by running:
 
-    <code>cf service-key SERVICE-INSTANCE KEY-NAME</code><br><br>
+    <code>cf service-key SERVICE-INSTANCE-NAME KEY-NAME</code><br><br>
 
     For example:
 
@@ -71,7 +68,7 @@ To create and find custom username credentials for an existing service instance:
 
  1. Create a new service key and username for a service-instance by running:
 
-    <code>$ cf create-service-key SERVICE-INSTANCE KEY-NAME -c '{ "username": NEW-USER-NAME }'</code><br><br>
+    <code>$ cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "username": NEW-USERNAME }'</code><br><br>
 
     For example:
 
@@ -82,7 +79,7 @@ To create and find custom username credentials for an existing service instance:
 
  1. Retrieve the credentials from the service key by running:
 
-    <code>cf service-key SERVICE-INSTANCE KEY-NAME</code><br><br>
+    <code>cf service-key SERVICE-INSTANCE-NAME KEY-NAME</code><br><br>
 
     For example:
 
