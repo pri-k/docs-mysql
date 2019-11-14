@@ -10,205 +10,236 @@ for <%= vars.platform_name %> v2.x service instance.
 
 <%= partial "../../p-mysql/partials/mysql/galera_ga" %>
 
+## <a id='overview'></a>Overview
+
+You can migrate data from a source database to a destination database using the `migrate` command. 
+
+To migrate data in <%= vars.product_short %>: 
+
+1. Enable the `migrate` command to access the source database. 
+    See [Enable Source Access](#source-access) below. 
+1. Migrate the data from the source database to the destination service instance. 
+    See [Migrate Data](#migrate-data) below.
+1. Ensure that the migration was successful.
+    See [Validate Data](#validate-data) below. 
+1. Rebind and restage apps to the new destination service instance. 
+    To save resources, you can optionally delete the old source database. 
+    See [Rebind and Restage Apps](#rebind-restage) below. 
+    
+<p class="note warning"><strong>Warning:</strong> Migrating large datasets can take several hours.
+Data migration is linear and depends on the hardware being used.
+For example, if X amount of data takes 10 minutes to migrate, 
+then 2X amount of data takes 20 minutes to migrate using the same hardware.
+<br><br>
+Do a test migration with small datasets to estimate how long the entire migration 
+will take before migrating larger datasets.</p>
+
 ## <a id='prepare'></a>Prerequisites
 
 Before you do the procedures in this topic, you must have:
 
-* Learned about the `migrate` command. See [About Data Migration
+* Read about the `migrate` command in [About Data Migration
 in <%= vars.product_short %>](./about-migrate.html).
-* The resource requirements listed in [Resource Planning](#sizing) below.
-* An existing MySQL database that is the data source you want to migrate from.
-  This can be:
+* An existing MySQL database that is the source of the data you want to migrate from.
+  MySQL source databases can be:
   * a <%= vars.product_old %> v1 service instance
   * a <%= vars.product_name %> v2 service instance
   * a non-Pivotal MySQL database
-* <%= vars.product_name %> v2.x installed in the target <%= vars.platform_name %> environment you want to migrate to.
-* A <%= vars.product_name %> service plan available in the targeted Org and Space you want
-  to migrate your data to. The service plan should have the correct topology and
-  resources for your target database.
+* <%= vars.product_name %> v2 installed in the destination <%= vars.platform_name %> environment 
+you want to migrate to.
+* A <%= vars.product_name %> service plan available in the destination org and space you want
+  to migrate your data to. 
+  This service plan must fulfill the requirements in [Resource Planning](#sizing) below. 
   Talk to your operator to determine which service plan is appropriate.
-  For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
-
-<p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>.
-  <%= vars.product_name %> v2.x appears as <code>p.mysql</code> and <%= vars.product_old %> v1.x appears as <code>p-mysql</code>.</p>
+  <p class="note"><strong>Note:</strong> To view available service plans, run <code>cf marketplace</code>.
+  <%= vars.product_name %> v2 appears as <code>p.mysql</code> 
+  and <%= vars.product_old %> v1 appears as <code>p-mysql</code>.</p>
 
 ### <a id='sizing'></a>Resource Planning
 
 You must ensure that the <%= vars.product_name %> v2 service plan for your
-target service INSTANCE has your preferred VM type and persistent disk size.
+destination service instance has your preferred VM type and persistent disk size.
 If the plan does not enough space on disk to store the data, migration fails.
 
-The service plan that you select for your target service instance should have a persistent disk that is:
+The service plan that you select for your destination service instance should have a persistent disk that is:
+When choosing a service plan for your destination service instance, if you select: 
 
-  * **Single-Node** or **Leader-Follower**: Three times larger than the size of the source data.
-  * **HA Cluster**: Two times larger than the size of the source data.
-
-<p class="note warning"><strong>Warning:</strong> Migrating large datasets can take several hours.
-Migration of the data is linear and depends on the hardware being used.
-For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
-Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
+* **A single node or leader-follower plan,** ensure the persistent disk size is three times 
+  larger than the size of the source data.
+* **A HA cluster plan,** ensure the persistent disk size is two times 
+larger than the size of the source data.
+  
+For more information about recommended persistent disk sizes, 
+see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
 
 ## <a id='install-plugin'></a>Install the mysql-tools CF CLI Plugin
 
 Pivotal recommends that operators and developers use the `mysql-tools` cf CLI plugin to migrate
-data from a source MySQL database to a <%= vars.product_name %> v2.x service instance.
+data from a source MySQL database to a <%= vars.product_name %> v2.x service instance. For more
+information about `mysql-tools` cf CLI plugin, 
+see [mysql-cli-plugin](https://github.com/pivotal-cf/mysql-cli-plugin) in GitHub.
 
-Do the following to install the `mysql-tools` cf CLI plugin:
+To install the `mysql-tools` cf CLI plugin:
 
-1. Run the following command:
+1. install the plugin by running:
 
     ```
     cf install-plugin -r CF-Community "MysqlTools"
     ```
-2. Ensure the plugin has installed successfully by running the following command:
+2. Confirm that the plugin has installed successfully by running:
 
     ```
     cf mysql-tools version
     ```
-3. You can run the following command to view plugin usage details:
 
-    ```
-    cf mysql-tools -h
-    ```
-    An example output:
-    <pre class="terminal">
-    $ cf mysql-tools -h
-    NAME:
-       mysql-tools - Plugin to migrate mysql instances
-
-    USAGE:
-       cf mysql-tools migrate [-h] [--no-cleanup] &lt;v1-service-instance&gt; &lt;plan-type&gt;
-       cf mysql-tools version
-    </pre>
-
-## <a id='source-access'></a>Set Up Source Access
+## <a id='source-access'></a>Enable Source Access
 
 The `migrate` command must be able to access the source database.
-How you enable this access depends on where the source database is located relative to the target, as follows:
+How you enable this access depends on where the source database is located relative to the destination
+space and org. 
+
+If you are:
 
 * **Migrating Within an Org and Space**: The `migrate` command can access the source without any preparation.
-Continue to [Migrate Data](#migrate-data), below.
-* **Migrating Across Spaces**: If the source database is in a different space from the target,
-enable access through service instance sharing. See [Source Access across Spaces](#across-spaces), below.
-* **Migrating from Off-Platform**: If the source database is in a different <%= vars.platform_name %> foundation from the target, or not on any <%= vars.platform_name %> foundation,
-create a user-provided service that accesses the remote database. See [Source Access Off-Platform](#off-platform), below.
+ Continue to [Migrate Data](#migrate-data) below.
+* **Migrating Across Spaces**: If the source database is in a different space from the destination,
+enable access using service instance sharing. 
+See [Source Access across Spaces](#across-spaces) below.
+* **Migrating from Off-Platform**: If the source database is in a different <%= vars.platform_name %> foundation 
+from the destination, or not on any <%= vars.platform_name %> foundation,
+create a user-provided service that can access the remote database. 
+See [Source Access Off-Platform](#off-platform) below.
 
 ### <a id='across-spaces'></a>Source Access across Spaces
 
-If your source MySQL service instance is in a different development space from your target org and space,
-you can migrate your data by sharing the service instance to the target org and space.
+If your source MySQL service instance is in a different development space from your destination org and space,
+you can migrate your data by sharing the service instance to the destination org and space.
 Service instance sharing is enabled by default.
 
-To share a source MySQL service instance with your target org and space:
+To share a source MySQL service instance with your destination org and space:
 
 1. Do the procedure in [Share Service Instances](./use.html#share).
 
-1. Continue to [Migrate Data](#migrate-data), below.
+1. Continue to [Migrate Data](#migrate-data) below.
 
 
 ### <a id='off-platform'></a>Source Access Off-Platform
 
-If your source MySQL database is in a different <%= vars.platform_name %> foundation, or not deployed
-on <%= vars.platform_name %> at all,
+If your source MySQL database is in a different <%= vars.platform_name %> foundation
+or not deployed on <%= vars.platform_name %>,
 you can migrate your data by creating a local user-provided service instance that can access the database.
 
 For more information on user-provided
 service instances, see
 [User-Provided Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/user-provided.html).
 
-To create a user-provided service instance to access the off-platform database, do the following:
+To create a user-provided service instance to access the off-platform database:
 
-1. Ensure your off-platform MySQL database allows inbound and outbound network
-    traffic to your target <%= vars.platform_name %> foundation. You may need to modify firewall rules
-    for your off-platform MySQL. Talk to your platform operator for assistance.
+1. Confirm that your off-platform MySQL database permits inbound and outbound network
+    traffic to your destination <%= vars.platform_name %> foundation. You might need to modify firewall rules
+    for your off-platform MySQL database. Talk to your platform operator for assistance.
 1. If your off-platform MySQL database requires connections over TLS, make sure
-    that your <%= vars.platform_name %> foundation is configured to recognize the CA that the MySQL server
-    certificate is signed with.
-1. Collect the address, credentials, and other values needed to access your off-platform database.  These typically include the following:
-  - `hostname`: Domain name or IP address of the off-platform source database
-  - `name`: Name of source database
-  - `username` and `password`: Database account credentials
-  - `port`: Typically `3306`
-  - `uri`: Query string for database access
+    that your <%= vars.platform_name %> foundation is configured to recognize the CA certificate 
+    that the MySQL server certificate is signed with.
+1. Record the information needed to access your off-platform database. 
+These values usually include:
+  - `hostname`: the domain name or IP address of the off-platform source database.
+  - `name`: the name of source database.
+  - `username` and `password`: the database account credentials.
+  - `port`: The port number for the database. This number is usually `3306`.
+  - `uri`: The query string for database access.
 
-1. Create a Cloud Foundry user-provided service instance that accesses the off-platform database:
+1. Create a Cloud Foundry user-provided service instance that can access the off-platform database:
 
     ```
     cf cups CF-DB-INSTANCE -p CREDS-STRUCT
     ```
    Where:
    * `CF-DB-INSTANCE` is the name that you want to give to the new database service instance that you are migrating to.
-   * `CREDS-STRUCT` is a JSON structure that contains the off-platform database access values above.
+   * `CREDS-STRUCT` is a JSON structure that contains the off-platform database access values  you recorded in the above step.
    <br><br>
    For example:
-   <pre class="terminal noselect">
-   $ cf cups migrating-db -p '{"hostname": "34.192.88.212", "name": "my_db", \
+   <pre class="terminal noselect">$ cf cups migrating-db -p '{"hostname": "34.192.88.212", "name": "my\_db", \
    "username": "root", "password": "P455w0rD", "port": "3306", \
-   "uri": "mysql<span>:</span>//root:P455w0rD<span>@</span>34.192.88.212:3306/my_db",}'
+   "uri": "mysql<span>:</span>//root:P455w0rD<span>@</span>34.192.88.212:3306/my_db",}' <br>
    Creating user provided service migrating-db in org my-org / space my-space as admin...
    OK
-   </p>
+   </pre>
+  <p class="note"><strong>Note</strong>: <code>cf cups</code> is a shortcut
+  for the <code>cf create-user-provided-service</code> command.</p>
 
-    <p class="note"><strong>Note</strong>: <code>cf cups</code> is a shortcut
-    for the <code>cf create-user-provided-service</code> command.</p>
-
-After seeing that your user-provided service instance was created, continue to [Migrate Data](#migrate-data), below.
+1. After your user-provided service instance is created, continue to [Migrate Data](#migrate-data) below.
 
 ## <a id='migrate-data'></a>Migrate Data
 
-When your source database is accessible to your destination space, perform the following steps to migrate your data:
+After your source database can access the destination space:
 
-1. If your source MySQL service instance is running on <%= vars.platform_name %>, do the following to stop all traffic to the service instance, by stopping and unbinding all apps
-that use it:
++ **If your source MySQL database is running on <%= vars.platform_name %>,** 
+you must stop all traffic to the service instance before you migrate your data. 
+You can do this by stopping and unbinding all of your apps.
+See [Stop and Unbind Apps](#stop-unbind) below. 
 
-    <p class="note"><strong>Note</strong>: To retrieve a list of bound apps, run <code>cf services</code> and see the <code>bound apps</code> column.</p>
++ **If your source MySQL database is running off-platform,**
+ do the procedure in [Migrate Data to Destination Instance](#command) below. 
 
-    1. Use the cf CLI to target and log in to your <%= vars.platform_name %> deployment.
-    For example:
-    <pre class="terminal">
-    $ cf target api.example.com
-    $ cf login
-    </pre>
-    When prompted, enter your credentials and target the org and space where the service instance is located.
+### <a id='stop-unbind'></a> Stop and Unbind Apps
 
-    1. Do the following for each app bound to the instance:
+To stop and unbind your apps:
 
-          1. Stop the app by running the following command:
+1.  Log in to your <%= vars.platform_name %> deployment by running:
+    
+    ```
+    cf login API-URL
+    ```
+    When prompted, enter your credentials. 
 
-              ```
-              cf stop APP
-              ```
+1. Target the org and space for the new destination service instance by running:
 
-              Where `APP` is the name of your app.
+    ```
+    cf target -o DESTINATION-ORG -s DESTINATION-SPACE 
+    ```
 
-              For example:
-              <pre class="terminal">
-              $ cf stop my-app
-              Stopping app my-app in org my-org / space my-space as user<span>@</span>example.com...
-              OK </pre>
+1. Retrieve and record a list of your bound apps by running:
+    
+    ```
+    cf services
+    ```
+    Your apps are listed the `bound apps` column.
 
-          1. Unbind the app by running the following command:
 
-              ```
-              cf unbind-service APP SOURCE-INSTANCE
-              ```
-              Where:
-              * `APP` is the name of your app.
-              * `SOURCE-INSTANCE` is the name of your source <%= vars.product_name %> service instance.
+1. For each bound app you recorded in the above step:        
+    1. Stop the app by running:
 
-              For example:
-              <pre class="terminal">
-              $ cf unbind-service my-app my-instance
-              Unbinding app my-app from service my-instance in org my-org / space my-space as user<span>@</span>example.com...
-              OK
-              </pre>
+        ```
+        cf stop APP
+        ```
+        
+    1. Unbind the app by running:
 
-1. Choose a service plan for your target <%= vars.product_name %> v2 instance.
-For example, `db-small`.
-  - To view available <%= vars.product_name %> v2 service plans, run `cf marketplace` and
-  refer to the plans under `p.mysql`.
+        ```
+        cf unbind-service APP SOURCE-INSTANCE
+        ```
+        Where:
+        * `APP` is the name of your app.
+        * `SOURCE-INSTANCE` is the name of your source <%= vars.product_name %> service instance.
 
-1. Migrate your data by running the following command:
+1. Do the procedure in [Migrate Data to Destination Instance](#command) below.
+
+### <a id='command'></a> Migrate Data to Destination Instance
+
+To migrate data from your source database to your destination service instance: 
+
+1. Log in to your <%= vars.platform_name %> deployment and target the destination org and space by doing
+steps 1 and 2 of [Stop and Unbind Apps](#stop-unbind) above. 
+
+1. View and select an available <%= vars.product_name %> v2 service plans by running:
+
+    ```
+    cf marketplace
+    ```
+    <%= vars.product_name %> v2 service plans are under  `p.mysql`.
+
+1. Migrate your data by running:
 
     ```
     cf mysql-tools migrate SOURCE-INSTANCE V2-PLAN
@@ -216,12 +247,7 @@ For example, `db-small`.
     Where:
     * `SOURCE-INSTANCE` is the name of your source MySQL service instance
      or user-provided service instance.
-    * `V2-PLAN` is the name of the service plan that you chose above.
-
-    <p class="note"><strong>Note:</strong> For debugging purposes, you can add the
-    <code>--no-cleanup</code> flag to the above command. If a migration fails,
-    this flag preserves the migration app and the newly-created service instance.
-    However, if a migration succeeds, the migration app is still deleted.</p>
+    * `V2-PLAN` is the name of the service plan that you selected above.
 
     <!-- DOES THIS TAKE UP MORE TIME OR MORE SPACE-->
     For example:
@@ -237,76 +263,72 @@ For example, `db-small`.
     2018/04/24 11:41:25 Started to run migration task
     2018/04/24 11:41:27 Migration completed successfully
     2018/04/24 11:41:29 Cleaning up...</pre>
+    
+    <p class="note"><strong>Note:</strong> For debugging purposes, you can add the
+    <code>--no-cleanup</code> flag to the above command. If a migration fails,
+    this flag preserves the migration app and the newly-created service instance.
+    However, if a migration succeeds, the migration app is still deleted.</p>
 
 ## <a id='validate-data'></a>Validate Data
 
-After migrating your data, you must verify that the data has successfully migrated by validating the data in the new <%= vars.product_name %> v2.x service instance.
-You can validate the data by creating an SSH tunnel to gain direct command line access to the new <%= vars.product_name %> v2.x service instance.
+After migrating your data, you must verify that the data was successfully migrated by validating the data 
+in the new <%= vars.product_name %> v2.x service instance.
 
-Do the following to create an SSH tunnel to the instance and validate your data:
+You can validate the data by creating an SSH tunnel to gain direct command line access to the 
+new <%= vars.product_name %> v2.x service instance.
 
-1. Create an SSH tunnel to your <%= vars.product_name %> v2.x service instance.
-To do this, perform the steps in the
-following sections of [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html):
+To create an SSH tunnel to the instance and validate your data:
 
-    1. Push Your Host App
+1. Create an SSH tunnel to your <%= vars.product_name %> v2.x service instance by doing the following procedures in [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html):
 
-    1. Create Your Service Key
+    1. [Push Your Host App](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#push-app)
 
-    1. Configure Your SSH Tunnel
+    1. [Create Your Service Key](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#bind-app)
 
-    1. Access Your Service Instance
+    1. [Configure Your SSH Tunnel](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html)
 
-1. From the MySQL shell, validate that the data that you expect to see has been imported into the <%= vars.product_name %> v2.x service instance.
+    1. [Access Your Service Instance](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#access-service)
+
+1. From the MySQL shell, validate that the data that you expect to see has been imported 
+into the <%= vars.product_name %> v2.x service instance.
 
 1. Exit the MySQL shell and kill the SSH tunnel.
 
 ## <a id='rebind-restage'></a>Rebind and Restage Apps
 
-To complete the migration, rebind and restage any apps that had been bound to the original <%= vars.product_name %> service instance.
+To complete the migration, rebind and restage any apps that had been bound to the 
+original <%= vars.product_name %> service instance. After rebinding and restaging your apps, 
+Pivotal recommends deleting the old database instance to save resources.
 
-Do the following to rebind and restage your apps:
+To rebind and restage your apps and delete the old databasee instance:
 
-1. Bind the app to the new service instance.
-Run the following command:
+1. Bind the app to the new service instance by running
 
     ```
     cf bind-service APP V2-INSTANCE
     ```
-    <br>
+    
     Where:
     * `APP` is the name of your app.
     * `V2-INSTANCE` is the name of your <%= vars.product_name %> v2.x service instance.
-    <br><br>
+
     For example:
-    <pre class="terminal">
-    $ cf bind-service my-app my-v2-instance
+    <pre class="terminal">$ cf bind-service my-app my-v2-instance <br>    
     Binding service my-v2-instance to app my-app in org my-org / space my-space as user<span>@</span>example.com...
     OK
-    TIP: Use 'cf restage my-app' to ensure your env variable changes take effect
-    </pre>
+    TIP: Use 'cf restage my-app' to ensure your env variable changes take effect</pre>
 
-1. Restage the app.
-  For example:
-  <pre class="terminal">
-  $ cf restage my-app
-  Restaging app my-app in org my-org / space my-space as user<span>@</span>example.com...
-  [...]
-  </pre>
-  The app is now using your new <%= vars.product_name %> v2.x service instance and should be operational again.
+1. Restage the app by running:
+    
+    ```
+    cf restage APP 
+    ```  
+    The app is now using your new <%= vars.product_name %> v2.x service instance and should be operational again.
+    
+1. (Optional) If your source database is deployed on <%= vars.platform_name %>, 
+    delete the old database instance by running:
 
-## <a id='delete-old-database'></a> Delete the Old Database
-
-After rebinding and restaging your apps to confirm that migration was successful, Pivotal recommends saving resources by deleting the old database instance.
-
-If your source database is deployed on <%= vars.platform_name %>, perform the deletion by running the following command:
-
-  ```
-  cf delete-service SOURCE-INSTANCE
-  ```
-  <br>
-  Where `SOURCE-INSTANCE` is the name of your old database instance.
-
-  For example:
-
-  <pre class="terminal">$ cf delete-service my-instance</pre>
+    ```
+    cf delete-service SOURCE-INSTANCE
+    ```
+    Where `SOURCE-INSTANCE` is the name of your old database instance.
