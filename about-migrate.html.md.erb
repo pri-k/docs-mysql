@@ -15,21 +15,21 @@ Read this topic before you do in the procedures in
 
 You can use the `mysql-tools` CLI plugin to migrate MySQL data with the `migrate` command.
 The `migrate` command does a streaming `mysqldump` and restore to migrate data from
-your source MySQL database to a destination <%= vars.product_name %> v2 instance.
+your source MySQL database to a destination <%= vars.product_full %> v2 instance.
 
 The command supports connections over TLS. If TLS is configured in
 the source and destination MySQL instances, the data is securely streamed using TLS.
-For information on how to configure TLS in your service instance,
+For information about how to configure TLS in a <%= vars.product_full %> v2 service instance,
 see
 [Using TLS](./using-tls.html).
 
-During data migration, the command:
+During data migration, the `migrate` command:
 
-  1. Creates a new <%= vars.product_name %> v2 service instance in the destination space
+  1. Creates a new <%= vars.product_full %> v2 service instance in the destination space
   with the same name as the source MySQL service instance name.
   1. Copies the source data over to the new service instance.
   1. Appends `-old` to the source service instance name,
-  regardless if the source is a <%= vars.product_name %> service instance or
+  regardless if the source is a <%= vars.product_full %> service instance or
   a user-provided service instance.
 
 
@@ -66,7 +66,7 @@ table:
 
   <tr>
     <td>Off-Platform Database</td>
-    <td><%= vars.product_name %> v2</td>
+    <td><%= vars.product_full %> v2</td>
   </tr>
 
   <tr>
@@ -77,11 +77,9 @@ table:
   <tr>
     <td>
       <%= vars.product_old %> v1</td>
-      <td><%= vars.product_name %> v2</td>
+      <td><%= vars.product_full %> v2</td>
   </tr>
 </table>
-
-
 
 ## <a id='unsupported'></a>Unsupported Data
 
