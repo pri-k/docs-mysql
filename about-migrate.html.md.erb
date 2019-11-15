@@ -102,6 +102,6 @@ The `migrate` command skips the following system schemas:
 
 <p class="note"><strong>Note:</strong><code>sys</code>, <code>performance_schema</code>, 
   and <code>information_schema</code> change dynamically with changes on a <%= vars.product_full %> 
-  service instance. 
-  You do not need to back up these schemas.
+  service instance. These schemas are not migrated because the destination database has its own version of the schemas.
+  You do not need to back up these schemas.  
 </p>
