@@ -22,9 +22,9 @@ To migrate data in <%= vars.product_short %>:
     See [Migrate Data](#migrate-data) below.
 1. Ensure that the migration was successful.
     See [Validate Data](#validate-data) below. 
-1. Rebind and restage apps to the new destination service instance. 
+1. Rebind and re-stage apps to the new destination service instance. 
     To save resources, you can optionally delete the old source database. 
-    See [Rebind and Restage Apps](#rebind-restage) below. 
+    See [Rebind and Re-stage Apps](#rebind-restage) below. 
     
 <p class="note warning"><strong>Warning:</strong> Migrating large datasets can take several hours.
 Data migration is linear and depends on the hardware being used.
@@ -43,25 +43,26 @@ in <%= vars.product_short %>](./about-migrate.html).
 * An existing MySQL database that is the source of the data you want to migrate from.
   MySQL source databases can be:
   * a <%= vars.product_old %> v1 service instance
-  * a <%= vars.product_name %> v2 service instance
+  * a <%= vars.product_full %> v2 service instance
   * a non-Pivotal MySQL database
-* <%= vars.product_name %> v2 installed in the destination <%= vars.platform_name %> environment 
+* <%= vars.product_full %> v2 installed in the destination <%= vars.platform_name %> environment 
 you want to migrate to.
-* A <%= vars.product_name %> service plan available in the destination org and space you want
+* A <%= vars.product_full %> service plan available in the destination org and space you want
   to migrate your data to. 
   This service plan must fulfill the requirements in [Resource Planning](#sizing) below. 
   Talk to your operator to determine which service plan is appropriate.
-  <p class="note"><strong>Note:</strong> To view available service plans, run <code>cf marketplace</code>.
-  <%= vars.product_name %> v2 appears as <code>p.mysql</code> 
-  and <%= vars.product_old %> v1 appears as <code>p-mysql</code>.</p>
+
 
 ### <a id='sizing'></a>Resource Planning
 
-You must ensure that the <%= vars.product_name %> v2 service plan for your
+You must ensure that the <%= vars.product_full %> v2 service plan for your
 destination service instance has your preferred VM type and persistent disk size.
 If the plan does not enough space on disk to store the data, migration fails.
 
-The service plan that you select for your destination service instance should have a persistent disk that is:
+<p class="note"><strong>Note:</strong> To view available service plans, run <code>cf marketplace</code>.
+<%= vars.product_full %> v2 appears as <code>p.mysql</code> 
+and <%= vars.product_old %> v1 appears as <code>p-mysql</code>.</p>
+
 When choosing a service plan for your destination service instance, if you select: 
 
 * **A single node or leader-follower plan,** ensure the persistent disk size is three times 
@@ -74,14 +75,13 @@ see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
 
 ## <a id='install-plugin'></a>Install the mysql-tools CF CLI Plugin
 
-Pivotal recommends that operators and developers use the `mysql-tools` cf CLI plugin to migrate
-data from a source MySQL database to a <%= vars.product_name %> v2.x service instance. For more
-information about `mysql-tools` cf CLI plugin, 
+Pivotal recommends that developers migrate data using the `mysql-tools` CLI plugin with the` migrate` command. 
+For more information about `mysql-tools` cf CLI plugin, 
 see [mysql-cli-plugin](https://github.com/pivotal-cf/mysql-cli-plugin) in GitHub.
 
 To install the `mysql-tools` cf CLI plugin:
 
-1. install the plugin by running:
+1. Install the plugin by running:
 
     ```
     cf install-plugin -r CF-Community "MysqlTools"
@@ -106,7 +106,7 @@ If you are:
 enable access using service instance sharing. 
 See [Source Access across Spaces](#across-spaces) below.
 * **Migrating from Off-Platform**: If the source database is in a different <%= vars.platform_name %> foundation 
-from the destination, or not on any <%= vars.platform_name %> foundation,
+from the destination or not deployed on <%= vars.platform_name %>,
 create a user-provided service that can access the remote database. 
 See [Source Access Off-Platform](#off-platform) below.
 
@@ -140,7 +140,7 @@ To create a user-provided service instance to access the off-platform database:
     for your off-platform MySQL database. Talk to your platform operator for assistance.
 1. If your off-platform MySQL database requires connections over TLS, make sure
     that your <%= vars.platform_name %> foundation is configured to recognize the CA certificate 
-    that the MySQL server certificate is signed with.
+    that the MySQL server certificate is signed with. Talk to your platform operator for assistance.
 1. Record the information needed to access your off-platform database. 
 These values usually include:
   - `hostname`: the domain name or IP address of the off-platform source database.
@@ -148,7 +148,10 @@ These values usually include:
   - `username` and `password`: the database account credentials.
   - `port`: The port number for the database. This number is usually `3306`.
   - `uri`: The query string for database access.
-
+  
+    If your off-platform database is a <%= vars.product_full %> service instance, these values are in your 
+    `VCAP_SERVICES` environment variable credentials hash. For more information, 
+    see [MySQL Environment Variables](./use.html#vcap).
 1. Create a Cloud Foundry user-provided service instance that can access the off-platform database:
 
     ```
@@ -221,7 +224,7 @@ To stop and unbind your apps:
         ```
         Where:
         * `APP` is the name of your app.
-        * `SOURCE-INSTANCE` is the name of your source <%= vars.product_name %> service instance.
+        * `SOURCE-INSTANCE` is the name of your source <%= vars.product_full %> service instance.
 
 1. Do the procedure in [Migrate Data to Destination Instance](#command) below.
 
@@ -232,12 +235,12 @@ To migrate data from your source database to your destination service instance:
 1. Log in to your <%= vars.platform_name %> deployment and target the destination org and space by doing
 steps 1 and 2 of [Stop and Unbind Apps](#stop-unbind) above. 
 
-1. View and select an available <%= vars.product_name %> v2 service plans by running:
+1. View and select an available <%= vars.product_full %> v2 service plans by running:
 
     ```
     cf marketplace
     ```
-    <%= vars.product_name %> v2 service plans are under  `p.mysql`.
+    <%= vars.product_full %> v2 service plans are under  `p.mysql`.
 
 1. Migrate your data by running:
 
@@ -249,7 +252,6 @@ steps 1 and 2 of [Stop and Unbind Apps](#stop-unbind) above.
      or user-provided service instance.
     * `V2-PLAN` is the name of the service plan that you selected above.
 
-    <!-- DOES THIS TAKE UP MORE TIME OR MORE SPACE-->
     For example:
     <pre class="terminal">$ cf mysql-tools migrate my-instance db-small <br>
     2018/04/24 11:31:19 Creating new service instance "my-instance" for service p.mysql using plan db-small
@@ -272,14 +274,15 @@ steps 1 and 2 of [Stop and Unbind Apps](#stop-unbind) above.
 ## <a id='validate-data'></a>Validate Data
 
 After migrating your data, you must verify that the data was successfully migrated by validating the data 
-in the new <%= vars.product_name %> v2.x service instance.
+in the new <%= vars.product_full %> v2.x service instance.
 
 You can validate the data by creating an SSH tunnel to gain direct command line access to the 
-new <%= vars.product_name %> v2.x service instance.
+new <%= vars.product_full %> v2.x service instance.
 
 To create an SSH tunnel to the instance and validate your data:
 
-1. Create an SSH tunnel to your <%= vars.product_name %> v2.x service instance by doing the following procedures in [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html):
+1. Create an SSH tunnel to your <%= vars.product_full %> v2.x service instance by doing the following procedures in 
+[Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html):
 
     1. [Push Your Host App](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#push-app)
 
@@ -290,17 +293,17 @@ To create an SSH tunnel to the instance and validate your data:
     1. [Access Your Service Instance](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#access-service)
 
 1. From the MySQL shell, validate that the data that you expect to see has been imported 
-into the <%= vars.product_name %> v2.x service instance.
+into the <%= vars.product_full %> v2.x service instance.
 
 1. Exit the MySQL shell and kill the SSH tunnel.
 
-## <a id='rebind-restage'></a>Rebind and Restage Apps
+## <a id='rebind-restage'></a>Rebind and Re-stage Apps
 
-To complete the migration, rebind and restage any apps that had been bound to the 
-original <%= vars.product_name %> service instance. After rebinding and restaging your apps, 
-Pivotal recommends deleting the old database instance to save resources.
+To complete the migration, rebind and re-stage any bounds apps in your destination org and space. 
+After rebinding and re-staging your apps, 
+Pivotal recommends deleting the old source database instance to save resources.
 
-To rebind and restage your apps and delete the old databasee instance:
+To rebind and re-stage your apps and delete the source database instance:
 
 1. Bind the app to the new service instance by running
 
@@ -310,25 +313,25 @@ To rebind and restage your apps and delete the old databasee instance:
     
     Where:
     * `APP` is the name of your app.
-    * `V2-INSTANCE` is the name of your <%= vars.product_name %> v2.x service instance.
+    * `V2-INSTANCE` is the name of your <%= vars.product_full %> v2.x service instance.
 
     For example:
-    <pre class="terminal">$ cf bind-service my-app my-v2-instance <br>    
+    <pre class="terminal">$ cf bind-service my-app my-v2-instance 
     Binding service my-v2-instance to app my-app in org my-org / space my-space as user<span>@</span>example.com...
     OK
     TIP: Use 'cf restage my-app' to ensure your env variable changes take effect</pre>
 
-1. Restage the app by running:
+1. Re-stage the app by running:
     
     ```
     cf restage APP 
     ```  
-    The app is now using your new <%= vars.product_name %> v2.x service instance and should be operational again.
+    The app is now using your new <%= vars.product_full %> v2.x service instance and should be operational again.
     
-1. (Optional) If your source database is deployed on <%= vars.platform_name %>, 
-    delete the old database instance by running:
+1. (Optional) Delete your source database. If your source database is deployed on <%= vars.platform_name %>, 
+    delete the old database instance by running in your source space and org:
 
     ```
     cf delete-service SOURCE-INSTANCE
     ```
-    Where `SOURCE-INSTANCE` is the name of your old database instance.
+    Where `SOURCE-INSTANCE` is the name of your source <%= vars.product_full %> service instance.
