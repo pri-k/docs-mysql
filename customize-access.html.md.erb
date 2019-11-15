@@ -27,24 +27,27 @@ To create and find read-only credentials for an existing service instance:
 
  1. Create a new read-only service key for a service instance by running:
 
-    <code>cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "read-only": true }'</code><br><br>
+    ```
+    cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "read-only": true }'
+    ```
 
     For example:
 
-    <pre class="terminal">
-    $ cf create-service-key mydb mykey1 -c '{ "read-only": true }'
+    <pre class="terminal">$ cf create-service-key mydb mykey1 -c '{ "read-only": true }'
+      
     Creating service key mykey1 for service instance mydb as admin...
-    OK
-    </pre>
+    OK</pre>
 
  1. Retrieve the read-only credentials from the service key by running:
-
-    <code>cf service-key SERVICE-INSTANCE-NAME KEY-NAME</code><br><br>
+    
+    ```
+    cf service-key SERVICE-INSTANCE-NAME KEY-NAME
+    ```
 
     For example:
 
-    <pre class="terminal">
-    $ cf service-key mydb mykey1</br>
+    <pre class="terminal">$ cf service-key mydb mykey1 
+      
     {
      "hostname": "99.99.99.9",
      "jdbcUrl": "jdbc:mysql://99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
@@ -53,13 +56,10 @@ To create and find read-only credentials for an existing service instance:
      "port": 3306,
      "uri": "mysql://abcdefghijklm:123456789<span>@</span>99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
      "username": "abcdefghijklm"
-    }
-    </pre>
+    }</pre>
 
-<p class="note">
-  <strong>Note:</strong> Any user with access to create a service key can provision a fully
-  privileged service key.
-</p>
+<p class="note"><strong>Note:</strong> Any user with access to create a service key can provision a fully
+  privileged service key.</p>
 
 ## <a id="username"></a> Create Credentials for a Custom Username
 
@@ -71,28 +71,28 @@ You can create credentials by using the cf CLI to create a new
 To create and find custom username credentials for an existing service instance:
 
  1. Create a new service key and username for a service-instance by running:
-
-    <code>
-      cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME \ <br>
-      -c '{ "username": NEW-USERNAME }'
-    </code><br><br>
+    
+    ```
+    cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "username": NEW-USERNAME }'
+    ```
 
     For example:
 
-    <pre class="terminal">
-    $ cf create-service-key mydb mykey2  -c '{ "username": myuser }'
+    <pre class="terminal">$ cf create-service-key mydb mykey2  -c '{ "username": myuser }'
+      
     Creating service key mykey2 for service instance mydb as admin...
-    OK
-    </pre>
+    OK</pre>
 
  1. Retrieve the credentials from the service key by running:
-
-    <code>cf service-key SERVICE-INSTANCE-NAME KEY-NAME</code><br><br>
+    
+    ```
+    cf service-key SERVICE-INSTANCE-NAME KEY-NAME
+    ```
 
     For example:
 
-    <pre class="terminal">
-    $ cf service-key mydb mykey2<br>
+    <pre class="terminal">$ cf service-key mydb mykey2</br>
+    
     {
      "hostname": "10.10.10.5",
      "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=my\_unique\_name\u0026password=123456789",
@@ -101,10 +101,7 @@ To create and find custom username credentials for an existing service instance:
      "port": 3306,
      "uri": "mysql://my\_unique\_name:123456789<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
      "username": "myuser"
-    }
-    </pre>
+    }</pre>
 
-<p class="note">
-  <strong>Note:</strong> Any user with access to create a service key can provision a fully
-  privileged service key.
-</p>
+<p class="note"><strong>Note:</strong> Any user with access to create a service key can provision a fully
+  privileged service key.</p>
