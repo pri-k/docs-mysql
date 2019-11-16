@@ -24,7 +24,7 @@ To migrate data in <%= vars.product_short %>:
     See [Validate Data](#validate-data) below. 
 1. Rebind and re-stage apps to the new destination service instance. 
     To save resources, you can optionally delete the old source database. 
-    See [Rebind and Re-stage Apps](#rebind-restage) below. 
+    See [Rebind and Re-Stage Apps](#rebind-restage) below.
     
 <p class="note warning"><strong>Warning:</strong> Migrating large datasets can take several hours.
 Data migration is linear and depends on the hardware being used.
@@ -100,9 +100,9 @@ space and org.
 
 If you are:
 
-* **Migrating Within an Org and Space**: The `migrate` command can access the source without any preparation.
+* **Migrating within an Org and Space**: The `migrate` command can access the source without any preparation.
  Continue to [Migrate Data](#migrate-data) below.
-* **Migrating Across Spaces**: If the source database is in a different space from the destination,
+* **Migrating across Spaces**: If the source database is in a different space from the destination,
 enable access using service instance sharing. 
 See [Source Access across Spaces](#across-spaces) below.
 * **Migrating from Off-Platform**: If the source database is in a different <%= vars.platform_name %> foundation 
@@ -297,7 +297,7 @@ into the <%= vars.product_full %> v2.x service instance.
 
 1. Exit the MySQL shell and kill the SSH tunnel.
 
-## <a id='rebind-restage'></a>Rebind and Re-stage Apps
+## <a id='rebind-restage'></a>Rebind and Re-Stage Apps
 
 To complete the migration, rebind and re-stage any bounds apps in your destination org and space. 
 After rebinding and re-staging your apps, 
