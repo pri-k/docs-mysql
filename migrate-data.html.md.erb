@@ -167,9 +167,9 @@ Do the following to install the `mysql-tools` cf CLI plugin:
 The `migrate` command must be able to access the source database.
 How you enable this access depends on where the source database is located relative to the target, as follows:
 
-* **Migrating Within an Org and Space**: The `migrate` command can access the source without any preparation.
+* **Migrating within an Org and Space**: The `migrate` command can access the source without any preparation.
 Continue to [Migrate Data](#migrate-data), below.
-* **Migrating Across Spaces**: If the source database is in a different space from the target,
+* **Migrating across Spaces**: If the source database is in a different space from the target,
 enable access through service instance sharing. See [Source Access across Spaces](#across-spaces), below.
 * **Migrating from Off-Platform**: If the source database is in a different PCF foundation from the target, or not on any PCF foundation,
 create a user-provided service that accesses the remote database. See [Source Access Off-Platform](#off-platform), below.
