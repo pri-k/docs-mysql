@@ -399,11 +399,11 @@ Service instances can also become temporarily inaccessible during upgrades and V
       Succeeded</pre>
       </li>
       <li>
-        to retrieve and record the instance id of your service instance, follow the
-        procedure below that correponds with your vm topology:
+        To retrieve and record the instance ID of your service instance, follow the
+        procedure below that corresponds with your VM topology:
         <ul>
-        <li>if you are using single node mysql vms, to retrieve and record the
-          instance id, run the
+        <li>If you are using single node MySQSL VMs, to retrieve and record the
+          instance ID, run the
         following command:
         <br>
         <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
@@ -545,21 +545,21 @@ Service instances can also become temporarily inaccessible during upgrades and V
         <strong>MySQL Process Failure:</strong> If the MySQL process crashes, <code>monit</code>
         and BOSH should restore the process. If the process is not restored, run the
         <code>download-logs</code> tool and consult the error logs it generates. For more information, see the
-        <a href="#download-logs">download-logs</a> section below.
+        <a href="#download-logs">download-logs</a> section below.<hr>
       </li>
       <li>
         <strong>Firewall Rule Change:</strong>
         If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster but do not show network latency errors.
         <br><br>
         To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change. Change your firewall rules to enable the
-        unresponsive node to rejoin the cluster.
+        unresponsive node to rejoin the cluster.<hr>
       </li>
       <li>
         <strong>VM Failure:</strong>
         If you cannot SSH into a node and you are not detecting either network latency or firewall issues, your node might be down due to VM failure. To confirm that the node is unresponsive and re-create the VM, see
         <a href="#recreate-VM">
           Re-create a Corrupted VM in a Highly Available</a>
-        below.
+        below.<hr>
       </li>
       <li>
         <strong>Node Unable to Rejoin:</strong> If a detached existing node fails to join the cluster, its
