@@ -20,6 +20,7 @@ This section provides information on how to troubleshooting specific errors or e
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-install-fail' %>
 
+
 ### <a id="cannot-create-delete"></a> Cannot Create or Delete Service Instances
 
 
@@ -73,561 +74,569 @@ Service instances can also become temporarily inaccessible during upgrades and V
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-missing-logs' %>
 
-###<a id="unable-to-determine"></a>Unable to Determine Leader and Follower (Errand Error)
 
-This problem happens when the <code>configure-leader-follower</code>
-errand fails because it cannot determine the VM roles.
+### <a id="l-f-errors"></a> Leader-Follower Service Instance Errors
 
-#### Symptom
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "unable-to-determine",
+    description: "Unable to Determine Leader and Follower",
+    symptom: <<~DESC,  
+    This problem happens when the <code>configure-leader-follower</code>
+    errand fails because it cannot determine the VM roles. <br><br>
+      
+    The <code>configure-leader-follower</code> errand exits with <code>1</code>
+    and the errand logs contain the following: 
 
-The <code>configure-leader-follower</code> errand exits with <code>1</code>
-and the errand logs contain the following:
+    <pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
+    DESC
+    
+    cause: <<~DESC, 
+    
+      Something has happened to the instances, such as a failure or manual intervention.
+      As a result, there is not enough information available to determine the correct state
+      and topology without operator intervention to resolve the issue.
+      DESC
+     
+    solution: <<~DESC,
+    
+    Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the
+    <a href="./about-leader-follower.html#errands">orchestration</a>
+    errands and backup/restore, you can put the service instance into a safe topology, and then rerun the
+    <code>configure-leader-follower</code> errand. This is shown in the example below.<br><br>
+    This example shows one outcome that the <code>inspect</code> errand can return: <br>
 
-<pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
-
-#### Explanation
-
-Something has happened to the instances, such as a failure or manual intervention.
-As a result, there is not enough information available to determine the correct state
-and topology without operator intervention to resolve the issue.
-
-#### Solution
-
-Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the
-<a href="./about-leader-follower.html#errands">orchestration</a>
-errands and backup/restore, you can put the service instance into a safe topology, and then rerun the
-<code>configure-leader-follower</code> errand. This is shown in the example below.
-This example shows one outcome that the <code>inspect</code> errand can return:
-
-<ol>
-  <li>Use the
-    <code>inspect</code>
-    errand to retrieve relevant information about the two VMs:
-    <pre class="terminal">
-  $ bosh -e my-env -d my-dep run-errand inspect
-  [...]
-  Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
-  Exit Code  0
-  Stdout     -
-  Stderr     2017/12/11 18:25:54 Started executing command: inspect
-           2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
-           2017/12/11 18:25:54
-           Has Data: false
-           Read Only: true
-           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-           Replication Configured: false<br /><br />
-  Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-  Exit Code  0
-  Stdout     -
-  Stderr     2017/12/11 18:25:54 Started executing command: inspect
-           2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
-           2017/12/11 18:25:54
-           Has Data: true
-           Read Only: true
-           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-           Replication Configured: true<br /><br />
-  2 errand(s)<br />
-  Succeeded
-  </pre>
-    In the above scenario, the first instance is missing data but does not have replication configured. The second instance has data, and also has replication configured. The instructions below resolve this by copying data to the first instance, and
-    resuming replication.</li>
-  <li>Take a backup of the second instance using the
-    <a href="backup-and-restore.html#manual-backup">Manual Backup</a>
-    steps.</li>
-  <li>Restore the backup artifact to the first instance using the
-    <a href="backup-and-restore.html#restore">Manual Restore</a>
-    steps.<br><br>
-    At this point, the instances have equivalent data.</li>
-  <li>
-    Run the <code>configure-leader-follower</code> errand to reconfigure replication:
-    <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code></pre>
-    For example:
-    <pre class="terminal">$ bosh -e my-env -d my-dep \
-    run-errand configure-leader-follower \
-    --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
-  </li>
-</ol>
-
-###<a id="both-writable"></a>Both Leader and Follower Instances Are Writable (Errand Error)
-
-This problem happens when the<code>configure-leader-follower</code>
-
-errand fails because both VMs are writable and the VMs might hold differing data.
-#### Symptom
-
-The <code>configure–leader-follower</code> errand exits with <code>1</code>
-and the errand logs contain the following:
-
-<pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
-
-#### Explanation
-
-<%= vars.product_name %> tries to ensure that there is only one writable instance of the
-leader-follower pair at any given time. However, in certain situations, such as
-network partitions, or manual intervention outside of the provided bosh
-errands, it is possible for both instances to be writable.
-The service instances remain in this state until an operator resolves the issue
-to ensure that the correct instance is promoted and reduce the potential for data divergence.
-
-#### Solution
-
-<ol>
-  <li>
-    Use the
-    <code>inspect</code> errand to retrieve the GTID Executed set for each VM:
-
-    <pre class="terminal">$ bosh -e my-env -d my-dep run-errand inspect
-  [...]
-  Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
-  Exit Code  0
-  Stdout     -
-  Stderr     2017/12/11 18:25:54 Started executing command: inspect
-           2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
-           2017/12/11 18:25:54
-           Has Data: true
-           Read Only: false
-           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-23
-           Replication Configured: false<br /><br />
-  Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-  Exit Code  0
-  Stdout     -
-  Stderr     2017/12/11 18:25:54 Started executing command: inspect
-           2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
-           2017/12/11 18:25:54
-           Has Data: true
-           Read Only: false
-           GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-           Replication Configured: false<br /><br />
-  2 errand(s)<br />
-  Succeeded
-</pre>
-    If the GTID Executed sets for both instances are the same, continue to Step 2. If they are different, continue to Step 4.</li>
-  <li>Look at the value of GTID Executed for both instances.
-    <ul>
-      <li>If the range after the GUID is equivalent, either instance can be made read-only, as described in Step 3.</li>
-      <li>If one instance has a range that is a subset of the other, the instance with the subset should must be made read-only, as described in Step 3.</li>
-    </ul>
-  </li>
-  <li>Based on the information you gathered in the step above, run the
-    <code>make-read-only</code>
-    errand to make the appropriate instance read-only:
-    <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE</code></pre>
-    For example:
-    <pre class="terminal">$ bosh -e my-env -d my-dep \
-        run-errand make-read-only \
-        --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-      [...]
-      succeeded</pre>
-  </li>
-  <li>If the GTID Executed sets are neither equivalent nor subsets, data has diverged and you must determine what data has diverged as part of the procedure below:
     <ol>
       <li>Use the
-        <code>make-read-only</code>
-        errand to set both instances to read-only to prevent further data divergence.
-        <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-INSTANCE</code></pre>
-        For example:
-        <pre class="terminal">$ bosh -e my-env -d my-dep \
-            run-errand make-read-only \
-            --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
-            [...]
-            succeeded</pre>
-      </li>
-      <li>Take a backup of both instances using the
+        <code>inspect</code>
+        errand to retrieve relevant information about the two VMs:
+        <pre class="terminal">$ bosh -e my-env -d my-dep run-errand inspect
+      [...]
+      Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
+      Exit Code  0
+      Stdout     -
+      Stderr   2017/12/11 18:25:54 Started executing command: inspect
+               2017/12/11 18:25:54 Started GET https<span>:</span>//127.0.0.1:8443/status
+               2017/12/11 18:25:54
+               Has Data: false
+               Read Only: true
+               GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+               Replication Configured: false
+      Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+      Exit Code  0
+      Stdout     -
+      Stderr   2017/12/11 18:25:54 Started executing command: inspect
+               2017/12/11 18:25:54 
+               Started GET https<span>:</span>//127.0.0.1:8443/status
+               2017/12/11 18:25:54
+               Has Data: true
+               Read Only: true
+               GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+               Replication Configured: true
+      2 errand(s)
+      Succeeded</pre>
+        In the above scenario, the first instance is missing data but does not have replication configured. The second instance has data, and also has replication configured. The instructions below resolve this by copying data to the first instance, and
+        resuming replication.</li>
+      <li>Take a backup of the second instance using the
         <a href="backup-and-restore.html#manual-backup">Manual Backup</a>
         steps.</li>
-      <li>Manually inspect the data on each instance to determine the discrepancies and put the data on the instance that is further ahead---this instance has the higher GTID Executed set, and will be the new leader.</li>
-      <li>Migrate all appropriate data to the new leader instance.</li>
-      <li>After putting all data on the leader, ssh onto the follower:
-        <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT ssh mysql/GUID-OF-FOLLOWER</code></pre>
+      <li>Restore the backup artifact to the first instance using the
+        <a href="backup-and-restore.html#restore">Manual Restore</a>
+        steps.<br>
+        At this point, the instances have equivalent data.</li>
+      <li>
+        Run the <code>configure-leader-follower</code> errand to reconfigure replication:
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+          run-errand configure-leader-follower &#92;
+          --instance=mysql/GUID-OF-LEADER</pre>
         For example:
-        <pre class="terminal">$ bosh -e my-env -d my-dep ssh mysql/e0b94ade-0114-4d49-a929-ce1616d8beda</pre>
-      </li>
-      <li>Become root with the command
-        <code>sudo su</code>.<br></li>
-      <li>Stop the mysql process with the command
-        <code>monit stop mysql</code>.</li>
-      <li>Delete the data directory of the follower with the command
-        <code>rm -rf /var/vcap/store/mysql</code>.</li>
-      <li>Start the mysql process with the command
-        <code>monit start mysql</code>.</li>
-      <li>Use the
-        <code>configure-leader-follower</code>
-        errand to copy the leader's data to the follower and resume replication:
-        <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code></pre>
-        For example:
-        <pre class="terminal">$ bosh -e my-env -d my-dep \
-          run-errand configure-leader-follower \
+        
+        <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+          run-errand configure-leader-follower &#92;
           --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
       </li>
     </ol>
-  </li>
-</ol>
+    DESC
+      
+} %>
 
-###<a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "both-writable",
+    
+    description: "Both Leader and Follower Instances Are Writable",
+    
+    symptom: <<~DESC ,
+    This problem happens when the<code>configure-leader-follower</code> errand fails because both VMs are writable and the VMs might hold differing data. <br><br>
+    The <code>configure–leader-follower</code> errand exits with <code>1</code>
+    and the errand logs contain the following:
 
-In a leader-follower topology, the leader VM is writable and the follower VM is read-only.
-However if both VMs are read only, apps cannot write to the database.
+    <pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
+    DESC
+    
+    cause: <<~DESC,
+      MySQL for Pivotal Platform tries to ensure that there is only one writable instance of the
+      leader-follower pair at any given time. However, in certain situations, such as
+      network partitions, or manual intervention outside of the provided bosh
+      errands, it is possible for both instances to be writable. <br><br>
+      The service instances remain in this state until an operator resolves the issue
+      to ensure that the correct instance is promoted and reduce the potential for data divergence.
+    DESC
+    
+    solution: <<~DESC,
+      <ol>
+        <li>
+          Use the
+          <code>inspect</code> errand to retrieve the GTID Executed set for each VM:
 
-#### Symptom
+          <pre class="terminal">$ bosh -e my-env -d my-dep run-errand inspect
+        [...]
+        Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
+        Exit Code  0
+        Stdout     -
+        Stderr     2017/12/11 18:25:54 Started executing command: inspect
+                 2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
+                 2017/12/11 18:25:54
+                 Has Data: true
+                 Read Only: false
+                 GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-23
+                 Replication Configured: false<br /><br />
+        Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+        Exit Code  0
+        Stdout     -
+        Stderr     2017/12/11 18:25:54 Started executing command: inspect
+                 2017/12/11 18:25:54 Started GET https<span>:</span>127.0.0.1:8443/status
+                 2017/12/11 18:25:54
+                 Has Data: true
+                 Read Only: false
+                 GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
+                 Replication Configured: false<br /><br />
+        2 errand(s)<br />
+        Succeeded
+      </pre>
+          If the GTID Executed sets for both instances are the same, continue to Step 2. If they are different, continue to Step 4.</li>
+        <li>Look at the value of GTID Executed for both instances.
+          <ul>
+            <li>If the range after the GUID is equivalent, either instance can be made read-only, as described in Step 3.</li>
+            <li>If one instance has a range that is a subset of the other, the instance with the subset should must be made read-only, as described in Step 3.</li>
+          </ul>
+        </li>
+        <li>Based on the information you gathered in the step above, run the
+          <code>make-read-only</code>
+          errand to make the appropriate instance read-only:
+          <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+            run-errand make-read-only &#92;
+            --instance=mysql/MYSQL-SUBSET-INSTANCE</code></pre>
+          For example:
+          <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+              run-errand make-read-only &#92;
+              --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+            [...]
+            succeeded</pre>
+        </li>
+        <li>If the GTID Executed sets are neither equivalent nor subsets, data has diverged and you must determine what data has diverged as part of the procedure below:
+          <ol>
+            <li>Use the
+              <code>make-read-only</code>
+              errand to set both instances to read-only to prevent further data divergence.
+              <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+                run-errand make-read-only &#92;
+                --instance=mysql/MYSQL-INSTANCE</code></pre>
+              For example:
+              <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+                  run-errand make-read-only &#92;
+                  --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
+                  [...]
+                  succeeded</pre>
+            </li>
+            <li>Take a backup of both instances using the
+              <a href="backup-and-restore.html#manual-backup">Manual Backup</a>
+              steps.</li>
+            <li>Manually inspect the data on each instance to determine the discrepancies and put the data on the instance that is further ahead---this instance has the higher GTID Executed set, and will be the new leader.</li>
+            <li>Migrate all appropriate data to the new leader instance.</li>
+            <li>After putting all data on the leader, ssh onto the follower:
+              <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT ssh mysql/GUID-OF-FOLLOWER</code></pre>
+              For example:
+              <pre class="terminal">$ bosh -e my-env -d my-dep ssh mysql/e0b94ade-0114-4d49-a929-ce1616d8beda</pre>
+            </li>
+            <li>Become root with the command
+              <code>sudo su</code>.<br></li>
+            <li>Stop the mysql process with the command
+              <code>monit stop mysql</code>.</li>
+            <li>Delete the data directory of the follower with the command
+              <code>rm -rf /var/vcap/store/mysql</code>.</li>
+            <li>Start the mysql process with the command
+              <code>monit start mysql</code>.</li>
+            <li>Use the
+              <code>configure-leader-follower</code>
+              errand to copy the leader's data to the follower and resume replication:
+              <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+                run-errand configure-leader-follower &#92;
+                --instance=mysql/GUID-OF-LEADER</code></pre>
+              For example:
+              <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+                run-errand configure-leader-follower &#92;
+                --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
+            </li>
+          </ol>
+        </li>
+      </ol>
+    DESC
+} %>
 
-Developers report that apps cannot write to the database.
-
-#### Explanation
-
-This problem happens if the leader VM fails and the BOSH Resurrector is enabled.
-When the leader is resurrected, it is set as read-only.
-
-#### Solution
-
-<ol>
-  <li>
-    Use the
-    <code>inspect</code>
-    errand to confirm that both VMs are in a read-only state:
-    <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect</pre>
-  </li>
-  <li>Examine the output and locate the information about the leader-follower MySQL VMs:
-    <pre class="terminal">
-Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-23
-         Replication Configured: true<br /><br />
-Instance   mysql/e0exampleade-0114-4d49-a929-cexample8beda
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-25
-         Replication Configured: false<br /><br />
-2 errand(s)<br />
-Succeeded
-</pre>
-  </li>
-  <li>
-    If Read Only is set to
-    <code>true</code>
-    for both VMs, make the leader writable using the following command:
-    <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</pre>
-    For example, if the second instance above is the leader:
-    <pre class="terminal">
-$ bosh -e my-env -d my-dep \
-  run-errand configure-leader-follower \
-  --instance=mysql/e0exampleade-0114-4d49-a929-cexample8beda
-</pre>
-  </li>
-</ol>
-
-###<a id="persistent-disk"></a>Persistent Disk is Full
-
-If your persistent disk is full, apps become inoperable.
-In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.
-
-#### Symptom
-
-Developers report that read, write, and cf CLI operations do not work.
-Developers cannot upgrade to a larger MySQL service plan to free up disk space.
-
-#### Explanation
-
-This problem happens if your persistent disk is full.
-When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage.
-<br><br>
-Available disk space can be increased by deleting audit log files.
-After deleting audit logs, you can then upgrade to a larger MySQL service plan.
-
-#### Solution
-
-The solution to this problem is to confirm that your persistent disk is full, and then
-delete an audit log file to free up disk space. When the disk is no longer full,
-the service instance can be upgraded to a larger plan to prevent the disk from becoming full again.<br><br>
-Follow the steps below:
-
-<ol>
-  <li>
-    To retrieve and record the GUID of your service instance, run the following command:
-    <br>
-    <pre>cf service SERVICE-INSTANCE-NAME --guid</pre>
-    Where
-    <code>SERVICE-INSTANCE-NAME</code>
-    is the name of your service instance.
-    <br><br>
-    For example:
-    <pre class="terminal">$ cf service my-service-instance --guid
-    12345678-90ab-cdef-1234-567890abcdef</pre>
-    If you do not know the name of your service instance, you can list service instances in the space with
-    <code>cf services</code>.
-  </li>
-
-  <li>
-    To confirm that your persistent disk usage is at 100%, run the following command:
-    <br>
-    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</pre>
-    Where
-    <code>SERVICE-INSTANCE-GUID</code>
-    is the GUID you recorded in the above step.<br><br>
-    For example:
-    <pre class="terminal"> $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances --vitals
-  Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
-
-  Task 19243. Done
-
-  Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-  Instance                                    Process State  AZ  IPs         VM Created At                 Uptime           Load              CPU    CPU    CPU   CPU   Memory        Swap      System      Ephemeral   Persistent
-                                                                                                                            (1m, 5m, 15m)     Total  User   Sys   Wait  Usage         Usage     Disk Usage  Disk Usage  Disk Usage
-  mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z3  10.0.18.20  Wed Sep 12 22:01:44 UTC 2018  35d 20h 54m 17s  0.02, 0.03, 0.00  -      10.2%  0.4%  0.2%  14% (1.1 GB)  0% (0 B)  54% (37i%)  11% (4i%)   7% (0i%)
-
-  1 instances
-
-  Succeeded</pre>
-  </li>
-  <li>
-    To retrieve and record the instance ID of your service instance, follow the
-    procedure below that corresponds with your VM topology:
-    <ul>
-    <li>If you are using single node MySQL VMs, to retrieve and record the
-      instance ID, run the
-    following command:
-    <br>
-    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
-    where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
-    step 1.<br>
-    <br>
-    For example:
-    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
-  Using environment '34.237.123.534' as client 'admin'
-
-  Task 204. Done
-
-  Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-  Instance                                    Process State  AZ  IPs
-  mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z2  10.244.17.3
-
-  1 instances
-
-  Succeeded
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "both-read-only",
+    description: "Both Leader and Follower Instances Are Read-Only",
+    symptom: "Developers report that apps cannot write to the database. In a leader-follower topology, the leader VM is writable and the follower VM is read-only.
+    However if both VMs are read only, apps cannot write to the database.",
+    cause: "This problem happens if the leader VM fails and the BOSH Resurrector is enabled.
+    When the leader is resurrected, it is set as read-only.",
+    solution: <<~DESC,
+    <ol>
+      <li>
+        Use the
+        <code>inspect</code>
+        errand to confirm that both VMs are in a read-only state:
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect</pre>
+      </li>
+      <li>Examine the output and locate the information about the leader-follower MySQL VMs:
+        <pre class="terminal">
+    Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
+    Exit Code  0
+    Stdout     -
+    Stderr     2017/12/11 18:25:54 Started executing command: inspect
+             2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
+             2017/12/11 18:25:54
+             Has Data: true
+             Read Only: true
+             GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-23
+             Replication Configured: true<br /><br />
+    Instance   mysql/e0exampleade-0114-4d49-a929-cexample8beda
+    Exit Code  0
+    Stdout     -
+    Stderr     2017/12/11 18:25:54 Started executing command: inspect
+             2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
+             2017/12/11 18:25:54
+             Has Data: true
+             Read Only: true
+             GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-25
+             Replication Configured: false<br /><br />
+    2 errand(s)<br />
+    Succeeded
     </pre>
-
-    The instance ID is the value for <code>Instance</code> after <code>mysql/</code>.
-    <br><br>
-    In the above output, the instance ID of the leader VM is <code>d15419ba-fc6c-4013-b056-19f91c6b0f1d</code>.
-    <br><br>
-  </li>
-  <li>If you are using leader-follower MySQL VMs, to retrieve and record the leader instance ID, run the following command:
-    <br>
-    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID run-errand inspect</pre>
-    Where
-    <code>SERVICE-INSTANCE-GUID</code>
-    is the GUID you recorded in the step 1.<br>
-    <br>
-    For example:
-    <pre class="terminal">
-$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
-  Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-  Exit Code  0
-  Stdout     2018/04/03 18:08:46 Started executing command: inspect
-            2018/04/03 18:08:46
-            IP Address: 10.0.8.11
-            Role: leader
-            Read Only: false
-            Replication Configured: false
-            Replication Mode: async
-            Has Data: true
-            GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-            2018/04/03 18:08:46 Successfully executed command: inspect
-  Stderr     -
-  <br>
-  Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
-  Exit Code  0
-  Stdout     2018/04/03 18:08:46 Started executing command: inspect
-            2018/04/03 18:08:46
-            IP Address: 10.0.8.10
-            Role: follower
-            Read Only: true
-            Replication Configured: true
-            Replication Mode: async
-            Has Data: true
-            GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-            2018/04/03 18:08:46 Successfully executed command: inspect
-  </pre>
-    The leader instance ID is the value for <code>Instance</code> after <code>mysql/</code>
-    corresponding with the instance marked <code>Role: leader</code>.
-    <br><br>
-    In the above output, the instance ID of the leader VM is
-    <code>ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</code>.
-  </li>
-</ul>
-</li>
-
-<li>
-To BOSH SSH into your service instances, run the following command:
-<br>
-<pre>bosh -d service-instance_SERVICE-INSTANCE-GUID ssh mysql/INSTANCE-ID</pre>
-Where:
-<br>
-<ul>
-  <li>
-    <code>SERVICE-INSTANCE-GUID</code>
-    is the GUID you recorded in step 1.</li>
-  <li>
-    <code>INSTANCE-ID</code>
-    is the instance ID you recorded in the above step.
-  </li>
-</ul>
-For example:
-<pre class="terminal">
-$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
-
-Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-Task 19244. Done
-</pre>
-
-<li>
-  To move to the directory where your audit log files are located, run the following command:
-  <br>
-  <pre>cd /var/vcap/store/mysql_audit_logs/mysql_server_audit.log</pre>
-</li>
-<li>
-  Delete at least one audit log file with
-  <code>rm</code>
-</li>
-
-<li>
-  Update your service instance to a larger plan. For more information, see
-  <a href="./use.html#update">Update a Service Instance</a>.
-</li>
-</ol>
-
-###<a id="unresponsive"></a>Unresponsive Node in a Highly Available Cluster
-
-#### Symptom
-
-A client connected to a MySQL cluster node reports the following error:
-
-<pre class="terminal">WSREP has not yet prepared this node for application use</pre>
-<br>
-Some clients might instead return the following:
-<pre class="terminal">
-  unknown error
-</pre>
-
-#### Explanation
-
-If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
-re-routes further connections to a different node.
-<br><br>
-
-#### Solutions
-
-A node can become unresponsive for a number of reasons. For solutions, see the following:
-
-<ul>
-  <li>
-    <strong>Network Latency</strong>: If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings to reduce your network latency.</li>
-  <li>
-    <strong>MySQL Process Failure:</strong> If the MySQL process crashes, <code>monit</code>
-    and BOSH should restore the process. If the process is not restored, run the
-    <code>download-logs</code> tool and consult the error logs it generates. For more information, see the
-    <a href="#download-logs">download-logs</a> section below.
-  </li>
-  <li>
-    <strong>Firewall Rule Change:</strong>
-    If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster but do not show network latency errors.
-    <br><br>
-    To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change. Change your firewall rules to enable the
-    unresponsive node to rejoin the cluster.
-  </li>
-  <li>
-    <strong>VM Failure:</strong>
-    If you cannot SSH into a node and you are not detecting either network latency or firewall issues, your node might be down due to VM failure. To confirm that the node is unresponsive and re-create the VM, see
-    <a href="#recreate-VM">
-      Re-create a Corrupted VM in a Highly Available</a>
-    below.
-  </li>
-  <li>
-    <strong>Node Unable to Rejoin:</strong> If a detached existing node fails to join the cluster, its
-    <code>sequence_number</code> might be higher than those of the nodes with quorum. A higher
-    <code>sequence_number</code> on the detached node indicates that it has recent changes to the
-     data that the primary component lacks. You can check this by looking at the node's error log at
-    <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
-    <br><br>
-    To restore the cluster, do one the following:
-    <ul>
-      <li>If the detached node has a higher sequence number than the primary component, do the procedures in
-        <a href="./bootstrapping.html">Bootstrapping</a>.
       </li>
       <li>
-        If bootstrapping does not restore the cluster, you can manually force
-        the node to rejoin the cluster. This removes all of the unsynchronized data
-        from the detached server node and creates a new copy of the cluster data on the node. For more
-        information, see <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.
-        <p class="note warning">
-          <strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only do this procedure with the assistance of
-          <a href="https://support.pivotal.io">Pivotal Support</a>.
-        </p>
+        If Read Only is set to
+        <code>true</code>
+        for both VMs, make the leader writable using the following command:
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+          run-errand configure-leader-follower &#92;
+          --instance=mysql/GUID-OF-LEADER</pre>
+        For example, if the second instance above is the leader:
+        <pre class="terminal">
+    $ bosh -e my-env -d my-dep &#92;
+      run-errand configure-leader-follower &#92;
+      --instance=mysql/e0exampleade-0114-4d49-a929-cexample8beda
+    </pre>
+      </li>
+    </ol>
+   DESC
+} %>
+
+###<a id="apps-inoperable"></a>Inoperable App Errors
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "persistent-disk", 
+    description: "Persistent Disk is Full",
+    symptom: "Developers report that read, write, and cf CLI operations do not work.
+    Developers cannot upgrade to a larger MySQL service plan to free up disk space. <br><br>
+    If your persistent disk is full, apps become inoperable.
+    In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.",
+    cause: "This problem happens if your persistent disk is full.
+    When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage. <br><br>
+    Available disk space can be increased by deleting audit log files.
+    After deleting audit logs, you can then upgrade to a larger MySQL service plan.",
+    solution: <<~DESC,
+    The solution to this problem is to confirm that your persistent disk is full, and then
+    delete an audit log file to free up disk space. When the disk is no longer full,
+    the service instance can be upgraded to a larger plan to prevent the disk from becoming full again.<br><br>
+    Follow the steps below:
+
+    <ol>
+      <li>
+        To retrieve and record the GUID of your service instance, run the following command:
+        <br>
+        <pre>cf service SERVICE-INSTANCE-NAME --guid</pre>
+        Where
+        <code>SERVICE-INSTANCE-NAME</code>
+        is the name of your service instance.
+        <br><br>
+        For example:
+        <pre class="terminal">$ cf service my-service-instance --guid 12345678-90ab-cdef-1234-567890abcdef</pre>
+        If you do not know the name of your service instance, you can list service instances in the space with
+        <code>cf services</code>.
+      </li>
+
+      <li>
+        To confirm that your persistent disk usage is at 100%, run the following command:
+        <br>
+        <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</pre>
+        Where
+        <code>SERVICE-INSTANCE-GUID</code>
+        is the GUID you recorded in the above step.<br><br>
+        For example:
+        <pre class="terminal"> $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances --vitals
+      Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
+
+      Task 19243. Done
+
+      Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+      Instance                                    Process State  AZ  IPs         VM Created At                 Uptime           Load              CPU    CPU    CPU   CPU   Memory        Swap      System      Ephemeral   Persistent
+                                                                                                                                (1m, 5m, 15m)     Total  User   Sys   Wait  Usage         Usage     Disk Usage  Disk Usage  Disk Usage
+      mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z3  10.0.18.20  Wed Sep 12 22:01:44 UTC 2018  35d 20h 54m 17s  0.02, 0.03, 0.00  -      10.2%  0.4%  0.2%  14% (1.1 GB)  0% (0 B)  54% (37i%)  11% (4i%)   7% (0i%)
+
+      1 instances
+
+      Succeeded</pre>
+      </li>
+      <li>
+        To retrieve and record the instance ID of your service instance, follow the
+        procedure below that corresponds with your VM topology:
+        <ul>
+        <li>If you are using single node MySQSL VMs, to retrieve and record the
+          instance ID, run the
+        following command:
+        <br>
+        <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
+        where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
+        step 1.<br>
+        <br>
+        For example:
+        <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
+      Using environment '34.237.123.534' as client 'admin'
+
+      Task 204. Done
+
+      Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+      Instance                                    Process State  AZ  IPs
+      mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z2  10.244.17.3
+
+      1 instances
+
+      Succeeded
+        </pre>
+
+        The instance ID is the value for <code>Instance</code> after <code>mysql/</code>.
+        <br><br>
+        In the above output, the instance ID of the leader VM is <code>d15419ba-fc6c-4013-b056-19f91c6b0f1d</code>.
+        <br><br>
+      </li>
+      <li>If you are using leader-follower MySQL VMs, to retrieve and record the leader instance ID, run the following command:
+        <br>
+        <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID run-errand inspect</pre>
+        Where
+        <code>SERVICE-INSTANCE-GUID</code>
+        is the GUID you recorded in the step 1.<br>
+        <br>
+        For example:
+        <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
+      Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+      Exit Code  0
+      Stdout     2018/04/03 18:08:46 Started executing command: inspect
+                2018/04/03 18:08:46
+                IP Address: 10.0.8.11
+                Role: leader
+                Read Only: false
+                Replication Configured: false
+                Replication Mode: async
+                Has Data: true
+                GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
+                2018/04/03 18:08:46 Successfully executed command: inspect
+      Stderr     -
+      <br>
+      Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+      Exit Code  0
+      Stdout     2018/04/03 18:08:46 Started executing command: inspect
+                2018/04/03 18:08:46
+                IP Address: 10.0.8.10
+                Role: follower
+                Read Only: true
+                Replication Configured: true
+                Replication Mode: async
+                Has Data: true
+                GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
+                2018/04/03 18:08:46 Successfully executed command: inspect</pre>
+        The leader instance ID is the value for <code>Instance</code> after <code>mysql/</code>
+        corresponding with the instance marked <code>Role: leader</code>.
+        <br><br>
+        In the above output, the instance ID of the leader VM is
+        <code>ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</code>.
       </li>
     </ul>
-  </li>
-</ul>
+    </li>
 
-###  <a id="replication-errors"></a>  Many Replication Errors in Logs for Highly Available Clusters
+    <li>
+    To BOSH SSH into your service instances, run the following command:
+    <br>
+    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID ssh mysql/INSTANCE-ID</pre>
+    Where:
+    <br>
+    <ul>
+      <li>
+        <code>SERVICE-INSTANCE-GUID</code>
+        is the GUID you recorded in step 1.</li>
+      <li>
+        <code>INSTANCE-ID</code>
+        is the instance ID you recorded in the above step.
+      </li>
+    </ul>
+    For example:
+    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+    Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
 
-This problem happens when there are errors in SQL statements.
+    Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
 
-#### Symptom
+    Task 19244. Done</pre>
 
-You see many replication errors in the MySQL logs, like the following:
+    <li>
+      To move to the directory where your audit log files are located, run the following command:
+      <br>
+      <pre>cd /var/vcap/store/mysql_audit_logs/mysql_server_audit.log</pre>
+    </li>
+    <li>
+      Delete at least one audit log file with
+      <code>rm</code>
+    </li>
 
-<pre class="terminal">
-  160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
-160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
-160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
-</pre>
+    <li>
+      Update your service instance to a larger plan. For more information, see
+      <a href="./use.html#update">Update a Service Instance to a Larger Plan</a>
+    </li>
+    </ol>
+  DESC
+} %>
 
-#### Explanation and Solution
 
-For solutions for replication errors in MySQL log files, see the table below.
+###<a id="ha"></a>Highly Available Cluster Errors
 
-<table class="nice">
-  <tr>
-    <th>Additional Error</th>
-    <th>Solution</th>
-  </tr>
-  <tr>
-    <td>
-      <code>ALTER TABLE</code>
-      errors</td>
-    <td>Fix the
-      <code>ALTER TABLE</code>
-      error.<br>
-      This error can occur when an app issues an invalid data definition statement. Other nodes log this problem as a replication error because they fail to replicate the
-      <code>ALTER TABLE</code>.</td>
-  </tr>
-  <tr>
-    <td>Increased persistent disk usage or running out of working memory</td>
-    <td>Decode the
-      <code>GRA_*.log</code>
-      files and look for errors. See
-      <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-pcf-v1-10">
-        How to decode Galera GRA log files</a>
-      in the Pivotal Support knowledge base. The GRA log files contain failing DDL statements.</td>
-  </tr>
-</table>
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "unresponsive",
+    description: "Unresponsive Node in a Highly Available Cluster",
+    symptom: <<~DESC,
+    A client connected to a MySQL cluster node reports the following error:
 
-If you see replication errors, but no <code>ALTER TABLE</code>
-or persistent disk or memory issues, you can ignore the replication errors.
+    <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
+    Some clients might instead return the following:
+    <pre class="terminal">
+      unknown error
+    </pre>
+    DESC
+    
+    cause: "If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
+    re-routes further connections to a different node.",
+    
+    solution: <<~DESC,
+    A node can become unresponsive for a number of reasons. For solutions, see the following:
+
+    <ul>
+      <li>
+        <strong>Network Latency</strong>: If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings to reduce your network latency. <hr></li>
+      <li>
+        <strong>MySQL Process Failure:</strong> If the MySQL process crashes, <code>monit</code>
+        and BOSH should restore the process. If the process is not restored, run the
+        <code>download-logs</code> tool and consult the error logs it generates. For more information, see the
+        <a href="#download-logs">download-logs</a> section below.<hr>
+      </li>
+      <li>
+        <strong>Firewall Rule Change:</strong>
+        If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster but do not show network latency errors.
+        <br><br>
+        To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change. Change your firewall rules to enable the
+        unresponsive node to rejoin the cluster.<hr>
+      </li>
+      <li>
+        <strong>VM Failure:</strong>
+        If you cannot SSH into a node and you are not detecting either network latency or firewall issues, your node might be down due to VM failure. To confirm that the node is unresponsive and re-create the VM, see
+        <a href="#recreate-VM">
+          Re-create a Corrupted VM in a Highly Available</a>
+        below.<hr>
+      </li>
+      <li>
+        <strong>Node Unable to Rejoin:</strong> If a detached existing node fails to join the cluster, its
+        <code>sequence_number</code> might be higher than those of the nodes with quorum. A higher
+        <code>sequence_number</code> on the detached node indicates that it has recent changes to the
+         data that the primary component lacks. You can check this by looking at the node's error log at
+        <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
+        <br><br>
+        To restore the cluster, do one the following:
+        <ul>
+          <li>If the detached node has a higher sequence number than the primary component, do the procedures in
+            <a href="./bootstrapping.html">Bootstrapping</a>.
+          </li>
+          <li>
+            If bootstrapping does not restore the cluster, you can manually force
+            the node to rejoin the cluster. This removes all of the unsynchronized data
+            from the detached server node and creates a new copy of the cluster data on the node. For more
+            information, see <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.
+            <p class="note warning">
+              <strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only do this procedure with the assistance of
+              <a href="https://support.pivotal.io">Pivotal Support</a>.
+            </p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    DESC
+} %>
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "replication-errors",
+    description: "Many Replication Errors in Logs for Highly Available Clusters",
+    symptom: <<~DESC,
+    You see many replication errors in the MySQL logs, like the following:
+
+    <pre class="terminal">
+    160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
+    160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
+    160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
+    </pre>
+    DESC
+    cause: "This problem happens when there are errors in SQL statements.",
+    solution: <<~DESC,
+      For solutions for replication errors in MySQL log files, see the table below.
+
+      <table class="nice">
+        <tr>
+          <th>Additional Error</th>
+          <th>Solution</th>
+        </tr>
+        <tr>
+          <td>
+            <code>ALTER TABLE</code>
+            errors</td>
+          <td>Fix the
+            <code>ALTER TABLE</code>
+            error.<br>
+            This error can occur when an app issues an invalid data definition statement. Other nodes log this problem as a replication error because they fail to replicate the
+            <code>ALTER TABLE</code>.</td>
+        </tr>
+        <tr>
+          <td>Increased persistent disk usage or running out of working memory</td>
+          <td>Decode the
+            <code>GRA_*.log</code>
+            files and look for errors. See
+            <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-pcf-v1-10">
+              How to decode Galera GRA log files</a>
+            in the Pivotal Support knowledge base. The GRA log files contain failing DDL statements.</td>
+        </tr>
+      </table>
+
+      If you see replication errors, but no <code>ALTER TABLE</code>
+      or persistent disk or memory issues, you can ignore the replication errors.
+    DESC
+    
+} %>
+
 
 ##  <a id="components"></a>  Troubleshooting Components
 
