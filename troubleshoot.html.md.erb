@@ -334,190 +334,190 @@ Service instances can also become temporarily inaccessible during upgrades and V
    DESC
 } %>
 
+###<a id="apps-inoperable"></a>Inoperable App Errors
 
-###<a id="persistent-disk"></a>Persistent Disk is Full
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "persistent-disk", 
+    description: "Persistent Disk is Full",
+    symptom: "Developers report that read, write, and cf CLI operations do not work.
+    Developers cannot upgrade to a larger MySQL service plan to free up disk space. 
+    If your persistent disk is full, apps become inoperable.
+    In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.",
+    cause: "This problem happens if your persistent disk is full.
+    When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage.
+    Available disk space can be increased by deleting audit log files.
+    After deleting audit logs, you can then upgrade to a larger MySQL service plan.",
+    solution: <<~DESC,
+    The solution to this problem is to confirm that your persistent disk is full, and then
+    delete an audit log file to free up disk space. When the disk is no longer full,
+    the service instance can be upgraded to a larger plan to prevent the disk from becoming full again.<br><br>
+    Follow the steps below:
 
-If your persistent disk is full, apps become inoperable.
-In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.
+    <ol>
+      <li>
+        To retrieve and record the GUID of your service instance, run the following command:
+        <br>
+        <pre>cf service SERVICE-INSTANCE-NAME --guid</pre>
+        Where
+        <code>SERVICE-INSTANCE-NAME</code>
+        is the name of your service instance.
+        <br><br>
+        For example:
+        <pre class="terminal">$ cf service my-service-instance --guid
+        12345678-90ab-cdef-1234-567890abcdef</pre>
+        If you do not know the name of your service instance, you can list service instances in the space with
+        <code>cf services</code>.
+      </li>
 
-#### Symptom
+      <li>
+        To confirm that your persistent disk usage is at 100%, run the following command:
+        <br>
+        <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</pre>
+        Where
+        <code>SERVICE-INSTANCE-GUID</code>
+        is the GUID you recorded in the above step.<br><br>
+        For example:
+        <pre class="terminal"> $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances --vitals
+      Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
 
-Developers report thatread, write, and cf CLI operations do not work.
-Developers cannot upgrade to a larger MySQL service plan to free up disk space.
+      Task 19243. Done
 
-#### Explanation
+      Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
 
-This problem happens if your persistent disk is full.
-When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage.
-<br><br>
-Available disk space can be increased by deleting audit log files.
-After deleting audit logs, you can then upgrade to a larger MySQL service plan.
+      Instance                                    Process State  AZ  IPs         VM Created At                 Uptime           Load              CPU    CPU    CPU   CPU   Memory        Swap      System      Ephemeral   Persistent
+                                                                                                                                (1m, 5m, 15m)     Total  User   Sys   Wait  Usage         Usage     Disk Usage  Disk Usage  Disk Usage
+      mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z3  10.0.18.20  Wed Sep 12 22:01:44 UTC 2018  35d 20h 54m 17s  0.02, 0.03, 0.00  -      10.2%  0.4%  0.2%  14% (1.1 GB)  0% (0 B)  54% (37i%)  11% (4i%)   7% (0i%)
+
+      1 instances
+
+      Succeeded</pre>
+      </li>
+      <li>
+        to retrieve and record the instance id of your service instance, follow the
+        procedure below that correponds with your vm topology:
+        <ul>
+        <li>if you are using single node mysql vms, to retrieve and record the
+          instance id, run the
+        following command:
+        <br>
+        <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
+        where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
+        step 1.<br>
+        <br>
+        For example:
+        <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
+      Using environment '34.237.123.534' as client 'admin'
+
+      Task 204. Done
+
+      Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+      Instance                                    Process State  AZ  IPs
+      mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z2  10.244.17.3
+
+      1 instances
+
+      Succeeded
+        </pre>
+
+        The instance ID is the value for <code>Instance</code> after <code>mysql/</code>.
+        <br><br>
+        In the above output, the instance ID of the leader VM is <code>d15419ba-fc6c-4013-b056-19f91c6b0f1d</code>.
+        <br><br>
+      </li>
+      <li>If you are using leader-follower MySQL VMs, to retrieve and record the leader instance ID, run the following command:
+        <br>
+        <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID run-errand inspect</pre>
+        Where
+        <code>SERVICE-INSTANCE-GUID</code>
+        is the GUID you recorded in the step 1.<br>
+        <br>
+        For example:
+        <pre class="terminal">
+    $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
+      Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+      Exit Code  0
+      Stdout     2018/04/03 18:08:46 Started executing command: inspect
+                2018/04/03 18:08:46
+                IP Address: 10.0.8.11
+                Role: leader
+                Read Only: false
+                Replication Configured: false
+                Replication Mode: async
+                Has Data: true
+                GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
+                2018/04/03 18:08:46 Successfully executed command: inspect
+      Stderr     -
+      <br>
+      Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
+      Exit Code  0
+      Stdout     2018/04/03 18:08:46 Started executing command: inspect
+                2018/04/03 18:08:46
+                IP Address: 10.0.8.10
+                Role: follower
+                Read Only: true
+                Replication Configured: true
+                Replication Mode: async
+                Has Data: true
+                GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
+                2018/04/03 18:08:46 Successfully executed command: inspect
+      </pre>
+        The leader instance ID is the value for <code>Instance</code> after <code>mysql/</code>
+        corresponding with the instance marked <code>Role: leader</code>.
+        <br><br>
+        In the above output, the instance ID of the leader VM is
+        <code>ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</code>.
+      </li>
+    </ul>
+    </li>
+
+    <li>
+    To BOSH SSH into your service instances, run the following command:
+    <br>
+    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID ssh mysql/INSTANCE-ID</pre>
+    Where:
+    <br>
+    <ul>
+      <li>
+        <code>SERVICE-INSTANCE-GUID</code>
+        is the GUID you recorded in step 1.</li>
+      <li>
+        <code>INSTANCE-ID</code>
+        is the instance ID you recorded in the above step.
+      </li>
+    </ul>
+    For example:
+    <pre class="terminal">
+    $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+    Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
+
+    Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
+
+    Task 19244. Done
+    </pre>
+
+    <li>
+      To move to the directory where your audit log files are located, run the following command:
+      <br>
+      <pre>cd /var/vcap/store/mysql_audit_logs/mysql_server_audit.log</pre>
+    </li>
+    <li>
+      Delete at least one audit log file with
+      <code>rm</code>
+    </li>
+
+    <li>
+      Update your service instance to a larger plan. For more information, see
+      <a href="./use.html#update">Update a Service Instance to a Larger Plan</a>
+    </li>
+    </ol>
+  DESC
+} %>
+
 
 #### Solution
 
-The solution to this problem is to confirm that your persistent disk is full, and then
-delete an audit log file to free up disk space. When the disk is no longer full,
-the service instance can be upgraded to a larger plan to prevent the disk from becoming full again.<br><br>
-Follow the steps below:
 
-<ol>
-  <li>
-    To retrieve and record the GUID of your service instance, run the following command:
-    <br>
-    <pre>cf service SERVICE-INSTANCE-NAME --guid</pre>
-    Where
-    <code>SERVICE-INSTANCE-NAME</code>
-    is the name of your service instance.
-    <br><br>
-    For example:
-    <pre class="terminal">$ cf service my-service-instance --guid
-    12345678-90ab-cdef-1234-567890abcdef</pre>
-    If you do not know the name of your service instance, you can list service instances in the space with
-    <code>cf services</code>.
-  </li>
-
-  <li>
-    To confirm that your persistent disk usage is at 100%, run the following command:
-    <br>
-    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances --vitals</pre>
-    Where
-    <code>SERVICE-INSTANCE-GUID</code>
-    is the GUID you recorded in the above step.<br><br>
-    For example:
-    <pre class="terminal"> $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances --vitals
-  Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
-
-  Task 19243. Done
-
-  Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-  Instance                                    Process State  AZ  IPs         VM Created At                 Uptime           Load              CPU    CPU    CPU   CPU   Memory        Swap      System      Ephemeral   Persistent
-                                                                                                                            (1m, 5m, 15m)     Total  User   Sys   Wait  Usage         Usage     Disk Usage  Disk Usage  Disk Usage
-  mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z3  10.0.18.20  Wed Sep 12 22:01:44 UTC 2018  35d 20h 54m 17s  0.02, 0.03, 0.00  -      10.2%  0.4%  0.2%  14% (1.1 GB)  0% (0 B)  54% (37i%)  11% (4i%)   7% (0i%)
-
-  1 instances
-
-  Succeeded</pre>
-  </li>
-  <li>
-    to retrieve and record the instance id of your service instance, follow the
-    procedure below that correponds with your vm topology:
-    <ul>
-    <li>if you are using single node mysql vms, to retrieve and record the
-      instance id, run the
-    following command:
-    <br>
-    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
-    where <code>SERVICE-INSTANCE-GUID</code> is the GUID you recorded in
-    step 1.<br>
-    <br>
-    For example:
-    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
-  Using environment '34.237.123.534' as client 'admin'
-
-  Task 204. Done
-
-  Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-  Instance                                    Process State  AZ  IPs
-  mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0  running        z2  10.244.17.3
-
-  1 instances
-
-  Succeeded
-    </pre>
-
-    The instance ID is the value for <code>Instance</code> after <code>mysql/</code>.
-    <br><br>
-    In the above output, the instance ID of the leader VM is <code>d15419ba-fc6c-4013-b056-19f91c6b0f1d</code>.
-    <br><br>
-  </li>
-  <li>If you are using leader-follower MySQL VMs, to retrieve and record the leader instance ID, run the following command:
-    <br>
-    <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID run-errand inspect</pre>
-    Where
-    <code>SERVICE-INSTANCE-GUID</code>
-    is the GUID you recorded in the step 1.<br>
-    <br>
-    For example:
-    <pre class="terminal">
-$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
-  Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-  Exit Code  0
-  Stdout     2018/04/03 18:08:46 Started executing command: inspect
-            2018/04/03 18:08:46
-            IP Address: 10.0.8.11
-            Role: leader
-            Read Only: false
-            Replication Configured: false
-            Replication Mode: async
-            Has Data: true
-            GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-            2018/04/03 18:08:46 Successfully executed command: inspect
-  Stderr     -
-  <br>
-  Instance   mysql/37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8
-  Exit Code  0
-  Stdout     2018/04/03 18:08:46 Started executing command: inspect
-            2018/04/03 18:08:46
-            IP Address: 10.0.8.10
-            Role: follower
-            Read Only: true
-            Replication Configured: true
-            Replication Mode: async
-            Has Data: true
-            GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-            2018/04/03 18:08:46 Successfully executed command: inspect
-  </pre>
-    The leader instance ID is the value for <code>Instance</code> after <code>mysql/</code>
-    corresponding with the instance marked <code>Role: leader</code>.
-    <br><br>
-    In the above output, the instance ID of the leader VM is
-    <code>ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0</code>.
-  </li>
-</ul>
-</li>
-
-<li>
-To BOSH SSH into your service instances, run the following command:
-<br>
-<pre>bosh -d service-instance_SERVICE-INSTANCE-GUID ssh mysql/INSTANCE-ID</pre>
-Where:
-<br>
-<ul>
-  <li>
-    <code>SERVICE-INSTANCE-GUID</code>
-    is the GUID you recorded in step 1.</li>
-  <li>
-    <code>INSTANCE-ID</code>
-    is the instance ID you recorded in the above step.
-  </li>
-</ul>
-For example:
-<pre class="terminal">
-$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
-Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
-
-Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
-
-Task 19244. Done
-</pre>
-
-<li>
-  To move to the directory where your audit log files are located, run the following command:
-  <br>
-  <pre>cd /var/vcap/store/mysql_audit_logs/mysql_server_audit.log</pre>
-</li>
-<li>
-  Delete at least one audit log file with
-  <code>rm</code>
-</li>
-
-<li>
-  Update your service instance to a larger plan. For more information, see
-  <a href="./use.html#update">Update a Service Instance to a Larger Plan</a>
-</li>
-</ol>
 
 ###<a id="unresponsive"></a>Unresponsive Node in a Highly Available Cluster
 
