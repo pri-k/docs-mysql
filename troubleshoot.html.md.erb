@@ -515,128 +515,125 @@ Service instances can also become temporarily inaccessible during upgrades and V
 } %>
 
 
-#### Solution
+###<a id="ha"></a>Highly Available Cluster Errors
 
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "unresponsive",
+    description: "Unresponsive Node in a Highly Available Cluster",
+    symptom: <<~DESC,
+    A client connected to a MySQL cluster node reports the following error:
 
+    <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
+    Some clients might instead return the following:
+    <pre class="terminal">
+      unknown error
+    </pre>
+    DESC
+    
+    cause: "If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
+    re-routes further connections to a different node.",
+    
+    solution: <<~DESC,
+    A node can become unresponsive for a number of reasons. For solutions, see the following:
 
-###<a id="unresponsive"></a>Unresponsive Node in a Highly Available Cluster
-
-#### Symptom
-
-A client connected to a MySQL cluster node reports the following error:
-
-<pre class="terminal">WSREP has not yet prepared this node for application use</pre>
-<br>
-Some clients might instead return the following:
-<pre class="terminal">
-  unknown error
-</pre>
-
-#### Explanation
-
-If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
-re-routes further connections to a different node.
-<br><br>
-
-#### Solutions
-
-A node can become unresponsive for a number of reasons. For solutions, see the following:
-
-<ul>
-  <li>
-    <strong>Network Latency</strong>: If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings to reduce your network latency.</li>
-  <li>
-    <strong>MySQL Process Failure:</strong> If the MySQL process crashes, <code>monit</code>
-    and BOSH should restore the process. If the process is not restored, run the
-    <code>download-logs</code> tool and consult the error logs it generates. For more information, see the
-    <a href="#download-logs">download-logs</a> section below.
-  </li>
-  <li>
-    <strong>Firewall Rule Change:</strong>
-    If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster but do not show network latency errors.
-    <br><br>
-    To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change. Change your firewall rules to enable the
-    unresponsive node to rejoin the cluster.
-  </li>
-  <li>
-    <strong>VM Failure:</strong>
-    If you cannot SSH into a node and you are not detecting either network latency or firewall issues, your node might be down due to VM failure. To confirm that the node is unresponsive and re-create the VM, see
-    <a href="#recreate-VM">
-      Re-create a Corrupted VM in a Highly Available</a>
-    below.
-  </li>
-  <li>
-    <strong>Node Unable to Rejoin:</strong> If a detached existing node fails to join the cluster, its
-    <code>sequence_number</code> might be higher than those of the nodes with quorum. A higher
-    <code>sequence_number</code> on the detached node indicates that it has recent changes to the
-     data that the primary component lacks. You can check this by looking at the node's error log at
-    <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
-    <br><br>
-    To restore the cluster, do one the following:
     <ul>
-      <li>If the detached node has a higher sequence number than the primary component, do the procedures in
-        <a href="./bootstrapping.html">Bootstrapping</a>.
+      <li>
+        <strong>Network Latency</strong>: If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings to reduce your network latency.</li>
+      <li>
+        <strong>MySQL Process Failure:</strong> If the MySQL process crashes, <code>monit</code>
+        and BOSH should restore the process. If the process is not restored, run the
+        <code>download-logs</code> tool and consult the error logs it generates. For more information, see the
+        <a href="#download-logs">download-logs</a> section below.
       </li>
       <li>
-        If bootstrapping does not restore the cluster, you can manually force
-        the node to rejoin the cluster. This removes all of the unsynchronized data
-        from the detached server node and creates a new copy of the cluster data on the node. For more
-        information, see <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.
-        <p class="note warning">
-          <strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only do this procedure with the assistance of
-          <a href="https://support.pivotal.io">Pivotal Support</a>.
-        </p>
+        <strong>Firewall Rule Change:</strong>
+        If your firewall rules change, it might prevent a node from communicating with the rest of the cluster. This causes the node to become unresponsive. In this case, the logs show the node leaving the cluster but do not show network latency errors.
+        <br><br>
+        To confirm that the node is unresponsive because of a firewall rule change, SSH from a responsive node to the unresponsive node. If you cannot connect, the node is unresponsive due to a firewall rule change. Change your firewall rules to enable the
+        unresponsive node to rejoin the cluster.
+      </li>
+      <li>
+        <strong>VM Failure:</strong>
+        If you cannot SSH into a node and you are not detecting either network latency or firewall issues, your node might be down due to VM failure. To confirm that the node is unresponsive and re-create the VM, see
+        <a href="#recreate-VM">
+          Re-create a Corrupted VM in a Highly Available</a>
+        below.
+      </li>
+      <li>
+        <strong>Node Unable to Rejoin:</strong> If a detached existing node fails to join the cluster, its
+        <code>sequence_number</code> might be higher than those of the nodes with quorum. A higher
+        <code>sequence_number</code> on the detached node indicates that it has recent changes to the
+         data that the primary component lacks. You can check this by looking at the node's error log at
+        <code>/var/vcap/sys/log/pxc-mysql/mysql.err.log</code>.
+        <br><br>
+        To restore the cluster, do one the following:
+        <ul>
+          <li>If the detached node has a higher sequence number than the primary component, do the procedures in
+            <a href="./bootstrapping.html">Bootstrapping</a>.
+          </li>
+          <li>
+            If bootstrapping does not restore the cluster, you can manually force
+            the node to rejoin the cluster. This removes all of the unsynchronized data
+            from the detached server node and creates a new copy of the cluster data on the node. For more
+            information, see <a href="#manual-force">Force a Node to Rejoin a Highly Available Cluster Manually</a> below.
+            <p class="note warning">
+              <strong>Warning</strong>: Forcing a node to rejoin the cluster is a destructive procedure. Only do this procedure with the assistance of
+              <a href="https://support.pivotal.io">Pivotal Support</a>.
+            </p>
+          </li>
+        </ul>
       </li>
     </ul>
-  </li>
-</ul>
+    DESC
+} %>
 
-###  <a id="replication-errors"></a>  Many Replication Errors in Logs for Highly Available Clusters
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "replication-errors",
+    description: "Many Replication Errors in Logs for Highly Available Clusters",
+    symptom: <<~DESC,
+    You see many replication errors in the MySQL logs, like the following:
 
-This problem happens when there are errors in SQL statements.
+    <pre class="terminal">
+    160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
+    160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
+    160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
+    </pre>
+    DESC
+    cause: "This problem happens when there are errors in SQL statements.",
+    solution: <<~DESC,
+      For solutions for replication errors in MySQL log files, see the table below.
 
-#### Symptom
+      <table class="nice">
+        <tr>
+          <th>Additional Error</th>
+          <th>Solution</th>
+        </tr>
+        <tr>
+          <td>
+            <code>ALTER TABLE</code>
+            errors</td>
+          <td>Fix the
+            <code>ALTER TABLE</code>
+            error.<br>
+            This error can occur when an app issues an invalid data definition statement. Other nodes log this problem as a replication error because they fail to replicate the
+            <code>ALTER TABLE</code>.</td>
+        </tr>
+        <tr>
+          <td>Increased persistent disk usage or running out of working memory</td>
+          <td>Decode the
+            <code>GRA_*.log</code>
+            files and look for errors. See
+            <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-pcf-v1-10">
+              How to decode Galera GRA log files</a>
+            in the Pivotal Support knowledge base. The GRA log files contain failing DDL statements.</td>
+        </tr>
+      </table>
 
-You see many replication errors in the MySQL logs, like the following:
+      If you see replication errors, but no <code>ALTER TABLE</code>
+      or persistent disk or memory issues, you can ignore the replication errors.
+    DESC
+} %>
 
-<pre class="terminal">
-  160318 9:25:16 [Warning] WSREP: RBR event 1 Query apply warning: 1, 16992456
-160318 9:25:16 [Warning] WSREP: Ignoring error for TO isolated action: source: abcd1234-abcd-1234-abcd-1234abcd1234 version: 3 local: 0 state: APPLYING flags: 65 conn_id: 246804 trx_id: -1 seqnos (l: 865022, g: 16992456, s: 16992455, d: 16992455, ts: 2530660989030983)
-160318 9:25:16 [ERROR] Slave SQL: Error 'Duplicate column name 'number'' on query. Default database: 'cf_0123456_1234_abcd_1234_abcd1234abcd'. Query: 'ALTER TABLE ...'
-</pre>
-
-#### Explanation and Solution
-
-For solutions for replication errors in MySQL log files, see the table below.
-
-<table class="nice">
-  <tr>
-    <th>Additional Error</th>
-    <th>Solution</th>
-  </tr>
-  <tr>
-    <td>
-      <code>ALTER TABLE</code>
-      errors</td>
-    <td>Fix the
-      <code>ALTER TABLE</code>
-      error.<br>
-      This error can occur when an app issues an invalid data definition statement. Other nodes log this problem as a replication error because they fail to replicate the
-      <code>ALTER TABLE</code>.</td>
-  </tr>
-  <tr>
-    <td>Increased persistent disk usage or running out of working memory</td>
-    <td>Decode the
-      <code>GRA_*.log</code>
-      files and look for errors. See
-      <a href="https://community.pivotal.io/s/article/How-to-decode-Galera-GRA-logs-for-MySQL-for-pcf-v1-10">
-        How to decode Galera GRA log files</a>
-      in the Pivotal Support knowledge base. The GRA log files contain failing DDL statements.</td>
-  </tr>
-</table>
-
-If you see replication errors, but no <code>ALTER TABLE</code>
-or persistent disk or memory issues, you can ignore the replication errors.
 
 ##  <a id="components"></a>  Troubleshooting Components
 
