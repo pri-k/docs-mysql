@@ -82,10 +82,10 @@ Service instances can also become temporarily inaccessible during upgrades and V
     description: "Unable to Determine Leader and Follower",
     symptom: <<~DESC,  
     This problem happens when the <code>configure-leader-follower</code>
-    errand fails because it cannot determine the VM roles. <br> <br>
+    errand fails because it cannot determine the VM roles. <br><br>
       
     The <code>configure-leader-follower</code> errand exits with <code>1</code>
-    and the errand logs contain the following: <br> <br>
+    and the errand logs contain the following: 
 
     <pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
     DESC
@@ -103,14 +103,13 @@ Service instances can also become temporarily inaccessible during upgrades and V
     <a href="./about-leader-follower.html#errands">orchestration</a>
     errands and backup/restore, you can put the service instance into a safe topology, and then rerun the
     <code>configure-leader-follower</code> errand. This is shown in the example below.<br><br>
-    This example shows one outcome that the <code>inspect</code> errand can return: <br><br>
+    This example shows one outcome that the <code>inspect</code> errand can return: <br>
 
     <ol>
       <li>Use the
         <code>inspect</code>
-        errand to retrieve relevant information about the two VMs:<br><br>
-        <pre class="terminal">
-      $ bosh -e my-env -d my-dep run-errand inspect
+        errand to retrieve relevant information about the two VMs:
+        <pre class="terminal">$ bosh -e my-env -d my-dep run-errand inspect
       [...]
       Instance   mysql/4ecad54b-0704-47eb-8eef-eb228cab9724
       Exit Code  0
@@ -121,7 +120,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
                Has Data: false
                Read Only: true
                GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-               Replication Configured: false<br /><br />
+               Replication Configured: false
       Instance   mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
       Exit Code  0
       Stdout     -
@@ -132,11 +131,9 @@ Service instances can also become temporarily inaccessible during upgrades and V
                Has Data: true
                Read Only: true
                GTID Executed: 1d774323-de9e-11e7-be01-42010a001014:1-25
-               Replication Configured: true<br /><br />
-      2 errand(s)<br />
-      Succeeded
-      </pre>
-      <br><br>
+               Replication Configured: true
+      2 errand(s)
+      Succeeded</pre>
         In the above scenario, the first instance is missing data but does not have replication configured. The second instance has data, and also has replication configured. The instructions below resolve this by copying data to the first instance, and
         resuming replication.</li>
       <li>Take a backup of the second instance using the
@@ -148,11 +145,13 @@ Service instances can also become temporarily inaccessible during upgrades and V
         At this point, the instances have equivalent data.</li>
       <li>
         Run the <code>configure-leader-follower</code> errand to reconfigure replication:
-        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower &#92;
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+          run-errand configure-leader-follower &#92;
           --instance=mysql/GUID-OF-LEADER</pre>
         For example:
         
-        <pre class="terminal">$ bosh -e my-env -d my-dep run-errand configure-leader-follower &#92;
+        <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+          run-errand configure-leader-follower &#92;
           --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
       </li>
     </ol>
@@ -166,7 +165,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
     description: "Both Leader and Follower Instances Are Writable",
     
     symptom: <<~DESC ,
-    This problem happens when the<code>configure-leader-follower</code> errand fails because both VMs are writable and the VMs might hold differing data.
+    This problem happens when the<code>configure-leader-follower</code> errand fails because both VMs are writable and the VMs might hold differing data. <br><br>
     The <code>configure–leader-follower</code> errand exits with <code>1</code>
     and the errand logs contain the following:
 
@@ -177,7 +176,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
       MySQL for Pivotal Platform tries to ensure that there is only one writable instance of the
       leader-follower pair at any given time. However, in certain situations, such as
       network partitions, or manual intervention outside of the provided bosh
-      errands, it is possible for both instances to be writable.
+      errands, it is possible for both instances to be writable. <br><br>
       The service instances remain in this state until an operator resolves the issue
       to ensure that the correct instance is promoted and reduce the potential for data divergence.
     DESC
@@ -223,7 +222,9 @@ Service instances can also become temporarily inaccessible during upgrades and V
         <li>Based on the information you gathered in the step above, run the
           <code>make-read-only</code>
           errand to make the appropriate instance read-only:
-          <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE</code></pre>
+          <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+            run-errand make-read-only &#92;
+            --instance=mysql/MYSQL-SUBSET-INSTANCE</code></pre>
           For example:
           <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
               run-errand make-read-only &#92;
@@ -236,7 +237,9 @@ Service instances can also become temporarily inaccessible during upgrades and V
             <li>Use the
               <code>make-read-only</code>
               errand to set both instances to read-only to prevent further data divergence.
-              <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-INSTANCE</code></pre>
+              <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+                run-errand make-read-only &#92;
+                --instance=mysql/MYSQL-INSTANCE</code></pre>
               For example:
               <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
                   run-errand make-read-only &#92;
@@ -265,7 +268,9 @@ Service instances can also become temporarily inaccessible during upgrades and V
             <li>Use the
               <code>configure-leader-follower</code>
               errand to copy the leader's data to the follower and resume replication:
-              <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code></pre>
+              <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+                run-errand configure-leader-follower &#92;
+                --instance=mysql/GUID-OF-LEADER</code></pre>
               For example:
               <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
                 run-errand configure-leader-follower &#92;
@@ -322,7 +327,9 @@ Service instances can also become temporarily inaccessible during upgrades and V
         If Read Only is set to
         <code>true</code>
         for both VMs, make the leader writable using the following command:
-        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</pre>
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
+          run-errand configure-leader-follower &#92;
+          --instance=mysql/GUID-OF-LEADER</pre>
         For example, if the second instance above is the leader:
         <pre class="terminal">
     $ bosh -e my-env -d my-dep &#92;
@@ -340,11 +347,11 @@ Service instances can also become temporarily inaccessible during upgrades and V
     id: "persistent-disk", 
     description: "Persistent Disk is Full",
     symptom: "Developers report that read, write, and cf CLI operations do not work.
-    Developers cannot upgrade to a larger MySQL service plan to free up disk space. 
+    Developers cannot upgrade to a larger MySQL service plan to free up disk space. <br><br>
     If your persistent disk is full, apps become inoperable.
     In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.",
     cause: "This problem happens if your persistent disk is full.
-    When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage.
+    When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage. <br><br>
     Available disk space can be increased by deleting audit log files.
     After deleting audit logs, you can then upgrade to a larger MySQL service plan.",
     solution: <<~DESC,
@@ -363,8 +370,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
         is the name of your service instance.
         <br><br>
         For example:
-        <pre class="terminal">$ cf service my-service-instance --guid
-        12345678-90ab-cdef-1234-567890abcdef</pre>
+        <pre class="terminal">$ cf service my-service-instance --guid 12345678-90ab-cdef-1234-567890abcdef</pre>
         If you do not know the name of your service instance, you can list service instances in the space with
         <code>cf services</code>.
       </li>
@@ -433,8 +439,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
         is the GUID you recorded in the step 1.<br>
         <br>
         For example:
-        <pre class="terminal">
-    $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
+        <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef run-errand inspect
       Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
       Exit Code  0
       Stdout     2018/04/03 18:08:46 Started executing command: inspect
@@ -460,8 +465,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
                 Replication Mode: async
                 Has Data: true
                 GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
-                2018/04/03 18:08:46 Successfully executed command: inspect
-      </pre>
+                2018/04/03 18:08:46 Successfully executed command: inspect</pre>
         The leader instance ID is the value for <code>Instance</code> after <code>mysql/</code>
         corresponding with the instance marked <code>Role: leader</code>.
         <br><br>
@@ -487,14 +491,12 @@ Service instances can also become temporarily inaccessible during upgrades and V
       </li>
     </ul>
     For example:
-    <pre class="terminal">
-    $ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
+    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef ssh mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
     Using environment 'https:<span>//10.0.0.6:25555</span>' as client 'admin'
 
     Using deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
 
-    Task 19244. Done
-    </pre>
+    Task 19244. Done</pre>
 
     <li>
       To move to the directory where your audit log files are located, run the following command:
@@ -538,7 +540,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
 
     <ul>
       <li>
-        <strong>Network Latency</strong>: If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings to reduce your network latency.</li>
+        <strong>Network Latency</strong>: If network latency causes a node to become unresponsive, the node drops but eventually rejoins. The node automatically rejoins only if one node has left the cluster. Consult your IaaS network settings to reduce your network latency. <hr></li>
       <li>
         <strong>MySQL Process Failure:</strong> If the MySQL process crashes, <code>monit</code>
         and BOSH should restore the process. If the process is not restored, run the
@@ -632,6 +634,7 @@ Service instances can also become temporarily inaccessible during upgrades and V
       If you see replication errors, but no <code>ALTER TABLE</code>
       or persistent disk or memory issues, you can ignore the replication errors.
     DESC
+    
 } %>
 
 
