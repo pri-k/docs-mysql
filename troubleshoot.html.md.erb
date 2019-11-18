@@ -225,8 +225,8 @@ Service instances can also become temporarily inaccessible during upgrades and V
           errand to make the appropriate instance read-only:
           <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-SUBSET-INSTANCE</code></pre>
           For example:
-          <pre class="terminal">$ bosh -e my-env -d my-dep \
-              run-errand make-read-only \
+          <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+              run-errand make-read-only &#92;
               --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
             [...]
             succeeded</pre>
@@ -238,8 +238,8 @@ Service instances can also become temporarily inaccessible during upgrades and V
               errand to set both instances to read-only to prevent further data divergence.
               <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand make-read-only --instance=mysql/MYSQL-INSTANCE</code></pre>
               For example:
-              <pre class="terminal">$ bosh -e my-env -d my-dep \
-                  run-errand make-read-only \
+              <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+                  run-errand make-read-only &#92;
                   --instance=mysql/e0b94ade-0114-4d49-a929-ce1616d8beda
                   [...]
                   succeeded</pre>
@@ -267,8 +267,8 @@ Service instances can also become temporarily inaccessible during upgrades and V
               errand to copy the leader's data to the follower and resume replication:
               <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</code></pre>
               For example:
-              <pre class="terminal">$ bosh -e my-env -d my-dep \
-                run-errand configure-leader-follower \
+              <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
+                run-errand configure-leader-follower &#92;
                 --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
             </li>
           </ol>
@@ -277,69 +277,63 @@ Service instances can also become temporarily inaccessible during upgrades and V
     DESC
 } %>
 
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "both-read-only",
+    description: "Both Leader and Follower Instances Are Read-Only",
+    symptom: "Developers report that apps cannot write to the database. In a leader-follower topology, the leader VM is writable and the follower VM is read-only.
+    However if both VMs are read only, apps cannot write to the database.",
+    cause: "This problem happens if the leader VM fails and the BOSH Resurrector is enabled.
+    When the leader is resurrected, it is set as read-only.",
+    solution: <<~DESC,
+    <ol>
+      <li>
+        Use the
+        <code>inspect</code>
+        errand to confirm that both VMs are in a read-only state:
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect</pre>
+      </li>
+      <li>Examine the output and locate the information about the leader-follower MySQL VMs:
+        <pre class="terminal">
+    Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
+    Exit Code  0
+    Stdout     -
+    Stderr     2017/12/11 18:25:54 Started executing command: inspect
+             2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
+             2017/12/11 18:25:54
+             Has Data: true
+             Read Only: true
+             GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-23
+             Replication Configured: true<br /><br />
+    Instance   mysql/e0exampleade-0114-4d49-a929-cexample8beda
+    Exit Code  0
+    Stdout     -
+    Stderr     2017/12/11 18:25:54 Started executing command: inspect
+             2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
+             2017/12/11 18:25:54
+             Has Data: true
+             Read Only: true
+             GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-25
+             Replication Configured: false<br /><br />
+    2 errand(s)<br />
+    Succeeded
+    </pre>
+      </li>
+      <li>
+        If Read Only is set to
+        <code>true</code>
+        for both VMs, make the leader writable using the following command:
+        <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</pre>
+        For example, if the second instance above is the leader:
+        <pre class="terminal">
+    $ bosh -e my-env -d my-dep &#92;
+      run-errand configure-leader-follower &#92;
+      --instance=mysql/e0exampleade-0114-4d49-a929-cexample8beda
+    </pre>
+      </li>
+    </ol>
+   DESC
+} %>
 
-###<a id="both-read-only"></a>Both Leader and Follower Instances Are Read-Only
-
-In a leader-follower topology, the leader VM is writable and the follower VM is read-only.
-However if both VMs are read only, apps cannot write to the database.
-
-#### Symptom
-
-Developers report that apps cannot write to the database.
-
-#### Explanation
-
-This problem happens if the leader VM fails and the BOSH Resurrector is enabled.
-When the leader is resurrected, it is set as read-only.
-
-#### Solution
-
-<ol>
-  <li>
-    Use the
-    <code>inspect</code>
-    errand to confirm that both VMs are in a read-only state:
-    <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect</pre>
-  </li>
-  <li>Examine the output and locate the information about the leader-follower MySQL VMs:
-    <pre class="terminal">
-Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-23
-         Replication Configured: true<br /><br />
-Instance   mysql/e0exampleade-0114-4d49-a929-cexample8beda
-Exit Code  0
-Stdout     -
-Stderr     2017/12/11 18:25:54 Started executing command: inspect
-         2017/12/11 18:25:54 Started GET https<span>:</span>999.0.0.1:8443/status
-         2017/12/11 18:25:54
-         Has Data: true
-         Read Only: true
-         GTID Executed: 1d779999-de9e-11e7-be01-42010a009999:1-25
-         Replication Configured: false<br /><br />
-2 errand(s)<br />
-Succeeded
-</pre>
-  </li>
-  <li>
-    If Read Only is set to
-    <code>true</code>
-    for both VMs, make the leader writable using the following command:
-    <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand configure-leader-follower --instance=mysql/GUID-OF-LEADER</pre>
-    For example, if the second instance above is the leader:
-    <pre class="terminal">
-$ bosh -e my-env -d my-dep \
-  run-errand configure-leader-follower \
-  --instance=mysql/e0exampleade-0114-4d49-a929-cexample8beda
-</pre>
-  </li>
-</ol>
 
 ###<a id="persistent-disk"></a>Persistent Disk is Full
 
