@@ -77,6 +77,12 @@ Service instances can also become temporarily inaccessible during upgrades and V
 
 ### <a id="l-f-errors"></a> Leader-Follower Service Instance Errors
 
+This section provides solutions for the following errands:
+
++ [Unable to Determine Leader and Follower](#unable-to-determine)
++ [Both Leader and Follower Instances Are Writable](#both-writable)
++ [Both Leader and Follower Instances Are Read-Only](#both-read-only)
+
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "unable-to-determine",
     description: "Unable to Determine Leader and Follower",
@@ -343,6 +349,10 @@ Service instances can also become temporarily inaccessible during upgrades and V
 
 ###<a id="apps-inoperable"></a>Inoperable App Errors
 
+This section provides a solution for the following errand:
+
++ [Persistent Disk is Full](#persistent-disk)
+
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "persistent-disk", 
     description: "Persistent Disk is Full",
@@ -518,6 +528,11 @@ Service instances can also become temporarily inaccessible during upgrades and V
 
 
 ###<a id="ha"></a>Highly Available Cluster Errors
+
+This section provides solutions for the following errands:
+
++ [Unresponsive Node in a Highly Available Cluster](#unresponsive)
++ [Many Replication Errors in Logs for Highly Available Clusters](#replication-errors)
 
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "unresponsive",
