@@ -814,22 +814,20 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 
 ### <a id="instance-creds"></a> Retrieve Admin and Read-Only Admin Credentials for a Service Instance
 
-To retrieve the admin and read-only admin credentials for a service instance from BOSH CredHub, perform the following steps:
-
+To retrieve the admin and read-only admin credentials for a service instance from BOSH CredHub: 
 <ol>
   <li>Use the cf CLI to determine the GUID associated with the service instance
-    for which you want to retrieve credentials. Run the following command:
+    for which you want to retrieve credentials by running:
     <pre><code>cf service service-instance --guid</code></pre>
-    <br>
     Where <code>SERVICE-INSTANCE</code> is the name of the service instance.
     <br><br>
-    For example:
-    <pre class="terminal">$ cf service my-service-instance --guid
+    For example: <br>
+    <pre class="terminal">$ cf service my-service-instance --guid <br><br>
     12345678-90ab-cdef-1234-567890abcdef</pre>
     If you do not know the name of the service instance, you can list service instances in the space with
     <code>cf services</code>.
   </li>
-  <li>Perform the steps in
+  <li>Do the steps in
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>
     and
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a>
@@ -842,29 +840,27 @@ To retrieve the admin and read-only admin credentials for a service instance fro
     <em>Advanced Troubleshooting with the BOSH CLI</em>.
   </li>
   <li>
-    Follow the steps in
-    <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>, and record the values for
+    Do the procedure in
+    <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a> and record the values for
     <code>identity</code>
     and
     <code>password</code>.</li>
-  <li>Set the API target of the CredHub CLI to your BOSH CredHub server.
-    <br><br>
-    Run the following command:
-    <pre><code>credhub api https://BOSH-DIRECTOR:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</code></pre>    <br>
+  <li>Set the API target of the CredHub CLI to your BOSH CredHub server by running:
+    <pre>credhub api https<span>:</span>//BOSH-DIRECTOR:8844 \
+      --ca-cert=/var/tempest/workspaces/default/root\_ca\_certificate</pre>
     Where
     <code>BOSH-DIRECTOR</code>
     is the IP address of the BOSH Director VM.
     <br><br>
     For example:
-    <pre class="terminal">$ credhub api http<span>s:</span>//10.0.0.5:8844 --ca-cert=/var/tempest/workspaces/default/root_ca_certificate</pre>
+    <pre class="terminal">$ credhub api http<span>s:</span>//10.0.0.5:8844 \
+      --ca-cert=/var/tempest/workspaces/default/root\_ca\_certificate</pre>
   </li>
   <li>
-    Log in to CredHub.
-    <br><br>
-    Run the following command:
-    <pre><code>credhub login \
+    Log in to CredHub by running:
+    <pre>credhub login \
     --client-name=CREDHUB-CLIENT-NAME \
-    --client-secret=CREDHUB-CLIENT-SECRET</code></pre>
+    --client-secret=CREDHUB-CLIENT-SECRET</pre>
     Where:
     <ul>
       <li>
@@ -886,28 +882,28 @@ To retrieve the admin and read-only admin credentials for a service instance fro
       --client-secret=abcdefghijklm123456789</pre>
   </li>
   <li>
-    Use the CredHub CLI to retrieve the credentials.
+    Use the CredHub CLI to retrieve the credentials:
     <ul>
       <li>
-        To retrieve the password for the admin user, run the following command:
-        <pre><code>credhub get -n /p-bosh/service-instance_GUID/admin_password</code></pre>
+        Retrieve the password for the admin user by running:
+        <pre>credhub get -n /p-bosh/service-instance\_GUID/admin\_password</pre>
         In the output, the password appears under
         <code>value</code>.</li>
       <br>
       <li>
-        To retrieve the password for the read-only admin user, run the following command:
-        <pre>credhub get -n /p-bosh/service-instance_GUID/read_only_admin_password</pre>
+        Retrieve the password for the read-only admin user by running:
+        <pre>credhub get -n /p-bosh/service-instance\_GUID/read\_only\_admin\_password</pre>
         In the output, the password appears under
         <code>value</code>.</li>
     </ul>
-    <br>
     For example:
-    <pre class="terminal">$ credhub get -n /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/admin_password
-    id: d6e5bd10-3b60-4a1a-9e01-c76da688b847
-    name: /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/admin_password
-    type: password
-    value: UMF2DXsqNPPlCNWMdVMcNv7RC3Wi10
-    version_created_at: 2018-04-02T23:16:09Z</pre>
+    <pre class="terminal">$ credhub get \
+      -n /p-bosh/service-instance\_70d30bb6-7f30-441a-a87c-05a5e4afff26/admin\_password <br>
+  id: d6e5bd10-3b60-4a1a-9e01-c76da688b847
+  name: /p-bosh/service-instance\_70d30bb6-7f30-441a-a87c-05a5e4afff26/admin\_password
+  type: password
+  value: UMF2DXsqNPPlCNWMdVMcNv7RC3Wi10
+  version\_created\_at: 2018-04-02T23:16:09Z</pre>
   </li>
 </ol>
 
@@ -1044,30 +1040,30 @@ To manually force a node to rejoin the cluster, do the following:
 
 <ol>
   <li>
-    To SSH into the node, follow the procedure in
+    SSH into the node by following the procedure in 
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
   </li>
   <li>
-    To become root, run the following command:
+    Become root by running:
     <pre> sudo su</pre>
   </li>
   <li>
-    To shut down the
+    Shut down the
     <code>mysqld</code>
-    process on the node, run the following command:
+    process on the node by running:
     <pre>  monit stop galera-init </pre>
   </li>
   <li>
-    To remove the unsynchronized data on the node, run the following command:
+    Remove the unsynchronized data on the node by running:
     <pre>  rm -rf /var/vcap/store/pxc-mysql</pre>
   </li>
   <li>
-    To prepare the node before restarting, run the following command:
+    Prepare the node before restarting by running:
     <pre>  /var/vcap/jobs/pxc-mysql/bin/pre-start</pre>
   </li>
-  <li>To restart the
+  <li>Restart the
     <code>mysqld</code>
-    process, run the following command:
+    process by running:
     <pre> monit start galera-init</pre>
   </li>
 </ol>
@@ -1075,22 +1071,22 @@ To manually force a node to rejoin the cluster, do the following:
 
 ### <a id="recreate-VM"></a>Re-create a Corrupted VM in a Highly Available Cluster
 
-To re-create a corrupted VM, do the following:
+To re-create a corrupted VM:
 
 <ol>
-  <li>To log in to the BOSH Director VM, do the following procedures:
+  <li>To log in to the BOSH Director VM by doing the following procedures:
     <ol>
-      <li>To gather the information needed to log in to the BOSH Director VM, see
+      <li>Gather the information needed to log in to the BOSH Director VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
-      <li>To log in to the Ops Manager VM, see
+      <li>Log in to the Ops Manager VM by doing the procedure in 
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
-      <li>To log in to the BOSH Director VM, see
+      <li>Log in to the BOSH Director VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
     </ol>
   </li>
   <li>
-    To identify and re-create the unresponsive node with
-    <code>bosh cloudcheck</code>, do the procedure in
+    Identify and re-create the unresponsive node with
+    <code>bosh cloudcheck</code>, by doing the procedure in 
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a>
     and run
     <code>Recreate VM using last known apply spec</code>.
@@ -1110,24 +1106,27 @@ To re-create a corrupted VM, do the following:
 ### <a id="check-replication"></a>Check Replication Status in a Highly Available Cluster
 
 If you see stale data in your cluster, you can check whether replication is functioning normally.
-<br><br>
+
 
 To check the replication status, do the following:
 
 <ol>
-  <li>To log in to the BOSH Director VM, do the following procedures:
+  <li>To log in to the BOSH Director VM, do the following:
     <ol>
-      <li>To gather the information needed to log in to the BOSH Director VM, see
+      <li>Gather the information needed to log in to the BOSH Director VM by doing the 
+        procedure in 
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>.
       </li>
-      <li>To log in to the Ops Manager VM, see
+      <li>Log in to the Ops Manager VM by doing the procedure in 
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>.
       </li>
     </ol>
   </li>
   <li>
-    To create a dummy database in the first node, run the following command:
-    <pre>mysql -h first-node-ip-address -u your-identity -p -e "create database verify_healthy;"</pre>
+    Create a dummy database in the first node by running:
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS \
+       -u YOUR-IDENTITY \
+       -p -e "create database verify_healthy;"</pre>
     Where:
     <ul>
       <li>
@@ -1141,18 +1140,28 @@ To check the replication status, do the following:
     </ul>
   </li>
   <li>
-    To create a dummy table in the dummy database, do the following:
-    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "create table dummy_table (id int not null primary key auto_increment, info text) engine='innodb';"</pre>
+    Create a dummy table in the dummy database by running:
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS \ 
+      -u your-identity \
+      -p -D verify_healthy \
+      -e "create table dummy_table (id int not null primary key auto_increment, info text) \
+      engine='innodb';"</pre>
   </li>
   <li>
-    To insert data into the dummy table, run the following command:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify_healthy -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
+    Insert data into the dummy table by running:
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS \
+      -u YOUR-IDENTITY \
+      -p -D verify_healthy \
+      -e "insert into dummy_table(info) values ('dummy data'),('more dummy data'),('even more dummy data');"</pre>
   </li>
   <li>
     <p>
-      To query the table and verify that the three rows of dummy data exist on the first node, run the following:
+      Query the table and verify that the three rows of dummy data exist on the first node by running:
     </p>
-    <pre>mysql -h first-node-ip-address -u your-identity -p -d verify_healthy -e "select * from dummy_table;"</pre>
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS \
+      -u YOUR-IDENTITY \
+      -p -D verify_healthy \
+      -e "select * from dummy_table;"</pre>
 
     When prompted for a password, provide the <code>password</code>
     value recorded in step 1.<br>
@@ -1167,23 +1176,34 @@ To check the replication status, do the following:
   +----+----------------------+</pre>
   </li>
   <li>
-    To verify that the other nodes contain the same dummy data do the following for each of the remaining MySQL server IP addresses:
-    <ul>
-      <li>To query the dummy table, do the following:
-        <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy_table;"</pre>
+    Verify that the other nodes contain the same dummy data 
+    by doing the following for each of the remaining MySQL server IP addresses:
+    <ol>
+      <li>Query the dummy table by running :
+        <pre>mysql -h NEXT-NODE-IP-ADDRESS \ 
+          -u YOUR-IDENTITY \ 
+          -p -D verify\_healthy \ 
+          -e "select * from dummy_table;"</pre>
 
         When prompted for a password, provide the
         <code>password</code>
         value recorded in step 1.
       </li>
       <li>
-        To verify that the node contains the same three rows of dummy data as the other nodes, run the following command:
+        Verify that the node contains the same three rows of dummy data as the other nodes
+        by running:
 
-        <pre class="terminal">mysql -h NEXT-NODE-IP-ADDRESS -u YOUR-IDENTITY -p -D verify\_healthy -e "select * from dummy\_table;"</pre>
+        <pre >mysql -h NEXT-NODE-IP-ADDRESS \ 
+          -u YOUR-IDENTITY \
+          -p -D verify\_healthy \
+          -e "select * from dummy\_table;"</pre>
 
         When prompted for a password, provide the
         <code>password</code>
-        value recorded in step 1. Verify that the above command returns output similar to the following:
+        value recorded in step 
+        </li>
+        
+        <li>Verify that the above command returns output similar to the following:
         <pre class="terminal">
     +----+----------------------+
     | id | info                 |
@@ -1193,14 +1213,14 @@ To check the replication status, do the following:
     | 10 | even more dummy data |
     +----+----------------------+ </pre>
       </li>
-    </ul>
+    </ol>
   </li>
   <li>
-    If each MySQL server instance does not return the same result, before proceeding
+    <strong>If each MySQL server instance does not return the same result,</strong> before proceeding
     further or making any changes to your deployment, contact
     <a href="https://support.pivotal.io/">Pivotal Support</a>
     <br>
-    If each MySQL server instance returns the same result, then you can safely proceed
+    <strong>If each MySQL server instance returns the same result,</strong> then you can safely proceed
     to scaling down your cluster to a single node.
   </li>
 </ol>
@@ -1214,46 +1234,58 @@ The troubleshooting techniques described above use the following tools.
 
 `download-logs` is a script that you can run from your Ops Manager VM to aggregate
 logs from your MySQL cluster nodes, MySQL proxies, and, with highly available clusters, the jumpbox VM.
-Do the following to run the `download-logs` script:
 
-1. Download and unpack the `download-logs` script from [<%= vars.product_name %>](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
+To use the `download-logs` script:
 
-1. From Ops Manager, open your **BOSH Director** tile > **Credentials** tab.
+1. Download and unzip the `download-logs` script from [<%= vars.product_name %>](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
 
-1. Click **Bosh Commandline Credentials** > **Link to Credential**. A short plaintext file opens.
+1. From the Ops Manager Installation Dashboard, navigate to **BOSH Director** > **Credentials**.
 
-4. From the plaintext file, record the values listed for the following:
+1. Click **Link to Credential** for the **Bosh Commandline Credentials**.
+
+4. From the plaintext file that opens, record the values for the following:
   + `BOSH_CLIENT`
   + `BOSH_CLIENT_SECRET`
   + `BOSH_CA_CERT`
   + `BOSH_ENVIRONMENT`
 
-1. From the BOSH CLI, run `bosh deployments` and record the name of the BOSH deployment that deployed <%= vars.product_name %>.
+1. From the BOSH CLI, view the name of the BOSH deployment for <%= vars.product_name %> by running: 
 
-1. SSH into your Ops Manager VM. For information on how to do this, see
+    ```
+    bosh deployments
+    ``` 
+    Record the name of the BOSH deployment. 
+
+1. SSH into your Ops Manager VM by doing the procedures in 
 [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
 and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
 
 1. File transfer or copy-paste the `download-logs` script to a working directory on the Ops Manager VM.
 
 1. Set local environment variables to the same BOSH variable values that you recorded earlier,
-including `BOSH_DEPLOYMENT` for the deployment name. For example:
+including `BOSH_DEPLOYMENT` for the deployment name. 
+  <br><br>
+    For example:
+    <pre class="terminal">$ BOSH\_CLIENT=ops\_manager \
+      BOSH\_CLIENT\_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY 
+      BOSH\_CA\_CERT=/var/tempest/workspaces/default/root\_ca\_certificate \ 
+      BOSH\_ENVIRONMENT=10.0.0.5 \
+      BOSH\_DEPLOYMENT=pivotal-mysql-14c4</pre>
 
-    <pre class="terminal">$ BOSH_CLIENT=ops_manager BOSH_CLIENT_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY BOSH_CA_CERT=/var/tempest/workspaces/default/root_ca_certificate BOSH_ENVIRONMENT=10.0.0.5 BOSH_DEPLOYMENT=pivotal-mysql-14c4</pre>
-
-1. Run the `download-logs` script, passing the output directory to the `-o` flag:
+1. Run the `download-logs` script by running: 
 
     ```
     ./download-logs -o .
     ```
 
-1. The script saves a compressed file of logs combined from all MySQL VMs.
-The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
+    The script saves a compressed file of logs combined from all MySQL VMs.
+    The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 
 ###  <a id="mysql-diag"></a>  mysql-diag
 
-`mysql-diag` outputs the current status of a highly available (HA) MySQL cluster
+The `mysql-diag` tools outputs the current status of a highly available (HA) MySQL cluster
 in <%= vars.platform_name %> and suggests recovery actions if the cluster fails.
+
 For more information, see [Running mysql-diag](./mysql-diag.html).
 
 ## <a id="kb"></a> Knowledge Base (Community)
