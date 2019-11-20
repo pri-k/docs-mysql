@@ -5,19 +5,34 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides information about the defaults that <%= vars.product_name %>
+This topic provides information about the defaults that <%= vars.product_full %>
 applies to its Percona Server components. This topic also provides
 instructions for how to use optional parameters to change certain server defaults.
 
-## <a id="defaults"></a> Server Defaults for <%= vars.product_name %>
+## <a id="defaults"></a> Server Defaults for <%= vars.product_short %>
 
-The following table lists the <%= vars.product_name %> server defaults for all service plans.
+This section lists the server defaults for <%= vars.product_short %> service plans.
+Most of the server defaults are the same for all service plans. However,
+some server defaults differ depending on the service plan.
+
+For server defaults that are:
+
++ Common to all plans, see [Server Defaults for All Plans](#all) below.
++ Specific to single node and leader-follower plans,
+see [Server Defaults for Single Node and Leader-Follower Plans](#sn-l-f) below.
++ Specific to highly available (HA) cluster and <%= vars.single_leader_plan_lc %> plans,
+see [Server Defaults for Highly Available Cluster and <%= vars.single_leader_plan %> Plans](#ha) below.
+
+### <a id="all"></a> Server Defaults for All Plans
+
+The following table lists the <%= vars.product_short %> server defaults that are common
+to all service plans.
 
 <table>
     <th>Name</th>
-    <th width="275">Variable Name</th>
+    <th width="25%">Variable Name</th>
     <th>Default</th>
-    <th width="300">Notes</th>
+    <th width="45%">Notes</th>
     <tr>
         <td><strong>Max Allowed Packet</strong></td>
         <td><code>max-allowed-packet</code></td>
@@ -40,7 +55,7 @@ The following table lists the <%= vars.product_name %> server defaults for all s
         <td>ON</td>
         <td>
             This disables reverse DNS lookups, which improves performance.
-            <%= vars.product_name %> uses user credentials, not hostnames, to authenticate access.
+            <%= vars.product_short %> uses user credentials, not hostnames, to authenticate access.
             Therefore, most deployments do not need reverse DNS lookups.<br>
             To enable reverse name resolution, clear this option.
         </td>
@@ -50,7 +65,7 @@ The following table lists the <%= vars.product_name %> server defaults for all s
         <td><code>symbolic-links</code></td>
         <td>OFF</td>
         <td>
-            <%= vars.product_name %> is configured to prevent the use of symlinks to tables.
+            <%= vars.product_short %> is configured to prevent the use of symlinks to tables.
             This recommended security setting prevents users from manipulating
             files on the server’s file system. For more information, see
             <a href="https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html">
@@ -64,7 +79,7 @@ The following table lists the <%= vars.product_name %> server defaults for all s
         <td>
             This setting relaxes constraints on how MySQL writes stored procedures
             to the binary log. For more information, see the
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html">
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-binary-log.html#sysvar_log_bin_trust_function_creators">
                 MySQL documentation</a>.
         </td>
     </tr>
@@ -90,8 +105,8 @@ The following table lists the <%= vars.product_name %> server defaults for all s
         <td>
             When enabled on the <a href="./install-config.html#monitoring">
             MySQL Monitoring pane</a>,
-            logs are written as CSVs to <code>/var/vcap/sys/log/mysql/mysql-audit-log</code>
-            as well as a remote syslog drain if it is enabled.
+            logs are written as JSONs to
+            <code>/var/vcap/store/mysql_audit_logs/mysql_server_audit.log</code>.
         </td>
     </tr>
     <tr>
@@ -105,7 +120,7 @@ The following table lists the <%= vars.product_name %> server defaults for all s
         <td><strong>InnoDB Log Buffer Size</strong></td>
         <td><code>innodb-log-buffer-size</code></td>
         <td>32&nbsp;MB</td>
-        <td><%= vars.product_name %> defaults to 32&nbsp;MB to avoid excessive disk I/O when
+        <td><%= vars.product_short %> defaults to 32&nbsp;MB to avoid excessive disk I/O when
             issuing large transactions.</td>
     </tr>
     <tr>
@@ -126,10 +141,10 @@ The following table lists the <%= vars.product_name %> server defaults for all s
     </tr>
 </table>
 
-## <a id="sn-l-f"></a> Server Defaults for Single Node and Leader-Follower Plans
+### <a id="sn-l-f"></a> Server Defaults for Single Node and Leader-Follower Plans
 
-The following table lists the <%= vars.product_name %> server defaults for single node 
-and leader-follower service plans.
+In addition to the server defaults that are common to all plans, single node
+and leader-follower plans use the server defaults listed in the following table.
 
 <table>
     <th>Name</th>
@@ -148,7 +163,7 @@ and leader-follower service plans.
         <td><code>myisam-recover-options</code></td>
         <td>BACKUP, FORCE</td>
         <td>
-            This setting enables <%= vars.product_name %> to recover from most MyISAM problems
+            This setting enables <%= vars.product_short %> to recover from most MyISAM problems
             without human intervention. For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
@@ -159,7 +174,7 @@ and leader-follower service plans.
         <td><code>event-scheduler</code></td>
         <td>ON</td>
         <td>
-            <%= vars.product_name %> enables the event scheduler so users can create and use
+            <%= vars.product_short %> enables the event scheduler so users can create and use
             events in their dedicated service instances.
         </td>
     </tr>
@@ -167,21 +182,24 @@ and leader-follower service plans.
         <td><strong>InnoDB Log File Size</strong></td>
         <td><code>innodb-log-file-size</code></td>
         <td>256&nbsp;MB</td>
-        <td><%= vars.product_name %> clusters default to a log-file size of 256&nbsp;MB.</td>
+        <td><%= vars.product_short %> clusters default to a log-file size of 256&nbsp;MB.</td>
     </tr>
-     
+
     <tr>
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
-        <td><code>utf8-general-ci</code></td>
-        <td>You can override this during a session.</td>
+        <td><code>utf8_general_ci</code></td>
+        <td>You can override this during a session. For instructions about
+          viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+        MySQL documentation</a>.</td>
     </tr>
 </table>
 
 
-## <a id="ha"></a> Server Defaults for Highly Available Cluster Plans
+### <a id="ha"></a> Server Defaults for Highly Available Cluster and <%= vars.single_leader_plan %> Plans
 
-The following table lists the <%= vars.product_name %> server defaults for highly available cluster service plans.
+In addition to the server defaults that are common to all plans,
+HA cluster and <%= vars.single_leader_plan_lc %> plans use the server defaults listed in the following table.
 
 <table>
     <th>Name</th>
@@ -200,7 +218,7 @@ The following table lists the <%= vars.product_name %> server defaults for highl
         <td><code>myisam-recover-options</code></td>
         <td>OFF</td>
         <td>
-            This setting enables <%= vars.product_name %> to recover from most MyISAM problems
+            This setting enables <%= vars.product_short %> to recover from most MyISAM problems
             without human intervention. For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
@@ -211,7 +229,7 @@ The following table lists the <%= vars.product_name %> server defaults for highl
         <td><code>event-scheduler</code></td>
         <td>OFF</td>
         <td>
-            <%= vars.product_name %> enables the event scheduler so users can create and use
+            <%= vars.product_short %> enables the event scheduler so users can create and use
             events in their dedicated service instances.
         </td>
     </tr>
@@ -219,19 +237,21 @@ The following table lists the <%= vars.product_name %> server defaults for highl
         <td><strong>InnoDB Log File Size</strong></td>
         <td><code>innodb-log-file-size</code></td>
         <td>1024&nbsp;MB</td>
-        <td><%= vars.product_name %> clusters default to a log-file size of 256&nbsp;MB.</td>
+        <td><%= vars.product_short %> clusters default to a log-file size of 256&nbsp;MB.</td>
     </tr>
-     
+
     <tr>
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
-        <td><code>utf8-unicode-ci</code></td>
-        <td>You can override this during a session.</td>
+        <td><code>utf8_unicode_ci</code></td>
+        <td>You can override this during a session. For instructions about
+          viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+        MySQL documentation</a>.</td>
     </tr>
 </table>
 ## <a id="changes"></a>Changing MySQL Server Defaults
 
-You can set optional parameters to change the <%= vars.product_name %> server defaults to
+You can set optional parameters to change the <%= vars.product_short %> server defaults to
 accommodate apps with a read-heavy or write-heavy workload, or if you need to use
 lowercase table names.
 
@@ -240,11 +260,11 @@ The procedures in this section use the Cloud Foundry Command Line Interface
 You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html)
 to perform the same tasks using a graphical UI.
 
-For general information about using <%= vars.product_name %>, see [Using <%= vars.product_name %>](./use.html).
+For general information about using <%= vars.product_short %>, see [Using <%= vars.product_short %>](./use.html).
 
-### <a id="configuring"></a>Optional Parameters for the <%= vars.product_name %> Service Instances
+### <a id="configuring"></a>Optional Parameters for the <%= vars.product_short %> Service Instances
 
-<%= vars.product_name %> service instances are configured by default with industry best practices.
+<%= vars.product_short %> service instances are configured by default with industry best practices.
 For more specific use cases, you can customize the following parameters:
 
 <table>
@@ -275,18 +295,19 @@ For more specific use cases, you can customize the following parameters:
     <td><code>default-charset</code></td>
     <td>String</td>
     <td><code>utf8</code></td>
-    <td>You can set this to any MySQL 5.7 supported character set. See <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html">Character Sets and Collations in MySQL</a>.</td>
+    <td>You can set this to any MySQL 5.7 supported character set.
+      See <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html">Character Sets and Collations in MySQL</a>.</td>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
   <tr>
     <td><code>default-collation</code></td>
     <td>String</td>
-    <td><code>utf8-general-ci</code></td>
+    <td><code>utf8_general_ci</code></td>
     <td>The <code>default-collation</code> changes based on the <code>default-charset</code>.
       To set the <code>default-collation</code>, first set the <code>default-charset</code>.
-      For a list of available and default collations,
-      see
-      <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">Supported Character Sets and Collations</a>.</td>
+      For instructions about
+      viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+      MySQL documentation</a>.</td>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
   <tr>
@@ -355,7 +376,7 @@ If you get an error using optional parameters, see [Troubleshooting Instances](.
 
 ### <a id='workload'></a> About Workload Types
 
-<%= vars.product_name %> offers three workload profiles that developers can use to configure MySQL instances based on their
+<%= vars.product_short %> offers three workload profiles that developers can use to configure MySQL instances based on their
 specific app workloads. For instructions on changing configuration options, see [Use Optional Parameters](#parameters).
 
 <table class="nice">
@@ -399,7 +420,7 @@ If you are migrating a database from a system that was case insensitive,
 For more information, see the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
 
 ### <a id='synchronous-replication'></a>About Synchronous Replication
-In a leader-follower topology, <%= vars.product_name %> supports synchronous replication in addition
+In a leader-follower topology, <%= vars.product_short %> supports synchronous replication in addition
 to the default asynchronous replication. In sync replication, data does not get committed to the
 leader node until the follower acknowledges the commit and can replicate it.
 
@@ -422,6 +443,6 @@ the replication modes automatically reverts to asynchronous without any user int
 
 #### <a id='semi-sync'></a>MySQL Semi-Synchronous Replication
 
-In <%= vars.product_name %>, the replication is called sync, rather than semi-sync. This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync
+In <%= vars.product_short %>, the replication is called sync, rather than semi-sync. This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync
 replication, see [16.3.9 Semisynchronous Replication](https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html)
 in the MySQL documentation.
