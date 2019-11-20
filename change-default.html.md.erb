@@ -79,7 +79,7 @@ to all service plans.
         <td>
             This setting relaxes constraints on how MySQL writes stored procedures
             to the binary log. For more information, see the
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html">
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-binary-log.html#sysvar_log_bin_trust_function_creators">
                 MySQL documentation</a>.
         </td>
     </tr>
@@ -188,8 +188,10 @@ and leader-follower plans use the server defaults listed in the following table.
     <tr>
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
-        <td><code>utf8-general-ci</code></td>
-        <td>You can override this during a session.</td>
+        <td><code>utf8_general_ci</code></td>
+        <td>You can override this during a session. For instructions about
+          viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+        MySQL documentation</a>.</td>
     </tr>
 </table>
 
@@ -241,8 +243,10 @@ HA cluster plans use the server defaults listed in the following table.
     <tr>
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
-        <td><code>utf8-unicode-ci</code></td>
-        <td>You can override this during a session.</td>
+        <td><code>utf8_unicode_ci</code></td>
+        <td>You can override this during a session. For instructions about
+          viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+        MySQL documentation</a>.</td>
     </tr>
 </table>
 ## <a id="changes"></a>Changing MySQL Server Defaults
@@ -291,7 +295,8 @@ For more specific use cases, you can customize the following parameters:
     <td><code>default-charset</code></td>
     <td>String</td>
     <td><code>utf8</code></td>
-    <td>You can set this to any MySQL 5.7 supported character set. See <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html">Character Sets and Collations in MySQL</a>.</td>
+    <td>You can set this to any MySQL 5.7 supported character set.
+      See <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html">Character Sets and Collations in MySQL</a>.</td>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
   <tr>
@@ -300,9 +305,9 @@ For more specific use cases, you can customize the following parameters:
     <td><code>utf8_general_ci</code></td>
     <td>The <code>default-collation</code> changes based on the <code>default-charset</code>.
       To set the <code>default-collation</code>, first set the <code>default-charset</code>.
-      For a list of available and default collations,
-      see
-      <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">Supported Character Sets and Collations</a>.</td>
+      For instructions about
+      viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+      MySQL documentation</a>.</td>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
   <tr>
