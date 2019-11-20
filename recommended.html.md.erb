@@ -30,12 +30,21 @@ see [Setting Limits for On-Demand Service Instances](./set-quotas.html).
 
 ##<a id="azs"></a> Availability Using Multiple AZs
 
-<%= vars.product_name %> supports configuring multiple availability zones.
+<%= vars.product_full %> supports configuring multiple availability zones.
 For more information, see [About Availability Zones](./index.html#other-notes).
 
 ##<a id="downtime"></a> Downtime During Redeploys
 
-Redeploying <%= vars.product_name %> for configuration changes or upgrades will result in MySQL being inaccessible to apps for a brief period of time.
+By default, <%= vars.product_full %> does a rolling deploy during upgrades or when you apply
+configuration changes.
+For single node and leader-follower plans, this results in <%= vars.product_full %>
+being inaccessible to apps for a brief period of time.
+
+If you are using a HA cluster plan, you do not incur downtime when your service redeploys.
+You can mitigate downtime by using HA cluster plans.
+
+For more information about downtime in <%= vars.product_full %>,
+see [RPOs and RTOs](.//availability-options.html#rpo-and-rto).
 
 ##<a id="persistent"></a> Persistent Disk Usage
 
