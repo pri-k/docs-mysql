@@ -6,40 +6,60 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 This topic describes how to use the BOSH CLI to run service broker
-errands. Errands can manage service brokers and run mass operations on service
-instances created by brokers.
+errands.
+
+## <a id="overview"></a> Overview
+
+Errands can manage service brokers and run mass operations on service
+instances created by brokers. For instructions about running errands,
+see [Run an Errand](#errand) below.
+
+<%= vars.product_full %> supports the following errands:
+
++ [find-deprecated-bindings](#find-deprecated-bindings)
++ [smoke-tests](#smoke-tests)
++ [upgrade-all-service-instances](#upgrade-all-service-instances)
++ [register-broker](#register-broker)
++ [delete-all-service-instances-and-deregister-broker](#delete-all-service-instances-and-deregister-broker)
+
 
 ## <a id="errand"></a> Run an Errand
 
-Locate the BOSH deployment name for your MySQL service broker by entering the following
-command:
 
-```
-bosh deployments
-```
+To run an errand:
 
-To run an errand, enter the following command:
+1. View the BOSH deployment name for your MySQL service broker by running:
 
-```
-bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
-```
+    ```
+    bosh deployments
+    ```
 
-Where:
+1. Run an errand:
 
-+ `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-+ `ERRAND-NAME` is the name of the errand you want to run.
+    ```
+    bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
+    ```
 
-For example:
+    Where:
+    + `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
+    + `ERRAND-NAME` is the name of the errand you want to run.
 
-<pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
+    For example:
+
+    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
+
+
 
 ## <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
-The `find-deprecated-bindings` errand lists apps and service keys that are deprecated in <%= vars.platform_name %> v<%= vars.current_minor_version %> because they do not require TLS.
-Pivotal recommends that operators configure bindings to require TLS,
-in the MySQL tile **Security** pane > **TLS Options**.
-
+The `find-deprecated-bindings` errand lists app bindings and service keys that are deprecated in
+<%= vars.platform_name %> v<%= vars.current_minor_version %>.
+These bindings are deprecated because they do not require TLS.
 The errand exits whether or not a deprecated binding is found.
+
+Pivotal recommends that operators configure bindings to require TLS. For instructions about
+configuring TLS, see [Configure TLS](/install-config.html#security).
+
 
 See below example of the errand output:
 
@@ -73,19 +93,20 @@ Stdout     +---------------------------+--------------------------------------+-
 
 ## <a id="smoke-tests"></a>smoke-tests
 
-This errand performs a test to validate that the service broker has been installed
-and configured correctly and can perform the basic functions of creating and
-removing service instances. If this errand runs successfully, <%= vars.product_name %> is
+This errand validates that the service broker has been installed
+and configured correctly. It can also create and
+remove service instances.
+
+If this errand runs successfully, <%= vars.product_short %> is
 installed successfully.
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-## <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
+### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
-For more information, see [Upgrading <%= vars.product_name %>](upgrade.html#upgrade-instances).
-
+For more information, see [Upgrading <%= vars.product_short %>](upgrade.html#upgrade-instances).
 
 
 ## <a id="register-broker"></a>register-broker
@@ -96,10 +117,14 @@ For more information, see [Upgrading <%= vars.product_name %>](upgrade.html#upgr
 ## <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
 
 
-Ops Manager runs this errand only when deleting <%= vars.product_name %>. 
+Ops Manager runs this errand only when deleting <%= vars.product_short %>.
 Running this errand removes all service instances and their data.
 
-<p class="note warning"><strong>Warning:</strong> Use extreme caution when running this errand. You should only use it when you want to destroy all of the on-demand service instances and deregister the broker from Cloud Foundry.</p>
+<p class="note warning"><strong>Warning:</strong> Pivotal recommends using extreme caution
+  when running this errand.
+  You should only use it when you want to destroy all of the on-demand service instances and
+  deregister the broker from <%= vars.platform_name %>.
+</p>
 
 This errand does the following:
 
@@ -113,4 +138,4 @@ access to ensure that new instances cannot be provisioned during the lifetime of
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
 In this case, Pivotal recommends running the errand again.
-1. Deregisters the broker from Cloud Foundry.
+1. Deregisters the broker from <%= vars.platform_name %>.
