@@ -35,8 +35,17 @@ For more information, see [About Availability Zones](./index.html#other-notes).
 
 ##<a id="downtime"></a> Downtime During Redeploys
 
-Redeploying MySQL for PCF for configuration changes or upgrades will result in MySQL being inaccessible to apps for a brief period of time.
+<%= vars.product_full %> redeploys service instances during upgrades or when you apply configuration
+changes.
+For single node and leader-follower plans, this results in <%= vars.product_full %>
+being inaccessible to apps for a brief period of time.
 
+If you are using a HA cluster plan, <%= vars.product_full %> uses rolling redeploys
+and your service does not incur downtime.
+You can mitigate downtime by using HA cluster plans.
+
+For more information about downtime in <%= vars.product_full %>,
+see [RPOs and RTOs](.//availability-options.html#rpo-and-rto).
 ##<a id="persistent"></a> Persistent Disk Usage
 
 The persistent disk receives, temporarily stores and encrypts MySQL backups.
