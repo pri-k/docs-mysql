@@ -29,7 +29,10 @@ origin:"p.mysql" eventType:ValueMetric timestamp:1496776477930669688 deployment:
 ## <a id="access"></a>Access MySQL Metrics
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-  <%= partial vars.path_to_partials + '/services/log-cache-cli-plugin' %>
+  <%= partial vars.path_to_partials + '/services/log-cache-cli-plugin',
+  :locals => {:service_name => vars.service_name, :platform_name => vars.platform_name} %>
+
+
 
 ## <a id="kpi"></a>KPIs for MySQL Service Instances
 
