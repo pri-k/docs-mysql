@@ -16,7 +16,7 @@ For the older, pre-provisioned service, see the v1.10 <a href="http://docs.pivot
 MySQL for PCF enables PCF app developers to provision and use a MySQL database with a
 single command.
 
-The MySQL for PCF product delivers dedicated instances on demand — "Database as a Service" — to PCF users. 
+The MySQL for PCF product delivers dedicated instances on demand — "Database as a Service" — to PCF users.
 When installed, the tile deploys and maintains a single Service Broker that is responsible for PCF integration.
 The service is configured with sane defaults, following the principle of least surprise for a general-use relational database service.
 
@@ -32,7 +32,7 @@ This table summarizes the main differences between the two:
   <col style="width:10%">
   <col style="width:28%">
   <col style="width:29%">
-  <col style="width:18%">  
+  <col style="width:18%">
    <th></th>
    <th>Available Since</th>
    <th>VMs it Runs On</th>
@@ -92,7 +92,51 @@ The following table provides version and version-support information about MySQL
 
 ##<a id="other-services"></a> MySQL for PCF and Other PCF Services
 
-<%= partial '../../p-mysql/partials/services/on-demand-service-table' %> 
+As well as MySQL for PCF, other Pivotal Cloud Foundry services offer *on-demand* service plans.
+These plans let developers provision service instances when they want.
+
+These contrast with the older *pre-provisioned* service plans,
+which require operators to provision the service instances during installation
+and configuration through the service tile UI.
+
+The following table lists which PCF services offer on-demand
+and pre-provisioned service plans:
+
+<table class="nice">
+  <tr>
+    <th width="20%">PCF service tile</th>
+    <th width="20%">Standalone product related to the service</th>
+    <th width="20%">Supports on-demand</th>
+    <th width="40%">Supports pre-provisioned</th>
+  </tr>
+  <tr>
+    <td>RabbitMQ for PCF</td>
+    <td>Pivotal RabbitMQ</td>
+    <td>Yes</td>
+    <td>Yes. Only recommended for test environments.</td>
+  </tr>
+  <tr>
+    <td>Redis for PCF</td>
+    <td>Redis</td>
+    <td>Yes</td>
+    <td>Yes (shared-VM plan). Only recommended for test environments.</td>
+  </tr>
+  <tr>
+    <td>MySQL for PCF</td>
+    <td>MySQL </td>
+    <td>Yes<br></td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>Pivotal Cloud Cache (PCC)</td>
+    <td>Pivotal GemFire</td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+</table>
+<br>
+For services that offer both on-demand and pre-provisioned plans, you can choose the
+plan you want to use when configuring the tile.
 
 ##<a id="feedback"></a> Feedback
 
