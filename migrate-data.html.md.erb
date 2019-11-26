@@ -45,9 +45,9 @@ in <%= vars.product_short %>](./about-migrate.html).
   * a <%= vars.product_old %> v1 service instance
   * a <%= vars.product_full %> v2 service instance
   * a non-Pivotal MySQL database
-* <%= vars.product_full %> v2 installed in the destination <%= vars.platform_name %> environment 
+* <%= vars.product_short %> v2 installed in the destination <%= vars.platform_name %> environment
 you want to migrate to.
-* A <%= vars.product_full %> service plan available in the destination org and space you want
+* A <%= vars.product_short %> service plan available in the destination org and space you want
   to migrate your data to. 
   This service plan must fulfill the requirements in [Resource Planning](#sizing) below. 
   Talk to your operator to determine which service plan is appropriate.
@@ -55,12 +55,12 @@ you want to migrate to.
 
 ### <a id='sizing'></a>Resource Planning
 
-You must ensure that the <%= vars.product_full %> v2 service plan for your
+You must ensure that the <%= vars.product_short %> v2 service plan for your
 destination service instance has your preferred VM type and persistent disk size.
 If the plan does not enough space on disk to store the data, migration fails.
 
 <p class="note"><strong>Note:</strong> To view available service plans, run <code>cf marketplace</code>.
-<%= vars.product_full %> v2 appears as <code>p.mysql</code> 
+<%= vars.product_short %> v2 appears as <code>p.mysql</code>
 and <%= vars.product_old %> v1 appears as <code>p-mysql</code>.</p>
 
 When choosing a service plan for your destination service instance, if you select: 
@@ -149,7 +149,7 @@ These values usually include:
   - `port`: The port number for the database. This number is usually `3306`.
   - `uri`: The query string for database access.
   
-    If your off-platform database is a <%= vars.product_full %> service instance, these values are in your 
+    If your off-platform database is a <%= vars.product_short %> service instance, these values are in your
     `VCAP_SERVICES` environment variable credentials hash. For more information, 
     see [MySQL Environment Variables](./use.html#vcap).
 1. Create a Cloud Foundry user-provided service instance that can access the off-platform database:
@@ -224,7 +224,7 @@ To stop and unbind your apps:
         ```
         Where:
         * `APP` is the name of your app.
-        * `SOURCE-INSTANCE` is the name of your source <%= vars.product_full %> service instance.
+        * `SOURCE-INSTANCE` is the name of your source <%= vars.product_short %> service instance.
 
 1. Do the procedure in [Migrate Data to Destination Instance](#command) below.
 
@@ -235,12 +235,12 @@ To migrate data from your source database to your destination service instance:
 1. Log in to your <%= vars.platform_name %> deployment and target the destination org and space by doing
 steps 1 and 2 of [Stop and Unbind Apps](#stop-unbind) above. 
 
-1. View and select an available <%= vars.product_full %> v2 service plans by running:
+1. View and select an available <%= vars.product_short %> v2 service plans by running:
 
     ```
     cf marketplace
     ```
-    <%= vars.product_full %> v2 service plans are under  `p.mysql`.
+    <%= vars.product_short %> v2 service plans are under  `p.mysql`.
 
 1. Migrate your data by running:
 
@@ -274,14 +274,14 @@ steps 1 and 2 of [Stop and Unbind Apps](#stop-unbind) above.
 ## <a id='validate-data'></a>Validate Data
 
 After migrating your data, you must verify that the data was successfully migrated by validating the data 
-in the new <%= vars.product_full %> v2.x service instance.
+in the new <%= vars.product_short %> v2.x service instance.
 
 You can validate the data by creating an SSH tunnel to gain direct command line access to the 
-new <%= vars.product_full %> v2.x service instance.
+new <%= vars.product_short %> v2.x service instance.
 
 To create an SSH tunnel to the instance and validate your data:
 
-1. Create an SSH tunnel to your <%= vars.product_full %> v2.x service instance by doing the following procedures in 
+1. Create an SSH tunnel to your <%= vars.product_short %> v2.x service instance by doing the following procedures in
 [Accessing Services with SSH](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html):
 
     1. [Push Your Host App](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#push-app)
@@ -293,7 +293,7 @@ To create an SSH tunnel to the instance and validate your data:
     1. [Access Your Service Instance](https://docs.pivotal.io/pivotalcf/devguide/deploy-apps/ssh-services.html#access-service)
 
 1. From the MySQL shell, validate that the data that you expect to see has been imported 
-into the <%= vars.product_full %> v2.x service instance.
+into the <%= vars.product_short %> v2.x service instance.
 
 1. Exit the MySQL shell and kill the SSH tunnel.
 
@@ -313,7 +313,7 @@ To rebind and re-stage your apps and delete the source database instance:
     
     Where:
     * `APP` is the name of your app.
-    * `V2-INSTANCE` is the name of your <%= vars.product_full %> v2.x service instance.
+    * `V2-INSTANCE` is the name of your <%= vars.product_short %> v2.x service instance.
 
     For example:
     <pre class="terminal">$ cf bind-service my-app my-v2-instance 
@@ -326,7 +326,7 @@ To rebind and re-stage your apps and delete the source database instance:
     ```
     cf restage APP 
     ```  
-    The app is now using your new <%= vars.product_full %> v2.x service instance and should be operational again.
+    The app is now using your new <%= vars.product_short %> v2.x service instance and should be operational again.
     
 1. (Optional) Delete your source database. If your source database is deployed on <%= vars.platform_name %>, 
     delete the old database instance by running in your source space and org:
@@ -334,4 +334,4 @@ To rebind and re-stage your apps and delete the source database instance:
     ```
     cf delete-service SOURCE-INSTANCE
     ```
-    Where `SOURCE-INSTANCE` is the name of your source <%= vars.product_full %> service instance.
+    Where `SOURCE-INSTANCE` is the name of your source <%= vars.product_short %> service instance.
