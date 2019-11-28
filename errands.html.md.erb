@@ -11,27 +11,27 @@ instances created by brokers.
 
 ## <a id="errand"></a> Run an Errand
 
-Locate the BOSH deployment name for your MySQL service broker by entering the following
-command:
+To run an errand:
 
-```
-bosh deployments
-```
+1. Locate the BOSH deployment name for your MySQL service broker by running:
 
-To run an errand, enter the following command:
+    ```
+    bosh deployments
+    ```
 
-```
-bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
-```
+1. Run an errand by running:
 
-Where:
+    ```
+    bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
+    ```
 
-+ `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-+ `ERRAND-NAME` is the name of the errand you want to run.
+    Where:
+    * `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
+    * `ERRAND-NAME` is the name of the errand you want to run.
 
-For example:
 
-<pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
+    For example:
+    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
 
 ## <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
