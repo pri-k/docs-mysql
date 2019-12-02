@@ -19,7 +19,9 @@ The three topologies offered in MySQL for PCF v2.5 are as follows:
   to the follower.
   For more information, see [About Leader-Follower](./about-leader-follower.html).
 
-+ Highly available (HA) cluster—This three-VM plus jumpbox cluster uses a patched Galera Cluster, Percona XtraDB Cluster (PXC) to provide the greatest availability of the three topologies. For more information, see [About Highly Available Clusters](./about-ha.html).
++ Highly available (HA) cluster—This three-VM plus jumpbox cluster uses a patched Galera cluster,
+Percona XtraDB Cluster (PXC), to provide the greatest availability of the three topologies.
+For more information, see [About Highly Available Clusters](./about-ha.html).
 
     <%= partial "../../p-mysql/partials/mysql/galera_beta" %>
 
@@ -68,7 +70,7 @@ which one is best for your developers.
   <tr><td>Highly available cluster</td><td>three and a jumpbox VM</td>
       <td>
           <ul>
-            <li>Tightest RPO and RTO.<br>
+            <li>Tightest RPO and RTO for downtime, including downtime for upgrades.<br>
                 See <a href="#rpo-and-rto">RPOs and RTOs</a> below.</li>
           </ul>
        </td>
