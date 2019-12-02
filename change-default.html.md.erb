@@ -143,13 +143,14 @@ to all service plans.
         <td><strong>Relay Log Recovery</strong></td>
         <td><code>relay-log-recovery</code></td>
         <td><code>OFF</code></td>
-        <td> This setting turns off clearing relay logs at server startup.
+        <td> This setting turns off clearing relay logs at server restart.
 
           When enabled, relay log recovery happens automatically after server startup.
           For more information, see the
         <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
     </tr>
-    <%# Is the above always set to OFF or does it get set to OFF only at server restart? %>
+    <%# Is the above always set to OFF or does it get set to OFF only at server restart/startup? %>
+    <%# Does server startup and server restart mean the the same thing here? %>
     <%# What versions of MySQL does this apply to? %>
     <%# Is this setting the same for all plans? %>
 </table>
