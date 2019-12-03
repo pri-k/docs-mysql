@@ -26,20 +26,20 @@ Docs for MySQL for [Pivotal Platform](https://network.pivotal.io/products/pivota
 
 ## Partials
 
-Cross-product partials for **<%= vars.product_name %>** are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-partials) repo.
+Cross-product partials for **MySQL for Pivotal PLatform** are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-partials) repo.
 
 Previously, these partials were sourced from the v018.x branch of the [On Demand Service Broker SDK](https://github.com/pivotal-cf/docs-on-demand-service-broker/tree/v0.18.x) content repo.
 
 ## Style Guide
 
-This is a word list for terminology and word usage specific to the <%= vars.product_name %> docs.
+This is a word list for terminology and word usage specific to the MySQL for Pivotal Platform docs.
 
 | Word | Explanation |
 |------|-------------|
 | CA certificate | A primary(?) certificate that is signed by a certificate authority. |
 | certificate | generic word, there are TLS certificates, internal certificates, CA certificates |
 | highly available cluster | No need to capitalize. Don't mix with "high availability cluster" or Galera. Galeria happens to be the technology right now, but highly available cluster is the topology. You can abbreviate to HA cluster after spelling out on first use. Don't use "HAC". |
-| internal certificate | These are certificates managed by <%= vars.product_name %>. There are many of these. They get rotated with upgrades. |
+| internal certificate | These are certificates managed by MySQL for Pivotal Platform. There are many of these. They get rotated with upgrades. |
 | leader-follower | It seems that we always hyphenate it. But we don't capitalize it. |
 | MySQL database cluster node | Only applies to Galera clusters. Spell out like this at first use, then opt for "node" on the rest of the page. |
 | node | See above. The old proxy page used: MySQL node, server node, MySQL servers, cluster back-ends, Backend database cluster node, database node VM, proxy instance, proxy. But, only two things are referred to here, nodes and proxies. |
