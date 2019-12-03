@@ -25,7 +25,6 @@ see [Run an Errand](#errand) below.
 
 ## <a id="errand"></a> Run an Errand
 
-
 To run an errand:
 
 1. View the BOSH deployment name for your MySQL service broker by running:
@@ -48,8 +47,6 @@ To run an errand:
 
     <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
 
-
-
 ## <a id="find-deprecated-bindings"></a>find-deprecated-bindings
 
 The `find-deprecated-bindings` errand lists app bindings and service keys that are deprecated in
@@ -60,35 +57,44 @@ The errand exits whether or not a deprecated binding is found.
 Pivotal recommends that operators configure bindings to require TLS. For instructions about
 configuring TLS, see [Configure TLS](./install-config.html#security).
 
+To run the `find-deprecated-bindings` errand:
 
-See below example of the errand output:
+1. Run the errand by running:
 
-<pre class="terminal">
-$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings
-Using environment '10.0.0.5' as client 'ops_manager'
+    ```
+    bosh -d pivotal-mysql-GUID run-errand find-deprecated-bindings
+    ```
 
-Using deployment 'pivotal-mysql-e3ddd36247fe5b923caf'
+    Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
 
-Task 148
+    For example:
 
-Task 148 | 02:42:08 | Preparing deployment: Preparing deployment (00:00:01)
-Task 148 | 02:42:09 | Running errand: dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0) (00:00:03)
-Task 148 | 02:42:12 | Fetching logs for dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0): Finding and packing log files (00:00:01)
+    <pre class="terminal">
+    $ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings
+    Using environment '10.0.0.5' as client 'ops_manager'
 
-Task 148 Started Tue Dec 18 02:42:08 UTC 2018
-Task 148 Finished Tue Dec 18 02:42:13 UTC 2018
-Task 148 Duration 00:00:05
-Task 148 done
+    Using deployment 'pivotal-mysql-e3ddd36247fe5b923caf'
 
-Instance   dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb
-Exit Code  0
-Stdout     +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-           |          SERVICE          |             SERVICE GUI             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
-           +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-           | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no tls                      |
-           | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no tls
-           +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-</pre>
+    Task 148
+
+    Task 148 | 02:42:08 | Preparing deployment: Preparing deployment (00:00:01)
+    Task 148 | 02:42:09 | Running errand: dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0) (00:00:03)
+    Task 148 | 02:42:12 | Fetching logs for dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0): Finding and packing log files (00:00:01)
+
+    Task 148 Started Tue Dec 18 02:42:08 UTC 2018
+    Task 148 Finished Tue Dec 18 02:42:13 UTC 2018
+    Task 148 Duration 00:00:05
+    Task 148 done
+
+    Instance   dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb
+    Exit Code  0
+    Stdout     +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+               |          SERVICE          |             SERVICE GUI             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
+               +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+               | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no tls                      |
+               | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no tls
+               +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
+    </pre>
 
 
 ## <a id="smoke-tests"></a>smoke-tests
@@ -99,6 +105,14 @@ remove service instances.
 
 If this errand runs successfully, <%= vars.product_short %> is
 installed successfully.
+
+<%# ADD RUNNING THE ERRAND. GET OUTPUT OF ERRAND FROM MYSQL TEAM %>
+
+See the below example of the errand output:
+
+<pre class="terminal">
+
+</pre>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
