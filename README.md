@@ -46,7 +46,10 @@ This is a word list for terminology and word usage specific to the <%= vars.prod
 | proxy | Use proxy consistently instead of alternating between "proxy instance" and "proxy". |
 | TLS certificates | Certificates needed if you use TLS; there are two or three of these. One is the TLS CA certificate. |
 | TLS CA certificate | The CA certificated used for TLS. You can add your own or use the one that Pivotal Ops Manager provides. |
-
+|Multi-Site Replication| This is the name of the feature and plan in the UI in v2.7.2 and later|
+|multi-site replication service key| When refering to a service key that is only used for nodes in different foundations or data centers to communicate, use this term at least on first use. If you are refering to a "normal" service key, like one that is used for TLS, just use `service key`|
+|decoupled leader-follower service instance| This refers to a leader-follower service that is across foundations or data centers and is manually created by a developer. The Multi-Site Replication plan enables you to create this service. Only use this term if you need to differenate between the Multi-Site Replication plan and the "normal" leader follower plan.|
+|coupled leader-follower service instance| This refers to a leader-follower service that is in the same foundation. The leeader-follower plan enables you to create this service. Only use this term if you need to differenate between the Multi-Site Replication plan and the "normal" leader follower plan.|
 
 
 
