@@ -20,11 +20,11 @@ In <%= vars.product_name %> v2.7 and later, you can configure replication betwee
 across multiple foundations or data centers to create a leader-follower topology.
 
 In a <%= vars.single_leader_plan_lc %> context, the two <%= vars.single_leader_plan %> service instances are
-referred to as a loosely coupled leader-follower service instance.
+referred to as a decoupled leader-follower service instance.
 
-<p class="note"><strong>Note:</strong> A loosely coupled leader-follower service instance deployed across multiple
-  foundations or data centers is different from the tightly coupled leader-follower plan that <%= vars.product_name %> offers.
-  For information about the tightly coupled leader-follower plan,
+<p class="note"><strong>Note:</strong> A decoupled leader-follower service instance deployed across multiple
+  foundations or data centers is different from the coupled leader-follower plan that <%= vars.product_name %> offers.
+  For information about the coupled leader-follower plan,
   see <a href="./about-leader-follower.html">About Leader-Follower</a>.
 </p>
 
@@ -44,7 +44,7 @@ To set up a leader-follower service instance of <%= vars.product_name %> across 
 
 1. Check the service availability in the Marketplace to see if there is an existing instance of <%= vars.product_name %> in your space.
 See [Confirm the <%= vars.product_name %> Service Availability](use.html#marketplace).
-1. Create <%= vars.single_leader_plan %> service instances to configure a loosely coupled multi-site leader-follower service instance.
+1. Create <%= vars.single_leader_plan %> service instances to configure a decoupled multi-site leader-follower service instance.
 See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
 1. Establish a connection between the <%= vars.single_leader_plan %> service instances to enable replication.
 See [Configure <%= vars.single_leader_plan %>](#create-service-key), below.
