@@ -116,7 +116,7 @@ See the below example of the errand output:
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
+## <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
@@ -143,11 +143,11 @@ This errand:
 1. Disables service access to the service offering for all orgs and spaces. The errand disables service
 access to ensure that new instances cannot be provisioned during the lifetime of the errand.
 1. Unbinds all apps from the service instances.
-1. Deletes all service instances sequentially. Each service instance deletion includes:
-  1. Running any pre-delete errands.
-  1. Deleting the BOSH deployment of the service instance.
-  1. Checking for instance deletion failure, which results in the errand failing immediately.
+1. For each instance, the errand does the following:
+  1. Runs any pre-delete errands.
+  1. Deletes the BOSH deployment of the service instance.
+  1. Checks for instance deletion failure, which results in the errand failing immediately.
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
 In this case, Pivotal recommends running the errand again.
-1. Deregisters the broker from <%= vars.platform_name %>.
+1. Deregisters the broker from Cloud Controller.
