@@ -139,6 +139,14 @@ to all service plans.
         <td><code>utf8</code></td>
         <td>Defaults all character sets. You can override this during a session.</td>
     </tr>
+    <tr>
+        <td><strong>Relay Log Recovery</strong></td>
+        <td><code>relay-log-recovery</code></td>
+        <td><code>ON</code></td>
+        <td> When enabled, relay log recovery happens automatically after server startup.
+          For more information, see the
+        <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
+    </tr>
 </table>
 
 ### <a id="sn-l-f"></a> Server Defaults for Single Node and Leader-Follower Plans
