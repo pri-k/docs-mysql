@@ -38,18 +38,18 @@ This is a word list for terminology and word usage specific to the MySQL for Piv
 |------|-------------|
 | CA certificate | A primary(?) certificate that is signed by a certificate authority. |
 | certificate | generic word, there are TLS certificates, internal certificates, CA certificates |
-| highly available cluster | No need to capitalize. Don't mix with "high availability cluster" or Galera. Galeria happens to be the technology right now, but highly available cluster is the topology. You can abbreviate to HA cluster after spelling out on first use. Don't use "HAC". |
+| highly available cluster | No need to capitalize. Don't mix with "high availability cluster" or Galera. Galera happens to be the technology right now, but highly available cluster is the topology. You can abbreviate to HA cluster after spelling out on first use. Don't use "HAC". |
 | internal certificate | These are certificates managed by MySQL for Pivotal Platform. There are many of these. They get rotated with upgrades. |
 | leader-follower | It seems that we always hyphenate it. But we don't capitalize it. |
 | MySQL database cluster node | Only applies to Galera clusters. Spell out like this at first use, then opt for "node" on the rest of the page. |
-| node | See above. The old proxy page used: MySQL node, server node, MySQL servers, cluster back-ends, Backend database cluster node, database node VM, proxy instance, proxy. But, only two things are referred to here, nodes and proxies. |
+| node | See above. The old proxy page used: MySQL node, server node, MySQL servers, cluster back-ends, back-end database cluster node, database node VM, proxy instance, proxy. But, only two things are referred to here, nodes and proxies. |
 | proxy | Use proxy consistently instead of alternating between "proxy instance" and "proxy". |
 | TLS certificates | Certificates needed if you use TLS; there are two or three of these. One is the TLS CA certificate. |
 | TLS CA certificate | The CA certificated used for TLS. You can add your own or use the one that Pivotal Ops Manager provides. |
 |Multi-Site Replication| This is the name of the feature and plan in the UI in v2.7.2 and later|
-|multi-site replication service key| When refering to a service key that is only used for nodes in different foundations or data centers to communicate, use this term at least on first use. If you are refering to a "normal" service key, like one that is used for TLS, just use `service key`|
-|decoupled leader-follower service instance| This refers to a leader-follower service that is across foundations or data centers and is manually created by a developer. The Multi-Site Replication plan enables you to create this service. Only use this term if you need to differenate between the Multi-Site Replication plan and the "normal" leader follower plan.|
-|coupled leader-follower service instance| This refers to a leader-follower service that is in the same foundation. The leeader-follower plan enables you to create this service. Only use this term if you need to differenate between the Multi-Site Replication plan and the "normal" leader follower plan.|
+|multi-site replication service key| When referring to a service key that is only used for nodes in different foundations or data centers to communicate, use this term at least on first use. If you are referring to a "normal" service key, like one that is used for TLS, just use `service key`|
+|decoupled leader-follower service instance| This refers to a leader-follower service that is across foundations or data centers and is manually created by a developer. The Multi-Site Replication plan enables you to create this service. Only use this term if you need to differentiate between the Multi-Site Replication plan and the "normal" leader-follower plan.|
+|coupled leader-follower service instance| This refers to a leader-follower service that is in the same foundation. The leader-follower plan enables you to create this service. Only use this term if you need to differentiate between the Multi-Site Replication plan and the "normal" leader-follower plan.|
 
 
 
