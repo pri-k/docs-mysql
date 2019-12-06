@@ -3,7 +3,12 @@ title: About Leader-Follower
 owner: MySQL
 ---
 
-<%= partial "../../p-mysql/partials/services/deprecation-notice-eogs" %>
+<p class="note warning"><strong>Warning:</strong> <%= vars.first_product_name %> 
+	v<%= product_info['local_product_version'] %> is no longer supported 
+because it has reached the End of General Support (EOGS) phase.
+To stay up to date with the latest software and security updates,
+upgrade to a supported version.
+</p>
 
 This topic describes how the leader-follower topology works in MySQL for Pivotal Cloud Foundry (PCF)
 and contains information to help users decide whether to enable or use leader-follower.
