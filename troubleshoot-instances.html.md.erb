@@ -34,7 +34,7 @@ information about troubleshooting inoperable apps, see [Apps are Inoperable](#di
 ### <a id="disk-full"></a>Apps are Inoperable
 
 If your apps become inoperable, your persistent disk might be full. In this state, read,
-write, and Cloud Foundry Command-Line Interface (cf CLI) opertations do not work.
+write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.
 
 Contact your operator to check if your persistent disk is full.
 For more information about troubleshooting this problem, see
@@ -50,11 +50,55 @@ You might see an error when using the Cloud Foundry Command-Line Interface (cf C
 * `cf unbind`
 * `cf delete`
 
-
-
 ### <a id="parse-error"></a>Understand a Cloud Foundry (CF) Error Message
 
-<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
+<p>
+  Failed operations (create, update, bind, unbind, delete) result in an error message.
+  You can retrieve the error message later by running the cf CLI command <code>cf service INSTANCE-NAME</code>.
+</p>
+
+<pre class="terminal">
+$ cf service myservice
+
+Service instance: myservice
+Service: super-db
+Bound apps:
+Tags:
+Plan: dedicated-vm
+Description: Dedicated Instance
+Documentation url:
+Dashboard:
+
+Last Operation
+Status: create failed
+Message: Instance provisioning failed: There was a problem completing your request.
+     Please contact your operations team providing the following information:
+     service: redis-acceptance,
+     service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089,
+     broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac,
+     task-id: 442,
+     operation: create
+Started: 2017-03-13T10:16:55Z
+Updated: 2017-03-13T10:17:58Z
+</pre>
+
+<p>
+  Use the information in the <code>Message</code> field to debug further.
+  Provide this information to Pivotal Support when filing a ticket.
+</p>
+
+<p>
+  The <code>task-id</code> field maps to the BOSH task ID.
+  For more information on a failed BOSH task, use the <code>bosh task TASK-ID</code>.
+</p>
+
+<p>
+  The <code>broker-request-guid</code> maps to the portion of the On-Demand Broker log
+  containing the failed step.
+  Access the broker log through your syslog aggregator, or access BOSH logs for
+  the broker by typing <code>bosh logs broker 0</code>.
+  If you have more than one broker instance, repeat this process for each instance.
+</p>
 
 ### <a id="instance"></a> Find Information about Your Service Instance
 
@@ -84,22 +128,39 @@ The service instances are listed in the `name` column.
 
 ### <a id='credential-setting-failure'></a>Error: Failed to Set Credentials in Credential Store
 
+<p>
+  If you encounter:
+</p>
 
+<pre class="terminal">
+error: failed to set credentials in credential store:
+The request includes an unrecognized parameter 'mode'.
+Please update or remove this parameter and retry your request.
+</pre>
 
-<%= partial '../../p-mysql/partials/services-tshoot/tshoot-credhub-failing-credentials' %>
+<p>
+  after upgrading from <%= vars.platform_name %> 2.3 to 2.4, it is likely because one or more installed on-demand brokers
+  were not restarted during the upgrade. To clear the cached server version and enable
+  your on-demand brokers to communicate with CredHub v2, do the procedure in
+  <a href="https://docs.pivotal.io/pivotalcf/2-4/customizing/upgrading-pcf.html#bosh-restart">Run BOSH Restart on Your On-Demand Service Brokers</a>.
+</p>
 
 ## <a id="kb"></a>Use the Knowledge Base (Community)
-
-
 
 <p>
   Find the answer to your question and browse product discussions and solutions by
   searching the <a href="https://community.pivotal.io/s/">Pivotal Knowledge Base</a>.
 </p>
 
-
 ## <a id="support"></a>File a Support Ticket
 
+<p>
+  You can file a support ticket <a href="https://support.pivotal.io/">here</a>.
+  Be sure to provide the error message from <code>cf service YOUR-SERVICE-INSTANCE</code>.
+</p>
 
-
-<%= partial '../../p-mysql/partials/services-tshoot/tshoot-support-dev' %>
+<p>
+  To expedite troubleshooting, if possible, provide your service broker logs,
+  service instance logs, and BOSH task output.
+  Your cloud operator should be able to obtain these from your error message.
+</p>
