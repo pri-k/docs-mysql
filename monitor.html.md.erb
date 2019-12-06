@@ -92,8 +92,8 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
    <tr>
       <th>Recommended alert thresholds</th>
-      <td><strong>Yellow warning</strong>: > 40% <br><br>
-      <strong>Red critical</strong>: > 45%</td>
+      <td><strong>Yellow warning</strong>: &gt; 40% <br>
+      <strong>Red critical</strong>: &gt; 45%</td>
    </tr>
    <tr>
       <th>Recommended response</th>
@@ -158,8 +158,8 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
    <tr>
       <th>Recommended alert thresholds</th>
-      <strong>Yellow warning</strong>: > 80</td>
-      <strong>Red critical</strong>: > 90</td>
+      <td><strong>Yellow warning</strong>: &gt; 80<br>
+      <strong>Red critical</strong>: &gt; 90</td>
    </tr>
    <tr>
       <th>Recommended response</th>
@@ -187,13 +187,15 @@ For a list of all MySQL for PCF component metrics, see [All MySQL Metrics](#mysq
    </tr>
    <tr>
       <th>Recommended alert thresholds</th>
-      <strong>Red critical</strong>: 0</td>
+      <td>
+        <strong>Red critical</strong>: 0</td>
    </tr>
    <tr>
       <th>Recommended response</th>
       <td>Investigate the MySQL server logs, such as the audit log, to understand why query rate changed and determine appropriate action.</td>
    </tr>
 </table>
+
 ### <a id="bosh"></a> BOSH System Health Metrics
 
 The BOSH layer that underlies <%= vars.product_name %> generates `healthmonitor` metrics for all VMs in the deployment.
