@@ -131,11 +131,11 @@ cause of failure easier.
 
 This release fixes the following issues:
 
-* The `mysqldump --all-databases` step no longer fails during maunal backups.
+* The `mysqldump --all-databases` step no longer fails during manual backups.
 For more information, see [Manual Backup](http://docs.pivotal.io/p-mysql/2-3/backup-and-restore.html#manual-backup).
 * Smoke tests no longer fail if Service Plan Access is set to manual.
 * `find-non-tls-bindings` BOSH errands no longer fail when the Secure Service Bindings feature is
-disabled and Credhub is enabled on the deployment.
+disabled and CredHub is enabled on the deployment.
 * The `mysql-restore` command now completely cleans up pre-existing MySQL users with column or
 table level privileges in the database.
 
