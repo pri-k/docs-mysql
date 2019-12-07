@@ -219,7 +219,7 @@ retries in the case of DNS timeouts.</p>
 
 * The leader-follower failover process no longer requires developers to rebind their apps to the service instance.
 
-To take advantage of the BOSH DNS improvments, you must do the following:
+To take advantage of the BOSH DNS improvements, you must do the following:
 
 1. Upgrade the MySQL instances, see <a href="./upgrade.html#upgrade-instances">Upgrade MySQL Instances</a>.
 
@@ -269,8 +269,7 @@ This release fixes the following issues:
 
 * Placement of service instance VMs is now randomized across all selected AZs for its plan,
 reducing the magnitude of an outage caused by an AZ failure.
-* The `find-non-tls-bindings` BOSH errand on the service broker still works when the i
-nstalled PCF version has Credhub, but secure service credentials is not enabled.
+* The `find-non-tls-bindings` BOSH errand on the service broker still works when the installed PCF version has CredHub, but secure service credentials is not enabled.
 * If the `find-non-tls-bindings` errand fails, the operator sees better messaging for the cause of the error.
 * Smoke tests no longer fail on an initial install of the tile when Service Plan Access is set to Manual.
 
