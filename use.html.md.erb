@@ -296,7 +296,8 @@ See [Change Default Parameters on an Existing Service Instance](./change-default
 
 
 <p class="note warning"><strong>Warning:</strong> You cannot use <code>cf update-service</code> to migrate data between a HA cluster plan and a plan of another topology.
-If you want to do this, you must use the <code>cf mysql-tools</code> plugin instead. For more information about migrating data, see <a href="./migrate-data.html">Migrating Data in <%= vars.product_name %></a>.
+If you want to do this, you must use the <code>cf mysql-tools</code> plugin instead.
+For more information about migrating data, see <a href="./about-migrate.html">About Data Migration in <%= vars.product_full %></a>.
 </p>
 
 When you update a service instance, you do not need to rebind your app or service keys. However, while the data is being migrated to the new service instance,
