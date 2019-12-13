@@ -2,14 +2,15 @@
 title: Upgrading MySQL for PCF
 owner: MySQL
 ---
-<p class="note warning"><strong>Warning:</strong> <%= vars.first_product_name %> 
-	v<%= product_info['local_product_version'] %> is no longer supported 
+
+<p class="note warning"><strong>Warning:</strong> <%= vars.product_full %>
+	v<%= product_info['local_product_version'] %> is no longer supported
 because it has reached the End of General Support (EOGS) phase.
 To stay up to date with the latest software and security updates,
 upgrade to a supported version.
 </p>
 
-This topic explains how to upgrade the MySQL for Pivotal Cloud Foundry (PCF) service and existing service instances. 
+This topic explains how to upgrade the MySQL for Pivotal Cloud Foundry (PCF) service and existing service instances.
 It also explains the service interruptions that can result from service changes and upgrades and from failures at the process, VM, and IaaS level.
 
 ## <a id="upgrade-service"></a>Upgrade MySQL for PCF
@@ -19,7 +20,7 @@ run the <code>upgrade-all-service-instances</code> errand to make sure that
 all your service instances are upgraded to your current version.<br>
 For more information, see <a href="./troubleshoot.html#upgrade-all">Upgrade All Service Instances</a>.</p>
 
-To upgrade the MySQL for PCF service, you follow the same Ops Manager process that you use to install the service for the first time. 
+To upgrade the MySQL for PCF service, you follow the same Ops Manager process that you use to install the service for the first time.
 Your configuration settings migrate to the new version automatically. To perform an upgrade:
 
 1. Review the [Release Notes](./release-notes.html) for the version you are upgrading to.
@@ -34,7 +35,7 @@ Your configuration settings migrate to the new version automatically. To perform
 
 1. Return to the Installation Dashboard and click **Apply Changes**.
 
-Upgrading the MySQL for PCF service and service instances can temporarily interrupt 
+Upgrading the MySQL for PCF service and service instances can temporarily interrupt
 the service.
 For more information, see [Service Interruptions](#interruptions) below.
 
@@ -43,7 +44,7 @@ For more information, see [Service Interruptions](#interruptions) below.
 After upgrading the MySQL for PCF service, operators must upgrade existing service instances
 
 to be in sync with the new version of the service.
-Developers cannot create new bindings to a service instance that has not been upgraded. 
+Developers cannot create new bindings to a service instance that has not been upgraded.
 
 To upgrade existing service instances, operators run the following command:
 
@@ -53,7 +54,7 @@ bosh -d BROKER-NAME run-errand upgrade-all-service-instances
 
 Where `BROKER-NAME` is the deployment name of the broker.
 
-	
+
 ## <a id="interruptions"></a>Service Interruptions
 
 Service changes and upgrades and failures at the process, VM, and IaaS level can cause outages in the MySQL for PCF service, as described below.
@@ -67,7 +68,7 @@ Read this section if:
 
 An operator updates a stemcell version or their version of MySQL for PCF.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. 
+- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to.
           The service should resume within 10–15 minutes.
 - <strong>Required Actions:</strong> None. If the update deploys successfully, apps reconnect automatically.
 
@@ -75,6 +76,6 @@ An operator updates a stemcell version or their version of MySQL for PCF.
 
 A developer changes their service instance to provide a different service plan, using `cf update-service` or Apps Manager.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to. 
+- <strong>Impact:</strong> Apps lose access to the MySQL service while PCF updates the service instance they are bound to.
           The service should resume within 10–15 minutes.
 - <strong>Required Actions:</strong> None. If the plan change deploys successfully, apps reconnect automatically.
