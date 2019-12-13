@@ -5,8 +5,8 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides operators with basic instructions for troubleshooting on-demand <%= vars.product_name %>.
-For information about temporary <%= vars.product_name %> service interruptions, see
+This topic provides operators with basic instructions for troubleshooting on-demand <%= vars.product_full %>.
+For information about temporary <%= vars.product_short %> service interruptions, see
 <a href="./upgrade.html#interruptions">Service Interruptions</a>.
 
 ## <a id="errors"></a> Troubleshooting Errors
@@ -86,25 +86,25 @@ This section provides solutions for the following errands:
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "unable-to-determine",
     description: "Unable to Determine Leader and Follower",
-    symptom: <<~DESC,  
+    symptom: <<~DESC,
     This problem happens when the <code>configure-leader-follower</code>
     errand fails because it cannot determine the VM roles. <br><br>
-      
+
     The <code>configure-leader-follower</code> errand exits with <code>1</code>
-    and the errand logs contain the following: 
+    and the errand logs contain the following:
 
     <pre class="terminal">$ Unable to determine leader and follower based on transaction history.</pre>
     DESC
-    
-    cause: <<~DESC, 
-    
+
+    cause: <<~DESC,
+
       Something has happened to the instances, such as a failure or manual intervention.
       As a result, there is not enough information available to determine the correct state
       and topology without operator intervention to resolve the issue.
       DESC
-     
+
     solution: <<~DESC,
-    
+
     Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the
     <a href="./about-leader-follower.html#errands">orchestration</a>
     errands and backup/restore, you can put the service instance into a safe topology, and then rerun the
@@ -131,7 +131,7 @@ This section provides solutions for the following errands:
       Exit Code  0
       Stdout     -
       Stderr   2017/12/11 18:25:54 Started executing command: inspect
-               2017/12/11 18:25:54 
+               2017/12/11 18:25:54
                Started GET https<span>:</span>//127.0.0.1:8443/status
                2017/12/11 18:25:54
                Has Data: true
@@ -155,21 +155,21 @@ This section provides solutions for the following errands:
           run-errand configure-leader-follower &#92;
           --instance=mysql/GUID-OF-LEADER</pre>
         For example:
-        
+
         <pre class="terminal">$ bosh -e my-env -d my-dep &#92;
           run-errand configure-leader-follower &#92;
           --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
       </li>
     </ol>
     DESC
-      
+
 } %>
 
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "both-writable",
-    
+
     description: "Both Leader and Follower Instances Are Writable",
-    
+
     symptom: <<~DESC ,
     This problem happens when the<code>configure-leader-follower</code> errand fails because both VMs are writable and the VMs might hold differing data. <br><br>
     The <code>configure–leader-follower</code> errand exits with <code>1</code>
@@ -177,7 +177,7 @@ This section provides solutions for the following errands:
 
     <pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
     DESC
-    
+
     cause: <<~DESC,
       MySQL for Pivotal Platform tries to ensure that there is only one writable instance of the
       leader-follower pair at any given time. However, in certain situations, such as
@@ -186,7 +186,7 @@ This section provides solutions for the following errands:
       The service instances remain in this state until an operator resolves the issue
       to ensure that the correct instance is promoted and reduce the potential for data divergence.
     DESC
-    
+
     solution: <<~DESC,
       <ol>
         <li>
@@ -354,7 +354,7 @@ This section provides a solution for the following errand:
 + [Persistent Disk is Full](#persistent-disk)
 
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
-    id: "persistent-disk", 
+    id: "persistent-disk",
     description: "Persistent Disk is Full",
     symptom: "Developers report that read, write, and cf CLI operations do not work.
     Developers cannot upgrade to a larger MySQL service plan to free up disk space. <br><br>
@@ -546,10 +546,10 @@ This section provides solutions for the following errands:
       unknown error
     </pre>
     DESC
-    
+
     cause: "If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
     re-routes further connections to a different node.",
-    
+
     solution: <<~DESC,
     A node can become unresponsive for a number of reasons. For solutions, see the following:
 
@@ -649,7 +649,7 @@ This section provides solutions for the following errands:
       If you see replication errors, but no <code>ALTER TABLE</code>
       or persistent disk or memory issues, you can ignore the replication errors.
     DESC
-    
+
 } %>
 
 
@@ -814,7 +814,7 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 
 ### <a id="instance-creds"></a> Retrieve Admin and Read-Only Admin Credentials for a Service Instance
 
-To retrieve the admin and read-only admin credentials for a service instance from BOSH CredHub: 
+To retrieve the admin and read-only admin credentials for a service instance from BOSH CredHub:
 <ol>
   <li>Use the cf CLI to determine the GUID associated with the service instance
     for which you want to retrieve credentials by running:
@@ -910,7 +910,7 @@ To retrieve the admin and read-only admin credentials for a service instance fro
 
 ###  <a id="reinstall"></a>  Reinstall a Tile
 
-To reinstall the <%= vars.product_name %> tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a>
+To reinstall the <%= vars.product_short %> tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a>
 in the Pivotal Support knowledge base.
 
 ###  <a id="view-resources"></a>  View Resource Saturation and Scaling
@@ -1003,10 +1003,10 @@ gathering information to diagnose the type of failure the cluster is experiencin
       </li>
       <li>
         <strong>Deployment environment:</strong>
-        The environment that <%= vars.product_name %> is running in such as <%= vars.app_runtime_full %> or a service tile.</li>
+        The environment that <%= vars.product_short %> is running in such as <%= vars.app_runtime_full %> or a service tile.</li>
       <li>
         <strong>Version numbers:</strong>
-        The versions of the installed Ops Manager, PAS, and <%= vars.product_name %>
+        The versions of the installed Ops Manager, PAS, and <%= vars.product_short %>
       </li>
     </ul>
   </li>
@@ -1040,7 +1040,7 @@ To manually force a node to rejoin the cluster, do the following:
 
 <ol>
   <li>
-    SSH into the node by following the procedure in 
+    SSH into the node by following the procedure in
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh">BOSH SSH</a>.
   </li>
   <li>
@@ -1078,7 +1078,7 @@ To re-create a corrupted VM:
     <ol>
       <li>Gather the information needed to log in to the BOSH Director VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
-      <li>Log in to the Ops Manager VM by doing the procedure in 
+      <li>Log in to the Ops Manager VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
       <li>Log in to the BOSH Director VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
@@ -1086,7 +1086,7 @@ To re-create a corrupted VM:
   </li>
   <li>
     Identify and re-create the unresponsive node with
-    <code>bosh cloudcheck</code>, by doing the procedure in 
+    <code>bosh cloudcheck</code>, by doing the procedure in
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#cck">BOSH Cloudcheck</a>
     and run
     <code>Recreate VM using last known apply spec</code>.
@@ -1113,11 +1113,11 @@ To check the replication status, do the following:
 <ol>
   <li>To log in to the BOSH Director VM, do the following:
     <ol>
-      <li>Gather the information needed to log in to the BOSH Director VM by doing the 
-        procedure in 
+      <li>Gather the information needed to log in to the BOSH Director VM by doing the
+        procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>.
       </li>
-      <li>Log in to the Ops Manager VM by doing the procedure in 
+      <li>Log in to the Ops Manager VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>.
       </li>
     </ol>
@@ -1141,7 +1141,7 @@ To check the replication status, do the following:
   </li>
   <li>
     Create a dummy table in the dummy database by running:
-    <pre>mysql -h FIRST-NODE-IP-ADDRESS \ 
+    <pre>mysql -h FIRST-NODE-IP-ADDRESS \
       -u your-identity \
       -p -D verify_healthy \
       -e "create table dummy_table (id int not null primary key auto_increment, info text) \
@@ -1176,13 +1176,13 @@ To check the replication status, do the following:
   +----+----------------------+</pre>
   </li>
   <li>
-    Verify that the other nodes contain the same dummy data 
+    Verify that the other nodes contain the same dummy data
     by doing the following for each of the remaining MySQL server IP addresses:
     <ol>
       <li>Query the dummy table by running :
-        <pre>mysql -h NEXT-NODE-IP-ADDRESS \ 
-          -u YOUR-IDENTITY \ 
-          -p -D verify\_healthy \ 
+        <pre>mysql -h NEXT-NODE-IP-ADDRESS \
+          -u YOUR-IDENTITY \
+          -p -D verify\_healthy \
           -e "select * from dummy_table;"</pre>
 
         When prompted for a password, provide the
@@ -1193,16 +1193,16 @@ To check the replication status, do the following:
         Verify that the node contains the same three rows of dummy data as the other nodes
         by running:
 
-        <pre >mysql -h NEXT-NODE-IP-ADDRESS \ 
+        <pre >mysql -h NEXT-NODE-IP-ADDRESS \
           -u YOUR-IDENTITY \
           -p -D verify\_healthy \
           -e "select * from dummy\_table;"</pre>
 
         When prompted for a password, provide the
         <code>password</code>
-        value recorded in step 
+        value recorded in step
         </li>
-        
+
         <li>Verify that the above command returns output similar to the following:
         <pre class="terminal">
     +----+----------------------+
@@ -1237,7 +1237,7 @@ logs from your MySQL cluster nodes, MySQL proxies, and, with highly available cl
 
 To use the `download-logs` script:
 
-1. Download and unzip the `download-logs` script from [<%= vars.product_name %>](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
+1. Download and unzip the `download-logs` script from [<%= vars.product_short %>](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
 
 1. From the Ops Manager Installation Dashboard, navigate to **BOSH Director** > **Credentials**.
 
@@ -1249,30 +1249,30 @@ To use the `download-logs` script:
   + `BOSH_CA_CERT`
   + `BOSH_ENVIRONMENT`
 
-1. From the BOSH CLI, view the name of the BOSH deployment for <%= vars.product_name %> by running: 
+1. From the BOSH CLI, view the name of the BOSH deployment for <%= vars.product_short %> by running:
 
     ```
     bosh deployments
-    ``` 
-    Record the name of the BOSH deployment. 
+    ```
+    Record the name of the BOSH deployment.
 
-1. SSH into your Ops Manager VM by doing the procedures in 
+1. SSH into your Ops Manager VM by doing the procedures in
 [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
 and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
 
 1. File transfer or copy-paste the `download-logs` script to a working directory on the Ops Manager VM.
 
 1. Set local environment variables to the same BOSH variable values that you recorded earlier,
-including `BOSH_DEPLOYMENT` for the deployment name. 
+including `BOSH_DEPLOYMENT` for the deployment name.
   <br><br>
     For example:
     <pre class="terminal">$ BOSH\_CLIENT=ops\_manager \
-      BOSH\_CLIENT\_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY 
-      BOSH\_CA\_CERT=/var/tempest/workspaces/default/root\_ca\_certificate \ 
+      BOSH\_CLIENT\_SECRET=a123bc-E_4Ke3fb-gImbl3xw4a7meW0rY
+      BOSH\_CA\_CERT=/var/tempest/workspaces/default/root\_ca\_certificate \
       BOSH\_ENVIRONMENT=10.0.0.5 \
       BOSH\_DEPLOYMENT=pivotal-mysql-14c4</pre>
 
-1. Run the `download-logs` script by running: 
+1. Run the `download-logs` script by running:
 
     ```
     ./download-logs -o .

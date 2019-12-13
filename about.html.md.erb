@@ -10,7 +10,7 @@ owner: MySQL
         <li><a href="#service-network">Service Network Requirement</a></li>
         <li><a href="#on-demand">Default Network and Service Network</a></li>
         <li><a href="#rules">Required Networking Rules for On-Demand Services</a></li>
-				<li><a href="#mysql-ports"> Required Networking Rules for <%= vars.product_name %></a>
+				<li><a href="#mysql-ports"> Required Networking Rules for <%= vars.product_short %></a>
 						<ul>
 							<li><a href='#lf-ports'>Required Networking Rules for Leader-Follower Plans</a></li>
 							<li><a href='#hac-ports'>Required Networking Rules for Highly Available (HA) Cluster Plans</a></li>
@@ -19,7 +19,7 @@ owner: MySQL
     </ul>
 </div>
 
-This topic describes networking for on-demand services, including <%= vars.product_name %>.
+This topic describes networking for on-demand services, including <%= vars.product_full %>.
 
 <h2> <a id="service-network"></a>Service Network Requirement </h2>
 
@@ -44,7 +44,7 @@ This topic describes networking for on-demand services, including <%= vars.produ
 	:app_runtime_full => vars.app_runtime_full,
 	:product_short => vars.product_short} %>
 
-<h2> <a id='mysql-ports'></a> Required Networking Rules for <%= vars.product_name %> </h2>
+<h2> <a id='mysql-ports'></a> Required Networking Rules for <%= vars.product_short %> </h2>
 
 Regardless of the specific network layout, the operator must ensure network rules are set up
 so that connections are open as described in the table below.
@@ -134,7 +134,7 @@ so that connections are open as described in the table below.
 
 <h3> <a id='lf-ports'></a> Required Networking Rules for Leader-Follower Plans </h3>
 
-In addition to the networking rules required for <%= vars.product_name %>, if you are using a leader-follower
+In addition to the networking rules required for <%= vars.product_short %>, if you are using a leader-follower
 service plan, the operator must ensure network rules are set up so that connections are open as described in the table below.
 
 <table class="nice">
@@ -156,7 +156,7 @@ service plan, the operator must ensure network rules are set up so that connecti
 
 <h3> <a id='hac-ports'></a> Required Networking Rules for Highly Available (HA) Cluster Plans </h3>
 
-In addition to the networking rules required for <%= vars.product_name %>, if you are using a highly available
+In addition to the networking rules required for <%= vars.product_short %>, if you are using a highly available
 cluster service plan, the operator must ensure network rules are set up so that connections are open
 as described in the table below.
 

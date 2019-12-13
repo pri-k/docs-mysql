@@ -6,7 +6,7 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 This topic provides instructions for developers to customize access credentials and privileges for
-<%= vars.product_name %> service instances.
+<%= vars.product_full %> service instances.
 
 ## <a id="overview"></a> Overview
 
@@ -14,11 +14,11 @@ These procedures use the Cloud Foundry Command Line Interface (cf CLI).
 You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks
 using a graphical UI.
 
-For information about using <%= vars.product_name %>, see [Using <%= vars.product_name %>](./use.html).
+For information about using <%= vars.product_short %>, see [Using <%= vars.product_short %>](./use.html).
 
 ## <a id="read-only"></a> Create Read-only Access Credentials
 
-<%= vars.product_name %> enables space developers to create read-only credentials to give to users who need
+<%= vars.product_short %> enables space developers to create read-only credentials to give to users who need
 read-only access to the database.
 You can create credentials by using the cf CLI to create a new
 [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
@@ -34,20 +34,20 @@ To create and find read-only credentials for an existing service instance:
     For example:
 
     <pre class="terminal">$ cf create-service-key mydb mykey1 -c '{ "read-only": true }'
-      
+
     Creating service key mykey1 for service instance mydb as admin...
     OK</pre>
 
  1. Retrieve the read-only credentials from the service key by running:
-    
+
     ```
     cf service-key SERVICE-INSTANCE-NAME KEY-NAME
     ```
 
     For example:
 
-    <pre class="terminal">$ cf service-key mydb mykey1 
-      
+    <pre class="terminal">$ cf service-key mydb mykey1
+
     {
      "hostname": "99.99.99.9",
      "jdbcUrl": "jdbc:mysql://99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
@@ -63,7 +63,7 @@ To create and find read-only credentials for an existing service instance:
 
 ## <a id="username"></a> Create Credentials for a Custom Username
 
-<%= vars.product_name %> lets space developers create custom usernames for service keys or service bindings.
+<%= vars.product_short %> lets space developers create custom usernames for service keys or service bindings.
 This is useful if you have users that want to access the database with a specific username.
 You can create credentials by using the cf CLI to create a new
 [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
@@ -71,7 +71,7 @@ You can create credentials by using the cf CLI to create a new
 To create and find custom username credentials for an existing service instance:
 
  1. Create a new service key and username for a service-instance by running:
-    
+
     ```
     cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "username": NEW-USERNAME }'
     ```
@@ -79,12 +79,12 @@ To create and find custom username credentials for an existing service instance:
     For example:
 
     <pre class="terminal">$ cf create-service-key mydb mykey2  -c '{ "username": myuser }'
-      
+
     Creating service key mykey2 for service instance mydb as admin...
     OK</pre>
 
  1. Retrieve the credentials from the service key by running:
-    
+
     ```
     cf service-key SERVICE-INSTANCE-NAME KEY-NAME
     ```
@@ -92,7 +92,7 @@ To create and find custom username credentials for an existing service instance:
     For example:
 
     <pre class="terminal">$ cf service-key mydb mykey2</br>
-    
+
     {
      "hostname": "10.10.10.5",
      "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=my\_unique\_name\u0026password=123456789",

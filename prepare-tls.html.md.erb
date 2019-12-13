@@ -48,12 +48,12 @@ container's operating system.
 
 ##<a id='workflow'></a> Workflow
 
-The following workflow describes enabling TLS for <%= vars.product_name %>:
+The following workflow describes enabling TLS for <%= vars.product_full %>:
 
 <ol>
 <li>An operator provides a CA certificate to CredHub by performing the procedures
 	in <a href="#provide-generate-pcf">Provide or Generate a CA Certificate</a> below.</li>
-<li>An operator enables TLS in the tile configuration while installing <%= vars.product_name %>.
+<li>An operator enables TLS in the tile configuration while installing <%= vars.product_short %>.
     See <a href="install-config.html#security">Configure Security</a>.</li>
 <li>A developer enables TLS for an existing service instance.
     See <a href="using-tls.html">Using TLS</a>.</li>
@@ -193,8 +193,8 @@ Click **Security**.
 8. Paste the contents of the CA certificate into **Trusted Certificates** and
  click **Save**.
 9. After preparing your environment for TLS, you must enable TLS in the tile
-configuration while installing <%= vars.product_name %>:
-    * **Existing Installation**: If you have already installed the <%= vars.product_name %>
+configuration while installing <%= vars.product_short %>:
+    * **Existing Installation**: If you have already installed the <%= vars.product_short %>
 		tile, perform the procedures
     in [Configure TLS](install-config.html#tls) to enable TLS in the **Security**
 		section of the tile. Then return to the Ops Manager Installation Dashboard to apply changes:<br><br>
@@ -206,15 +206,15 @@ configuration while installing <%= vars.product_name %>:
 
         This restarts all the VMs in your <%= vars.platform_name %> deployment and applies your
 				CA certificate.<br><br>
-    * **New Installation**: If you have not yet installed the <%= vars.product_name %> tile,
+    * **New Installation**: If you have not yet installed the <%= vars.product_short %> tile,
 		perform all of
-    the procedures in [Installing and Configuring <%= vars.product_name %>](install-config.html).
+    the procedures in [Installing and Configuring <%= vars.product_short %>](install-config.html).
     Then return to the Ops Manager Installation Dashboard to apply changes:<br><br>
 						1. Click **Review Pending Changes**.<br><br>
 						2. Enable the checkboxes next to the <%= vars.app_runtime %> tile and the MySQL tile.<br><br>
 						3. Click **Apply Changes**.<br><br>
 
-        This deploys <%= vars.product_name %>, restarts all the VMs in your <%= vars.platform_name %> deployment,
+        This deploys <%= vars.product_short %>, restarts all the VMs in your <%= vars.platform_name %> deployment,
         and applies your CA certificate.
         <p class="note warning"><strong>WARNING</strong>: Restarting all of the
 					VMs in your <%= vars.platform_name %> deployment to apply a CA certificate takes a

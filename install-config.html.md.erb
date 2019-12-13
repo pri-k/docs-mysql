@@ -7,8 +7,8 @@ owner: MySQL
 
 
 This topic provides instructions to <%= vars.platform_name %> operators
-about how to install, configure, and deploy the <%= vars.product_name %> tile.  The
-<%= vars.product_name %> service enables <%= vars.platform_name %> developers to create and use MySQL
+about how to install, configure, and deploy the <%= vars.product_full %> tile.  The
+<%= vars.product_short %> service enables <%= vars.platform_name %> developers to create and use MySQL
 service instances on demand.
 
 ## <a id="rbac"></a>Role-Based Access in Pivotal Ops Manager
@@ -23,23 +23,23 @@ For more information about roles in Ops Manager, see
 
 ## <a id="prereq"></a> Prerequisites
 
-Before you install the <%= vars.product_name %> tile, you must:
+Before you install the <%= vars.product_short %> tile, you must:
 
-+ [Create an App Security Group for <%= vars.product_name %>](#asg).
++ [Create an App Security Group for <%= vars.product_short %>](#asg).
 + [Enable the BOSH Resurrector](#resurrector).
 + [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS and one of these conditions applies to you:
     * You are using Ops Manager v2.5 or earlier.
     * You are using Ops Manager v2.6 or later and are not using the certificate
     provided by Ops Manager.
 
-### <a id="asg"></a> Create an App Security Group for <%= vars.product_name %>
+### <a id="asg"></a> Create an App Security Group for <%= vars.product_short %>
 
 To enable apps running on <%= vars.platform_name %> to communicate with the MySQL service network,
 you must create an App Security Group (ASG).
-The ASG enables smoke tests to run when you first install the <%= vars.product_name %> service
+The ASG enables smoke tests to run when you first install the <%= vars.product_short %> service
 and apps to access the service after it is installed.
 
-To create an ASG for <%= vars.product_name %>:
+To create an ASG for <%= vars.product_short %>:
 
 1. Navigate to **Ops Manager Installation Dashboard** > **BOSH Director**.
 
@@ -61,7 +61,7 @@ To create an ASG for <%= vars.product_name %>:
     ```
     Where `CIDR` is the CIDR that you recorded in the above step.
 
-1. Create an ASG by running: 
+1. Create an ASG by running:
 
     ```
     $ cf create-security-group p.mysql ./mysql-asg.json
@@ -73,14 +73,14 @@ To create an ASG for <%= vars.product_name %>:
     $ cf bind-running-security-group p.mysql
     ```
 
-For more information about ASGs, 
+For more information about ASGs,
 see [App Security Groups](http://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual).
 
 
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
-Pivotal recommends enabling the BOSH Resurrector when installing <%= vars.product_name %>. 
-The BOSH Resurrector increases the availability of <%= vars.product_name %> by restarting and resuming MySQL service.
+Pivotal recommends enabling the BOSH Resurrector when installing <%= vars.product_short %>.
+The BOSH Resurrector increases the availability of <%= vars.product_short %> by restarting and resuming MySQL service.
 
 The BOSH Resurrector does the following:
 
@@ -88,7 +88,7 @@ The BOSH Resurrector does the following:
 - Detects operating system failures by continuously monitoring VMs and restarting them as required
 - Continuously monitors the BOSH Agent running on each service instance VM and restarts the VM as required
 
-For more information about the BOSH Resurrector, 
+For more information about the BOSH Resurrector,
 see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector.html#bosh-resurrector).
 
  To enable the BOSH Resurrector:
@@ -103,26 +103,26 @@ see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector
 
 ## <a id="install"></a> Download and Import the Tile
 
-To download and import the <%= vars.product_name %> tile:
+To download and import the <%= vars.product_short %> tile:
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/pivotal-mysql/).
 
 1. Navigate to the **Ops Manager Installation Dashboard** and click **Import a Product** to upload the product file.
 
-1. Under **Import a Product**, click **+** next to the version number of <%= vars.product_name %>.
+1. Under **Import a Product**, click **+** next to the version number of <%= vars.product_short %>.
    This adds the tile to your staging area.
 
-1. Click the newly-added **<%= vars.product_name %>** tile to open its configuration panes.
+1. Click the newly-added **<%= vars.product_short %>** tile to open its configuration panes.
 
     ![AZ and Network Assignments pane](config-azs.png)
 
 ## <a id="config-on-demand"></a> Configure the Tile
 
-To configure the <%= vars.product_name %> tile, do the procedures below.
+To configure the <%= vars.product_short %> tile, do the procedures below.
 
 ###<a id="azs"></a> Configure AZs and Networks
 
-To configure an availability zone (AZ) to run the service broker 
+To configure an availability zone (AZ) to run the service broker
 and networks for the broker and MySQL service instances:
 
 1. Click **Assign AZs and Networks**.
@@ -140,7 +140,7 @@ and networks for the broker and MySQL service instances:
             This network is represented by the Default Network in diagram in <a href="./about.html#on-demand">Default Network and Service Network</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
-        <td>Select the subnet for the on-demand service instances. 
+        <td>Select the subnet for the on-demand service instances.
           This network is represented by the Service Network in diagram in <a href="./about.html#on-demand">Default Network and Service Network</a>.
             <br><br>
             If you are adding IPsec to encrypt MySQL communication, Pivotal recommends that you deploy MySQL to its own network
@@ -158,20 +158,20 @@ and networks for the broker and MySQL service instances:
 <%= partial "../../p-mysql/partials/mysql/galera_ga" %>
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
-<%= vars.product_name %> enables you to configure as many as nine service plans.
+<%= vars.product_short %> enables you to configure as many as nine service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
 By default, plans 1–3 are active and plans 4–9 are inactive. The procedures below describe how to change these defaults.
 
-<p class="note warning"><strong>Warning:</strong> 
-  You must not set <strong>Plan 1</strong> to <strong>Inactive</strong>. 
+<p class="note warning"><strong>Warning:</strong>
+  You must not set <strong>Plan 1</strong> to <strong>Inactive</strong>.
   If you deactivate <strong>Plan 1</strong>, your installation fails when you apply changes.
 </p>
 
 <p class="note warning"><strong>Warning:</strong> You must configure one of your service plans as
 a single node plan. This is because you can only restore to a single node plan. You cannot restore
 directly to a leader-follower plan. Ensure that the persistent disk in the single node plan is as
-least as large as the persistent disk of your largest leader-follower plan. 
+least as large as the persistent disk of your largest leader-follower plan.
 For more information about restoring services instances,
 see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>.
 </p>
@@ -258,13 +258,13 @@ For each plan that you want to use in your <%= vars.platform_name %> deployment:
 
 
     <div id="tab1" class="tabcontent" style="display:block">
-      <img src="./images/single-node-plan.png"> 
+      <img src="./images/single-node-plan.png">
     </div>
     <div id="tab2" class="tabcontent">
-      <img src="./images/leader-follower-plan.png"> 
+      <img src="./images/leader-follower-plan.png">
     </div>
     <div id="tab3" class="tabcontent">
-      <img src="./images/ha-plan.png"> 
+      <img src="./images/ha-plan.png">
     </div>
 
 
@@ -276,7 +276,7 @@ For each plan that you want to use in your <%= vars.platform_name %> deployment:
             <ul><li> <strong>Enable (Default):</strong> Gives access to all orgs
               and displays the service plan to all developers in the Marketplace.
                 </li>
-                <li><strong>Disable:</strong> Disables access to all orgs and hides the service plan 
+                <li><strong>Disable:</strong> Disables access to all orgs and hides the service plan
                   to all developers in the Marketplace.
                   This disables creating new service instances of this plan.
                 </li>
@@ -326,7 +326,7 @@ For each plan that you want to use in your <%= vars.platform_name %> deployment:
   an error and cannot continue if they try to upgrade from Plan 1 to Plan 2. This
   prevents them from losing their data by orphaning their disk in AZ1.<br><br>
   If you need to manually migrate the data from one AZ to another, see
-  <a href="https://docs.pivotal.io/p-mysql/about-migrate.html">About Data Migration in <%= vars.product_name %></a>.
+  <a href="https://docs.pivotal.io/p-mysql/about-migrate.html">About Data Migration in <%= vars.product_short %></a>.
 </p>
 
 ###<a id="inactive"></a> (Optional) Deactivate Service Plan
@@ -338,9 +338,9 @@ To deactivate a service plan:
     1. Under **Service Plan Access**, select **Disable**.
     1. Click **Save**.
     1. Return to the Ops Manager Installation Dashboard and click **Apply Changes** to redeploy.
-    1. When the <%= vars.platform_name %> deployment has redeployed, 
+    1. When the <%= vars.platform_name %> deployment has redeployed,
     use the cf CLI or Apps Manager to delete all existing service instances on the service plan.
-    1. Return to the <%= vars.product_name %> tile configuration.
+    1. Return to the <%= vars.product_short %> tile configuration.
 1. Click the section for the plan. For example, **Plan 2**.
 1. Click **Inactive**.
 1. Click **Save**.
@@ -386,14 +386,14 @@ To set MySQL defaults and enable developers to customize their instances:
     <tr><th>Field</th><th>Instructions</th></tr>
     <tr><td><strong>Enable Lower Case Table Names</strong></td>
         <td>Select this checkbox to store all table names in lowercase.
-            This sets the MySQL server system variable 
-            <code>lower\_case\_table\_names</code> to <code>1</code> on all <%= vars.product_name %> instances by default. <br>
+            This sets the MySQL server system variable
+            <code>lower\_case\_table\_names</code> to <code>1</code> on all <%= vars.product_short %> instances by default. <br>
             To permit developers to override this default, see the checkbox below. <br>
             For more information about <code>lower\_case\_table\_names</code> , see the <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names">MySQL documentation</a>.
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
         <td>Select this checkbox to permit developers to override the configured default <strong>Enable Lower Case Table Names</strong> value when they are creating a new service instance.
-            For more information, see <a href="./change-default.html#configuring">Optional Parameters for the <%= vars.product_name %> Service Instances</a>.</td></tr>
+            For more information, see <a href="./change-default.html#configuring">Optional Parameters for the <%= vars.product_short %> Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
         <td>Select this checkbox to enable data downloading from the local file system of the client.
             Pivotal discourages selecting this checkbox. Before you enable local in-file,
@@ -419,18 +419,18 @@ To configure automated backups:
 1. To learn how automated backups work, see [About Automated Backups](backup-and-restore.html#overview).
 
 1. Select a **Backup configuration** and do the procedure for your storage solution in _Backing Up and Restoring_:
-  * **Ceph or Amazon S3:** <%= vars.product_name %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
+  * **Ceph or Amazon S3:** <%= vars.product_short %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
     that saves backups to an S3 bucket,
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.<br>
     For instructions about using Ceph or Amazon S3 for backups, see [Back up to Ceph or S3](./backup-and-restore.html#ceph-or-s3).<br><br>
-  * **SCP:** <%= vars.product_name %> runs an Secure Copy Protocol (SCP) command that secure-copies backups to a VM
+  * **SCP:** <%= vars.product_short %> runs an Secure Copy Protocol (SCP) command that secure-copies backups to a VM
     or physical machine operating outside of <%= vars.platform_name %>. This is the fastest option. <br>
     SCP enables you to securely transfer files between two hosts.
     You can provision the backup machine separately from your <%= vars.platform_name %> installation.
      <br>For instructions about using SCP for backups, see [Back up with SCP](backup-and-restore.html#scp).<br><br>
-  * **GSC:** <%= vars.product_name %> runs a [Google Cloud Storage (GCS)](https://cloud.google.com/storage/) SDK 
+  * **GSC:** <%= vars.product_short %> runs a [Google Cloud Storage (GCS)](https://cloud.google.com/storage/) SDK
     that saves backups to an GCS bucket. <br>For instructions about using GCS for backups, see [Back up to GCS](backup-and-restore.html#gcs). <br><br>
-  * **Azure:** <%= vars.product_name %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
+  * **Azure:** <%= vars.product_short %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
     SDK that saves backups to an Azure storage account.<br>For instructions about using Azure for backups, see [Back up to Azure Storage](backup-and-restore.html#azure).
 
 ###<a id="security"></a> Configure Security
@@ -475,24 +475,24 @@ To store your service instance credentials in runtime CredHub:
 1. After deploying the tile, notify the developers that they must unbind and rebind any existing service instances bindings if they want to use secure service instance credentials. Developers must:
 
     1. Unbind the service instance from the app by running:
-        
+
         ```
         cf unbind-service APP SERVICE-INSTANCE
         ```
     1. Rebind the service instance to the app by running:
-    
+
         ```
         cf bind-service PP SERVICE-INSTANCE
         ```
     1. Restart the app to apply the new binding by running:
-    
+
         ```
-        cf restart APP 
+        cf restart APP
         ```
     1. Verify that the binding includes CredHub pointers in the `VCAP_SERVICES` environment variable by running:
-        
+
         ```
-        cf env APP 
+        cf env APP
         ```
         For example:
         <pre class="terminal">$ cf env my-app
@@ -580,18 +580,18 @@ To enable RFC 5424 system logging for the MySQL broker and service instance VMs:
     <tr><td><strong>SSL Certificate</strong></td>
         <td>Enter the SSL certificates for the syslog server. This ensures the logs are transported securely.</td></tr>
   </table>
-  <p class="note"><strong>Note:</strong> If your syslog server is external to <%= vars.platform_name %>, 
-    you might need to select 
+  <p class="note"><strong>Note:</strong> If your syslog server is external to <%= vars.platform_name %>,
+    you might need to select
     <strong>Provide public IP addresses to all Service VMs</strong> on the <strong>Settings</strong> page.
-    See <a href="#global">Configure Global Settings</a> above. 
+    See <a href="#global">Configure Global Settings</a> above.
   <p>
 
 1. Click **Save**.
 
 ###<a id="service-instance-upgrades"></a> Configure Service Instance Upgrades
 
-This section configures the `upgrade-all-service-instances` errand. 
-<%= vars.product_name %> uses this errand to upgrade service instances.
+This section configures the `upgrade-all-service-instances` errand.
+<%= vars.product_short %> uses this errand to upgrade service instances.
 
 To configure service instance upgrades.
 
@@ -625,75 +625,75 @@ To configure service instance upgrades.
 ###<a id="errands"></a> (Optional) Review Errands
 
 Errands are scripts that run at specfic times to do various tasks.
-<%= vars.product_name %> can run errands to manage the broker and service instances.
+<%= vars.product_short %> can run errands to manage the broker and service instances.
 You do not need to change the default configurations for errands.
 
 <p class="note warning"><strong>Warning:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does
-necessary cleanup tasks when you delete the <%= vars.product_name %> tile or re-define plans. Setting this errand to <strong>Off</strong> can cause
+necessary cleanup tasks when you delete the <%= vars.product_short %> tile or re-define plans. Setting this errand to <strong>Off</strong> can cause
 problems when attempting to reinstall the tile or re-define plans. Pivotal recommends that you do not set this errand to <strong>Off</strong>.
 </p>
 
-<%= vars.product_name %> uses the following types of errands:
+<%= vars.product_short %> uses the following types of errands:
 
 
 * **Post-Deploy Errands:** These errands run when you click **Apply Changes**.
-* **Pre-Delete Errands:** These errands run before you delete the <%= vars.product_name %> tile.
+* **Pre-Delete Errands:** These errands run before you delete the <%= vars.product_short %> tile.
 
-<%= vars.product_name %> also uses errands to configure leader-follower service instances.
+<%= vars.product_short %> also uses errands to configure leader-follower service instances.
 For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands Used in Leader-Follower Failover</a>.
 
 You can use errands when troubleshooting the broker or service instances.
 For more information about using errands for troubleshooting, see [Run Service
 Broker Errands to Manage Brokers and Instances](./troubleshoot.html#broker-errands).
 
-    
+
 To review errands:
 
 1. Click **Errands**.
 
     <%= image_tag("errands.png", :alt => "Errand list for MySQL for Pivotal Platform.", :width => "250") %>
-    
+
 1. Review the settings for the following erands:
   <table>
     <tr>
       <th>Errand</th>
       <th>Description</th>
     </tr>
-    
+
     <tr>
       <th colspan="2" style="text-align:center;">Post-Deploy Errands</th>
     </tr>
-    
+
     <tr>
       <td><strong>Register On-demand MySQL Broker</strong></td>
       <td>Registers a broker with the Cloud Controller and lists it in the Marketplace.</td>
     </tr>
-    
+
     <tr>
       <td><strong>Smoke Tests</strong></td>
       <td>Validates basic MySQL operations.</td>
     </tr>
-    
+
     <tr>
       <td><strong>Validate no IP-based bindings in use before upgrade-all-service-instances</strong></td>
       <td>Checks if service instances have app bindings or service keys using IP addresses or have a TLS certificate that is signed with an IP address. If either is true, the installation fails.</td>
     </tr>
-    
+
     <tr>
       <td><strong>Upgrade all On-demand MySQL Service Instances</strong></td>
       <td>Upgrades existing instances of a service to its latest installed version.</td>
     </tr>
-    
+
     <tr>
       <th colspan="2" style="text-align:center;">Pre-Delete Errands</th>
     </tr>
-    
+
     <tr>
       <td><strong>Delete All Service Instances and Deregister Broker</strong></td>
       <td>Deletes all service instances and deregisters the broker.</td>
     </tr>
   </table>
-  
+
 ###<a id="stemcell"></a> Verify Stemcell Version and Apply All Changes
 
 To verify your stemcell version and apply all changes:
@@ -706,6 +706,6 @@ To verify your stemcell version and apply all changes:
 1. Navigate to **Ops Manager Dashboard** > **Review Pending Changes**.
 
 1. Click **Apply Changes**.
-    
-For information about the Xenial stemcells that are compatible with <%= vars.product_name %>,
+
+For information about the Xenial stemcells that are compatible with <%= vars.product_short %>,
 see [Release Notes](./release-notes.html) or [Pivotal Network](https://network.pivotal.io/).

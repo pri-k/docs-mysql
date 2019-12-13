@@ -37,7 +37,7 @@ See [Check Ephemeral Disk Size](#ephemeral-disk).
 
 ###<a id="check-eph"></a>Check Ephemeral Disk Size
 
-Running a RSU on a large table can fill up your ephemeral disk. <%= vars.product_name %>
+Running a RSU on a large table can fill up your ephemeral disk. <%= vars.product_full %>
 cannot function properly if there is not sufficient free space on file systems.
 Before running a RSU, confirm that your ephemeral disk is large enough to run the
 upgrade.
@@ -84,7 +84,7 @@ To retrieve the IDs for your nodes, do the following:
 	```
 	cf service MY-INSTANCE --guid
 	```
-	Where `YOUR-INSTANCE` is the name of your <%= vars.product_name %> service instance.
+	Where `YOUR-INSTANCE` is the name of your <%= vars.product_short %> service instance.
 	Record the guid returned in the output.
 
 1. To identify the nodes in your HA cluster, run the following command:
