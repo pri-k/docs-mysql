@@ -8,8 +8,12 @@ owner: MySQL
 This topic describes how to configure automated backups for <%= vars.product_full %>
 and how to manually restore a MySQL service instance from a backup.
 
-<p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.</p>
-<p class="note"><strong>Note:</strong> Pivotal recommends that you always configure a single instance plan in order to streamline the restore process for leader-follower plans.</p>
+<p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.
+</p>
+
+<p class="note"><strong>Note:</strong> Pivotal recommends that you always configure a single instance plan
+  in order to streamline the restore process for leader-follower plans.
+</p>
 
 ## <a id="overview"></a>About Automated Backups
 
@@ -89,7 +93,7 @@ SCP enables the operator to use any desired storage solution on the destination 
 To back up your database using SCP, complete the following procedures:
 
 + [Create a Public and Private Key Pair](#scp-keys)
-+ [Configure Backups in Ops Manager](#configure-scp)
++ [Configure Backups in Pivotal Ops Manager](#configure-scp)
 
 ### <a id="scp-keys"></a> Create a Public and Private Key Pair
 
@@ -106,7 +110,7 @@ Pivotal recommends that this user and key pair be solely for <%= vars.product_sh
 
 1. (Recommended) Create a new public and private key pair for authenticating as the above user on the destination VM.
 
-### <a id="configure-scp"></a> Configure Backups in Ops Manager
+### <a id="configure-scp"></a> Configure Backups in Pivotal Ops Manager
 
 Use Ops Manager to configure <%= vars.product_short %> to backup using SCP.
 
@@ -386,6 +390,8 @@ For more information, see [Establish a Connection to a Service Instance from Out
     * `MYSQL-IP` is the MySQL IP address.
     * `DB-NAME` is the name of the database.
     * `BACKUP` is a name you create for the backup file. Use a different filename for each backup.
+
+    The `--set-gtid-purged=off` flag enables you to restore the backup without admin privileges. <br><br>
 
     The `--set-gtid-purged=off` flag enables you to restore the backup without admin privileges. <br><br>
 

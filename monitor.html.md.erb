@@ -20,6 +20,7 @@ The default metrics polling interval is 30 seconds for MySQL instances and 60 se
 You can configure the interval for MySQL instance in the **Configure Monitoring** pane
 in the <%= vars.product_short %> tile. For more information, see [Configure Monitoring](./install-config.html#monitoring).
 
+
 Metrics are long, single lines of text that follow the format:
 
 ```
@@ -50,10 +51,10 @@ new, installation-specific monitoring
 metrics, thresholds, and alerts based on learning from your installations.
 
 For a list of all the <%= vars.product_short %> component metrics, see [Component Metrics](#component-metrics).
-
 <%# If you are confused about how to edit the following HA partials see the Tile Dev partials topic in the wiki  %>
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/all-kpis' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/all-kpis' %>
+
 
 ## <a id="component-metrics"></a>Component Metrics
 
@@ -69,22 +70,22 @@ that can be used for monitoring and alerting:
 
 All <%= vars.product_short %> service instances emit the following metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/mysql-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/mysql-metrics' %>
 
 ### <a id="disk-metrics"></a>Disk Metrics
 
 All <%= vars.product_short %> services emit the following disk usage metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/disk-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/disk-metrics' %>
 
 ### <a id="l-f-metrics"></a>Leader-Follower Metrics
 
 Leader-follower VMs emit the followings metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/l-f-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/l-f-metrics' %>
 
 ### <a id="ha-metrics"></a>Highly Available Cluster Metrics
 
 HA clusters emit the followings metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/ha-metrics' %>
+<%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/ha-metrics' %>

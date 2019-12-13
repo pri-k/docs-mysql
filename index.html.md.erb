@@ -12,10 +12,11 @@ This guide describes setting up and using <%= vars.product_full %> as an on-dema
 
 ## <a id='AboutTile'></a>About <%= vars.product_short %>
 
-<%= vars.product_short %> enables <%= vars.platform_name %> app developers to provision and use a MySQL database with a
-single command.
+<%= vars.product_short %> enables <%= vars.platform_name %> app developers to provision
+and use a MySQL database with a single command.
 
-The <%= vars.product_short %> product delivers dedicated instances on demand, "Database as a Service", to <%= vars.platform_name %> users.
+The <%= vars.product_short %> product delivers dedicated instances on demand,
+"Database as a Service", to <%= vars.platform_name %> users.
 When installed, the tile deploys and maintains a single Service Broker that is
 responsible for <%= vars.platform_name %> integration.
 The service is configured with sane defaults, following the principle of least
@@ -24,12 +25,18 @@ surprise for a general-use relational database service.
 <%= vars.product_short %> supports the following VM topologies:
 
   + Single node.
-  + Leader-follower. For more information, see [About Leader-Follower](./about-leader-follower.html).
-  + Highly available (HA) cluster. For highly available clusters, <%= vars.product_short %> uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
+  + Leader-follower. For more information,
+  see [About Leader-Follower](./about-leader-follower.html).
+  + Highly available (HA) cluster.
+  For highly available clusters, <%= vars.product_short %> uses
+  a patched Galera Cluster, Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
+  + <%= vars.single_leader_plan %>. For more information,
+  see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
 
     <%= partial "../../p-mysql/partials/mysql/galera_ga" %>
+    <%= partial "../../p-mysql/partials/mysql/multi_site_beta" %>
 
 ## <a id='snapshot'></a> Product Snapshot
 
@@ -40,11 +47,11 @@ The following table provides version and version-support information about <%= v
 <th>Details</th>
 <tr>
   <td>Version</td>
-  <td>2.7.2</td>
+  <td>2.7.3</td>
 </tr>
 <tr>
   <td>Release date</td>
-  <td>October 21, 2019</td>
+  <td>XXX X, 2019</td>
 </tr>
 <tr>
   <td>Software component version</td>
@@ -73,19 +80,22 @@ The following table provides version and version-support information about <%= v
 <%= vars.product_short %> uses on-demand service, which provides dedicated instances of
 MySQL that app developers can provision on-demand from the command line or Apps Manager.
 The <%= vars.product_short %> on-demand service gives flexibility in how and when
-instances are provisioned and allows for efficient and seamless resource use for both the operator and app developer.
+instances are provisioned and allows for efficient and seamless resource use
+for both the operator and app developer.
 Additionally, both the operator and app developer can configure essential MySQL settings.
 
-The <%= vars.product_short %> on-demand service leverages the on-demand service broker. For general information about the on-demand service
+The <%= vars.product_short %> on-demand service leverages the on-demand service broker.
+For general information about the on-demand service
 broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/).
 
 ### <a id="service"></a>On-Demand Service Plan
 
-<%= vars.product_short %> offers on-demand plans as the `p.mysql` service in the <%= vars.product_short %> tile.
-The plans can be configured in any way that you see fit.
+<%= vars.product_short %> offers on-demand plans as the `p.mysql` service in the <%= vars.product_short %>
+tile. The plans can be configured in any way that you see fit.
 
 Operators can update certain plan settings after the plans have been created.
-If the operator updates the VM size or disk size these settings will be implemented in all instances already created.
+If the operator updates the VM size or disk size these settings will be
+implemented in all instances already created.
 Operators should not decrease the disk size because this can cause data loss in existing instances.
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
@@ -93,45 +103,112 @@ Operators should not decrease the disk size because this can cause data loss in 
 Review the following table to determine if <%= vars.product_short %> has the features needed to support your enterprise.
 
 <table border="1" class="nice">
-<tr><th colspan=2>Plans and Instances</th><th>More Information</th></tr>
-<tr><td>On-Demand, Dedicated-VM plans</td><td><%= vars.product_short %> provides On-Demand VM plans.</td><td><a href="./about.html">Architecture</a></td></tr>
-<tr><td>Customizable plans</td><td>For the On-Demand Plan, the operator can customize the VM, disk size, and availability zone.</td><td><a href="./install-config.html#active">Configuring</a></td></tr>
-<tr><td>Custom schemas</td><td><%= vars.product_short %> supports custom schemas. Using custom schemas allows for apps that share a MySQL service instance to isolate app data by schema.</td><td><a href="./use.html#schema">Use Custom Schemas</a></td></tr>
-<tr><td>Share Service Instances</td><td><%= vars.product_short %> supports sharing service instances between different orgs and spaces.</td><td><a href="use.html#share">Share Service Instances</a></td></tr>
+<tr>
+  <th colspan=2>Plans and Instances</th>
+  <th>More Information</th>
+</tr>
+<tr>
+  <td>On-Demand, Dedicated-VM plans</td>
+  <td><%= vars.product_short %> provides On-Demand VM plans.</td>
+  <td><a href="./about.html">Architecture</a></td>
+</tr>
+<tr>
+  <td>Customizable plans</td>
+  <td>For the On-Demand Plan, the operator can customize the VM, disk size, and availability zone.</td>
+  <td><a href="./install-config.html#active">Configuring</a></td>
+</tr>
+<tr>
+  <td>Custom schemas</td>
+  <td><%= vars.product_short %> supports custom schemas.
+    Using custom schemas allows for apps that share a MySQL service instance to
+    isolate app data by schema.</td>
+    <td><a href="./use.html#schema">Use Custom Schemas</a></td>
+  </tr>
+<tr><td>Share Service Instances</td>
+  <td><%= vars.product_short %> supports sharing service instances between different orgs and spaces.</td>
+  <td><a href="use.html#share">Share Service Instances</a></td>
+</tr>
 
-<tr><th colspan=2>Installation and Upgrades</th><th>More Information</th></tr>
-<tr><td>Product upgrades</td><td><%= vars.product_short %> can be upgraded within the v2.x tile series.</td>
-   <td><a href="./upgrade.html">Upgrading <%= vars.product_short %></a></td></tr>
-<tr><td>Deployment Smoke Tests</td><td><%= vars.product_short %> installation and upgrade runs
+<tr>
+  <th colspan=2>Installation and Upgrades</th>
+  <th>More Information</th>
+</tr>
+<tr>
+  <td>Product upgrades</td>
+  <td><%= vars.product_short %> can be upgraded within the v2.x tile series.</td>
+   <td><a href="./upgrade.html">Upgrading <%= vars.product_short %></a></td>
+ </tr>
+<tr>
+  <td>Deployment Smoke Tests</td>
+  <td><%= vars.product_short %> installation and upgrade runs
       a post deployment BOSH errand that validates basic MySQL operations.</td>
-  <td></td></tr>
+  <td></td>
+</tr>
 
-<tr><th colspan=2>Maintenance and Backups</th><th>More Information</th></tr>
-<tr><td>Operational Monitoring and Logging</td><td><%= vars.product_short %> provides metrics for monitoring On-Demand plan usage and quotas, as well as MySQL component metrics. Additionally, <%= vars.product_short %> provides syslog redirection to external log ingestors.</td>
-  <td><a href="./monitor.html">Monitoring <%= vars.product_short %></a></td></tr>
-<tr><td>Backup and Restore</td><td><%= vars.product_short %> includes automatic backups on a configurable schedule to a variety of destinations, as well as a simple restore process.
-</td><td><a href="./backup-and-restore.html">Manual Backup and Restore of <%= vars.product_short %></a></td></tr>
+<tr>
+  <th colspan=2>Maintenance and Backups</th>
+  <th>More Information</th>
+</tr>
+<tr>
+  <td>Operational Monitoring and Logging</td>
+  <td><%= vars.product_short %> provides metrics for monitoring On-Demand plan usage and quotas,
+    as well as MySQL component metrics.
+    Additionally, <%= vars.product_short %> provides syslog redirection to external log ingestors.</td>
+  <td><a href="./monitor.html">Monitoring <%= vars.product_short %></a></td>
+</tr>
+<tr>
+  <td>Backup and Restore</td>
+  <td><%= vars.product_short %> includes automatic backups on a configurable schedule to a variety
+    of destinations, as well as a simple restore process.
+</td>
+<td><a href="./backup-and-restore.html">Manual Backup and Restore of <%= vars.product_short %></a></td>
+</tr>
 
-<tr><th colspan=2>Scale and Availability</th><th>More Information</th></tr>
-<tr><td>On-Demand Plan</td><td><%= vars.product_short %> provides up to 200 on-demand instances across all plans</td><td></td></tr>
-<tr><td>Ability to Scale Up / Down</td><td>Operators can scale VMs up, but not down</td><td><a href="./install-config.html">Configuring</a></td></tr>
-<tr><td>Rolling Deployments</td><td><%= vars.product_short %> supports rolling deployments when upgrading HA clusters.
-      However, single node and leader-follower service instances are unavailable during upgrades.</td>
-  <td><a href="./upgrade.html">Upgrades</a></td></tr>
-<tr><td>AZ Support</td><td><%= vars.product_short %> can be deployed to multiple zones to increase availability during unplanned outages of a zone.</td>
-  <td><a href="#other-notes">About Availability Zones</a></td></tr>
+<tr>
+  <th colspan=2>Scale and Availability</th><th>More Information</th>
+</tr>
+<tr>
+  <td>On-Demand Plan</td>
+  <td><%= vars.product_short %> provides up to 200 on-demand instances across all plans</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Ability to Scale Up / Down</td><td>Operators can scale VMs up, but not down</td>
+  <td><a href="./install-config.html">Configuring</a></td>
+</tr>
+<tr>
+  <td>Rolling Deployments</td>
+  <td><%= vars.product_short %> supports rolling deployments when upgrading HA clusters.
+      However, single node and leader-follower service instances are unavailable during upgrades.
+  </td>
+  <td><a href="./upgrade.html">Upgrades</a></td>
+</tr>
+<tr>
+  <td>AZ Support</td>
+  <td><%= vars.product_short %> can be deployed to multiple zones to increase availability during
+    unplanned outages of a zone.</td>
+  <td><a href="#other-notes">About Availability Zones</a></td>
+</tr>
 
-<tr><th colspan=2>Encryption</th><th>More Information</th></tr>
+<tr>
+  <th colspan=2>Encryption</th>
+  <th>More Information</th>
+</tr>
 <tr>
   <td>Transport Layer Security (TLS)</td>
-  <td><%= vars.product_short %> supports TLS. Enabling TLS provisions a MySQL server with a certificate so that apps and clients can establish an encrypted connection with the data service.</td>
+  <td><%= vars.product_short %> supports TLS. Enabling TLS provisions a MySQL server with a certificate
+    so that apps and clients can establish an encrypted connection with the data service.</td>
   <td><a href="./prepare-tls.html">Preparing for TLS</a></td>
 </tr>
 <tr>
 <td>Encrypted Communication in Transit</td>
 <td><%= vars.product_short %> has been tested successfully with the BOSH IPsec Add-on.</td>
   <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">Securing Data in Transit with the IPsec Add-on</a></td></tr>
-<tr><td>Encrypted Data at Rest</td><td><%= vars.product_short %> enables integration with commercial vendors for full-disk encryption at rest.</td><td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
+<tr>
+  <td>Encrypted Data at Rest</td>
+  <td><%= vars.product_short %> enables integration with commercial vendors for full-disk encryption
+    at rest.</td>
+    <td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
 </table>
 
 ## <a id="other-notes"></a>About Availability Zones
@@ -142,10 +219,11 @@ However, assigning multiple AZs to MySQL jobs does not guarantee high availabili
 * You can assign on-demand plans to any of the configured AZs.
 * BOSH randomly deploys service instances across configured AZs.
   This minimizes the impact of an AZ outage and removes single points
-  of failure.
+  of failure,
 * For all <%= vars.product_short %> plans, select three AZs.
 Choosing three AZs does not increase the number of AZs assigned to service instances to three.
 
 ##<a id="feedback"></a> Feedback
 
-Please provide any bugs, feature requests, or questions to [the <%= vars.platform_name %> Feedback list](mailto:pivotal-cf–feedback@pivotal.io).
+Please provide any bugs, feature requests, or questions to
+[the <%= vars.platform_name %> Feedback list](mailto:pivotal-cf–feedback@pivotal.io).

@@ -333,7 +333,7 @@ In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) op
 
 #### Symptom
 
-Developers report that read, write, and cf CLI operations do not work.
+Developers report thatread, write, and cf CLI operations do not work.
 Developers cannot upgrade to a larger MySQL service plan to free up disk space.
 
 #### Explanation
@@ -394,8 +394,8 @@ Follow the steps below:
     To retrieve and record the instance ID of your service instance, follow the
     procedure below that corresponds with your VM topology:
     <ul>
-    <li>If you are using single node MySQL VMs, to retrieve and record the
-      instance ID, run the
+    <li>if you are using single node mysql vms, to retrieve and record the
+      instance id, run the
     following command:
     <br>
     <pre>bosh -d service-instance_SERVICE-INSTANCE-GUID instances</pre>
@@ -986,7 +986,7 @@ gathering information to diagnose the type of failure the cluster is experiencin
         The environment that <%= vars.product_short %> is running in such as <%= vars.app_runtime_full %> or a service tile.</li>
       <li>
         <strong>Version numbers:</strong>
-        The versions of the installed Ops Manager, PAS, and <%= vars.product_short %>
+        The versions of the installed Ops Manager, <%= vars.app_runtime_abbr %>, and <%= vars.product_short %>
       </li>
     </ul>
   </li>
