@@ -5,20 +5,20 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to check expiration dates and rotate certificates used by <%= vars.product_name %>.
+This topic describes how to check expiration dates and rotate certificates used by <%= vars.product_full %>.
 
 ## <a id="overview"></a> Types of Certificates
 
-<%= vars.product_name %> uses the following types of certificates:
+<%= vars.product_short %> uses the following types of certificates:
 
-+ **TLS certificates managed by the operator:** If you are using TLS for <%= vars.product_name %>,
++ **TLS certificates managed by the operator:** If you are using TLS for <%= vars.product_short %>,
 you provided a CA certificate to BOSH CredHub when you did the procedures	in [Preparing for TLS](prepare-tls.html). Operators must manually rotate this TLS CA certificate before the certificate expires or if it is compromised.
 
-+ **Internal certificates managed by <%= vars.product_name %>:** When you upgrade to <%= vars.product_name %> v2.7,
-<%= vars.product_name %> automatically rotates your internal certificates. The new certificates do not expire for 5 years.
++ **Internal certificates managed by <%= vars.product_short %>:** When you upgrade to <%= vars.product_short %> v2.7,
+<%= vars.product_short %> automatically rotates your internal certificates. The new certificates do not expire for 5 years.
 For more information, see [Rotate Internal Certificates](#internal) below.
 
-For a list of the certificates used by <%= vars.product_name %>, see [Certificates Used by <%= vars.product_name %>](#mysql-certs)
+For a list of the certificates used by <%= vars.product_short %>, see [Certificates Used by <%= vars.product_short %>](#mysql-certs)
 below.
 
 <p class="note warning"><strong>Warning</strong>: Do not attempt to rotate a CA certificate on your own.
@@ -26,14 +26,14 @@ Contact <a href="https://support.pivotal.io">Pivotal Support</a>
 and perform the following procedures with their help.
 </p>
 
-## <a id="mysql-certs"></a> Certificates Used by <%= vars.product_name %>
+## <a id="mysql-certs"></a> Certificates Used by <%= vars.product_short %>
 
-The following table lists the certificates used by <%= vars.product_name %>:
+The following table lists the certificates used by <%= vars.product_short %>:
 
 <table>
   <tr>
     <th width="75%"">Certificate</th>
-    <th>Rotated by <%= vars.product_name %>?</th>
+    <th>Rotated by <%= vars.product_short %>?</th>
   </tr>
   <tr>
     <th colspan="2">TLS Certificates</th>
@@ -131,8 +131,8 @@ To rotate your certificates:
 
 ## <a id="credhub"></a> Check Expiration Dates
 
-<%= vars.platform_name %> stores the certificates used by <%= vars.product_name %>
-in the BOSH CredHub credentials store. You can use the CredHub API to check the expiration date for the certificates used by <%= vars.product_name %>. For more information, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
+<%= vars.platform_name %> stores the certificates used by <%= vars.product_short %>
+in the BOSH CredHub credentials store. You can use the CredHub API to check the expiration date for the certificates used by <%= vars.product_short %>. For more information, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
 
 To use the CredHub API, you must retrieve credentials from BOSH Director and then use the credentials to log in to CredHub from the Pivotal Ops Manager VM.
 
@@ -196,7 +196,7 @@ CredHub server by running the following command:
     --client-secret=abcdefghijklm123456789
     </pre>
 
-1. For each certificate in the [Certificates Used by <%= vars.product_name %>](#mysql-certs) list above,
+1. For each certificate in the [Certificates Used by <%= vars.product_short %>](#mysql-certs) list above,
    run the following command:
 
     ```
@@ -220,7 +220,7 @@ CredHub server by running the following command:
   * **If your TLS certificates are about to expire or have expired,**
     do the procedures in [Rotate TLS Certificates](#tls) below.
     This rotates both the TLS certificates and the internal certificates.
-  * **If only your internal certificates are about to expire or have expired,** 
+  * **If only your internal certificates are about to expire or have expired,**
     do the procedure in [Rotate Internal Certificates ](#internal) below.
 
 ##<a id='tls'></a> Rotate TLS Certificates
@@ -393,23 +393,23 @@ To rebind your app:
 
 ## <a id="internal"></a> Rotate Internal Certificates
 
-When you upgrade to <%= vars.product_name %> v2.7, <%= vars.product_name %> automatically
+When you upgrade to <%= vars.product_short %> v2.7, <%= vars.product_short %> automatically
 rotates all internal certificates. The new certificates do not expire for 5 years.
 The below commands upgrade all of your MySQL for service instances and distribute the new certificates to your service instances.
 
 To ensure that the internal certificates rotate, do one of the following:
 
-+ **If you have not yet upgraded to <%= vars.product_name %> v2.7,** do the following:
-    1. Navigate to the Ops Manager Installation Dashboard and click the **<%= vars.product_name %> v2** tile.
++ **If you have not yet upgraded to <%= vars.product_short %> v2.7,** do the following:
+    1. Navigate to the Ops Manager Installation Dashboard and click the **<%= vars.product_short %> v2** tile.
     1. Click **Errands**.
     1. Under **Post-Deploy Errands**, ensure that **Upgrade all On-demand MySQL Service Instances** is set to **Default (On)**.
 
           ![Upgrade All Instances Errand](upgrade-all-instances-errand.png)
     1. Click **Save.**
 
-    For instructions for upgrading to <%= vars.product_name %> v2.7, see [Upgrading <%= vars.product_name %>](./upgrade.html).<br><br>
+    For instructions for upgrading to <%= vars.product_short %> v2.7, see [Upgrading <%= vars.product_short %>](./upgrade.html).<br><br>
 
-+ **If you have already upgraded to <%= vars.product_name %> v2.7 without the Upgrade all On-demand MySQL Service Instances errand on,** run the following command:
++ **If you have already upgraded to <%= vars.product_short %> v2.7 without the Upgrade all On-demand MySQL Service Instances errand on,** run the following command:
 
     ```
     bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
@@ -417,5 +417,5 @@ To ensure that the internal certificates rotate, do one of the following:
 
     Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
     <br><br>
-    For a list of certificates used by <%= vars.product_name %>,
-    see [Certificates Used by <%= vars.product_name %>](#mysql-certs) above.
+    For a list of certificates used by <%= vars.product_short %>,
+    see [Certificates Used by <%= vars.product_short %>](#mysql-certs) above.

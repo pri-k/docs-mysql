@@ -5,33 +5,33 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers using the <%= vars.product_name %> service for their
+This topic provides instructions for developers using the <%= vars.product_full %> service for their
 <%= vars.platform_name %> apps.
 
 
 ## <a id='overview'></a>Overview
 
-<%= vars.product_name %> provides a relational database for apps and devices. To use <%= vars.product_name %> in an app:
+<%= vars.product_short %> provides a relational database for apps and devices. To use <%= vars.product_short %> in an app:
 
 1. Check the service availability in the Marketplace,
-   and see if there is an existing instance of <%= vars.product_name %> in your space.
+   and see if there is an existing instance of <%= vars.product_short %> in your space.
 
-    See [Confirm the <%= vars.product_name %> Service Availability](#marketplace), below.
+    See [Confirm the <%= vars.product_short %> Service Availability](#marketplace), below.
 
 2. If there is no existing instance or you want to use a different one,
-   create an instance of the <%= vars.product_name %> service in the same space as the app.
+   create an instance of the <%= vars.product_short %> service in the same space as the app.
 
     See [Create a Service Instance](#create), below.
 
-4. Bind the app to the <%= vars.product_name %> service instance, to enable the app to use MySQL.
+4. Bind the app to the <%= vars.product_short %> service instance, to enable the app to use MySQL.
 
     See [Bind a Service Instance to Your App](#bind), below.
 
-5. Call the <%= vars.product_name %> service in your app code, and then re-push your app into the space.
+5. Call the <%= vars.product_short %> service in your app code, and then re-push your app into the space.
 
     See [Use the MySQL Service in Your App](#call), below.
 
-After you create a <%= vars.product_name %> service instance, you can manage it over the life cycle of your apps and data.
+After you create a <%= vars.product_short %> service instance, you can manage it over the life cycle of your apps and data.
 See [Manage Service Instances](#manage), below.
 
 The below procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
@@ -42,11 +42,11 @@ For more information, see
 
 ## <a id="prereqs"></a>Prerequisites
 
-To use <%= vars.product_name %> with your <%= vars.platform_name %> apps, you need:
+To use <%= vars.product_short %> with your <%= vars.platform_name %> apps, you need:
 
 * Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
 * If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html#limitations).
-* A <%= vars.platform_name %> installation with [<%= vars.product_name %>](https://network.pivotal.io/products/p-mysql) installed and listed
+* A <%= vars.platform_name %> installation with [<%= vars.product_short %>](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 * A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the <%= vars.platform_name %> installation
 * A local machine with the following installed:
@@ -57,9 +57,9 @@ in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
 * To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
 
 
-## <a id='marketplace'></a>Confirm the <%= vars.product_name %> Service Availability
+## <a id='marketplace'></a>Confirm the <%= vars.product_short %> Service Availability
 
-For an app to use the <%= vars.product_name %> service, both of the following must be true:
+For an app to use the <%= vars.product_short %> service, both of the following must be true:
 
 * The service must be available in the Marketplace for its space.
 * An instance of the service must exist in its space.
@@ -68,7 +68,7 @@ You can confirm both of these using the cf CLI as follows.
 
 ### <a id="check-marketplace"></a> Check Service Availability in the Marketplace
 
-To find out if a <%= vars.product_name %> service is available in the Marketplace:
+To find out if a <%= vars.product_short %> service is available in the Marketplace:
 
 1. Enter the following command:
 
@@ -76,7 +76,7 @@ To find out if a <%= vars.product_name %> service is available in the Marketplac
     cf marketplace
     ```
 
-1. If the output lists `p.mysql` in the `service` column, <%= vars.product_name %> is available.
+1. If the output lists `p.mysql` in the `service` column, <%= vars.product_short %> is available.
    If it is not available, ask your operator to install it.
 
     <pre class="terminal">
@@ -91,7 +91,7 @@ To find out if a <%= vars.product_name %> service is available in the Marketplac
 
 ### <a id="check-instance"></a> Check That an Instance Is Running in the Space
 
-To confirm that a <%= vars.product_name %> instance is running in the space:
+To confirm that a <%= vars.product_short %> instance is running in the space:
 
 1. Use the [cf CLI](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) or
 [Apps Manager](http://docs.pivotal.io/pivotalcf/customizing/console-login.html) to log in to the org and space that contains the app.
@@ -100,7 +100,7 @@ To confirm that a <%= vars.product_name %> instance is running in the space:
     ```
     cf services
     ```
-1. Any `p.mysql` listings in the `service` column are service instances of <%= vars.product_name %> in the space.
+1. Any `p.mysql` listings in the `service` column are service instances of <%= vars.product_short %> in the space.
 <br><br>
 For example:
     <pre class="terminal">
@@ -117,7 +117,7 @@ For example:
 On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use.
 
-To create an instance of the <%= vars.product_name %> service:
+To create an instance of the <%= vars.product_short %> service:
 
 1. Create a service instance by running the following command:
 
@@ -126,7 +126,7 @@ To create an instance of the <%= vars.product_name %> service:
     ```
 
     Where:
-    - `PLAN` is the name of the <%= vars.product_name %> plan you want to use.
+    - `PLAN` is the name of the <%= vars.product_short %> plan you want to use.
     - `SERVICE-INSTANCE` is a name you choose to identify the service instance.
     This name appears under `service` in output from `cf services`.
 
@@ -156,15 +156,15 @@ your instance to show as `create succeeded`.
 
 For an app to use a service, you must bind the app to a service instance.  You must do this after every time you run `cf push`.
 
-To push and bind an app to a <%= vars.product_name %> instance run the following command:
+To push and bind an app to a <%= vars.product_short %> instance run the following command:
 
-1. Push your app into the same space as your <%= vars.product_name %> service instance by running the following command:
+1. Push your app into the same space as your <%= vars.product_short %> service instance by running the following command:
 
     ```
     cf push
     ```
 
-1. Bind your app to a <%= vars.product_name %> instance by running the following command:
+1. Bind your app to a <%= vars.product_short %> instance by running the following command:
 
     ```
     cf bind-service APP SERVICE-INSTANCE
@@ -205,25 +205,25 @@ To access the MySQL service from your app:
 
 ###<a id="schema"></a>Use Custom Schemas
 
-  <%= vars.product_name %> supports multiple custom schemas.
+  <%= vars.product_short %> supports multiple custom schemas.
   You can use custom schemas with apps that share a MySQL service instance to isolate app data by schema.
   By default, service bindings use the default schema `service_instance_db`.
 
   To use custom schemas in your apps:
-    
+
   1. Bind your app to the custom schema by running the following command:
-      
+
       ```
       cf bind-service APP SERVICE-INSTANCE -c '{"schema":"CUSTOM-SCHEMA"}'
       ```
-      
+
     Where:
     - `APP` is the app you want to use the custom schema.
     - `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
     - `CUSTOM-SCHEMA` is the name of your custom schema.
-    
+
   1. Restart your app by running the following command:
-    
+
     ```
     cf restart APP
     ```
@@ -319,7 +319,7 @@ $ cf update-service my-instance -p db-large
 
 ###<a id="share"></a> Share Service Instances
 
-In <%= vars.product_name %> you can share service instances between different orgs and spaces using `cf share-service`.
+In <%= vars.product_short %> you can share service instances between different orgs and spaces using `cf share-service`.
 Service instance sharing is enabled by default.
 
 For more information about service instance sharing, see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/devguide/services/sharing-instances.html).
@@ -327,23 +327,23 @@ For more information about service instance sharing, see [Sharing Service Instan
 To share a service instance:
 
 1. Target the source org and space for the service instance you want to share by running:
-  
+
     ```
     cf target -o SOURCE-ORG -s SOURCE-SPACE
     ```
-    
+
     Where:
     + `SOURCE-ORG` is the source org for your service instance.
-    + `SOURCE-SPACE` is the source space for your service instance. 
-    
+    + `SOURCE-SPACE` is the source space for your service instance.
+
 2. Share your service instance to the destination org and space by running:
 
     ```
     cf share-service SERVICE-INSTANCE -o DESTINATION-ORG -s DESTINATION-SPACE
     ```
-    
+
     Where:
-    + `SERVICE-INSTANCE` is the service instance you want to share. 
+    + `SERVICE-INSTANCE` is the service instance you want to share.
     + `DESTINATION-ORG` is the destination org for the service instance.
     + `DESTINATION-SPACE` is the destination space for the service instance.
 1. Target the destination org and space by running:
@@ -351,14 +351,14 @@ To share a service instance:
     ```
     cf target -o DESTINATION-ORG -s DESTINATION-SPACE
     ```
-  
-1. Confirm the service instance was shared by running: 
+
+1. Confirm the service instance was shared by running:
 
     ```
     cf service SERVICE-INSTANCE
     ```
-    
-    Where `SERVICE-INSTANCE` is the service instance you shared. 
+
+    Where `SERVICE-INSTANCE` is the service instance you shared.
 
 ### <a id="unbind"></a>Unbind an App from a Service Instance
 

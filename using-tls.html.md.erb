@@ -6,11 +6,11 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 This topic describes how developers can use TLS to secure the communication
-from their apps and local workstations to the <%= vars.product_name %> service.
+from their apps and local workstations to the <%= vars.product_full %> service.
 
 ## <a id="overview"></a>Overview
 
-For <%= vars.product_old %> v2.5 and later and <%= vars.product_name %> 2.7 and later, if your operator has configured TLS in the tile,
+For <%= vars.product_old %> v2.5 and later and <%= vars.product_short %> 2.7 and later, if your operator has configured TLS in the tile,
 but did not configure TLS for existing service instances in <%= vars.product_old %> v2.4 and earlier,
 you must enable TLS using the procedures in [Enable TLS](#enable), below.
 
@@ -101,7 +101,7 @@ The metadata includes the information needed to connect to the service, such as 
 To activate TLS for your app, do the following:
 
 1. Modify your app to retrieve the hostname, username, password, database name, and CA certificate
-   for the bound <%= vars.product_name %> service instance from the `VCAP_SERVICES` environment variable.
+   for the bound <%= vars.product_short %> service instance from the `VCAP_SERVICES` environment variable.
 
 	 <a id="call-service"></a>
 	 <br>
@@ -126,7 +126,7 @@ To activate TLS for your app, do the following:
 	 }
 	 ```
 
-2. Modify your app to use the hostname, username, password, and CA certificate to establish a secure connection with the bound <%= vars.product_name %> service instance.<br><br>
+2. Modify your app to use the hostname, username, password, and CA certificate to establish a secure connection with the bound <%= vars.product_short %> service instance.<br><br>
 
     For example, the following Node.js function establishes a TLS connection with the MySQL service, using the information loaded into `mysql_creds`:
 
@@ -150,7 +150,7 @@ To activate TLS for your app, do the following:
 
 ##<a id='establish-tls'></a> Establish a TLS Connection to a Service Instance
 
-You can use `mysql` to establish a TLS connection to a <%= vars.product_name %> service instance that has TLS
+You can use `mysql` to establish a TLS connection to a <%= vars.product_short %> service instance that has TLS
 enabled. For more information about how to enable TLS for a service instance, see [Enable TLS](#enable), above.
 
 To establish a TLS connection to a service instance, do the following:

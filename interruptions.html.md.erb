@@ -5,11 +5,11 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic explains events in the lifecycle of a <%= vars.product_name %> service instance that may cause temporary service interruptions.
+This topic explains events in the lifecycle of a <%= vars.product_full %> service instance that may cause temporary service interruptions.
 
 ## <a id='service-update'></a>Stemcell or Service Update
 
-An operator updates a stemcell version or their version of <%= vars.product_name %>.
+An operator updates a stemcell version or their version of <%= vars.product_short %>.
 
 - <strong>Impact:</strong> Apps lose access to the MySQL service while <%= vars.platform_name %> updates the service instance they are bound to. The service should resume within 10-15 minutes.
 - <strong>Required Actions:</strong> None. If the update deploys successfully, apps reconnect automatically.
@@ -33,7 +33,7 @@ A process, like the MySQL server, crashes on the service instance VM.
 
 ## <a id='vm-fail'></a>VM Failure
 
-A <%= vars.product_name %> VM fails and goes offline due to either a virtualization problem or a host hardware problem.
+A <%= vars.product_short %> VM fails and goes offline due to either a virtualization problem or a host hardware problem.
 
 - <strong>Impact:</strong>
   - If the [BOSH Resurrector](https://bosh.io/docs/resurrector.html) is enabled (recommended), BOSH should detect the failure, recreate the VM, and reattach the same persistent disk and IP address.

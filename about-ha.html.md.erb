@@ -7,7 +7,7 @@ owner: MySQL
 
 <%= partial "../../p-mysql/partials/mysql/galera_ga" %>
 
-This topic describes how highly available (HA) clusters work in <%= vars.product_name %>
+This topic describes how highly available (HA) clusters work in <%= vars.product_full %>
 and contains information to help you decide whether to use HA clusters.
 
 ## <a id="understanding"></a> Highly Available Cluster Topology
@@ -24,7 +24,7 @@ For more information about cluster availability, see
 [Percona XtraDB Cluster: Quorum and Availability of the cluster](https://www.percona.com/blog/2015/06/12/percona-xtradb-cluster-quorum-availability-cluster/)
 in the Percona XtraDB Cluster documentation.
 
-In HA topology, the <%= vars.product_name %> service uses the following:
+In HA topology, the <%= vars.product_short %> service uses the following:
 
 * Three MySQL servers running
 [Percona XtraDB](https://www.percona.com/software/mysql-database/percona-xtradb-cluster)
@@ -45,12 +45,12 @@ The following diagram shows an HA cluster in three availability zones (AZs):
 
 <a href="./images/ha-clusters.png" target="_blank">View a larger version of this diagram</a>
 
-For more information about other availability options supported by <%= vars.product_name %>,
+For more information about other availability options supported by <%= vars.product_short %>,
 see [Availability Options](availability-options.html).
 
 ## <a id="requirements"></a> Infrastructure Requirements for Highly Available Deployments
 
- Before deciding to use HA clusters for <%= vars.product_name %> service plans, consider the
+ Before deciding to use HA clusters for <%= vars.product_short %> service plans, consider the
  following requirements.
 
 ### <a id="cap-plan"></a> Capacity Planning
@@ -69,7 +69,7 @@ With three AZs, nodes are deployed to separate AZs.
 For more information, see [About Availability Zones](./index.html#other-notes).
 
 ### <a id="network-req"></a> Networking Rules
-In addition to the standard networking rules needed for <%= vars.product_name %>, the operator
+In addition to the standard networking rules needed for <%= vars.product_short %>, the operator
 must ensure HA cluster specific network rules are also configured.
 
 For information about HA cluster specific networking rules,
@@ -77,7 +77,7 @@ see [Required Networking Rules for Highly Available Cluster Plans](./about.html#
 
 ## <a id="limitations"></a> Highly Available Cluster Limitations
 
-When deployed with HA topology, <%= vars.product_name %> runs three nodes. This cluster
+When deployed with HA topology, <%= vars.product_short %> runs three nodes. This cluster
 arrangement imposes some limitations which do not apply to single node or
 leader-follower MySQL database servers. For more information about the difference
 between single node, leader-follower, and HA cluster topologies,
@@ -151,14 +151,14 @@ bootstrapped. For more information about bootstrapping HA clusters,
 see [Bootstrapping](./bootstrapping.html).
 
 ## <a id="server"></a> MySQL Server Defaults for HA Components
-This section describes some defaults that <%= vars.product_name %> applies to HA components.
+This section describes some defaults that <%= vars.product_short %> applies to HA components.
 
 ### State Snapshot Transfer Process
 When a new node is added to or rejoins a cluster, a primary node from the cluster
 is designated as the state donor. The new node synchronizes with the donor through
 the State Snapshot Transfer (SST) process.
 
-<%= vars.product_name %> uses Xtrabackup for SST, which lets the state donor node to continue
+<%= vars.product_short %> uses Xtrabackup for SST, which lets the state donor node to continue
 accepting reads and writes during the transfer. HA clusters default to using rsync
 to perform SST, which is fast, but blocks requests during the transfer. For more
 information about [Percona XtraBackup SST Configuration](https://www.percona.com/doc/percona-xtradb-cluster/LATEST/manual/xtrabackup_sst.html)
