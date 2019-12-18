@@ -71,7 +71,7 @@ so that connections are open as described in the table below.
 		<td>This port is for metrics.</td>
 	</tr>
 	<tr>
-		<td><strong>Deployed apps on <%= vars.app_runtime %></strong></td>
+		<td><strong>Deployed apps on <%= vars.product_short %></strong></td>
 		<td><strong>MySQL service instances</strong></td>
 		<td>3306</td>
 		<td>This port is for general use, app-specific tasks.
@@ -105,18 +105,18 @@ so that connections are open as described in the table below.
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td><strong><%= vars.app_runtime %></strong></td>
+		<td><strong><%= vars.product_short %></strong></td>
 		<td>8443</td>
 		<td>The default port is not configurable.</td>
 	</tr>
 	<tr>
-		<td><strong><%= vars.app_runtime %></strong></td>
+		<td><strong><%= vars.product_short %></strong></td>
 		<td><strong>ODB</strong></td>
 		<td>8080</td>
-		<td>This port allows <%= vars.app_runtime %> to communicate with the ODB component.</td>
+		<td>This port allows <%= vars.product_short %> to communicate with the ODB component.</td>
 	</tr>
 	<tr>
-		<td><strong>Deployed apps on <%= vars.app_runtime %></strong></td>
+		<td><strong>Deployed apps on <%= vars.product_short %></strong></td>
 		<td><strong>Runtime CredHub</strong></td>
 		<td>8844</td>
 		<td>This port is needed if secure service instance credentials are enabled.
@@ -124,7 +124,7 @@ so that connections are open as described in the table below.
 		</td>
 	</tr>
 	<tr>
-		<td><strong><%= vars.app_runtime %></strong></td>
+		<td><strong><%= vars.product_short %></strong></td>
 		<td><strong>MySQL service instances</strong>
 		</td>
 		<td>8853</td>
@@ -169,7 +169,7 @@ as described in the table below.
 	<th>Notes</th>
 
 	<tr>
-		<td><strong><%= vars.app_runtime %></strong></td>
+		<td><strong><%= vars.product_short %></strong></td>
 		<td><strong>MySQL service instances</strong></td>
 		<td>8083</td>
 		<td>This port is needed to monitor cluster health with Switchboard.
@@ -178,7 +178,7 @@ as described in the table below.
 
 	<tr>
 		<td><strong>Jumpbox VM</strong></td>
-		<td><strong><%= vars.app_runtime %> UAA</strong></td>
+		<td><strong><%= vars.product_short %> UAA</strong></td>
 		<td>8443</td>
 		<td>This port is needed so that the replication canary can create a UAA client for sending email
 			notifications. For more information, see <a href="./replication-canary.html">About the Replication Canary</a>.</td>
