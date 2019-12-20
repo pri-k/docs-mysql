@@ -119,21 +119,92 @@ Use Ops Manager to configure <%= vars.product_short %> to backup using SCP.
 1. Select **SCP**.<br/>
     ![SCP Backup Configuration Form](scp-backups.png)
 
-1. Fill in the fields as follows:<br/>
-    * **Username**---Enter the user that you created above.
-    * **Private Key**---Enter the private key that you created above.
-        The public key should be stored for ssh and scp access on the destination VM.
-    * **Hostname**---Enter the IP or DNS entry that should be used to access the destination VM.
-    * **Destination Directory**---Enter the directory in which <%= vars.product_short %> should upload backups.
-    * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
-        to take backups of each service instance.
-    * **Fingerprint**---Enter the fingerprint of the destination VM's public key.
-        This helps to detect any changes to the destination VM.
-    * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          - Added all users who need to be notified about failed backups to System org and System space</li>
-          - Configured Email Notifications in <%= vars.app_runtime %>.
-          See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Username</strong>
+            </td>
+            <td>
+                Enter the user that you created in <a href="#scp-keys">Create a Public and Private Key Pair</a>
+                above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Private Key</strong>
+            </td>
+            <td>
+                 Enter the private key that you created above.
+                 The public key should be stored for ssh and scp access on the destination VM.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Hostname</strong>
+            </td>
+            <td>
+                Enter the IP or DNS entry that should be used to access the destination VM.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Destination Directory</strong>
+            </td>
+            <td>
+                Enter the directory in which <%= vars.product_short %> should upload backups.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>SCP Port</strong>
+            </td>
+            <td>
+               Enter the SCP port number for SSH.
+               Usually, this is port 22.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
+                cron syntax</a>, to take backups of each service instance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Fingerprint</strong>
+            </td>
+            <td>
+                Enter the fingerprint of the destination VM's public key.
+                This helps to detect any changes to the destination VM.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup failure occurs.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
 
 ## <a id="ceph-or-s3"></a> Option 2: Back Up to Ceph or S3
 
@@ -194,25 +265,88 @@ Use Ops Manager to connect <%= vars.product_short %> to your S3 account.
 
     ![S3 Backup Configuration Form](S3-backups.png)
 
-1. Fill in the fields as follows:<br><br>
-      * **Access Key ID** and **Secret Access Key**---Enter the S3 Access Key ID and Secret Access Key from above.
-      * **Endpoint URL**---Enter the S3 compatible endpoint URL for uploading backups.
-          URL must start with `http://` or `https://`.
-          The default is https://s3.amazonaws.com
-      * **Region**---Enter the region where your bucket is located or the region where you want a bucket to be created.
-        If the bucket does not already exist, it is created automatically.
-      * **Bucket Name**---Enter the name of your bucket.
-      Do not include an `s3://` prefix, a trailing `/`, or underscores.
-      Pivotal recommends using the naming convention `DEPLOYMENT-backups`, such as `sandbox-backups`.
-      * **Bucket Path**---Enter the path in the bucket to store backups.
-      Do not include a trailing `/`. Pivotal recommends using `mysql-v2`.
-      * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
-          to take backups of each service instance.
-      * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          * Added all users who need to be notified about failed backups to System org and System space
-          * Configured Email Notifications in <%= vars.app_runtime %>.
-          See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Access Key ID</strong> and <strong>Secret Access Key</strong>
+            </td>
+            <td>
+                Enter the S3 Access Key ID and Secret Access Key from <a href="#access-key-aws">Create
+                a Policy and Access Key</a> above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Endpoint URL</strong>
+            </td>
+            <td>
+                Enter the S3 compatible endpoint URL for uploading backups.
+                URL must start with <code>http://</code> or <code>https://</code>.
+                The default is <code>https://s3.amazonaws.com</code>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Region</strong>
+            </td>
+            <td>
+                Enter the region where your bucket is located or the region where you want a bucket to be created.
+                If the bucket does not already exist, it is created automatically.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Bucket Name</strong>
+            </td>
+            <td>
+                Enter the name of your bucket.
+                Do not include an <code>s3://</code> prefix, a trailing <code>/</code>, or underscores.
+                Pivotal recommends using the naming convention <code>DEPLOYMENT-backups</code>,
+                such as <code>sandbox-backups</code>.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Bucket Path</strong>
+            </td>
+            <td>
+               Enter the path in the bucket to store backups.
+               Do not include a trailing <code>/</code>. Pivotal recommends using <code>mysql-v2</code>.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
+                cron syntax</a>, to take backups of each service instance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup failure occurs.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
 
 ## <a id="gcs"></a> Option 3: Back Up to GCS
 
@@ -252,17 +386,65 @@ Use Ops Manager to connect <%= vars.product_short %> to your GCS account.
 
     ![GCS Backup Configuration Form](gcs-backups.png)
 
-1. Fill in the fields as follows:<br><br>
-    * **Project ID**---Enter the Project ID for the Google Cloud project that you are using.
-    * **Bucket Name**---Enter the bucket name in which to upload.
-    * **Service Account JSON**---Enter the contents of the service account JSON file that you downloaded when creating a service account above.
-    * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
-        to take backups of each service instance.
-    * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          * Added all users who need to be notified about failed backups to System org and System space
-          * Configured Email Notifications in <%= vars.app_runtime %>.
-          See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Project ID</strong>
+            </td>
+            <td>
+                Enter the Project ID for the Google Cloud project that you are using.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Bucket name</strong>
+            </td>
+            <td>
+                Enter the bucket name in which to upload.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Service Account JSON</strong>
+            </td>
+            <td>
+                Enter the contents of the service account JSON file that you downloaded
+                when creating a service account in <a href="#access-key">Create a Policy and Access Key</code> above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
+                cron syntax</a>, to take backups of each service instance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup failure occurs.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
 
 ## <a id="azure"></a> Option 4: Back Up to Azure Storage
 
@@ -274,19 +456,81 @@ Complete the following steps to back up your database to your Azure Storage acco
 
     ![Azure Backup Configuration Form](azure-backups.png)
 
-1. Fill in the fields as follows:
-    * **Account**---Enter the Azure Storage account name that you are using.
-    * **Azure Storage Access Key**---Enter one of the storage access keys that can be used to access the Azure Storage account.
-    * **Container Name**---Enter the container name that backups should be uploaded to.
-    * **Destination Directory**---Enter the directory in which backups should be uploaded to inside of the Container.
-    * **Blob Store Base URL**---By default, backups are sent to the public Azure blob storage.
-        To use an on-premise blob storage, enter the hostname of the blob storage.
-    * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
-    * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          * Added all users who need to be notified about failed backups to System org and System space</li>
-          * Configured Email Notifications in <%= vars.app_runtime %>.
-          See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Account</strong>
+            </td>
+            <td>
+               Enter the Azure Storage account name that you are using.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Azure Storage Access Key</strong>
+            </td>
+            <td>
+                Enter one of the storage access keys that can be used to access the Azure Storage account.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Container Name</strong>
+            </td>
+            <td>
+                Enter the container name that backups should be uploaded to.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Destination Directory</strong>
+            </td>
+            <td>
+                Enter the directory in which backups should be uploaded to inside of the Container.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Blob Store Base URL</strong>
+            </td>
+            <td>
+               By default, backups are sent to the public Azure blob storage.
+               To use an on-premise blob storage, enter the hostname of the blob storage.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
+                cron syntax</a>, to take backups of each service instance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup failure occurs.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
 
 
 ## <a id="manual-backup"></a> Manual Backup
