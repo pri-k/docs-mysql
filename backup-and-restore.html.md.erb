@@ -126,10 +126,15 @@ Use Ops Manager to configure MySQL for PCF to backup using SCP.
     * **Fingerprint**---Enter the fingerprint of the destination VM's public key.
         This helps to detect any changes to the destination VM.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          - Added all users who need to be notified about failed backups to System org and System space
-          - Configured Email Notifications in PAS.
-            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+        Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
 
 ## <a id="ceph-or-s3"></a> Option 2: Back Up to Ceph or S3
 
@@ -205,10 +210,15 @@ Use Ops Manager to connect MySQL for PCF to your S3 account.
       * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
           to take backups of each service instance.
       * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          * Added all users who need to be notified about failed backups to System org and System space
-          * Configured Email Notifications in PAS.
-            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+          Also verify that:
+          <ul>
+           <li>All users who need to be notified about failed backups
+               have the Space Developer role in the system org and system space.</li>
+           <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+               See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+               (Optional) Configure Email Notifications</a>.
+           </li>
+          </ul>
 
 ## <a id="gcs"></a> Option 3: Back Up to GCS
 
@@ -248,17 +258,22 @@ Use Ops Manager to connect MySQL for PCF to your GCS account.
 
     ![GCS Backup Configuration Form](gcs-backups.png)
 
-1. Fill in the fields as follows:<br><br>
+1. Fill in the fields as follows:<br>
     * **Project ID**---Enter the Project ID for the Google Cloud project that you are using.
     * **Bucket Name**---Enter the bucket name in which to upload.
     * **Service Account JSON**---Enter the contents of the service account JSON file that you downloaded when creating a service account above.
     * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto),
         to take backups of each service instance.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          * Added all users who need to be notified about failed backups to System org and System space
-          * Configured Email Notifications in PAS.
-            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+        Also verify that:
+        <ul>
+         <li>All users who need to be notified about failed backups
+             have the Space Developer role in the system org and system space.</li>
+         <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+             See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+             (Optional) Configure Email Notifications</a>.
+         </li>
+        </ul>
 
 ## <a id="azure"></a> Option 4: Back Up to Azure Storage
 
@@ -279,10 +294,15 @@ Complete the following steps to back up your database to your Azure Storage acco
         To use an on-premise blob storage, enter the hostname of the blob storage.
     * **Cron Schedule**---Enter a `cron` schedule, using standard [cron syntax](https://help.ubuntu.com/community/CronHowto), to take backups of each service instance.
     * **Enable Email Alerts**---Select to receive email notifications when a backup failure occurs.
-          Also verify that you have done the following:
-          * Added all users who need to be notified about failed backups to System org and System space
-          * Configured Email Notifications in PAS.
-            See [(Optional) Configure Email Notifications](https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp).
+          Also verify that:
+          <ul>
+           <li>All users who need to be notified about failed backups
+               have the Space Developer role in the system org and system space.</li>
+           <li>Email notifications are configured in <%= vars.app_runtime_full %>.
+               See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+               (Optional) Configure Email Notifications</a>.
+           </li>
+          </ul>
 
 ## <a id="manual-backup"></a> Manual Backup
 
