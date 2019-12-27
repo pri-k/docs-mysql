@@ -26,7 +26,7 @@ For more information about troubleshooting this problem, see
 If you can no longer read to the database as well, your persistent disk might be full. For more
 information about troubleshooting inoperable apps, see [Apps are Inoperable](#disk-full).
 
-### <a id="disk-full"></a>Apps are Inoperable
+### <a id="disk-full"></a>Apps Are Inoperable
 
 If your apps become inoperable, your persistent disk might be full. In this state, read,
 write, and Cloud Foundry Command-Line Interface (cf CLI) opertations do not work.
@@ -34,6 +34,14 @@ write, and Cloud Foundry Command-Line Interface (cf CLI) opertations do not work
 Contact your operator to check if your persistent disk is full.
 For more information about troubleshooting this problem, see
 [Persistent Disk is Full](./troubleshoot.html#persistent-disk).
+
+### <a id="m-tls-error"></a>Apps Cannot Connect to the Database
+
+**Symptom:** Apps cannot connect to the database when TLS is enabled and
+the apps are using MySQL Connector/J v5.1.41 or earlier.
+
+**Solution:** Upgrade to MySQL Connector/J v5.1.42 or later.
+To download, see [MySQL Community Downloads](https://dev.mysql.com/downloads/connector/j/8.0.html").
 
 ## <a id="errors"></a> Troubleshoot Errors
 
