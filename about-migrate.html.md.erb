@@ -35,12 +35,21 @@ During data migration, the `migrate` command:
 
 ## <a id='use-cases'></a>Use Cases
 
+The `migrate` command is used for most migration use cases.
+See [Use Cases Requiring the migrate Command](#migrate-cases) below.
+
+However, many common migrations, such as from a small to a large database,
+can be done with the simpler `update-service` command.
+See [Use Cases Not Requiring the migrate Command](#update-service-cases) below.
+
+### <a id='migrate-cases'></a> Use Cases Requiring the migrate Command
 The `migrate` command supports most migration use cases, including the cases listed in the following
 table:
+The following table lists migration use cases that must be done with the `migrate` command.
 
 <table>
   <tr>
-    <th>Migrating from...</th>
+    <th>Use <code>migrate</code> for migrating from...</th>
     <th>To...</th>
   </tr>
 
@@ -80,6 +89,45 @@ table:
       <td><%= vars.product_short %> v2</td>
   </tr>
 </table>
+
+### <a id='update-service-cases'></a> Use Cases Not Requiring the migrate Command
+
+Not all migrations require the `migrate` command.
+If you are migrating from a smaller to a larger plan of the same or similar toplogy,
+use the simpler `update-service` command.
+
+The following table lists migration use cases that can be done with the `update-service` command.
+For how to use the `update-service` command,
+[Update a Service Instance](use.html#update).
+
+
+<table>
+  <tr>
+    <th>Use <code>update-service</code> for migrating from...</th>
+    <th>To...</th>
+  </tr>
+
+  <tr>
+    <td>small Single Node</td>
+    <td>larger Single Node</td>
+  </tr>
+
+  <tr>
+    <td>small Leader-Follower</td>
+    <td>larger Leader-Follower</td>
+  </tr>
+
+  <tr>
+    <td>Single Node</td>
+    <td>Leader-Follower of same or larger size</td>
+  </tr>
+
+  <tr>
+    <td>Leader-Follower</td>
+      <td>Single Node of same or larger size</td>
+  </tr>
+</table>
+
 
 ## <a id='unsupported'></a>Omitted Data
 
