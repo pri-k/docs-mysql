@@ -3,7 +3,6 @@ title: About MySQL Server Defaults
 owner: MySQL
 ---
 
-
 <strong><%= modified_date %></strong>
 
 This topic provides information about the defaults that <%= vars.product_full %>
@@ -22,7 +21,6 @@ For server defaults that are:
 see [Server Defaults for Single Node and Leader-Follower Plans](#sn-l-f) below.
 + Specific to highly available (HA) cluster plans,
 see [Server Defaults for Highly Available Cluster Plans](#ha) below.
-
 
 <p class="note"><strong>Note:</strong>
   You can use optional parameters to change certain server defaults. For more information,
@@ -43,13 +41,13 @@ to all service plans.
         <td><strong>Max Allowed Packet</strong></td>
         <td><code>max-allowed-packet</code></td>
         <td>256&nbsp;MB</td>
-        <td>You can change this size in a session variable if necessary. </td>
+        <td>If necessary, you can change this size in a session variable. </td>
     </tr>
      <tr>
         <td><strong>Table Definition Cache</strong></td>
         <td><code>table-definition-cache</code></td>
         <td>8192</td>
-        <td>For more information about updating this variable,
+        <td>For information about changing this setting,
             see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache">
                 MySQL documentation</a>.
@@ -60,9 +58,9 @@ to all service plans.
         <td><code>skip-name-resolve</code></td>
         <td>ON</td>
         <td>
-            This disables reverse DNS lookups, which improves performance.
-            <%= vars.product_short %> uses user credentials, not hostnames, to authenticate access.
-            Therefore, most deployments do not need reverse DNS lookups.<br>
+            This disables reverse DNS lookups to improve performance.
+            <%= vars.product_short %> uses user credentials, rather than hostnames, to authenticate access.
+            Therefore, most deployments do not need reverse DNS lookups.<br><br>
             To enable reverse name resolution, clear this option.
         </td>
     </tr>
@@ -72,8 +70,9 @@ to all service plans.
         <td>OFF</td>
         <td>
             <%= vars.product_short %> is configured to prevent the use of symlinks to tables.
-            This recommended security setting prevents users from manipulating
-            files on the server’s file system. For more information, see
+            Pivotal recommends this security setting to prevent users from manipulating
+            files on the server file system. <br> <br>
+            For more information, see
             <a href="https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html">
                 Making MySQL Secure Against Attackers</a>.
         </td>
@@ -84,7 +83,7 @@ to all service plans.
         <td>ON</td>
         <td>
             This setting relaxes constraints on how MySQL writes stored procedures
-            to the binary log. For more information, see the
+            to the binary log. <br><br> For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-binary-log.html#sysvar_log_bin_trust_function_creators">
                 MySQL documentation</a>.
         </td>
@@ -96,9 +95,9 @@ to all service plans.
         <td>
             By default, all table names are case sensitive.
             Operators can change this default on the
-            <a href="./install-config.html#mysql">MySQL Configuration page</a>,
-            and can permit developers to override the default when creating a
-            service instance. For more information about the use for lowercase
+            <a href="./install-config.html#mysql">MySQL Configuration page</a>
+            and permit developers to override the default when they create a
+            service instance. <br> <br>For more information about using lowercase
             table names, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">
                 MySQL documentation</a>.
@@ -119,14 +118,14 @@ to all service plans.
         <td><strong>InnoDB Buffer Pool Size</strong></td>
         <td><code>innodb-buffer-pool-size</code></td>
         <td>50% of the available memory on each service instance</td>
-        <td>Dynamically configured to be 50% of the available memory on each
+        <td>This setting is dynamically configured to be 50% of the available memory on each
             service instance.</td>
     </tr>
      <tr>
         <td><strong>InnoDB Log Buffer Size</strong></td>
         <td><code>innodb-log-buffer-size</code></td>
         <td>32&nbsp;MB</td>
-        <td><%= vars.product_short %> defaults to 32&nbsp;MB to avoid excessive disk I/O when
+        <td>This setting defaults to 32&nbsp;MB to avoid excessive disk I/O when
             issuing large transactions.</td>
     </tr>
     <tr>
@@ -134,16 +133,25 @@ to all service plans.
         <td><code>innodb-autoinc-lock-mode</code></td>
         <td>2</td>
         <td>
-            Auto Increment uses "interleaved" mode.
+            This setting uses the interleaved mode.
             This enables multiple statements to execute at the same time.
             There can be gaps in auto-incrementing columns.
         </td>
     </tr>
     <tr>
+        <td><strong>InnoDB Flush Method</strong></td>
+        <td><code>innodb_flush_method</code></td>
+        <td><code>fsync</code></td>
+        <td>
+          This setting defines the method used to flush data to InnoDB data and log files. <br><br>
+          For more information, see the
+          <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html#sysvar_innodb_flush_method">MySQL documentation</a>.
+    </tr>
+    <tr>
         <td><strong>Character Set</strong></td>
         <td><code>character-set-server</code></td>
         <td><code>utf8</code></td>
-        <td>Defaults all character sets. You can override this during a session.</td>
+        <td>This setting defaults all character sets. You can override this during a session.</td>
     </tr>
     <tr>
         <td><strong>Relay Log Recovery</strong></td>
@@ -179,7 +187,7 @@ and leader-follower plans use the server defaults listed in the following table.
         <td>BACKUP, FORCE</td>
         <td>
             This setting enables <%= vars.product_short %> to recover from most MyISAM problems
-            without human intervention. For more information, see the
+            without human intervention. <br><br>For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
         </td>
@@ -236,7 +244,7 @@ HA cluster plans use the server defaults listed in the following table.
         <td>OFF</td>
         <td>
             This setting enables <%= vars.product_short %> to recover from most MyISAM problems
-            without human intervention. For more information, see the
+            without human intervention. <br><br>For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
         </td>
