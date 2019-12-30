@@ -43,8 +43,7 @@ can be done with the simpler `update-service` command.
 See [Use Cases Not Requiring the migrate Command](#update-service-cases) below.
 
 ### <a id='migrate-cases'></a> Use Cases Requiring the migrate Command
-The `migrate` command supports most migration use cases, including the cases listed in the following
-table:
+
 The following table lists migration use cases that must be done with the `migrate` command.
 
 <table>
@@ -93,11 +92,11 @@ The following table lists migration use cases that must be done with the `migrat
 ### <a id='update-service-cases'></a> Use Cases Not Requiring the migrate Command
 
 Not all migrations require the `migrate` command.
-If you are migrating from a smaller to a larger plan of the same or similar toplogy,
+For example, if you are migrating a database to a larger single node or leader-follower plan,
 use the simpler `update-service` command.
 
 The following table lists migration use cases that can be done with the `update-service` command.
-For how to use the `update-service` command,
+For instructions about using the `update-service` command, see
 [Update a Service Instance](use.html#update).
 
 
@@ -108,23 +107,23 @@ For how to use the `update-service` command,
   </tr>
 
   <tr>
-    <td>small Single Node</td>
+    <td>Single Node</td>
     <td>larger Single Node</td>
   </tr>
 
   <tr>
-    <td>small Leader-Follower</td>
+    <td>Leader-Follower</td>
     <td>larger Leader-Follower</td>
   </tr>
 
   <tr>
     <td>Single Node</td>
-    <td>Leader-Follower of same or larger size</td>
+    <td>Leader-Follower of the same or larger size</td>
   </tr>
 
   <tr>
     <td>Leader-Follower</td>
-      <td>Single Node of same or larger size</td>
+      <td>Single Node of the same or larger size</td>
   </tr>
 </table>
 
@@ -140,16 +139,16 @@ contact <a href="https://pivotal.io/support">Pivotal Support</a>.
 
 The `migrate` command skips the following system schemas:
 
-- `cf_metadata`: This is metadata for binding information, such as database users mapped to 
-<%= vars.platform_name %> GUIDs. 
+- `cf_metadata`: This is metadata for binding information, such as database users mapped to
+<%= vars.platform_name %> GUIDs.
 - `information_schema`: This is metadata for the MySQL database.
-- `mysql`: This is a MySQL database that describes users, user accounts, and permissions. 
+- `mysql`: This is a MySQL database that describes users, user accounts, and permissions.
     <%= vars.product_short %> uses it to authenticate users.
-- `performance_schema`: This is metadata about performance  and server execution. 
+- `performance_schema`: This is metadata about performance  and server execution.
 - `sys`: This is a schema that summarizes `performance_schema`.
 
-<p class="note"><strong>Note:</strong><code>sys</code>, <code>performance_schema</code>, 
+<p class="note"><strong>Note:</strong><code>sys</code>, <code>performance_schema</code>,
   and <code>information_schema</code> change dynamically with changes on a <%= vars.product_short %>
   service instance. These schemas are not migrated because the destination database has its own version of the schemas.
-  You do not need to back up these schemas.  
+  You do not need to back up these schemas.
 </p>
