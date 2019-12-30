@@ -35,6 +35,25 @@ Contact your operator to check if your persistent disk is full.
 For more information about troubleshooting this problem, see
 [Persistent Disk is Full](./troubleshoot.html#persistent-disk).
 
+### <a id="m-tls-error"></a>Apps Cannot Connect to the Database
+
+**Symptom:** Apps cannot connect to the database when TLS is enabled and
+the apps are using MySQL Connector/J v5.1.41 or earlier.
+You see errors about certificates.
+For example:
+```
+Caused by: javax.net.ssl.SSLHandshakeException: Received fatal alert: bad_certificate
+        at sun.security.ssl.Alerts.getSSLException(Alerts.java:192) ~[na:1.8.0_152]
+```
+
+**Solution:** Upgrade to MySQL Connector/J v5.1.42 or later.
+To download, see [MySQL Community Downloads](https://dev.mysql.com/downloads/connector/j/8.0.html").
+
+If you cannot update the MySQL Connector/J, try the workaround outlined in
+[How to disable KeyManager and TrustManager in Container Security Provider Framework in the Java
+buildpack](https://community.pivotal.io/s/article/how-to-disable-keymanager-and-or-trustmanager-in-container-security-provider-framework-in-the-java-buildpack)
+in the Pivotal Support knowledge base.
+
 ## <a id="errors"></a> Troubleshoot Errors
 
 You might see an error when using the Cloud Foundry Command-Line Interface (cf CLI) to perform basic operations on a <%= vars.product_short %> service instance:
