@@ -1,456 +1,357 @@
 ---
-title: MySQL Server Defaults
+title: Changing MySQL Server Defaults
 owner: MySQL
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic provides information about the defaults that <%= vars.product_full %>
-applies to its Percona Server components. This topic also provides
-instructions for how to use optional parameters to change certain server defaults.
+This topic provides instructions for how to use optional parameters to change server defaults.
 
-## <a id="defaults"></a> Server Defaults for <%= vars.product_short %>
+## <a id="changes"></a>Overview
 
-This section lists the server defaults for <%= vars.product_short %> service plans.
-Most of the server defaults are the same for all service plans. However,
-some server defaults differ depending on the service plan.
+You can configure optional parameters to change certain <%= vars.product_full %> server defaults.
+You might want to configure optional parameters in the following cases:
 
-For server defaults that are:
++ You have a read-heavy or write-heavy app.
+See [Workloads](#workload) below.
++ You are migrating from a case-insensitive database.
+See [Lowercase Table Names](#lowercase) below.
++ You want to use a different character set or collation than the default.
+See [Character Sets](#character) below.
++ You want to configure leader-follower replication.
+See [Synchronous Replication](#synchronous-replication) below.
 
-+ Common to all plans, see [Server Defaults for All Plans](#all) below.
-+ Specific to single node and leader-follower plans,
-see [Server Defaults for Single Node and Leader-Follower Plans](#sn-l-f) below.
-+ Specific to highly available (HA) cluster plans,
-see [Server Defaults for Highly Available Cluster Plans](#ha) below.
-
-### <a id="all"></a> Server Defaults for All Plans
-
-The following table lists the <%= vars.product_short %> server defaults that are common
-to all service plans.
-
-<table>
-    <th>Name</th>
-    <th width="25%">Variable Name</th>
-    <th>Default</th>
-    <th width="45%">Notes</th>
-    <tr>
-        <td><strong>Max Allowed Packet</strong></td>
-        <td><code>max-allowed-packet</code></td>
-        <td>256&nbsp;MB</td>
-        <td>You can change this size in a session variable if necessary. </td>
-    </tr>
-     <tr>
-        <td><strong>Table Definition Cache</strong></td>
-        <td><code>table-definition-cache</code></td>
-        <td>8192</td>
-        <td>For more information about updating this variable,
-            see the
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache">
-                MySQL documentation</a>.
-        </td>
-    </tr>
-     <tr>
-        <td><strong>Reverse Name Resolution</strong></td>
-        <td><code>skip-name-resolve</code></td>
-        <td>ON</td>
-        <td>
-            This disables reverse DNS lookups, which improves performance.
-            <%= vars.product_short %> uses user credentials, not hostnames, to authenticate access.
-            Therefore, most deployments do not need reverse DNS lookups.<br>
-            To enable reverse name resolution, clear this option.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>Skip Symbolic Links</strong></td>
-        <td><code>symbolic-links</code></td>
-        <td>OFF</td>
-        <td>
-            <%= vars.product_short %> is configured to prevent the use of symlinks to tables.
-            This recommended security setting prevents users from manipulating
-            files on the server’s file system. For more information, see
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html">
-                Making MySQL Secure Against Attackers</a>.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>Log Bin Trust Function Creators</strong></td>
-        <td><code>log-bin-trust-function-creators</code></td>
-        <td>ON</td>
-        <td>
-            This setting relaxes constraints on how MySQL writes stored procedures
-            to the binary log. For more information, see the
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-binary-log.html#sysvar_log_bin_trust_function_creators">
-                MySQL documentation</a>.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>Lower Case Table Names</strong></td>
-        <td><code>lower-case-table-names</code></td>
-        <td>0</td>
-        <td>
-            By default, all table names are case sensitive.
-            Operators can change this default on the
-            <a href="./install-config.html#mysql">MySQL Configuration page</a>,
-            and may allow developers to override the default when creating a
-            service instance. For more information about the use for lowercase
-            table names, see the
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">
-                MySQL documentation</a>.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>Audit Log</strong></td>
-        <td><code>audit-log</code></td>
-        <td>OFF</td>
-        <td>
-            When enabled on the <a href="./install-config.html#monitoring">
-            MySQL Monitoring pane</a>,
-            logs are written as JSONs to
-            <code>/var/vcap/store/mysql_audit_logs/mysql_server_audit.log</code>.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>InnoDB Buffer Pool Size</strong></td>
-        <td><code>innodb-buffer-pool-size</code></td>
-        <td>50% of the available memory on each service instance</td>
-        <td>Dynamically configured to be 50% of the available memory on each
-            service instance.</td>
-    </tr>
-     <tr>
-        <td><strong>InnoDB Log Buffer Size</strong></td>
-        <td><code>innodb-log-buffer-size</code></td>
-        <td>32&nbsp;MB</td>
-        <td><%= vars.product_short %> defaults to 32&nbsp;MB to avoid excessive disk I/O when
-            issuing large transactions.</td>
-    </tr>
-    <tr>
-        <td><strong>InnoDB Auto Increment Lock Mode</strong></td>
-        <td><code>innodb-autoinc-lock-mode</code></td>
-        <td>2</td>
-        <td>
-            Auto Increment uses "interleaved" mode.
-            This enables multiple statements to execute at the same time.
-            There may be gaps in auto-incrementing columns.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>Character Set</strong></td>
-        <td><code>character-set-server</code></td>
-        <td><code>utf8</code></td>
-        <td>Defaults all character sets. You can override this during a session.</td>
-    </tr>
-    <tr>
-        <td><strong>Relay Log Recovery</strong></td>
-        <td><code>relay-log-recovery</code></td>
-        <td><code>ON</code></td>
-        <td> When enabled, relay log recovery happens automatically after server startup.
-          For more information, see the
-        <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
-    </tr>
-</table>
-
-### <a id="sn-l-f"></a> Server Defaults for Single Node and Leader-Follower Plans
-
-In addition to the server defaults that are common to all plans, single node
-and leader-follower plans use the server defaults listed in the following table.
-
-<table>
-    <th>Name</th>
-    <th width="25%">Variable Name</th>
-    <th>Default</th>
-    <th width="45%">Notes</th>
-    <tr>
-        <td><strong>Max Connections</strong></td>
-        <td><code>max-connections</code></td>
-        <td>750 connections per service instance</td>
-        <td>
-            System processes count towards this limit.
-        </td>
-    </tr>
-        <td><strong>MyISAM Recover Options</strong></td>
-        <td><code>myisam-recover-options</code></td>
-        <td>BACKUP, FORCE</td>
-        <td>
-            This setting enables <%= vars.product_short %> to recover from most MyISAM problems
-            without human intervention. For more information, see the
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
-                MySQL documentation</a>.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>Event Scheduler</strong></td>
-        <td><code>event-scheduler</code></td>
-        <td>ON</td>
-        <td>
-            <%= vars.product_short %> enables the event scheduler so users can create and use
-            events in their dedicated service instances.
-        </td>
-    </tr>
-     <tr>
-        <td><strong>InnoDB Log File Size</strong></td>
-        <td><code>innodb-log-file-size</code></td>
-        <td>256&nbsp;MB</td>
-        <td><%= vars.product_short %> clusters default to a log-file size of 256&nbsp;MB.</td>
-    </tr>
-
-    <tr>
-        <td><strong>Collation Server</strong></td>
-        <td><code>collation-server</code></td>
-        <td><code>utf8_general_ci</code></td>
-        <td>You can override this during a session. For instructions about
-          viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
-        MySQL documentation</a>.</td>
-    </tr>
-</table>
-
-
-### <a id="ha"></a> Server Defaults for Highly Available Cluster Plans
-
-In addition to the server defaults that are common to all plans,
-HA cluster plans use the server defaults listed in the following table.
-
-<table>
-    <th>Name</th>
-    <th width="25%">Variable Name</th>
-    <th>Default</th>
-    <th width="45%">Notes</th>
-    <tr>
-        <td><strong>Max Connections</strong></td>
-        <td><code>max-connections</code></td>
-        <td>1500 connections per service instance</td>
-        <td>
-            System processes count towards this limit.
-        </td>
-    </tr>
-        <td><strong>MyISAM Recover Options</strong></td>
-        <td><code>myisam-recover-options</code></td>
-        <td>OFF</td>
-        <td>
-            This setting enables <%= vars.product_short %> to recover from most MyISAM problems
-            without human intervention. For more information, see the
-            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
-                MySQL documentation</a>.
-        </td>
-    </tr>
-    <tr>
-        <td><strong>Event Scheduler</strong></td>
-        <td><code>event-scheduler</code></td>
-        <td>OFF</td>
-        <td>
-            <%= vars.product_short %> enables the event scheduler so users can create and use
-            events in their dedicated service instances.
-        </td>
-    </tr>
-     <tr>
-        <td><strong>InnoDB Log File Size</strong></td>
-        <td><code>innodb-log-file-size</code></td>
-        <td>1024&nbsp;MB</td>
-        <td><%= vars.product_short %> clusters default to a log-file size of 256&nbsp;MB.</td>
-    </tr>
-
-    <tr>
-        <td><strong>Collation Server</strong></td>
-        <td><code>collation-server</code></td>
-        <td><code>utf8_unicode_ci</code></td>
-        <td>You can override this during a session. For instructions about
-          viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
-        MySQL documentation</a>.</td>
-    </tr>
-</table>
-## <a id="changes"></a>Changing MySQL Server Defaults
-
-You can set optional parameters to change the <%= vars.product_short %> server defaults to
-accommodate apps with a read-heavy or write-heavy workload, or if you need to use
-lowercase table names.
-
-The procedures in this section use the Cloud Foundry Command Line Interface
+The procedures in this topic use the Cloud Foundry Command Line Interface
 ([cf CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html)).
 You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html)
 to perform the same tasks using a graphical UI.
 
-For general information about using <%= vars.product_short %>, see [Using <%= vars.product_short %>](./use.html).
 
-### <a id="configuring"></a>Optional Parameters for the <%= vars.product_short %> Service Instances
-
+<p class="note"> <strong>Note:</strong>
 <%= vars.product_short %> service instances are configured by default with industry best practices.
-For more specific use cases, you can customize the following parameters:
-
-<table>
-  <th width="200">Parameter</th>
-  <th>Type</th>
-  <th>Default</th>
-  <th>Description</th>
-  <th width="100">Usage</th>
-  <tr>
-    <td><code>workload</code></td>
-    <td>String</td>
-    <td><code>mixed</code></td>
-    <td>Set this to <code>read-heavy</code>, <code>mixed</code>, or <code>write-heavy</code>.
-      See <a href="#workload">About Workload Types</a> below.</td>
-    <td><code>create-service</code> or <code>update-service</code></td>
-  </tr>
-  <tr>
-    <td><code>enable_lower_case_table_names</code></td>
-    <td>Boolean</td>
-    <td>Set by the operator</td>
-    <td> The operator sets a default for this parameter and may allow you to override the default.
-      If allowed, you can only set this when creating a service instance. If you set this to
-      <code>true</code>, table names are stored in lowercase.
-      See <a href="#lowercase">About Lowercase Table Names</a>  below.</td>
-    <td><code>create-service</code></td>
-  </tr>
-  <tr>
-    <td><code>default-charset</code></td>
-    <td>String</td>
-    <td><code>utf8</code></td>
-    <td>You can set this to any MySQL 5.7 supported character set.
-      See <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html">Character Sets and Collations in MySQL</a>.</td>
-    <td><code>create-service</code> or <code>update-service</code></td>
-  </tr>
-  <tr>
-    <td><code>default-collation</code></td>
-    <td>String</td>
-    <td><code>utf8_general_ci</code></td>
-    <td>The <code>default-collation</code> changes based on the <code>default-charset</code>.
-      To set the <code>default-collation</code>, first set the <code>default-charset</code>.
-      For instructions about
-      viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
-      MySQL documentation</a>.</td>
-    <td><code>create-service</code> or <code>update-service</code></td>
-  </tr>
-  <tr>
-    <td><code>replication_mode</code></td>
-    <td>String</td>
-    <td><code>async</code></td>
-    <td>Set this to <code>async</code> or <code>semi-sync</code>. See
-      <a href="#synchronous-replication">About Synchronous Replication</a>.</td>
-    <td><code>create-service</code> or <code>update-service</code></td>
-  </tr>
-  <tr>
-    <td><code>semi_sync_ack_timeout_in_ms</code></td>
-    <td>Integer</td>
-    <td>2<sup>63</sup> milliseconds</td>
-    <td>Sets the timeout in milliseconds for the leader to acknowledge a replication operation. See
-      <a href="#replication-timeout">Synchronous Replication Timeout</a>.
-    </td>
-    <td><code>create-service</code> or <code>update-service</code></td>
-  </tr>
-</table>
-
-### <a id="parameters"></a> Use Optional Parameters
-
-You can change these default configuration parameters using the cf CLI as follows:
+For information about the configured server defaults,
+see <a href="./server-defaults.html">About MySQL Server Defaults.</a>
+</p>
 
 
-#### <a id="creating"></a> Change Default Parameters when Creating a Service Instance
+## <a id="parameters"></a> Set Optional Parameters
 
-To create a service instance using optional parameters use the following command:
+You can change the default configuration of optional parameters by creating a new service instance or
+updating an existing service instance.
 
-`cf create-service SERVICE-INSTANCE -c '{ "PARAMETER": "PARAMETER-VALUE" }'`
+To set optional parameters:
 
+1. Do one of the following:
+    +  **If you want to create a new service instance,** run:
 
-The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
-provided either in-line or in a file.
+          ```
+        cf create-service p.mysql PLAN SERVICE-INSTANCE \
+          -c '{ "PARAMETER": "PARAMETER-VALUE"}'
+          ```
+    +  <strong>If you want to update an existing service instance,</strong> run:
 
+          ```
+        cf update-service p.mysql PLAN SERVICE-INSTANCE \
+          -c '{ "PARAMETER": "PARAMETER-VALUE"}'
+          ```
 
-For example:
-<pre class="terminal">
-$ cf create-service myDB -c '{ "workload": "mixed" }'
-Creating service instance myDB in org system / space system as admin...
-OK<br />
-Create in progress. Use 'cf services' or 'cf service myDB' to check operation status.</pre>
+      For a list of available optional parameters, see [Optional Parameters](#configuring) below.
+      The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
+      provided either in-line or in a file.<br>
 
+1. Verify that your service instance was successfully created by running:
 
-If you get an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
+    ```
+    watch cf services
+    ```
 
-#### <a id="updating"></a> Change Default Parameters on an Existing Service Instance
+    Wait for the `last operation` for your instance to show as `create succeeded`.
+    <br><br>
+    For example:
 
-To change the default parameters of an existing instance use the following command:
+    <pre class="terminal">
+   $ watch cf services
+    Getting services in org my-org / space my-space as user<span>@</span>example.com...\
+    OK
 
-`cf update-service SERVICE-INSTANCE -c '{ "PARAMETER": "PARAMETER-VALUE" }'`
-
-
-The `-c` flag accepts a valid JSON object containing service-specific configuration parameters,
-provided either in-line or in a file.
-
-For example:
-
-<pre class="terminal">
-$ cf update-service myDB -c '{ "workload": "mixed" }'
+    name          service       plan        bound apps    last operation
+    myDB          p.mysql       db-small                  create succeeded
 </pre>
 
+## <a id='workload'></a>Workloads
 
-If you get an error using optional parameters, see [Troubleshooting Instances](./troubleshoot-instances.html).
+The below table describes how to use the `workload` optional parameter
+ to adjust server default settings for different workload profiles:
 
-### <a id='workload'></a> About Workload Types
+<table>
+  <tr>
 
-<%= vars.product_short %> offers three workload profiles that developers can use to configure MySQL instances based on their
-specific app workloads. For instructions on changing configuration options, see [Use Optional Parameters](#parameters).
+    <th colspan="2" style="text-align:center;">workload</th>
+  </tr>
+
+  <tr>
+    <th><strong>Type</strong></th>
+    <td>String</td>
+  </tr>
+
+  <tr>
+    <th><strong>Default</strong></th>
+    <td><code>mixed</code></td>
+  </tr>
+
+  <tr>
+    <th><strong>Description</strong></th>
+    <td>Set this parameter to  <code>mixed</code>,
+      <code>read-heavy</code> or <code>write-heavy</code>.
+      See <a href="#workload-type">Workload Profile Types</a> below.</td>
+  </tr>
+
+  <tr>
+    <th><strong>Usage</strong></th>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+
+</table>
+
+### <a id='workload-type'></a> Workload Profile Types
+
+The below table lists the workload profiles that developers
+can use to configure MySQL instances based on their specific app workloads:
+
 
 <table class="nice">
     <th>Profile</th><th>Description</th>
     <tr>
         <td>Mixed Workload</td>
-        <td>By default, each MySQL service instance is configured for a mixed workload,
-            that is, a workload that is equally heavy on reads and writes.
-            The configuration for this profile is described in detail in <a href="#defaults">MySQL Server Defaults</a>.</td>
+        <td>By default, each MySQL service instance is configured for a mixed workload.
+            This workload is equally heavy on reads and writes. <br><br>
+
+            The configuration for this profile is described in
+            <a href="./server-defaults.html">About MySQL Server Defaults</a>.
     </tr>
+
     <tr>
         <td>Read-Heavy Workload</td>
-        <td>For apps that have a large number of reads, the service instance can be configured for a read-heavy workload.
-            The read-heavy profile changes these two properties from
-            the <a href="#defaults">MySQL Server Defaults</a>:
+        <td>For apps that have a large number of reads, you can configure your
+          service instances with a read-heavy workload.<br><br>
+          The read-heavy profile changes the following server defaults listed in
+          <a href="./server-defaults.html">About MySQL Server Defaults</a>:
+          <ul>
+            <li><code>innodb_buffer_pool_size</code>
+              is increased to 75% of the available memory on each service instance.</li>
 
-<ul>
-<li><code>innodb_buffer_pool_size</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
-<li><code>innodb_flush_method</code> is set to <code>O_DIRECT</code></li>
-</ul>
+              <li><code>innodb_flush_method</code> is set to <code>O_DIRECT</code>.</li>
+          </ul>
 
     <tr>
         <td>Write-Heavy Workload</td>
-        <td>For apps that write to the database a lot, the service instance can be configured for
-            a write-heavy workload. The write-heavy profile changes these four properties from
-            the <a href="#defaults">MySQL Server Defaults</a>:
-<ul>
-<li><code>innodb_buffer_pool_size</code> is increased to <code>75%</code> of the MySQL VM's memory</li>
-<li><code>innodb_flush_method</code> is set to <code>O_DIRECT</code></li>
-<li><code>innodb_log_file_size</code> is increased to <code>1GB</code></li>
-<li><code>max_allowed_packets</code> is increased to <code>1GB</code></li>
-</ul>
+        <td>For apps that write to the database a lot, you can configure your
+          service instances with a write-heavy workload.<br><br>
+            The write-heavy profile changes the following server defaults listed in
+                <a href="./server-defaults.html">About MySQL Server Defaults</a>:
+          <ul>
+          <li><code>innodb_buffer_pool_size</code>
+            is increased to 75% of the available memory on each service instance.</li>
+          <li><code>innodb_flush_method</code> is set to <code>O_DIRECT</code>.</li>
+          <li><code>innodb_log_file_size</code> is increased to 1&nbsp;GB.</li>
+          <li><code>max_allowed_packets</code> is increased to 1&nbsp;GB.</li>
+          </ul>
 </table>
 
-### <a id="lowercase"></a> About Lowercase Table Names
+## <a id="lowercase"></a>Lowercase Table Names
 
-If you are migrating a database from a system that was case insensitive,
-            that is, where `TableName` is the same as `TABLEname`, then forcing lowercase turns both into `tablename`.
-            In this way both names are interpreted as the same table.
+If you are migrating a database from a system that was case-insensitive,
+you can enable lowercase table names to change all table names to lowercase.
 
-For more information, see the MySQL [documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
+For example, if your database had the tables names `TableName` and `TABLEname`, when you enable
+lowercase table names both of the above names change to `tablename` and are interpreted as the same table.
 
-### <a id='synchronous-replication'></a>About Synchronous Replication
-In a leader-follower topology, <%= vars.product_short %> supports synchronous replication in addition
+For more information, see the
+[MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names).
+
+The below table describes how to use the `enable_lower_case_table_names` optional parameter:
+
+<table>
+  <tr>
+    <th colspan="2" style="text-align:center;">enable_lower_case_table_names</th>
+  </tr>
+
+  <tr>
+    <th><strong>Type</strong></th>
+    <td>Boolean</td>
+  </tr>
+
+  <tr>
+    <th><strong>Default</strong></th>
+    <td>Set by the operator in the <strong>Mysql Configuration</strong> pane in the tile. See
+      <a href="./install-config.html#mysql">Configure MySQL</a>.</td>
+  </tr>
+
+  <tr>
+    <th><strong>Description</strong></th>
+    <td>The operator can set a default for this parameter and permit developers to override the default.
+      If enabled in the tile, you can only set the parameter when you create a service instance. <br><br>
+      If you set this to <code>true</code>, table names are stored in lowercase.
+      See <a href="#lowercase">About Lowercase Table Names</a> below.</td>
+  </tr>
+
+  <tr>
+    <th><strong>Usage</strong></th>
+    <td><code>create-service</code></td>
+  </tr>
+
+</table>
+
+## <a id='character'></a>Character Sets
+
+The below table describes how to use the `default-charset` and  `default-collation`
+optional parameters to change the character sets used in databases:
+
+<table>
+  <tr>
+    <th colspan="2" style="text-align:center;">default-charset</th>
+  </tr>
+
+  <tr>
+    <th><strong>Type</strong></th>
+    <td>String</td>
+  </tr>
+
+  <tr>
+    <th><strong>Default</strong></th>
+    <td><code>utf8</code></td>
+  </tr>
+
+  <tr>
+    <th><strong>Description</strong></th>
+    <td>You can set this to any MySQL 5.7 supported character set.
+      See <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html">Character Sets and Collations in MySQL</a>.</td>
+  </tr>
+
+  <tr>
+    <th><strong>Usage</strong></th>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+
+</table>
+
+<table>
+  <tr>
+    <th colspan="2" style="text-align:center;">default-collation</th>
+  </tr>
+
+  <tr>
+    <th><strong>Type</strong></th>
+    <td>String</td>
+  </tr>
+
+  <tr>
+    <th><strong>Default</strong></th>
+    <td><code>utf8_general_ci</code></td>
+  </tr>
+
+  <tr>
+    <th><strong>Description</strong></th>
+    <td>The <code>default-collation</code> changes based on the <code>default-charset</code>.
+      To set the <code>default-collation</code>, first set the <code>default-charset</code>. <br><br>
+      For instructions for
+      viewing available and default collations,
+      see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+      MySQL documentation</a>.</td>
+  </tr>
+
+  <tr>
+    <th><strong>Usage</strong></th>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+
+</table>
+
+## <a id='synchronous-replication'></a>Synchronous Replication
+
+If you use a leader-follower service instance, <%= vars.product_short %> supports synchronous replication in addition
 to the default asynchronous replication. In sync replication, data does not get committed to the
 leader node until the follower acknowledges the commit and can replicate it.
 
-The guarantee of redundancy gives sync replication an advantage in data integrity over asynchronous replication. However, sync replication reduces the performance of write operations, depending on
-latency.
+The guarantee of redundancy gives sync replication an advantage over asynchronous replication in data integrity.
+However, depending on latency, sync replication reduces the performance of write operations.
 
-To enable sync replication on a leader-follower service instance, set `replication_mode` to
-`semi-sync`. To restore the default asynchronous replication for a leader-follower service instance,
-set `replication_mode` to `async`.
+The below table describes how to use the `replication_mode` optional parameter:
 
-#### <a id='replication-timeout'></a>Synchronous Replication Timeout
+<table>
+  <tr>
+    <th colspan="2" style="text-align:center;">replication_mode</th>
+  </tr>
+
+  <tr>
+    <th><strong>Type</strong></th>
+    <td>String</td>
+  </tr>
+
+  <tr>
+    <th><strong>Default</strong></th>
+    <td><code>async</code></td>
+  </tr>
+
+  <tr>
+    <th><strong>Description</strong></th>
+    <td>Set this parameter to one of the following:
+      <ul>
+        <li><code>semi-sync:</code> This enables sync replication on a leader-follower service instance.</li>
+        <li><code>async:</code> This restore the default asynchronous replication for a leader-follower service instance.</li>
+      </ul>
+  </tr>
+
+  <tr>
+    <th><strong>Usage</strong></th>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+
+</table>
+<p class="note"><strong>Note:</strong>
+  In <%= vars.product_short %>, replication is called sync, rather than semi-sync.
+  This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync
+  replication,
+  see the <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html">MySQL documentation</a>.
+
+</p>
+
+### <a id='replication-timeout'></a>Synchronous Replication Timeout
 
 By default, the timeout for sync replication is set to approximately 292 million years. Therefore,
 the leader always waits for the follower to confirm receipt of the transaction. This guarantees that
 if the leader is lost, a redundant copy of the data exists on the follower.
 
 <p class="note"><strong>Note:</strong> When the replication mode timeout is reached,
-the replication modes automatically reverts to asynchronous without any user intervention. You can manually override this timeout with a lower value.
+the replication mode automatically reverts to asynchronous without any user intervention.
+You can manually override this timeout by setting a lower value.
 </p>
 
-#### <a id='semi-sync'></a>MySQL Semi-Synchronous Replication
+The below table describes how to use the `semi_sync_ack_timeout_in_ms` optional parameter:
 
-In <%= vars.product_short %>, the replication is called sync, rather than semi-sync. This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync
-replication, see [16.3.9 Semisynchronous Replication](https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html)
-in the MySQL documentation.
+<table>
+  <tr>
+    <th colspan="2" style="text-align:center;">semi_sync_ack_timeout_in_ms</th>
+  </tr>
+
+  <tr>
+    <th><strong>Type</strong></th>
+    <td>Integer</td>
+  </tr>
+
+  <tr>
+    <th><strong>Default</strong></th>
+    <td>2<sup>63</sup> milliseconds</td>
+  </tr>
+
+  <tr>
+    <th><strong>Description</strong></th>
+    <td>Sets the timeout in milliseconds for the leader to acknowledge a replication operation. </td>
+  </tr>
+
+  <tr>
+    <th><strong>Usage</strong></th>
+    <td><code>create-service</code> or <code>update-service</code></td>
+  </tr>
+
+</table>
