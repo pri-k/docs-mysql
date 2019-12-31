@@ -74,7 +74,7 @@ to all service plans.
         <td>
             <%= vars.product_short %> is configured to prevent the use of symlinks to tables.
             Pivotal recommends this security setting to prevent users from manipulating
-            files on the server file system. <br> <br>
+            files on the server file system. <br>
             For more information, see
             <a href="https://dev.mysql.com/doc/refman/5.7/en/security-against-attack.html">
                 Making MySQL Secure Against Attackers</a>.
@@ -86,7 +86,7 @@ to all service plans.
         <td>ON</td>
         <td>
             This setting relaxes constraints on how MySQL writes stored procedures
-            to the binary log. <br><br> For more information, see the
+            to the binary log. <br>For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-binary-log.html#sysvar_log_bin_trust_function_creators">
                 MySQL documentation</a>.
         </td>
@@ -100,7 +100,7 @@ to all service plans.
             Operators can change this default on the
             <a href="./install-config.html#mysql">MySQL Configuration page</a>
             and permit developers to override the default when they create a
-            service instance. <br> <br>For more information about using lowercase
+            service instance. <br>For more information about using lowercase
             table names, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">
                 MySQL documentation</a>.
@@ -146,7 +146,7 @@ to all service plans.
         <td><code>innodb_flush_method</code></td>
         <td><code>fsync</code></td>
         <td>
-          This setting defines the method used to flush data to InnoDB data and log files. <br><br>
+          This setting defines the method used to flush data to InnoDB data and log files. <br>
           For more information, see the
           <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html#sysvar_innodb_flush_method">MySQL documentation</a>.
     </tr>
@@ -183,7 +183,7 @@ and leader-follower plans use the server defaults listed in the following table.
         <td>BACKUP, FORCE</td>
         <td>
             This setting enables <%= vars.product_short %> to recover from most MyISAM problems
-            without human intervention. <br><br>For more information, see the
+            without human intervention. <br>For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
         </td>
@@ -208,7 +208,7 @@ and leader-follower plans use the server defaults listed in the following table.
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
         <td><code>utf8_general_ci</code></td>
-        <td>You can override this during a session. For instructions about
+        <td>You can override this during a session.<br>For instructions about
           viewing available and default collations,
           see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
         MySQL documentation</a>.</td>
@@ -217,7 +217,7 @@ and leader-follower plans use the server defaults listed in the following table.
         <td><strong>Relay Log Recovery</strong></td>
         <td><code>relay-log-recovery</code></td>
         <td><code>ON</code></td>
-        <td> When enabled, relay log recovery happens automatically after server startup.
+        <td> When enabled, relay log recovery happens automatically after server startup.<br>
           For more information, see the
         <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
     </tr>
@@ -248,7 +248,7 @@ HA cluster plans use the server defaults listed in the following table.
         <td>OFF</td>
         <td>
             This setting enables <%= vars.product_short %> to recover from most MyISAM problems
-            without human intervention. <br><br>For more information, see the
+            without human intervention. <br>For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
         </td>
@@ -273,7 +273,7 @@ HA cluster plans use the server defaults listed in the following table.
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
         <td><code>utf8_unicode_ci</code></td>
-        <td>You can override this during a session. For instructions about
+        <td>You can override this during a session. <br>For instructions about
           viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
         MySQL documentation</a>.</td>
     </tr>
@@ -281,7 +281,7 @@ HA cluster plans use the server defaults listed in the following table.
         <td><strong>Relay Log Recovery</strong></td>
         <td><code>relay-log-recovery</code></td>
         <td><code>ON</code></td>
-        <td> When enabled, relay log recovery happens automatically after server startup.
+        <td> When enabled, relay log recovery happens automatically after server startup.<br>
           For more information, see the
         <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
     </tr>
@@ -310,7 +310,7 @@ In addition to the server defaults that are common to all plans,
         <td>OFF</td>
         <td>
             This setting enables <%= vars.product_short %> to recover from most MyISAM problems
-            without human intervention. <br><br>For more information, see the
+            without human intervention.<br>For more information, see the
             <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
                 MySQL documentation</a>.
         </td>
@@ -335,7 +335,8 @@ In addition to the server defaults that are common to all plans,
         <td><strong>Collation Server</strong></td>
         <td><code>collation-server</code></td>
         <td><code>utf8_unicode_ci</code></td>
-        <td>You can override this during a session. For instructions about
+        <td>You can override this during a session.<br>
+          For instructions about
           viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
         MySQL documentation</a>.</td>
     </tr>
@@ -343,7 +344,7 @@ In addition to the server defaults that are common to all plans,
         <td><strong>Relay Log Recovery</strong></td>
         <td><code>relay-log-recovery</code></td>
         <td><code>OFF</code></td>
-        <td> When enabled, relay log recovery happens automatically after server startup.
+        <td> When enabled, relay log recovery happens automatically after server startup.<br>
           For more information, see the
         <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
     </tr>
