@@ -1,0 +1,83 @@
+---
+title: Triggering Multi-Site Replication Failover
+owner: MySQL
+---
+<strong><%= modified_date %></strong>
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
+
+The topic describes how to trigger a failover using <%= vars.single_leader_plan_lc %>
+in <%= vars.product_name %>.
+
+##<a id='overview'></a> Overview
+
+You might want to trigger a failover in the following scenarios:
+
+* You want to take the leader VM down to do planned maintenance.
+* The performance of the leader VM degrades.
+* The leader VM fails unexpectedly.
+* The AZ where the leader VM is located goes offline unexpectedly.
+
+To trigger a failover:
+
+1. [Promote the Follower](#promote)
+1. [(Optional) Clean Up the Former Leader](#clean-up)
+1. [Configure the New Follower](#new-follower)
+1. [Unbind and Rebind the App](#rebind)
+
+##<a id='promote'></a> Promote the Follower
+
+The following steps assume that you have created the leader <%= vars.single_leader_plan %>
+service instance in the primary foundation and the follower <%= vars.single_leader_plan %>
+service instance in the secondary foundation. You created these service instances in
+[Create <%= vars.single_leader_plan %> Service Instances](use-multi-site.html#create-multi-dc).
+
+To promote the follower:
+
+1. Log in to the PCF deployment for your primary foundation by running:
+
+    ```
+    cf login PRIMARY-API-URL
+    ```
+    Where `PRIMARY-API-URL` is the API endpoint for the primary foundation. <br>
+    For example:
+    <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
+
+1. _Run some command to double check that the primary service instance is the leader?_
+
+1. Set the primary service instance that is currently the leader to read-only by running:
+
+    ```
+    cf update-service PRIMARY-INSTANCE -c '{"initiate-failover":"make-leader-read-only"}
+    ```
+
+1. Log in to the PCF deployment for your secondary foundation by running:
+
+    ```
+    cf login SECONDARY-API-URL
+    ```
+    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation. <br>
+    For example:
+    <pre class="terminal">$ cf login https<span>:</span>//secondary.example.com</pre>
+
+
+1. Promote the secondary service instance to leader by running:
+
+    ```
+    cf update-service SECONDARY-INSTANCE -c '{"initiate-failover":"promote-follower-to-leader"}'
+    ```
+
+##<a id='clean-up'></a> (Optional) Clean Up the Former Leader
+
+<%# IS THIS NECESSARY? %>
+
+
+##<a id='new-follower'></a> Configure the New Follower
+
+<%# IS THIS NECESSARY? %>
+
+##<a id='rebind'></a> Unbind and Rebind the App
+
+<%# IS THIS NECESSARY? %>
