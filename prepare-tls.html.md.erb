@@ -34,15 +34,9 @@ Apps and clients that communicate with the MySQL server must have access to the
 public component of the CA certificate
 to validate that the server certificate can be trusted.
 
-<<<<<<< HEAD
 PCF distributes the public component of the CA certificate to apps in two ways:
 
 * PCF provisions a copy of the CA certificate in the trusted store of each
-=======
-<%= vars.platform_name %> distributes the public component of the CA certificate to apps in two ways:
-
-* <%= vars.platform_name %> provisions a copy of the CA certificate in the trusted store of each
->>>>>>> 1973b42... incorpate feedback [#170393336]
 container's operating system.
   Apps written in Java and Spring automatically discover the CA certificate in
 	the trusted store.
