@@ -21,9 +21,8 @@ After TLS is enabled for your service instance, you can establish a TLS connecti
 
 <p class="note"><strong>Note:</strong> Mutual TLS (mTLS) is not supported in <%= vars.product_short %>.
   Because of this, the server certificate does not validate apps.
-  However, <%= vars.product_short %> does encrypted the traffic both from the app to the server and the server to the app.
   If an app presents a certificate to the server,
-  the connection closes and an unknown artifact error appears in the app log file. <br>
+  the connection closes and an <code>unknown_ca</code> error appears in the app log file.<br>
   For instructions about troubleshooting this error, see <a href="#"></a>.
 </p>
 
