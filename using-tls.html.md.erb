@@ -22,7 +22,7 @@ The procedures in this topic have the following prerequisites:
 * The PCF operator must have completed the procedure in [Preparing for TLS](prepare-tls.html).
 * The PCF operator must have enabled TLS in the tile configuration when doing the procedure in [Configure Security](install-config.html#security).
 
-<p class="note warning"><strong>Warning:</strong> Mutual TLS (mTLS) is not supported in <%= vars.product_short %>.
+<p class="note warning"><strong>Warning:</strong> Mutual TLS (mTLS) is not supported in MySQL for PCF.
   Because of this, the server certificate does not validate apps.
   If an app presents a certificate to the MySQL server,
   the connection closes and a network error appears in the app logs. To resolve this issue, you must disable
