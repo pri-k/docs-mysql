@@ -34,6 +34,14 @@ Apps and clients that communicate with the MySQL server must have access to the
 public component of the CA certificate
 to validate that the server certificate can be trusted.
 
+<p class="note"><strong>Note:</strong> Mutual TLS (mTLS) is not supported in <%= vars.product_short %>.
+  Because of this, the server certificate does not validate apps.
+  However, <%= vars.product_short %> does encrypted the traffic both from the app to the server and the server to the app.
+  If an app presents a certificate to the server,
+  the connection closes and an unknown artifact error appears in the app log file. <br>
+  For instructions about troubleshooting this error, see <a href="#"></a>.
+</p>
+
 <%= vars.platform_name %> distributes the public component of the CA certificate to apps in two ways:
 
 * <%= vars.platform_name %> provisions a copy of the CA certificate in the trusted store of each
