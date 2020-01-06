@@ -37,10 +37,19 @@ For more information about troubleshooting this problem, see
 
 ### <a id="m-tls-error"></a>Apps Cannot Connect to the Database
 
+Apps can fail to connect to the database in the following cases:
+
++ When your app uses MySQL Connector/J v5.1.41 or earlier.
+See [MySQL Connector/J v5.1.41 or Earlier](#connector) below.
++ When your app uses mutual TLS (mTLS). See [Mutual TLS](#m-tls) below.
+
+#### <a id="connecter"></a>MySQL Connector/J v5.1.41 or Earlier
+
 **Symptom:** Apps cannot connect to the database when TLS is enabled and
 the apps are using MySQL Connector/J v5.1.41 or earlier.
 You see errors about certificates.
 For example:
+
 ```
 Caused by: javax.net.ssl.SSLHandshakeException: Received fatal alert: bad_certificate
         at sun.security.ssl.Alerts.getSSLException(Alerts.java:192) ~[na:1.8.0_152]
@@ -53,6 +62,15 @@ If you cannot update the MySQL Connector/J, do the workaround in
 [How to disable KeyManager and TrustManager in Container Security Provider Framework in the Java
 buildpack](https://community.pivotal.io/s/article/how-to-disable-keymanager-and-or-trustmanager-in-container-security-provider-framework-in-the-java-buildpack)
 in the Pivotal Support knowledge base.
+
+
+#### <a id="m-tls"></a>Mutual TLS
+
+**Symptom:** Apps cannot connect to the database when TLS is enabled and your apps uses mTLS.
+You see network errors in your app logs.
+
+**Solution:**
+To resolve this issue disable mTLS in your apps.
 
 ## <a id="errors"></a> Troubleshoot Errors
 
