@@ -19,6 +19,13 @@ If your operator has configured TLS in the tile, new service instances have TLS 
 After TLS is enabled for your service instance, you can establish a TLS connection from your local workstation to a MySQL for PCG service instance.
  See [Establish a TLS Connection to a Service Instance](#establish-tls), below.
 
+ <p class="note warning"><strong>Warning:</strong> Mutual TLS (mTLS) is not supported in <%= vars.product_short %>.
+   Because of this, the server certificate does not validate apps.
+   If an app presents a certificate to the MySQL server,
+   the connection closes and a network error appears in the app logs. To resolve this issue, you must disable
+ 	mTLS in your apps.
+ </p>
+
 
 ## <a id='enable'></a> Enable TLS
 
