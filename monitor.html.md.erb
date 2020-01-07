@@ -29,7 +29,7 @@ origin:"p.mysql" eventType:ValueMetric timestamp:1496776477930669688 deployment:
 ## <a id="access"></a>Access MySQL Metrics
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-  <%= partial vars.path_to_partials + '/services/log-cache-cli-plugin',
+  <%= partial '/services/log-cache-cli-plugin',
   :locals => {:service_name => "MySQL for PCF", :platform_name => "PCF"} %>
 
 
@@ -53,7 +53,7 @@ For a list of all the MySQL for PCF component metrics, see [Component Metrics](#
 
 <%# If you are confused about how to edit the following HA partials see the Tile Dev partials topic in the wiki  %>
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/all-kpis' %>
+<%= partial '/mysql/monitoring/kpis-metrics/all-kpis' %>
 
 ## <a id="component-metrics"></a>Component Metrics
 
@@ -69,22 +69,22 @@ that can be used for monitoring and alerting:
 
 All MySQL for PCF service instances emit the following metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/mysql-metrics' %>
+<%= partial '/mysql/monitoring/kpis-metrics/mysql-metrics' %>
 
 ### <a id="disk-metrics"></a>Disk Metrics
 
 All MySQL for PCF services emit the following disk usage metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/disk-metrics' %>
+<%= partial '/mysql/monitoring/kpis-metrics/disk-metrics' %>
 
 ### <a id="l-f-metrics"></a>Leader-Follower Metrics
 
 Leader-follower VMs emit the followings metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/l-f-metrics' %>
+<%= partial '/mysql/monitoring/kpis-metrics/l-f-metrics' %>
 
 ### <a id="ha-metrics"></a>Highly Available Cluster Metrics
 
 HA clusters emit the followings metrics:
 
-<%= partial '../../p-mysql/partials/mysql/monitoring/kpis-metrics/ha-metrics' %>
+<%= partial '/mysql/monitoring/kpis-metrics/ha-metrics' %>

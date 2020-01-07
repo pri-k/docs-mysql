@@ -50,7 +50,7 @@ For more information, see [Share Service Instances](./use.html#share).
 
 This release has the following issue:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "/mysql/disable-plan-ki" %>
 
 ## <a id="2-5-7"></a>v2.5.7
 
@@ -81,8 +81,8 @@ Previously, a regression caused the leader or follower node to take a backup of 
 
 This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
+<%= partial "/mysql/disable-plan-ki" %>
+<%= partial "/mysql/instance-sharing" %>
 
 ### Compatibility
 
@@ -114,9 +114,9 @@ New feature and change in this release:
 
 This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial "/mysql/disable-plan-ki" %>
+<%= partial "/mysql/instance-sharing" %>
+<%= partial "/mysql/audit-logs-ki" %>
 
 ## <a id="2-5-5"></a>v2.5.5
 
@@ -137,9 +137,9 @@ This release fixes the following issue:
 
 This release has the following issue:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial "/mysql/disable-plan-ki" %>
+<%= partial "/mysql/instance-sharing" %>
+<%= partial "/mysql/audit-logs-ki" %>
 
 ## <a id="2-5-4"></a>v2.5.4
 
@@ -181,9 +181,9 @@ This release has the following issues:
   If you have the Scheduler for PCF tile installed, MySQL for PCF must have
   **TLS Options** set to **Optional** or **Not Configured**.
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial "/mysql/disable-plan-ki" %>
+<%= partial "/mysql/instance-sharing" %>
+<%= partial "/mysql/audit-logs-ki" %>
 
 ## <a id="2-5-3"></a>v2.5.3
 
@@ -197,11 +197,11 @@ This release has the following issues:
   If you have the Scheduler for PCF tile installed, MySQL for PCF must have
   **TLS Options** set to **Optional** or **Not Configured**.
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "/mysql/disable-plan-ki" %>
 
-<%= partial '../../p-mysql/partials/mysql/ha_cluster_backup_ki' %>
+<%= partial '/mysql/ha_cluster_backup_ki' %>
 
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
+<%= partial "/mysql/instance-sharing" %>
 
 * Java apps are not able to establish a connection to an HA cluster service
   instance if TLS is disabled.
@@ -233,12 +233,12 @@ This release has the following issues:
   - If the operator chooses to enable TLS, developers cannot use the MariaDB Connector/J in their Spring apps to connect to a MySQL service instance.
   Pivotal recommends developers configure their apps to use the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/8.0.html) instead of the MariaDB Connector/J.
 
-<%= partial '../../p-mysql/partials/mysql/ha_cluster_backup_ki' %>
+<%= partial '/mysql/ha_cluster_backup_ki' %>
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "/mysql/disable-plan-ki" %>
 
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial "/mysql/instance-sharing" %>
+<%= partial "/mysql/audit-logs-ki" %>
 
 ### Features
 
@@ -252,7 +252,7 @@ New features and changes in this release:
 
 ####<a name="ha-cluster"></a>Highly Available (HA) Cluster Service Plans
 
-<%= partial "../../p-mysql/partials/mysql/galera_beta" %>
+<%= partial "/mysql/galera_beta" %>
 
 MySQL for PCF now supports three deployment topologies. In addition to single
 node and leader-follower service plans, operators can offer an HA cluster
