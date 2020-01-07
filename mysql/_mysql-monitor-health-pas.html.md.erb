@@ -1,10 +1,10 @@
 ## <a id="node-health"></a> Node Health
 
-When determining where to route traffic, the proxy queries an HTTP healthcheck process running on the node. This healthcheck can return as either healthy or unhealthy, or the node can be unresponsive.
+When determining where to route traffic, the proxy queries an HTTP health check process running on the node. This health check can return as either healthy or unhealthy, or the node can be unresponsive.
 
 ### <a id="healthy"></a> Healthy
 
-If the healthcheck process returns HTTP status code `200`, the proxy includes the node in its pool of healthy nodes.
+If the health check process returns HTTP status code `200`, the proxy includes the node in its pool of healthy nodes.
 
 When a new or resurrected nodes rejoin the cluster, the proxy continues to route all connections to the currently active node. In the case of failover, the proxy considers all healthy nodes as candidates for new connections.
 
@@ -12,7 +12,7 @@ When a new or resurrected nodes rejoin the cluster, the proxy continues to route
 
 ### <a id="unhealthy"></a> Unhealthy
 
-If the healthcheck returns HTTP status code `503`, the proxy considers the node unhealthy.
+If the health check returns HTTP status code `503`, the proxy considers the node unhealthy.
 
 <!-- We will eventually move the following link to a troubleshooting topic in 2.5 -->
 
@@ -24,7 +24,7 @@ The proxy severs existing connections to newly unhealthy node. The proxy routes 
 
 ### <a id="unresponsive"></a> Unresponsive
 
-If node health cannot be determined due to an unreachable or unresponsive healthcheck endpoint, the proxy considers the node unhealthy. This may happen if there is a network partition or if the VM running the node and healthcheck died.
+If node health cannot be determined due to an unreachable or unresponsive health check endpoint, the proxy considers the node unhealthy. This may happen if there is a network partition or if the VM running the node and healthcheck died.
 
 
 ## <a id="monitor"></a> Monitor Node Health
@@ -40,9 +40,9 @@ You can monitor the health status of your nodes by doing one of the following:
 
 Each MySQL Proxy instance has its own Switchboard dashboard. To access the dashboard, you must construct the dashboard URL.
 
-To construct the URL for the Switchboard dashboard, do the following:
+To construct the URL for the Switchboard dashboard:
 
-1. Find and record the system domain on the **Domains** pane in the <%= vars.app_runtime_full %> tile.
+1. Find and record the system domain on the **Domains** pane in the <%= vars.app_runtime_abbr %> tile.
 
 1. Find and record the number of MySQL Proxy VM instances in your deployment in the **Resource Config** pane.
 
@@ -50,9 +50,9 @@ To construct the URL for the Switchboard dashboard, do the following:
 
 #### <a id='dashboard-login'></a> Log In to the Dashboard
 
-To log into the Switchboard dashboard, do the following:
+To log into the Switchboard dashboard:
 
-1. In the <%= vars.app_runtime %> tile, the URL in your browser contains the Ops Manager fully qualified domain name (FQDN) and the <%= vars.app_runtime %> product GUID, as in the following example: `https://OPS-MANAGER-FQDN/products/APPLICTION-SERVICE-PRODUCT-GUID/az_and_network_assignments/edit`<br>
+1. In the <%= vars.app_runtime_abbr %> tile, the URL in your browser contains the Ops Manager fully qualified domain name (FQDN) and the <%= vars.app_runtime_abbr %> product GUID, as in the following example: `https://OPS-MANAGER-FQDN/products/APPLICTION-SERVICE-PRODUCT-GUID/az_and_network_assignments/edit`<br>
 To log into the dashboard, you need the username and password for the MySQL Proxy VM that are stored in the BOSH Director CredHub.<br>
 To obtain them, enter `https://[OPS-MANAGER-FQDN]/api/v0/deployed/products/[APPLICTION-SERVICE-PRODUCT-GUID]/variables?name=mysql-proxy-dashboard-credentials` into your browser and record the username and password.
 
@@ -60,7 +60,7 @@ To obtain them, enter `https://[OPS-MANAGER-FQDN]/api/v0/deployed/products/[APPL
 
 #### <a id="use-dashboard"></a> Use the Dashboard
 
-To monitor node health using the Switchboard dashboard, do the following:
+To monitor node health using the Switchboard dashboard:
 
 1. To view a list of proxies in your browser, navigate to the URL that you created in [Construct the URL for the Dashboard](#dashboard-url).
 
@@ -76,9 +76,9 @@ To monitor node health using the Switchboard dashboard, do the following:
 
 You can also use the Switchboard API to obtain the information that is shown on the Switchboard dashboard. For example, you might want to use the API to write your own app to monitor the cluster.
 
-To monitor node health using the Switchboard API, do the following:
+To monitor node health using the Switchboard API:
 
-1. To monitor node health, run the following command:
+1. To monitor node health, run:
 
     ```
     curl https://USERNAME:PASSWORD@N-HOSTNAME/v0/backends
@@ -88,9 +88,9 @@ To monitor node health using the Switchboard API, do the following:
     + `USERNAME` is the `username` you recorded in [Log In to the Dashboard](#dashboard-login).
     + `PASSWORD` is the `password` you recorded in [Log In to the Dashboard](#dashboard-login).
     + `N` is either 0, 1, or 2 depending on the proxy you want to connect to.
-    + `HOSTNAME` is the IP address of the **Database** found in the **Status** tab of your <%= vars.app_runtime %> tile.
+    + `HOSTNAME` is the IP address of the **Database** found in the **Status** tab of your <%= vars.app_runtime_abbr %> tile.
 
-    The above command outputs a JSON object similar to the following:
+    The above command outputs a JSON object similar to:
 
     <pre class="terminal">
     $ curl https://abcdefghijklmno:012345678912345@0-proxy.123abc45-67d8-912e-34f5-g34612c10dba.org.dedicated-mysql.cf-app.com/v0/backends

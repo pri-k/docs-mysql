@@ -199,32 +199,36 @@ The specific costs depend on your IaaS.
 To view configurations for your <%= vars.service_name %> on-demand plan, do the following:
 
 1. Navigate to **Ops Manager Installation Dashboard** > **<%= vars.tile_name %>** > **Settings**.
-1. Click the section for the plan you want to view.
-<% if vars.service_name == 'RabbitMQ for Pivotal Platform' %>
-For example, **On Demand Instance (RMQ 3.7): Plan 1**.
-<% end %>
-<% if vars.service_name == 'Redis for Pivotal Platform' %>
-For example, **On-Demand Plan 1**.
-<% end %>
-<% if vars.service_name == 'MySQL for Pivotal Platform' %>
-For example, **Plan 1**.
-<% end %>
-<% if vars.service_name == 'Pivotal Cloud Cache' %>
-For example, **Plan 1**.
-<% end %>
 
-<% if vars.service_name == 'Pivotal Cloud Cache' %>
+<%# Case statement to change the instructions to satisfy each service %>
+<% case vars.service_name
+when 'RabbitMQ for Pivotal Platform' %>
+1. Click the section for the plan you want to view. For example, **On Demand Instance (RMQ 3.7): Plan 1**.
 
-The image below shows an example that includes the VM type and persistent disk
-selected for the server VMs, as well as the quota for this plan.
-The quota is shown in the **Maximum service instances** field.
+<% when 'MySQL for Pivotal Platform' %>
+1. Click the section for the plan you want to view. For example, **Plan 1**.
 
+<% when  'Pivotal Cloud Cache' %>
+1. Click the section for the plan you want to view. For example, **Plan 1**.
+
+<% when 'Redis for Pivotal Platform' %>
+<%# Redis has different instructions in v2.3 and later %>
+<% if product_info['local_product_version'] == '2.1' || product_info['local_product_version'] == '2.2' %>
+1. Click the section for the plan you want to view. For example, **On-Demand Plan 1**.
 <% else %>
+1. Click **On-Demand Plans**.
+1. Click the dropdown for the plan you want to view. For example, **on-demand-cache**.
+<% end %>
+
+<% end %>
 
 The image below shows an example that includes the VM type and persistent disk
 selected for the server VMs, as well as the quota for this plan.
+<% if vars.service_name == 'Pivotal Cloud Cache' %>
+The quota is shown in the **Maximum service instances** field.
 <% end %>
 
+<%# Tabbed table to display image for MySQL, otherwise display image plainly. %>
 <% if current_page.data.galera %>
 Click the tabs below to show an example of each plan:
 
@@ -306,8 +310,9 @@ function openDocs(evt, docsName) {
 
 
 <% else %>
+
 <%= image_tag("../images/plan-resources.png",
-:alt => "Example showing a quota set to 15 instances, VM type set to micro, and persistent disk type set to 20 GB",
+:alt => "Example plan quota configuration showing the plan quota field set to 15 instances, VM type set to micro, and persistent disk type set to 20 GB",
 :width => "400") %>
 
 <% end %>
