@@ -48,7 +48,7 @@ and [USN-4195-1: MySQL vulnerabilities](https://usn.ubuntu.com/4195-1/) in the U
 
 This release has the following fixes:
 
-* Single node service instances no longer emit leader-follower service instance metrics.
+* Single node service instances no longer emit metrics for leader-follower service instances.
 * Smoke test error messages now explain the actual error rather than outputting
 `fork/exec /usr/local/bin/bosh: no such file or directory`.
 * Audit logs are now stored on the persistent disk rather than on the syslog endpoint.
@@ -96,9 +96,12 @@ For more information, see [Share Service Instances](./use.html#share).
 
 ### Known Issue
 
-This release has the following issue:
+This release has the following issues:
 
 <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/metrics-ki" %>
+<%= partial "../../p-mysql/partials/mysql/smoke-test-error-ki" %>
+<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
 
 ## <a id="2-7-1"></a> v2.7.1 - Withdrawn
 
@@ -141,6 +144,9 @@ For more information, see [Share Service Instances](./use.html#share).
 This release has the following issue:
 
 <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/metrics-ki" %>
+<%= partial "../../p-mysql/partials/mysql/smoke-test-error-ki" %>
+<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
 
 + Smoke tests fail when TLS is not configured.
 
@@ -173,6 +179,9 @@ This release has the following issues:
 
 <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 <%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
+<%= partial "../../p-mysql/partials/mysql/metrics-ki" %>
+<%= partial "../../p-mysql/partials/mysql/smoke-test-error-ki" %>
+<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
 
 ### Compatibility
 
