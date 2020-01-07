@@ -18,7 +18,7 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 This release includes the following security fix:
 
-* Updates bpm-release to v1.1.3. 
+* Updates bpm-release to v1.1.3.
 This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-2019-9893).
 
 ### Feature
@@ -33,13 +33,14 @@ This release has the following fixes:
 
 * You can now share MySQL for Pivotal Platform service instances across orgs and spaces using `cf share-service`.
 For more information, see [Share Service Instances](./use.html#share).
-* Certificate rotation now works reliably with BOSH. 
+* Certificate rotation now works reliably with BOSH.
 
 ### Known Issue
 
 This release has the following issue:
 
 <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
 
 ## <a id="2-6-3"></a>v2.6.3
 
@@ -49,7 +50,7 @@ This release has the following issue:
 
 This release includes the following security fix:
 
-+ Updates the cf CLI to v6.46. This update fixes the following CVEs: 
++ Updates the cf CLI to v6.46. This update fixes the following CVEs:
   + High [CVE-2019-3781: CF CLI does not sanitize user's password in verbose/trace/debug](https://pivotal.io/security/cve-2019-3781)
   + Medium [CVE-2019-3800: CF CLI writes the client id and secret to config file](https://pivotal.io/security/cve-2019-3800)
 
@@ -63,7 +64,7 @@ New feature and change in this release:
 
 This release has the following fix:
 
-+ Automatic backups for leader-follower service instances now work correctly. 
++ Automatic backups for leader-follower service instances now work correctly.
 Previously, a regression caused the leader or follower node to take a backup of its peer node rather than itself.
 
 ### Known Issues
@@ -72,6 +73,7 @@ This release has the following issues:
 
 <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 <%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
+<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
 
 ## <a id="2-6-2"></a> v2.6.2
 
@@ -86,7 +88,7 @@ New features and changes in this release:
 + Renames **Galera [BETA]** service plan type to **HA Cluster [BETA]**.
 + Updates the service instance limit for highly available (HA) cluster service plan types to 50 instances.
 + Updates AWS CLI version used by automatic backups to support non-public AWS regions and external object stores that require the v4 signature.
-+ Enables developers to bind their app to a custom schema in the database. For more information, 
++ Enables developers to bind their app to a custom schema in the database. For more information,
   see [Use Custom Schemas](./use.html#schema).
 + Updates Golang version to v1.12.
 
@@ -102,6 +104,7 @@ This release has the following issues:
 
 <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 <%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
+<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
 
 ## <a id="2-6-1"></a> v2.6.1
 
@@ -148,6 +151,7 @@ This release has the following issues:
 
 <%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
 <%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
+<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
 
 ### Compatibility
 
