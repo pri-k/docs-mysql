@@ -14,7 +14,7 @@ version, upgrade to the latest v2.6.x version before upgrading to the latest v2.
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
-## <a id="2-7-3"></a> v2.7.3
+## <a id="2-7-3"></a> v2.7.4
 
 **Release Date: January 6, 2020**
 
@@ -22,27 +22,36 @@ For product versions and upgrade paths, see the [Product Compatibility Matrix](h
 
 New features and changes in this release:
 
-* The beta <%= vars.single_leader_plan %> service plan in <%= vars.product_full %> now supports failing over to a follower in
-  a different data center. 
+* <%= vars.single_leader_plan %> plans support failover to a follower service instance in a different data center.
   <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
-* Operators are able to monitor MySQL metrics on the Healthwatch Indicator Protocol dashboard. For more information, see [Indicator Protocol Dashboard (Beta)](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html).
-* Updated HA Clusters to only retain 3 days of binary logs, which minimizes persistent disk usage. 
+* Operators can monitor MySQL metrics on the Healthwatch Indicator Protocol dashboard.
+For more information, see [Indicator Protocol Dashboard (Beta)](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html).
+* Highly available (HA) cluster plans only retain three days of binary logs.
+This reduces persistent disk usage.
 
 ### Security Fixes
 
-This release includes the following security fix:
+This release includes the following security fixes:
 
-* Updates Envoy to v1.12.2, which fixes CVE-2019-18801, CVE-2019-18802, and CVE-2019-18838.
-* Updates Percona Server to v5.7.28-31, which fixes several CVEs. For more information, see [here](https://usn.ubuntu.com/4070-1/) and [here](https://usn.ubuntu.com/4195-1/).
-* Bumped Golang to v1.13.x, which fixes several CVEs.
+* Updates Envoy to v1.12.2. This update fixes the following CVEs:
+    + Critical [CVE-2019-18801](https://nvd.nist.gov/vuln/detail/CVE-2019-18801)
+    + Critical [CVE-2019-18802](https://nvd.nist.gov/vuln/detail/CVE-2019-18802)
+    + High [CVE-2019-18838](https://nvd.nist.gov/vuln/detail/CVE-2019-18838)
+* Updates Percona Server to v5.7.28-31. This update fixes multiple security issues. <br>
+For more information, see
+[USN-4070-1: MySQL vulnerabilities](https://usn.ubuntu.com/4070-1/)
+and [USN-4195-1: MySQL vulnerabilities](https://usn.ubuntu.com/4195-1/) in the Ubuntu documentation.
+* Updates golang to v1.13. This fixes the following CVE:
+    + High [CVE-2019-17596](https://nvd.nist.gov/vuln/detail/CVE-2019-17596)
 
 ### Resolved Issues
 
 This release has the following fixes:
 
-* Single node service instances no longer emit irrelevant Leader-Follower metrics.
-* Fixed smoke tests error output to explain the actual error rather than a confusing BOSH-related error.
-* Moved audit logs to be stored on persistent disk, instead of the syslog endpoint.
+* Single node service instances no longer emit leader-follower service instance metrics.
+* Smoke test error messages now explain the actual error rather than outputting 
+`fork/exec /usr/local/bin/bosh: no such file or directory`.
+* Audit logs are now stored on the persistent disk rather than at the syslog endpoint.
 
 ### Known Issues
 
