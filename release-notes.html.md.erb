@@ -10,6 +10,43 @@ Pivotal recommends that you upgrade to the latest version of your current minor 
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
+## <a id="2-6-5"></a> v2.6.5
+
+**Release Date: January 7, 2020**
+
+### Features
+
+New features and changes in this release:
+
+* Operators can monitor MySQL metrics on the Healthwatch Indicator Protocol dashboard.
+For more information, see [Indicator Protocol Dashboard (Beta)](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html).
+* Highly available (HA) cluster plans only retain three days of binary logs.
+This reduces persistent disk usage.
+
+### Security Fixes
+
+This release includes the following security fixes:
+
+* Updates Percona Server to v5.7.28-31. This update fixes multiple security issues. <br>
+For more information, see
+[USN-4070-1: MySQL vulnerabilities](https://usn.ubuntu.com/4070-1/)
+and [USN-4195-1: MySQL vulnerabilities](https://usn.ubuntu.com/4195-1/) in the Ubuntu documentation.
+* Updates golang to v1.13. This fixes the following CVE:
+    + High [CVE-2019-17596](https://nvd.nist.gov/vuln/detail/CVE-2019-17596)
+
+### Resolved Issues
+
+This release has the following fixes:
+
+* Smoke test error messages now explain the actual error rather than outputting
+`fork/exec /usr/local/bin/bosh: no such file or directory`.
+
+### Known Issue
+
+This release has the following issue:
+
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+
 ## <a id="2-6-4"></a>v2.6.4
 
 **Release Date:**  Oct 10, 2019
