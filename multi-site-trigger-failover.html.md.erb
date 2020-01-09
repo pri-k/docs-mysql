@@ -8,7 +8,7 @@ owner: MySQL
 
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
-The topic describes how to trigger a failover and switchover when using a  <%= vars.single_leader_plan %> plan.
+The topic describes how to trigger a failover and switchover when using a <%= vars.single_leader_plan %> plan.
 
 
 <p class="note"><strong>Note:</strong> You can only do failovers and switchovers in
@@ -132,25 +132,10 @@ To promote the follower service instance to leader:
         FAILED
         Server error, status code: 502, error code: 10001, message: Service broker error: Promotion of follower failed - the leader is still writable</pre>
 
+1. WATCH SOMEHOW
 
 1. Reconfigure your global DNS load balancer to direct all traffic to apps in your secondary foundation.
 See [Configure Your GLB](https://docs.pivotal.io/platform/plan/global-dns-lb.html#configure-glb).
-
-1. If your primary foundation is healthy, create a follower service instance in your primary foundation
-    by doing the following:
-      1. Create a  <%= vars.single_leader_plan %> service instance by running:
-
-        ```
-        cf create-service p.mysql PLAN PRIMARY-INSTANCE
-        ```
-        <p class="note"><strong>Note:</strong> Do not name your service instance
-          <code>leader</code> or <code>follower</code>. If you trigger a failover,
-          the service instances in your primary and secondary foundations switch roles.</p>
-      1. Switch the roles for your primary and secondary service instances by doing the procedure
-          in [Switch Roles](#switch) below.
-      1. If you want to use an active-active topology,
-      bind your app to the follower service instance in your primary foundation.
-      See [Bind a Service Instance to Your App](./use.html#bind).
 
 ###<a id='clean-up'></a> Delete the Former Leader
 
@@ -190,7 +175,7 @@ service instance in the secondary foundation. You created these service instance
 To trigger a switchover:
 
 1. [Promote the Follower](#promote)
-1. [Switch Roles](#switch)
+1. [Reconfigure <%= vars.single_leader_plan %>](#configure)
 
 
 ### <a id='promote-switchover'></a> Promote the Follower
@@ -226,6 +211,8 @@ To promote the follower to leader in the secondary foundation:
 
     <%# HAPPY PATH? %>
 
+1. WATCH SOMEHOW?
+
 1. Log in to the deployment for your secondary foundation by running:
 
     ```
@@ -253,11 +240,17 @@ To promote the follower to leader in the secondary foundation:
         Updating service instance secondary-node as admin...
         FAILED
         Server error, status code: 502, error code: 10001, message: Service broker error: Promotion of follower failed - the leader is still writable</pre>
+1. WATCH SOMEHOW?
 
-### <a id='switch'></a>Switch Roles
+### <a id='reconfigure'></a>Reconfigure <%= vars.single_leader_plan %>
+
+To establish a connection between the primary and secondary service instances, you must
+reconfigure replication. Reconfiguring replication is similar to the procedure in
+[Configure Multi‑Site Replication](./use-multi-site.html#create-service-key) except the
+primary service instance is the follower and the secondary service instance is the leader.
 
 
-To switch the roles for the primary and secondary service instances:
+To reconfigure replication for the primary and secondary service instances:
 
 1. Log in to the deployment for your primary foundation by running:
 
