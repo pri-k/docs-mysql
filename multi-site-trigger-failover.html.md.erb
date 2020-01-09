@@ -1,5 +1,5 @@
 ---
-title: Triggering Multi-Site Replication Failover
+title: Triggering Multi-Site Replication Failover and Switchover
 owner: MySQL
 ---
 <strong><%= modified_date %></strong>
@@ -8,31 +8,163 @@ owner: MySQL
 
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
-The topic describes how to trigger a failover using <%= vars.single_leader_plan_lc %>
-in <%= vars.product_name %>.
+The topic describes how to trigger a failover and switchover using <%= vars.single_leader_plan_lc %>
+in <%= vars.product_full %>.
+
+
+<p class="note"><strong>Note:</strong> You can only do failovers and switchovers in
+  <%= vars.product_short %> v2.7.3 and later.
+</p>
 
 ##<a id='overview'></a> Overview
 
-You might want to trigger a failover in the following scenarios:
+You can use <%= vars.product_short %> to failover or switchover a <%= vars.single_leader_plan %> plan.
+When you failover or switchover a <%= vars.single_leader_plan %> plan,
+the follower service instance is promoted to the leader.
 
-* You want to take the leader VM down to do planned maintenance.
-* The performance of the leader VM degrades.
-* The leader VM fails unexpectedly.
-* The AZ where the leader VM is located goes offline unexpectedly.
+<p class="note"><strong>Note:</strong>
+  In a <%= vars.single_leader_plan_lc %> context,
+  the two <%= vars.single_leader_plan %> service instances are
+  referred to as a decoupled leader-follower service instance. <br> <br>
+  A decoupled leader-follower service instance deployed across multiple
+  foundations or data centers is different from the coupled leader-follower plan that
+  <%= vars.product_name %> offers.
+  For information about the coupled leader-follower plan,
+  see <a href="./about-leader-follower.html">About Leader-Follower</a>.
+</p>
+
+The table below describes when you should trigger a failover or switchover:
+
+<table>
+  <tr>
+    <th>Trigger a failover if...</th>
+    <th>Trigger a switchover if your instances are healthy and..</th>
+  </tr>
+
+  <tr>
+    <td>
+      <ul>
+        <li>The leader service instance is unreachable</li>
+        <li>The leader service instance fails unexpectedly</li>
+        <li>The performance of the leader VM degrades.</li>
+        <li>The AZ where the leader VM is located goes offline unexpectedly.</li>
+        <li>The leader is in read-only mode</li>
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+        <li>Perform data center maintenance</li>
+        <li>Upgrade your foundation (such as stemcell upgrades)</li>
+        <li>Hardware</li>
+        <li>Intentionally take data center offline.</li>
+        <li>You want to re-configure replication roles</li>
+      </ul>
+    </td>
+  </tr>
+
+</table>
+
+
+##<a id='failover'></a> Trigger a Failover
+
+If your apps cannot write to the database, your leader service instance might be down.
+In this case, you should do a failover to promote the follower service instance to leader.
+
+If your leader service instance is still in read-write mode,
+do the procedures in [Trigger a Switchover](#switchover) below instead.
+
+<p class="note warning"><strong>Warning:</strong> You should only do a failover
+  if you do not need to recover the leader service instance.
+  You cannot recover the downed leader service instance after you do a failover.
+</p>
+
+The following steps assume that you have created the leader
+service instance in the primary foundation and the follower
+service instance in the secondary foundation. You created these service instances in
+[Create <%= vars.single_leader_plan %> Service Instances](./use-multi-site.html#create-multi-dc).
 
 To trigger a failover:
 
-1. [Promote the Follower](#promote)
+1. [Promote the Follower](#promote-failover)
 1. [(Optional) Clean Up the Former Leader](#clean-up)
-1. [Configure the New Follower](#new-follower)
-1. [Unbind and Rebind the App](#rebind)
 
-##<a id='promote'></a> Promote the Follower
+### <a id='promote-failover'></a> Promote the Follower
 
-The following steps assume that you have created the leader <%= vars.single_leader_plan %>
-service instance in the primary foundation and the follower <%= vars.single_leader_plan %>
+1. Log in to the PCF deployment for your secondary foundation by running:
+
+    ```
+    cf login SECONDARY-API-URL
+    ```
+    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation. <br>
+
+1. Promote the secondary service instance to leader by running:
+
+    ```
+    cf update-service SECONDARY-INSTANCE \
+    -c '{"initiate-failover":"promote-follower-to-leader"}'
+    ```
+
+    <p class="note"><strong>Note:</strong> If run <code>cf update-service</code>
+    with a coupled leader-follower, highly available cluster, or single node service instance, the command fails.
+    Ensure that you run this command with a <%= vars.single_leader_plan %>  service instances.
+    </p>
+
+1. If the above command fails, do one of the following:
+    + If you have unapplied local transactions on the follower service instance, wait for the transactions
+    to be applied and then run the above command again. The error message looks like the following:
+        <pre class=terminal>Updating service instance secondary-node as admin...
+        FAILED
+        Server error, status code: 502, error code: 10001, message: Service broker error: Promotion of follower failed - has 1 transactions still unapplied</pre>
+    + If leader service instance is still reachable and in read-write mode, do the procedure in
+        [Trigger a Switchover](#switchover) below. The error message looks like the following:
+          <pre class=terminal>
+        Updating service instance secondary-node as admin...
+        FAILED
+        Server error, status code: 502, error code: 10001, message: Service broker error: Promotion of follower failed - the leader is still writable</pre>
+
+
+1. Re-configure your global DNS load balancer to direct all traffic to apps in your secondary foundation.
+See [Configure Your GLB](https://docs.pivotal.io/platform/plan/global-dns-lb.html#configure-glb).
+
+
+###<a id='clean-up'></a> (Optional) Clean Up the Former Leader
+
+For a failover, we assume that the busted leader is disposable. Follow these steps in order to clean
+up your old leader after performing a failover. This prevents the possibility of the leader coming
+back up in R/W mode, or creating any confusion to the user on which node should be the active R/W.
+
+1. Remove all bindings and service keys from the PRIMARY-INSTANCE.
+1. Delete the service instance with `cf delete-service PRIMARY-INSTANCE`
+1. If your primary foundation is healthy, and you would like to create a new follower to the leader
+  in your secondary foundation, first create a new service instance.
+1. Then, follow "Re-Configure Replication Roles" to re-establish replication.
+
+
+
+##<a id='switchover'></a> Trigger a Switchover
+
+<%# MAYBE CHANGE RE-CONFGIRE IN SOME CONTEXTS TO SWITCH AS IN SWITCH ROLES %>
+
+If your<%= vars.single_leader_plan %> leader-follower service is running and healthy and
+you want to re-configure replication roles, do a switchover.
+
+
+Id your leader service instance is down or unhealthy,
+do the procedures in [Trigger a Failover](#failover) above instead.
+
+The following steps assume that you have created the leader
+service instance in the primary foundation and the follower
 service instance in the secondary foundation. You created these service instances in
-[Create <%= vars.single_leader_plan %> Service Instances](use-multi-site.html#create-multi-dc).
+[Create <%= vars.single_leader_plan %> Service Instances](./use-multi-site.html#create-multi-dc).
+
+To trigger a switchover:
+
+1. [Promote the Follower](#promote)
+1. [Re-Configure Replication Roles](#reconfigure)
+
+
+### <a id='promote-switchover'></a> Promote the Follower
 
 To promote the follower:
 
@@ -41,43 +173,213 @@ To promote the follower:
     ```
     cf login PRIMARY-API-URL
     ```
-    Where `PRIMARY-API-URL` is the API endpoint for the primary foundation. <br>
-    For example:
-    <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
-
-1. _Run some command to double check that the primary service instance is the leader?_
+    Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
 
 1. Set the primary service instance that is currently the leader to read-only by running:
 
     ```
-    cf update-service PRIMARY-INSTANCE -c '{"initiate-failover":"make-leader-read-only"}
+    cf update-service PRIMARY-INSTANCE \
+      -c '{"initiate-failover":"make-leader-read-only"}
     ```
+
+    <p class="note"><strong>Note:</strong> If run <code>cf update-service</code>
+    with a coupled leader-follower, highly available cluster, or single node service instance, the command fails.
+    Ensure that you run this command with a <%= vars.single_leader_plan %>  service instances.
+    </p>
+1. Log in to the PCF deployment for your secondary foundation by running:
+
+    ```
+    cf login SECONDARY-API-URL
+    ```
+    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation.
+
+1. Promote the secondary service instance to leader by running:
+
+    ```
+    cf update-service SECONDARY-INSTANCE \
+      -c '{"initiate-failover":"promote-follower-to-leader"}'
+    ```
+    <p class="note"><strong>Note:</strong> If run <code>cf update-service</code>
+    with a coupled leader-follower, highly available cluster, or single node service instance, the command fails.
+    Ensure that you run this command with a <%= vars.single_leader_plan %>  service instances.
+    </p>
+
+### <a id='reconfigure'></a>Re-Configure Replication Roles
+
+
+To re-configure the replication roles for the primary and secondary service instances:
+
+
+1. Log in to the PCF deployment for your primary foundation by running:
+
+    ```
+    cf login PRIMARY-API-URL
+    ```
+
+1. Create a host-info service key for the service instance in your primary foundation:
+
+    ```
+    cf create-service-key PRIMARY-INSTANCE SERVICE-KEY \
+      -c '{"replication-request": "host-info"}
+    ```
+    Where:
+    + `PRIMARY-INSTANCE` is the name of the primary service instance.
+    + `SERVICE-KEY` is a name you choose for the host-info service key.
+
+    For example:
+    <pre class="terminal">cf create-service-key primary-node host-info \
+          -c '{"replication-request": "host-info" }'
+        Creating service key host-info for service instance primary-node as user<span>@</span>example.com...
+        OK
+    </pre>
+
+1. View the `replication-credentials` for your host-info service key by running the following command:
+
+    ```
+    cf service-key PRIMARY-INSTANCE SERVICE-KEY
+    ```
+    Where:
+    + `PRIMARY-INSTANCE` is the name of the primary service instance.
+    + `SERVICE-KEY` is the name of the host-info service key you created in step above.
+
+    For example:
+
+    <pre class="terminal">$ cf service-key primary-node host-info-key
+      Getting key host-info-key for service instance primary-node as user@example.com...
+
+      {
+        "replication": {
+            "peer-info": {
+              "hostname": "primary.bosh",
+              "ip": "10.0.19.12",
+              "system_domain": "sys.primary-domain.com",
+              "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
+          },
+          "role": "leader"
+        }
+      }</pre>
+
+1. Record the output of the above command.
 
 1. Log in to the PCF deployment for your secondary foundation by running:
 
     ```
     cf login SECONDARY-API-URL
     ```
-    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation. <br>
+
+1. Update your secondary service instance with the host-info service key by running the
+following command:
+
+    ```
+    cf update-service SECONDARY-INSTANCE -c HOST-INFO
+    ```
+    Where:
+    + `SECONDARY-INSTANCE` is the name of the secondary service instance.
+    + `HOST-INFO` is the output you recorded in step above.
+
     For example:
-    <pre class="terminal">$ cf login https<span>:</span>//secondary.example.com</pre>
-
-
-1. Promote the secondary service instance to leader by running:
+    <pre class="terminal">cf update-service secondary-node -c {"replication":{ \
+      "peer-info":{ \
+          "hostname": "primary.bosh", \
+          "ip": "10.0.18.12", \
+          "system_domain": "sys.primary-domain.com", \
+          "uuid": "ab12cd34-5678-91e2-345f-67891h234567" \
+        },\
+      "role": "leader" \
+      } \
+    }</pre>
+    <p class="note"><strong>Note:</strong> If run <code>cf update-service</code>
+    with a coupled leader-follower, highly available cluster, or single node service instance, the command fails.
+    Ensure that you run this command with a <%= vars.single_leader_plan %>  service instances.
+    </p>
+1.  Create a credentials service key for the service instance in your secondary foundation by
+    running the following command:
 
     ```
-    cf update-service SECONDARY-INSTANCE -c '{"initiate-failover":"promote-follower-to-leader"}'
+    cf create-service-key SECONDARY-INSTANCE SERVICE-KEY-NAME \
+      -c '{"replication-request": "credentials"}
     ```
+    Where:
+    + `SECONDARY-INSTANCE` is the name of the secondary service instance.
+    + `SERVICE-KEY-NAME` is a name you choose for the credentials service key.
 
-##<a id='clean-up'></a> (Optional) Clean Up the Former Leader
+    For example:
+    <pre class="terminal">cf create-service-key secondary-node cred-key \
+        -c '{"replication-request": "credentials" }'
+        Creating service key cred-key for service instance secondary-node as user<span>@</span>example.com...
+        OK
+    </pre>
+    <p class="note"><strong>Note:</strong> The <code>-c </code> flag is different than the one in step NUMBER.
+    </p>
 
-<%# IS THIS NECESSARY? %>
+1. View the `replication-credentials` for your credentials service key by running the following command:
+
+    ```
+    cf service-key SECONDARY-INSTANCE SERVICE-KEY-NAME
+    ```
+    Where:
+    + `SECONDARY-INSTANCE` is the name of the primary service instance.
+    + `SERVICE-KEY-NAME` is the name of the credentials service key you created in step NUMBER, above.
+
+    For example:
+
+    <pre class="terminal">$ cf service-key secondary-node cred-key
+      Getting key cred-key for service instance secondary as user@example.com...
+
+      {
+        "replication": {
+          "credentials": {
+            "password": "a22aaa2a2a2aaaaa",
+            "username": "6bf07ae455a14064a9073cec8696366c"
+          },
+          "peer-info": {
+            "hostname": "secondary.bosh",
+            "ip": "10.0.17.12",
+            "system_domain": "sys.secondary-domain.com",
+            "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
+          },
+          "role": "follower"
+        }
+      }</pre>
+
+1. Record the output of the above command.
+
+1. Log in to the PCF deployment for your primary foundation by running:
+
+    ```
+    cf login PRIMARY-API-URL
+    ```
+1. Update your primary service instance with the credentials service key by running the following command:
+
+    ```
+    cf update-service PRIMARY-INSTANCE -c CREDENTIALS
+    ```
+    Where:
+    + `PRIMARY-INSTANCE` is name of your primary service instance.
+    + `CREDENTIALS` is the output you recorded in the step above.
+
+    For example:
+    <pre class="terminal"> cf update-service primary-node -c {"replication": { \
+        "credentials": { \
+          "password": "a22aaa2a2a2aaaaa", \
+          "username": "6bf07ae455a14064a9073cec8696366c" \
+        }, \
+        "peer-info": { \
+          "hostname": "secondary.bosh", \
+          "ip": "10.0.17.12", \
+          "system_domain": "sys.secondary-domain.com", \
+          "uuid": "zy98xw76-5432-19v8-765u-43219t876543" \
+        }, \
+        "role": "follower" \
+      } \
+    }</pre>
+    <p class="note"><strong>Note:</strong> If run <code>cf update-service</code>
+    with a coupled leader-follower, highly available cluster, or single node service instance, the command fails.
+    Ensure that you run this command with a <%= vars.single_leader_plan %>  service instances.
+    </p>
+At this point, you should have a Leader-Follower instance successfully configured,
+where the Leader is in your secondary foundation, and your Follower is in the primary foundation.
 
 
-##<a id='new-follower'></a> Configure the New Follower
-
-<%# IS THIS NECESSARY? %>
-
-##<a id='rebind'></a> Unbind and Rebind the App
-
-<%# IS THIS NECESSARY? %>
+1. Re-configure your global DNS load balancer to direct traffic to the correct foundations of your choice.
+See [Configure Your GLB](https://docs.pivotal.io/platform/plan/global-dns-lb.html#configure-glb).
