@@ -1,7 +1,7 @@
 <%if vars.app_runtime == "Application Service" %>
 ## <a id="proxy"></a>MySQL Proxy
 <%end%>
-<%= vars.product_full %> uses a proxy to send client connections
+MySQL for Pivotal Cloud Foundry uses a proxy to send client connections
 to the healthy MySQL database cluster nodes in a highly available cluster plan.
 Using a proxy gracefully handles failure of nodes, enabling fast,
 failover to other nodes within the cluster. When a
