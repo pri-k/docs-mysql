@@ -116,6 +116,40 @@ To run the errand:
     bosh -d DEPLOYMENT-NAME run-errand smoke-tests
     ```
 
+    For example:
+    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand smoke-tests
+      run-errand find-deprecated-bindingsUsing deployment 'dedicated-mysql-broker'
+      Task 5192168
+      Task 5192168 | 15:24:19 | Preparing deployment: Preparing deployment (00:00:04)
+      Task 5192168 | 15:24:23 | Running errand: dedicated-mysql-broker/425c9a28-6a8e-4a39-8785-c1a26a8095d3 (1) (00:11:33)
+      Task 5192168 | 15:35:56 | Fetching logs for dedicated-mysql-broker/425c9a28-6a8e-4a39-8785-c1a26a8095d3 (1): Finding and packing log files (00:00:01)
+      Task 5192168 Started  Wed Jan  8 15:24:19 UTC 2020
+      Task 5192168 Finished Wed Jan  8 15:35:57 UTC 2020
+      Task 5192168 Duration 00:11:38
+      Task 5192168 done
+      Instance   dedicated-mysql-broker/425c9a28-6a8e-4a39-8785-c1a26a8095d3
+      Exit Code  0
+      Stdout     Running Errand with plan: db-small
+                 Running Errand in org: dedicated-mysql-smoketests
+                 /var/vcap/packages/smoke-tests/bin /var/vcap/bosh
+                 Running Suite: Smoke Tests Suite
+                 ================================
+                 Random Seed: 1578497063
+                 Will run 1 of 1 specs
+                 • [SLOW TEST:623.171 seconds]
+                 Lifecycle
+                 /var/vcap/data/compile/smoke-tests/src/specs/smoke_tests/lifecycle_test.go:13
+                   binds the service instance to an app, and writes to and reads from database
+                   /var/vcap/data/compile/smoke-tests/src/specs/smoke_tests/lifecycle_test.go:34
+                 ------------------------------
+                 Ran 1 of 1 Specs in 692.140 seconds
+                 SUCCESS! -- 1 Passed | 0 Failed | 0 Pending | 0 Skipped
+                 PASS
+                 /var/vcap/bosh
+      Stderr     -
+      1 errand(s)
+      Succeeded</pre>
+
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 ## <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
