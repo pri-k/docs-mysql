@@ -82,15 +82,12 @@ To create a leader-follower service instance:
 
 1. Create a <%= vars.single_leader_plan %> service instance in your primary foundation:
 
-    1. Log in to the PCF deployment for your primary foundation by running:
+    1. Log in to the deployment for your primary foundation by running:
 
         ```
         cf login PRIMARY-API-URL
         ```
         Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
-        <br><br>
-        For example:
-        <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
 
     1. Create a primary service instance by running:
 
@@ -106,12 +103,15 @@ To create a leader-follower service instance:
         For example:
 
         <pre class="terminal">$ cf create-service p.mysql db-small primary-node<br>
-        Creating service primary-node in org my-org / space my-space as user<span>@</span>example.com...
+        Creating service primary-node in org my-org / space my-space as admin...
         OK</pre>
 
         <p class="note"><strong>Note:</strong> Do not name your service instance
-          <code>leader</code> or <code>follower</code>. If you trigger a failover,
-          the service instances in your primary and secondary foundations switch roles.</p>
+          <code>leader</code> or <code>follower</code>. If you trigger a failover or switchover,
+          the service instances in your primary and secondary foundations switch roles.
+          For more information,
+          see <a href="./multi-site-trigger-failover.html">Triggering Multi-Site Replication Failover and Switchover</a>.
+        </p>
 
     1. (Optional) Watch the progress of the service instance creation by running:
 
@@ -124,7 +124,7 @@ To create a leader-follower service instance:
         For example:
 
         <pre class="terminal">$ watch cf services<br>
-        Getting services in org my-org / space my-space as user<span>@</span>example.com...
+        Getting services in org my-org / space my-space as admin...
         OK
         name           service       plan        bound apps    last operation
         primary-node   p.mysql       db-small                  create succeeded
@@ -132,7 +132,7 @@ To create a leader-follower service instance:
         If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 
 1. Create a <%= vars.single_leader_plan %> service instance in your secondary
-foundation by repeating step 1 and replacing references to primary with secondary.
+foundation by repeating step 1 and replacing references to `primary` with `secondary`.
 
 ### <a id='create-service-key'></a>Configure <%= vars.single_leader_plan %>
 
@@ -154,7 +154,8 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
 1. Create a host-info service key for the service instance in your secondary foundation by running:
 
     ```
-    cf create-service-key SECONDARY-INSTANCE SERVICE-KEY -c '{"replication-request": "host-info"}
+    cf create-service-key SECONDARY-INSTANCE SERVICE-KEY \
+      -c '{"replication-request": "host-info"}
     ```
     Where:
     + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
@@ -162,8 +163,9 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
     + `SERVICE-KEY` is a name you choose for the host-info service key.
     <br><br>
     For example:
-    <pre class="terminal">$ cf create-service-key secondary-node host-info -c '{"replication-request": "host-info" }'
-        Creating service key host-info for service instance secondary-node as user<span>@</span>example.com...
+    <pre class="terminal">$ cf create-service-key secondary-node host-info \
+           -c '{"replication-request": "host-info" }'<br>
+        Creating service key host-info for service instance secondary-node as admin...
         OK
     </pre>
 
@@ -179,8 +181,8 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
 
     For example:
 
-    <pre class="terminal">$ cf service-key secondary-node host-info-key
-      Getting key host-info-key for service instance secondary-node as user@example.com...
+    <pre class="terminal">$ cf service-key secondary-node host-info-key <br>
+    Getting key host-info-key for service instance secondary-node as admin...
 
       {
         "replication": {
@@ -194,16 +196,11 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
         }
       }</pre>
 1. Record the output of the above command.
-1. Log in to the PCF deployment for your primary foundation by running:
+1. Log in to the deployment for your primary foundation by running:
 
     ```
     cf login PRIMARY-API-URL
     ```
-    Where `PRIMARY-API-URL` is the API endpoint for your primary foundation.
-    <br><br>
-    For example:
-    <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
-
 1. Update your primary service instance with the host-info service key by running:
 
     ```
@@ -224,12 +221,15 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
         },\
       "role": "leader" \
       } \
-    }</pre>
+    }<br>
+    Updating service instance primary-node as admin...
+    OK</pre>
 1.  Create a credentials service key for the service instance in your primary foundation by
     running:
 
     ```
-    cf create-service-key PRIMARY-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "credentials"}
+    cf create-service-key PRIMARY-INSTANCE SERVICE-KEY-NAME \
+      -c '{"replication-request": "credentials"}
     ```
     Where:
     + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
@@ -237,9 +237,10 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
     + `SERVICE-KEY-NAME` is a name you choose for the credentials service key.
     <br><br>
     For example:
-    <pre class="terminal">$ cf create-service-key primary-node cred-key -c '{"replication-request": "credentials" }'
-        Creating service key cred-key for service instance primary-node as user<span>@</span>example.com...
-        OK
+    <pre class="terminal">$ cf create-service-key primary-node cred-key \
+          -c '{"replication-request": "credentials" }' <br>
+      Creating service key cred-key for service instance primary-node as admin...
+      OK
     </pre>
     <p class="note"><strong>Note:</strong> The <code>-c </code> flag is different than the one in step 1.
     </p>
@@ -255,8 +256,8 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
 
     For example:
 
-    <pre class="terminal">$ cf service-key primary-node cred-key
-      Getting key cred-key for service instance primary as user@example.com...
+    <pre class="terminal">$ cf service-key primary-node cred-key <br>
+    Getting key cred-key for service instance primary as admin...
 
       {
         "replication": {
@@ -275,16 +276,11 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
       }</pre>
 
 1. Record the output of the above command.
-1. Log in to the PCF deployment for your secondary foundation by running:
+1. Log in to the deployment for your secondary foundation by running:
 
     ```
     cf login SECONDARY-API-URL
     ```
-    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation.
-    <br><br>
-    For example:
-    <pre class="terminal">$ cf login https<span>:</span>//secondary.example.com</pre>
-
 1. Update your secondary service instance with the credentials service key by running:
 
     ```
@@ -309,7 +305,9 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
         }, \
         "role": "follower" \
       } \
-    }</pre>
+    }<br>
+    Updating service instance primary-node as admin...
+    OK</pre>
 
 ### <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
 
@@ -322,54 +320,17 @@ For information about apps in multiple foundations or data centers, see
 
 To bind an app to a leader-follower service instance:
 
-1. Log in to the PCF deployment for your primary foundation by running:
+1. Log in to the deployment for your primary foundation by running:
 
     ```
     cf login PRIMARY-API-URL
     ```
-    Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
-    <br><br>
-    For example:
-    <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
-
-1. Push your app into the same space as the leader-follower service instance by running the following
-    command:
-
-    ```
-    cf push
-    ```
-
-1. Bind your app to your primary service instance by running:
-
-    ```
-    cf bind-service APP PRIMARY-SERVICE-INSTANCE
-    ```
-    Where:
-    - `APP` is the app you want to use the leader-follower service instance.<br>
-    - `PRIMARY-INSTANCE` is the name of the primary service instance you created in
-    step 1 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
-
-    For example:
-    <pre class="terminal">
-    $ cf bind-service my-app primary-node<br>
-    Binding service primary-node to my-app in org my-org / space my-space as user<span>@</span>example.com...
-    OK
-    TIP: Use 'cf push' to ensure your env variable changes take effect
-    </pre>
-
-1. Restart your app by running:
-
-    ```
-    cf restart APP
-    ```
-    Where `APP` is the app you bound to the leader-follower service instance in step 2, above.
+1. Bind your app to your primary service instance by doing the procedure in
+[Bind a Service Instance to Your App](./use.html#bind).
 
 1. (Optional) If you are using an active-active topology,
 you must bind the same app to your secondary service instance in your secondary foundation.
-To do this, repeat the above steps and replace references to primary with secondary.
+To do this, repeat the above steps and replace references to `primary` with `secondary`.
 
-<p class="note"><strong>Note:</strong> After you bind an app to your service instances,
-  you must modify the app to use the <%= vars.product_name %> service.
-  For instructions on how to use <%= vars.product_name %> in an app,
-  see <a href="./use.html#call"> Use the MySQL Service in Your App</a>.
-</p>
+1. Modify your app to use the <%= vars.product_name %> service by doing the procedure in
+  [Use the MySQL Service in Your App](./use.html#call).
