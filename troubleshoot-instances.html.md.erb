@@ -26,6 +26,12 @@ For more information about troubleshooting this problem, see
 If you can no longer read to the database as well, your persistent disk might be full. For more
 information about troubleshooting inoperable apps, see [Apps are Inoperable](#disk-full).
 
+If you have a <%= vars.single_leader_plan %> topology
+and your apps can no longer write to the database, your leader VM might be down. To resolve this issue,
+you can trigger a failover to the follower VM.
+For more information about troubleshooting this problem,
+see [Triggering Multi-Site Replication Failover and Switchover](./multi-site-trigger-failover.html).
+
 ### <a id="disk-full"></a>Apps Are Inoperable
 
 If your apps become inoperable, your persistent disk might be full. In this state, read,
