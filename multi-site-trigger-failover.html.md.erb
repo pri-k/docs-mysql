@@ -132,7 +132,22 @@ To promote the follower service instance to leader:
         FAILED
         Server error, status code: 502, error code: 10001, message: Service broker error: Promotion of follower failed - the leader is still writable</pre>
 
-1. WATCH SOMEHOW
+1.  Watch the progress of the service instance update by running:
+
+    ```
+    watch cf services
+    ```
+
+    Wait for the `last operation` for your instance to show as `update succeeded`.
+    <br><br>
+    For example:
+
+    <pre class="terminal">$ watch cf services<br>
+    Getting services in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    name             service       plan                      bound apps    last operation
+    secondary-node   p.mysql       db-pxc-single-node-small                update succeeded
+  </pre>
 
 1. Reconfigure your global DNS load balancer to direct all traffic to apps in your secondary foundation.
 See [Configure Your GLB](https://docs.pivotal.io/platform/plan/global-dns-lb.html#configure-glb).

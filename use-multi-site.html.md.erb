@@ -82,7 +82,7 @@ To create a leader-follower service instance:
 
 1. Create a <%= vars.single_leader_plan %> service instance in your primary foundation:
 
-    1. Log in to the PCF deployment for your primary foundation by running the following command:
+    1. Log in to the PCF deployment for your primary foundation by running:
 
         ```
         cf login PRIMARY-API-URL
@@ -92,7 +92,7 @@ To create a leader-follower service instance:
         For example:
         <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
 
-    1. Create a primary service instance by running the following command:
+    1. Create a primary service instance by running:
 
         ```
         cf create-service p.mysql PLAN PRIMARY-INSTANCE
@@ -113,7 +113,7 @@ To create a leader-follower service instance:
           <code>leader</code> or <code>follower</code>. If you trigger a failover,
           the service instances in your primary and secondary foundations switch roles.</p>
 
-    1. (Optional) Watch the progress of the service instance creation by running the following command:
+    1. (Optional) Watch the progress of the service instance creation by running:
 
         ```
         watch cf services
@@ -151,7 +151,7 @@ service instance in the secondary foundation. You created these service instance
 
 To create the service keys for your <%= vars.single_leader_plan %> service instances:
 
-1. Create a host-info service key for the service instance in your secondary foundation:
+1. Create a host-info service key for the service instance in your secondary foundation by running:
 
     ```
     cf create-service-key SECONDARY-INSTANCE SERVICE-KEY -c '{"replication-request": "host-info"}
@@ -162,12 +162,12 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
     + `SERVICE-KEY` is a name you choose for the host-info service key.
     <br><br>
     For example:
-    <pre class="terminal">cf create-service-key secondary-node host-info -c '{"replication-request": "host-info" }'
+    <pre class="terminal">$ cf create-service-key secondary-node host-info -c '{"replication-request": "host-info" }'
         Creating service key host-info for service instance secondary-node as user<span>@</span>example.com...
         OK
     </pre>
 
-1. View the `replication-credentials` for your host-info service key by running the following command:
+1. View the `replication-credentials` for your host-info service key by running:
 
     ```
     cf service-key SECONDARY-INSTANCE SERVICE-KEY
@@ -187,14 +187,14 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
             "peer-info": {
               "hostname": "secondary.bosh",
               "ip": "10.0.19.12",
-              "system_domain": "sys.primary-domain.com",
+              "system_domain": "sys.secondary-domain.com",
               "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
           },
           "role": "leader"
         }
       }</pre>
 1. Record the output of the above command.
-1. Log in to the PCF deployment for your primary foundation by running the following command:
+1. Log in to the PCF deployment for your primary foundation by running:
 
     ```
     cf login PRIMARY-API-URL
@@ -204,8 +204,7 @@ To create the service keys for your <%= vars.single_leader_plan %> service insta
     For example:
     <pre class="terminal">$ cf login https<span>:</span>//primary.example.com</pre>
 
-1. Update your primary service instance with the host-info service key by running the
-following command:
+1. Update your primary service instance with the host-info service key by running:
 
     ```
     cf update-service PRIMARY-INSTANCE -c HOST-INFO
@@ -216,18 +215,18 @@ following command:
     + `HOST-INFO` is the output you recorded in step 3, above.
 
     For example:
-    <pre class="terminal">cf update-service primary-node -c {"replication":{ \
+    <pre class="terminal">$ cf update-service primary-node -c {"replication":{ \
       "peer-info":{ \
           "hostname": "secondary.bosh", \
           "ip": "10.0.18.12", \
-          "system_domain": "sys.primary-domain.com", \
+          "system_domain": "sys.secondary-domain.com", \
           "uuid": "ab12cd34-5678-91e2-345f-67891h234567" \
         },\
       "role": "leader" \
       } \
     }</pre>
 1.  Create a credentials service key for the service instance in your primary foundation by
-    running the following command:
+    running:
 
     ```
     cf create-service-key PRIMARY-INSTANCE SERVICE-KEY-NAME -c '{"replication-request": "credentials"}
@@ -238,13 +237,13 @@ following command:
     + `SERVICE-KEY-NAME` is a name you choose for the credentials service key.
     <br><br>
     For example:
-    <pre class="terminal">cf create-service-key primary-node cred-key -c '{"replication-request": "credentials" }'
+    <pre class="terminal">$ cf create-service-key primary-node cred-key -c '{"replication-request": "credentials" }'
         Creating service key cred-key for service instance primary-node as user<span>@</span>example.com...
         OK
     </pre>
     <p class="note"><strong>Note:</strong> The <code>-c </code> flag is different than the one in step 1.
     </p>
-1. View the `replication-credentials` for your credentials service key by running the following command:
+1. View the `replication-credentials` for your credentials service key by running:
 
     ```
     cf service-key PRIMARY-INSTANCE SERVICE-KEY-NAME
@@ -268,7 +267,7 @@ following command:
           "peer-info": {
             "hostname": "primary.bosh",
             "ip": "10.0.17.12",
-            "system_domain": "sys.secondary-domain.com",
+            "system_domain": "sys.primary-domain.com",
             "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
           },
           "role": "follower"
@@ -276,7 +275,7 @@ following command:
       }</pre>
 
 1. Record the output of the above command.
-1. Log in to the PCF deployment for your secondary foundation by running the following command:
+1. Log in to the PCF deployment for your secondary foundation by running:
 
     ```
     cf login SECONDARY-API-URL
@@ -286,7 +285,7 @@ following command:
     For example:
     <pre class="terminal">$ cf login https<span>:</span>//secondary.example.com</pre>
 
-1. Update your secondary service instance with the credentials service key by running the following command:
+1. Update your secondary service instance with the credentials service key by running:
 
     ```
     cf update-service SECONDARY-INSTANCE -c CREDENTIALS
@@ -297,7 +296,7 @@ following command:
     + `CREDENTIALS` is the output you recorded in step 8, above.
 
     For example:
-    <pre class="terminal"> cf update-service secondary-node -c {"replication": { \
+    <pre class="terminal">$ cf update-service secondary-node -c {"replication": { \
         "credentials": { \
           "password": "a22aaa2a2a2aaaaa", \
           "username": "6bf07ae455a14064a9073cec8696366c" \
@@ -305,7 +304,7 @@ following command:
         "peer-info": { \
           "hostname": "primary.bosh", \
           "ip": "10.0.17.12", \
-          "system_domain": "sys.secondary-domain.com", \
+          "system_domain": "sys.primary-domain.com", \
           "uuid": "zy98xw76-5432-19v8-765u-43219t876543" \
         }, \
         "role": "follower" \
@@ -323,7 +322,7 @@ For information about apps in multiple foundations or data centers, see
 
 To bind an app to a leader-follower service instance:
 
-1. Log in to the PCF deployment for your primary foundation by running the following command:
+1. Log in to the PCF deployment for your primary foundation by running:
 
     ```
     cf login PRIMARY-API-URL
@@ -340,7 +339,7 @@ To bind an app to a leader-follower service instance:
     cf push
     ```
 
-1. Bind your app to your primary service instance by running the following command:
+1. Bind your app to your primary service instance by running:
 
     ```
     cf bind-service APP PRIMARY-SERVICE-INSTANCE
@@ -358,7 +357,7 @@ To bind an app to a leader-follower service instance:
     TIP: Use 'cf push' to ensure your env variable changes take effect
     </pre>
 
-1. Restart your app by running the following command:
+1. Restart your app by running:
 
     ```
     cf restart APP
