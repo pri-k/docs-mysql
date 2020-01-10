@@ -321,7 +321,7 @@ To reconfigure replication for the primary and secondary service instances:
     OK
     </pre>
 
-1. View the `replication-credentials` for your host-info service key by running the following command:
+1. View the `replication-credentials` for your host-info service key by running:
 
     ```
     cf service-key PRIMARY-INSTANCE SERVICE-KEY
@@ -387,7 +387,7 @@ following command:
     Wait for the `last operation` for your instance to show as `update succeeded`.
 
 1.  Create a credentials service key for the service instance in your secondary foundation by
-    running the following command:
+    running:
 
     ```
     cf create-service-key SECONDARY-INSTANCE SERVICE-KEY-NAME \
@@ -406,7 +406,7 @@ following command:
     <p class="note"><strong>Note:</strong> The <code>-c </code> flag is different than the one in step 2 above.
     </p>
 
-1. View the `replication-credentials` for your credentials service key by running the following command:
+1. View the `replication-credentials` for your credentials service key by running:
 
     ```
     cf service-key SECONDARY-INSTANCE SERVICE-KEY-NAME
@@ -443,7 +443,7 @@ following command:
     ```
     cf login PRIMARY-API-URL
     ```
-1. Update your primary service instance with the credentials service key by running the following command:
+1. Update your primary service instance with the credentials service key by running:
 
     ```
     cf update-service PRIMARY-INSTANCE -c CREDENTIALS
