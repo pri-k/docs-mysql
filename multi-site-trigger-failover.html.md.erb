@@ -290,6 +290,12 @@ reconfigure replication. Reconfiguring replication is similar to the procedure i
 [Configure Multi‑Site Replication](./use-multi-site.html#create-service-key) except the
 primary service instance is the follower and the secondary service instance is the leader.
 
+The following diagram describes the workflow for reconfiguring multi-site replication:
+
+![](switchover.png)
+
+<a href="./images/switchover.png" target="_blank">View a larger version of this diagram</a>
+
 <p class='note warning'><strong>Warning:</strong> You must reconfigure
   <%= vars.single_leader_plan_lc %> within three days of promoting the follower service instance.
   This is because <%= vars.product_short %> does not retain binary logs after three days.
