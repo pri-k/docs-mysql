@@ -17,8 +17,8 @@ The topic describes how to trigger a failover and switchover when using a <%= va
 
 ##<a id='overview'></a> Overview
 
-You can use <%= vars.product_short %> to failover or switchover a <%= vars.single_leader_plan %> plan.
-When you failover or switchover a <%= vars.single_leader_plan %> plan,
+You can do failover and do switchover in a <%= vars.single_leader_plan %> plan.
+In both cases, when you failover or switchover,
 the follower service instance is promoted to the leader.
 
 <p class="note"><strong>Note:</strong>
@@ -57,7 +57,8 @@ The table below describes when you should trigger a failover or switchover:
         <li>Upgrading your foundation. For example, upgrading stemcells.</li>
         <li>Changing your hardware</li>
         <li>Intentionally taking the data center offline</li>
-        <li>Re-configuring replication roles of the primary and secondary instances</li>
+        <li>Reconfiguring replication roles.
+            That is, making the leader into the follower and vice versa.</li>
       </ul>
     </td>
   </tr>
@@ -110,7 +111,7 @@ To promote the follower service instance to leader:
     ```
     Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation. <br>
 
-1. Promote the secondary service instance to leader by running:
+1. Promote the follower service instance to leader by running:
 
     ```
     cf update-service SECONDARY-INSTANCE \
@@ -208,7 +209,7 @@ To trigger a switchover:
 </p>
 
 Before you promote the follower service instance,
-you must make the primary service instance read-only.
+you must make the leader service instance, which is in the primary foundation, read-only.
 
 To promote the follower to leader in the secondary foundation:
 
@@ -219,7 +220,7 @@ To promote the follower to leader in the secondary foundation:
     ```
     Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
 
-1. Set the primary service instance that is currently the leader to read-only by running:
+1. Set the service instance that is currently the leader to read-only by running:
 
     ```
     cf update-service PRIMARY-INSTANCE \
@@ -256,7 +257,7 @@ To promote the follower to leader in the secondary foundation:
     ```
     Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation.
 
-1. Promote the secondary service instance to leader by running:
+1. Promote the service instance in the secondary foundation to leader by running:
 
     ```
     cf update-service SECONDARY-INSTANCE \
@@ -285,10 +286,11 @@ To promote the follower to leader in the secondary foundation:
 
 ### <a id='reconfigure'></a>Reconfigure <%= vars.single_leader_plan %>
 
-To establish a connection between the primary and secondary service instances, you must
-reconfigure replication. Reconfiguring replication is similar to the procedure in
+To establish a connection between the service instances in the primary and secondary foundations,
+you must reconfigure replication. Reconfiguring replication is similar to the procedure in
 [Configure Multi‑Site Replication](./use-multi-site.html#create-service-key) except the
-primary service instance is the follower and the secondary service instance is the leader.
+service instance in the primary foundation is the follower and the service instance
+in the secondary foundation is the leader.
 
 The following diagram describes the workflow for reconfiguring multi-site replication:
 
@@ -302,7 +304,7 @@ The following diagram describes the workflow for reconfiguring multi-site replic
 </p>
 
 
-To reconfigure replication for the primary and secondary service instances:
+To reconfigure replication for the service instances:
 
 1. Log in to the deployment for your primary foundation by running:
 
@@ -317,7 +319,7 @@ To reconfigure replication for the primary and secondary service instances:
       -c '{"replication-request": "host-info"}
     ```
     Where:
-    + `PRIMARY-INSTANCE` is the name of the primary service instance.
+    + `PRIMARY-INSTANCE` is the name of the follower service instance in the primary foundation.
     + `SERVICE-KEY` is a name you choose for the host-info service key.
 
     For example:
@@ -333,7 +335,7 @@ To reconfigure replication for the primary and secondary service instances:
     cf service-key PRIMARY-INSTANCE SERVICE-KEY
     ```
     Where:
-    + `PRIMARY-INSTANCE` is the name of the primary service instance.
+    + `PRIMARY-INSTANCE` is the name of the follower service instance in the primary foundation.
     + `SERVICE-KEY` is the name of the host-info service key you created in step above.
 
     For example:
@@ -361,14 +363,14 @@ To reconfigure replication for the primary and secondary service instances:
     cf login SECONDARY-API-URL
     ```
 
-1. Update your secondary service instance with the host-info service key by running the
-following command:
+1. Update your leader service instance in the secondary foundation with the host-info service key
+   by running the following command:
 
     ```
     cf update-service SECONDARY-INSTANCE -c HOST-INFO
     ```
     Where:
-    + `SECONDARY-INSTANCE` is the name of the secondary service instance.
+    + `SECONDARY-INSTANCE` is the name of the leader service instance in the secondary foundation.
     + `HOST-INFO` is the output you recorded in step above.
 
     For example:
@@ -400,7 +402,7 @@ following command:
       -c '{"replication-request": "credentials"}
     ```
     Where:
-    + `SECONDARY-INSTANCE` is the name of the secondary service instance.
+    + `SECONDARY-INSTANCE` is the name of the service instance in the secondary foundation.
     + `SERVICE-KEY-NAME` is a name you choose for the credentials service key.
 
     For example:
@@ -418,7 +420,7 @@ following command:
     cf service-key SECONDARY-INSTANCE SERVICE-KEY-NAME
     ```
     Where:
-    + `SECONDARY-INSTANCE` is the name of the primary service instance.
+    + `SECONDARY-INSTANCE` is the name of the follower service instance in the primary foundation.
     + `SERVICE-KEY-NAME` is the name of the credentials service key you created in step 7, above.
 
     For example:
@@ -449,13 +451,13 @@ following command:
     ```
     cf login PRIMARY-API-URL
     ```
-1. Update your primary service instance with the credentials service key by running:
+1. Update the leader service instance in the primary foundation with the credentials service key by running:
 
     ```
     cf update-service PRIMARY-INSTANCE -c CREDENTIALS
     ```
     Where:
-    + `PRIMARY-INSTANCE` is name of your primary service instance.
+    + `PRIMARY-INSTANCE` is name of the follower service instance in the primary foundation.
     + `CREDENTIALS` is the output you recorded in the step above.
 
     For example:
