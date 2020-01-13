@@ -15,7 +15,7 @@ You must bootstrap a cluster that loses quorum. A cluster loses quorum when less
 
 To check whether your cluster has lost quorum, look for the following symptoms:
 
-- All nodes appear "Unhealthy" on the proxy dashboard, viewable at <%= vars.switchboard_url %>:
+- All nodes appear "Unhealthy" on the proxy dashboard, viewable at proxy-BOSH-JOB-INDEX.p-mysql.YOUR-SYSTEM-DOMAIN:
 ![3 out of 3 nodes are unhealthy.](quorum-lost.png)
 - All responsive nodes report the value of `wsrep_cluster_status` as `non-Primary`:
 

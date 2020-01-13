@@ -8,9 +8,9 @@ failover to other nodes within the cluster. When a
 node becomes unhealthy, the proxy closes all connections to the unhealthy node
 and re-routes all subsequent connections to a healthy node.
 
-The proxy used in <%= vars.product_short %> is Switchboard.
+The proxy used in MySQL for PCF is Switchboard.
 Switchboard was developed to replace HAProxy as the proxy tier for the high
-availability cluster for MySQL databases in <%= vars.product_short %>.
+availability cluster for MySQL databases in MySQL for PCF.
 
 <% if vars.product_short == "MySQL for Pivotal Platform" %>
 

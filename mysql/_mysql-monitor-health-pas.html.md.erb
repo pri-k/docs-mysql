@@ -42,7 +42,7 @@ Each MySQL Proxy instance has its own Switchboard dashboard. To access the dashb
 
 To construct the URL for the Switchboard dashboard:
 
-1. Find and record the system domain on the **Domains** pane in the <%= vars.app_runtime_abbr %> tile.
+1. Find and record the system domain on the **Domains** pane in the PAS tile.
 
 1. Find and record the number of MySQL Proxy VM instances in your deployment in the **Resource Config** pane.
 
@@ -52,7 +52,7 @@ To construct the URL for the Switchboard dashboard:
 
 To log into the Switchboard dashboard:
 
-1. In the <%= vars.app_runtime_abbr %> tile, the URL in your browser contains the Ops Manager fully qualified domain name (FQDN) and the <%= vars.app_runtime_abbr %> product GUID, as in the following example: `https://OPS-MANAGER-FQDN/products/APPLICTION-SERVICE-PRODUCT-GUID/az_and_network_assignments/edit`<br>
+1. In the PAS tile, the URL in your browser contains the Ops Manager fully qualified domain name (FQDN) and the PAS product GUID, as in the following example: `https://OPS-MANAGER-FQDN/products/APPLICTION-SERVICE-PRODUCT-GUID/az_and_network_assignments/edit`<br>
 To log into the dashboard, you need the username and password for the MySQL Proxy VM that are stored in the BOSH Director CredHub.<br>
 To obtain them, enter `https://[OPS-MANAGER-FQDN]/api/v0/deployed/products/[APPLICTION-SERVICE-PRODUCT-GUID]/variables?name=mysql-proxy-dashboard-credentials` into your browser and record the username and password.
 
@@ -88,7 +88,7 @@ To monitor node health using the Switchboard API:
     + `USERNAME` is the `username` you recorded in [Log In to the Dashboard](#dashboard-login).
     + `PASSWORD` is the `password` you recorded in [Log In to the Dashboard](#dashboard-login).
     + `N` is either 0, 1, or 2 depending on the proxy you want to connect to.
-    + `HOSTNAME` is the IP address of the **Database** found in the **Status** tab of your <%= vars.app_runtime_abbr %> tile.
+    + `HOSTNAME` is the IP address of the **Database** found in the **Status** tab of your PAS tile.
 
     The above command outputs a JSON object similar to:
 
