@@ -420,7 +420,7 @@ To reconfigure replication for the service instances:
     cf service-key SECONDARY-INSTANCE SERVICE-KEY-NAME
     ```
     Where:
-    + `SECONDARY-INSTANCE` is the name of the follower service instance in the primary foundation.
+    + `SECONDARY-INSTANCE` is the name of the leader service instance in the secondary foundation.
     + `SERVICE-KEY-NAME` is the name of the credentials service key you created in step 7, above.
 
     For example:
@@ -451,7 +451,7 @@ To reconfigure replication for the service instances:
     ```
     cf login PRIMARY-API-URL
     ```
-1. Update the leader service instance in the primary foundation with the credentials service key by running:
+1. Update the follower service instance in the primary foundation with the credentials service key by running:
 
     ```
     cf update-service PRIMARY-INSTANCE -c CREDENTIALS
