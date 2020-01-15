@@ -178,14 +178,14 @@ This section provides solutions for the following errands:
     <pre class="terminal">$ Both mysql instances are writable. Please ensure no divergent data and set one instance to read-only mode.</pre>
     DESC
 
-    cause: <<~DESC,
-      MySQL for Pivotal Platform tries to ensure that there is only one writable instance of the
+    cause:
+      vars.product_short + ' tries to ensure that there is only one writable instance of the
       leader-follower pair at any given time. However, in certain situations, such as
       network partitions, or manual intervention outside of the provided bosh
       errands, it is possible for both instances to be writable. <br><br>
       The service instances remain in this state until an operator resolves the issue
       to ensure that the correct instance is promoted and reduce the potential for data divergence.
-    DESC
+    ',
 
     solution: <<~DESC,
       <ol>
@@ -295,7 +295,7 @@ This section provides solutions for the following errands:
     However if both VMs are read only, apps cannot write to the database.",
     cause: "This problem happens if the leader VM fails and the BOSH Resurrector is enabled.
     When the leader is resurrected, it is set as read-only.",
-    solution: <<~DESC,
+    solution:'
     <ol>
       <li>
         Use the
@@ -303,7 +303,8 @@ This section provides solutions for the following errands:
         errand to confirm that both VMs are in a read-only state:
         <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect</pre>
       </li>
-      <li>Examine the output and locate the information about the leader-follower MySQL VMs:
+      <li>Examine the output and locate the information about the leader-follower ' +
+        vars.product_short+ ' VMs:
         <pre class="terminal">
     Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
     Exit Code  0
@@ -344,7 +345,7 @@ This section provides solutions for the following errands:
     </pre>
       </li>
     </ol>
-   DESC
+   '
 } %>
 
 ###<a id="apps-inoperable"></a>Inoperable App Errors
@@ -356,15 +357,15 @@ This section provides a solution for the following errand:
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "persistent-disk",
     description: "Persistent Disk is Full",
-    symptom: "Developers report that read, write, and cf CLI operations do not work.
-    Developers cannot upgrade to a larger MySQL service plan to free up disk space. <br><br>
+    symptom: 'Developers report that read, write, and cf CLI operations do not work.
+    Developers cannot upgrade to a larger' + vars.product_short + ' service plan to free up disk space. <br><br>
     If your persistent disk is full, apps become inoperable.
-    In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.",
-    cause: "This problem happens if your persistent disk is full.
+    In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.',
+    cause: 'This problem happens if your persistent disk is full.
     When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage. <br><br>
     Available disk space can be increased by deleting log files.
-    After deleting logs, you can then upgrade to a larger MySQL service plan.",
-    solution: <<~DESC,
+    After deleting logs, you can then upgrade to a larger ' + vars.product_short + ' service plan.',
+    solution: '
       To resolve this issue, you must free up disk space by deleting binary logs.<br><br>
 
       For instructions for deleting binary logs, see
@@ -373,8 +374,7 @@ This section provides a solution for the following errand:
       <p class="note warning"><strong>Warning:</strong>
         Deleting binary logs is a destructive procedure and can result in MySQL data loss.
         Only do this procedure with the assistance of <a href="https://pivotal.io/support">Pivotal Support</a>.
-      </p>
-  DESC
+      </p>'
 } %>
 
 
@@ -388,18 +388,18 @@ This section provides solutions for the following errands:
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "unresponsive",
     description: "Unresponsive Node in a Highly Available Cluster",
-    symptom: <<~DESC,
-    A client connected to a MySQL cluster node reports the following error:
+    symptom:'
+    A client connected to a ' + vars.product_short + ' cluster node reports the following error:
 
     <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
     Some clients might instead return the following:
     <pre class="terminal">
       unknown error
     </pre>
-    DESC
+    ',
 
-    cause: "If the client is connected to a MySQL cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
-    re-routes further connections to a different node.",
+    cause: 'If the client is connected to a ' + vars.product_short + ' cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
+    re-routes further connections to a different node.',
 
     solution: <<~DESC,
     A node can become unresponsive for a number of reasons. For solutions, see the following:
@@ -819,7 +819,8 @@ gathering information to diagnose the type of failure the cluster is experiencin
   </li>
 
   <li>
-    Run <code>download-logs</code> against each node in your MySQL cluster, MySQL proxies, and jumpbox VM. You must run
+    Run <code>download-logs</code> against each node in your <%= vars.product_short %> cluster, proxies, and jumpbox VM.
+    You must run
     <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible.
     <br>
     For more information, see the <a href="#download-logs">download-logs</a>
@@ -847,7 +848,7 @@ gathering information to diagnose the type of failure the cluster is experiencin
       </li>
       <li>
         <strong>download-logs logs:</strong>
-        Logs from your MySQL cluster, MySQL proxies, and jumpbox VM. The
+        Logs from your <%= vars.product_short %> cluster, proxies, and jumpbox VM. The
         <a href="#download-logs" ">download-logs</a>
         section below explains how to run
         <strong>download-logs</strong>.
@@ -1084,7 +1085,8 @@ The troubleshooting techniques described above use the following tools.
 ### <a id="download-logs"></a>download-logs
 
 `download-logs` is a script that you can run from your Ops Manager VM to aggregate
-logs from your MySQL cluster nodes, MySQL proxies, and, with highly available clusters, the jumpbox VM.
+logs from your <%= vars.product_short %> cluster nodes, proxies, and, with highly available clusters,
+the jumpbox VM.
 
 To use the `download-logs` script:
 
@@ -1129,12 +1131,12 @@ including `BOSH_DEPLOYMENT` for the deployment name.
     ./download-logs -o .
     ```
 
-    The script saves a compressed file of logs combined from all MySQL VMs.
+    The script saves a compressed file of logs combined from all <%= vars.product_short %> VMs.
     The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 
 ###  <a id="mysql-diag"></a>  mysql-diag
 
-The `mysql-diag` tools outputs the current status of a highly available (HA) MySQL cluster
+The `mysql-diag` tools outputs the current status of a highly available (HA) <%= vars.product_short %> cluster
 in <%= vars.platform_name %> and suggests recovery actions if the cluster fails.
 
 For more information, see [Running mysql-diag](./mysql-diag.html).
