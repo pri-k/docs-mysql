@@ -14,7 +14,7 @@ Errands can manage service brokers and run mass operations on service
 instances created by brokers. For instructions about running errands,
 see [Run an Errand](#errand) below.
 
-<%= vars.product_full %> supports the following errands:
+MySQL for Pivotal Cloud Foundry (PCF) supports the following errands:
 
 + [find-deprecated-bindings](#find-deprecated-bindings)
 + [smoke-tests](#smoke-tests)
@@ -104,7 +104,7 @@ To run the errand:
 This errand validates that the service broker has been installed and configured correctly.
 It can also create and remove service instances.
 
-If this errand runs successfully, <%= vars.product_short %> is installed successfully.
+If this errand runs successfully, MySQL for PCF is installed successfully.
 
 ### How to Run the Errand
 
@@ -156,7 +156,7 @@ To run the errand:
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
-For more information, see [Upgrading <%= vars.product_short %>](upgrade.html#upgrade-instances).
+For more information, see [Upgrading MySQL for PCF](upgrade.html#upgrade-instances).
 
 
 ## <a id="register-broker"></a>register-broker
@@ -167,7 +167,7 @@ For more information, see [Upgrading <%= vars.product_short %>](upgrade.html#upg
 ## <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
 
 
-Ops Manager runs this errand only when deleting <%= vars.product_short %>.
+Ops Manager runs this errand only when deleting MySQL for PCF.
 Running this errand removes all service instances and their data.
 
 <p class="note warning"><strong>Warning:</strong> This errand destroys all of the

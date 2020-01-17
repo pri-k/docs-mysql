@@ -5,8 +5,8 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides operators with basic instructions for troubleshooting on-demand <%= vars.product_full %>.
-For information about temporary <%= vars.product_short %> service interruptions, see
+This topic provides operators with basic instructions for troubleshooting on-demand MySQL for Pivotal Cloud Foundry (PCF).
+For information about temporary MySQL for PCF service interruptions, see
 <a href="./upgrade.html#interruptions">Service Interruptions</a>.
 
 ## <a id="errors"></a> Troubleshooting Errors
@@ -761,7 +761,7 @@ To retrieve the admin and read-only admin credentials for a service instance fro
 
 ###  <a id="reinstall"></a>  Reinstall a Tile
 
-To reinstall the <%= vars.product_short %> tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a>
+To reinstall the MySQL for PCF tile, see <a href="https://community.pivotal.io/s/article/Reinstalling-MySQL-for-Pivotal-Cloud-Foundry-version-2-and-above">Reinstalling MySQL for Pivotal Cloud Foundry version 2 and above</a>
 in the Pivotal Support knowledge base.
 
 ###  <a id="view-resources"></a>  View Resource Saturation and Scaling
@@ -819,7 +819,7 @@ gathering information to diagnose the type of failure the cluster is experiencin
   </li>
 
   <li>
-    Run <code>download-logs</code> against each node in your <%= vars.product_short %> cluster, proxies, and jumpbox VM.
+    Run <code>download-logs</code> against each node in your MySQL for PCF cluster, proxies, and jumpbox VM.
     You must run
     <code>download-logs</code> before attempting recovery because any failures in the recovery procedure can result in logs being lost or made inaccessible.
     <br>
@@ -848,17 +848,17 @@ gathering information to diagnose the type of failure the cluster is experiencin
       </li>
       <li>
         <strong>download-logs logs:</strong>
-        Logs from your <%= vars.product_short %> cluster, proxies, and jumpbox VM. The
+        Logs from your MySQL for PCF cluster, proxies, and jumpbox VM. The
         <a href="#download-logs" ">download-logs</a>
         section below explains how to run
         <strong>download-logs</strong>.
       </li>
       <li>
         <strong>Deployment environment:</strong>
-        The environment that <%= vars.product_short %> is running in such as <%= vars.app_runtime_full %> or a service tile.</li>
+        The environment that MySQL for PCF is running in such as <%= vars.app_runtime_full %> or a service tile.</li>
       <li>
         <strong>Version numbers:</strong>
-        The versions of the installed Ops Manager, PAS, and <%= vars.product_short %>
+        The versions of the installed Ops Manager, PAS, and MySQL for PCF
       </li>
     </ul>
   </li>
@@ -1085,12 +1085,12 @@ The troubleshooting techniques described above use the following tools.
 ### <a id="download-logs"></a>download-logs
 
 `download-logs` is a script that you can run from your Ops Manager VM to aggregate
-logs from your <%= vars.product_short %> cluster nodes, proxies, and, with highly available clusters,
+logs from your MySQL for PCF cluster nodes, proxies, and, with highly available clusters,
 the jumpbox VM.
 
 To use the `download-logs` script:
 
-1. Download and unzip the `download-logs` script from [<%= vars.product_short %>](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
+1. Download and unzip the `download-logs` script from [MySQL for PCF](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
 
 1. From the Ops Manager Installation Dashboard, navigate to **BOSH Director** > **Credentials**.
 
@@ -1102,7 +1102,7 @@ To use the `download-logs` script:
   + `BOSH_CA_CERT`
   + `BOSH_ENVIRONMENT`
 
-1. From the BOSH CLI, view the name of the BOSH deployment for <%= vars.product_short %> by running:
+1. From the BOSH CLI, view the name of the BOSH deployment for MySQL for PCF by running:
 
     ```
     bosh deployments
@@ -1131,12 +1131,12 @@ including `BOSH_DEPLOYMENT` for the deployment name.
     ./download-logs -o .
     ```
 
-    The script saves a compressed file of logs combined from all <%= vars.product_short %> VMs.
+    The script saves a compressed file of logs combined from all MySQL for PCF VMs.
     The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 
 ###  <a id="mysql-diag"></a>  mysql-diag
 
-The `mysql-diag` tools outputs the current status of a highly available (HA) <%= vars.product_short %> cluster
+The `mysql-diag` tools outputs the current status of a highly available (HA) MySQL for PCF cluster
 in <%= vars.platform_name %> and suggests recovery actions if the cluster fails.
 
 For more information, see [Running mysql-diag](./mysql-diag.html).

@@ -9,7 +9,7 @@ This topic provides instructions for how to use optional parameters to change se
 
 ## <a id="changes"></a>Overview
 
-You can configure optional parameters to change certain <%= vars.product_full %> server defaults.
+You can configure optional parameters to change certain MySQL for Pivotal Cloud Foundry (PCF) server defaults.
 You might want to configure optional parameters in the following cases:
 
 + You have a read-heavy or write-heavy app.
@@ -28,7 +28,7 @@ to perform the same tasks using a graphical UI.
 
 
 <p class="note"> <strong>Note:</strong>
-<%= vars.product_short %> service instances are configured by default with industry best practices.
+MySQL for PCF service instances are configured by default with industry best practices.
 For information about the configured server defaults,
 see <a href="server-defaults.html">About MySQL Server Defaults.</a>
 </p>
@@ -270,7 +270,7 @@ optional parameters to change the character sets used in databases:
 
 ## <a id='synchronous-replication'></a>Synchronous Replication
 
-If you use a leader-follower service instance, <%= vars.product_short %> supports synchronous replication in addition
+If you use a leader-follower service instance, MySQL for PCF supports synchronous replication in addition
 to the default asynchronous replication. In sync replication, data does not get committed to the
 leader node until the follower acknowledges the commit and can replicate it.
 
@@ -310,7 +310,7 @@ The table below describes how to use the `replication_mode` optional parameter:
 
 </table>
 <p class="note"><strong>Note:</strong>
-  In <%= vars.product_short %>, replication is called sync, rather than semi-sync.
+  In MySQL for PCF, replication is called sync, rather than semi-sync.
   This is because it is as synchronous as possible given the limits of MySQL. For more information about MySQL semi-sync
   replication,
   see the <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html">MySQL documentation</a>.
