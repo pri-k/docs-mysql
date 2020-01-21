@@ -11,6 +11,9 @@ and how to manually restore a MySQL service instance from a backup.
 <p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.</p>
 <p class="note"><strong>Note:</strong> Pivotal recommends that you always configure a single instance plan in order to streamline the restore process for leader-follower plans.</p>
 
+Additionally, developers can create logical backups using `mysqldump`.
+For information, see [Backing Up and Restoring with mysqldump](/backup-mysqldump.html).
+
 ## <a id="overview"></a>About Automated Backups
 
 Automated backups do the following:
@@ -527,122 +530,6 @@ Complete the following steps to back up your database to your Azure Storage acco
             </td>
         </tr>
       </table>
-
-
-## <a id="manual-backup"></a> Manual Backup
-
-<%= vars.product_short %> disables remote admin access to MySQL databases.
-To access your MySQL database to perform a manual backup, you must create a service key for each service instance you want to back up.
-
-This backup acquires a global read lock on all tables, but does not hold it for the entire duration of the dump.
-
-Perform the following steps to back up your <%= vars.product_short %> data manually:
-
-1. Use the Cloud Foundry Command Line Interface (cf CLI) to target the Cloud Controller of your <%= vars.platform_name %> deployment with `cf api api.YOUR-SYSTEM-DOMAIN`.
-   For example:
-  <pre class="terminal">$ cf api api.sys.cf-example.com</pre>
-  For more information about installing and using the cf CLI, see the [cf CLI documentation](https://docs.pivotal.io/pivotalcf/cf-cli/index.html).
-
-1. Log in:
-  <pre class="terminal">$ cf login</pre>
-
-1. Create a service key for the MySQL service instance. Run the following command:
-<pre><code>cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME \
-  -c '{"read-only":true}'</code></pre>
-    <br/>
-    Where:<br/>
-    * `SERVICE-INSTANCE-NAME` is the name of the existing MySQL service instance
-       that contains the data you want to back up.
-    * `SERVICE-KEY-NAME` a name you choose for the new service key.
-
-    For example:
-    <pre class="terminal">
-    $ cf create-service-key mysql-spring spring-key \
-    -c '{"read-only":true}'
-    Creating service key spring-key for service instance mysql-spring as admin...
-    OK
-    </pre>
-
-1. After creating the service key, retrieve its information. Run the following command:
-  `cf service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME`
-    <br><br>
-    Where:<br>
-    * `SERVICE-INSTANCE-NAME` is the name of the MySQL service instance you created a service key for.
-    * `SERVICE-KEY-NAME` is the name of the newly created service key.
-
-    For example:
-    <pre class="terminal">
-    $ cf service-key mysql-spring spring-key
-    Getting key spring-key for service instance mysql-spring as admin...
-
-    {
-     "hostname": "q-n3s3y1.q-g696.bosh",
-     "jdbcUrl": "jdbc:mysql://q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
-     "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
-     "password": "123456789",
-     "port": 3306,
-     "uri": "mysql://abcdefghijklm:123456789<span>@</span>q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
-     "username": "abcdefghijklm"
-    }
-    </pre>
-
-1. Examine the output and record the following values:
-    * `hostname`: The MySQL BOSH DNS hostname
-    * `password`: The password for the user that can be used to perform backups of the service instance database
-    * `username`: The username for the user that can be used to perform backups of the service instance database
-
-1. Connect to the database, by either using an SSH tunnel, or by connecting directly to its IP address.
-For more information, see [Establish a Connection to a Service Instance from Outside Your <%= vars.platform_name %> Deployment](./use.html#remote-connection).
-
-1. To view a list of your databases, run the following command:
-<pre><code>mysql --user=USERNAME --password=PASSWORD \
---host=MYSQL-IP \
---silent --silent --execute='show databases'</code></pre>
-
-    Where:
-    * `USERNAME` is the username retrieved from the output of `cf service-key`.
-    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP` is the MySQL IP address. This value is `0` if you are connecting via SSH tunnel.
-
-    For example:
-    <pre class="terminal">
-    $ mysql --user=abcdefghijklm --password=123456789 \
-    --host=10.10.10.5 \
-    --silent --execute='show databases'
-    </pre>
-
-1. Delete the following databases from the list. Do not back up the following databases:
-    * `cf_metadata`
-    * `information_schema`
-    * `mysql`
-    * `performance_schema`
-    * `sys`
-
-1. To back up the databases remaining in the list, run the following command for each database:
-<pre><code>mysqldump --set-gtid-purged=off --single-transaction --user=USERNAME --password=PASSWORD \
---host=MYSQL-IP \
---databases DB-NAME > BACKUP.sql
-</code></pre>
-
-    Where:
-    * `USERNAME` is the username retrieved from the output of `cf service-key`.
-    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
-    * `MYSQL-IP` is the MySQL IP address.
-    * `DB-NAME` is the name of the database.
-    * `BACKUP` is a name you create for the backup file. Use a different filename for each backup.
-
-    The `--set-gtid-purged=off` flag enables you to restore the backup without admin privileges. <br><br>
-
-    For example:
-    <pre class="terminal">
-    $ mysqldump --set-gtid-purged=off --single-transaction --user=abcdefghijklm --password=123456789 \
-    --host=10.10.10.5 \
-    --databases canary\_db > canary\_db.sql
-    </pre>
-
-    For more information about the mysqldump utility, see
-    [mysqldump](https://dev.mysql.com/doc/refman/en/mysqldump.html) in the
-    [MySQL Documentation](https://dev.mysql.com/doc/).
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 

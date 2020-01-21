@@ -1,0 +1,158 @@
+---
+title: Backing Up and Restoring with mysqldump
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes how to manually back up and restore a MySQL database with `mysqldump`.
+
+## <a id="overview"></a> Overview
+
+The operator configures automated backups of your MySQL database. If you want to back up your database, do the procedures below. You might want to back your database if...
+
+
+When you back up your database with `mysqldump`, you create a logical backup.
+A logical backup reproduces the table structure and data, without copying the actual data files.
+For example, the backup contains SQL statements to re-create data.
+
+A logical backup offers flexibility, for example, you can edit table definitions or insert
+statements before restoring.
+However, restoring a logical backup takes longer than restoring an automated backup.
+
+For information about automated backups configured by operators,
+see [Backing Up and Restoring On-Demand MySQL for Pivotal Platform](./backup-and-restore.html).
+
+## <a id="manual-backup"></a> Create a Logical Backup
+
+<%= vars.product_short %> disables remote admin access to MySQL databases.
+To access your MySQL database manually back up, you must create a service key for each service instance you want to back up.
+
+This backup acquires a global read lock on all tables, but does not hold the lock for the entire duration of the dump.
+
+To back up your <%= vars.product_short %> data manually:
+
+1. Target the Cloud Controller of your <%= vars.platform_name %> deployment by running:
+
+    ```
+    cf api api.YOUR-SYSTEM-DOMAIN
+    ```
+   For example:
+   <pre class="terminal">$ cf api api.sys.cf-example.com</pre>
+1. Log in:
+
+    ```
+    cf login
+    ```
+1. Create a service key for the MySQL service instance by running:
+
+    ```
+    cf create-service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME \
+    -c '{"read-only":true}'
+    ```
+    Where:
+    * `SERVICE-INSTANCE-NAME` is the name of the existing MySQL service instance
+       that contains the data you want to back up.
+    * `SERVICE-KEY-NAME` is a name you choose for the new service key.
+
+    For example:
+    <pre class="terminal">
+    $ cf create-service-key mydb backup-key \
+    -c '{"read-only":true}'
+    Creating service key backup-key for service instance mydb as user...
+    OK
+    </pre>
+
+1. Retrieve the credentials for the service by running:
+
+    ```
+    cf service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME
+    ```
+    Where:
+    * `SERVICE-INSTANCE-NAME` is the name of the MySQL service instance you created a service key for.
+    * `SERVICE-KEY-NAME` is the name of the newly created service key.
+
+    For example:
+    <pre class="terminal">
+    $ cf service-key mydb backup-key
+    Getting key backup-key for service instance mydb as user...
+
+    {
+     "hostname": "q-n3s3y1.q-g696.bosh",
+     "jdbcUrl": "jdbc:mysql://q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
+     "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
+     "password": "123456789",
+     "port": 3306,
+     "uri": "mysql://abcdefghijklm:123456789<span>@</span>q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+     "username": "abcdefghijklm"
+    }
+    </pre>
+
+1. Record the following values:
+    * `hostname`: The MySQL BOSH DNS hostname
+    * `password`: The password for the user that can be used to perform backups of the service instance database
+    * `username`: The username for the user that can be used to perform backups of the service instance database
+
+1. Connect to the database, by either using an SSH tunnel or by connecting directly to its IP address.
+For more information, see [Establish a Connection to a Service Instance from Outside Your <%= vars.platform_name %> Deployment](./establish.html).
+
+1. View a list of your databases by running:
+<pre><code>mysql --user=USERNAME --password=PASSWORD \
+--host=MYSQL-IP \
+--silent --silent --execute='show databases'</code></pre>
+
+    Where:
+    * `USERNAME` is the username retrieved from the output of `cf service-key`.
+    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
+    * `MYSQL-IP` is the MySQL IP address. This value is `0` if you are connecting using an SSH tunnel.
+
+    For example:
+    <pre class="terminal">
+    $ mysql --user=abcdefghijklm --password=123456789 \
+    --host=10.10.10.5 \
+    --silent --execute='show databases'
+    </pre>
+
+1. Do not back up the following databases:
+    * `cf_metadata`
+    * `information_schema`
+    * `mysql`
+    * `performance_schema`
+    * `sys`
+
+1. For each remaining database, back up by running:
+
+    ```
+    mysqldump --set-gtid-purged=off --single-transaction \
+    --user=USERNAME --password=PASSWORD \
+    --host=MYSQL-IP \
+    --databases DB-NAME > BACKUP.sql
+    ```
+
+    Where:
+    * `USERNAME` is the username retrieved from the output of `cf service-key`.
+    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
+    * `MYSQL-IP` is the MySQL IP address.
+    * `DB-NAME` is the name of the database.
+    * `BACKUP` is a name you create for the backup file. Use a different filename for each backup.
+
+    The `--set-gtid-purged=off` flag enables you to restore the backup without admin privileges. <br><br>
+
+    For example:
+    <pre class="terminal">
+    $ mysqldump --set-gtid-purged=off --single-transaction \
+    --user=abcdefghijklm --password=123456789 \
+    --host=10.10.10.5 \
+    --databases canary\_db > canary\_db.sql
+    </pre>
+
+    For more information about the mysqldump utility, see
+    [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/using-mysqldump.html) in the MySQL Documentation.
+
+    ## <a id="restore-backup"></a> Restore from a Logical Backup
+
+    1. Create and prepare new service instance (would you always want to do this? What if you just
+    want to rewind it?)
+    1. Get credentials
+    1. Restore from SQL file (on local machine) (which command on this page: https://dev.mysql.com/doc/refman/5.7/en/reloading-sql-format-dumps.html)
+    1. Restage?
