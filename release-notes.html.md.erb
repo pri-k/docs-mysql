@@ -10,6 +10,29 @@ Pivotal recommends that you upgrade to the latest version of your current minor 
 
 For product versions and upgrade paths, see the [Product Compatibility Matrix](https://docs.pivotal.io/resources/product-compatibility-matrix.pdf).
 
+## <a id="2-6-6"></a> v2.6.6
+
+**Release Date: January 21, 2020**
+
+### Security Fixes
+
+This release includes the following security fix:
+
+* Updates all dependencies to golang v1.13. This fixes the following CVE:
+    + High [CVE-2019-17596](https://nvd.nist.gov/vuln/detail/CVE-2019-17596)
+
+### Resolved Issues
+
+This release has the following fix:
+
+* Improves error messaging for when the MySQL broker fails to connect to a service instance's MySQL server.
+
+### Known Issue
+
+This release has the following issue:
+
+<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+
 ## <a id="2-6-5"></a> v2.6.5
 
 **Release Date: January 7, 2020**
