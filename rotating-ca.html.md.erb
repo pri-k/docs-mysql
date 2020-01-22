@@ -134,13 +134,13 @@ To rotate your certificates:
 <%= vars.platform_name %> stores the certificates used by <%= vars.product_short %>
 in the BOSH CredHub credentials store. You can use the CredHub API to check the expiration date for the certificates used by <%= vars.product_short %>. For more information, see [BOSH CredHub](https://docs.pivotal.io/pivotalcf/credhub/#bosh).
 
-To use the CredHub API, you must retrieve credentials from BOSH Director and then use the credentials to log in to CredHub from the Pivotal Ops Manager VM.
+To use the CredHub API, you must retrieve credentials from BOSH Director and then use the credentials to log in to CredHub from the <%= vars.ops_manager_full %> VM.
 
 To check certificate expiration dates:
 
 1. If the CredHub CLI is not installed on your local machine, install the CredHub CLI by doing the instructions in [credhub-cli](https://github.com/cloudfoundry-incubator/credhub-cli) on GitHub.
 
-1. In the Ops Manager Installation Dashboard, click the **BOSH Director** tile.
+1. In the <%= vars.ops_manager %> Installation Dashboard, click the **BOSH Director** tile.
 
 1. Click the **Credentials** tab.
 
@@ -162,10 +162,10 @@ To check certificate expiration dates:
 1. Record the information needed to log in to the BOSH Director VM by doing the procedure in
 [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather).
 
-1. Log in to the Ops Manager VM by doing the procedure in
-[Log in to the Ops Manager VM with SSH](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh).
+1. Log in to the <%= vars.ops_manager %> VM by doing the procedure in
+[Log in to the <%= vars.ops_manager %> VM with SSH](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh).
 
-1. From the Ops Manager VM, set the API target of the CredHub CLI to your BOSH
+1. From the <%= vars.ops_manager %> VM, set the API target of the CredHub CLI to your BOSH
 CredHub server by running the following command:
 
     ```
@@ -240,7 +240,7 @@ To manually rotate the TLS CA certificate:
 all of the VMs in your <%= vars.platform_name %> deployment. The operation can take a long time to complete.
 </p>
 
-To add a new TLS CA Certificate to Ops Manager:
+To add a new TLS CA Certificate to <%= vars.ops_manager %>:
 
 1. Log in to CredHub by doing steps 1 through 9 in [Check Expiration Dates](#credhub) above.
 
@@ -278,7 +278,7 @@ by running the following command:
 
 4. Record the output.
 
-5. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
+5. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click the **BOSH Director** tile.
 
 6. Click **Security**.
 
@@ -302,7 +302,7 @@ Do not remove the old TLS CA certificate.
     you must manually run the <code>upgrade-all-services-instances</code> errand after applying changes.
     To manually run this errand, see <a href="#regenerate">Regenerate Internal Certificates</a> below.</p>
 
-8. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
+8. Return to the **Installation Dashboard** in <%= vars.ops_manager %> and click **Apply Changes**.
 
 ### <a id="regenerate"></a> Regenerate Internal Certificates
 
@@ -340,7 +340,7 @@ your old TLS CA certificate before rebinding your app.
 
 To remove the old TLS CA certificate:
 
-1. Navigate to the **Installation Dashboard** in Ops Manager and click the **BOSH
+1. Navigate to the **Installation Dashboard** in <%= vars.ops_manager %> and click the **BOSH
 Director** tile.
 
 1. Click **Security**.
@@ -349,7 +349,7 @@ Director** tile.
 
 1. Click **Save**.
 
-1. Return to the **Installation Dashboard** in Ops Manager and click **Apply Changes**.
+1. Return to the **Installation Dashboard** in <%= vars.ops_manager %> and click **Apply Changes**.
 This restarts all the VMs in your deployment.
 
 ### <a id='rebind'></a> Rebind Your App
@@ -400,7 +400,7 @@ The below commands upgrade all of your MySQL for service instances and distribut
 To ensure that the internal certificates rotate, do one of the following:
 
 + **If you have not yet upgraded to <%= vars.product_short %> v2.7,** do the following:
-    1. Navigate to the Ops Manager Installation Dashboard and click the **<%= vars.product_short %> v2** tile.
+    1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click the **<%= vars.product_short %> v2** tile.
     1. Click **Errands**.
     1. Under **Post-Deploy Errands**, ensure that **Upgrade all On-demand MySQL Service Instances** is set to **Default (On)**.
 

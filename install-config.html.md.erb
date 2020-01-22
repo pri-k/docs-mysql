@@ -11,15 +11,15 @@ about how to install, configure, and deploy the <%= vars.product_full %> tile.  
 <%= vars.product_short %> service enables <%= vars.platform_name %> developers to create and use MySQL
 service instances on demand.
 
-## <a id="rbac"></a>Role-Based Access in Pivotal Ops Manager
+## <a id="rbac"></a>Role-Based Access in <%= vars.ops_manager_full %>
 
-Ops Manager admins can use Role-Based Access Control (RBAC) to manage which
-operators can make deployment changes, view credentials, and manage user roles in Ops Manager.
+<%= vars.ops_manager %> admins can use Role-Based Access Control (RBAC) to manage which
+operators can make deployment changes, view credentials, and manage user roles in <%= vars.ops_manager %>.
 Your role permissions might not permit you to do every procedure in this topic.
 
-For more information about roles in Ops Manager, see
+For more information about roles in <%= vars.ops_manager %>, see
     <a href="https://docs.pivotal.io/pivotalcf/opsguide/config-rbac.html#about">
-        Roles in Ops Manager</a>.</p>
+        Roles in <%= vars.ops_manager %></a>.</p>
 
 ## <a id="prereq"></a> Prerequisites
 
@@ -28,9 +28,9 @@ Before you install the <%= vars.product_short %> tile, you must:
 + [Create an App Security Group for <%= vars.product_short %>](#asg).
 + [Enable the BOSH Resurrector](#resurrector).
 + [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS and one of these conditions applies to you:
-    * You are using Ops Manager v2.5 or earlier.
-    * You are using Ops Manager v2.6 or later and are not using the certificate
-    provided by Ops Manager.
+    * You are using <%= vars.ops_manager %> v2.5 or earlier.
+    * You are using <%= vars.ops_manager %> v2.6 or later and are not using the certificate
+    provided by <%= vars.ops_manager %>.
 
 ### <a id="asg"></a> Create an App Security Group for <%= vars.product_short %>
 
@@ -41,7 +41,7 @@ and apps to access the service after it is installed.
 
 To create an ASG for <%= vars.product_short %>:
 
-1. Navigate to **Ops Manager Installation Dashboard** > **BOSH Director**.
+1. Navigate to **<%= vars.ops_manager %> Installation Dashboard** > **BOSH Director**.
 
 1. Click **Create Networks**.
 
@@ -93,7 +93,7 @@ see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector
 
  To enable the BOSH Resurrector:
 
-1. Navigate to **Ops Manager Installation Dashboard** > **BOSH Director**.
+1. Navigate to **<%= vars.ops_manager %> Installation Dashboard** > **BOSH Director**.
 
 2. Click **Director Config**.
 
@@ -107,7 +107,7 @@ To download and import the <%= vars.product_short %> tile:
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/pivotal-mysql/).
 
-1. Navigate to the **Ops Manager Installation Dashboard** and click **Import a Product** to upload the product file.
+1. Navigate to the **<%= vars.ops_manager %> Installation Dashboard** and click **Import a Product** to upload the product file.
 
 1. Under **Import a Product**, click **+** next to the version number of <%= vars.product_short %>.
    This adds the tile to your staging area.
@@ -337,7 +337,7 @@ To deactivate a service plan:
     1. Click the section for the plan. For example, **Plan 2**.
     1. Under **Service Plan Access**, select **Disable**.
     1. Click **Save**.
-    1. Return to the Ops Manager Installation Dashboard and click **Apply Changes** to redeploy.
+    1. Return to the <%= vars.ops_manager %> Installation Dashboard and click **Apply Changes** to redeploy.
     1. When the <%= vars.platform_name %> deployment has redeployed,
     use the cf CLI or Apps Manager to delete all existing service instances on the service plan.
     1. Return to the <%= vars.product_short %> tile configuration.
@@ -448,9 +448,9 @@ To enable TLS for the MySQL service:
 
 
 1. Do the procedures in [Preparing for TLS](prepare-tls.html) if one of these conditions applies to you:
-    * You are using Ops Manager v2.5 or earlier.
-    * You are using Ops Manager v2.6 or later and are not using the certificate
-    provided by Ops Manager.
+    * You are using <%= vars.ops_manager %> v2.5 or earlier.
+    * You are using <%= vars.ops_manager %> v2.6 or later and are not using the certificate
+    provided by <%= vars.ops_manager %>.
 
 1. Click **Security**.
 1. Under **TLS Options**, select one of the following:
@@ -703,7 +703,7 @@ To verify your stemcell version and apply all changes:
 
 1. Verify and, if necessary, import a new stemcell version.
 
-1. Navigate to **Ops Manager Dashboard** > **Review Pending Changes**.
+1. Navigate to **<%= vars.ops_manager %> Dashboard** > **Review Pending Changes**.
 
 1. Click **Apply Changes**.
 
