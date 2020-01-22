@@ -8,8 +8,8 @@ owner: MySQL
 This topic describes how to provide an existing CA certificate to BOSH CredHub
 and how to generate a new CA certificate with BOSH CredHub, if you do not already have one.
 
-If you are using Ops Manager v2.6 or later and you want to use the certificate
-provided by Ops Manager, then you can skip this page.
+If you are using <%= vars.ops_manager %> v2.6 or later and you want to use the certificate
+provided by <%= vars.ops_manager %>, then you can skip this page.
 
 <p class="note warning"><strong>WARNING</strong>: This procedure involves restarting
 	all of the VMs in your PCF deployment to apply a CA certificate. The
@@ -73,19 +73,19 @@ For information about how to rotate your CA certificate, see
 
 Follow the procedures below to generate and add a CA certificate.
 
-<p class="note"><strong>Note:</strong> If you are using Ops Manager v2.6 or later,
-you do not need to generate the CA certificate because the certificate is provided by Ops Manager.
-The steps that Ops Manager v2.6 users can skip are marked below.</p>
+<p class="note"><strong>Note:</strong> If you are using <%= vars.ops_manager %> v2.6 or later,
+you do not need to generate the CA certificate because the certificate is provided by <%= vars.ops_manager %>.
+The steps that <%= vars.ops_manager %> v2.6 users can skip are marked below.</p>
 
 
-###<a id='credhub-creds'></a> Find the CredHub Credentials in Ops Manager
+###<a id='credhub-creds'></a> Find the CredHub Credentials in <%= vars.ops_manager %>
 
 You need the BOSH CredHub client name and client secret to complete the
 [Add the CA Certificate](#add-ca-cert) procedure below.
 
 To find the BOSH CredHub client name and client secret, do the following:
 
-1. In the Ops Manager Installation Dashboard, click the BOSH Director tile.
+1. In the <%= vars.ops_manager %> Installation Dashboard, click the BOSH Director tile.
 1. Click the **Credentials** tab.
 1. In the BOSH Director section, click the link to the BOSH Commandline Credentials.
 	![CredHub Credentials](credhub-creds.png)
@@ -109,9 +109,9 @@ To find the BOSH CredHub client name and client secret, do the following:
 
 <!-- UPDATE PROCEDURE -->
 
-To generate and add the CA Certificate to Ops Manager, do the following:
+To generate and add the CA Certificate to <%= vars.ops_manager %>, do the following:
 
-1. From the Ops Manager VM, set the API target of the CredHub CLI to your BOSH
+1. From the <%= vars.ops_manager %> VM, set the API target of the CredHub CLI to your BOSH
 CredHub server by running the following command:
 
     ```
@@ -143,7 +143,7 @@ CredHub server by running the following command:
     	--client-secret=abcdefghijklm123456789
     </pre>
 
-3. If you are using Ops Manager v2.6 or later, go to step 5.
+3. If you are using <%= vars.ops_manager %> v2.6 or later, go to step 5.
    Otherwise, find out if a services CA certificate already is present by running the following command:
 
   	```
@@ -188,7 +188,7 @@ CredHub server by running the following command:
     --path /value/certificate
     ```
 6. Copy the output.
-7. Navigate to the Ops Manager **Installation Dashboard** and select the BOSH Director tile.
+7. Navigate to the <%= vars.ops_manager %> **Installation Dashboard** and select the BOSH Director tile.
 Click **Security**.
 8. Paste the contents of the CA certificate into **Trusted Certificates** and
  click **Save**.
@@ -197,9 +197,9 @@ configuration while installing MySQL for PCF:
     * **Existing Installation**: If you have already installed the MySQL for PCF
 		tile, perform the procedures
     in [Configure TLS](install-config.html#tls) to enable TLS in the **Security**
-		section of the tile. Then return to the Ops Manager Installation Dashboard to apply changes:<br><br>
+		section of the tile. Then return to the <%= vars.ops_manager %> Installation Dashboard to apply changes:<br><br>
 			    	1. Click **Review Pending Changes**.
-			    	For more information about this Ops Manager page, see
+			    	For more information about this <%= vars.ops_manager %> page, see
 			    	[Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
 						2. Enable the checkboxes next to the PAS tile and the MySQL tile.<br><br>
 						3. Click **Apply Changes**.<br><br>
@@ -209,9 +209,9 @@ configuration while installing MySQL for PCF:
     * **New Installation**: If you have not yet installed the MySQL for PCF tile,
 		perform all of
     the procedures in [Installing and Configuring MySQL for PCF](install-config.html).
-    Then return to the Ops Manager Installation Dashboard to apply changes:<br><br>
+    Then return to the <%= vars.ops_manager %> Installation Dashboard to apply changes:<br><br>
 						1. Click **Review Pending Changes**.
-						For more information about this Ops Manager page, see
+						For more information about this <%= vars.ops_manager %> page, see
 						[Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
 						2. Enable the checkboxes next to the PAS tile and the MySQL tile.<br><br>
 						3. Click **Apply Changes**.<br><br>

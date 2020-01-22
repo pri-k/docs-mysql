@@ -11,17 +11,17 @@ about how to install, configure, and deploy the MySQL for PCF tile.  The
 MySQL for PCF service lets PCF developers create and use their own MySQL
 service instances on demand.
 
-## <a id="rbac"></a>Role-Based Access in Ops Manager
+## <a id="rbac"></a>Role-Based Access in <%= vars.ops_manager %>
 
-Ops Manager administrators can use Role-Based Access Control (RBAC) to manage which
-operators can make deployment changes, view credentials, and manage user roles in Ops Manager.
+<%= vars.ops_manager %> administrators can use Role-Based Access Control (RBAC) to manage which
+operators can make deployment changes, view credentials, and manage user roles in <%= vars.ops_manager %>.
 Therefore, your role permissions might not allow you to perform every procedure in this operator guide.
 
-For more information about roles in Ops Manager, see
+For more information about roles in <%= vars.ops_manager %>, see
     <a href="https://docs.pivotal.io/pivotalcf/opsguide/config-rbac.html#about">
-        Understand Roles in Ops Manager</a>.</p>
+        Understand Roles in <%= vars.ops_manager %></a>.</p>
 
-## <a id="prereq"></a> Prepare Your Ops Manager and PCF Installation for MySQL for PCF
+## <a id="prereq"></a> Prepare Your <%= vars.ops_manager %> and PCF Installation for MySQL for PCF
 
 Before you download and install the MySQL for PCF tile, complete the following procedures:
 
@@ -39,7 +39,7 @@ and allows apps to access the service after it is installed.
 
 To create an ASG for MySQL for PCF, do the following:
 
-1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
+1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click the **BOSH Director** tile.
 
 1. Click **Create Networks**.
 
@@ -85,7 +85,7 @@ increases the availability of MySQL for PCF by restarting and resuming MySQL ser
 Pivotal recommends enabling the BOSH Resurrector when installing MySQL for PCF. To enable the BOSH Resurrector,
 do the following:
 
-1. Navigate to the Ops Manager Installation Dashboard and click the **BOSH Director** tile.
+1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click the **BOSH Director** tile.
 
 2. Click **Director Config**.
 
@@ -100,7 +100,7 @@ see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector
 
 1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/pivotal-mysql/).
 
-1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file.
+1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click **Import a Product** to upload the product file.
 
 1. Under the **Import a Product** button, click **+** next to the version number of MySQL for PCF.
    This adds the tile to your staging area.
@@ -319,7 +319,7 @@ Follow the steps below to deactivate a service plan:
     1. Click the section for the plan. For example, **Plan 2**.
     1. Under **Service Plan Access**, select **Disable**.
     1. Click **Save**.
-    1. Return to the Ops Manager Installation Dashboard and click **Apply Changes** to redeploy.
+    1. Return to the <%= vars.ops_manager %> Installation Dashboard and click **Apply Changes** to redeploy.
     1. When the PCF deployment has redeployed, use the cf CLI or Apps Manager to delete all existing service instances on the service plan.
     1. Return to the MySQL for PCF tile configuration.
 1. Click the section for the plan. For example, **Plan 2**.
@@ -433,9 +433,9 @@ To enable TLS for the MySQL service, perform the following steps:
 
 
 1. Do the procedures in [Preparing for TLS](prepare-tls.html) if one of these conditions applies to you:
-    * You are using Ops Manager v2.5 or earlier.
-    * You are using Ops Manager v2.6 or later and are not using the certificate
-    provided by Ops Manager.
+    * You are using <%= vars.ops_manager %> v2.5 or earlier.
+    * You are using <%= vars.ops_manager %> v2.6 or later and are not using the certificate
+    provided by <%= vars.ops_manager %>.
 
 1. Click **Security**.
 1. Under **TLS Options**, select one of the following:
@@ -648,9 +648,9 @@ Follow the steps below to verify your stemcell version and apply all changes:
 
 1. Verify and, if necessary, import a new stemcell version.
 
-1. <a name="apply-changes"></a>In the Ops Manager Dashboard, do the following to complete the installation:
+1. <a name="apply-changes"></a>In the <%= vars.ops_manager %> Dashboard, do the following to complete the installation:
 
     1. Click **Review Pending Changes**.
-    For more information about this Ops Manager page, see
+    For more information about this <%= vars.ops_manager %> page, see
     [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).<br><br>
     1. Click **Apply Changes**.
