@@ -693,11 +693,11 @@ To retrieve the admin and read-only admin credentials for a service instance fro
   <li>Do the steps in
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>
     and
-    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a>
+    <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into <%= vars.ops_manager %></a>
     of
-    <em>Advanced Troubleshooting with the BOSH CLI to SSH into the Ops Manager VM</em>.
+    <em>Advanced Troubleshooting with the BOSH CLI to SSH into the <%= vars.ops_manager %> VM</em>.
   </li>
-  <li>From the Pivotal Ops Manager VM, log in to your BOSH Director with the BOSH CLI. See
+  <li>From the <%= vars.ops_manager_full %> VM, log in to your BOSH Director with the BOSH CLI. See
     <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a>
     in
     <em>Advanced Troubleshooting with the BOSH CLI</em>.
@@ -870,7 +870,7 @@ gathering information to diagnose the type of failure the cluster is experiencin
         The environment that <%= vars.product_short %> is running in such as <%= vars.app_runtime_full %> or a service tile.</li>
       <li>
         <strong>Version numbers:</strong>
-        The versions of the installed Ops Manager, PAS, and <%= vars.product_short %>
+        The versions of the installed <%= vars.ops_manager %>, PAS, and <%= vars.product_short %>
       </li>
     </ul>
   </li>
@@ -942,8 +942,8 @@ To re-create a corrupted VM:
     <ol>
       <li>Gather the information needed to log in to the BOSH Director VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>&#46;</li>
-      <li>Log in to the Ops Manager VM by doing the procedure in
-        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>&#46;</li>
+      <li>Log in to the <%= vars.ops_manager %> VM by doing the procedure in
+        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the <%= vars.ops_manager %> VM with SSH</a>&#46;</li>
       <li>Log in to the BOSH Director VM by doing the procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director VM</a>&#46;</li>
     </ol>
@@ -981,8 +981,8 @@ To check the replication status, do the following:
         procedure in
         <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>.
       </li>
-      <li>Log in to the Ops Manager VM by doing the procedure in
-        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the Ops Manager VM with SSH</a>.
+      <li>Log in to the <%= vars.ops_manager %> VM by doing the procedure in
+        <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">Log in to the <%= vars.ops_manager %> VM with SSH</a>.
       </li>
     </ol>
   </li>
@@ -1096,7 +1096,7 @@ The troubleshooting techniques described above use the following tools.
 
 ### <a id="download-logs"></a>download-logs
 
-`download-logs` is a script that you can run from your Ops Manager VM to aggregate
+`download-logs` is a script that you can run from your <%= vars.ops_manager %> VM to aggregate
 logs from your <%= vars.product_short %> cluster nodes, proxies, and, with highly available clusters,
 the jumpbox VM.
 
@@ -1104,7 +1104,7 @@ To use the `download-logs` script:
 
 1. Download and unzip the `download-logs` script from [<%= vars.product_short %>](https://network.pivotal.io/products/pivotal-mysql) on Pivotal Network.
 
-1. From the Ops Manager Installation Dashboard, navigate to **BOSH Director** > **Credentials**.
+1. From the <%= vars.ops_manager %> Installation Dashboard, navigate to **BOSH Director** > **Credentials**.
 
 1. Click **Link to Credential** for the **Bosh Commandline Credentials**.
 
@@ -1121,11 +1121,11 @@ To use the `download-logs` script:
     ```
     Record the name of the BOSH deployment.
 
-1. SSH into your Ops Manager VM by doing the procedures in
+1. SSH into your <%= vars.ops_manager %> VM by doing the procedures in
 [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
-and [SSH into Ops Manager](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
+and [SSH into <%= vars.ops_manager %>](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
 
-1. File transfer or copy-paste the `download-logs` script to a working directory on the Ops Manager VM.
+1. File transfer or copy-paste the `download-logs` script to a working directory on the <%= vars.ops_manager %> VM.
 
 1. Set local environment variables to the same BOSH variable values that you recorded earlier,
 including `BOSH_DEPLOYMENT` for the deployment name.

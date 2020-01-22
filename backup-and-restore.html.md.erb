@@ -93,7 +93,7 @@ SCP enables the operator to use any desired storage solution on the destination 
 To back up your database using SCP, complete the following procedures:
 
 + [Create a Public and Private Key Pair](#scp-keys)
-+ [Configure Backups in Pivotal Ops Manager](#configure-scp)
++ [Configure Backups in <%= vars.ops_manager_full %>](#configure-scp)
 
 ### <a id="scp-keys"></a> Create a Public and Private Key Pair
 
@@ -110,11 +110,11 @@ Pivotal recommends that this user and key pair be solely for <%= vars.product_sh
 
 1. (Recommended) Create a new public and private key pair for authenticating as the above user on the destination VM.
 
-### <a id="configure-scp"></a> Configure Backups in Pivotal Ops Manager
+### <a id="configure-scp"></a> Configure Backups in <%= vars.ops_manager_full %>
 
-Use Ops Manager to configure <%= vars.product_short %> to backup using SCP.
+Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup using SCP.
 
-1. In Ops Manager, open the <%= vars.product_short %> tile **Backups** pane.
+1. In <%= vars.ops_manager %>, open the <%= vars.product_short %> tile **Backups** pane.
 
 1. Select **SCP**.<br/>
     ![SCP Backup Configuration Form](scp-backups.png)
@@ -211,7 +211,7 @@ Use Ops Manager to configure <%= vars.product_short %> to backup using SCP.
 To back up your database on Ceph or Amazon S3, complete the following procedures:
 
 + [Create a Policy and Access Key](#access-key-aws)
-+ [Configure Backups in Ops Manager](#configure-aws)
++ [Configure Backups in <%= vars.ops_manager %>](#configure-aws)
 
 ### <a id="access-key-aws"></a> Create a Policy and Access Key
 
@@ -255,11 +255,11 @@ You must apply a minimal policy that lets the user account upload backups to you
 
 1. Attach the policy you created to the AWS user account that <%= vars.product_short %> will use to access S3 (**IAM** > **Policies** > **Policy Actions** > **Attach**).
 
-### <a id="configure-aws"></a> Configure Backups in Ops Manager
+### <a id="configure-aws"></a> Configure Backups in <%= vars.ops_manager %>
 
-Use Ops Manager to connect <%= vars.product_short %> to your S3 account.
+Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 account.
 
-1. In Ops Manager, open the <%= vars.product_short %> tile **Backups** pane.
+1. In <%= vars.ops_manager %>, open the <%= vars.product_short %> tile **Backups** pane.
 
 1. Select **Ceph or Amazon S3**.
 
@@ -353,7 +353,7 @@ Use Ops Manager to connect <%= vars.product_short %> to your S3 account.
 To back up your database on Google Cloud Storage (GCS), complete the following procedures:
 
 + [Create a Policy and Access Key](#access-key)
-+ [Configure Backups in Ops Manager](#configure-gcs)
++ [Configure Backups in <%= vars.ops_manager %>](#configure-gcs)
 
 ### <a id="access-key"></a> Create a Policy and Access Key
 
@@ -376,11 +376,11 @@ You must apply a minimal policy that lets the user account upload backups to you
 
 1. Click **Create** and take note of the name and location of the service account JSON file that is downloaded.
 
-### <a id="configure-gcs"></a> Configure Backups in Ops Manager
+### <a id="configure-gcs"></a> Configure Backups in <%= vars.ops_manager %>
 
-Use Ops Manager to connect <%= vars.product_short %> to your GCS account.
+Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your GCS account.
 
-1. In Ops Manager, open the <%= vars.product_short %> tile **Backups** pane.
+1. In <%= vars.ops_manager %>, open the <%= vars.product_short %> tile **Backups** pane.
 
 1. Select **GCS**.
 
@@ -450,7 +450,7 @@ Use Ops Manager to connect <%= vars.product_short %> to your GCS account.
 
 Complete the following steps to back up your database to your Azure Storage account.
 
-1. In Ops Manager, open the <%= vars.product_short %> tile **Backups** pane.
+1. In <%= vars.ops_manager %>, open the <%= vars.product_short %> tile **Backups** pane.
 
 1. Select **Azure**.
 
@@ -670,8 +670,8 @@ Perform the following steps to retrieve the backup encryption key:
  <pre class="terminal">$ cf service MY-INSTANCE-NAME --guid \
  12345678-90ab-cdef-1234-567890abcdef</pre>
 </li>
-<li>Perform the steps in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a> and <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into Ops Manager</a> of <em>Advanced Troubleshooting with the BOSH CLI to SSH into the Ops Manager VM</em>.</li>
-<li>From the Ops Manager VM, log in to your BOSH Director with the BOSH CLI. See <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a> in <em>Advanced Troubleshooting with the BOSH CLI</em>.</li>
+<li>Perform the steps in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a> and <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into <%= vars.ops_manager %></a> of <em>Advanced Troubleshooting with the BOSH CLI to SSH into the <%= vars.ops_manager %> VM</em>.</li>
+<li>From the <%= vars.ops_manager %> VM, log in to your BOSH Director with the BOSH CLI. See <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a> in <em>Advanced Troubleshooting with the BOSH CLI</em>.</li>
 <li> Perform the steps in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>, and record the values for <code>identity</code> and <code>password</code>.</li>
 <li>Set the API target of the CredHub CLI to your BOSH CredHub server.
     <br><br>
@@ -726,7 +726,7 @@ If you are using a different backup destination, see the documentation for your 
 
 Perform the following steps to download the backup artifact from an AWS S3 bucket:
 
-1. From the Ops Manager VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest.
+1. From the <%= vars.ops_manager %> VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest.
 For example:
   <pre class="terminal">
    $ bosh -e my-env \
@@ -826,7 +826,7 @@ To prepare a new service instance for restore, do the following:
 1. To retrieve the admin password for your new service instance, do the procedure
    in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds).
 
-1. From the Ops Manager VM, to find and record the new instance name and GUID from BOSH, run the following command:
+1. From the <%= vars.ops_manager %> VM, to find and record the new instance name and GUID from BOSH, run the following command:
 
     ```
     bosh -e ENVIRONMENT -d DEPLOYMENT instances
