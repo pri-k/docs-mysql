@@ -35,14 +35,15 @@ This release includes the following security fix:
 
 This release has the following fix:
 
-* Error messages for when the MySQL service broker fails to connect to the MySQL server now
-suggest troubleshooting steps.
+* When the MySQL service broker fails to connect to the MySQL server an inaccurate generic message
+no longer appears. Also, the error message now suggests troubleshooting steps.
 
-### Known Issue
+### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
 <%= partial "/mysql/disable-plan-ki" %>
+<%= partial "/mysql/broker-ki" %>
 
 ## <a id="2-5-9"></a> v2.5.9
 
@@ -76,11 +77,12 @@ This release has the following fixes:
 `fork/exec /usr/local/bin/bosh: no such file or directory`.
 * Audit logs are now stored on the persistent disk rather than on the syslog endpoint.
 
-### Known Issue
+### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
 <%= partial "/mysql/disable-plan-ki" %>
+<%= partial "/mysql/broker-ki" %>
 
 ## <a id="2-5-8"></a>v2.5.8
 
@@ -107,9 +109,9 @@ This release has the following fixes:
 For more information, see [Share Service Instances](./use.html#share).
 * Certificate rotation now works reliably with BOSH.
 
-### Known Issue
+### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
 <%= partial "/mysql/disable-plan-ki" %>
 <%= partial "/mysql/audit-logs-ki" %>
@@ -201,7 +203,7 @@ This release fixes the following issue:
 
 ### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
 <%= partial "/mysql/disable-plan-ki" %>
 <%= partial "/mysql/instance-sharing" %>
