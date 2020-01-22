@@ -25,14 +25,15 @@ This release includes the following security fix:
 
 This release has the following fix:
 
-* Error messages for when the MySQL service broker fails to connect to the MySQL server now
-suggest troubleshooting steps.
+* When the MySQL service broker fails to connect to the MySQL server an inaccurate generic message
+no longer appears. Also, the error message now suggests troubleshooting steps.
 
-### Known Issue
+### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-ki" %>
 
 ## <a id="2-6-5"></a> v2.6.5
 
@@ -66,11 +67,12 @@ This release has the following fixes:
 `fork/exec /usr/local/bin/bosh: no such file or directory`.
 * Audit logs are now stored on the persistent disk rather than on the syslog endpoint.
 
-### Known Issue
+### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-ki" %>
 
 ## <a id="2-6-4"></a>v2.6.4
 
@@ -97,13 +99,14 @@ This release has the following fixes:
 For more information, see [Share Service Instances](./use.html#share).
 * Certificate rotation now works reliably with BOSH.
 
-### Known Issue
+### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/smoke-test-error-ki" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/smoke-test-error-ki" %>
+<%= partial vars.path_to_partials + "/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-ki" %>
 
 ## <a id="2-6-3"></a>v2.6.3
 
@@ -134,10 +137,11 @@ Previously, a regression caused the leader or follower node to take a backup of 
 
 This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
-<%= partial "../../p-mysql/partials/mysql/smoke-test-error-ki" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/instance-sharing" %>
+<%= partial vars.path_to_partials + "/mysql/smoke-test-error-ki" %>
+<%= partial vars.path_to_partials + "/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-ki" %>
 
 ## <a id="2-6-2"></a> v2.6.2
 
@@ -166,10 +170,11 @@ This release has the following fix:
 
 This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
-<%= partial "../../p-mysql/partials/mysql/smoke-test-error-ki" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/instance-sharing" %>
+<%= partial vars.path_to_partials + "/mysql/smoke-test-error-ki" %>
+<%= partial vars.path_to_partials + "/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-ki" %>
 
 ## <a id="2-6-1"></a> v2.6.1
 
@@ -214,10 +219,11 @@ This release has the following fixes:
 
 This release has the following issues:
 
-<%= partial "../../p-mysql/partials/mysql/disable-plan-ki" %>
-<%= partial "../../p-mysql/partials/mysql/instance-sharing" %>
-<%= partial "../../p-mysql/partials/mysql/smoke-test-error-ki" %>
-<%= partial "../../p-mysql/partials/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/instance-sharing" %>
+<%= partial vars.path_to_partials + "/mysql/smoke-test-error-ki" %>
+<%= partial vars.path_to_partials + "/mysql/audit-logs-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-ki" %>
 
 ### Compatibility
 
