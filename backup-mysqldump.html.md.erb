@@ -9,42 +9,26 @@ This topic describes how to manually create a logical backup with `mysqldump` an
 
 ## <a id="overview"></a> Overview
 
-The operator configures automated backups of your MySQL database. Automated backups are physical backups. Developers do not have access to physical backups. If you are a developer and want to create an additional backup, do the procedures below.
+The operator configures automated physical backups of your MySQL database.
+Developers do not have access to physical backups. In most cases, if you want to copy a <%= vars.product_full %> database you should use the `migrate` command.
 
-You might want to back up your database in the following use cases:
+However, you might want to create an additional logical backup in the following use cases:
 
-+ 
++ Migrating a <%= vars.product_full %> database to an off-platform database.
++ Backing up specific individual databases.
++ Editing table definitions or insert statements before restoring the database.
 
-Test databases
-Update your app
-Self-service
 
-When you back up your database with `mysqldump`, you create a logical backup.
-A logical backup reproduces the table structure and data, without copying the actual data files.
-For example, the backup contains SQL statements to re-create data.
+A logical backup reproduces the table structure and data, without copying the InnoDB data files.
+The backup contains unencrypted SQL statements to re-create the data.
+Because of this, restoring a logical backup takes longer that restoring a physical backup.
+While the backup is running, operations against the database are stalled.
 
-A logical backup offers flexibility, for example, you can edit table definitions or insert
-statements before restoring.
-However, restoring a logical backup takes longer than restoring an automated backup.
-
-This backup acquires a global read lock on all tables, but does not hold the lock for the entire duration of the dump. operations can stall while backup is running.
-
-if against existing service instance maybe data loss
-
-if clone another thing on same foundation use mysql-tools
-
-only if direct access to data use this topic
-if multiple foundations manual workflow
-
-if dev copy off-platform manual workflow
-
-not copying files off the file system
-
-representation of data with statements, longer bc recreating table
-def on local machine
 
 For information about automated backups configured by operators,
 see [Backing Up and Restoring On-Demand MySQL for Pivotal Platform](./backup-and-restore.html).
+
+For information about using the `migrate` command, see [About Data Migration in MySQL for Pivotal Platform](./about-migrate.html).
 
 ## <a id="manual-backup"></a> Create a Logical Backup
 
