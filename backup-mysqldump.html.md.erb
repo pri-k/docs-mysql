@@ -5,12 +5,19 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to manually back up and restore a MySQL database with `mysqldump`.
+This topic describes how to manually create a logical backup with `mysqldump` and restore a MySQL database with the backup.
 
 ## <a id="overview"></a> Overview
 
-The operator configures automated backups of your MySQL database. If you want to back up your database, do the procedures below. You might want to back your database if...
+The operator configures automated backups of your MySQL database. Automated backups are physical backups. Developers do not have access to physical backups. If you are a developer and want to create an additional backup, do the procedures below. 
 
+You might want to back up your database if...
+
++
+
+Test databases
+Update your app
+Self-service
 
 When you back up your database with `mysqldump`, you create a logical backup.
 A logical backup reproduces the table structure and data, without copying the actual data files.
@@ -20,15 +27,29 @@ A logical backup offers flexibility, for example, you can edit table definitions
 statements before restoring.
 However, restoring a logical backup takes longer than restoring an automated backup.
 
+This backup acquires a global read lock on all tables, but does not hold the lock for the entire duration of the dump. operations can stall while backup is running.
+
+if against existing service instance maybe data loss
+
+if clone another thing on same foundation use mysql-tools
+
+only if direct access to data use this topic
+if multiple foundations manual workflow
+
+if dev copy off-platform manual workflow
+
+not copying files off the file system
+
+representation of data with statements, longer bc recreating table
+def on local machine
+
 For information about automated backups configured by operators,
 see [Backing Up and Restoring On-Demand MySQL for Pivotal Platform](./backup-and-restore.html).
 
 ## <a id="manual-backup"></a> Create a Logical Backup
 
 <%= vars.product_short %> disables remote admin access to MySQL databases.
-To access your MySQL database manually back up, you must create a service key for each service instance you want to back up.
-
-This backup acquires a global read lock on all tables, but does not hold the lock for the entire duration of the dump.
+Because of this, you must create a service key to access the database for the service instance you want to back up.
 
 To back up your <%= vars.product_short %> data manually:
 
@@ -149,10 +170,22 @@ For more information, see [Establish a Connection to a Service Instance from Out
     For more information about the mysqldump utility, see
     [mysqldump](https://dev.mysql.com/doc/refman/5.7/en/using-mysqldump.html) in the MySQL Documentation.
 
-    ## <a id="restore-backup"></a> Restore from a Logical Backup
+## <a id="restore-backup"></a> Restore from a Logical Backup
 
-    1. Create and prepare new service instance (would you always want to do this? What if you just
-    want to rewind it?)
-    1. Get credentials
-    1. Restore from SQL file (on local machine) (which command on this page: https://dev.mysql.com/doc/refman/5.7/en/reloading-sql-format-dumps.html)
-    1. Restage?
+To restore a logical backup:
+
+1. (Optional) If you want to create a new service instance,
+do the procedure in [Create a Service Instance](./use.html#create).
+
+1. Retrieve the credentials for your service instance, do steps 1 through 5 in
+[Create a Logical Backup](#manual-backup) above.
+
+1. Restore your data from the SQL file on your local machine by running:
+
+    ```
+    mysql --user=USERNAME --password=PASSWORD --host=MYSQL-IP  < dump.sql
+    ```
+    Where:
+    * `USERNAME` is the username retrieved from the output of `cf service-key`.
+    * `PASSWORD` is the password retrieved from the output of `cf service-key`.
+    * `MYSQL-IP` is the MySQL IP address.
