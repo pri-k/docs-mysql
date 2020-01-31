@@ -9,10 +9,22 @@ This topic provides operators with basic instructions for troubleshooting on-dem
 For information about temporary <%= vars.product_short %> service interruptions, see
 <a href="./upgrade.html#interruptions">Service Interruptions</a>.
 
-## <a id="errors"></a> Troubleshooting Errors
+## <a id="errors"></a> Troubleshoot Errors
 
-This section provides information on how to troubleshooting specific errors or error messages.
+This section provides information on how to troubleshoot specific errors or error messages.
 
+### <a id="x-product"></a> Errors That Occur in Multiple Services
+
+The following errors occur in multiple services:
+
++ [Failed Installation](#install-fail)
++ [Cannot Create or Delete Service Instances](#cannot-create-delete)
++ [Broker Request Timeouts](#timeouts)
++ [Instance Does Not Exist](#instance-not-exist)
++ [Cannot Bind to or Unbind from Service Instances](#cannot-bind)
++ [Cannot Connect to a Service Instance](#cannot-connect)
++ [Upgrade All Service Instances Errand Fails](#upgrade-all-fails)
++ [Missing Logs and Metrics](#missing-logs)
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
@@ -493,7 +505,7 @@ This section provides solutions for the following errands:
 } %>
 
 
-##  <a id="components"></a>  Troubleshooting Components
+##  <a id="components"></a>  Troubleshoot Components
 
 This section provides guidance on checking for and fixing issues in on-demand service components.
 
@@ -509,7 +521,7 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 ### <a id="bosh-config"></a> Configuration
 
-#### <a id="bosh-instance-fail"></a> Service instances in failing state
+#### <a id="bosh-instance-fail"></a> Service Instances in Failing State
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
@@ -601,7 +613,7 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-bosh-cf-access' %>
 
 
-####  <a id="access-broker"></a>  Access Broker Logs and VM(s)
+####  <a id="access-broker"></a>  Access Broker Logs and VMs
 
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
@@ -761,7 +773,7 @@ in the Pivotal Support knowledge base.
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-view-resources' %>
 
 
-###  <a id="id-instance-owner"></a>  Identify Service Instance Owner
+###  <a id="id-instance-owner"></a>  Identify Service Instance Owners
 
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
@@ -1123,7 +1135,7 @@ including `BOSH_DEPLOYMENT` for the deployment name.
     The script saves a compressed file of logs combined from all <%= vars.product_short %> VMs.
     The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 
-###  <a id="mysql-diag"></a>  mysql-diag
+###  <a id="mysql-diag"></a> mysql-diag
 
 The `mysql-diag` tools outputs the current status of a highly available (HA) <%= vars.product_short %> cluster
 in <%= vars.platform_name %> and suggests recovery actions if the cluster fails.
