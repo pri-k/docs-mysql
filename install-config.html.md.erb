@@ -138,7 +138,7 @@ and networks for the broker and MySQL service instances:
         <td>Ignore; not used.</td></tr>
     <tr><td><strong>Network</strong></td>
         <td>Select a subnet for the MySQL broker. This is typically the same subnet
-            that includes the <%= vars.app_runtime_full %> component VMs.<br>
+            that includes the <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) component VMs.<br>
             This network is represented by the Default Network in diagram in <a href="./about.html#on-demand">Default Network and Service Network</a>.
             </td></tr>
     <tr><td><strong>Service Network</strong></td>
@@ -476,8 +476,8 @@ For more information about runtime CredHub, see [CredHub](https://docs.pivotal.i
 
 To store your service instance credentials in runtime CredHub:
 
-1. Ensure that you have configured the <%= vars.app_runtime %> tile to support securing service instance credentials in runtime CredHub.
-   For instructions, see [Step 1: Configure the <%= vars.app_runtime %> Tile](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html#pas-config).
+1. Ensure that you have configured the <%= vars.app_runtime_abbr %> tile to support securing service instance credentials in runtime CredHub.
+   For instructions, see [Step 1: Configure the <%= vars.app_runtime_abbr %> Tile](https://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html#pas-config).
 1. Click **Security**.
 1. Select the **Enable Secure Service Instance Credentials** checkbox.
 1. Click **Save**.
