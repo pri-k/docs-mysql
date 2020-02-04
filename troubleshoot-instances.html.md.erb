@@ -8,51 +8,17 @@ owner: MySQL
 This topic provides techniques app developers can use to begin troubleshooting
  on-demand instances.
 
+## <a id="errors"></a> Troubleshoot Errors
 
+You might see an error when using the Cloud Foundry Command-Line Interface 
+(cf CLI) to perform basic operations on a MySQL for Pivotal Platform service 
+instance:
 
-## <a id="techniques"></a> Techniques for Troubleshooting
-
-You might see an error when using the Cloud Foundry Command-Line Interface
- (cf CLI) to perform basic operations on a <%= vars.product_short %> service instance:
-
-* `cf create`
-* `cf update`
-* `cf bind`
-* `cf unbind`
-* `cf delete`
-
-### <a id="parse-error"></a>Understand a Cloud Foundry (CF) Error Message
-
-<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
-
-<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
-
-### <a id="instance"></a> Find Information about Your Service Instance
-
-You might need to find the name, GUID, or other information about a service instance.
-To find this information, do the following:
-
-1. Log into the space containing the instance or failed instance.
-    <pre class="terminal">
-    $ cf login
-    </pre>
-
-1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space.
-The service instances are listed in the `name` column.
-    <pre class="terminal">
-    $ cf services
-    Getting services in org my-org / space my-space as user<span>@</span>example.com...
-    OK
-    name          service      plan        bound apps    last operation
-    my-instance   p.mysql      db-small                  create succeeded
-    </pre>
-
-1. To retrieve more information about a specific instance, run `cf service SERVICE-INSTANCE-NAME`
-
-1. To retrieve the GUID of the instance, run `cf service SERVICE-INSTANCE-NAME --guid`
-
-   The GUID is useful for debugging.
-
+* cf create
+* cf update
+* cf bind
+* cf unbind
+* cf delete
 
 ### <a id="general-errors"></a> Troubleshoot General Errors
 
@@ -60,6 +26,25 @@ The service instances are listed in the `name` column.
 
 <%= partial vars.path_to_partials + '/services-tshoot/tshoot-no-metrics' %>
 
+
+
+## <a id="techniques"></a> Techniques for Troubleshooting
+
+Start here if you are looking for techniques to troubleshoot issues you experience 
+running operations with the cf CLI such as
+`create`, `update`, `bind`, `unbind`, and `delete`.
+
+See the following troubleshooting techniques:
+
+* [Understand a Cloud Foundry (CF) Error Message](#parse-error)
+* [Find Information About Your Service Instance](#instance)
+
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-info-service-instance' %>
 
 
 
