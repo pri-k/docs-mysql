@@ -5,21 +5,29 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides techniques app developers can use to begin troubleshooting
+This topic provides techniques that app developers can use to begin troubleshooting
  on-demand instances.
+
+## <a id="errors"></a> Troubleshoot Errors
+
+Start here if you are responding to a specific error or error messages.
+
+### <a id="general-errors"></a> Troubleshoot General Errors
+
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
+
+<%= partial vars.path_to_partials + '/services-tshoot/tshoot-no-metrics' %>
 
 
 
 ## <a id="techniques"></a> Techniques for Troubleshooting
 
-You might see an error when using the Cloud Foundry Command-Line Interface
- (cf CLI) to perform basic operations on a <%= vars.product_short %> service instance:
+See the following sections for troubleshooting techniques when using 
+the Cloud Foundry Command-Line Interface (cf CLI) to perform basic 
+operations on a <%= vars.product_short %> service instance.
 
-* `cf create`
-* `cf update`
-* `cf bind`
-* `cf unbind`
-* `cf delete`
+Basic cf CLI operations include `create`, `update`, `bind`, `unbind`, and `delete`.
+
 
 ### <a id="parse-error"></a>Understand a Cloud Foundry (CF) Error Message
 
@@ -53,12 +61,6 @@ The service instances are listed in the `name` column.
 
    The GUID is useful for debugging.
 
-
-### <a id="general-errors"></a> Troubleshoot General Errors
-
-<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-
-<%= partial vars.path_to_partials + '/services-tshoot/tshoot-no-metrics' %>
 
 
 
