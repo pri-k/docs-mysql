@@ -12,60 +12,13 @@ This topic provides techniques that app developers can use to begin troubleshoot
 
 Start here if you are responding to a specific error or error messages.
 
-### <a id="general-errors"></a> Troubleshoot General Errors
+### <a id="x-product"></a> Common Service Errors
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
 <%= partial vars.path_to_partials + '/services-tshoot/tshoot-no-metrics' %>
 
-
-
-## <a id="techniques"></a> Techniques for Troubleshooting
-
-See the following sections for troubleshooting techniques when using 
-the Cloud Foundry Command-Line Interface (cf CLI) to perform basic 
-operations on a <%= vars.product_short %> service instance.
-
-Basic cf CLI operations include `create`, `update`, `bind`, `unbind`, and `delete`.
-
-
-### <a id="parse-error"></a>Understand a Cloud Foundry (CF) Error Message
-
-<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
-
-<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
-
-### <a id="instance"></a> Find Information about Your Service Instance
-
-You might need to find the name, GUID, or other information about a service instance.
-To find this information, do the following:
-
-1. Log into the space containing the instance or failed instance.
-    <pre class="terminal">
-    $ cf login
-    </pre>
-
-1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space.
-The service instances are listed in the `name` column.
-    <pre class="terminal">
-    $ cf services
-    Getting services in org my-org / space my-space as user<span>@</span>example.com...
-    OK
-    name          service      plan        bound apps    last operation
-    my-instance   p.mysql      db-small                  create succeeded
-    </pre>
-
-1. To retrieve more information about a specific instance, run `cf service SERVICE-INSTANCE-NAME`
-
-1. To retrieve the GUID of the instance, run `cf service SERVICE-INSTANCE-NAME --guid`
-
-   The GUID is useful for debugging.
-
-
-
-
-
-## <a id="inaccessible"></a>If Instances or Database are Inaccessible
+### <a id="inaccessible"></a>If Instances or Database are Inaccessible
 
 You might experience the following during upgrades or in a leader-follower topology:
 
@@ -157,6 +110,51 @@ Javanbuildpack</a> in the Pivotal Support knowledge base.</p>'
     cause: 'You see network errors in your app logs.',
     solution: 'To resolve this issue disable mTLS in your apps.'
 } %>
+
+
+
+## <a id="techniques"></a> Techniques for Troubleshooting
+
+See the following sections for troubleshooting techniques when using 
+the Cloud Foundry Command-Line Interface (cf CLI) to perform basic 
+operations on a <%= vars.product_short %> service instance.
+
+Basic cf CLI operations include `create`, `update`, `bind`, `unbind`, and `delete`.
+
+
+### <a id="parse-error"></a>Understand a Cloud Foundry (CF) Error Message
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
+
+### <a id="instance"></a> Find Information about Your Service Instance
+
+You might need to find the name, GUID, or other information about a service instance.
+To find this information, do the following:
+
+1. Log into the space containing the instance or failed instance.
+    <pre class="terminal">
+    $ cf login
+    </pre>
+
+1. If you do not know the name of the service instance, run `cf services` to see a listing of all service instances in the space.
+The service instances are listed in the `name` column.
+    <pre class="terminal">
+    $ cf services
+    Getting services in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    name          service      plan        bound apps    last operation
+    my-instance   p.mysql      db-small                  create succeeded
+    </pre>
+
+1. To retrieve more information about a specific instance, run `cf service SERVICE-INSTANCE-NAME`
+
+1. To retrieve the GUID of the instance, run `cf service SERVICE-INSTANCE-NAME --guid`
+
+   The GUID is useful for debugging.
+
+
 
 
 
