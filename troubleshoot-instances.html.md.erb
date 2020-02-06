@@ -7,80 +7,119 @@ owner: MySQL
 
 This topic provides techniques app developers can use to begin troubleshooting on-demand instances.
 
-## <a id="inaccessible"></a>If Instances or Database are Inaccessible
-
-You might experience the following during upgrades or in a leader-follower topology.
-
-### <a id="outages"></a>Temporary Outages
-
-<%= vars.product_full %> service instances can become temporarily inaccessible during upgrades and VM or network failures.
-For more information, see [Service Interruptions](./upgrade.html#interruptions).
-
-### <a id="read-only"></a>Apps Cannot Write to the Database
-
-If you have a leader-follower topology and your apps can no longer write to the database, the leader VM might be read-only.
-Contact your operator to check if the leader VM is read-only.
-For more information about troubleshooting this problem, see
-[Both Leader and Follower Instances Are Read-Only](./troubleshoot.html#both-read-only).
-
-If you can no longer read to the database as well, your persistent disk might be full. For more
-information about troubleshooting inoperable apps, see [Apps are Inoperable](#disk-full).
-
-### <a id="disk-full"></a>Apps are Inoperable
-
-If your apps become inoperable, your persistent disk might be full. In this state, read,
-write, and Cloud Foundry Command-Line Interface (cf CLI) opertations do not work.
-
-Contact your operator to check if your persistent disk is full.
-For more information about troubleshooting this problem, see
-[Persistent Disk is Full](./troubleshoot.html#persistent-disk).
-
-### <a id="m-tls-error"></a>Apps Cannot Connect to the Database
-
-Apps can fail to connect to the database in the following cases:
-
-+ When your app uses MySQL Connector/J v5.1.41 or earlier.
-See [MySQL Connector/J v5.1.41 or Earlier](#connector) below.
-+ When your app uses mutual TLS (mTLS). See [Mutual TLS](#m-tls) below.
-
-#### <a id="connecter"></a>MySQL Connector/J v5.1.41 or Earlier
-
-**Symptom:** Apps cannot connect to the database when TLS is enabled and
-the apps are using MySQL Connector/J v5.1.41 or earlier.
-You see errors about certificates.
-For example:
-
-```
-Caused by: javax.net.ssl.SSLHandshakeException: Received fatal alert: bad_certificate
-        at sun.security.ssl.Alerts.getSSLException(Alerts.java:192) ~[na:1.8.0_152]
-```
-
-**Solution:** Upgrade to MySQL Connector/J v5.1.42 or later.
-To download, see [MySQL Community Downloads](https://dev.mysql.com/downloads/connector/j/8.0.html).
-
-If you cannot update the MySQL Connector/J, do the workaround in
-[How to disable KeyManager and TrustManager in Container Security Provider Framework in the Java
-buildpack](https://community.pivotal.io/s/article/how-to-disable-keymanager-and-or-trustmanager-in-container-security-provider-framework-in-the-java-buildpack)
-in the Pivotal Support knowledge base.
-
-
-#### <a id="m-tls"></a>Mutual TLS
-
-**Symptom:** Apps cannot connect to the database when TLS is enabled and your apps uses mTLS.
-You see network errors in your app logs.
-
-**Solution:**
-To resolve this issue disable mTLS in your apps.
-
 ## <a id="errors"></a> Troubleshoot Errors
 
-You might see an error when using the Cloud Foundry Command-Line Interface (cf CLI) to perform basic operations on a <%= vars.product_short %> service instance:
+Start here if you are responding to a specific error or error messages.
 
-* `cf create`
-* `cf update`
-* `cf bind`
-* `cf unbind`
-* `cf delete`
+### <a id="x-product"></a> Common Service Errors
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+<%= partial vars.path_to_partials + '/services-tshoot/tshoot-no-metrics' %>
+
+
+### <a id="inaccessible"></a>If Instances or Database are Inaccessible
+
+You might experience the following during upgrades or in a leader-follower topology:
+
+- [Temporary Outages](#outages)
+- [Apps Cannot Write to the Database](#read-only)
+- [Apps Are Inoperable](#disk-full)
+- [Apps Cannot Connect to the Database](#m-tls-error)
+- [MySQL Connector/J v5.1.41 or Earlier](#connecter)
+- [Mutual TLS](#m-tls)
+
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: 'outages',
+    description: 'Temporary Outages',
+    symptom: vars.product_full + ' service instances can become temporarily inaccessible during upgrades and VM or network failures.',
+    solution: 'For more information, see <a href="./upgrade.html#interruptions">Service Interruptions</a>.'
+} %>
+
+
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: 'read-only',
+    description: 'Apps Cannot Write to the Database',
+    symptom: 'You have a leader-follower topology and your apps can no 
+    longer write to the database.',
+    cause: 'The leader VM might be read-only. If you can no longer read 
+    to the database as well, your persistent disk might be full.',
+    solution: '<p>For more information about troubleshooting this problem, see 
+    <a href="./troubleshoot.html#both-read-only">Both Leader and 
+        Follower Instances Are Read-Only</a>.</p>
+<p>If you can no longer read to the database as well, 
+    your persistent disk might be full. For more information about 
+    troubleshooting inoperable apps, see <a href="#disk-full">Apps 
+    are Inoperable</a>.</p>'
+} %>
+
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: 'disk-full',
+    description: 'Apps Are Inoperable',
+    symptom: 'Your apps become inoperable. Read,
+write, and cf CLI operations do not work.',
+    cause: 'Your persistent disk might be full',
+    solution: 'Contact your operator to check if your persistent disk is full.
+For more information about troubleshooting this problem, see
+<a href="./troubleshoot.html#persistent-disk">Persistent Disk is Full</a>.'
+} %>
+
+
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: 'm-tls-error',
+    description: 'Apps Cannot Connect to the Database',
+    symptom: 'Apps can fail to connect to the database.',
+    cause: '<ul>
+    <li>When your app uses MySQL Connector/J v5.1.41 or earlier.
+    </li>
+    <li>When your app uses mutual TLS (mTLS).</li>
+</ul>',
+    solution: '<ul>
+    <li>See <a href="#connector">MySQL Connector/J v5.1.41 or Earlier</a> below.</li>
+    <li>See <a href="#m-tls">Mutual TLS</a> below.</li>
+</ul>'
+} %>
+
+
+
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: 'connecter',
+    description: 'MySQL Connector/J v5.1.41 or Earlier',
+    symptom: '<p>Apps cannot connect to the database when TLS is enabled and
+the apps are using MySQL Connector/J v5.1.41 or earlier.</p>',
+    cause: '<p>You see errors about certificates.</p>
+<p>For example:</p>
+<pre>Caused by: javax.net.ssl.SSLHandshakeException: Received fatal alert: bad_certificate
+        at sun.security.ssl.Alerts.getSSLException(Alerts.java:192) ~[na:1.8.0_152]</pre>',
+    solution:'<p>If you cannot update the MySQL Connector/J, do the workaround in
+<a href="https://community.pivotal.io/s/article/how-to-disable-keymanager-and-or-trustmanager-in-container-security-provider-framework-in-the-java-buildpack">
+How to disable KeyManager and TrustManager in Container Security Provider Framework in the 
+Javanbuildpack</a> in the Pivotal Support knowledge base.</p>'
+} %>
+
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: 'm-tls',
+    description: 'Mutual TLS',
+    symptom: 'Apps cannot connect to the database when TLS is enabled and your apps uses mTLS.',
+    cause: 'You see network errors in your app logs.',
+    solution: 'To resolve this issue disable mTLS in your apps.'
+} %>
+
+
+
+## <a id="techniques"></a> Techniques for Troubleshooting
+
+See the following sections for troubleshooting techniques when using 
+the Cloud Foundry Command-Line Interface (cf CLI) to perform basic 
+operations on a <%= vars.product_short %> service instance.
+
+Basic cf CLI operations include `create`, `update`, `bind`, `unbind`, and `delete`.
+
 
 ### <a id="parse-error"></a>Understand a Cloud Foundry (CF) Error Message
 
@@ -114,11 +153,7 @@ The service instances are listed in the `name` column.
 
    The GUID is useful for debugging.
 
-### <a id="no-metrics"></a> No Metrics from Log Cache
 
-<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-
-<%= partial vars.path_to_partials + '/services-tshoot/tshoot-no-metrics' %>
 
 ## <a id="kb"></a>Use the Knowledge Base (Community)
 
