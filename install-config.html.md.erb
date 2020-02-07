@@ -597,7 +597,7 @@ To configure service instance upgrades.
 
 1. Click **Service Instance Upgrades**.
 
-    <%= image_tag("service-instance-upgrades.png", :alt => "Service instance upgrades section.") %>
+    <%= image_tag("service-instance-upgrades.png", :alt => "Screenshot of service instance upgrades section in the MySQL tile in Ops Manager. Includes a header called 'Configuration for the upgrade-all-service-instances errand and several fields, described below. ") %>
 
 1. Configure the fields as follows:
   <table>
@@ -617,6 +617,15 @@ To configure service instance upgrades.
     <tr><td><strong>BOSH Upgrade Timeout</td>
         <td>Enter the amount of time in seconds to wait for BOSH to respond before timing out when upgrading service instances.
             Increasing this value enables service instance upgrades to fail faster.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Please type 'X' to acknowledge that you have run...</strong>
+      </td>
+        <td>
+          If this is a fresh installation, enter `X`. Do not be concerned with the 
+          label instructions.
+        </td>
     </tr>
 </table>
 
