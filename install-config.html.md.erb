@@ -25,10 +25,9 @@ For more information about roles in <%= vars.ops_manager %>, see
 
 Before you download and install the MySQL for PCF tile, complete the following procedures:
 
-+ [Create an Application Security Group for MySQL for PCF](#asg)
-+ [Enable the BOSH Resurrector](#resurrector)
-+ [(Optional) Preparing for TLS](prepare-tls.html):
-Only required if you want to enable TLS.
++ [Create an App Security Group for <%= vars.product_old %>](#asg).
++ [Enable the BOSH Resurrector](#resurrector).
++ [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS.
 
 ### <a id="asg"></a> Create an Application Security Group for MySQL for PCF
 
@@ -432,10 +431,7 @@ Follow the steps below to configure the security settings for the MySQL service.
 To enable TLS for the MySQL service, perform the following steps:
 
 
-1. Do the procedures in [Preparing for TLS](prepare-tls.html) if one of these conditions applies to you:
-    * You are using <%= vars.ops_manager %> v2.5 or earlier.
-    * You are using <%= vars.ops_manager %> v2.6 or later and are not using the certificate
-    provided by <%= vars.ops_manager %>.
+1. Do the procedures in [Preparing for TLS](prepare-tls.html).
 
 1. Click **Security**.
 1. Under **TLS Options**, select one of the following:
@@ -443,7 +439,8 @@ To enable TLS for the MySQL service, perform the following steps:
   * **Required**: This enables developers to configure their MySQL service VMs to use TLS, and requires all MySQL service VMs to only accept secure connections.
 <p class="note warning"><strong>Warning:</strong> Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
-1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html).
+1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps.
+See [Using TLS](using-tls.html).
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
@@ -584,7 +581,7 @@ This section configures the `upgrade-all-service-instances` errand, which MySQL 
         <strong>Please type 'X' to acknowledge that you have run...</strong>
       </td>
         <td>
-          If this is a fresh installation, enter `X`. Do not be concerned with the 
+          If this is a fresh installation, enter `X`. Do not be concerned with the
           label instructions.
         </td>
     </tr>
