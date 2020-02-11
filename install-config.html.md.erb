@@ -27,10 +27,7 @@ Before you install the <%= vars.product_short %> tile, you must:
 
 + [Create an App Security Group for <%= vars.product_short %>](#asg).
 + [Enable the BOSH Resurrector](#resurrector).
-+ [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS and one of these conditions applies to you:
-    * You are using <%= vars.ops_manager %> v2.5 or earlier.
-    * You are using <%= vars.ops_manager %> v2.6 or later and are not using the certificate
-    provided by <%= vars.ops_manager %>.
++ [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS.
 
 ### <a id="asg"></a> Create an App Security Group for <%= vars.product_short %>
 
@@ -447,10 +444,7 @@ To configure the security settings for the MySQL service, do one or both:
 To enable TLS for the MySQL service:
 
 
-1. Do the procedures in [Preparing for TLS](prepare-tls.html) if one of these conditions applies to you:
-    * You are using <%= vars.ops_manager %> v2.5 or earlier.
-    * You are using <%= vars.ops_manager %> v2.6 or later and are not using the certificate
-    provided by <%= vars.ops_manager %>.
+1. Do the procedures in [Preparing for TLS](prepare-tls.html).
 
 1. Click **Security**.
 1. Under **TLS Options**, select one of the following:
@@ -458,7 +452,8 @@ To enable TLS for the MySQL service:
   * **Required**: This enables developers to configure their MySQL service VMs to use TLS and requires all MySQL service VMs to only accept secure connections.
 <p class="note warning"><strong>Warning:</strong> Selecting <strong>Required</strong> breaks any apps that are not currently connecting over TLS.</p>
 1. Click **Save**.
-1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps. See [Using TLS](using-tls.html).
+1. After deploying the tile, notify your developers that they must enable TLS for their service instances and activate TLS for their apps.
+See [Using TLS](using-tls.html).
 
 ####<a id="security-service-instance-creds"></a> Configure Secure Service Instance Credentials
 
@@ -623,7 +618,7 @@ To configure service instance upgrades.
         <strong>Please type 'X' to acknowledge that you have run...</strong>
       </td>
         <td>
-          If this is a fresh installation, enter `X`. Do not be concerned with the 
+          If this is a fresh installation, enter `X`. Do not be concerned with the
           label instructions.
         </td>
     </tr>
