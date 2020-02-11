@@ -9,22 +9,23 @@ This topic provides an overview of the on-demand <%= vars.product_old %> (PCF) s
 
 ## <a id='AboutTile'></a>About MySQL for PCF
 
-MySQL for PCF enables app developers to provision and use a
+MySQL for PCF enables developers to provision and use a
 dedicated instances MySQL database on demand.
 When you install MySQL for PCF,
 the tile deploys and maintains a single service broker that integrates
 MySQL for PCF with <%= vars.platform_old %>.
 
-MySQL for PCF behaves in a manner that most users would expect a
-general-use relational database service to behave.
-This is because the service is configured with sensible settings by default.
-
+MySQL for PCF is configured with sensible settings by default so
+that the service meets user expectations for a general-use relational database
 
 MySQL for PCF supports the following VM topologies:
 
   + Single node.
-  + Leader-follower. For more information, see [About Leader-Follower](./about-leader-follower.html).
-  + Highly available (HA) cluster. For highly available clusters, MySQL for PCF uses a patched Galera Cluster, Percona XtraDB Cluster (PXC).
+  + Leader-follower. For more information,
+  see [About Leader-Follower](./about-leader-follower.html).
+  + Highly available (HA) cluster.
+  For highly available clusters MySQL for PCF uses
+  a patched Galera Cluster named Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
 
@@ -67,16 +68,16 @@ The following table provides version and version-support information about MySQL
 </tr>
 </table>
 
-##<a id="intro"></a> On-Demand Service
+## <a id="intro"></a> On-Demand Service
 
-MySQL for PCF is an on-demand service. This means that the service provides dedicated instances of
+MySQL for PCF is an on-demand service.
+This means that the service provides dedicated instances of
 MySQL that developers can provision on-demand using the cf CLI or Apps Manager.
-With MySQL for PCF you have more flexibility in how and when
-instances are provisioned.
 
- MySQL for PCF enables efficient and seamless resource use
-for both the operator and app developer.
-Additionally, both the operator and app developer can configure MySQL settings.
+With MySQL for PCF you have more options for how and when
+instances are provisioned.
+MySQL for PCF enables both the operator and developer to configure MySQL settings and
+resource use.
 
 The MySQL for PCF on-demand service uses the on-demand service broker.
 For information about the on-demand service
@@ -84,12 +85,12 @@ broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/).
 
 ### <a id="service"></a>On-Demand Service Plan
 
-MySQL for PCF offers on-demand service plans as the `p.mysql` service in the MySQL for PCF
-tile. Operators can configured and update  MySQL for PCF plan settings.
+MySQL for PCF offers an on-demand service plan called `p.mysql`.
+Operators can configured and update the plan settings.
 
-When operators update the VM size or disk size these settings are
+When operators update the VM or disk size these settings are
 applied to all existing instances.
-If an operators decreases the disk size data loss might occur in existing instances.
+If an operators decreases the disk size, data loss might occur in existing instances.
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
@@ -146,13 +147,13 @@ Review the following table to determine if MySQL for PCF has the features needed
   <td>Operational Monitoring and Logging</td>
   <td>MySQL for PCF provides metrics for monitoring service plan usage, service quotas,
     and MySQL component metrics.
-    Additionally, MySQL for PCF provides syslog redirection to external log ingestors.</td>
+    MySQL for PCF can also forward metrics to an external service.</td>
   <td><a href="./monitor.html">Monitoring MySQL for PCF</a></td>
 </tr>
 <tr>
   <td>Backup and Restore</td>
   <td>MySQL for PCF provides automatic backups to an external storage solution on a configurable schedule.
-  Additionally, MySQL for PCF provides a restore process.</td>
+  MySQL for PCF alsp provides a restore process.</td>
 <td><a href="./backup-and-restore.html">Backing Up and Restoring MySQL for PCF</a></td>
 </tr>
 
@@ -165,7 +166,7 @@ Review the following table to determine if MySQL for PCF has the features needed
   <td></td>
 </tr>
 <tr>
-  <td>Scaling</td><td>Operators can scale VMs up, but they cannot scale VMs down.</td>
+  <td>Scaling</td><td>Operators can scale size of VMs up, but not down.</td>
   <td><a href="./install-config.html">Installing Configuring MySQL for PCF</a></td>
 </tr>
 <tr>
@@ -177,8 +178,8 @@ Review the following table to determine if MySQL for PCF has the features needed
 </tr>
 <tr>
   <td>AZ Support</td>
-  <td>MySQL for PCF can be deployed to multiple zones to increase availability during
-    unplanned outages of a zone.</td>
+  <td>MySQL for PCF can be deployed to multiple zones to ensure availability if an
+    unplanned outage of a zone occurs.</td>
   <td><a href="#other-notes">About Availability Zones</a></td>
 </tr>
 
@@ -189,10 +190,10 @@ Review the following table to determine if MySQL for PCF has the features needed
   <td><a href="./prepare-tls.html">Preparing for TLS</a></td>
 </tr>
 <tr>
-
 <td>Encrypted Communication in Transit</td>
 <td>MySQL for PCF has been tested successfully with the BOSH IPsec Add-on.</td>
-  <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">IPsec Add-on</a></td></tr>
+  <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">IPsec Add-on</a></td>
+</tr>
 <tr>
 </table>
 
