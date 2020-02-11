@@ -12,16 +12,14 @@ This topic provides an overview of the on-demand <%= vars.product_full %> servic
 
 ## <a id='AboutTile'></a>About <%= vars.product_short %>
 
-<%= vars.product_short %> enables app developers to provision and use a
+<%= vars.product_short %> enables developers to provision and use a
 dedicated instances MySQL database on demand.
 When you install <%= vars.product_short %>,
 the tile deploys and maintains a single service broker that integrates
 <%= vars.product_short %> with <%= vars.platform_name %>.
 
-<%= vars.product_short %> behaves in a manner that most users would expect a
-general-use relational database service to behave.
-This is because the service is configured with sensible settings by default.
-
+<%= vars.product_short %> is configured with sensible settings by default so
+that the service meets user expectations for a general-use relational database
 
 <%= vars.product_short %> supports the following VM topologies:
 
@@ -29,8 +27,8 @@ This is because the service is configured with sensible settings by default.
   + Leader-follower. For more information,
   see [About Leader-Follower](./about-leader-follower.html).
   + Highly available (HA) cluster.
-  For highly available clusters, <%= vars.product_short %> uses
-  a patched Galera Cluster, Percona XtraDB Cluster (PXC).
+  For highly available clusters <%= vars.product_short %> uses
+  a patched Galera Cluster named Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
 
@@ -73,16 +71,16 @@ The following table provides version and version-support information about <%= v
 </tr>
 </table>
 
-##<a id="intro"></a> On-Demand Service
+## <a id="intro"></a> On-Demand Service
 
-<%= vars.product_short %> is an on-demand service. This means that the service provides dedicated instances of
+<%= vars.product_short %> is an on-demand service.
+This means that the service provides dedicated instances of
 MySQL that developers can provision on-demand using the cf CLI or Apps Manager.
-With <%= vars.product_short %> you have more flexibility in how and when
-instances are provisioned.
 
- <%= vars.product_short %> enables efficient and seamless resource use
-for both the operator and app developer.
-Additionally, both the operator and app developer can configure MySQL settings.
+With <%= vars.product_short %> you have more options for how and when
+instances are provisioned.
+<%= vars.product_short %> enables both the operator and developer to configure MySQL settings and
+resource use.
 
 The <%= vars.product_short %> on-demand service uses the on-demand service broker.
 For information about the on-demand service
@@ -90,12 +88,12 @@ broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/).
 
 ### <a id="service"></a>On-Demand Service Plan
 
-<%= vars.product_short %> offers on-demand service plans as the `p.mysql` service in the <%= vars.product_short %>
-tile. Operators can configured and update  <%= vars.product_short %> plan settings.
+<%= vars.product_short %> offers an on-demand service plan called `p.mysql`.
+Operators can configured and update the plan settings.
 
-When operators update the VM size or disk size these settings are
+When operators update the VM or disk size these settings are
 applied to all existing instances.
-If an operators decreases the disk size data loss might occur in existing instances.
+If an operators decreases the disk size, data loss might occur in existing instances.
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
@@ -152,13 +150,13 @@ Review the following table to determine if <%= vars.product_short %> has the fea
   <td>Operational Monitoring and Logging</td>
   <td><%= vars.product_short %> provides metrics for monitoring service plan usage, service quotas,
     and MySQL component metrics.
-    Additionally, <%= vars.product_short %> provides syslog redirection to external log ingestors.</td>
+    <%= vars.product_short %> can also forward metrics to an external service.</td>
   <td><a href="./monitor.html">Monitoring <%= vars.product_short %></a></td>
 </tr>
 <tr>
   <td>Backup and Restore</td>
   <td><%= vars.product_short %> provides automatic backups to an external storage solution on a configurable schedule.
-  Additionally, <%= vars.product_short %> provides a restore process.</td>
+  <%= vars.product_short %> alsp provides a restore process.</td>
 <td><a href="./backup-and-restore.html">Backing Up and Restoring <%= vars.product_short %></a></td>
 </tr>
 
@@ -171,7 +169,7 @@ Review the following table to determine if <%= vars.product_short %> has the fea
   <td></td>
 </tr>
 <tr>
-  <td>Scaling</td><td>Operators can scale VMs up, but they cannot scale VMs down.</td>
+  <td>Scaling</td><td>Operators can scale size of VMs up, but not down.</td>
   <td><a href="./install-config.html">Installing Configuring <%= vars.product_short %></a></td>
 </tr>
 <tr>
@@ -183,8 +181,8 @@ Review the following table to determine if <%= vars.product_short %> has the fea
 </tr>
 <tr>
   <td>AZ Support</td>
-  <td><%= vars.product_short %> can be deployed to multiple zones to increase availability during
-    unplanned outages of a zone.</td>
+  <td><%= vars.product_short %> can be deployed to multiple zones to ensure availability if an
+    unplanned outage of a zone occurs.</td>
   <td><a href="#other-notes">About Availability Zones</a></td>
 </tr>
 
@@ -198,9 +196,11 @@ Review the following table to determine if <%= vars.product_short %> has the fea
     so that apps and clients can establish an encrypted connection with the data service.</td>
   <td><a href="./prepare-tls.html">Preparing for TLS</a></td>
 </tr>
+<tr>
 <td>Encrypted Communication in Transit</td>
 <td><%= vars.product_short %> has been tested successfully with the BOSH IPsec Add-on.</td>
-  <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">IPsec Add-on</a></td></tr>
+  <td><a href="https://docs.pivotal.io/addon-ipsec/index.html">IPsec Add-on</a></td>
+</tr>
 <tr>
   <td>Encrypted Data at Rest</td>
   <td><%= vars.product_short %> enables integration with commercial vendors for full-disk encryption
