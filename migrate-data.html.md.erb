@@ -14,6 +14,12 @@ for PCF v2.x service instance.
 
 The `mysql-tools` CLI plugin includes a `migrate` command.
 
+<p class="note">
+  <strong>Note:</strong> 
+  You must have TLS enabled to use this feature.
+  To configure and enable TLS, see [Configure TLS](./install-config.html#security-tls).
+</p>
+
 To migrate data from a source MySQL instance to a new target MySQL instance in Pivotal Cloud Foundry (PCF), you run the `migrate` command from your target org and space.  The command:
 
   1. Creates a new MySQL for PCF v2.x service instance in the target space.
