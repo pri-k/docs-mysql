@@ -19,9 +19,11 @@ To migrate data from a source MySQL instance to a new target MySQL instance in P
   1. Creates a new MySQL for PCF v2.x service instance in the target space.
   1. Copies the source data over to the new service instance.
 
-<p class="note warning"><strong>WARNING:</strong> The <code>migrate</code> command  does not migrate all stored programs.
-The command only migrates views and does not migrate triggers, routines, or events.
-To manually migrate triggers, routines,	or events, contact <a href="https://pivotal.io/support">Pivotal Support</a>.</p>
+<p class="note warning"><strong>Warning:</strong>
+  The <code>migrate</code> command  does not migrate all stored programs.
+  The command only migrates views and does not migrate triggers, routines, or events.
+  To manually migrate triggers, routines,	or events, contact <a href="https://pivotal.io/support">Pivotal Support</a>.
+</p>
 
 ## <a id='use-cases'></a>Use Cases
 
@@ -193,8 +195,10 @@ To perform the procedures in this topic, you must have the following:
   Talk to your operator to determine which service plan is appropriate.
   For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
 
-<p class="note"><strong>Note</strong>: To view available service plans, run <code>cf marketplace</code>.
-  MySQL for PCF v2.x appears as <code>p.mysql</code> and MySQL for PCF v1.x appears as <code>p-mysql</code>.</p>
+<p class="note"><strong>Note</strong>:
+  To view available service plans, run <code>cf marketplace</code>.
+  MySQL for PCF v2.x appears as <code>p.mysql</code> and MySQL for PCF v1.x appears as <code>p-mysql</code>.
+</p>
 
 ### <a id='sizing'></a>Resource Planning
 
@@ -207,10 +211,14 @@ The service plan that you select for your target service instance should have a 
   * **Single-Node** or **Leader-Follower**: Three times larger than the size of the source data.
   * **HA Cluster**: Two times larger than the size of the source data.
 
-<p class="note warning"><strong>WARNING</strong>: Migrating large datasets can take several hours.
-Migration of the data is linear and depends on the hardware being used.
-For example, if X amount of data takes 10 minutes to migrate, then 2X amount of data will take 20 minutes to migrate using the same hardware.
-Do a test migration with small datasets to estimate how long the entire migration will take before migrating larger datasets.</p>
+<p class="note warning"><strong>Warning</strong>:
+  Migrating large datasets can take several hours.
+  Migration of the data is linear and depends on the hardware being used.
+  For example, if X amount of data takes 10 minutes to migrate,
+  then 2X amount of data will take 20 minutes to migrate using the same hardware.
+  Do a test migration with small datasets to estimate how long the entire migration
+  will take before migrating larger datasets.
+</p>
 
 ## <a id='install-plugin'></a>Install the mysql-tools CF CLI Plugin
 
@@ -218,7 +226,7 @@ Pivotal recommends that operators and developers use the `mysql-tools` cf CLI pl
 data from a source MySQL database to a MySQL for PCF v2.x service instance.
 
 <p class="note">
-  <strong>Note:</strong> 
+  <strong>Note:</strong>
   You must have TLS enabled to use this feature.
   To configure and enable TLS, see <a href="./install-config.html#security-tls">Configure TLS</a>.
 </p>
@@ -317,10 +325,11 @@ To create a user-provided service instance to access the off-platform database, 
    "uri": "mysql<span>:</span>//root:P455w0rD<span>@</span>34.192.88.212:3306/my_db",}'
    Creating user provided service migrating-db in org my-org / space my-space as admin...
    OK
-   </p>
+   </pre>
 
-    <p class="note"><strong>Note</strong>: <code>cf cups</code> is a shortcut
-    for the <code>cf create-user-provided-service</code> command.</p>
+    <p class="note"><strong>Note</strong>:
+      <code>cf cups</code> is a shortcut for the <code>cf create-user-provided-service</code> command.
+    </p>
 
 After seeing that your user-provided service instance was created, continue to [Migrate Data](#migrate-data), below.
 
@@ -331,7 +340,9 @@ When your source database is accessible to your destination space, perform the f
 1. If your source MySQL service instance is running on PCF, do the following to stop all traffic to the service instance, by stopping and unbinding all apps
 that use it:
 
-    <p class="note"><strong>Note</strong>: To retrieve a list of bound apps, run <code>cf services</code> and see the <code>bound apps</code> column.</p>
+    <p class="note"><strong>Note</strong>:
+      To retrieve a list of bound apps, run <code>cf services</code> and see the <code>bound apps</code> column.
+    </p>
 
     1. Use the cf CLI to target and log in to your PCF deployment.
     For example:
