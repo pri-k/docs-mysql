@@ -31,7 +31,7 @@ This release has the following fix:
 
 * An inaccurate generic message no longer appears when the MySQL service broker fails
   to connect to the MySQL server.
-  
+
 ### Known Issues
 
 This release has the following issues:
@@ -49,7 +49,7 @@ New features and changes in this release:
 * <%= vars.single_leader_plan %> plans support failover to a follower service instance in a different data center.
   <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 * Operators can monitor MySQL metrics on the Healthwatch Indicator Protocol dashboard.
-For more information, see [Indicator Protocol Dashboard (Beta)](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html).
+For more information, see [Use the Indicator Protocol Dashboard](./monitor.html#indicator).
 * Highly available (HA) cluster plans only retain three days of binary logs.
 This reduces persistent disk usage.
 
