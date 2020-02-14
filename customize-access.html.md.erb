@@ -5,92 +5,100 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers to customize access credentials and privileges for MySQL for Pivotal Cloud Foundry (PCF) service instances.
+This topic provides instructions for developers to customize access credentials and privileges for
+<%= vars.product_old %> service instances.
 
-These procedures use the Cloud Foundry Command Line Interface (cf CLI).
-You can also use [Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html) to do the same tasks
-using a graphical UI.
+## <a id="overview"></a> Overview
 
-For information about using MySQL for PCF, see [Using MySQL for PCF](./use.html).
+You can customize database credentials by creating service keys with custom properties.
+For example, you can create read-only access credentials to enable desktop tools to connect to
+your databases.
 
-## <a id="read-only"></a>Create Read-only Access Credentials 
+The following procedures use the Cloud Foundry Command Line Interface (cf CLI).
+You can also use Apps Manager to do the same tasks using a graphical user interface. For information Apps Manager, see [Getting Started with Apps Manager](http://docs.pivotal.io/pivotalcf/console/dev-console.html)
 
-MySQL for PCF lets space developers create read-only credentials to give to users who need read-only access to the database.
-You can create credentials by using the cf CLI to create a new [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
+## <a id="read-only"></a> Create Read-only Access Credentials
 
-To create and find read-only credentials for an existing service instance, do the following:
+<%= vars.product_old %> enables space developers to create read-only credentials to give to users who need read-only access to the database. These users can audit and monitor the database without mutating or changing any data.
 
- 1. Run the following command to create a new service key for a service instance, specifying it to be read-only:
+<p class="note"><strong>Note:</strong> Any user that can create a service key can provision a fully privileged service key.
+</p>
 
-    <code>cf create-service-key SERVICE-INSTANCE KEY-NAME -c '{ "read-only": true }'</code>
 
-    Where:
+To create and find read-only credentials for an existing service instance:
 
-    <code>SERVICE-INSTANCE</code>: The name of the service instance
+ 1. Create a new read-only service key for a service instance by running:
 
-    <code>KEY-NAME</code>: What you want to call the key
+    ```
+    cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "read-only": true }'
+    ```
 
-    For example,
+    For example:
 
-    <pre class="terminal">
-    $ cf create-service-key mydb mykey1 -c '{ "read-only": true }'
+    <pre class="terminal">$ cf create-service-key mydb mykey1 -c '{ "read-only": true }'
+
     Creating service key mykey1 for service instance mydb as admin...
     OK</pre>
 
- 1. Run the following command to retrieve the read-only credentials from the service key:
+ 1. Retrieve the read-only credentials from the service key by running:
 
-    <code> cf service-key SERVICE-INSTANCE KEY-NAME</code>
+    ```
+    cf service-key SERVICE-INSTANCE-NAME KEY-NAME
+    ```
 
-    For example, 
-    <pre class="terminal">
-    $ cf service-key mydb mykey1</br>
+    For example:
+
+    <pre class="terminal">$ cf service-key mydb mykey1
+
     {
      "hostname": "99.99.99.9",
-     "jdbcUrl": "jdbc:mysql://99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
-     "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
+     "jdbcUrl": "jdbc:mysql://99.99.99.9:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
+     "name": "cf_e2d148a8_1baa_4961_b314_2431f57037e5",
      "password": "123456789",
      "port": 3306,
-     "uri": "mysql://abcdefghijklm:123456789<span>@</span>99.99.99.9:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+     "uri": "mysql://abcdefghijklm:123456789<span>@</span>99.99.99.9:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?reconnect=true",
      "username": "abcdefghijklm"
     }</pre>
 
-<p class="note"><strong>Note</strong>: Any user with access to create a service key may provision a fully privileged
-service key.</p>
+## <a id="username"></a> Create Custom Username Credentials
 
-## <a id="username"></a>Create Credentials for a Custom Username
+<%= vars.product_old %> enables space developers to create custom usernames for service keys and service bindings. You can create these credentials for users that want to access the database with a specific username.
 
-If you have users that want to access the database with a specific username, MySQL for PCF lets space developers create custom
-usernames for service keys or service bindings.
-You can create credentials by using the cf CLI to create a new [service key](https://docs.pivotal.io/pivotalcf/devguide/services/service-keys.html).
+<p class="note"><strong>Note:</strong> Any user that can create a service key can provision a fully privileged service key.
+</p>
 
-To create and find custom username credentials for an existing service instance, do the following:
 
- 1. Create a new service key for a service-instance, specifying a username:
+To create and find custom username credentials for an existing service instance:
 
-    <code>$ cf create-service-key SERVICE-INSTANCE KEY-NAME -c '{ "username": NEW-USER-NAME }'</code>
+ 1. Create a new service key and username for a service-instance by running:
 
-    For example,
-    <pre class="terminal">
-    $ cf create-service-key mydb mykey2  -c '{ "username": myuser }'
+    ```
+    cf create-service-key SERVICE-INSTANCE-NAME KEY-NAME -c '{ "username": NEW-USERNAME }'
+    ```
+
+    For example:
+
+    <pre class="terminal">$ cf create-service-key mydb mykey2  -c '{ "username": myuser }'
+
     Creating service key mykey2 for service instance mydb as admin...
     OK</pre>
 
- 1. Run the following command to retrieve the credentials from the service key.
+ 1. Retrieve the credentials from the service key by running:
 
-    <code>cf service-key SERVICE-INSTANCE KEY-NAME</code>
+    ```
+    cf service-key SERVICE-INSTANCE-NAME KEY-NAME
+    ```
 
-    For example,
-    <pre class="terminal">
-    $ cf service-key mydb mykey2</br>
+    For example:
+
+    <pre class="terminal">$ cf service-key mydb mykey2</br>
+
     {
      "hostname": "10.10.10.5",
-     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=my\_unique\_name\u0026password=123456789",
-     "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
+     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?user=my_unique_name\u0026password=123456789",
+     "name": "cf_e2d148a8_1baa_4961_b314_2431f57037e5",
      "password": "123456789",
      "port": 3306,
-     "uri": "mysql://my\_unique\_name:123456789<span>@</span>10.10.10.5:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
+     "uri": "mysql://my_unique_name:123456789<span>@</span>10.10.10.5:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?reconnect=true",
      "username": "myuser"
     }</pre>
-
-<p class="note"><strong>Note</strong>: Any user with access to create a service key may provision a fully privileged
-service key.</p>
