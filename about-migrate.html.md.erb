@@ -1,0 +1,164 @@
+---
+title: About Data Migration in MySQL for Pivotal Platform
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic explains how data migration works in <%= vars.product_full %>.
+
+Read this topic before you do in the procedures in
+[Migrating Data in <%= vars.product_short %>](./migrate-data.html).
+
+
+## <a id='overview'></a>The migrate Command
+
+You can use the `mysql-tools` CLI plugin to migrate MySQL data with the `migrate` command.
+The `migrate` command does a streaming `mysqldump` and restore to migrate data from
+your source MySQL database to a destination <%= vars.product_short %> v2 instance.
+
+The command supports connections over TLS. If TLS is configured in
+the source and destination MySQL instances, the data is securely streamed using TLS.
+For information about how to configure TLS in a <%= vars.product_short %> v2 service instance,
+see
+[Using TLS](./using-tls.html).
+
+During data migration, the `migrate` command:
+
+  1. Creates a new <%= vars.product_short %> v2 service instance in the destination space
+  with the same name as the source MySQL service instance name.
+  1. Copies the source data over to the new service instance.
+  1. Appends `-old` to the source service instance name,
+  regardless if the source is a <%= vars.product_short %> service instance or
+  a user-provided service instance.
+
+
+## <a id='use-cases'></a>Use Cases
+
+The `migrate` command is used for most migration use cases.
+See [Use Cases Requiring the migrate Command](#migrate-cases) below.
+
+However, many common migrations, such as from a small to a large database,
+can be done with the simpler `update-service` command.
+See [Use Cases Not Requiring the migrate Command](#update-service-cases) below.
+
+If your use case is not listed in this topic,
+you might need to manually back up and restore your database to migrate your data.
+See [Backing Up and Restoring with mysqldump](./backup-mysqldump.html)
+
+
+### <a id='migrate-cases'></a> Use Cases Requiring the migrate Command
+
+The following table lists migration use cases that must be done with the `migrate` command.
+
+<table>
+  <tr>
+    <th>Use <code>migrate</code> for migrating from...</th>
+    <th>To...</th>
+  </tr>
+
+  <tr>
+    <td>Single Node</td>
+    <td>Highly Available (HA) Cluster</td>
+  </tr>
+
+  <tr>
+    <td>Leader-Follower</td>
+    <td>HA Cluster</td>
+  </tr>
+
+  <tr>
+    <td>HA Cluster</td>
+    <td>Leader-Follower</td>
+  </tr>
+
+  <tr>
+    <td>HA Cluster</td>
+      <td>Single Node</td>
+  </tr>
+
+  <tr>
+    <td>Off-Platform Database *</td>
+    <td><%= vars.product_short %> v2</td>
+  </tr>
+
+  <tr>
+    <td>Availability Zone (AZ)</td>
+    <td>Another AZ</td>
+  </tr>
+
+  <tr>
+    <td>
+      <%= vars.product_old %> v1</td>
+      <td><%= vars.product_short %> v2</td>
+  </tr>
+</table>
+
+**&#42;** If your off-platform database has encryption at rest or the Percona PAM Authentication plugin
+enabled, you cannot use the `migrate` command.
+Instead, you must follow the procedure
+in [Restore from an Off-Platform Logical Backup](/backup-mysqldump.html#external).
+
+### <a id='update-service-cases'></a> Use Cases Not Requiring the migrate Command
+
+Not all migrations require the `migrate` command.
+For example, if you are migrating a database to a larger single node or leader-follower plan,
+use the simpler `update-service` command.
+
+The following table lists migration use cases that can be done with the `update-service` command.
+For instructions about using the `update-service` command, see
+[Update a Service Instance](use.html#update).
+
+
+<table>
+  <tr>
+    <th>Use <code>update-service</code> for migrating from...</th>
+    <th>To...</th>
+  </tr>
+
+  <tr>
+    <td>Single Node</td>
+    <td>larger Single Node</td>
+  </tr>
+
+  <tr>
+    <td>Leader-Follower</td>
+    <td>larger Leader-Follower</td>
+  </tr>
+
+  <tr>
+    <td>Single Node</td>
+    <td>Leader-Follower of the same or larger size</td>
+  </tr>
+
+  <tr>
+    <td>Leader-Follower</td>
+      <td>Single Node of the same or larger size</td>
+  </tr>
+</table>
+
+
+## <a id='unsupported'></a>Omitted Data
+
+<p class="note warning"><strong>Warning:</strong>
+The <code>migrate</code> command does not migrate all stored programs.
+The command only migrates views and does not migrate triggers, routines, or events.
+To manually migrate triggers, routines,	or events,
+contact <a href="https://pivotal.io/support">Pivotal Support</a>.
+</p>
+
+The `migrate` command skips the following system schemas:
+
+- `cf_metadata`: This is metadata for binding information, such as database users mapped to
+<%= vars.platform_old %> GUIDs.
+- `information_schema`: This is metadata for the MySQL database.
+- `mysql`: This is a MySQL database that describes users, user accounts, and permissions.
+    <%= vars.product_short %> uses it to authenticate users.
+- `performance_schema`: This is metadata about performance  and server execution.
+- `sys`: This is a schema that summarizes `performance_schema`.
+
+<p class="note"><strong>Note:</strong><code>sys</code>, <code>performance_schema</code>,
+  and <code>information_schema</code> change dynamically with changes on a <%= vars.product_short %>
+  service instance. These schemas are not migrated because the destination database has its own version of the schemas.
+  You do not need to back up these schemas.
+</p>
