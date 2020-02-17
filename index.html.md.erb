@@ -10,13 +10,13 @@ This topic provides an overview of the on-demand <%= vars.product_old %> (PCF) s
 ## <a id='AboutTile'></a>About MySQL for PCF
 
 MySQL for PCF enables developers to provision and use a
-dedicated instances MySQL database on demand.
+dedicated instances MySQL database on-demand.
 When you install MySQL for PCF,
 the tile deploys and maintains a single service broker that integrates
 MySQL for PCF with <%= vars.platform_old %>.
 
 MySQL for PCF is configured with sensible settings by default so
-that the service meets user expectations for a general-use relational database
+that the service meets user expectations for a general-use relational database.
 
 MySQL for PCF supports the following VM topologies:
 
@@ -86,11 +86,11 @@ broker, see [On-Demand Services SDK](https://docs.pivotal.io/svc-sdk/odb/).
 ### <a id="service"></a>On-Demand Service Plan
 
 MySQL for PCF offers an on-demand service plan called `p.mysql`.
-Operators can configured and update the plan settings.
+Operators can configure and update the plan settings.
 
 When operators update the VM or disk size these settings are
 applied to all existing instances.
-If an operators decreases the disk size, data loss might occur in existing instances.
+If an operator decreases the disk size, data loss might occur in existing instances.
 
 ##<a id="checklist"></a> Enterprise-Ready Checklist
 
@@ -153,7 +153,7 @@ Review the following table to determine if MySQL for PCF has the features needed
 <tr>
   <td>Backup and Restore</td>
   <td>MySQL for PCF provides automatic backups to an external storage solution on a configurable schedule.
-  MySQL for PCF alsp provides a restore process.</td>
+  MySQL for PCF also provides a restore process.</td>
 <td><a href="./backup-and-restore.html">Backing Up and Restoring MySQL for PCF</a></td>
 </tr>
 
@@ -166,7 +166,7 @@ Review the following table to determine if MySQL for PCF has the features needed
   <td></td>
 </tr>
 <tr>
-  <td>Scaling</td><td>Operators can scale size of VMs up, but not down.</td>
+  <td>Scaling</td><td>Operators can scale the size of VMs up, but not down.</td>
   <td><a href="./install-config.html">Installing Configuring MySQL for PCF</a></td>
 </tr>
 <tr>
