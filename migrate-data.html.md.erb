@@ -34,6 +34,10 @@ However, many common migrations, such as from a small to a large database,
 can be done with the simpler `update-service` command.
 See [Use Cases Not Requiring the migrate Command](#update-service-cases) below.
 
+If your use case is not listed in this topic,
+you might need to manually back up and restore your database to migrate your data.
+See [Backing Up and Restoring with mysqldump](./backup-mysqldump.html)
+
 ### <a id='migrate-cases'></a> Use Cases Requiring the migrate Command
 The following table lists migration use cases that must be done with the `migrate` command.
 
@@ -64,7 +68,7 @@ The following table lists migration use cases that must be done with the `migrat
   </tr>
 
   <tr>
-    <td>Off-Platform Database</td>
+    <td>Off-Platform Database *</td>
     <td>MySQL for PCF v2</td>
   </tr>
 
@@ -80,6 +84,11 @@ The following table lists migration use cases that must be done with the `migrat
   </tr>
 </table>
 
+**&#42;** If your off-platform database has encryption at rest or the Percona PAM Authentication plugin
+enabled, you cannot use the `migrate` command.
+Instead, you must follow the procedure
+in [Restore from an Off-Platform Logical Backup](./backup-mysqldump.html#external).
+
 ### <a id='update-service-cases'></a> Use Cases Not Requiring the migrate Command
 
 Not all migrations require the `migrate` command.
@@ -89,6 +98,7 @@ use the simpler `update-service` command.
 The following table lists migration use cases that can be done with the `update-service` command.
 For instructions about using the `update-service` command,
 [Update a Service Instance](use.html#update).
+
 
 
 <table>
