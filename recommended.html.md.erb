@@ -9,15 +9,20 @@ owner: MySQL
 
 MySQL is a powerful open-source relational database used by apps since the mid-90s.
 Developers have relied on MySQL as a first step to storing, processing and sharing data.
-As its user community has grown, MySQL has become a robust system capable of handling a wide variety of use cases and very significant workloads.
+As its user community has grown,
+MySQL has become a robust system capable of handling a wide variety of use cases
+and very significant workloads.
 Unlike other traditional databases which centralize and consolidate data,
-MySQL lends itself to dedicated deployment supporting the “shared nothing” context of building apps in the cloud.
+MySQL lends itself to dedicated deployment supporting the “shared nothing”
+ context of building apps in the cloud.
 
 ##<a id="ondemand"></a> About On-Demand Plans
 * Each on-demand plan instance is deployed to its own VM and is suitable for production workloads.
-* The maximum-number of on-demand plan instances available to developers is set by the operator and enforced on both a global and per-plan level quota.
+* The maximum-number of on-demand plan instances available to developers is set by the operator and
+enforced on both a global and per-plan level quota.
   The global quota cannot exceed 200.
-* Operators can update the plan settings, including the VM size and disk size after the plans have been created.
+* Operators can update the plan settings,
+including the VM size and disk size after the plans have been created.
 **Operators should not downsize the VMs or disk size as this can cause data loss in pre-existing instances.**
 * All plans deploy a single VM of the specified size with the specified disk type.
 * Cannot scale down the size of VMs on the plan once deployed (this protects against data loss).
@@ -30,8 +35,15 @@ see [Setting Limits for On-Demand Service Instances](./set-quotas.html).
 
 ##<a id="azs"></a> Availability Using Multiple AZs
 
-MySQL for PCF supports supports configuring multiple availability zones.
-For more information, see [About Availability Zones](./index.html#other-notes).
+MySQL for PCF supports configuring multiple availability zones (AZs).
+However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
+
+* You can assign on-demand plans to any of the configured AZs.
+* BOSH randomly deploys service instances across configured AZs.
+  This minimizes the impact of an AZ outage and removes single points
+  of failure.
+* For all MySQL for PCF plans, select three AZs.
+Choosing three AZs does not increase the number of AZs assigned to service instances to three.
 
 ##<a id="downtime"></a> Downtime During Redeploys
 
@@ -53,8 +65,9 @@ This results in increased disk usage while backups are being processed.
 For single node and leader-follower service plans, backups are processed on the MySQL VM.
 For highly available (HA) clusters, backups are processed on the jumpbox VM.
 
-In addition to backups, the persistent disk also stores InnoDB redo logs and binlogs. InnoDB redo logs use
-a static amount of disk size. If your app is write-heavy,
+In addition to backups, the persistent disk also stores InnoDB redo logs and binlogs.
+InnoDB redo logs use a static amount of disk size.
+If your app is write-heavy,
 increase your persistent disk to accommodate the binlogs.
 
 Use the following table to determine the amount of persistent disk space you need
@@ -62,7 +75,9 @@ to set when you configure a service plan.
 For instructions for configuring service plans,
 see [Configure Service Plans](./install-config.html#active).
 
-<p class="note warning"><strong>Warning:</strong> For all persistent disks except the HA cluster jumpbox disk, your <strong>Total Disk Size</strong> must be greater than 5&nbsp;GB.
+<p class="note warning"><strong>Warning:</strong>
+  For all persistent disks except the HA cluster jumpbox disk,
+  your <strong>Total Disk Size</strong> must be greater than 5&nbsp;GB.
 </p>
 
 <table>
@@ -104,13 +119,15 @@ see [Configure Service Plans](./install-config.html#active).
 &#42; In the **Total Disk Size** formula, `N` is the maximum amount of app data that a developer needs.
 Remember to include binlogs in your size estimate for app data.
 
-The following diagram shows how persistent disk space is used in the single node and leader-follower topologies
-and in the HA cluster topology:
+The following diagram shows how persistent disk space is used in the single node and
+leader-follower topologies and in the HA cluster topology:
 
 <!-- Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing -->
 
 <a href="./images/disk-lf-ha.png" target="_blank">
-  <img alt="Persistent Disk diagram. The information depicted in the diagram is in the persistent disk table above" src="./images/disk-lf-ha.png"/>
+  <img alt="Persistent Disk diagram.
+  The information depicted in the diagram is in the persistent disk table
+  above" src="./images/disk-lf-ha.png"/>
 </a>
 
 <a href="./images/disk-lf-ha.png" aria-hidden="true" target="_blank">View a larger version of this diagram.</a>

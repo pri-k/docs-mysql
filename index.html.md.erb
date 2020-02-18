@@ -9,8 +9,8 @@ This topic provides an overview of the on-demand <%= vars.product_old %> (PCF) s
 
 ## <a id='AboutTile'></a>About MySQL for PCF
 
-MySQL for PCF enables developers to provision and use a
-dedicated instances MySQL database on-demand.
+MySQL for PCF enables developers to provision and use
+dedicated instances MySQL database on demand.
 When you install MySQL for PCF,
 the tile deploys and maintains a single service broker that integrates
 MySQL for PCF with <%= vars.platform_old %>.
@@ -180,7 +180,7 @@ Review the following table to determine if MySQL for PCF has the features needed
   <td>AZ Support</td>
   <td>MySQL for PCF can be deployed to multiple zones to ensure availability if an
     unplanned outage of a zone occurs.</td>
-  <td><a href="#other-notes">About Availability Zones</a></td>
+  <td><a href="./recommended.html#azs">About Availability Zones</a></td>
 </tr>
 
 <tr><th colspan=2>Encryption</th><th>More Information</th></tr>
@@ -197,17 +197,7 @@ Review the following table to determine if MySQL for PCF has the features needed
 <tr>
 </table>
 
-## <a id="other-notes"></a>About Availability Zones
 
-MySQL for PCF supports configuring multiple availability zones (AZs).
-However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
-
-* You can assign on-demand plans to any of the configured AZs.
-* BOSH randomly deploys service instances across configured AZs.
-  This minimizes the impact of an AZ outage and removes single points
-  of failure.
-* For all MySQL for PCF plans, select three AZs.
-Choosing three AZs does not increase the number of AZs assigned to service instances to three.
 
 ##<a id="feedback"></a> Feedback
 
