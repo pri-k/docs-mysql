@@ -12,9 +12,9 @@ This topic provides an overview of the on-demand <%= vars.product_full %> servic
 
 ## <a id='AboutTile'></a>About <%= vars.product_short %>
 
-<%= vars.product_short %> enables developers to provision and use a
-dedicated instances MySQL database on-demand.
-When you install <%= vars.product_short %>,
+<%= vars.product_short %> enables developers to provision and use
+dedicated instances MySQL database on demand.
+When you install MySQL for PCF,
 the tile deploys and maintains a single service broker that integrates
 <%= vars.product_short %> with <%= vars.platform_name %>.
 
@@ -182,7 +182,7 @@ Review the following table to determine if <%= vars.product_short %> has the fea
   <td>AZ Support</td>
   <td><%= vars.product_short %> can be deployed to multiple zones to ensure availability if an
     unplanned outage of a zone occurs.</td>
-  <td><a href="#other-notes">About Availability Zones</a></td>
+  <td><a href="./recommended.html#azs">About Availability Zones</a></td>
 </tr>
 
 <tr>
@@ -206,18 +206,6 @@ Review the following table to determine if <%= vars.product_short %> has the fea
     at rest.</td>
     <td><a href="https://docs.pivotal.io/partners/vormetric-transparent-encryption/">Thales Vormetric plugin</a></td></tr>
 </table>
-
-## <a id="other-notes"></a>About Availability Zones
-
-<%= vars.product_short %> supports configuring multiple availability zones (AZs).
-However, assigning multiple AZs to MySQL jobs does not guarantee high availability.
-
-* You can assign on-demand plans to any of the configured AZs.
-* BOSH randomly deploys service instances across configured AZs.
-  This minimizes the impact of an AZ outage and removes single points
-  of failure.
-* For all <%= vars.product_short %> plans, select three AZs.
-Choosing three AZs does not increase the number of AZs assigned to service instances to three.
 
 ##<a id="feedback"></a> Feedback
 
