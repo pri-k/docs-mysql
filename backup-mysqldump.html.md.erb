@@ -36,12 +36,12 @@ For information about using the `migrate` command, see [About Data Migration in 
 
 To back up and restore a <%= vars.product_old %> logical backup:
 
-1. Create a logical backup of your database. See [Create a <%= vars.product_old %> Logical Backup](#manual-backup) below.
+1. Create a logical backup of your database. See [Create a <%= vars.product_old %> Logical Backup](#create-backup) below.
 1. Restore the logical backup to a <%= vars.product_old %> service instance.
 See [ Restore from a <%= vars.product_old %> Logical Backup](#restore-backup) below.
 
 
-### <a id="manual-backup"></a> Create a <%= vars.product_old %> Logical Backup
+### <a id="create-backup"></a> Create a <%= vars.product_old %> Logical Backup
 
 <%= vars.product_old %> disables remote admin access to MySQL databases.
 Because of this, you must create a read-only service key to access the database for the service instance you want to back up.
@@ -147,7 +147,7 @@ To restore a logical backup:
 do the procedure in [Create a Service Instance](./use.html#create).
 
 1. Retrieve the credentials for your service instance, do steps 1 through 5 in
-[Create a Logical Backup](#manual-backup) above.
+[Create a <%= vars.product_short %> Logical Backup](#create-backup) above.
 
 1. Restore your data from the SQL file on your local machine by running:
 
@@ -158,7 +158,7 @@ do the procedure in [Create a Service Instance](./use.html#create).
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
     * `PASSWORD` is the password retrieved from the output of `cf service-key`.
     * `MYSQL-IP` is the MySQL IP address.
-    * `BACKUP-FILE` is the name of you backup artifact.
+    * `BACKUP-FILE` is the name of your backup artifact.
 
 
 ## <a id="external"></a> Restore from an Off-Platform Logical Backup

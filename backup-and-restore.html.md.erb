@@ -19,9 +19,10 @@ For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldum
 Automated backups do the following:
 
 - Periodically create and upload backups suitable for restoring all of the databases used by the service instance.
-- Operate without locking apps out of the database; no downtime.
+- Operate without locking apps out of the database. There is no downtime.
 - Include a metadata file that contains the critical details of the backup, including the calendar time of the backup.
-- Encrypt backups within the <%= vars.product_old %> VM; unencrypted data is never transported outside the <%= vars.product_old %> deployment.
+- Encrypt backups within the <%= vars.product_old %> VM.
+Unencrypted data is never transported outside the <%= vars.product_old %> deployment.
 
 ### <a id="understanding-metadata"></a> Backup Files and Metadata
 
@@ -74,8 +75,8 @@ the backup uploaded by <%= vars.product_old %> is both compressed and encrypted.
   - [Option 2: Back up to Ceph or S3](#ceph-or-s3)---<%= vars.product_old %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
     that saves backups to an S3 bucket,
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.
-  - [Option 3: Back up to GCS](#gcs)---<%= vars.product_old %> runs an [GCS](https://cloud.google.com/storage/) SDK
-    that saves backups to an Google Cloud Storage bucket.
+  - [Option 3: Back up to GCS](#gcs)---<%= vars.product_old %> runs a [GCS](https://cloud.google.com/storage/) SDK
+    that saves backups to a Google Cloud Storage bucket.
   - [Option 4: Back up to Azure Storage](#azure)---<%= vars.product_old %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
     SDK that saves backups to an Azure storage account.
 
@@ -414,7 +415,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_old %> to your GCS accou
             </td>
             <td>
                 Enter the contents of the service account JSON file that you downloaded
-                when creating a service account in <a href="#access-key">Create a Policy and Access Key</code> above.
+              when creating a service account in <a href="#access-key">Create a Policy and Access Key</a> above.
             </td>
         </tr>
         <tr>
