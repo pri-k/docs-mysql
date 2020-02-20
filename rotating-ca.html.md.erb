@@ -143,7 +143,7 @@ To rotate your certificates:
     This rotates both the TLS certificates and the internal certificates.
   * **If only your internal certificates are about to expire or have expired,** do the procedure in [Rotate Internal Certificates ](#internal) below.
 
-<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => "aws" } %>
+<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => vars.product_short } %>
 
 
 ## <a id="internal"></a> Rotate Internal Certificates
