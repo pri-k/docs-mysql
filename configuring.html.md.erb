@@ -315,7 +315,7 @@ Problems with persistent disks are typically caused by:
 The MariaDB nodes store their data on the persistent disk, so when recovering from a disk issue you must either reattach or recreate the disk before restarting the node.
 
 To determine what type of recovery is required, determine the state of the Galera cluster.
-For instructions, see [Check Cluster State](./troubleshoot.html#check-state).
+For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
 
 **If the Cluster has Failed**
 
@@ -439,7 +439,7 @@ To recover a disk in this scenario, do the following:
   <pre class="terminal">
   $ bosh2 -e my-env -d my-dep deploy manifest.yml
   </pre>
-1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshoot.html#check-state).
+1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
 1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`.
 1. Redeploy the release. For example:
   <pre class="terminal">
@@ -541,7 +541,7 @@ To recover a disk in this scenario, do the following:
   <pre class="terminal">
   $ bosh deploy
   </pre>
-1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshoot.html#check-state).
+1. SSH into any of the nodes and verify that all nodes have joined the cluster. For instructions, see [Check Cluster State](./troubleshooting.html#check-state).
 1. After all nodes have joined the cluster, edit the deployment manifest to set the number of instances for `cf-mysql-broker` and `proxy` back to 1 and restore the static IP for `proxy`.
 1. Redeploy the release.
   <pre class="terminal">
