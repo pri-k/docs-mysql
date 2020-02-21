@@ -14,10 +14,10 @@ For general information about logging and metrics in <%= vars.platform_name %>, 
 
 ## <a id="metrics"></a>About Metrics
 
-Metrics are regularly-generated log messages that report measured component states.
+Metrics are regularly-generated log entries that report measured component states.
 The default metrics polling interval is 30 seconds for MySQL instances and 60 seconds for the service broker.
 
-You can configure the interval for MySQL instance in the **Configure Monitoring** pane
+You can configure the interval for MySQL instance in **Configure Monitoring**.
 in the <%= vars.product_short %> tile. For more information, see [Configure Monitoring](./install-config.html#monitoring).
 
 Metrics are long, single lines of text that follow the format:
@@ -38,13 +38,16 @@ To access MySQL metrics do either of the following:
 You can use the Indicator Protocol dashboard to view Key Performance Indicators (KPIs)
 for <%= vars.product_short %> service instances. The dashboard includes a graphical representation of the KPIs and information about recommended alert thresholds.
 
-For more information about the Indicator Protocol dashboard, see [Indicator Protocol Dashboard (Beta)](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html).
+For more information about the Indicator Protocol dashboard, see [Indicator Protocol Dashboard
+(Beta)](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html).
 For information about <%= vars.product_short %> KPIs, see [KPIs for MySQL Service Instances](#kpi) below.
 
 To access KPIs using the Indicator Protocol dashboard:
 
-1. Install the Healthwatch tile in <%= vars.ops_manager %>. See [Installing and Configuring Pivotal Healthwatch](https://docs.pivotal.io/platform/healthwatch/installing.html).
-1. Enable the Indicator Protocol add-on in <%= vars.ops_manager %>. See [Enable the Indicator Protocol Add-on](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html#enable-add-on).
+1. Install the Healthwatch tile in <%= vars.ops_manager %>. See [Installing
+and Configuring Pivotal Healthwatch](https://docs.pivotal.io/platform/healthwatch/installing.html).
+1. Enable the Indicator Protocol add-on in <%= vars.ops_manager %>. See [Enable the Indicator Protocol
+Add-on](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html#enable-add-on).
 1. View the Indicator Protocol Dashboard by navigating to:
 
     ```
@@ -54,9 +57,11 @@ To access KPIs using the Indicator Protocol dashboard:
 The following image shows an example of the Indicator Protocol dashboard for a highly available
 (HA) cluster service instance:
 
-![This screenshot shows KPIs metrics for MySQL server availability, the percentage of available connections, CPU utilization percentage, queries delta, ephemeral disk percent, and persistent disk used percent. The value of the metrics are shown as graphs over time.](indicator-dash.png)
+![This screenshot shows KPIs metrics for MySQL server availability, the percentage of available connections,
+CPU utilization percentage, queries delta, ephemeral disk percent, and persistent disk percent. The value of the
+metrics are shown as graphs over time.](indicator-dash.png)
 
-<a href="./images/indicator-dash.png" target="_blank">View a larger version of this image</a>
+<a href="./images/indicator-dash.png" target="_blank" aria-hidden="true">View a larger version of this image</a>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
@@ -76,14 +81,13 @@ for typical <%= vars.product_short %> installations.
 Pivotal recommends that you alter the alert measures by observing historical trends.
 You can also create your KPIs that are specific to your environment using the available component metrics.
 
-For a list of all the <%= vars.product_short %> component metrics, see [Component Metrics](#component-metrics).
+For a list of all the <%= vars.product_short %> component metrics, see [Component Metrics](#component-metrics) below.
 
 <%= partial vars.path_to_partials + '/mysql/monitoring/kpis-metrics/all-kpis' %>
 
 ## <a id="component-metrics"></a>Component Metrics
 
-In addition to the above KPIs, the MySQL service emits the followings metrics
-that can be used for monitoring and alerting:
+In addition to the above KPIs, the MySQL service emits the followings metrics for monitoring and alerting:
 
   + [MySQL Metrics](#mysql-metrics)
   + [Disk Metrics](#disk-metrics)
