@@ -92,9 +92,7 @@ This section provides solutions for the following errands:
       and topology without operator intervention to resolve the issue.
       DESC
 
-    solution: <<~DESC,
-
-    Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the
+    solution: 'Use the <code>inspect</code> errand to determine which instance should be the leader. Then, using the
     <a href="./about-leader-follower.html#errands">orchestration</a>
     errands and backup/restore, you can put the service instance into a safe topology, and then rerun the
     <code>configure-leader-follower</code> errand. This is shown in the example below.<br><br>
@@ -132,10 +130,10 @@ This section provides solutions for the following errands:
         In the above scenario, the first instance is missing data but does not have replication configured. The second instance has data, and also has replication configured. The instructions below resolve this by copying data to the first instance, and
         resuming replication.</li>
       <li>Take a backup of the second instance using the
-        <a href="backup-and-restore.html#manual-backup">Manual Backup</a>
+        <a href="./backup-mysqldump.html#create-backup">Create a ' + vars.product_old + ' Logical Backup</a>
         steps.</li>
       <li>Restore the backup artifact to the first instance using the
-        <a href="backup-and-restore.html#restore">Manual Restore</a>
+        <a href="./backup-mysqldump.html#restore-backup">Restore from a ' + vars.product_old + ' Logical Backup</a>
         steps.<br>
         At this point, the instances have equivalent data.</li>
       <li>
@@ -149,8 +147,7 @@ This section provides solutions for the following errands:
           run-errand configure-leader-follower &#92;
           --instance=mysql/4ecad54b-0704-47eb-8eef-eb228cab9724</pre>
       </li>
-    </ol>
-    DESC
+    </ol>'
 
 } %>
 
@@ -168,7 +165,7 @@ This section provides solutions for the following errands:
     DESC
 
     cause:
-      vars.product_short + ' tries to ensure that there is only one writable instance of the
+      vars.product_old + ' tries to ensure that there is only one writable instance of the
       leader-follower pair at any given time. However, in certain situations, such as
       network partitions, or manual intervention outside of the provided bosh
       errands, it is possible for both instances to be writable. <br><br>
@@ -176,7 +173,7 @@ This section provides solutions for the following errands:
       to ensure that the correct instance is promoted and reduce the potential for data divergence.
     ',
 
-    solution: <<~DESC,
+    solution: '
       <ol>
         <li>
           Use the
@@ -243,7 +240,7 @@ This section provides solutions for the following errands:
                   succeeded</pre>
             </li>
             <li>Take a backup of both instances using the
-              <a href="backup-and-restore.html#manual-backup">Manual Backup</a>
+              <a href="./backup-mysqldump.html#create-backup"> Create a ' + vars.product_old + ' Logical Backup</a>
               steps.</li>
             <li>Manually inspect the data on each instance to determine the discrepancies and put the data on the instance that is further ahead---this instance has the higher GTID Executed set, and will be the new leader.</li>
             <li>Migrate all appropriate data to the new leader instance.</li>
@@ -262,7 +259,7 @@ This section provides solutions for the following errands:
               <code>monit start mysql</code>.</li>
             <li>Use the
               <code>configure-leader-follower</code>
-              errand to copy the leader's data to the follower and resume replication:
+              errand to copy the leader data to the follower and resume replication:
               <pre><code>bosh -e ENVIRONMENT -d DEPLOYMENT &#92;
                 run-errand configure-leader-follower &#92;
                 --instance=mysql/GUID-OF-LEADER</code></pre>
@@ -274,7 +271,7 @@ This section provides solutions for the following errands:
           </ol>
         </li>
       </ol>
-    DESC
+    '
 } %>
 
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
@@ -293,7 +290,7 @@ This section provides solutions for the following errands:
         <pre>bosh -e ENVIRONMENT -d DEPLOYMENT run-errand inspect</pre>
       </li>
       <li>Examine the output and locate the information about the leader-follower ' +
-        vars.product_short+ ' VMs:
+        vars.product_old+ ' VMs:
         <pre class="terminal">
     Instance   mysql/4eexample54b-0704-47eb-8eef-eb2example724
     Exit Code  0
@@ -347,13 +344,13 @@ This section provides a solution for the following errand:
     id: "persistent-disk",
     description: "Persistent Disk is Full",
     symptom: 'Developers report that read, write, and cf CLI operations do not work.
-    Developers cannot upgrade to a larger ' + vars.product_short + ' service plan to free up disk space. <br><br>
+    Developers cannot upgrade to a larger ' + vars.product_old + ' service plan to free up disk space. <br><br>
     If your persistent disk is full, apps become inoperable.
     In this state, read, write, and Cloud Foundry Command-Line Interface (cf CLI) operations do not work.',
     cause: 'This problem happens if your persistent disk is full.
     When you use the BOSH CLI to target your deployment, you see that instances are at 100% persistent disk usage. <br><br>
     Available disk space can be increased by deleting log files.
-    After deleting logs, you can then upgrade to a larger ' + vars.product_short + ' service plan.',
+    After deleting logs, you can then upgrade to a larger ' + vars.product_old + ' service plan.',
     solution: '
       To resolve this issue, you must free up disk space by deleting binary logs.<br><br>
 
@@ -378,7 +375,7 @@ This section provides solutions for the following errands:
     id: "unresponsive",
     description: "Unresponsive Node in a Highly Available Cluster",
     symptom:'
-    A client connected to a ' + vars.product_short + ' cluster node reports the following error:
+    A client connected to a ' + vars.product_old + ' cluster node reports the following error:
 
     <pre class="terminal">WSREP has not yet prepared this node for application use</pre>
     Some clients might instead return the following:
@@ -387,7 +384,7 @@ This section provides solutions for the following errands:
     </pre>
     ',
 
-    cause: 'If the client is connected to a ' + vars.product_short + ' cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
+    cause: 'If the client is connected to a ' + vars.product_old + ' cluster node and that node loses connection to the rest of the cluster, the node stops accepting writes. If the connection to this node is made through the proxy, the proxy automatically
     re-routes further connections to a different node.',
 
     solution: <<~DESC,
