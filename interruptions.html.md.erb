@@ -11,14 +11,15 @@ This topic explains events in the lifecycle of a <%= vars.product_full %> servic
 
 An operator updates a stemcell version or their version of <%= vars.product_short %>.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while <%= vars.platform_name %> updates the service instance they are bound to. The service should resume within 10-15 minutes.
+- <strong>Impact:</strong> Apps lose access to the MySQL service while <%= vars.ops_manager %> updates the service instance they are bound to.
+The service should resume within 10-15 minutes.
 - <strong>Required Actions:</strong> None. If the update deploys successfully, apps reconnect automatically.
 
 ## <a id='change-plan'></a>Plan Change
 
 A developer changes their service instance to provide a different service plan, using `cf update-service` or Apps Manager.
 
-- <strong>Impact:</strong> Apps lose access to the MySQL service while <%= vars.platform_name %> updates the service instance they are bound to. The service should resume within 10-15 minutes.
+- <strong>Impact:</strong> Apps lose access to the MySQL service while <%= vars.ops_manager %> updates the service instance they are bound to. The service should resume within 10-15 minutes.
 - <strong>Required Actions:</strong> None. If the plan change deploys successfully, apps reconnect automatically.
 
 ## <a id='process-fail'></a>VM Process Failure
@@ -49,7 +50,8 @@ A <%= vars.product_short %> VM fails and goes offline due to either a virtualiza
 
 ## <a id='az-fail'></a>AZ Failure
 
-An Availability Zone (AZ) goes offline entirely or loses connectivity to other AZs (net split). This causes service interruption in multi-AZ <%= vars.platform_name %> deployments where [Diego](http://docs.pivotal.io/pivotalcf/concepts/diego/diego-auction.html) has placed multiple instances of a MySQL-using app in different AZs.
+An availability zone (AZ) goes offline entirely or loses connectivity to other AZs (net split).
+This causes service interruption in multi-AZ deployments where [Diego](http://docs.pivotal.io/pivotalcf/concepts/diego/diego-auction.html) has placed multiple instances of a MySQL-using app in different AZs.
 
 - <strong>Impact:</strong>
   - Some app instances may still be able to connect and continue operating.
@@ -59,9 +61,10 @@ An Availability Zone (AZ) goes offline entirely or loses connectivity to other A
 
 ## <a id='region-fail'></a>Region Failure
 
-- <strong>Example:</strong> An entire region fails, bringing <%= vars.platform_name %> components offline.
+- <strong>Example:</strong> An entire region fails,
+bringing <%= vars.app_runtime_full %> components offline.
 
 - <strong>Impact:</strong>
-  - The entire <%= vars.platform_name %> needs to be brought back up manually.
+  - The entire installation needs to be brought back up manually.
   - Downtime: Unknown
 - <strong>Required Actions:</strong> Each service instance may need to be [restored individually](./backup-and-restore.html#restore) depending on the restored state of the platform.

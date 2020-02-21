@@ -6,9 +6,9 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 
-This topic provides instructions to <%= vars.platform_name %> operators
+This topic provides instructions to operators
 about how to install, configure, and deploy the <%= vars.product_full %> tile.  The
-<%= vars.product_short %> service enables <%= vars.platform_name %> developers to create and use MySQL
+<%= vars.product_short %> service enables developers to create and use MySQL
 service instances on demand.
 
 ## <a id="rbac"></a>Role-Based Access in <%= vars.ops_manager_full %>
@@ -31,7 +31,7 @@ Before you install the <%= vars.product_short %> tile, you must:
 
 ### <a id="asg"></a> Create an App Security Group for <%= vars.product_short %>
 
-To enable apps running on <%= vars.platform_name %> to communicate with the MySQL service network,
+To enable apps running on <%= vars.app_runtime_full %> to communicate with the MySQL service network,
 you must create an App Security Group (ASG).
 The ASG enables smoke tests to run when you first install the <%= vars.product_short %> service
 and apps to access the service after it is installed.
@@ -172,7 +172,7 @@ For more information about restoring services instances,
 see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>.
 </p>
 
-For each plan that you want to use in your <%= vars.platform_name %> deployment:
+For each plan that you want to use in your deployment:
 
 1. Click the section for the plan. For example, **Plan 1**.
 
@@ -334,7 +334,7 @@ To deactivate a service plan:
     1. Under **Service Plan Access**, select **Disable**.
     1. Click **Save**.
     1. Return to the <%= vars.ops_manager %> Installation Dashboard and click **Apply Changes** to redeploy.
-    1. When the <%= vars.platform_name %> deployment has redeployed,
+    1. When the deployment has redeployed,
     use the cf CLI or Apps Manager to delete all existing service instances on the service plan.
     1. Return to the <%= vars.product_short %> tile configuration.
 1. Click the section for the plan. For example, **Plan 2**.
@@ -420,9 +420,9 @@ To configure automated backups:
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.<br>
     For instructions about using Ceph or Amazon S3 for backups, see [Back up to Ceph or S3](./backup-and-restore.html#ceph-or-s3).<br><br>
   * **SCP:** <%= vars.product_short %> runs an Secure Copy Protocol (SCP) command that secure-copies backups to a VM
-    or physical machine operating outside of <%= vars.platform_name %>. This is the fastest option. <br>
+    or physical machine operating outside of your deployment. This is the fastest option. <br>
     SCP enables you to securely transfer files between two hosts.
-    You can provision the backup machine separately from your <%= vars.platform_name %> installation.
+    You can provision the backup machine separately from your installation.
      <br>For instructions about using SCP for backups, see [Back up with SCP](backup-and-restore.html#scp).<br><br>
   * **GSC:** <%= vars.product_short %> runs a [Google Cloud Storage (GCS)](https://cloud.google.com/storage/) SDK
     that saves backups to an GCS bucket. <br>For instructions about using GCS for backups, see [Back up to GCS](backup-and-restore.html#gcs). <br><br>
@@ -574,7 +574,7 @@ To enable RFC 5424 system logging for the MySQL broker and service instance VMs:
     <tr><td><strong>SSL Certificate</strong></td>
         <td>Enter the SSL certificates for the syslog server. This ensures the logs are transported securely.</td></tr>
   </table>
-  <p class="note"><strong>Note:</strong> If your syslog server is external to <%= vars.platform_name %>,
+  <p class="note"><strong>Note:</strong> If your syslog server is external to your deployment,
     you might need to select
     <strong>Provide public IP addresses to all Service VMs</strong> on the <strong>Settings</strong> page.
     See <a href="#global">Configure Global Settings</a> above.

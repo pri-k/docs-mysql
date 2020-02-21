@@ -5,12 +5,13 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic provides instructions for developers for establishing a connection to a <%= vars.product_full %> service instance from outside your <%= vars.platform_name %> deployment.
+This topic provides instructions for developers for establishing a connection to a
+<%= vars.product_full %> service instance from outside your deployment.
 
 ## <a id='overview'></a>Overview
 
-If you want to connect to a MySQL service instance from outside the <%= vars.platform_name %> deployment
-where your <%= vars.product_short %> service instance is located, you can do one of the following:
+If you want to connect to a MySQL service instance from outside the <%= vars.app_runtime_full %>
+deployment where your <%= vars.product_short %> service instance is located, you can do one of the following:
 
 + [Connect Using an SSH Tunnel](#ssh-tunnel)
 + [Connect Using an IP Address](#ip-address)
@@ -18,20 +19,20 @@ where your <%= vars.product_short %> service instance is located, you can do one
 You may want to use an SSH tunnel or IP address for establishing a connection in the following cases:
 
 + Connecting from a local workstation. For more information, see [<%= vars.product_short %> Tools](./tools.html).
-+ Connecting from an external <%= vars.platform_name %> deployment.
-+ Connecting from a legacy app that is not in a <%= vars.platform_name %> deployment.
++ Connecting from outside where your <%= vars.product_short %> service instance is located.
++ Connecting from a legacy app that is not in your <%= vars.app_runtime_short %> deployment.
 + Taking a manual backup to be stored locally.
   For more information, see [Backing Up and Restoring with mysqldump](./backup-mysqldump.html).
 
 ## <a id='ssh-tunnel'></a> Connect Using an SSH Tunnel
 
-Any app deployed within a <%= vars.platform_name %> deployment can resolve BOSH DNS hostnames and forward
+Any app deployed within your deployment can resolve BOSH DNS hostnames and forward
 traffic to MySQL service instances using an SSH tunnel.
 
 ### Prerequisite
 
 To connect using an SSH tunnel, you must have SSH access to app containers.
-For more information, see [Configuring SSH Access for <%= vars.platform_name %>](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
+For more information, see [Configuring SSH Access for <%= vars.app_runtime_abbr %>](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
 
 ### Procedure
 
@@ -67,7 +68,7 @@ cf SSH.
 To obtain the IP address using cf SSH, you must have the following:
 
 + SSH access to app containers. For more information, see
-[Configuring SSH Access for <%= vars.platform_name %>](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
+[Configuring SSH Access for <%= vars.app_runtime_abbr %>](https://docs.pivotal.io/pivotalcf/opsguide/config-ssh.html).
 
 + An app deployed on the same deployment as the MySQL service instance.
 

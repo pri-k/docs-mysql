@@ -6,7 +6,7 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 This topic provides instructions for developers using the <%= vars.product_full %> service for their
-<%= vars.platform_name %> apps.
+<%= vars.app_runtime_full %> apps.
 
 
 ## <a id='overview'></a>Overview
@@ -42,13 +42,13 @@ For more information, see
 
 ## <a id="prereqs"></a>Prerequisites
 
-To use <%= vars.product_short %> with your <%= vars.platform_name %> apps, you need:
+To use <%= vars.product_short %> with your <%= vars.app_runtime_abbr %> apps, you need:
 
 * Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
 * If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html#limitations).
-* A <%= vars.platform_name %> installation with [<%= vars.product_short %>](https://network.pivotal.io/products/p-mysql) installed and listed
+* An <%= vars.ops_manager %> installation with [<%= vars.product_short %>](https://network.pivotal.io/products/p-mysql) installed and listed
 in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
-* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the <%= vars.platform_name %> installation
+* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the <%= vars.ops_manager %> installation
 * A local machine with the following installed:
    - a browser
    - a shell
@@ -220,8 +220,8 @@ To access the MySQL service from your app:
     Where:
     - `APP` is the app you want to use the custom schema.
     - `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
-    - `CUSTOM-SCHEMA` is the name of your custom schema. Valid characters include uppercase and lowercase 
-    letters, digits, `$`, and `_`. 
+    - `CUSTOM-SCHEMA` is the name of your custom schema. Valid characters include uppercase and lowercase
+    letters, digits, `$`, and `_`.
 
   1. Restart your app by running the following command:
 
@@ -231,7 +231,7 @@ To access the MySQL service from your app:
     Where `APP` is the app you want to use the custom schema.
 
 ###<a id="vcap"></a>MySQL Environment Variables
-Apps running in <%= vars.platform_name %> gain access to bound service instances
+Apps running in <%= vars.ops_manager %> gain access to bound service instances
 through an environment variable credentials hash called `VCAP_SERVICES`.
 This environment variable includes the credentials that apps
 use to access service instances.
