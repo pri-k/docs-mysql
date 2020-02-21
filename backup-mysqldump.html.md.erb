@@ -21,7 +21,8 @@ You might want to create a logical backup in the following use cases:
 + Backing up specific individual <%= vars.product_short %> databases.
 + Editing table definitions or insert statements before restoring the <%= vars.product_short %> database.
 + Migrating an off-platform database with encryption at rest or the Percona PAM Authentication plugin
-enabled to a <%= vars.product_short %> database. See [Restore from an External Logical Backup](#logical-backup).
+enabled to a <%= vars.product_short %> database.
+See [Restore from an Off-Platform Logical Backup](#logical-backup).
 
 The operator configures automated physical backups of your MySQL database.
 Developers do not have access to physical backups.
@@ -48,35 +49,10 @@ Because of this, you must create a read-only service key to access the database 
 
 To back up your <%= vars.product_short %> data manually:
 
-1. Create a read-only service key by following the procedure in
+1. Create and retrieve read-only access credentials  by following the procedure in
 [Create Read-only Access Credentials](./customize-access.html#read-only).
 
-1. Retrieve the credentials for the service by running:
-
-    ```
-    cf service-key SERVICE-INSTANCE-NAME SERVICE-KEY-NAME
-    ```
-    Where:
-    * `SERVICE-INSTANCE-NAME` is the name of the MySQL service instance you created a service key for.
-    * `SERVICE-KEY-NAME` is the name of the newly created service key.
-
-    For example:
-    <pre class="terminal">
-    $ cf service-key mydb backup-key
-    Getting key backup-key for service instance mydb as user...
-
-    {
-     "hostname": "q-n3s3y1.q-g696.bosh",
-     "jdbcUrl": "jdbc:mysql://q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
-     "name": "cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5",
-     "password": "123456789",
-     "port": 3306,
-     "uri": "mysql://abcdefghijklm:123456789<span>@</span>q-n3s3y1.q-g696.bosh:3306/cf\_e2d148a8\_1baa\_4961\_b314\_2431f57037e5?reconnect=true",
-     "username": "abcdefghijklm"
-    }
-    </pre>
-
-1. Record the following values:
+1. From the output of the previous step, record the following values:
     * `hostname`: The MySQL BOSH DNS hostname
     * `password`: The password for the user that can be used to perform backups of the service instance database
     * `username`: The username for the user that can be used to perform backups of the service instance database
@@ -88,7 +64,7 @@ see [Establish a Connection to a Service Instance from Outside Your <%= vars.pla
 1. View a list of your databases by running:
 <pre><code>mysql --user=USERNAME --password=PASSWORD \
 --host=MYSQL-IP \
---silent --silent --execute='show databases'</code></pre>
+--silent --execute='show databases'</code></pre>
 
     Where:
     * `USERNAME` is the username retrieved from the output of `cf service-key`.
