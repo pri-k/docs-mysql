@@ -59,7 +59,7 @@ To back up your <%= vars.product_short %> data manually:
     * `username`: The username for the user that can be used for
      backups of the service instance database
 
-1. Connect to the database, by either using an SSH tunnel or by connecting directly to its IP address.
+1. Connect to your service instance, by either using an SSH tunnel or by connecting directly to its IP address.
 For more information,
 see [Establish a Connection to a Service Instance from Outside Your <%= vars.platform_name %> Deployment](./establish.html).
 
@@ -124,8 +124,14 @@ To restore a logical backup:
 1. (Optional) If you want to create a new service instance,
 do the procedure in [Create a Service Instance](./use.html#create).
 
-1. Retrieve the credentials for your service instance by following steps 1 through 4 in
+1. Retrieve the credentials for the service instance you are restoring the backup to by following steps 1 and 2 in
 [Create a <%= vars.product_short %> Logical Backup](#create-backup) above.
+You can either restore the backup to an existing service instance or the one you created in step 1.
+
+1. Connect to your service instance,
+by either using an SSH tunnel or by connecting directly to its IP address.
+For more information,
+see [Establish a Connection to a Service Instance from Outside Your Deployment](./establish.html).
 
 1. Restore your data from the SQL file on your local machine by running:
 
