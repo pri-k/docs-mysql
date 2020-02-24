@@ -8,6 +8,7 @@ owner: MySQL
 This topic explains how to upgrade the MySQL for Pivotal Cloud Foundry (PCF) service and existing service instances.
 It also explains the service interruptions that can result from service changes and upgrades and from failures at the process, VM, and IaaS level.
 
+<%= partial vars.path_to_partial + "/upgrade-planner" %>
 ## <a id="upgrade-service"></a>Upgrade MySQL for PCF
 
 To upgrade the MySQL for PCF service, follow the <%= vars.ops_manager %> process that you use to install the service for the first time.
@@ -27,7 +28,7 @@ and import it into the <%= vars.ops_manager %> Stemcell Library. For instruction
 1. Click the newly-added **MySQL for PCF** tile to review its configuration panes.
 Click **Save** on any panes where you make changes.
     <p class="note"><strong>Note:</strong> To decrease the runtime for service instance upgrades,
-      configure the <code>upgrade-all-service-instances</code> errand in the tile. 
+      configure the <code>upgrade-all-service-instances</code> errand in the tile.
       For instructions about configuring this errand,
       see <a href="./install-config.html#service-instance-upgrades">Configure Service Instance Upgrades</a>.
 
