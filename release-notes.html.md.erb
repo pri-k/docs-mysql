@@ -20,6 +20,27 @@ For product versions and upgrade paths, see the
   use DNS hostnames. For more information, see
   <a href="./prepare-upgrade.html">Preparing for Upgrading MySQL for PCF</a>.</p>
 
+## <a id="2-5-11"></a> v2.5.11
+
+**Release Date: Feb 24, 2020**
+
+### Features
+
+* Added metrics to monitor persistent disk, ephemeral disk, and number of connections for 
+MySQL service instances in the Indicator Dashboard under the Healthwatch tile.
+
+* Operator can now run a broker errand `recreate-all-service-instances` to recreate VMs of their MySQL service instances.
+
+### Resolved Issues
+
+This release has the following fixes:
+
+* An inaccurate generic message no longer appears when trying to migrate from single node or leader follower plan to HA cluster
+when trying to do so using `cf update-service`. We now fail fast to indicate that this is an unsupported workflow.
+
+* Backups should no longer silently fail when configured with an SCP endpoint.
+
+
 ## <a id="2-5-10"></a> v2.5.10
 
 **Release Date: January 21, 2020**
