@@ -14,6 +14,28 @@ version, upgrade to the latest v2.6.x version before upgrading to the latest v2.
 
 <%= partial vars.path_to_partials + '/upgrade-planner' %>
 
+## <a id="2-7-6"></a> v2.7.6
+
+**Release Date: February 24, 2020**
+
+### Features
+
+* Added metrics to monitor persistent disk, ephemeral disk, and number of connections for 
+MySQL service instances in the Indicator Dashboard under the Healthwatch tile.
+
+* Operator can now run a broker errand `recreate-all-service-instances` to recreate VMs of their MySQL service instances.
+
+### Resolved Issues
+
+This release has the following fixes:
+
+* An inaccurate generic message no longer appears when trying to migrate from single node or leader follower plan to HA cluster
+when trying to do so using `cf update-service`. We now fail fast to indicate that this is an unsupported workflow.
+
+* Backups should no longer silently fail when configured with an SCP endpoint.
+
+* Custom schema creation and binding with invalid characters fails with an error message stating the permitted characters.
+
 ## <a id="2-7-5"></a> v2.7.5
 
 **Release Date: January 21, 2020**
