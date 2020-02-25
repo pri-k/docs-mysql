@@ -9,7 +9,7 @@ This topic describes how to configure automated backups for <%= vars.product_ful
 and how to manually restore a MySQL service instance from a backup.
 
 <p class="note"><strong>Note:</strong>
-  You must configure automated backups. Automated backups can no longer be disabled.
+  You must configure automated backups. Automated backups cannot be disabled.
 </p>
 <p class="note"><strong>Note:</strong> <%= vars.recommended_by %>
   that you always configure a single instance plan in order to streamline the
@@ -77,25 +77,32 @@ but backups only reflect transactions that completed before their `start_time`.
 
 <%= vars.product_short %> automatically backs up databases to external storage.
 
-* **How and where**---There are four options for how automated backups transfer backup data and where the data saves to:
-  - [Option 1: Back up with SCP](#scp)---<%= vars.product_short %> runs an SCP command that secure-copies backups to a VM
+* **How and where**---There are four options for how automated backups transfer backup data
+and where the data saves to:
+  - [Option 1: Back up with SCP](#scp)---<%= vars.product_short %> runs an SCP command
+  that secure-copies backups to a VM
     or physical machine operating outside of your deployment.
     SCP stands for secure copy protocol, and offers a way to securely transfer files between two hosts.
-    The operator provisions the backup machine separately from their  installation.
+    The operator provisions the backup machine separately from their installation.
     This is the fastest option.
-  - [Option 2: Back up to Ceph or S3](#ceph-or-s3)---<%= vars.product_short %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
-    that saves backups to an S3 bucket,
-    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by VMware.
-  - [Option 3: Back up to GCS](#gcs)---<%= vars.product_short %> runs a [GCS](https://cloud.google.com/storage/) SDK
-    that saves backups to a Google Cloud Storage bucket.
-  - [Option 4: Back up to Azure Storage](#azure)---<%= vars.product_short %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
-    SDK that saves backups to an Azure storage account.
+  - [Option 2: Back up to Ceph or S3](#ceph-or-s3)---<%= vars.product_short %> runs an
+  [Amazon S3](https://aws.amazon.com/documentation/s3/) client that saves backups to an S3 bucket,
+    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster,
+    or another S3-compatible endpoint certified by VMware.
+  - [Option 3: Back up to GCS](#gcs)---<%= vars.product_short %> runs a
+    [GCS](https://cloud.google.com/storage/) SDK that saves backups to a Google Cloud Storage bucket.
+  - [Option 4: Back up to Azure Storage](#azure)---<%= vars.product_short %> runs an
+    [Azure](https://docs.microsoft.com/en-us/azure/storage/) SDK that saves backups to
+    an Azure storage account.
 
-* **When**---Backups follow a schedule that you specify with a [cron](http://godoc.org/github.com/robfig/cron) expression.
+* **When**---Backups follow a schedule that you specify with a
+[cron](http://godoc.org/github.com/robfig/cron) expression.
 
-* **What is backed up**---Each MySQL instance backs up its entire MySQL data directory, consistent to a specific point in time.
+* **What is backed up**---Each MySQL instance backs up its entire MySQL data directory,
+consistent to a specific point in time.
 
-To configure automated backups, follow the procedures below according to the option you choose for external storage.
+To configure automated backups,
+follow the procedures below according to the option you choose for external storage.
 
 ## <a id="scp"></a> Option 1: Back Up with SCP
 
