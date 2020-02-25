@@ -81,7 +81,7 @@ increases the availability of MySQL for PCF by restarting and resuming MySQL ser
 - Detects operating system failures by continuously monitoring VMs and restarting them as required
 - Continuously monitors the BOSH Agent running on each service instance VM and restarts the VM as required
 
-<% vars.recommended_by %> enabling the BOSH Resurrector when installing MySQL for PCF. To enable the BOSH Resurrector,
+<%= vars.recommended_by %> enabling the BOSH Resurrector when installing MySQL for PCF. To enable the BOSH Resurrector,
 do the following:
 
 1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click the **BOSH Director** tile.
@@ -134,7 +134,7 @@ Follow the steps below to choose an availability zone (AZ) to run the service br
     <tr><td><strong>Service Network</strong></td>
         <td>Select the subnet for the on-demand service instances, the Services Network in this <a href="./about.html#on-demand">picture</a>.
             <br >
-            If you are adding IPsec to encrypt MySQL communication, <% vars.recommended_by %> that you deploy MySQL to its own network
+            If you are adding IPsec to encrypt MySQL communication, <%= vars.recommended_by %> that you deploy MySQL to its own network
             to avoid conflicts with services that are not IPsec compatible.
          </td></tr>
   </table>
@@ -271,7 +271,7 @@ Perform the following steps for each plan that you want to use in your PCF deplo
             This is the name that appears in the Marketplace for developers.</td></tr>
     <tr><td><strong>Plan Description</strong></td>
         <td>Accept the default or enter a description to help developers understand plan features.
-            <% vars.recommended_by %> adding VM type details and disk size to this field.
+            <%= vars.recommended_by %> adding VM type details and disk size to this field.
         </td></tr>
     <tr><td><strong>Plan Quota</strong></td>
         <td>Enter the maximum number of service instances that can exist at one time.
@@ -379,7 +379,7 @@ Follow the steps below to set MySQL defaults and enable developers to customize 
             For more information, see <a href="./change-default.html#configuring">Optional Parameters for the MySQL for PCF Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
         <td>Select this checkbox to enable data downloading from the client's local file system.
-            <% vars.recommended_by %> against selecting this checkbox. Before you enable local in-file,
+            <%= vars.recommended_by %> against selecting this checkbox. Before you enable local in-file,
             review the security issues associated with <code>LOCAL DATA LOCAL</code>.
             See the
             [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html).
@@ -535,7 +535,7 @@ Follow the steps below to enable system logging for the MySQL broker and service
     <tr><td><strong>Port</strong></td>
         <td>Enter the port of the syslog server for sending logs, for example, <code>29279</code>.</td></tr>
     <tr><td><strong>Transport Protocol</strong></td>
-        <td>Select the protocol over which you want system logs. <% vars.recommended_by %> using TCP.</td></tr>
+        <td>Select the protocol over which you want system logs. <%= vars.recommended_by %> using TCP.</td></tr>
     <tr><td><strong>Enable TLS</strong></td>
     <td>If you select TCP, you can also select to send logs encrypted over TLS.</td></tr>
     <tr><td><strong>Permitted Peer</strong></td>
@@ -633,7 +633,7 @@ By default, MySQL for PCF runs the following errands:
 
 <p class="note warning"><strong>Warning:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does
 necessary cleanup tasks when you delete the MySQL for PCF tile. Setting this errand to <strong>Off</strong> can cause
-problems when attempting to reinstall the tile. <% vars.recommended_by %> that you do not set this errand to <strong>Off</strong>.</p>
+problems when attempting to reinstall the tile. <%= vars.recommended_by %> that you do not set this errand to <strong>Off</strong>.</p>
 
 MySQL for PCF also uses errands to configure leader-follower service instances.
 For more information about leader-follower errands, see <a href="./maintain-leader-follower.html#errands">Errands Used in Leader-Follower Failover</a>.
