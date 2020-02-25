@@ -8,8 +8,13 @@ owner: MySQL
 This topic describes how to configure automated backups for <%= vars.product_full %>
 and how to manually restore a MySQL service instance from a backup.
 
-<p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.</p>
-<p class="note"><strong>Note:</strong> <%= vars.recommended_by %> that you always configure a single instance plan in order to streamline the restore process for leader-follower plans.</p>
+<p class="note"><strong>Note:</strong>
+  You must configure automated backups. Automated backups can no longer be disabled.
+</p>
+<p class="note"><strong>Note:</strong> <%= vars.recommended_by %>
+  that you always configure a single instance plan in order to streamline the
+  restore process for leader-follower plans.
+</p>
 
 Additionally, developers can create logical backups using `mysqldump`.
 For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldump.html).
@@ -18,15 +23,18 @@ For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldum
 
 Automated backups do the following:
 
-- Periodically create and upload backups suitable for restoring all of the databases used by the service instance.
+- Periodically create and upload backups suitable for restoring all of the databases used
+by the service instance.
 - Operate without locking apps out of the database. There is no downtime.
-- Include a metadata file that contains the critical details of the backup, including the calendar time of the backup.
+- Include a metadata file that contains the critical details of the backup,
+including the calendar time of the backup.
 - Encrypt backups within the <%= vars.product_short %> VM.
 Unencrypted data is never transported outside the <%= vars.product_short %> deployment.
 
 ### <a id="understanding-metadata"></a> Backup Files and Metadata
 
-When <%= vars.product_short %> runs a backup, it uploads two files with Unix epoch-timestamped filenames of the form `mysql-backup-TIMESTAMP`:
+When <%= vars.product_short %> runs a backup,
+it uploads two files with Unix epoch-timestamped filenames of the form `mysql-backup-TIMESTAMP`:
 
   * The encrypted data backup file `mysql-backup-TIMESTAMP.tar.gpg`
   * A metadata file `mysql-backup-TIMESTAMP.txt`
@@ -57,10 +65,13 @@ tool_version = 2.4.5
 
 Within this file, the most important items are the `start_time` and the `server_version` entries.
 
-The backup process does not interrupt MySQL service, but backups only reflect transactions that completed before their `start_time`.
+The backup process does not interrupt MySQL service,
+but backups only reflect transactions that completed before their `start_time`.
 
-<p class="note"><strong>Note</strong>: Although both <code>compressed</code> and <code>encrypted</code> show as <code>N</code> in this file,
-the backup uploaded by <%= vars.product_short %> is both compressed and encrypted. This is a known issue.</p>
+<p class="note"><strong>Note</strong>: Although both <code>compressed</code> and <code>encrypted</code>
+  show as <code>N</code> in this file, the backup uploaded by <%= vars.product_short %>
+  is both compressed and encrypted. This is a known issue.
+</p>
 
 ### <a id="enable-backups"></a> About Configuring Automated Backups
 
@@ -103,12 +114,15 @@ To back up your database using SCP, complete the following procedures:
 1. Determine the remote host that you will be using to store backups for <%= vars.product_short %>.
    Ensure that the MySQL service instances can access the remote host.
 
-    <p class="note"><strong>Note</strong>: <%= vars.recommended_by %> using a VM outside your deployment for the destination of SCP backups.
-       As a result, you might need to enable public IPs for the MySQL VMs. </p>
+    <p class="note"><strong>Note</strong>: <%= vars.recommended_by %> using a VM outside your deployment
+      for the destination of SCP backups. As a result,
+      you might need to enable public IPs for the MySQL VMs.
+    </p>
 
 1. (Recommended) Create a new user for <%= vars.product_short %> on the destination VM.
 
-1. (Recommended) Create a new public and private key pair for authenticating as the above user on the destination VM.
+1. (Recommended) Create a new public and private key pair for authenticating as the above user
+on the destination VM.
 
 ### <a id="configure-scp"></a> Configure Backups in <%= vars.ops_manager %>
 
@@ -131,7 +145,8 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
                 <strong>Username</strong>
             </td>
             <td>
-                Enter the user that you created in <a href="#scp-keys">Create a Public and Private Key Pair</a>
+                Enter the user that you created in
+                <a href="#scp-keys">Create a Public and Private Key Pair</a>
                 above.
             </td>
         </tr>
@@ -174,7 +189,8 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
                 <strong>Cron Schedule</strong>
             </td>
             <td>
-                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
+                Enter a <code>cron</code> schedule, using standard
+                <a href="https://help.ubuntu.com/community/CronHowto">
                 cron syntax</a>, to take backups of each service instance.
             </td>
         </tr>
@@ -197,7 +213,8 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
                 <ul>
                  <li>All users who need to be notified about failed backups
                      have the Space Developer role in the system org and system space.</li>
-                 <li>Email notifications are configured in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
+                 <li>Email notifications are configured in
+                   <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
                      See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
                      (Optional) Configure Email Notifications</a>.
                  </li>
@@ -222,11 +239,13 @@ You must apply a minimal policy that lets the user account upload backups to you
 1. Create a policy for your <%= vars.product_short %> user account.
 
     <br>Policy creation varies depending on the S3 provider.
-        Follow the relevant procedure to give <%= vars.product_short %> the following permissions:<br><br>
+        Follow the relevant procedure to give <%= vars.product_short %>
+        the following permissions:<br><br>
       * List and upload to buckets
       * (Optional) Create buckets in order to use buckets that do not already exist
 
-    For example, in AWS, to create a new custom policy, go to **IAM** > **Policies** > **Create Policy** > **Create Your Own Policy**
+    For example, in AWS, to create a new custom policy,
+    go to **IAM** > **Policies** > **Create Policy** > **Create Your Own Policy**
     and paste in the following permissions:
      <pre class="highlight json">
 {
@@ -251,9 +270,11 @@ You must apply a minimal policy that lets the user account upload backups to you
 }
 </pre>
 
-1. (Recommended) Create a new user for <%= vars.product_short %> and record its Access Key ID and Secret Access Key, the user credentials.
+1. (Recommended) Create a new user for <%= vars.product_short %> and record
+its Access Key ID and Secret Access Key, the user credentials.
 
-1. Attach the policy you created to the AWS user account that <%= vars.product_short %> will use to access S3 (**IAM** > **Policies** > **Policy Actions** > **Attach**).
+1. Attach the policy you created to the AWS user account that <%= vars.product_short %>
+will use to access S3 (**IAM** > **Policies** > **Policy Actions** > **Attach**).
 
 ### <a id="configure-aws"></a> Configure Backups in <%= vars.ops_manager %>
 
@@ -296,7 +317,8 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 acco
                 <strong>Region</strong>
             </td>
             <td>
-                Enter the region where your bucket is located or the region where you want a bucket to be created.
+                Enter the region where your bucket is located or the region where
+                you want a bucket to be created.
                 If the bucket does not already exist, it is created automatically.
             </td>
         </tr>
@@ -317,7 +339,8 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 acco
             </td>
             <td>
                Enter the path in the bucket to store backups.
-               Do not include a trailing <code>/</code>. <%= vars.recommended_by %> using <code>mysql-v2</code>.
+               Do not include a trailing <code>/</code>.
+               <%= vars.recommended_by %> using <code>mysql-v2</code>.
             </td>
         </tr>
         <tr>
@@ -325,8 +348,9 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 acco
                 <strong>Cron Schedule</strong>
             </td>
             <td>
-                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
-                cron syntax</a>, to take backups of each service instance.
+                Enter a <code>cron</code> schedule, using standard
+                <a href="https://help.ubuntu.com/community/CronHowto">cron syntax</a>,
+                to take backups of each service instance.
             </td>
         </tr>
         <tr>
@@ -361,7 +385,9 @@ To back up your database on Google Cloud Storage (GCS), complete the following p
 <%= vars.recommended_by %> that this account be solely for <%= vars.product_short %>.
 You must apply a minimal policy that lets the user account upload backups to your GCS store.
 
-1. In the GCS console, create a new service account for <%= vars.product_short %>: **IAM and Admin** > **Service Accounts** > **Create Service Account**.<br><br>
+1. In the GCS console,
+create a new service account for <%= vars.product_short %>:
+**IAM and Admin** > **Service Accounts** > **Create Service Account**.<br><br>
 
       <%= vars.product_short %> needs the following permissions for this account:
       * List and upload to buckets
@@ -370,11 +396,13 @@ You must apply a minimal policy that lets the user account upload backups to you
 
 1. Enter a unique name in the **Service account name** field, such as `MySQL-for-VMware-Tanzu`.
 
-1. In the **Roles** dropdown, grant the `MySQL-for-VMware-Tanzu %>` service account the **Storage Admin** role.
+1. In the **Roles** dropdown, grant the `MySQL-for-VMware-Tanzu %>` service account
+the **Storage Admin** role.
 
 1. Check the **Furnish a new private key** box so that a new key is created and downloaded.
 
-1. Click **Create** and take note of the name and location of the service account JSON file that is downloaded.
+1. Click **Create** and take note of the name and location of the service account JSON file that is
+downloaded.
 
 ### <a id="configure-gcs"></a> Configure Backups in <%= vars.ops_manager %>
 
@@ -423,7 +451,8 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your GCS acc
                 <strong>Cron Schedule</strong>
             </td>
             <td>
-                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
+                Enter a <code>cron</code> schedule, using standard
+                <a href="https://help.ubuntu.com/community/CronHowto">
                 cron syntax</a>, to take backups of each service instance.
             </td>
         </tr>
@@ -509,8 +538,9 @@ Complete the following steps to back up your database to your Azure Storage acco
                 <strong>Cron Schedule</strong>
             </td>
             <td>
-                Enter a <code>cron</code> schedule, using standard <a href="https://help.ubuntu.com/community/CronHowto">
-                cron syntax</a>, to take backups of each service instance.
+                Enter a <code>cron</code> schedule, using standard
+                <a href="https://help.ubuntu.com/community/CronHowto">cron syntax</a>,
+                to take backups of each service instance.
             </td>
         </tr>
         <tr>
@@ -534,10 +564,12 @@ Complete the following steps to back up your database to your Azure Storage acco
 
 ## <a id="restore"></a> Restore a Service Instance from Backup
 
-Restoring <%= vars.product_short %> from backup is a manual process primarily intended for disaster recovery.
+Restoring <%= vars.product_short %> from backup is a manual process primarily intended for
+disaster recovery.
 Restoring a <%= vars.product_short %> service instance replaces all of its data and running state.
 
-To restore a <%= vars.product_short %> instance from an offsite backup, download the backup and restore to a new instance by following these procedures:
+To restore a <%= vars.product_short %> instance from an offsite backup,
+download the backup and restore to a new instance by following these procedures:
 
 + [Retrieve Backup Encryption Key](#retrieve-key)
 + [Download the Backup Artifact](#download)
@@ -548,13 +580,21 @@ To restore a <%= vars.product_short %> instance from an offsite backup, download
 Perform the following steps to retrieve the backup encryption key:
 
 <ol>
-<li>Run <code>cf service</code> to determine the GUID associated with the service instance that you want to restore:
+<li>Run <code>cf service</code> to determine the GUID associated with the service instance that
+  you want to restore:
  <pre class="terminal">$ cf service MY-INSTANCE-NAME --guid \
  12345678-90ab-cdef-1234-567890abcdef</pre>
 </li>
-<li>Perform the steps in <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a> and <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into <%= vars.ops_manager %></a> of <em>Advanced Troubleshooting with the BOSH CLI to SSH into the <%= vars.ops_manager %> VM</em>.</li>
-<li>From the <%= vars.ops_manager %> VM, log in to your BOSH Director with the BOSH CLI. See <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a> in <em>Advanced Troubleshooting with the BOSH CLI</em>.</li>
-<li> Perform the steps in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>, and record the values for <code>identity</code> and <code>password</code>.</li>
+<li>Perform the steps in
+  <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather">Gather Credential and IP Address Information</a>
+  and <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh">SSH into <%= vars.ops_manager %></a>
+  of <em>Advanced Troubleshooting with the BOSH CLI to SSH into the <%= vars.ops_manager %> VM</em>.</li>
+<li>From the <%= vars.ops_manager %> VM,
+  log in to your BOSH Director with the BOSH CLI.
+  See <a href="https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in">Log in to the BOSH Director</a>
+  in <em>Advanced Troubleshooting with the BOSH CLI</em>.</li>
+<li> Perform the steps in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>,
+   and record the values for <code>identity</code> and <code>password</code>.</li>
 <li>Set the API target of the CredHub CLI to your BOSH CredHub server.
     <br><br>
     Run the following command:
@@ -575,8 +615,10 @@ Perform the following steps to retrieve the backup encryption key:
     --client-secret=CREDHUB-CLIENT-SECRET</code></pre>
     Where:
     <ul>
-      <li><code>CREDHUB-CLIENT-NAME</code> is the <code>identity</code> you recorded in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
-      <li><code>CREDHUB-CLIENT-SECRET</code> is the <code>password</code> you recorded in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
+      <li><code>CREDHUB-CLIENT-NAME</code> is the <code>identity</code> you recorded
+        in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
+      <li><code>CREDHUB-CLIENT-SECRET</code> is the <code>password</code> you recorded
+        in <a href="prepare-tls.html#credhub-creds">Find the CredHub Credentials</a>.</li>
     </ul>
     For example:
     <pre class="terminal">$ credhub login \
@@ -604,11 +646,14 @@ Perform the following steps to retrieve the backup encryption key:
 Download the backup artifact from your blob storage.
 
 These instructions assume that you are using AWS S3 as your backup destination.
-If you are using a different backup destination, see the documentation for your backup provider to download the backup.
+If you are using a different backup destination,
+see the documentation for your backup provider to download the backup.
 
 Perform the following steps to download the backup artifact from an AWS S3 bucket:
 
-1. From the <%= vars.ops_manager %> VM, download the manifest for the service instance deployment by specifying the deployment name as `service-instance_GUID` and a filename for the manifest.
+1. From the <%= vars.ops_manager %> VM,
+download the manifest for the service instance deployment by specifying the deployment name
+as `service-instance_GUID` and a filename for the manifest.
 For example:
   <pre class="terminal">
    $ bosh -e my-env \
@@ -617,20 +662,25 @@ For example:
   </pre>
 
 4. Inspect the downloaded manifest and record the following properties:<br><br>
-  * `properties.service-backup.destinations[0].config.bucket_name`: This is the bucket where the backups are uploaded.
-  * `properties.service-backup.destinations[0].config.bucket_path`: This is the path within the bucket above.
+  * `properties.service-backup.destinations[0].config.bucket_name`:
+  This is the bucket where the backups are uploaded.
+  * `properties.service-backup.destinations[0].config.bucket_path`:
+  This is the path within the bucket above.
 
 5. Log in to the AWS CLI.
-   For information about how to download and use the AWS CLI, see [AWS Command Line Interface](https://aws.amazon.com/cli/).
+   For information about how to download and use the AWS CLI,
+   see [AWS Command Line Interface](https://aws.amazon.com/cli/).
 
-6. List the available backups for the instance, replacing `BUCKET-NAME` and `BUCKET-PATH` with values from above.
+6. List the available backups for the instance,
+replacing `BUCKET-NAME` and `BUCKET-PATH` with values from above.
   The artifacts are sorted by time.
  <pre class="terminal">
   $ aws s3 ls \
   --recursive s3://BUCKET-NAME/BUCKET-PATH/service-instance\_12345678-90ab-cdef-1234-567890abcdef/
  </pre>
 
-7. Choose the most recent backup file, or an older backup you want to restore from. The backups are timestamped in the filename and have a `.gpg` extension.
+7. Choose the most recent backup file, or an older backup you want to restore from.
+The backups are timestamped in the filename and have a `.gpg` extension.
 
 8. Download the selected backup:
  <pre class="terminal">
@@ -639,15 +689,19 @@ For example:
   ./a-local-path/mysql-backup-1489168980-0.tar.gpg
  </pre>
 
-    <p class="note"><strong>Note</strong>: You can also log in to AWS and download S3 backups from a browser.</p>
+    <p class="note"><strong>Note</strong>:
+      You can also log in to AWS and download S3 backups from a browser.
+    </p>
 
 ###<a id="restoreinstance"></a> Restore the Service Instance
 
-Because restoring a service instance is destructive, <%= vars.recommended_by %> that you restore to a new and unused service instance.
+Because restoring a service instance is destructive,
+<%= vars.recommended_by %> that you restore to a new and unused service instance.
 
 These instructions assume you have a backup downloaded.
 
-To restore the backup to a new service instance for a single node, leader-follower, or highly available (HA) cluster plan, do the following:
+To restore the backup to a new service instance for a single node, leader-follower,
+or highly available (HA) cluster plan, do the following:
 
 * [Create and Prepare a New Service Instance for Restore](#prepare)
 * [Restore a Single Node or Leader-Follower Instance](#run-sn-leader-follower)
@@ -672,18 +726,24 @@ To prepare a new service instance for restore, do the following:
     <ul>
     <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA topology.</li><br>
 
-    <li>If you are using a single node or leader-follower plan, you can only restore backup artifacts to a single node topology. The persistent disk
-     size of this single node plan must be three times larger than the maximum size of the data you intend
-     to provide to developers. For more information,
-     see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li><br>
+    <li>If you are using a single node or leader-follower plan,
+      you can only restore backup artifacts to a single node topology.
+      The persistent disk size of this single node plan must be three times larger than
+      the maximum size of the data you intend to provide to developers.
+      For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li><br>
 
     <li>If you want to restore to a leader-follower plan, you can do one of the following:
       <ul>
-        <li><b>Create a single-node instance to restore to</b> then update the plan on this instance to leader-follower after you run the restore utility.
-          For how to update the plan, see step 1 of <a href="#restage">Restage the Service Instance</a>.</li>
-        <li><b>Create a leader-follower instance to restore to</b> then scale the instances to one before running the restore utility. For how to scale instances, see step 6 of this procedure.</li>
+        <li><b>Create a single-node instance to restore to</b>
+          then update the plan on this instance to leader-follower after you run the restore utility.
+          For how to update the plan,
+          see step 1 of <a href="#restage">Restage the Service Instance</a>.</li>
+        <li><b>Create a leader-follower instance to restore to</b> then scale the instances to one
+          before running the restore utility. For how to scale instances,
+          see step 6 of this procedure.</li>
       </ul>
-        <p class="note"><strong>Note:</strong> You can only restore to a single node.</p>
+        <p class="note"><strong>Note:</strong> You can only restore to a single node.
+        </p>
     </li>
 </ul>
 
@@ -708,7 +768,8 @@ To prepare a new service instance for restore, do the following:
 1. To retrieve the admin password for your new service instance, do the procedure
    in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds).
 
-1. From the <%= vars.ops_manager %> VM, to find and record the new instance name and GUID from BOSH, run the following command:
+1. From the <%= vars.ops_manager %> VM, to find and record the new instance name and GUID from BOSH,
+run the following command:
 
     ```
     bosh -e ENVIRONMENT -d DEPLOYMENT instances
@@ -763,7 +824,8 @@ To prepare a new service instance for restore, do the following:
     - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
     - `DESTINATION-PATH` is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
-1. Use the BOSH CLI to SSH in to the newly created MySQL service instance. For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
+1. Use the BOSH CLI to SSH in to the newly created MySQL service instance.
+For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
 1. After securely logging in to MySQL, to become root, run the following command:
 
@@ -776,7 +838,8 @@ To prepare a new service instance for restore, do the following:
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and
   should only be run on a new and unused service instance.</p>
 
-Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
+Be sure you have followed the procedure in
+[Create and Prepare a New Service Instance for Restore](#prepare) above.
 
 To restore a single node or leader-follower service instance, do the following:
 
@@ -791,8 +854,10 @@ To restore a single node or leader-follower service instance, do the following:
     ```
     Where:
     <ul>
-      <li>`ENCRYPTION-KEY` is the backup encryption key you retrieved in [Retrieve Backup Encryption Key](#retrieve-key).</li>
-      <li>`ADMIN-PASSWORD` is the admin password for your new service instance, retrieved in [Create and Prepare a New Service Instance for Restore](#prepare) above.</li>
+      <li>`ENCRYPTION-KEY` is the backup encryption key you retrieved in
+        [Retrieve Backup Encryption Key](#retrieve-key).</li>
+      <li>`ADMIN-PASSWORD` is the admin password for your new service instance,
+        retrieved in [Create and Prepare a New Service Instance for Restore](#prepare) above.</li>
       <li>`RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.</li>
     </ul>
 1. Exit the MySQL VM.
@@ -803,7 +868,8 @@ To restore a single node or leader-follower service instance, do the following:
 <p class="note warning"><strong>WARNING</strong>: This is a destructive action and
   should only be run on a new and unused service instance.</p>
 
-Be sure you have followed the procedure in [Create and Prepare a New Service Instance for Restore](#prepare) above.
+Be sure you have followed the procedure in
+[Create and Prepare a New Service Instance for Restore](#prepare) above.
 
 To restore an HA cluster, do the following:
 
@@ -850,11 +916,12 @@ To restore an HA cluster, do the following:
     ```
 1. Exit out of the MySQL node.
 
-#### <a id="restage"></a> Restage the Service Instance
+#### <a id="restage"></a> Re-stage the Service Instance
 
-After you restore your single node, leader-follower, or HA cluster service instance, you must restage your new service instance.
+After you restore your single node, leader-follower, or HA cluster service instance,
+you must re-stage your new service instance.
 
-To restage your service instance, do the following:
+To re-stage your service instance, do the following:
 
 1. If you restored to a service instance with a single-node plan but want a
 leader-follower plan, update the plan now:
@@ -882,7 +949,8 @@ Instance for Restore* above, do the following:
               ...
 
              ```
-      + If you scaled an HA cluster instance, scale the instances to three by modifying the deployment manifest.
+      + If you scaled an HA cluster instance, scale the instances to three by
+      modifying the deployment manifest.
       Update the instance group for your new service instance as follows:
 
             ```yaml
