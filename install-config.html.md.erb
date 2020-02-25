@@ -76,7 +76,7 @@ see [App Security Groups](http://docs.pivotal.io/pivotalcf/concepts/asg.html#asg
 
 ### <a id="resurrector"></a> Enable the BOSH Resurrector
 
-<% vars.recommended_by %> enabling the BOSH Resurrector when installing <%= vars.product_short %>.
+<%= vars.recommended_by %> enabling the BOSH Resurrector when installing <%= vars.product_short %>.
 The BOSH Resurrector increases the availability of <%= vars.product_short %> by restarting and resuming MySQL service.
 
 The BOSH Resurrector does the following:
@@ -140,7 +140,7 @@ and networks for the broker and MySQL service instances:
         <td>Select the subnet for the on-demand service instances.
           This network is represented by the Service Network in diagram in <a href="./about.html#on-demand">Default Network and Service Network</a>.
             <br><br>
-            If you are adding IPsec to encrypt MySQL communication, <% vars.recommended_by %> that you deploy MySQL to its own network
+            If you are adding IPsec to encrypt MySQL communication, <%= vars.recommended_by %> that you deploy MySQL to its own network
             to avoid conflicts with services that are not IPsec compatible.
          </td></tr>
   </table>
@@ -285,7 +285,7 @@ For each plan that you want to use in your deployment:
             This is the name that appears in the Marketplace for developers.</td></tr>
     <tr><td><strong>Plan Description</strong></td>
         <td>Accept the default or enter a description to help developers understand plan features.
-            <% vars.recommended_by %> adding VM type details and disk size to this field.
+            <%= vars.recommended_by %> adding VM type details and disk size to this field.
         </td></tr>
     <tr><td><strong>Plan Quota</strong></td>
         <td>Enter the maximum number of service instances that can exist at one time.
@@ -561,7 +561,7 @@ To enable RFC 5424 system logging for the MySQL broker and service instance VMs:
     <tr><td><strong>Port</strong></td>
         <td>Enter the port of the syslog server for sending logs. For example: <code>29279</code>.</td></tr>
     <tr><td><strong>Transport Protocol</strong></td>
-        <td>Select the protocol you want to use to send system logs. <% vars.recommended_by %> using TCP.</td></tr>
+        <td>Select the protocol you want to use to send system logs. <%= vars.recommended_by %> using TCP.</td></tr>
     <tr><td><strong>Enable TLS</strong></td>
     <td>If you select TCP, you can also select to send logs encrypted over TLS.</td></tr>
     <tr><td><strong>Permitted Peer</strong></td>
@@ -633,7 +633,7 @@ You do not need to change the default configurations for errands.
 
 <p class="note warning"><strong>Warning:</strong> The <strong>Delete All Service Instances and Deregister Broker</strong> errand does
 necessary cleanup tasks when you delete the <%= vars.product_short %> tile or re-define plans. Setting this errand to <strong>Off</strong> can cause
-problems when attempting to reinstall the tile or re-define plans. <% vars.recommended_by %> that you do not set this errand to <strong>Off</strong>.
+problems when attempting to reinstall the tile or re-define plans. <%= vars.recommended_by %> that you do not set this errand to <strong>Off</strong>.
 </p>
 
 <%= vars.product_short %> uses the following types of errands:
