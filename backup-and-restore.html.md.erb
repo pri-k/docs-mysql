@@ -244,19 +244,21 @@ To back up your database on Ceph or Amazon S3, complete the following procedures
 ### <a id="access-key-aws"></a> Create a Policy and Access Key
 
 <%= vars.product_short %> accesses your S3 store through a user account.
-<%= vars.recommended_by %> that this account be solely for <%= vars.product_short %>.
+<%= vars.recommended_by %> that this account is only used by <%= vars.product_short %>.
 You must apply a minimal policy that lets the user account upload backups to your S3 store.
 
+These instructions assume that you are using AWS as your S3 store. If you are using a different S3 store to create the policy and access key, follow the documentation for your S3 store.
+
+To create a policy and access key in AWS:
+
 1. Create a policy for your <%= vars.product_short %> user account.
-        Policy creation varies depending on the S3 provider.<br><br>
-        Follow the relevant procedure to give <%= vars.product_short %>
-        the following permissions:
+      Give the policy the following permissions:
       * List and upload to buckets
       * (Optional) Create buckets in order to use buckets that do not already exist
 
-    For example, in AWS, create a new custom policy by navigating
-    to **IAM** > **Policies** > **Create Policy** > **JSON**
-    and paste in the following permissions:
+    In AWS, create a new custom policy by following the procedure in the
+    [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create-console.html#access_policies_create-json-editor). <br>
+    Paste in the following permissions:
 
     ```json
     {
@@ -281,14 +283,10 @@ You must apply a minimal policy that lets the user account upload backups to you
     }
 ```
 
-1. (Recommended) Create a new user for <%= vars.product_short %> and record
-the user credentials.
-For example, in AWS, create a user by navigating to **IAM** > **Users** > **Add user**.
-Record the Access Key ID and Secret Access Key user credentials.
-
-1. Attach the policy you created to the user that <%= vars.product_short %> uses to
-access the S3 bucket.
-For example, in AWS, attach the policy by navigating to **IAM** > **Policies** > **Policy Actions** > **Attach**.
+1. Record the Access Key ID and Secret Access Key user credentials for a new user account by following the procedure in
+the [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console).
+Ensure you select **Programmatic access**
+and **Attach existing policies to user directly**. You must attach the policy you created in the previous step.
 
 ### <a id="configure-aws"></a> Configure Backups in <%= vars.ops_manager %>
 
