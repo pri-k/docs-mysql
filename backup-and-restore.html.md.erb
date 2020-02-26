@@ -238,14 +238,14 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
 
 To back up your database on Ceph or Amazon S3, complete the following procedures:
 
-+ [Create a Policy and Access Key](#access-key-aws)
++ [Create a Custom Policy and Access Key](#access-key-aws)
 + [Configure Backups in <%= vars.ops_manager %>](#configure-aws)
 
-### <a id="access-key-aws"></a> Create a Policy and Access Key
+### <a id="access-key-aws"></a> Create a Custom Policy and Access Key
 
 <%= vars.product_short %> accesses your S3 store through a user account.
 <%= vars.recommended_by %> that this account is only used by <%= vars.product_short %>.
-You must apply a minimal policy that lets the user account upload backups to your S3 store.
+You must apply a minimal policy that enales the user account upload backups to your S3 store.
 
 These instructions assume that you are using AWS as your S3 store. If you are using a different S3 store to create the policy and access key, follow the documentation for your S3 store.
 
@@ -311,7 +311,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 acco
             </td>
             <td>
                 Enter the S3 Access Key ID and Secret Access Key from <a href="#access-key-aws">Create
-                a Policy and Access Key</a> above.
+                a Custom Policy and Access Key</a> above.
             </td>
         </tr>
         <tr>
@@ -388,34 +388,28 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 acco
 
 To back up your database on Google Cloud Storage (GCS), complete the following procedures:
 
-+ [Create a Policy and Access Key](#access-key)
++ [Create a Service Account and Private Key](#service-account-gcs)
 + [Configure Backups in <%= vars.ops_manager %>](#configure-gcs)
 
-### <a id="access-key"></a> Create a Policy and Access Key
+### <a id="service-account-gcs"></a> Create a Service Account and Private Key
 
 <%= vars.product_short %> accesses your GCS store through a service account.
-<%= vars.recommended_by %> that this account be solely for <%= vars.product_short %>.
-You must apply a minimal policy that lets the user account upload backups to your GCS store.
+<%= vars.recommended_by %> that this account is only used by <%= vars.product_short %>.
+You must apply a minimal policy that enales the service account upload backups to your GCS store.
 
-1. In the GCS console,
-create a new service account for <%= vars.product_short %>:
-**IAM and Admin** > **Service Accounts** > **Create Service Account**.<br><br>
+The service account needs the following permissions:
 
-      <%= vars.product_short %> needs the following permissions for this account:
-      * List and upload to buckets
-      * (Optional) Create buckets in order to use buckets that do not already exist
+* List and upload to buckets
+* (Optional) Create buckets in order to use buckets that do not already exist
 
+To create a service account and private key in GCS:
 
-1. Enter a unique name in the **Service account name** field and click **Create**.
-  For example, `MySQL-for-VMware-Tanzu`.
+1. Create a new service account by following the procedure in the [GCS documentation](https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account). <br>
+When you create the service account, you must do the following:
+      1. Enter a unique name for the service account name.
+      1. Add the **Storage Admin** role.
+      1. Create and download a private key JSON file.
 
-1. In the **Select a role** dropdown, select the **Storage Admin** role and click **Continue**.
-
-1. Click **Create Key**.
-
-1. In the **Create key (optional)** pane, select **JSON** and click **Create**.
-   This downloads a private key JSON file.
-1. Click **Done**
 
 ### <a id="configure-gcs"></a> Configure Backups in <%= vars.ops_manager %>
 
@@ -456,7 +450,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your GCS acc
             </td>
             <td>
                 Enter the contents of the service account JSON file that you downloaded
-              when creating a service account in <a href="#access-key">Create a Policy and Access Key</a> above.
+              when creating a service account in <a href="#service-account-gcs">Create a Service Account and Private Key</a> above.
             </td>
         </tr>
         <tr>
@@ -490,6 +484,30 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your GCS acc
 
 ## <a id="azure"></a> Option 4: Back Up to Azure Storage
 
+To back up your database on Azure Storage, complete the following procedures:
+
++ [Create a Storage Account and Access Key](#storage-account-azure)
++ [Configure Backups in <%= vars.ops_manager %>](#configure-azure)
+
+### <a id="storage-account-azure"></a> Create a Storage Account and Access Key
+
+<%= vars.product_short %> accesses your Azure Storage account through a storage access key.
+<%= vars.recommended_by %> that this account is only used by <%= vars.product_short %>.
+You must apply a minimal policy that enables the storage account upload backups to your GCS store.
+
+The storage account needs the following permissions:
+
+* List and upload to buckets
+* (Optional) Create buckets in order to use buckets that do not already exist
+
+To create a storage account and access key:
+
+1. Create a new storage account by following the procedure in the [Azure documentation](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal#create-a-storage-account).
+
+1. View your access key by following the procedure in the [Azure documentation](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage#view-access-keys-and-connection-string)
+
+### <a id="configure-azure"></a> Configure Backups in <%= vars.ops_manager %>
+
 Complete the following steps to back up your database to your Azure Storage account.
 
 1. In <%= vars.ops_manager %>, open the <%= vars.product_short %> tile **Backups** pane.
@@ -510,7 +528,7 @@ Complete the following steps to back up your database to your Azure Storage acco
                 <strong>Account</strong>
             </td>
             <td>
-               Enter the Azure Storage account name that you are using.
+               Enter the Azure Storage account name that you created in <a href="#storage-account-azure">Create a Storage Account and Access Key</a> above.
             </td>
         </tr>
         <tr>
@@ -518,7 +536,7 @@ Complete the following steps to back up your database to your Azure Storage acco
                 <strong>Azure Storage Access Key</strong>
             </td>
             <td>
-                Enter one of the storage access keys that can be used to access the Azure Storage account.
+                Enter one of the storage access keys that you viewed in <a href="#storage-account-azure">Create a Storage Account and Access Key</a> above.
             </td>
         </tr>
         <tr>
