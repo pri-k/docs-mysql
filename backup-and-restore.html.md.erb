@@ -234,7 +234,7 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
         </tr>
       </table>
 
-## <a id="ceph-or-s3"></a> Option 2: Back Up to Ceph or S3
+## <a id="ceph-or-s3"></a> Option 2: Back Up to Ceph or Amazon S3
 
 To back up your database on Ceph or Amazon S3, complete the following procedures:
 
@@ -243,18 +243,20 @@ To back up your database on Ceph or Amazon S3, complete the following procedures
 
 ### <a id="access-key-aws"></a> Create a Custom Policy and Access Key
 
-<%= vars.product_short %> accesses your S3 store through a user account.
+<%= vars.product_short %> accesses your S3 bucket through a user account.
 <%= vars.recommended_by %> that this account is only used by <%= vars.product_short %>.
-You must apply a minimal policy that enales the user account upload backups to your S3 store.
+You must apply a minimal policy that enables the user account upload backups to your S3 bucket.
 
-These instructions assume that you are using AWS as your S3 store. If you are using a different S3 store to create the policy and access key, follow the documentation for your S3 store.
+The procedure in this section assumes that you are using a AWS S3 bucket. If you are using a Ceph or another S3-compatible bucket to create the policy and access key, follow the documentation for your storage solution.
+
+Give the policy the following permissions:
+
+* List and upload to buckets
+* (Optional) Create buckets in order to use buckets that do not already exist
 
 To create a policy and access key in AWS:
 
 1. Create a policy for your <%= vars.product_short %> user account.
-      Give the policy the following permissions:
-      * List and upload to buckets
-      * (Optional) Create buckets in order to use buckets that do not already exist
 
     In AWS, create a new custom policy by following the procedure in the
     [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create-console.html#access_policies_create-json-editor). <br>
@@ -275,8 +277,8 @@ To create a policy and access key in AWS:
             "s3:PutObject"
           ],
           "Resource": [
-            "arn:aws:s3:::MY\_BUCKET\_NAME/*",
-            "arn:aws:s3:::MY\_BUCKET\_NAME"
+            "arn:aws:s3:::MY_BUCKET_NAME/*",
+            "arn:aws:s3:::MY_BUCKET_NAME"
           ]
         }
       ]
@@ -493,7 +495,7 @@ To back up your database on Azure Storage, complete the following procedures:
 
 <%= vars.product_short %> accesses your Azure Storage account through a storage access key.
 <%= vars.recommended_by %> that this account is only used by <%= vars.product_short %>.
-You must apply a minimal policy that enables the storage account upload backups to your GCS store.
+You must apply a minimal policy that enables the storage account upload backups to your Azure Storage.
 
 The storage account needs the following permissions:
 
@@ -658,13 +660,14 @@ To retrieve the backup encryption key:
 
     ```
     credhub get \
-    -n /p-bosh/service-instance_GUID/backup_encryption_key</code>
+    -n /p-bosh/service-instance_GUID/backup_encryption_key
     ```
     For example:
     <pre class="terminal">$ credhub get \
     -n /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/backup_encryption_key</pre>
 
 1. Copy the backup encryption key under <code>value</code> in the output.
+    You use this key when you restore the backup.
 
     For example:
     <pre class="terminal">id: d6e5bd10-3b60-4a1a-9e01-c76da688b847
@@ -680,7 +683,11 @@ These instructions assume that you are using AWS S3 as your backup destination.
 If you are using a different backup destination,
 see the documentation for your backup provider to download the backup.
 
-To download the backup artifact from an AWS S3 bucket:
+<p class="note"><strong>Note</strong>:
+  You can also use the AWS Management Console to download backups.
+</p>
+
+To download the backup artifact from an AWS S3 bucket using the command line:
 
 1. From the <%= vars.ops_manager %> VM,
 download the manifest for the service instance deployment by specifying the deployment name
@@ -725,28 +732,23 @@ For example:
     ./a-local-path/mysql-backup-TIMESTAMP.tar.gpg
     ```
 
-    <p class="note"><strong>Note</strong>:
-      You can also log in to AWS and download S3 backups from a browser.
-    </p>
-
 ###<a id="restoreinstance"></a> Restore the Service Instance
 
-Because restoring a service instance is destructive,
+<p class="note warning"><strong>Warning:</strong> Restoring a service instance is destructive.
 <%= vars.recommended_by %> that you restore to a new and unused service instance.
+</p>
 
-These instructions assume you have a backup downloaded.
+To restore the downloaded backup to a new service instance for a single node, leader-follower,
+or highly available (HA) cluster plan:
 
-To restore the backup to a new service instance for a single node, leader-follower,
-or highly available (HA) cluster plan, do the following:
-
-* [Create and Prepare a New Service Instance for Restore](#prepare)
-* [Restore a Single Node or Leader-Follower Instance](#run-sn-leader-follower)
-* [Restore an HA Cluster Instance](#runHA)
-* [Restage the Service Instance](#restage)
+1. [Create and Prepare a New Service Instance for Restore](#prepare)
+1. [Restore a Single Node or Leader-Follower Instance](#run-sn-leader-follower)
+1. [Restore an HA Cluster Instance](#runHA)
+1. [Restage the Service Instance](#restage)
 
 #### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
-To prepare a new service instance for restore, do the following:
+To prepare a new service instance for restore:
 
 1. To create a new MySQL service instance, run the following command:
 
@@ -760,12 +762,12 @@ To prepare a new service instance for restore, do the following:
     <br><br>
 
     <ul>
-    <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA topology.</li><br>
+    <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA service instance.</li><br>
 
     <li>If you are using a single node or leader-follower plan,
-      you can only restore backup artifacts to a single node topology.
+      you can only restore backup artifacts to a single node service instance.
       The persistent disk size of this single node plan must be three times larger than
-      the maximum size of the data you intend to provide to developers.
+      the maximum size of the data developers need.
       For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li><br>
 
     <li>If you want to restore to a leader-follower plan, you can do one of the following:
@@ -778,8 +780,6 @@ To prepare a new service instance for restore, do the following:
           before running the restore utility. For how to scale instances,
           see step 6 of this procedure.</li>
       </ul>
-        <p class="note"><strong>Note:</strong> You can only restore to a single node.
-        </p>
     </li>
 </ul>
 
@@ -812,8 +812,8 @@ run the following command:
     ```
 
 1. If you created a leader-follower or HA cluster service instance to restore to, do the following:
-    1. Modify the deployment manifest to scale instances to one. Do one of the following:
-      * To scale a leader-follower instance, scale instances one and set the
+    1. Modify the deployment manifest to scale the instances to one. Do one of the following:
+      * To scale a leader-follower instance, set the `instances` property to `1` and the
       `leader-follower` property to `false`.
       Update the instance group  and properties for your new service instance as follows:
 
@@ -829,7 +829,7 @@ run the following command:
               ...
             ```
       * To scale an HA cluster instance, modify the deployment manifest
-      to scale instances to one.
+      to set `instances` to `1`.
       Update the instance group for your new service instance as follows:
 
             ```yaml
@@ -853,8 +853,8 @@ run the following command:
 1. To copy the downloaded backup to the new service instance, run the following command:
 
     ```
-    bosh -e my-env \
-    -d my-dep scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+    bosh -e ENVIRONMENT  \
+    -d DEPLOYMENT scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
     ```
     Where:<br>
     - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
@@ -970,7 +970,7 @@ leader-follower plan, update the plan now:
 Instance for Restore* above, do the following:
     1. To scale your instance, do one of the following:
       + If you scaled a leader-follower instance, modify the deployment manifest
-      to scale the instances two and set the `leader-follower` property to `true`.
+      to edit the `instances` property to `2` and the `leader-follower` property to `true`.
       Update the instance group and properties for your new service instance as follows:
 
             ```yaml
@@ -985,7 +985,7 @@ Instance for Restore* above, do the following:
               ...
 
              ```
-      + If you scaled an HA cluster instance, scale the instances to three by
+      + If you scaled an HA cluster instance, set the `instances` property to `3` by
       modifying the deployment manifest.
       Update the instance group for your new service instance as follows:
 
