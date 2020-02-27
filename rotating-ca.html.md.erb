@@ -166,15 +166,14 @@ of your service instance, do the procedure in
 
 To rotate your certificates:
 
-1. Determine which of your certificates are expiring. See [Check Expiration Dates](#credhub) below.
+1. Determine which of your certificates are expiring. See [Check Expiration Dates](#check) below.
 1. If any of your certificates are about to expire or have expired, do one of the following:
-  * **If your TLS certificates are about to expire or have expired,**
-    do the procedures in [Rotate TLS Certificates](#tls) below.
-    This rotates both the TLS certificates and the internal certificates.<br><br>
-  * **If your internal certificates for single node or leader-follower service instances are about to expire or have expired,** do the procedure in [Rotate Internal Certificates](#internal) below.<br><br>
-  * **If only your internal certificates for HA clusters are about to expire or have expired,** upgrade to MySQL for PCF v2.7.
-    See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-7/upgrade.html).
-
+  * **If your TLS certificates are about to expire or have expired:**
+    Do the procedures in [Rotate CA Certificates Manually](#tls) below.
+    This rotates both the TLS certificates and the internal certificates.
+  * **If your internal certificates for single node or leader-follower service instances are about to expire or have expired:** Do the procedure in [Rotate Internal Certificates](#internal) below.<br><br>
+  * **If only your internal certificates for HA clusters are about to expire or have expired:** Upgrade to MySQL for PCF v2.7.
+  See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-7/upgrade.html).
 <%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => "MySQL for PCF" } %>
 
 
@@ -186,7 +185,7 @@ The below commands upgrade all of your MySQL for service instances and distribut
 
 To ensure that the internal certificates rotate, do one of the following:
 
-+ **If you have not upgraded to MySQL for PCF v2.6,** do the following:
++ **If you have not upgraded to MySQL for PCF v2.6:** Do the following:
     1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click the **MySQL for Pivotal Cloud Foundry v2** tile.
     1. Click **Errands**.
     1. Under **Post-Deploy Errands**, ensure that **Upgrade all On-demand MySQL Service Instances** is set to **Default (On)**.
@@ -194,7 +193,7 @@ To ensure that the internal certificates rotate, do one of the following:
           ![Upgrade All Instances Errand](upgrade-all-instances-errand.png)
     1. Click **Save.**
 
-+ **If you have already upgraded to MySQL for PCF v2.6 without the Upgrade all On-demand MySQL Service Instances errand on,** run the following command:
++ **If you have already upgraded to MySQL for PCF v2.6 without the Upgrade all On-demand MySQL Service Instances errand on:** Run the following command:
 
     ```
     bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
