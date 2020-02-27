@@ -142,10 +142,10 @@ To rotate your certificates:
 
 1. Determine which of your certificates are expiring. See [Check Expiration Dates](#check) below.
 1.  If any of your certificates are about to expire or have expired, do one of the following:
-  * **If your TLS certificates are about to expire or have expired,**
-    do the procedures in [Rotate CA Certificates Manually](#tls) below.
+  * **If your TLS certificates are about to expire or have expired:**
+    Do the procedures in [Rotate CA Certificates Manually](#tls) below.
     This rotates both the TLS certificates and the internal certificates.
-  * **If only your internal certificates are about to expire or have expired,** do the procedure in [Rotate Internal Certificates ](#internal) below.
+  * **If only your internal certificates are about to expire or have expired:** Do the procedure in [Rotate Internal Certificates ](#internal) below.
 
 <%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => vars.product_short } %>
 
@@ -158,7 +158,7 @@ The below commands upgrade all of your MySQL for service instances and distribut
 
 To ensure that the internal certificates rotate, do one of the following:
 
-+ **If you have not yet upgraded to <%= vars.product_short %> v2.7,** do the following:
++ **If you have not yet upgraded to <%= vars.product_short %> v2.7:** Do the following:
     1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click the **<%= vars.product_short %> v2** tile.
     1. Click **Errands**.
     1. Under **Post-Deploy Errands**, ensure that **Upgrade all On-demand MySQL Service Instances** is set to **Default (On)**.
@@ -168,7 +168,7 @@ To ensure that the internal certificates rotate, do one of the following:
 
     For instructions for upgrading to <%= vars.product_short %> v2.7, see [Upgrading <%= vars.product_short %>](./upgrade.html).<br><br>
 
-+ **If you have already upgraded to <%= vars.product_short %> v2.7 without the Upgrade all On-demand MySQL Service Instances errand on,** run the following command:
++ **If you have already upgraded to <%= vars.product_short %> v2.7 without the Upgrade all On-demand MySQL Service Instances errand on:** Run the following command:
 
     ```
     bosh -d p-mysql-GUID run-errand upgrade-all-service-instances
