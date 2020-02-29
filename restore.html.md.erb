@@ -1,0 +1,464 @@
+---
+title: Restoring MySQL for VMware Tanzu
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes how to manually restore a
+<%= vars.product_full %> service instance from a backup.
+
+You can create a backup by following the procedures in
+[Backing up <%= vars.product_full %>](./restore.html)
+
+## <a id="overview"></a>Overview
+
+<p class="note"><strong>Note:</strong> VMware recommends
+  that you always configure a single instance plan to streamline the
+  restore process for leader-follower plans.
+</p>
+
+Restoring <%= vars.product_short %> from backup is a manual process primarily intended for
+disaster recovery.
+Restoring a <%= vars.product_short %> service instance replaces all of its data and running state.
+
+To restore a <%= vars.product_short %> instance from an offsite backup:
+
++ [Retrieve Backup Encryption Key](#retrieve-key)
++ [Download the Backup Artifact](#download)
++ [Restore the Service Instance](#restoreinstance)
+
+##<a id="retrieve-key"></a> Retrieve Backup Encryption Key
+
+To retrieve the backup encryption key:
+
+1. Find and record your CredHub credentials by following the procedure in [Find the CredHub Credentials](./prepare-tls.html#credhub-creds).
+
+1. Find the GUID for the service instance that you want to restore by running:
+
+    ```
+    cf service MY-INSTANCE-NAME --guid
+    ```
+    Record the output.
+
+1. Record the information needed to log in to the BOSH Director VM by following the procedure in
+[Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather).
+
+1. Log in to the <%= vars.ops_manager %> VM by following the procedure in
+[Log in to the <%= vars.ops_manager %> VM with SSH](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh).
+
+1. Set the API target of the CredHub CLI as your CredHub server by running:
+
+    ```
+    credhub api https://BOSH-DIRECTOR:8844 \
+    --ca-cert=/var/tempest/workspaces/default/root_ca_certificate
+    ```
+
+    Where `BOSH-DIRECTOR` is the IP address of the BOSH Director VM.
+    For example:
+    <pre class="terminal">$ credhub api http<span>s:</span>//10.0.0.5:8844 \
+      --ca-cert=/var/tempest/workspaces/default/root\_ca\_certificate</pre>
+
+2. Log in to CredHub by running:
+
+    ```
+    credhub login \
+    --client-name=CREDHUB-CLIENT-NAME \
+    --client-secret=CREDHUB-CLIENT-SECRET
+    ```
+    Where
+    * `CREDHUB-CLIENT-NAME` is the value you recorded for `BOSH_CLIENT` in
+		[Find the CredHub Credentials in step 1.
+    * `CREDHUB-CLIENT-SECRET` is the value you recorded for `BOSH_CLIENT_SECRET` in
+		[Find the CredHub Credentials in step 1. <br>
+
+    For example:
+    <pre class="terminal">$ credhub login \
+    	--client-name=credhub \
+    	--client-secret=abcdefghijklm123456789</pre>
+1. Use the CredHub CLI to retrieve the backup encryption key by running:
+
+    ```
+    credhub get \
+    -n /p-bosh/service-instance_GUID/backup_encryption_key
+    ```
+    For example:
+    <pre class="terminal">$ credhub get \
+    -n /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/backup_encryption_key</pre>
+
+1. Copy the backup encryption key under <code>value</code> in the output.
+    You use this key when you restore the backup.
+
+    For example:
+    <pre class="terminal">id: d6e5bd10-3b60-4a1a-9e01-c76da688b847
+    name: /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/backup_encryption_key
+    type: password
+    value: UMF2DXsqNPPlCNWMdVMcNv7RC3Wi10
+    version_created_at: 2018-04-02T23:16:09Z</pre>
+
+
+##<a id="download"></a> Download the Backup Artifact
+
+These instructions assume that you are using an Amazon S3 bucket as your backup destination.
+If you are using a different backup destination,
+see the documentation for your backup provider to download the backup.
+
+<p class="note"><strong>Note</strong>:
+  You can also use the AWS Management Console to download backups.
+</p>
+
+To download the backup artifact from an Amazon S3 bucket using the command line:
+
+1. From the <%= vars.ops_manager %> VM,
+download the manifest for the service instance deployment by specifying the deployment name
+as `service-instance_GUID` and a filename for the manifest.
+For example:
+  <pre class="terminal">
+   $ bosh -e my-env \
+   -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
+   manifest > ./manifest.yml
+  </pre>
+
+4. Record the following properties from the download manifest:
+  * `properties.service-backup.destinations[0].config.bucket_name`:
+  This is the bucket where the backups are uploaded.
+  * `properties.service-backup.destinations[0].config.bucket_path`:
+  This is the path within the bucket above.
+
+5. Log in to the AWS CLI.
+   For information about how to download and use the AWS CLI,
+   see the [AWS documentation](https://aws.amazon.com/cli/).
+
+6. List the available backups for the instance by running:
+
+    ```
+    aws s3 ls \
+    --recursive s3://BUCKET-NAME/BUCKET-PATH/service-instance_GUID/
+    ```
+    Where:
+    + `BUCKET-NAME` is the bucket where the backups are uploaded recorded in the previous step.
+    + `BUCKET-PATH` is the path within the bucket recorded in the previous step.
+
+    The artifacts are sorted by time.
+
+7. Select the most recent backup file or an older backup you want to restore from.
+    The backups are timestamped in the filename and have a `.gpg` extension.
+
+8. Download the selected backup by running:
+
+    ```
+    aws s3 cp \
+    s3://BUCKET-NAME/BUCKET-PATH/service-instance_GUID/YEAR/MONTH/DATE/mysql-backup-TIMESTAMP.tar.gpg \
+    ./a-local-path/mysql-backup-TIMESTAMP.tar.gpg
+    ```
+
+##<a id="restoreinstance"></a> Restore the Service Instance
+
+<p class="note warning"><strong>Warning:</strong> Restoring a service instance is destructive.
+<%= vars.recommended_by %> that you restore to a new and unused service instance.
+</p>
+
+To restore the downloaded backup to a new service instance for a single node, leader-follower,
+or highly available (HA) cluster plan:
+
+1. [Create and Prepare a New Service Instance for Restore](#prepare)
+1. [Restore a Single Node or Leader-Follower Instance](#run-sn-leader-follower)
+1. [Restore an HA Cluster Instance](#runHA)
+1. [Restage the Service Instance](#restage)
+
+### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
+
+To prepare a new service instance for restore:
+
+1. Create a new MySQL service instance by running:
+
+    ```
+    cf create-service p.mysql SERVICE-PLAN NEW-INSTANCE-NAME
+    ```
+
+    Where:
+    + `SERVICE-PLAN` is the name of the service plan for your new service instance.
+    + `NEW-INSTANCE-NAME` is the name of the new service instance.
+    <br><br>
+
+    <ul>
+    <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA service instance.</li><br>
+
+    <li>If you are using a single node or leader-follower plan,
+      you can only restore backup artifacts to a single node service instance.
+      The persistent disk size of this single node plan must be three times larger than
+      the maximum size of the data developers need.
+      For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li><br>
+
+    <li>To restore to a leader-follower plan, do one of the following:
+      <ul>
+        <li><b>Create a single-node instance to restore to</b>
+          then update the plan on this instance to leader-follower after you run the restore utility.
+          For how to update the plan,
+          see step 1 of <a href="#restage">Restage the Service Instance</a>.</li>
+        <li><b>Create a leader-follower instance to restore to</b> then scale the instances to one
+          before running the restore utility. For how to scale instances,
+          see step 6 of this procedure.</li>
+      </ul>
+    </li>
+</ul>
+
+
+
+    For more information, see [Create a Service Instance](./use.html#create).
+
+1. Monitor the status of the service instance creation by running:
+
+    ```
+    cf service NEW-INSTANCE-NAME
+    ```
+    Where `NEW-INSTANCE-NAME` is the name of the new service instance. <br><br>
+
+1. Locate and record the GUID associated with your new service instance by running:
+
+    ```
+    cf service NEW-INSTANCE-NAME --guid
+    ```
+    Where `NEW-INSTANCE-NAME` is the name of the new service instance. <br><br>
+
+1. Retrieve the admin password for your new service instance by following the procedure in
+   in [Retrieve Admin and Read-Only Admin Credentials for a Service Instance](troubleshoot.html#instance-creds).
+
+1. From the <%= vars.ops_manager %> VM, find and record the new instance name and GUID from BOSH by
+    running:
+
+    ```
+    bosh -e BOSH-ENVIRONMENT  -d BOSH-DEPLOYMENT instances
+    ```
+
+1. If you created a leader-follower or HA cluster service instance to restore to, do the following:
+    1. Modify the deployment manifest to scale the instances to one. Do one of the following:
+      * To scale a leader-follower instance, set the `instances` property to `1` and the
+      `leader-follower` property to `false`.
+      Update the instance group  and properties for your new service instance as follows:
+
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 1    # Scale instances to 1
+              ...
+            properties:
+              leader_follower:
+                enabled: false    # Set to false
+              ...
+            ```
+      * To scale an HA cluster instance, modify the deployment manifest
+      to set `instances` to `1`.
+      Update the instance group for your new service instance as follows:
+
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 1    # Scale instances to 1
+              ...
+            ```
+  1. Redeploy the deployment manifest by running:
+
+        ```
+        bosh -e BOSH-ENVIRONMENT -d BOSH-DEPLOYMENT  deploy PATH-TO-MANIFEST.yml
+        ```
+        For example:
+
+        <pre class="terminal">
+        bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        </pre>
+
+1. Copy the downloaded backup to the new service instance by running:
+
+    ```
+    bosh -e BOSH-ENVIRONMENT   \
+    -d BOSH-DEPLOYMENT scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+    ```
+    Where:<br>
+    - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
+    - `DESTINATION-PATH` is where the backup file saves on the BOSH VM. For example, `/tmp/`.
+
+1. Use the BOSH CLI to SSH in to the newly created MySQL service instance.
+For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
+
+### <a id="run-sn-leader-follower"></a> Restore a Single Node or Leader-Follower Instance
+
+<p class="note warning"><strong>Warning</strong>: This is a destructive action and
+  should only be run on a new and unused service instance.</p>
+
+Be sure you have followed the procedure in
+[Create and Prepare a New Service Instance for Restore](#prepare) above.
+
+You can restore a single node or leader-follower service instance using the restore utility.
+The restore utility is packaged with the <%= vars.product_full %> tile.
+
+The restore utility does the following:
+
+* Deletes any existing data
+* Decrypts and unzips the backup artifact
+* Restores the backup artifact into the MySQL data directory
+
+To restore a single node or leader-follower service instance:
+
+1. After securely logging in to MySQL, become root by running:
+
+    ```
+    sudo su
+    ```
+
+1. Run the restore utility to restore the backup artifact into the data directory.
+
+    ```
+    mysql-restore --encryption-key ENCRYPTION-KEY \
+    --mysql-username admin --mysql-password ADMIN-PASSWORD --restore-file RESTORE-FILE-PATH
+    ```
+
+    Where:
+    + `ENCRYPTION-KEY` is the backup encryption key you retrieved in
+        [Retrieve Backup Encryption Key](#retrieve-key) above.
+    + `ADMIN-PASSWORD` is the admin password for your new service instance,
+        retrieved in [Create and Prepare a New Service Instance for Restore](#prepare) above.
+    + `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.
+
+### <a id="runHA"></a>Restore an HA Cluster Instance
+
+<p class="note warning"><strong>Warning</strong>: This is a destructive action and
+  should only be run on a new and unused service instance.</p>
+
+Be sure you have followed the procedure in
+[Create and Prepare a New Service Instance for Restore](#prepare) above.
+
+To restore an HA cluster:
+
+1. After securely logging in to MySQL, become root by running:
+
+    ```
+    sudo su
+    ```
+
+1. Pause the local database server by running:
+
+    ```
+    monit stop all
+    ```
+1. Confirm that all jobs are listed as `not monitored` by running:
+
+    ```
+    watch monit summary
+    ```
+    <!-- What happends if it is `monitored` -->
+1. Delete the existing MySQL data that is stored on disk by running:
+
+    ```
+    rm -rf /var/vcap/store/mysql/*
+    ```
+
+1. Move the compressed backup file to the node using `scp`.
+1. Decrypt and expand the file and send the output to TAR by running:
+
+    ```
+    gpg --decrypt mysql-backup.tar.gpg | tar -C /var/vcap/store/mysql -xvf -
+    ```
+1. Change the owner of the data directory by running:
+
+     ```
+     chown -R vcap:vcap /var/vcap/store/mysql
+     ```
+
+     MySQL expects the data directory to be owned by a particular user.
+1. Start all services with `monit` by running:
+
+    ```
+    monit start all
+    ```
+
+1. Watch the summary until all jobs are listed as `running` by running::
+
+    ```
+    watch monit summary
+    ```
+
+
+## <a id="restage"></a> Restage the Service Instance
+
+After you restore your single node, leader-follower, or HA cluster service instance,
+you must restage your new service instance.
+
+To restage your service instance:
+
+1. If you restored to a service instance with a single-node plan but want a
+leader-follower plan, update the plan now:
+
+    ```
+    cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
+    ```
+
+1. If you scaled instances to one in step 6 of *Create and Prepare a New Service
+Instance for Restore* above, do the following:
+    1. To scale your instance, do one of the following:
+      + If you scaled a leader-follower instance, modify the deployment manifest
+      to edit the `instances` property to `2` and the `leader-follower` property to `true`.
+      Update the instance group and properties for your new service instance as follows:
+
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 2    # Scale instances to 2
+              ...
+            properties:
+              leader_follower:
+                enabled: true    # Set to true
+              ...
+
+             ```
+      + If you scaled an HA cluster instance, set the `instances` property to `3` by
+      modifying the deployment manifest.
+      Update the instance group for your new service instance as follows:
+
+            ```yaml
+            instance_groups:
+            - name: mysql
+              ...
+              instances: 3    # Scale instances to 3
+              ...
+             ```
+  1. Redeploy the deployment manifest by running:
+
+        ```
+        bosh -e BOSH-ENVIRONMENT  -d BOSH-DEPLOYMENT  deploy PATH-TO-MANIFEST.yml
+        ```
+
+        For example:
+
+        <pre class="terminal">
+        bosh -e my-env -d service-instance\_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        </pre>
+
+1. Determine if the app is currently bound to a MySQL service instance:
+
+    ```
+    cf services
+    ```
+
+1. If the previous step shows that the app is currently bound to a MySQL instance, unbind it:
+
+    ```
+    cf unbind-service APP-NAME OLD-INSTANCE-NAME
+    ```
+
+1. Update your CF app to bind to the new service instance:
+
+    ```
+    cf bind-service APP-NAME  NEW-INSTANCE-NAME
+    ```
+
+1. Restage your CF app to make the changes take effect:
+
+    ```
+    cf restage APP-NAME
+    ```
+
+Your app should be running and able to access the restored data.
