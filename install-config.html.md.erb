@@ -174,7 +174,7 @@ a single node plan. This is because you can only restore to a single node plan. 
 directly to a leader-follower plan. Ensure that the persistent disk in the single node plan is as
 least as large as the persistent disk of your largest leader-follower plan.
 For more information about restoring services instances,
-see <a href="./backup-and-restore.html#restoreinstance">Restore the Service Instance</a>.
+see <a href="./restore.html#restoreinstance">Restore the Service Instance</a>.
 </p>
 
 For each plan that you want to use in your <%= vars.platform_name %> deployment:
@@ -423,22 +423,23 @@ To configure automated backups:
     <%= image_tag("backups.png", :alt => "The radio buttons for backup configuration are
         Ceph or Amazon S3, SCP, GCS, and Azure.", :width => "200") %>
 
-1. To learn how automated backups work, see [About Automated Backups](backup-and-restore.html#overview).
+1. To learn how automated backups work, see [About Automated Backups](backup.html#overview).
 
 1. Select a **Backup configuration** and do the procedure for your storage solution in _Backing Up and Restoring_:
   * **Ceph or Amazon S3:** <%= vars.product_short %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
     that saves backups to an S3 bucket,
-    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by Pivotal.<br>
-    For instructions about using Ceph or Amazon S3 for backups, see [Back up to Ceph or S3](./backup-and-restore.html#ceph-or-s3).<br><br>
+    a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by VMware.<br>
+    For instructions about using Ceph or Amazon S3 for backups, see [Back up to Ceph or S3](./backup.html#ceph-or-s3).<br><br>
   * **SCP:** <%= vars.product_short %> runs an Secure Copy Protocol (SCP) command that secure-copies backups to a VM
     or physical machine operating outside of <%= vars.platform_name %>. This is the fastest option. <br>
     SCP enables you to securely transfer files between two hosts.
-    You can provision the backup machine separately from your <%= vars.platform_name %> installation.
-     <br>For instructions about using SCP for backups, see [Back up with SCP](backup-and-restore.html#scp).<br><br>
+    You can provision the backup machine separately from your installation.
+     <br>For instructions about using SCP for backups, see [Back up with SCP](backup.html#scp).<br><br>
   * **GSC:** <%= vars.product_short %> runs a [Google Cloud Storage (GCS)](https://cloud.google.com/storage/) SDK
-    that saves backups to an GCS bucket. <br>For instructions about using GCS for backups, see [Back up to GCS](backup-and-restore.html#gcs). <br><br>
+    that saves backups to an GCS bucket. <br>For instructions about using GCS for backups, see [Back up to GCS](backup.html#gcs). <br><br>
   * **Azure:** <%= vars.product_short %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
-    SDK that saves backups to an Azure storage account.<br>For instructions about using Azure for backups, see [Back up to Azure Storage](backup-and-restore.html#azure).
+    SDK that saves backups to an Azure storage account.<br>For instructions about using Azure for backups,
+    see [Back up to Azure Storage](backup.html#azure).
 
 ###<a id="security"></a> Configure Security
 
