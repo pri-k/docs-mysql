@@ -410,18 +410,18 @@ Follow the steps below to configure automated backups:
     SCP stands for secure copy protocol, and offers a way to securely transfer files between two hosts.
     The operator provisions the backup machine separately from their PCF installation.
     This is the fastest option.
-  - [Option 2: Back up to Ceph or S3](backup-and-restore.html#ceph-or-s3)---MySQL for PCF runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
+  - [Option 2: Back up to Ceph or S3](backup-and-restore.html#ceph-or-s3)---<%= vars.product_old %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client
     that saves backups to an S3 bucket,
     a [Ceph](http://docs.ceph.com/docs/master/) storage cluster, or another S3-compatible endpoint certified by VMware.<br>
     For instructions about using Ceph or Amazon S3 for backups, see [Back up to Ceph or S3](./backup.html#ceph-or-s3).<br><br>
-  * **SCP:** MySQL for PCF runs an Secure Copy Protocol (SCP) command that secure-copies backups to a VM
+  * **SCP:** <%= vars.product_old %> runs an Secure Copy Protocol (SCP) command that secure-copies backups to a VM
     or physical machine operating outside of your deployment. This is the fastest option. <br>
     SCP enables you to securely transfer files between two hosts.
     You can provision the backup machine separately from your installation.
      <br>For instructions about using SCP for backups, see [Back up with SCP](backup.html#scp).<br><br>
-  * **GSC:** MySQL for PCF runs a [Google Cloud Storage (GCS)](https://cloud.google.com/storage/) SDK
+  * **GSC:** <%= vars.product_old %> runs a [Google Cloud Storage (GCS)](https://cloud.google.com/storage/) SDK
     that saves backups to an GCS bucket. <br>For instructions about using GCS for backups, see [Back up to GCS](backup.html#gcs). <br><br>
-  * **Azure:** MySQL for PCF runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
+  * **Azure:** <%= vars.product_old %> runs an [Azure](https://docs.microsoft.com/en-us/azure/storage/)
     SDK that saves backups to an Azure storage account.<br>For instructions about using Azure for backups,
     see [Back up to Azure Storage](backup.html#azure).
 
