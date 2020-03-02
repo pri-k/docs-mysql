@@ -1,0 +1,637 @@
+---
+title: Backing up MySQL for PCF
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes how to configure automated backups for <%= vars.product_old %>.
+
+You can restore an automatic backup by following the procedures in
+[Restoring <%= vars.product_old %>](./restore.html)
+
+Additionally, developers can create logical backups using `mysqldump`.
+For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldump.html).
+
+## <a id="overview"></a>About Automated Backups
+
+Automated backups do the following:
+
+- Periodically create and upload backups for restoring all of the databases used
+by a service instance.
+- Operate without locking apps out of the database. There is no downtime.
+- Include a metadata file that contains the critical details for the backup,
+including the calendar time of the backup.
+- Encrypt backups within the <%= vars.product_old %> VM.
+Unencrypted data is never transferred outside the <%= vars.product_old %> deployment.
+
+<p class="note"><strong>Note:</strong>
+  You must configure automated backups. Automated backups cannot be disabled.
+</p>
+
+### <a id="understanding-metadata"></a> Backup Files and Metadata
+
+When <%= vars.product_old %> runs a backup,
+it uploads two files with Unix epoch-timestamped filenames:
+
+  * The encrypted data backup file, `mysql-backup-TIMESTAMP.tar.gpg`
+  * A metadata file, `mysql-backup-TIMESTAMP.txt`
+
+The metadata file contains information about the backup that looks similar to the following:
+
+```
+ibbackup_version = 2.4.5
+end_time = 2017-04-24 21:00:03
+lock_time = 0
+binlog_pos =
+incremental = N
+encrypted = N
+server_version = 5.7.16-10-log
+start_time = 2017-04-24 21:00:00
+tool_command = --user=admin --password=... --stream=tar tmp/
+innodb_from_lsn = 0
+innodb_to_lsn = 2491844
+format = tar
+compact = N
+name =
+tool_name = innobackupex
+partial = N
+compressed = N
+uuid = fd13cf26-2930-11e7-871e-42010a000807
+tool_version = 2.4.5
+```
+
+The most important entires in the metadata file are the following:
+
++ `start_time`: You use this to determine which transactions are captured in the backup.
++ `server_version`: You use this to determine potential incompatibilities
+when restoring an instance with this backup artifact.
+
+The backup process does not interrupt MySQL service.
+However backups only reflect transactions that are completed before the `start_time`.
+
+<p class="note"><strong>Note</strong>: Although both <code>compressed</code> and <code>encrypted</code>
+  are show as <code>N</code> in this file, the backup uploaded by <%= vars.product_old %>
+  is both compressed and encrypted.
+</p>
+
+### <a id="enable-backups"></a> About Configuring Automated Backups
+
+You can configure <%= vars.product_old %> to automatically back up databases to external storage.
+<%= vars.product_old %> backs up the entire data directory for each service instance.
+
+The backups are taken on schedule that you configure with a cron expression.
+For information about cron expressions, see
+[CRON expression](https://en.wikipedia.org/wiki/Cron#CRON_expression) on Wikipedia.
+
+To configure automated backups, follow the procedure for your external storage solution:
+
++ [Back up Using SCP](#scp)
++ [Back up to Amazon S3 or Ceph](#ceph-or-s3)
++ [Back up to GCS](#gcs)
++ [Back up to Azure Storage](#azure)
+
+## <a id="scp"></a> Back up Using SCP
+
+Secure copy protocol (SCP) enables operators to use any storage solution
+on the destination VM. This is the fastest method for backing up your database.
+
+When you configure automatic backups with SCP,
+<%= vars.product_old %> runs an SCP command that securely copies backups to a VM
+or physical machine operating outside of your deployment.
+The operator provisions the backup machine separately from their installation.
+
+To back up your database using SCP:
+
++ [Create a Public and Private Key Pair](#scp-keys)
++ [Configure Backups in <%= vars.ops_manager %>](#configure-scp)
+
+### <a id="scp-keys"></a> Create a Public and Private Key&#8209;Pair
+
+<%= vars.product_old %> accesses a remote host as a user with a private key for authentication.
+VMware recommends that this user and key-pair is only used for <%= vars.product_old %>.
+
+1. Determine the remote host that you use to store backups for <%= vars.product_old %>.
+   Ensure that the MySQL service instances can access the remote host.
+
+    <p class="note"><strong>Note</strong>: VMware recommends using a VM outside your deployment
+      for the destination of SCP backups. As a result,
+      you might need to enable public IPs for the MySQL VMs.
+    </p>
+
+1. (Recommended) Create a new user for <%= vars.product_old %> on the destination VM.
+
+1. (Recommended) Create a new public and private key-pair for authenticating as the above user
+on the destination VM.
+
+### <a id="configure-scp"></a> Configure Backups in <%= vars.ops_manager %>
+
+Use <%= vars.ops_manager %> to configure <%= vars.product_old %> to backup using SCP.
+
+1. In <%= vars.ops_manager %>, open the <%= vars.product_old %> tile **Backups** pane.
+
+1. Select **SCP**.<br/>
+    ![SCP Backup Configuration Form](scp-backups.png)
+
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Username</strong>
+            </td>
+            <td>
+                Enter the user that you created in
+                <a href="#scp-keys">Create a Public and Private Key&#8209;Pair</a>
+                above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Private Key</strong>
+            </td>
+            <td>
+                 Enter the private key that you created in
+                 <a href="#scp-keys">Create a Public and Private Key&#8209;Pair</a>
+                 above. <br>
+                 Store the public key that is used for SSH and SCP access on the destination VM.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Hostname</strong>
+            </td>
+            <td>
+                Enter the IP address or DNS entry that is used to access the destination VM.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Destination Directory</strong>
+            </td>
+            <td>
+                Enter the directory that <%= vars.product_old %> uploads backups to.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>SCP Port</strong>
+            </td>
+            <td>
+               Enter the SCP port number for SSH.
+               This is port usually <code>22</code>.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a cron expression using standard syntax.
+                This sets the schedule for taking backups for each service instance.
+                <br>
+                For information about cron expressions, see
+                <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
+                on Wikipedia.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Fingerprint</strong>
+            </td>
+            <td>
+                (Optional) Enter the fingerprint for the destination VM public key.
+                This helps to detect any changes to the destination VM.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup fails.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in
+                   <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
+
+## <a id="ceph-or-s3"></a> Back up to Amazon S3 or Ceph
+
+When you configure automatic backups for Amazon S3 or Ceph,
+<%= vars.product_old %> runs an Amazon S3 client that saves the backups to one of the following:
+
++ an Amazon S3 bucket
++ a Ceph storage cluster
++ another S3-compatible endpoint certified by VMware
+
+For information about Amazon S3 buckets,
+see the [Amazon documentation](https://aws.amazon.com/documentation/s3/).
+For information about Ceph storage clusters,
+see the [Ceph documentation](http://docs.ceph.com/docs/master/).
+
+To back up your database to Amazon S3 or Ceph:
+
++ [Create a Custom Policy and Access Key](#access-key-aws)
++ [Configure Backups in <%= vars.ops_manager %>](#configure-aws)
+
+### <a id="access-key-aws"></a> Create a Custom Policy and Access Key
+
+<%= vars.product_old %> accesses your S3 bucket through a user account.
+VMware recommends that this account is only used by <%= vars.product_old %>.
+You must apply a minimal policy that enables the user account upload backups to your S3 bucket.
+
+Give the policy the following permissions:
+
+* List and upload to buckets
+* (Optional) Create buckets if they do not already exist
+
+The procedure in this section assumes that you are using an Amazon S3 bucket.
+If you are using a Ceph or another S3-compatible bucket to create the policy and access key,
+follow the documentation for your storage solution.
+For more information about Ceph S3 bucket policies,
+see the [Ceph documentation](https://docs.ceph.com/docs/master/radosgw/bucketpolicy/).
+
+To create a policy and access key in AWS:
+
+1. Create a policy for your <%= vars.product_old %> user account. <br><br>
+
+    In AWS, create a new custom policy by following this procedure in the
+    [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create-console.html#access_policies_create-json-editor). <br>
+
+    Paste in the following permissions:
+
+    ```json
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "ServiceBackupPolicy",
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListBucket",
+            "s3:ListBucketMultipartUploads",
+            "s3:ListMultipartUploadParts",
+            "s3:CreateBucket",
+            "s3:PutObject"
+          ],
+          "Resource": [
+            "arn:aws:s3:::MY_BUCKET_NAME/*",
+            "arn:aws:s3:::MY_BUCKET_NAME"
+          ]
+        }
+      ]
+    }
+```
+
+1. Record the Access Key ID and Secret Access Key user credentials for a new user account by
+following the procedure in
+this [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console).
+Ensure you select **Programmatic access**
+and **Attach existing policies to user directly**. You must attach the policy you created in
+the previous step.
+
+### <a id="configure-aws"></a> Configure Backups in <%= vars.ops_manager %>
+
+Use <%= vars.ops_manager %> to connect <%= vars.product_old %> to your S3 account.
+
+1. In <%= vars.ops_manager %>, open the <%= vars.product_old %> tile **Backups** pane.
+
+1. Select **Ceph or Amazon S3**.
+
+    ![S3 Backup Configuration Form](S3-backups.png)
+
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Access Key ID</strong> and <strong>Secret Access Key</strong>
+            </td>
+            <td>
+                Enter the S3 Access Key ID and Secret Access Key that you created in
+                <a href="#access-key-aws">Create a Custom Policy and Access Key</a> above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Endpoint URL</strong>
+            </td>
+            <td>
+                Enter the S3-compatible endpoint URL for uploading backups. <br>
+                The URL must start with <code>http://</code> or <code>https://</code>. <br>
+                The default is <code>https://s3.amazonaws.com</code>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Region</strong>
+            </td>
+            <td>
+                Enter the region where your bucket is located or the region where
+                you want a bucket to be created.
+                If the bucket does not already exist, it is created automatically.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Bucket Name</strong>
+            </td>
+            <td>
+                Enter the name of your bucket. <br>
+                Do not include an <code>s3://</code> prefix, a trailing <code>/</code>, or underscores.
+                VMware recommends using the naming convention <code>DEPLOYMENT-backups</code>.
+                For example, <code>sandbox-backups</code>.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Bucket Path</strong>
+            </td>
+            <td>
+               Enter the path in the bucket to store backups. <br>
+               Do not include a trailing <code>/</code>.
+               VMware recommends using <code>mysql-v2</code>.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a cron expression using standard syntax.
+                This sets the schedule for taking backups for each service instance.
+                <br>
+                For information about cron expressions, see
+                <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
+                on Wikipedia.
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup fails.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_abbr %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
+
+## <a id="gcs"></a> Back up to GCS
+
+When you configure automatic backups for a Google Cloud Storage (GCS) bucket,
+<%= vars.product_old %> runs a GCS SDK that saves backups to a GCS bucket.
+
+  For information about GCS buckets,
+  see the [GCS documentation](https://cloud.google.com/storage/).
+
+To back up your database to Google Cloud Storage (GCS):
+
++ [Create a Service Account and Private Key](#service-account-gcs)
++ [Configure Backups in <%= vars.ops_manager %>](#configure-gcs)
+
+### <a id="service-account-gcs"></a> Create a Service Account and Private Key
+
+<%= vars.product_old %> accesses your GCS bucket through a service account.
+VMware recommends that this account is only used by <%= vars.product_old %>.
+You must apply a minimal policy that enables the service account to upload backups to your GCS bucket.
+
+The service account needs the following permissions:
+
+* List and upload to buckets
+* (Optional) Create buckets if they do not already exist
+
+To create a service account and private key in GCS:
+
+1. Create a new service account by following this procedure in
+the [GCS documentation](https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account). <br>
+When you create the service account:
+      1. Enter a unique name for the service account name.
+      1. Add the **Storage Admin** role.
+      1. Create and download a private key JSON file.
+
+
+### <a id="configure-gcs"></a> Configure Backups in <%= vars.ops_manager %>
+
+Use <%= vars.ops_manager %> to connect <%= vars.product_old %> to your GCS account.
+
+1. In <%= vars.ops_manager %>, open the <%= vars.product_old %> tile **Backups** pane.
+
+1. Select **GCS**.
+
+    ![GCS Backup Configuration Form](gcs-backups.png)
+
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Project ID</strong>
+            </td>
+            <td>
+                Enter the Project ID for the Google Cloud project that you are using.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Bucket name</strong>
+            </td>
+            <td>
+                Enter the bucket name that <%= vars.product_old %> uploads backups to.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Service Account JSON</strong>
+            </td>
+            <td>
+                Enter the contents of the service account JSON file that you downloaded
+                when creating a service account in
+               <a href="#service-account-gcs">Create a Service Account and Private Key</a> above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a cron expression using standard syntax.
+                This sets the schedule for taking backups for each service instance.
+                <br>
+                For information about cron expressions, see
+                <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
+                on Wikipedia.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup fails.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_abbr %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
+
+## <a id="azure"></a> Back up to Azure Storage
+
+When you configure automatic backups for Azure Storage,
+<%= vars.product_old %> runs an Azure SDK that saves backups to an Azure storage account.
+
+For information about Azure Storage,
+see the [Azure documentation](https://docs.microsoft.com/en-us/azure/storage/).
+
+To back up your database to Azure Storage:
+
++ [Create a Storage Account and Access Key](#storage-account-azure)
++ [Configure Backups in <%= vars.ops_manager %>](#configure-azure)
+
+### <a id="storage-account-azure"></a> Create a Storage Account and Access Key
+
+<%= vars.product_old %> accesses your Azure Storage account through a storage access key.
+VMware recommends that this account is only used by <%= vars.product_old %>.
+You must apply a minimal policy that enables the storage account upload backups to your Azure Storage.
+
+The storage account needs the following permissions:
+
+* List and upload to buckets
+* (Optional) Create buckets if they do not already exist
+
+To create a storage account and access key:
+
+1. Create a new storage account by following this procedure in
+the [Azure documentation](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal#create-a-storage-account).
+
+1. View your access key by following this procedure in
+the [Azure documentation](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage#view-access-keys-and-connection-string)
+
+### <a id="configure-azure"></a> Configure Backups in <%= vars.ops_manager %>
+
+To back up your database to your Azure Storage account:
+
+1. In <%= vars.ops_manager %>, open the <%= vars.product_old %> tile **Backups** pane.
+
+1. Select **Azure**.
+
+    ![Azure Backup Configuration Form](azure-backups.png)
+
+1. Configure the fields as follows:
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Instructions</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Account</strong>
+            </td>
+            <td>
+               Enter the Azure Storage account name that you created in
+               <a href="#storage-account-azure">Create a Storage Account and Access Key</a> above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Azure Storage Access Key</strong>
+            </td>
+            <td>
+                Enter one of the storage access keys that you viewed in
+                <a href="#storage-account-azure">Create a Storage Account and Access Key</a> above.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Container Name</strong>
+            </td>
+            <td>
+                Enter the container name that <%= vars.product_old %> uploads backups to.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Destination Directory</strong>
+            </td>
+            <td>
+                Enter the directory that backups are uploaded to inside of the container.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Blob Store Base URL</strong>
+            </td>
+            <td>
+              To use an on-premise blob storage, enter the hostname of the blob storage.
+               By default, backups are sent to the public Azure blob storage.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Cron Schedule</strong>
+            </td>
+            <td>
+                Enter a cron expression using standard syntax.
+                This sets the schedule for taking backups for each service instance.
+                <br>
+                For information about cron expressions, see
+                <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
+                on Wikipedia.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Enable Email Alerts</strong>
+            </td>
+            <td>
+                Select to receive email notifications when a backup fails.
+                Also verify that:
+                <ul>
+                 <li>All users who need to be notified about failed backups
+                     have the Space Developer role in the system org and system space.</li>
+                 <li>Email notifications are configured in <%= vars.app_runtime_abbr %>.
+                     See <a href="https://docs.pivotal.io/platform/customizing/configure-pas.html#smtp">
+                     (Optional) Configure Email Notifications</a>.
+                 </li>
+                </ul>
+            </td>
+        </tr>
+      </table>
