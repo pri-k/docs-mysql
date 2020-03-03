@@ -54,7 +54,7 @@ The `find-deprecated-bindings` errand lists app bindings and service keys that a
 These bindings are deprecated because they do not require TLS.
 The errand exits whether or not a deprecated binding is found.
 
-<%= vars.recommended_by %> that operators configure bindings to require TLS. For instructions about
+VMware recommends that operators configure bindings to require TLS. For instructions about
 configuring TLS, see [Configure TLS](./install-config.html#security).
 
 ### How to Run the Errand
@@ -189,7 +189,7 @@ access to ensure that new instances cannot be provisioned during the lifetime of
   1. Checks for instance deletion failure, which results in the errand failing immediately.
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
-In this case, <%= vars.recommended_by %> running the errand again.
+In this case, VMware recommends running the errand again.
 1. Deregisters the broker from Cloud Controller.
 
 ### How to Run the Errand
