@@ -204,6 +204,18 @@ To run the errand:
 
 ## <a id="recreate-all-service-instance"></a>recreate-all-service-instances
 
+<div class="note">
+    <strong>Note:</strong> <%= vars.product_short %> only supports the
+    <code>recreate-all-service-instances</code> errand in the following BOSH versions:<br><br>
+    <ul>
+      <li>266.10.0–266.10.x</li>
+      <li>267.10.0–267.10.x</li>
+      <li>268.2.2–268.2.x</li>
+      <li>268.4.0 and later</li>
+    </ul>
+    Where x represents the latest version in that release line.
+</div>
+
 The `recreate-all-service-instances` errand re-creates all service instance VMs managed by a broker.
 You might want use this errand when doing, for example:
 
