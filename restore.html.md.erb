@@ -311,15 +311,12 @@ To restore a single node or leader-follower service instance:
 1. Run the restore utility to restore the backup artifact into the data directory.
 
     ```
-    mysql-restore --encryption-key ENCRYPTION-KEY \
-    --mysql-username admin --mysql-password ADMIN-PASSWORD --restore-file RESTORE-FILE-PATH
+    mysql-restore --encryption-key ENCRYPTION-KEY --restore-file RESTORE-FILE-PATH
     ```
 
     Where:
     + `ENCRYPTION-KEY` is the backup encryption key you retrieved in
         [Retrieve Backup Encryption Key](#retrieve-key) above.
-    + `ADMIN-PASSWORD` is the admin password for your new service instance,
-        retrieved in [Create and Prepare a New Service Instance for Restore](#prepare) above.
     + `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.
 
 ### <a id="runHA"></a>Restore an HA Cluster Instance
