@@ -151,7 +151,7 @@ To run the errand:
       1 errand(s)
       Succeeded</pre>
 
-<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
 ## <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
@@ -204,19 +204,8 @@ To run the errand:
 
 ## <a id="recreate-all-service-instance"></a>recreate-all-service-instances
 
-<div class="note">
-    <strong>Note:</strong> <%= vars.product_short %> only supports the
-    <code>recreate-all-service-instances</code> errand in the following BOSH versions:<br><br>
-    <ul>
-      <li>266.10.0–266.10.x</li>
-      <li>267.10.0–267.10.x</li>
-      <li>268.2.2–268.2.x</li>
-      <li>268.4.0 and later</li>
-    </ul>
-    Where x represents the latest version in that release line.
-</div>
-
-The `recreate-all-service-instances` errand re-creates all service instance VMs managed by a broker.
+The `recreate-all-service-instances` errand re-creates all service instance VMs managed by an on-demand
+broker.
 You might want use this errand when doing, for example:
 
 * Rotating the <%= vars.ops_manager %> root certificate authority (CA).
@@ -224,52 +213,17 @@ For more information about rotating CAs, see
 [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
 * A full restore of the platform during disaster recovery or migration.
 
+#### How to Run the Errand
 
-#### Add the Errand to the Manifest
+To run the `recreate-all-service-instances` errand:
 
-To add the `recreate-all-service-instances` errand to the manifest:
+1. Run the command:
 
-1. Add the following instance group to your manifest:
-
-    ```yaml
-    - name: recreate-all-service-instances
-      lifecycle: errand
-      instances: 1
-      jobs:
-        - name: recreate-all-service-instances
-          release: MYSQL-RELEASE-NAME
-          properties:
-            polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
-            attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
-            attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
-            broker_uri: BROKER-URI # optional
-            tls: # optional
-              ca_cert: BROKER-CA-CERT
-              disable_ssl_cert_verification: TRUE|FALSE # defaults to false
-      vm_type: VM-TYPE
-      stemcell: STEMCELL
-      networks: [{name: NETWORK}]
-      azs: [AZ]
+    ```
+    bosh -d DEPLOYMENT-NAME run-errand recreate-all-service-instances
     ```
 
-    You can configure the behavior of this errand using following properties:
-
-    <table class="nice">
-      <col width="35%">
-      <col width="65%">
-      <th>Property</th>
-      <th>Description</th>
-      <tr>
-        <td><code>polling_interval_seconds</code></td>
-        <td> This controls the wait between checking the status of successfully
-        submitted BOSH re-create tasks. </td> </tr>
-      <tr>
-        <td><code>attempt_interval_seconds</code></td>
-        <td> When there are BOSH tasks in progress on the service instance to
-        re-create, the instance is put in a retry queue.
-        This property controls the pause between retries. </td> </tr>
-      <tr>
-        <td><code>attempt_limit</code></td>
-        <td> The number of times to check whether each instance is available to be
-        re-created. After an instance reaches the limit, the errand terminates.</td> </tr>
-    </table>
+    For example:
+    <pre class="terminal">
+    $ bosh -d cf run-errand recreate-all-service-instances
+    </pre>
