@@ -61,18 +61,19 @@ uuid = fd13cf26-2930-11e7-871e-42010a000807
 tool_version = 2.4.5
 ```
 
-The most important entires in the metadata file are the following:
+The most important entries in the metadata file are the following:
 
-+ `start_time`: You use this to determine which transactions are captured in the backup.
-+ `server_version`: You use this to determine potential incompatibilities
-when restoring an instance with this backup artifact.
++ `start_time`: Use this to determine which transactions are captured in the backup.
++ `server_version`: Use this to determine potential incompatibilities
+when restoring an instance with the backup artifact.
 
 The backup process does not interrupt MySQL service.
 However backups only reflect transactions that are completed before the `start_time`.
 
-<p class="note"><strong>Note</strong>: Although both <code>compressed</code> and <code>encrypted</code>
-  are show as <code>N</code> in this file, the backup uploaded by <%= vars.product_old %>
-  is both compressed and encrypted.
+<p class="note"><strong>Note</strong>:
+  The metadata suggests that the file is not compressed or encrypted by the <code>N</code> value.
+  However, the backup uploaded by <%= vars.product_old %> is both compressed and encrypted.
+  This is a known issue.
 </p>
 
 ### <a id="enable-backups"></a> About Configuring Automated Backups
@@ -80,7 +81,8 @@ However backups only reflect transactions that are completed before the `start_t
 You can configure <%= vars.product_old %> to automatically back up databases to external storage.
 <%= vars.product_old %> backs up the entire data directory for each service instance.
 
-The backups are taken on schedule that you configure with a cron expression.
+<%= vars.product_short %> back ups your database on a schedule.
+You configure this schedule with a cron expression.
 For information about cron expressions, see
 [CRON expression](https://en.wikipedia.org/wiki/Cron#CRON_expression) on Wikipedia.
 
@@ -183,7 +185,7 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_old %> to backup using
             </td>
             <td>
                Enter the SCP port number for SSH.
-               This is port usually <code>22</code>.
+               This port usually is <code>22</code>.
             </td>
         </tr>
         <tr>
@@ -192,7 +194,7 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_old %> to backup using
             </td>
             <td>
                 Enter a cron expression using standard syntax.
-                This sets the schedule for taking backups for each service instance.
+                The cron expression sets the schedule for taking backups for each service instance.
                 <br>
                 For information about cron expressions, see
                 <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
@@ -205,7 +207,7 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_old %> to backup using
             </td>
             <td>
                 (Optional) Enter the fingerprint for the destination VM public key.
-                This helps to detect any changes to the destination VM.
+                The fingerprint detects any changes to the destination VM.
             </td>
         </tr>
         <tr>
@@ -297,8 +299,8 @@ To create a policy and access key in AWS:
 ```
 
 1. Record the Access Key ID and Secret Access Key user credentials for a new user account by
-following the procedure in
-this [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console).
+following this procedure in
+the [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console).
 Ensure you select **Programmatic access**
 and **Attach existing policies to user directly**. You must attach the policy you created in
 the previous step.
@@ -376,7 +378,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_old %> to your S3 accoun
             </td>
             <td>
                 Enter a cron expression using standard syntax.
-                This sets the schedule for taking backups for each service instance.
+                The cron expression sets the schedule for taking backups for each service instance.
                 <br>
                 For information about cron expressions, see
                 <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
@@ -486,7 +488,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_old %> to your GCS accou
             </td>
             <td>
                 Enter a cron expression using standard syntax.
-                This sets the schedule for taking backups for each service instance.
+                The cron expression sets the schedule for taking backups for each service instance.
                 <br>
                 For information about cron expressions, see
                 <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
@@ -610,7 +612,7 @@ To back up your database to your Azure Storage account:
             </td>
             <td>
                 Enter a cron expression using standard syntax.
-                This sets the schedule for taking backups for each service instance.
+                The cron expression sets the schedule for taking backups for each service instance.
                 <br>
                 For information about cron expressions, see
                 <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>
