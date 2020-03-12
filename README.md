@@ -45,7 +45,7 @@ This is a word list for terminology and word usage specific to the MySQL for VMw
 | node | See above. The old proxy page used: MySQL node, server node, MySQL servers, cluster back-ends, back-end database cluster node, database node VM, proxy instance, proxy. But, only two things are referred to here, nodes and proxies. |
 | proxy | Use proxy consistently instead of alternating between "proxy instance" and "proxy". |
 | TLS certificates | Certificates needed if you use TLS; there are two or three of these. One is the TLS CA certificate. |
-| TLS CA certificate | The CA certificated used for TLS. You can add your own or use the one that Pivotal Ops Manager provides. |
+| TLS CA certificate | The CA certificated used for TLS. You can add your own or use the one that  Ops Manager provides. |
 |Multi-Site Replication| This is the name of the feature and plan in the UI in v2.7.2 and later|
 |multi-site replication service key| When referring to a service key that is only used for nodes in different foundations or data centers to communicate, use this term at least on first use. If you are referring to a "normal" service key, like one that is used for TLS, just use `service key`|
 |decoupled leader-follower service instance| This refers to a leader-follower service that is across foundations or data centers and is manually created by a developer. The Multi-Site Replication plan enables you to create this service. Only use this term if you need to differentiate between the Multi-Site Replication plan and the "normal" leader-follower plan.|

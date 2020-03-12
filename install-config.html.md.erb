@@ -102,7 +102,7 @@ see [BOSH Resurrector](https://docs.pivotal.io/pivotalcf/customizing/resurrector
 
 To download and import the <%= vars.product_short %> tile:
 
-1. Download the product file from [Pivotal Network](https://network.pivotal.io/products/pivotal-mysql/).
+1. Download the product file from [<%= vars.product_network %>](https://network.pivotal.io/products/pivotal-mysql/).
 
 1. Navigate to the **<%= vars.ops_manager %> Installation Dashboard** and click **Import a Product** to upload the product file.
 
@@ -392,7 +392,7 @@ To set MySQL defaults and enable developers to customize their instances:
             For more information, see <a href="./change-default.html#configuring">Optional Parameters for the <%= vars.product_short %> Service Instances</a>.</td></tr>
     <tr><td><strong>Enable Local Infile</strong></td>
         <td>Select this checkbox to enable data downloading from the local file system of the client.
-            Pivotal discourages selecting this checkbox. Before you enable local in-file,
+            VMware discourages selecting this checkbox. Before you enable local in-file,
             review the security issues associated with <code>LOAD DATA LOCAL</code>.
             See the <a href="https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html">MySQL documentation</a>.
     </td></tr>
@@ -712,4 +712,4 @@ To verify your stemcell version and apply all changes:
 1. Click **Apply Changes**.
 
 For information about the Xenial stemcells that are compatible with <%= vars.product_short %>,
-see [Release Notes](./release-notes.html) or [Pivotal Network](https://network.pivotal.io/).
+see [Release Notes](./release-notes.html) or [<%= vars.product_network %>](https://network.pivotal.io/).

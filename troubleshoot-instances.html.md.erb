@@ -42,16 +42,16 @@ You might experience the following during upgrades or in a leader-follower topol
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: 'read-only',
     description: 'Apps Cannot Write to the Database',
-    symptom: 'You have a leader-follower topology and your apps can no 
+    symptom: 'You have a leader-follower topology and your apps can no
     longer write to the database.',
-    cause: 'The leader VM might be read-only. If you can no longer read 
+    cause: 'The leader VM might be read-only. If you can no longer read
     to the database as well, your persistent disk might be full.',
-    solution: '<p>For more information about troubleshooting this problem, see 
-    <a href="./troubleshoot.html#both-read-only">Both Leader and 
+    solution: '<p>For more information about troubleshooting this problem, see
+    <a href="./troubleshoot.html#both-read-only">Both Leader and
         Follower Instances Are Read-Only</a>.</p>
-<p>If you can no longer read to the database as well, 
-    your persistent disk might be full. For more information about 
-    troubleshooting inoperable apps, see <a href="#disk-full">Apps 
+<p>If you can no longer read to the database as well,
+    your persistent disk might be full. For more information about
+    troubleshooting inoperable apps, see <a href="#disk-full">Apps
     are Inoperable</a>.</p>'
 } %>
 
@@ -98,8 +98,8 @@ the apps are using MySQL Connector/J v5.1.41 or earlier.</p>',
         at sun.security.ssl.Alerts.getSSLException(Alerts.java:192) ~[na:1.8.0_152]</pre>',
     solution:'<p>If you cannot update the MySQL Connector/J, do the workaround in
 <a href="https://community.pivotal.io/s/article/how-to-disable-keymanager-and-or-trustmanager-in-container-security-provider-framework-in-the-java-buildpack">
-How to disable KeyManager and TrustManager in Container Security Provider Framework in the 
-Javanbuildpack</a> in the Pivotal Support knowledge base.</p>'
+How to disable KeyManager and TrustManager in Container Security Provider Framework in the
+Javanbuildpack</a> in the Support knowledge base.</p>'
 } %>
 
 
@@ -115,8 +115,8 @@ Javanbuildpack</a> in the Pivotal Support knowledge base.</p>'
 
 ## <a id="techniques"></a> Techniques for Troubleshooting
 
-See the following sections for troubleshooting techniques when using 
-the Cloud Foundry Command-Line Interface (cf CLI) to perform basic 
+See the following sections for troubleshooting techniques when using
+the Cloud Foundry Command-Line Interface (cf CLI) to perform basic
 operations on a <%= vars.product_short %> service instance.
 
 Basic cf CLI operations include `create`, `update`, `bind`, `unbind`, and `delete`.
