@@ -57,8 +57,14 @@ Add-on](https://docs.pivotal.io/platform/healthwatch/indicator-protocol.html#ena
 The following image shows an example of the Indicator Protocol dashboard for a highly available
 (HA) cluster service instance:
 
-![This screenshot shows KPIs metrics for MySQL server availability, the percentage of available connections,
-CPU utilization percentage, queries delta, ephemeral disk percent, and persistent disk percent. The value of the
+<p class="note"><strong>Note:</strong> <%= vars.product_short %> v2.7.5 and earlier show fewer KPIs. 
+Indicator Protocol dashboard does not include ephemeral and persistent disk usage, Galera cluster node 
+readiness, cluster size, and cluster status.</p>
+
+![This screenshot shows KPIs for MySQL server availability, the 
+percentage of available connections, CPU utilization percentage, queries delta, 
+ephemeral disk percent, persistent disk percent, galera cluster node readiness, 
+galera cluster size, and galera cluster status. The value of the
 metrics are shown as graphs over time.](indicator-dash.png)
 
 <a href="./images/indicator-dash.png" target="_blank" aria-hidden="true">View a larger version of this image</a>
