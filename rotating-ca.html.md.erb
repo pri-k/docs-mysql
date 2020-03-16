@@ -68,12 +68,7 @@ The following table lists the certificates used by MySQL for PCF:
   </tr>
 
   <tr>
-    <td><code>mysql_tls</code></td>
-    <td>No</td>
-  </tr>
-
-  <tr>
-    <td><code>mysql_server_tls</code></td>
+    <td><code>/p-bosh/service-instance_GUID/mysql_server_tls</code></td>
     <td>No</td>
   </tr>
 
@@ -82,17 +77,17 @@ The following table lists the certificates used by MySQL for PCF:
   </tr>
 
   <tr>
-    <td><code>/service_instance_GUID/pxc_tls_ca</code></td>
+    <td><code>/p-bosh/service-instance_GUID/pxc_tls_ca</code></td>
     <td>No</td>
   </tr>
 
   <tr>
-    <td><code>/service_instance_GUID/pxc_tls_server</code></td>
+    <td><code>/p-bosh/service-instance_GUID/pxc_tls_server</code></td>
     <td>No</td>
   </tr>
 
   <tr>
-    <td><code>/service_instance_GUID/pxc_internal</code></td>
+    <td><code>/p-bosh/service-instance_GUID/pxc_internal_ca</code></td>
     <td>No</td>
   </tr>
 
@@ -101,52 +96,42 @@ The following table lists the certificates used by MySQL for PCF:
   </tr>
 
   <tr>
-    <td><code>/pivotal_mysql_GUID/agent_ca</code></td>
+    <td><code>/p-bosh/pivotal-mysql_GUID/agent_ca_2_6_x</code></td>
       <td>Yes</td>
   </tr>
 
   <tr>
-    <td><code>/pivotal_mysql_GUID/agent_client_ssl</code></td>
+    <td><code>/p-bosh/pivotal-mysql_GUID/agent_client_ssl_2_6_x</code></td>
     <td>Yes</td>
   </tr>
 
   <tr>
-    <td><code>/pivotal_mysql_GUID/agent_server_ssl</code></td>
+    <td><code>/p-bosh/pivotal-mysql_GUID/agent_server_ssl_2_6_x</code></td>
     <td>Yes</td>
   </tr>
 
     <tr>
-      <td><code>/service_instance_GUID/agent_ca</code></td>
+      <td><code>/p-bosh/service-instance_GUID/agent_ca</code></td>
       <td>Yes</td>
     </tr>
 
     <tr>
-      <td><code>/service_instance_GUID/lf_agent_client_ssl</code></td>
+      <td><code>/p-bosh/service-instance_GUID/agent_client_tls</code></td>
       <td>Yes</td>
     </tr>
 
     <tr>
-      <td><code>/service_instance_GUID/lf_agent_server_ssl</code></td>
+      <td><code>/p-bosh/service-instance_GUID/agent_server_tls</code></td>
       <td>Yes</td>
     </tr>
 
       <tr>
-        <td><code>/service_instance_GUID/agent_client_ssl</code></td>
+        <td><code>/p-bosh/service-instance_GUID/streaming_backup_ca</code></td>
         <td>Yes</td>
       </tr>
 
       <tr>
-        <td><code>/service_instance_GUID/agent_server_ssl</code></td>
-        <td>Yes</td>
-      </tr>
-
-      <tr>
-        <td><code>/service_instance_GUID/streaming_backup_ca</code></td>
-        <td>Yes</td>
-      </tr>
-
-      <tr>
-        <td><code>/service_instance_GUID/streaming_backup_server_cert</code></td>
+        <td><code>/p-bosh/service-instance_GUID/streaming_backup_server_cert</code></td>
         <td>Yes</td>
       </tr>
 </table>
