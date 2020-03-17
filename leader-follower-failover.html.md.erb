@@ -26,6 +26,32 @@ To trigger a failover, follow these procedures:
 + [Configure the New Follower](#config-follower)
 + [Unbind and Rebind the App](#unbind-rebind)
 
+## <a id="errands"></a> Errands Used in Leader-Follower Failover
+
+This section describes the errands used to trigger a failover.
+You can also use these errands to create custom failover scripts.
+
+Operators use the BOSH CLI to run the errands on the deployment for a particular leader-follower service instance.
+
+The errands used in the failover procedures are:
+
+* **configure-leader-follower**:
+  * Configures replication on the follower and ensures the leader is writable
+  * Runs after every create or update of a leader-follower instance
+  * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
+
+* **make-read-only**:
+  * Demotes a leader VM to a follower
+  * Sets the VM to read-only, and guarantees that apps no longer write to this VM
+  * Relays all in-flight transactions on this former leader VM to the follower VM, if it is accessible
+
+* **make-leader**:
+  * Promotes a follower VM to a leader
+  * Removes replication configuration from the VM, waits for all transactions to be applied to the VM,
+    and sets the VM as writable
+  * Fails if the original leader is still writeable to protect against data divergence
+
+
 ## <a id='retrieve'></a> Retrieve Information
 
 Perform the following steps to retrieve the information necessary
