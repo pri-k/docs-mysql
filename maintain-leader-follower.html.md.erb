@@ -5,7 +5,7 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to use the leader-follower topology for the MySQL service and how to trigger a failover of apps from the leader to the follower.
+This topic describes how to use the leader-follower topology for the MySQL service.
 
 You can maintain availability of your MySQL databases by keeping two copies of your database,
 one on a leader (master) instance and another on a follower (slave) instance.
@@ -44,9 +44,7 @@ The following are the high-level steps for setting up and using a leader-followe
 1. **Promotion**: If the leader instance fails or the operator wants to take the leader offline for maintenance,
    the operator promotes the follower instance to the new leader.
 
-1. **Failover**: After a promotion, the developer unbinds the app from the leader-follower service instance and then rebinds it in order to fail the app over to the new leader.
-
-See [Triggering a Leader-Follower Failover](./leader-follower-failover.html) below.
+1. **Failover**: After a promotion, the developer unbinds the app from the leader-follower service instance and then rebinds it in order to fail the app over to the new leader. See [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
 
 ## <a id="config-plan"></a> Configure a Leader-Follower Service Plan
 
