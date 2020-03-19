@@ -170,7 +170,7 @@ The `configure-leader-follower` errand does the following:
 * Runs after every create or update of a leader-follower instance
 * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
 
-<%= current.data.failover_errand %>
+<%= current_page.data.failover_errand %>
 
 ### <a id="make-leader"></a> make-leader
 
@@ -181,7 +181,7 @@ The `make-leader` errand does the following:
   and sets the VM as writable
 * Fails if the original leader is still writeable to protect against data divergence
 
-<%= current.data.failover_errand %>
+<%= current_page.data.failover_errand %>
 
 
 ### <a id="make-read-only"></a> make-read-only
@@ -192,7 +192,7 @@ The `make-read-only` errand does the following:
 * Sets the VM to read-only, and guarantees that apps no longer write to this VM
 * Relays all in-flight transactions on this former leader VM to the follower VM, if it is accessible
 
-<%= current.data.failover_errand %>
+<%= current_page.data.failover_errand %>
 
 ### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
