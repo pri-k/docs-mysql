@@ -1,6 +1,8 @@
 ---
 title: Running Errands
 owner: MySQL
+failover_errand: This errand is used to trigger a failover. You can also use this errand to create custom failover scripts.
+
 ---
 
 <strong><%= modified_date %></strong>
@@ -100,7 +102,13 @@ To run the errand:
     </pre>
 
 
-## <a id="smoke-tests"></a>smoke-tests
+## <a id="available-errands"></a> Available Errands
+
+The following sections describe each service broker errand that 
+you can run.
+
+
+### <a id="smoke-tests"></a>smoke-tests
 
 This errand validates that the service broker has been installed and configured correctly.
 It can also create and remove service instances.
@@ -153,19 +161,52 @@ To run the errand:
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
-## <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
+
+### <a id="configure-leader-follower"></a> configure-leader-follower
+
+The `configure-leader-follower` errand does the following:
+
+* Configures replication on the follower and ensures the leader is writable
+* Runs after every create or update of a leader-follower instance
+* Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
+
+<%= current.data.failover_errand %>
+
+### <a id="make-leader"></a> make-leader
+
+The `make-leader` errand does the following:
+
+* Promotes a follower VM to a leader
+* Removes replication configuration from the VM, waits for all transactions to be applied to the VM,
+  and sets the VM as writable
+* Fails if the original leader is still writeable to protect against data divergence
+
+<%= current.data.failover_errand %>
+
+
+### <a id="make-read-only"></a> make-read-only
+
+The `make-read-only` errand does the following:
+
+* Demotes a leader VM to a follower
+* Sets the VM to read-only, and guarantees that apps no longer write to this VM
+* Relays all in-flight transactions on this former leader VM to the follower VM, if it is accessible
+
+<%= current.data.failover_errand %>
+
+### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
 For more information, see [Upgrading <%= vars.product_short %>](upgrade.html#upgrade-instances).
 
 
-## <a id="register-broker"></a>register-broker
+### <a id="register-broker"></a>register-broker
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' %>
 
 
-## <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
+### <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
 
 
 <%= vars.ops_manager %> runs this errand only when deleting <%= vars.product_short %>.
@@ -176,7 +217,7 @@ Running this errand removes all service instances and their data.
   Use it with extreme caution.
 </p>
 
-### What the Errand Does
+#### What the Errand Does
 
 The `delete-all-service-instances-and-deregister-broker` errand:
 
@@ -192,7 +233,7 @@ If new instances are detected, the errand returns an error.
 In this case, Pivotal recommends running the errand again.
 1. Deregisters the broker from Cloud Controller.
 
-### How to Run the Errand
+#### How to Run the Errand
 
 To run the errand:
 
@@ -202,7 +243,7 @@ To run the errand:
     bosh -d DEPLOYMENT-NAME run-errand delete-all-service-instances-and-deregister-broker
     ```
 
-## <a id="recreate-all-service-instance"></a>recreate-all-service-instances
+### <a id="recreate-all-service-instance"></a>recreate-all-service-instances
 
 The `recreate-all-service-instances` errand re-creates all service instance VMs managed by an on-demand
 broker.
@@ -213,7 +254,7 @@ For more information about rotating CAs, see
 [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
 * Performing a full restore of the platform during disaster recovery or migration.
 
-### How to Run the Errand
+#### How to Run the Errand
 
 To run the errand:
 
