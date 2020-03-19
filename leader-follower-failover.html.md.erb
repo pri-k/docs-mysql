@@ -30,20 +30,26 @@ To trigger a failover, follow these procedures:
 1. [Unbind and Rebind the App](#unbind-rebind)
 
 
-
 ## <a id='retrieve'></a> Retrieve Information
 
 Perform the following steps to retrieve the information necessary
 for stopping the leader and promoting the follower:
 
-1. Target the Cloud Controller of your deployment with the Cloud Foundry Command Line Interface (cf CLI).
-   For example:
-  <pre class="terminal">$ cf api api.pcf.example.com</pre>
-1. Log in:
-  <pre><code>cf login</code></pre>
-1. Enter the org and space where the leader-follower service instance is located.
-1. Retrieve the GUID of the service instance by running the following command:
-    <pre><code>cf service SERVICE-INSTANCE --guid</code></pre>
+1.  Log in to your <%= vars.platform_name %> deployment by running:
+
+    ```
+    cf login API-URL
+    ```
+    When prompted, enter your credentials.
+
+1. Target the org and space where the leader-follower service instance is located by running:
+
+    ```
+    cf target -o DESTINATION-ORG -s DESTINATION-SPACE
+    ```
+
+1. Record the GUID of the service instance by running:
+    <pre>cf service SERVICE-INSTANCE --guid</pre>
     <br>
     Where `SERVICE-INSTANCE` is the name of the leader-follower service instance.
   <br><br>
@@ -52,23 +58,26 @@ for stopping the leader and promoting the follower:
   82ddc607-710a-404e-b1b8-a7e3ea7ec063
   </pre>
   If you do not know the name of the service instance, you can list service instances in the space with `cf services`.
-1. Perform the steps in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
-   and [SSH into <%= vars.ops_manager %>](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) of
-   <em>Advanced Troubleshooting with the BOSH CLI</em> to SSH into the <%= vars.ops_manager %> VM.
+
+1. Follow the procedure at [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather)
+   and [SSH into <%= vars.ops_manager %>](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh) to SSH into the <%= vars.ops_manager %> VM.
+
 1. From the <%= vars.ops_manager %> VM, log in to your BOSH Director with the BOSH CLI.
-   See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in) in
-   <em>Advanced Troubleshooting with the BOSH CLI</em>.
-1. Use the BOSH CLI to run the `inspect` errand with the following command:
-  <pre><code>bosh -d service-instance\_GUID run-errand inspect</code></pre>
+   See [Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
+
+1. Use the BOSH CLI to run the `inspect` errand by running:
+  <pre>bosh -d service-instance\_GUID run-errand inspect</pre>
   <br>
-  Where `GUID` is the GUID of the leader-follower service instance retrieved above.
+  Where `GUID` is the GUID of the leader-follower service instance you recorded.
   <br><br>
   For example:
   <pre class="terminal">
   $ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
       run-errand inspect
   </pre>
-1. Examine the output and locate the information about the leader-follower MySQL VMs:
+
+1. See the output about the leader-follower MySQL VMs and identify 
+the instance marked `Role: leader`.><br>For example output:
   <pre class="terminal">
   Instance   mysql/ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0
   Exit Code  0
@@ -97,13 +106,14 @@ for stopping the leader and promoting the follower:
             GTID Executed: 82ddc607-710a-404e-b1b8-a7e3ea7ec063:1-18
             2018/04/03 18:08:46 Successfully executed command: inspect
   </pre>
-1. Identify the instance marked `Role: leader`.
-   This is the leader VM.
-   Record the index, which is the value for `Instance` after `mysql/`.
-   In the above output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
+1. Record the index of the instance marked `Role: leader`.
+   In the above example output, the index of the leader VM is `ca0ed8b5-7590-4cde-bba8-7ca2935f2bd0`.
+
 1. Record the index of the other instance, which is the follower VM.
-   In the above output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
-1. If you still have access to the AZ where the leader VM is located, use the BOSH CLI to determine if the leader VM is in the AZ you want to take offline.
+   In the above example output, the index of the follower VM is `37e4b6bc-2ed6-4bd2-84d1-e59a91f5e7f8`.
+
+1. If you still have access to the AZ where the leader VM is located, use the BOSH CLI to determine if the 
+leader VM is in the AZ you want to take offline.
   For example:
   <pre class="terminal">$ bosh -d service-instance\_82ddc607-710a-404e-b1b8-a7e3ea7ec063 \
     instances
