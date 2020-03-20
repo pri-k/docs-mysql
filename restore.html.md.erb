@@ -24,9 +24,9 @@ Restoring a <%= vars.product_old %> service instance replaces all of its data an
 
 To restore a <%= vars.product_old %> instance from an offsite backup:
 
-+ [Retrieve Backup Encryption Key](#retrieve-key)
-+ [Download the Backup Artifact](#download)
-+ [Restore the Service Instance](#restoreinstance)
+1. [Retrieve Backup Encryption Key](#retrieve-key)
+2. [Download the Backup Artifact](#download)
+3. [Restore the Service Instance](#restoreinstance)
 
 ##<a id="retrieve-key"></a> Retrieve Backup Encryption Key
 
@@ -37,10 +37,15 @@ To retrieve the backup encryption key:
 1. Find the GUID for the service instance that you want to restore by running:
 
     ```
-    cf service MY-INSTANCE-NAME --guid
+    cf service SERVICE-INSTANCE-NAME --guid
     ```
     Record the output.
 
+    <p class="note">
+      <strong>Note:</strong> If you do not know the name of the service instance,
+      run <code>cf services</code> to see a listing of all service instances in the space.
+      The service instances are listed in the name column.
+    </p>
 1. Record the information needed to log in to the BOSH Director VM by following the procedure in
 [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#gather).
 
@@ -66,7 +71,7 @@ To retrieve the backup encryption key:
     --client-name=CREDHUB-CLIENT-NAME \
     --client-secret=CREDHUB-CLIENT-SECRET
     ```
-    Where
+    Where:
     * `CREDHUB-CLIENT-NAME` is the value you recorded for `BOSH_CLIENT` in
 		[Find the CredHub Credentials in step 1.
     * `CREDHUB-CLIENT-SECRET` is the value you recorded for `BOSH_CLIENT_SECRET` in
@@ -107,7 +112,7 @@ see the documentation for your backup provider to download the backup.
   You can also use the AWS Management Console to download backups.
 </p>
 
-To download the backup artifact from an Amazon S3 bucket using the command line:
+To download the backup artifact from an Amazon S3 bucket using the command line interface (CLI):
 
 1. From the <%= vars.ops_manager %> VM,
 download the manifest for the service instance deployment by specifying the deployment name
@@ -154,8 +159,9 @@ For example:
 
 ##<a id="restoreinstance"></a> Restore the Service Instance
 
-<p class="note warning"><strong>Warning:</strong> Restoring a service instance is destructive.
-VMware recommends that you restore to a new and unused service instance.
+<p class="note warning">
+  <strong>Warning:</strong> Restoring a service instance is destructive.
+  VMware recommends that you only restore to a new and unused service instance.
 </p>
 
 To restore the downloaded backup to a new service instance for a single node, leader-follower,
@@ -179,18 +185,18 @@ To prepare a new service instance for restore:
     Where:
     + `SERVICE-PLAN` is the name of the service plan for your new service instance.
     + `NEW-INSTANCE-NAME` is the name of the new service instance.
-    <br><br>
 
-    <ul>
-    <li>If you are using an HA cluster plan, you can only restore backup artifacts to an HA service instance.</li><br>
 
-    <li>If you are using a single node or leader-follower plan,
+    If you are using an HA cluster plan, you can only restore backup artifacts
+    to an HA service instance.<br><br>
+
+    If you are using a single node or leader-follower plan,
       you can only restore backup artifacts to a single node service instance.
       The persistent disk size of this single node plan must be three times larger than
       the maximum size of the data developers need.
-      For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li><br>
+      For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li>
 
-    <li>To restore to a leader-follower plan, do one of the following:
+    To restore to a leader-follower plan, do one of the following:
       <ul>
         <li><b>Create a single-node instance to restore to</b>
           then update the plan on this instance to leader-follower after you run the restore utility.
@@ -200,9 +206,6 @@ To prepare a new service instance for restore:
           before running the restore utility. For how to scale instances,
           see step 6 of this procedure.</li>
       </ul>
-    </li>
-</ul>
-
 
 
     For more information, see [Create a Service Instance](./use.html#create).
@@ -227,8 +230,12 @@ To prepare a new service instance for restore:
     ```
     bosh -e BOSH-ENVIRONMENT  -d BOSH-DEPLOYMENT instances
     ```
+    For example:
+    <pre class="terminal">
+    bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
+    </pre>
 
-1. If you created a leader-follower or HA cluster service instance to restore to, do the following:
+1. If you created a leader-follower or HA cluster service instance to restore to:
     1. Modify the deployment manifest to scale the instances to one. Do one of the following:
       * To scale a leader-follower instance, set the `instances` property to `1` and the
       `leader-follower` property to `false`.
@@ -282,10 +289,12 @@ For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizi
 
 ### <a id="run-sn-leader-follower"></a> Restore a Single Node or Leader-Follower Instance
 
-<p class="note warning"><strong>Warning</strong>: This is a destructive action and
-  should only be run on a new and unused service instance.</p>
+<p class="note warning">
+  <strong>Warning:</strong> Restoring a service instance is destructive.
+  VMware recommends that you only restore to a new and unused service instance.
+</p>
 
-Be sure you have followed the procedure in
+Before you restore your service instance, follow the procedure in
 [Create and Prepare a New Service Instance for Restore](#prepare) above.
 
 You can restore a single node or leader-follower service instance using the restore utility.
@@ -312,16 +321,18 @@ To restore a single node or leader-follower service instance:
     ```
 
     Where:
-    + `ENCRYPTION-KEY` is the backup encryption key you retrieved in
+    + `ENCRYPTION-KEY` is the backup encryption key you recorded in
         [Retrieve Backup Encryption Key](#retrieve-key) above.
     + `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.
 
 ### <a id="runHA"></a>Restore an HA Cluster Instance
 
-<p class="note warning"><strong>Warning</strong>: This is a destructive action and
-  should only be run on a new and unused service instance.</p>
+<p class="note warning">
+  <strong>Warning:</strong> Restoring a service instance is destructive.
+  VMware recommends that you only restore to a new and unused service instance.
+</p>
 
-Be sure you have followed the procedure in
+Before you restore your service instance, follow the procedure in
 [Create and Prepare a New Service Instance for Restore](#prepare) above.
 
 To restore an HA cluster:
@@ -390,8 +401,8 @@ leader-follower plan, update the plan now:
     ```
 
 1. If you scaled instances to one in step 6 of *Create and Prepare a New Service
-Instance for Restore* above, do the following:
-    1. To scale your instance, do one of the following:
+Instance for Restore* above:
+    1. Scale your instance. Do one of the following:
       + If you scaled a leader-follower instance, modify the deployment manifest
       to edit the `instances` property to `2` and the `leader-follower` property to `true`.
       Update the instance group and properties for your new service instance as follows:
