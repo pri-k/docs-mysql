@@ -233,6 +233,9 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
 
 ## <a id="ceph-or-s3"></a> Back up to Amazon S3 or Ceph
 
+<p class="warning note"><strong>Warning:</strong> For <%= vars.product_short %> v2.7.5 and v2.7.6, 
+backups do not upload to s3 external storage. Configure a different external storage option.</p>
+
 When you configure automatic backups for Amazon S3 or Ceph,
 <%= vars.product_short %> runs an Amazon S3 client that saves the backups to one of the following:
 
