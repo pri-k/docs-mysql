@@ -102,7 +102,7 @@ To run the errand:
 
 ## <a id="available-errands"></a> Available Errands
 
-The following sections describe each service broker errand that 
+The following sections describe each service broker errand that
 you can run.
 
 
@@ -168,7 +168,8 @@ The `configure-leader-follower` errand does the following:
 * Runs after every create or update of a leader-follower instance
 * Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
 
-This errand is used to trigger a failover. You can also use this errand to create custom failover scripts.
+This errand is used to trigger a leader-follower failover. You can also use this errand to create custom failover scripts.
+For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
 
 ### <a id="make-leader"></a> make-leader
 
@@ -179,7 +180,8 @@ The `make-leader` errand does the following:
   and sets the VM as writable
 * Fails if the original leader is still writeable to protect against data divergence
 
-This errand is used to trigger a failover. You can also use this errand to create custom failover scripts.
+This errand is used to trigger a leader-follower failover. You can also use this errand to create custom failover scripts.
+For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
 
 
 ### <a id="make-read-only"></a> make-read-only
@@ -190,7 +192,8 @@ The `make-read-only` errand does the following:
 * Sets the VM to read-only, and guarantees that apps no longer write to this VM
 * Relays all in-flight transactions on this former leader VM to the follower VM, if it is accessible
 
-This errand is used to trigger a failover. You can also use this errand to create custom failover scripts.
+This errand is used to trigger a leader-follower failover. You can also use this errand to create custom failover scripts.
+For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
 
 ### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
 
