@@ -3,9 +3,33 @@ title: Accessing a Database as an Admin User
 owner: MySQL
 ---
 
-This topic describes how to access a database as an admin user 
-using either the `mysql` CLI or the <%= vars.ops_manager %> UI.
+This topic describes how to access a database as an admin user.
 
-## <a id="instance-creds"></a> Retrieve Admin and Read-Only Admin Credentials for a Service Instance
+## <a id="overview"></a> Overview
+
+You can get access to your database service instance as an admin 
+in one of two ways:
+
+- [Retrieve Admin Credentials with cf CLI](#instance-creds)
+
+- [Set Admin Database Permission with BOSH SSH](#set-permissions)
+
+
+## <a id="instance-creds"></a> Retrieve Admin Credentials with cf CLI
 
 <%= partial vars.path_to_partials + "/services-tshoot/tshoot-tech-instance-creds" %>
+
+## <a id="set-permissions"></a> Set Admin Database Permission with BOSH SSH
+
+To set admin database permission:
+
+1. BOSH SSH into your node by doing the procedure in
+[BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh)
+in the <%= vars.ops_manager %> documentation.
+
+1. Enable ` global read_only` as an admin user by running:
+
+	```
+	mysql --defaults-file=/var/vcap/jobs/pxc-mysql/config/mylogin.cnf -e "set global read_only=on;"
+	```
+
