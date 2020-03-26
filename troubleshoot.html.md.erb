@@ -345,11 +345,12 @@ This section provides solutions for the following errands:
    '
 } %>
 
-###<a id="apps-inoperable"></a>Inoperable App Errors
+###<a id="apps-inoperable"></a>Inoperable App and Database Errors
 
-This section provides a solution for the following errand:
+This section provides a solution for the following errors:
 
 + [Persistent Disk is Full](#persistent-disk)
++ [Cannot Access Database Table](#access-table)
 
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "persistent-disk",
@@ -372,6 +373,53 @@ This section provides a solution for the following errand:
         Deleting binary logs is a destructive procedure and can result in MySQL data loss.
         Only do this procedure with the assistance of <a href="https://pivotal.io/support">Pivotal Support</a>.
       </p>'
+} %>
+
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
+    id: "access-table",
+    description: "Cannot Access Database Table",
+    symptom: "When you query an existing table, you see an error similar to 
+    the following: 
+    <pre class='terminal'>ERROR 1146 (42S02): Table 'mysql.foobar' doesn't exist</pre>",
+    cause: "<p>If you created an uppercase table name and then enabled lower case table names, 
+    this error occurs.</p>
+
+    <p>You enable lower case table names either by:</p>
+
+    <ul>
+
+      <li>Setting the optional <code>enable_lower_case_table_names</code> parameter to <code>true</code> 
+      with the cf CLI. For more information about the parameter, see 
+      <a href='./change-default.html#lowercase'>Lowercase Table Names</a>.</li>
+
+      <li>Selecting <strong>Enable Lower Case Table Names</strong> in 
+      the <strong>Mysql Configuration</strong> pane of the tile. For more 
+      information about this configuration, 
+      see <a href='./install-config.html#mysql'>Configure MySQL</a>.</li>
+    </ul>
+",
+    solution: "<p>To resolve this issue:</p>
+    <ol>
+      <li>Disable lowercase table names by doing one of the following:
+          <ul>
+            <li>Set the optional <code>enable_lower_case_table_names</code> parameter to <code>false</code> 
+            with the cf CLI.</li>
+            <li>Enable lower case table names in the tile:
+              <ol>
+              <li>Deselect <strong>Enable Lower Case Table Names</strong> in 
+            the <strong>Mysql Configuration</strong> pane of the tile.</li>
+              <li> Navigate to the " + vars.ops_manager + " Installation Dashboard, 
+        click <strong>Review Pending Changes</strong>, and then click 
+        <strong>Apply Changes</strong>.</li>
+            </ol></li>
+        </ul>
+      </li>
+
+      <li>
+        (Optional) If you want to re-enable lowercase table names, 
+        re-name your table to lowercase and then enable lowercase table names.
+      </li>
+    </ol>"
 } %>
 
 
