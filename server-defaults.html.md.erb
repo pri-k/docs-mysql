@@ -21,6 +21,9 @@ For server defaults that are:
 see [Server Defaults for Single Node and Leader-Follower Plans](#sn-l-f) below.
 + Specific to highly available (HA) cluster plans,
 see [Server Defaults for Highly Available Cluster Plans](#ha) below.
++ Specific to <%= vars.single_leader_plan_lc %> plans,
+see [Server Defaults for <%= vars.single_leader_plan %> Plans](#multi-site) below.
+
 
 <p class="note"><strong>Note:</strong>
   You can use optional parameters to change certain server defaults. For more information,
@@ -153,14 +156,6 @@ to all service plans.
         <td>This setting defaults all character sets. You can override this during a session.</td>
     </tr>
     <tr>
-        <td><strong>Relay Log Recovery</strong></td>
-        <td><code>relay-log-recovery</code></td>
-        <td><code>ON</code></td>
-        <td> When enabled, relay log recovery happens automatically after server startup.<br>
-          For more information, see the
-        <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
-    </tr>
-    <tr>
         <td><strong>Binary Log Removal</strong></td>
         <td><code>expire_log_days</code></td>
         <td>3</td>
@@ -224,6 +219,14 @@ and leader-follower plans use the server defaults listed in the following table.
           see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
         MySQL documentation</a>.</td>
     </tr>
+    <tr>
+        <td><strong>Relay Log Recovery</strong></td>
+        <td><code>relay-log-recovery</code></td>
+        <td><code>ON</code></td>
+        <td> When enabled, relay log recovery happens automatically after server startup.<br>
+          For more information, see the
+        <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
+    </tr>
 </table>
 
 
@@ -279,5 +282,77 @@ HA cluster plans use the server defaults listed in the following table.
         <td>You can override this during a session. <br>For instructions about
           viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
         MySQL documentation</a>.</td>
+    </tr>
+    <tr>
+        <td><strong>Relay Log Recovery</strong></td>
+        <td><code>relay-log-recovery</code></td>
+        <td><code>ON</code></td>
+        <td> When enabled, relay log recovery happens automatically after server startup.<br>
+          For more information, see the
+        <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
+    </tr>
+</table>
+
+## <a id="multi-site"></a> Server Defaults for <%= vars.single_leader_plan %> Plans
+
+In addition to the server defaults that are common to all plans,
+<%= vars.single_leader_plan_lc %> plans use the server defaults listed in the following table.
+
+<table>
+    <th>Name</th>
+    <th width="25%">Variable Name</th>
+    <th>Default</th>
+    <th width="45%">Notes</th>
+    <tr>
+        <td><strong>Max Connections</strong></td>
+        <td><code>max-connections</code></td>
+        <td>1500 connections per service instance</td>
+        <td>
+            System processes count towards this limit.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>MyISAM Recover Options</strong></td>
+        <td><code>myisam-recover-options</code></td>
+        <td>OFF</td>
+        <td>
+            This setting enables <%= vars.product_short %> to recover from most MyISAM problems
+            without human intervention.<br>For more information, see the
+            <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options">
+                MySQL documentation</a>.
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Event Scheduler</strong></td>
+        <td><code>event-scheduler</code></td>
+        <td>OFF</td>
+        <td>
+            <%= vars.product_short %> enables the event scheduler so users can create and use
+            events in their dedicated service instances.
+        </td>
+    </tr>
+     <tr>
+        <td><strong>InnoDB Log File Size</strong></td>
+        <td><code>innodb-log-file-size</code></td>
+        <td>1024&nbsp;MB</td>
+        <td><%= vars.product_short %> clusters default to a log-file size of 256&nbsp;MB.</td>
+    </tr>
+
+    <tr>
+        <td><strong>Collation Server</strong></td>
+        <td><code>collation-server</code></td>
+        <td><code>utf8_unicode_ci</code></td>
+        <td>You can override this during a session.<br>
+          For instructions about
+          viewing available and default collations, see the <a href="https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html">
+        MySQL documentation</a>.</td>
+    </tr>
+    <tr>
+        <td><strong>Relay Log Recovery</strong></td>
+        <td><code>relay-log-recovery</code></td>
+        <td><code>OFF</code></td>
+        <td> When enabled, relay log recovery happens automatically after server startup.<br>
+          For more information, see the
+        <a href="https://dev.mysql.com/doc/refman/5.7/en/replication-options-slave.html#sysvar_relay_log_recovery">MySQL documentation</a>.</td>
     </tr>
 </table>

@@ -1,0 +1,344 @@
+---
+title: Using MySQL for Pivotal Platform Multi-Site Replication
+owner: MySQL
+---
+<strong><%= modified_date %></strong>
+
+<%= partial vars.path_to_partials + "/mysql/multi-site-not-supported" %>
+
+This topic provides instructions for developers using the <%= vars.product_name %> for replication
+across multiple foundations or data centers.
+
+<!-- LINK OUT TO DEF OF PXC SINGLE NODE, PRIMARY / SECONDARY ETC  -->
+<!-- WHAT HAPPENS IF THEY MESS THIS UP - T-SHOOTING? -->
+<!-- ADD LINKS BACK TO NORMAL USING DOC? -->
+<!-- THERE WILL BE MORE PROCEDURES ON THIS PAGE -->
+<!-- IF YOU UPDATE PLAN TO SOMETHING TRHAT IS NOT PXC-SINGLE-NODE BAD STUFF HAPPENS -->
+<!-- UPDATE UPDATE-SERVICE COMMAND TO INCLUDE `replication-role:follower`? CHECK WHEN ACCEPTED #163158711 -->
+
+## <a id="overview"></a>Overview
+
+In <%= vars.product_name %> v2.7 and later,
+you can configure replication between two <%= vars.single_leader_plan %> service instances
+across multiple foundations or data centers to create a leader-follower topology.
+
+In a <%= vars.single_leader_plan_lc %> context,
+the two <%= vars.single_leader_plan %> service instances are
+referred to as a decoupled leader-follower service instance.
+
+<p class="note"><strong>Note:</strong>
+  A decoupled leader-follower service instance deployed across multiple
+  foundations or data centers is different from the coupled leader-follower plan that
+  <%= vars.product_name %> offers.
+  For information about the coupled leader-follower plan,
+  see <a href="./about-leader-follower.html">About Leader-Follower</a>.
+</p>
+
+For more information about multi-site architecture,
+see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
+
+## <a id="prereq"></a>Prerequisites
+
+Before you use <%= vars.product_name %> across multiple foundations or data centers, you must have:
+
++ Access to the <%= vars.single_leader_plan %> plan
++ A multi-site architecture configured by a operator
+For more information configuring a multi-site architecture,
+see [Preparing for <%= vars.single_leader_plan %>](./prepare-multi-site.html).
+
+## <a id='create-multi-dc'></a>Create a Multi-Foundation Leader-Follower Service Instance
+
+To set up a leader-follower service instance of <%= vars.product_name %> across multiple foundations
+or data centers:
+
+1. Check the availability of the <%= vars.single_leader_plan %> service in the Marketplace in both your
+foundations.
+See [Confirm the <%= vars.product_name %> Service Availability](use.html#marketplace).
+1. Create <%= vars.single_leader_plan %> service instances to configure a
+decoupled multi-site leader-follower service instance.
+See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
+1. Establish a connection between the <%= vars.single_leader_plan %> service instances to enable
+replication.
+See [Configure <%= vars.single_leader_plan %>](#create-service-key), below.
+1. Bind the  <%= vars.single_leader_plan %> service instances to your apps.
+See [Bind a Leader-Follower Service Instance to Your App](#bind), below.
+5. Modify your app to use the <%= vars.product_name %> service.
+See [Use the MySQL Service in Your App](./use.html#call).
+
+After you create a leader-follower service instance across multiple foundations or data centers,
+you can manage it over the life cycle of your apps and data.
+For instructions on how to manage a <%= vars.product_name %> service instance,
+see [Manage Service Instances](./use.html#manage).
+
+### <a id='create-service-instance'></a>Create <%= vars.single_leader_plan %> Service Instances
+
+To create a leader-follower service instance across multiple foundations or data centers, you
+must create a <%= vars.single_leader_plan %> service instance in two different
+foundations.
+
+Pivotal recommends that you create the leader <%= vars.single_leader_plan %> service instance
+in your primary foundation and the follower <%= vars.single_leader_plan %>
+service instance in your secondary foundation.
+
+To create a leader-follower service instance:
+
+1. Create a <%= vars.single_leader_plan %> service instance in your primary foundation:
+
+    1. Log in to the deployment for your primary foundation by running:
+
+        ```
+        cf login PRIMARY-API-URL
+        ```
+        Where `PRIMARY-API-URL` is the API endpoint for the primary foundation.
+
+    1. Create a primary service instance by running:
+
+        ```
+        cf create-service p.mysql PLAN PRIMARY-INSTANCE
+        ```
+
+        Where:
+        - `PLAN` is the name of the <%= vars.single_leader_plan %> plan you want to use.
+        - `PRIMARY-INSTANCE` is a name you choose to identify the service instance.
+        This name appears under `service` in output from `cf services`.
+
+        For example:
+
+        <pre class="terminal">$ cf create-service p.mysql db-small primary-node<br>
+        Creating service primary-node in org my-org / space my-space as admin...
+        OK</pre>
+
+        <p class="note"><strong>Note:</strong> Do not name your service instance
+          <code>leader</code> or <code>follower</code>. If you trigger a failover or switchover,
+          the service instances in your primary and secondary foundations switch roles.
+          For more information,
+          see <a href="./multi-site-trigger-failover.html">Triggering Multi-Site Replication Failover and Switchover</a>.
+        </p>
+
+    1. (Optional) Watch the progress of the service instance creation by running:
+
+        ```
+        watch cf services
+        ```
+
+        Wait for the `last operation` for your instance to show as `create succeeded`.
+        <br><br>
+        For example:
+
+        <pre class="terminal">$ watch cf services<br>
+        Getting services in org my-org / space my-space as admin...
+        OK
+        name           service       plan        bound apps    last operation
+        primary-node   p.mysql       db-small                  create succeeded
+      </pre>
+        If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
+
+1. Create a <%= vars.single_leader_plan %> service instance in your secondary
+foundation by repeating step 1 and replacing references to `primary` with `secondary`.
+
+### <a id='create-service-key'></a>Configure <%= vars.single_leader_plan %>
+
+After you create the leader and follower <%= vars.single_leader_plan %> service instances,
+you must establish a connection between them to enable
+replication.
+You do this by creating multi-site replication service keys with the `host-info` of the follower instance
+and the `credentials` of the leader instance.
+You only use these service keys for establishing replication between <%= vars.single_leader_plan %>
+service instances.
+
+The following diagram describes the workflow for configuring multi-site replication:
+
+![diagram summarizes the procedure below](configure-multi-site.png)
+
+<a href="./images/configure-multi-site.png" target="_blank">View a larger version of this diagram</a>
+
+The following steps assume that you have created the leader <%= vars.single_leader_plan %>
+service instance in the primary foundation and the follower <%= vars.single_leader_plan %>
+service instance in the secondary foundation. You created these service instances in
+[Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
+
+To create the service keys for your <%= vars.single_leader_plan %> service instances:
+
+1. Create a host-info service key for the service instance in your secondary foundation by running:
+
+    ```
+    cf create-service-key SECONDARY-INSTANCE SERVICE-KEY \
+      -c '{"replication-request": "host-info"}
+    ```
+    Where:
+    + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
+    step 2 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
+    + `SERVICE-KEY` is a name you choose for the host-info service key.
+    <br><br>
+    For example:
+    <pre class="terminal">$ cf create-service-key secondary-node host-info \
+           -c '{"replication-request": "host-info" }'<br>
+        Creating service key host-info for service instance secondary-node as admin...
+        OK
+    </pre>
+
+1. View the `replication-credentials` for your host-info service key by running:
+
+    ```
+    cf service-key SECONDARY-INSTANCE SERVICE-KEY
+    ```
+    Where:
+    + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
+    step 2 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
+    + `SERVICE-KEY` is the name of the host-info service key you created in step 1, above.
+
+    For example:
+
+    <pre class="terminal">$ cf service-key secondary-node host-info-key <br>
+    Getting key host-info-key for service instance secondary-node as admin...
+
+      {
+        "replication": {
+            "peer-info": {
+              "hostname": "secondary.bosh",
+              "ip": "10.0.19.12",
+              "system_domain": "sys.secondary-domain.com",
+              "uuid": "ab12cd34-5678-91e2-345f-67891h234567"
+          },
+          "role": "leader"
+        }
+      }</pre>
+1. Record the output of the above command.
+1. Log in to the deployment for your primary foundation by running:
+
+    ```
+    cf login PRIMARY-API-URL
+    ```
+1. Update your primary service instance with the host-info service key by running:
+
+    ```
+    cf update-service PRIMARY-INSTANCE -c HOST-INFO
+    ```
+    Where:
+    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
+    step 1 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
+    + `HOST-INFO` is the output you recorded in step 3, above.
+
+    For example:
+    <pre class="terminal">$ cf update-service primary-node -c {"replication":{ \
+      "peer-info":{ \
+          "hostname": "secondary.bosh", \
+          "ip": "10.0.18.12", \
+          "system_domain": "sys.secondary-domain.com", \
+          "uuid": "ab12cd34-5678-91e2-345f-67891h234567" \
+        },\
+      "role": "leader" \
+      } \
+    }<br>
+    Updating service instance primary-node as admin...
+    OK</pre>
+1.  Create a credentials service key for the service instance in your primary foundation by
+    running:
+
+    ```
+    cf create-service-key PRIMARY-INSTANCE SERVICE-KEY-NAME \
+      -c '{"replication-request": "credentials"}
+    ```
+    Where:
+    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
+    step 1 of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
+    + `SERVICE-KEY-NAME` is a name you choose for the credentials service key.
+    <br><br>
+    For example:
+    <pre class="terminal">$ cf create-service-key primary-node cred-key \
+          -c '{"replication-request": "credentials" }' <br>
+      Creating service key cred-key for service instance primary-node as admin...
+      OK
+    </pre>
+    <p class="note"><strong>Note:</strong> The <code>-c </code> flag is different than the one in step 1.
+    </p>
+1. View the `replication-credentials` for your credentials service key by running:
+
+    ```
+    cf service-key PRIMARY-INSTANCE SERVICE-KEY-NAME
+    ```
+    Where:
+    + `PRIMARY-INSTANCE` is the name of the primary service instance you created in step 1
+    of [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
+    + `SERVICE-KEY-NAME` is the name of the credentials service key you created in step 6, above.
+
+    For example:
+
+    <pre class="terminal">$ cf service-key primary-node cred-key <br>
+    Getting key cred-key for service instance primary as admin...
+
+      {
+        "replication": {
+          "credentials": {
+            "password": "a22aaa2a2a2aaaaa",
+            "username": "6bf07ae455a14064a9073cec8696366c"
+          },
+          "peer-info": {
+            "hostname": "primary.bosh",
+            "ip": "10.0.17.12",
+            "system_domain": "sys.primary-domain.com",
+            "uuid": "zy98xw76-5432-19v8-765u-43219t876543"
+          },
+          "role": "follower"
+        }
+      }</pre>
+
+1. Record the output of the above command.
+1. Log in to the deployment for your secondary foundation by running:
+
+    ```
+    cf login SECONDARY-API-URL
+    ```
+1. Update your secondary service instance with the credentials service key by running:
+
+    ```
+    cf update-service SECONDARY-INSTANCE -c CREDENTIALS
+    ```
+    Where:
+    + `SECONDARY-INSTANCE` is name of the secondary service instance you created in step 2 of
+    [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
+    + `CREDENTIALS` is the output you recorded in step 8, above.
+
+    For example:
+    <pre class="terminal">$ cf update-service secondary-node -c {"replication": { \
+        "credentials": { \
+          "password": "a22aaa2a2a2aaaaa", \
+          "username": "6bf07ae455a14064a9073cec8696366c" \
+        }, \
+        "peer-info": { \
+          "hostname": "primary.bosh", \
+          "ip": "10.0.17.12", \
+          "system_domain": "sys.primary-domain.com", \
+          "uuid": "zy98xw76-5432-19v8-765u-43219t876543" \
+        }, \
+        "role": "follower" \
+      } \
+    }<br>
+    Updating service instance primary-node as admin...
+    OK</pre>
+
+### <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
+
+For an app to use a multi-site leader-follower service instance, you must bind your app to
+your primary service instance in your primary foundation. If you want to use an active-active topology,
+you must additionally bind your app to the secondary service instance in your secondary foundation.
+
+For information about apps in multiple foundations or data centers, see
+[About <%= vars.single_leader_plan %>](./about-multi-site.html).
+
+To bind an app to a leader-follower service instance:
+
+1. Log in to the deployment for your primary foundation by running:
+
+    ```
+    cf login PRIMARY-API-URL
+    ```
+1. Bind your app to your primary service instance by doing the procedure in
+[Bind a Service Instance to Your App](./use.html#bind).
+
+1. (Optional) If you are using an active-active topology,
+you must bind the same app to your secondary service instance in your secondary foundation.
+To do this, repeat the above steps and replace references to `primary` with `secondary`.
+
+1. Modify your app to use the <%= vars.product_name %> service by doing the procedure in
+  [Use the MySQL Service in Your App](./use.html#call).

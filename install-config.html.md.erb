@@ -27,7 +27,9 @@ Before you install the <%= vars.product_short %> tile, you must:
 
 + [Create an App Security Group for <%= vars.product_short %>](#asg).
 + [Enable the BOSH Resurrector](#resurrector).
-+ [(Optional) Preparing for TLS](prepare-tls.html). Only required if you want to enable TLS.
++ [(Optional) Preparing for TLS](./prepare-tls.html). Only required if you want to enable TLS.
++ [(Optional) Preparing for <%= vars.single_leader_plan %>](./prepare-multi-site.html): Only required if you
+want to replicate data across multiple foundations or data centers.
 
 ### <a id="asg"></a> Create an App Security Group for <%= vars.product_short %>
 
@@ -250,6 +252,7 @@ For each plan that you want to use in your deployment:
       <button class="tablinks active" onclick="openDocs(event, 'tab1')">Single Node</button>
       <button class="tablinks" onclick="openDocs(event, 'tab2')">Leader-Follower</button>
       <button class="tablinks" onclick="openDocs(event, 'tab3')">HA Cluster</button>
+      <button class="tablinks" onclick="openDocs(event, 'tab4')"> <%= vars.single_leader_plan %> [BETA]</button>
     </div>
 
 
@@ -262,9 +265,14 @@ For each plan that you want to use in your deployment:
     <div id="tab3" class="tabcontent">
       <img src="./images/ha-plan.png">
     </div>
+    <div id="tab4" class="tabcontent">
+      <img src="./images/multi-site-plan.png">
+    </div>
 
 
 1. Configure the fields as follows:
+    <p class="note"><strong>Note:</strong> If you want to replicate data across multiple foundations or data centers,
+    you must configure a <%= vars.single_leader_plan %> plan in both foundations using the same configurations.</p>
   <table>
     <tr><th>Field</th><th>Description</th></tr>
     <tr><td><strong>Service Plan Access</strong></td>
@@ -657,7 +665,7 @@ To review errands:
 
     <%= image_tag("errands.png", :alt => "Errand list for MySQL for VMware Tanzu.", :width => "250") %>
 
-1. Review the settings for the following erands:
+1. Review the settings for the following errands:
   <table>
     <tr>
       <th>Errand</th>

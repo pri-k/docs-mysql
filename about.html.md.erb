@@ -205,3 +205,28 @@ as described in the table below.
 	</td>
 	</tr>
 </table>
+
+<h3> <a id='multi-site-ports'></a> Required Networking Rules for <%= vars.single_leader_plan %> </h3>
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
+
+If you are using <%= vars.single_leader_plan_lc %>, you must ensure the networking rules required for all <%= vars.product_short %>
+service instances and the connection described in the table below are set up in both foundations.
+
+<table class="nice">
+	<th>Source VM</th>
+	<th>Destination VM</th>
+	<th>Default TCP Port</th>
+	<th>Notes</th>
+
+	<tr>
+		<td><strong>Leader VM</strong></td>
+		<td><strong>Follower VM</strong></td>
+		<td>8081 <br>8443<br>18443 <br>3306</td>
+		<td>These ports are needed to enable replication between services instance in two different
+			foundations. <br><br>The communication between these VMs is two-way.</td>
+	</tr>
+
+</table>

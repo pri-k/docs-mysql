@@ -1,0 +1,66 @@
+---
+title: About Multi-Site Replication
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial vars.path_to_partials + "/mysql/multi-site-not-supported" %>
+
+<%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
+
+<!-- WHAT ELSE NEEDS TO BE ADDED HERE? -->
+
+The topic describes how multi-site architectures work with <%= vars.product_name %>
+and contains information to help users decide whether to use <%= vars.single_leader_plan_lc %>.
+
+##<a id='overview'></a> Overview
+
+decoupled/coupled leader-follower
+
+
+Operators can configure multiple foundations to be in the same data center
+or spread across multiple data centers. This is useful for the following use cases:
+
+* Active-Passive Disaster Recovery strategy
+* Active-Active Disaster Recovery strategy
+* Off-Platform Access
+
+<!-- ### Terminology -->
+<!-- * Primary Foundation -->
+<!-- * Secondary Foundation -->
+
+Single cloud? Multi-cloud?
+
+
+##<a id='active-passive'></a> Active-Passive Topology
+
+![Active-Passive](active-passive.png)
+
+<a href="./images/active-passive.png" target="_blank">View a larger version of this diagram.</a>
+
+
+##<a id='active-active'></a> Active-Active Topology
+
+![Active-Active](active-active.png)
+
+<a href="./images/active-active.png" target="_blank">View a larger version of this diagram.</a>
+
+
+##<a id='infrastructure'></a> Infrastructure Requirements for <%= vars.single_leader_plan %>
+
+###<a id='capacity'></a> Capacity Planning
+
+<%# ###<a id='az'></a> Availability Zones %>
+
+###<a id='network'></a> Networking Rules
+
+##<a id='enable'></a> Enabling and Using <%= vars.single_leader_plan %>
+
+<%# ##<a id='failover'></a> About Failover %>
+
+##<a id='disaster'></a> About Disaster Recovery
+
+##<a id='limitations'></a> <%= vars.single_leader_plan %> Limitations

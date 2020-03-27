@@ -38,6 +38,12 @@ You might experience the following during upgrades or in a leader-follower topol
 } %>
 
 
+If you have a <%= vars.single_leader_plan %> topology
+and your apps can no longer write to the database, your leader VM might be down. To resolve this issue,
+you can trigger a failover to the follower VM.
+For more information about troubleshooting this problem,
+see [Triggering Multi-Site Replication Failover and Switchover](./multi-site-trigger-failover.html).
+
 
 <%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: 'read-only',
@@ -153,9 +159,6 @@ The service instances are listed in the `name` column.
 1. To retrieve the GUID of the instance, run `cf service SERVICE-INSTANCE-NAME --guid`
 
    The GUID is useful for debugging.
-
-
-
 
 
 ## <a id="kb"></a>Use the Knowledge Base (Community)

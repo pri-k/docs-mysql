@@ -28,7 +28,10 @@ that the service meets user expectations for a general-use relational database.
   a patched Galera Cluster named Percona XtraDB Cluster (PXC).
     For more information about PXC,
     see [Percona XtraDB Cluster](https://www.percona.com/software/mysql-database/percona-xtradb-cluster).
++  <%= vars.single_leader_plan %>. For more information,
+    see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
 
+    <%= partial vars.path_to_partials + "/mysql/multi_site_beta" %>
 
 ## <a id='snapshot'></a> Product Snapshot
 
@@ -47,7 +50,7 @@ The following table provides version and version-support information about <%= v
 </tr>
 <tr>
   <td>Software component version</td>
-  <td>Percona Server 5.7.20-21</td>
+  <td>Percona Server 5.7.28-31</td>
 </tr>
 <tr>
   <td>Compatible <%= vars.ops_manager %> versions</td>

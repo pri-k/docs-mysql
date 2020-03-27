@@ -1,0 +1,62 @@
+---
+title: Preparing for Multi-Site Replication
+owner: MySQL
+---
+
+<strong><%= modified_date %></strong>
+
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
+
+<%= partial vars.path_to_partials + "/mysql/multi-site-not-supported" %>
+
+<%= partial vars.path_to_partials + "/mysql/multi_site_beta" %>
+
+This topic provides instructions to operators about how to prepare foundations for
+<%= vars.single_leader_plan_lc %> using <%= vars.product_name %>.
+
+##<a id='overview'></a> Overview
+
+<!-- Quick reasons why you would want to use this and what it is. Super summary of
+the About page-->
+
+For more information about multi-site architecture,
+see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
+
+##<a id='prerequisites'></a> Prerequisites
+
+Before <%= vars.single_leader_plan_lc %> can be configured for <%= vars.product_name %>, you must
+confirm that you have done the following:
+
+1. Created two PCF foundations with identical release versions.
+The configurations and capacities of the two foundations should be as similar as possible.
+
+1. Determined which of the following disaster recovery strategies you want to use for your foundations:
+      + **Active-Passive:** Pivotal recommends this topology for most apps.
+      If you use active-passive disaster recovery plan, you must create a primary foundation and a secondary foundation.
+      For more information, see [Active-Passive Topology](./about-multi-site.html#active-passive).
+      + **Active-Active:** Pivotal recommends this topology for apps with critical workloads
+      that require high app uptime. If you use active-active typology, you must create two primary foundations.
+      For more information, see [Active-Active Topology](./about-multi-site.html#active-active).
+
+1. Deployed both foundations on a single flat network. For example, the leader and follower nodes must be
+able to connect to each other on their respective IP addresses. You must ensure that the CIDR ranges for the leader
+and follower nodes do not overlap.
+
+1. Configured a global DNS load balancer to point to the two PCF foundations
+and their local load balancers.
+See [Configure Your GLB](https://docs.pivotal.io/pivotalcf/plan/global-dns-lb.html#configure-glb).
+
+##<a id='enable'></a> Enable <%= vars.single_leader_plan %>
+
+After two PCF foundations are created, you can enable <%= vars.single_leader_plan_lc %> by
+doing the following:
+
+1. Configure networking rules.
+See [Required Networking Rules for <%= vars.single_leader_plan %>](./about.html#multi-site-ports).
+
+1. Enable TLS for both foundations. When you paste the contents of your TLS CA certificate in [Preparing for TLS](./prepare-tls.html), paste both TLS CA certificates as shown below:
+
+    ![On the Security pane in the MySQL tile, a TLS CA certificate for the two different foundation are in the Trusted Certificates field.](./images/multi-site-ca.png)
+
+1. Configure a <%= vars.single_leader_plan %> plan on both foundations. See
+[Configure Service Plans](./install-config.html#active).
