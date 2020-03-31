@@ -9,104 +9,165 @@ owner: MySQL
 
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
-The topic describes how multi-site architectures work with <%= vars.product_name %>
-and contains information to help users decide whether to use <%= vars.single_leader_plan_lc %>.
+The topic describes how the <%= vars.single_leader_plan_lc %> topology works with
+<%= vars.product_full %> and contains information to help users decide whether to use
+the <%= vars.single_leader_plan %> plan.
 
 ##<a id='overview'></a> Overview
 
-Multi-site Replication in MySQL for TAS is a disaster recovery solution that enables developers to provision a leader-follower instance across two foundations. These foundations can be in different data centers and geographical regions.
+The <%= vars.single_leader_plan_lc %> topology in <%= vars.product_short %>
+is a disaster recovery solution that enables developers to provision a leader-follower
+instance across two foundations.
 
-This topology uses mulit-site plan, which is different ledaer-follower service plan.
+Operators can configure two foundations to be in the same data center
+or spread across multiple data centers or geographical regions.
 
-This solution makes the MySQL instance resilient to data center-wide outages by allowing Developers to fail over to their secondary site and maintain app uptime.
+The foundation types are the following:
 
-Additionally, Multi-site Replication enables Platform teams to perform data center upgrades without taking Apps and databases running on foundations in that data center offline.
+* **Primary Foundation:** This foundation is deployed in your main data center.
+Generally, this data center has the best hardware and the majority of app traffic.
+<%= vars.product_short %> assumes that the leader is deployed on this foundation when
+healthy.
 
-* Single cloud: on public cloud provider or on-premise
-* Hybrid cloud: more than one cloud provider or cloud provider and on premise
-with no change to user experience.
-
-Operators can configure multiple foundations to be in the same data center
-or spread across multiple data centers.
-
-The feature supports the following deployment patterns:
-
-* Active-Passive Disaster Recovery strategy
-* Active-Active Disaster Recovery strategy
-
-Note: make sure we are not using foundation and data center interchangeably
-
- ### Terminology
-
-* Primary Foundation: the foundation that is deployed on your main data center has the best hardware most app traffic - assume that leader is deployed on this foundation, when things are normal and healthy leader would be in the Primary.
-
-* Secondary Foundation: Failover site. either no app traffic or little app traffic. Assume that follower is deployed on this foundation
+* **Secondary Foundation:** This foundation is deployed in your failover data center.
+Generally, this data center either has no app traffic or little app traffic.
+<%= vars.product_short %> assumes that follower is deployed on this foundation unless
+a developer triggers a failover.
 
 
-Note: Synchronous replication is not supported for a Multi-site Leader-Follower instance. The Leader will not wait for the Follower to apply replicated transactions. in changing defaults the optional parameters does not work. You can only do async.
+<p class="note"><strong>Note:</strong> The <%= vars.single_leader_plan %>
+  uses the <%= vars.single_leader_plan %> plan.
+  This plan is different than the leader-follower service plan.
+</p>
 
-Multi-site Replication plans on MySQL v2.7.4 and above will not be compatible with TAS 2.5 or older. All other features adhere to the compatibility requirements defined on Pivnet.
+For information for operators about enabling <%= vars.single_leader_plan %>,
+see
+[Preparing for <%= vars.single_leader_plan %>](./prepare-multi-site.html).
 
-(MySQL 2.8 does not support TAS 2.5. MySQL 2.7 does support 2.5 tho)
+For information for developers about using <%= vars.single_leader_plan %>,
+see
+[Using <%= vars.product_short %> for <%= vars.single_leader_plan %>](./use-multi-site.html).
 
-##<a id='active-passive'></a> Active-Passive Topology
+##<a id='benefits'></a> <%= vars.single_leader_plan %> Benefits
 
-To learn more
+The <%= vars.single_leader_plan %> plan has the following benefits:
 
-![Active-Passive](active-passive.png)
++ **Resilience for Service Instances:** Developers can trigger a failover or switchover
+to maintain app uptime.
+For more information,
+see [Triggering <%= vars.single_leader_plan %> Failover and Switchover](./multi-site-trigger-failover.html).
 
-app to leader - traffic
-app` to follower - Failover
-leader to follower - replication
++ **Data Center Upgrades with Zero Downtime:** Operators can upgrade data centers
+without taking apps and databases offline.
+
++ **Support for Multiple Cloud Deployment Models:**
+Operators can configure <%= vars.single_leader_plan_lc %> with a
+single cloud, multi-cloud, or hybrid cloud deployment model.
+All of the deployment models have the same end user experience.
+
++ **Support for Active-Passive and Active-Active Disaster Recovery:**
+For more information, see [About Active-Passive Topology](#active-passive)
+and [About Active-Active Topology](#active-active) below.
+
+
+##<a id='active-passive'></a> About Active-Passive Topology
+
+In an active-passive topology, app traffic is directed to the primary foundation when healthy.
+If a developer triggers a failover or switchover, app traffic is directed to the secondary
+foundation.
+
+For more information about failover and switchover,
+see [Triggering <%= vars.single_leader_plan %> Failover and Switchover](./multi-site-trigger-failover.html).
+
+The following diagram describes the active-passive topology in a healthy state:
+
+![Active-Passive Topology](active-passive.png)
 
 
 <a href="./images/active-passive.png" target="_blank">View a larger version of this diagram.</a>
 
+The above diagram shows the following workflows:
 
-##<a id='active-active'></a> Active-Active Topology
++ The global DNS load balancer (GLB) directs traffic to the app in the primary foundation.
+  This app writes to the leader service instance.
++ The leader service instance in the primary foundation replicates data to the follower service
+instance in the secondary foundation.
 
-To learn more
+<%# app to leader - traffic
+app` to follower - Failover
+leader to follower - replication %>
+
+##<a id='active-active'></a> About Active-Active Topology
+
+In an active-active topology, app traffic is directed to the primary and secondary foundation when healthy.
+If a developer triggers a failover or switchover,
+app traffic is directed to the service instance in the secondary foundation.
+
+For more information about failover and switchover,
+see [Triggering <%= vars.single_leader_plan %> Failover and Switchover](./multi-site-trigger-failover.html).
+
+The following diagram describes the active-active topology in a healthy state:
 
 ![Active-Active](active-active.png)
 
-App' to follower to leader and app to leader - app traffic
-leader to follower - replication
-app to leader to follower - failover
-
-
-Not exactly the industry norm. We are not enabling multi master, app can write to the leader and the follower. Both apps are both still writing to the leader in primary foundation.
-
-normally assumption is app to leader and app` to folllower
-
 <a href="./images/active-active.png" target="_blank">View a larger version of this diagram.</a>
 
+The above diagram shows the following workflows:
+
++ The global DNS load balancer (GLB) directs traffic to the apps in the primary and
+  secondary foundations.
+  The app in the primary foundation writes to the leader service instance.
+  The app in the secondary foundation writes to the leader service instance
+  by directing traffic to the follower service instance, which then directs traffic to the leader.
++ The leader service instance in the primary foundation replicates data to the follower service
+  instance in the secondary foundation.
+
+<%# App' to follower to leader and app to leader - app traffic
+leader to follower - replication
+app to leader to follower - failover %>
+
+<p class="note"><strong>Note:</strong>
+In <%= vars.product_short %>, the active-active topology does not enable multi-master replication.
+Therefore, the app in the secondary foundation cannot write to the follower service instance.
+Apps can only write to the leader in the primary foundation.
+ </p>
 
 ##<a id='infrastructure'></a> Infrastructure Requirements for <%= vars.single_leader_plan %>
 
+Before using the <%= vars.single_leader_plan %> plan, consider the following requirements.
+
 ###<a id='capacity'></a> Capacity Planning
 
-When calculating IaaS usage, you must take into account that each leader-follower instance requires two VMs. Therefore, the resources used for <%= vars.single_leader_plan %> plan is twice the amount of single node plan. For more information, see Resource Usage Planning for On-Demand Plans.
+When calculating IaaS usage, you must take into account that each
+<%= vars.single_leader_plan %> instance requires two VMs.
+Therefore, the resources used for <%= vars.single_leader_plan %> plan is
+twice the amount of single node plan.
 
-also def link out to persistent disk usage
+For more information,
+see [Setting Limits for On-Demand Service Instances](.//set-quotas.html) and
+[Persistent Disk Usage](./recommended.html#persistent).
 
 ###<a id='network'></a> Networking Rules
 
 For information about the standard networking rules,
-see [Required Networking Rules for Multi‑Site Replication](./about.html#multi-site-ports).
-
-##<a id='enable'></a> Enabling and Using <%= vars.single_leader_plan %>
-
-Link out to Preparing for Multi-Site Replication
-
-Link out to Using MySQL for VMware Tanzu for Multi-Site Replication
+see [Required Networking Rules for <%= vars.single_leader_plan %>](./about.html#multi-site-ports).
 
 ##<a id='failover'></a> About Failover and Switchover
 
-MySQL for VMware Tanzu focuses on data consistency rather than availability. Therefore, it does not trigger failover automatically, but relies on developers to trigger a failover.
+<%= vars.product_short %> focuses on data consistency rather than availability.
+Therefore, it does not trigger failover automatically
+and developers must trigger a failover.
 
-Link out to Triggering Multi-Site Replication Failover and Switchover
+For more information,
+see [Triggering <%= vars.single_leader_plan %> Failover and Switchover](./multi-site-trigger-failover.html).
 
 ##<a id='limitations'></a> <%= vars.single_leader_plan %> Limitations
 
-+ single flat network
-+ There might be more latency when deployed across foundations because of hardware and geographical limitations
+The <%= vars.single_leader_plan %> plan has the following limitations:
+
++ **Single Flat Network Requirement:** You must deploy both foundations on a single flat network.
++ **Increased Latency:** There might be more latency when <%= vars.product_short %> is deployed across foundations.
+  This is because of hardware and geographical limitations
++ **Synchronous Replication is Not Supported:**
+For <%= vars.single_leader_plan %> plans any data that is written to the leader
+is asynchronously replicated to the follower.
