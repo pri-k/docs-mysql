@@ -11,40 +11,74 @@ owner: MySQL
 
 <%= partial vars.path_to_partials + "/mysql/multi-site-not-supported" %>
 
-<!-- WHAT ELSE NEEDS TO BE ADDED HERE? -->
-
 The topic describes how multi-site architectures work with <%= vars.product_name %>
 and contains information to help users decide whether to use <%= vars.single_leader_plan_lc %>.
 
 ##<a id='overview'></a> Overview
 
-decoupled/coupled leader-follower
+Multi-site Replication in MySQL for TAS is a disaster recovery solution that enables developers to provision a leader-follower instance across two foundations. These foundations can be in different data centers and geographical regions.
 
+This topology uses mulit-site plan, which is different ledaer-follower service plan.
+
+This solution makes the MySQL instance resilient to data center-wide outages by allowing Developers to fail over to their secondary site and maintain app uptime.
+
+Additionally, Multi-site Replication enables Platform teams to perform data center upgrades without taking Apps and databases running on foundations in that data center offline.
+
+* Single cloud: on public cloud provider or on-premise
+* Hybrid cloud: more than one cloud provider or cloud provider and on premise
+with no change to user experience.
 
 Operators can configure multiple foundations to be in the same data center
-or spread across multiple data centers. This is useful for the following use cases:
+or spread across multiple data centers.
+
+The feature supports the following deployment patterns:
 
 * Active-Passive Disaster Recovery strategy
 * Active-Active Disaster Recovery strategy
-* Off-Platform Access
 
-<!-- ### Terminology -->
-<!-- * Primary Foundation -->
-<!-- * Secondary Foundation -->
+Note: make sure we are not using foundation and data center interchangeably
 
-Single cloud? Multi-cloud?
+ ### Terminology
 
+* Primary Foundation: the foundation that is deployed on your main data center has the best hardware most app traffic - assume that leader is deployed on this foundation, when things are normal and healthy leader would be in the Primary.
+
+* Secondary Foundation: Failover site. either no app traffic or little app traffic. Assume that follower is deployed on this foundation
+
+
+Note: Synchronous replication is not supported for a Multi-site Leader-Follower instance. The Leader will not wait for the Follower to apply replicated transactions. in changing defaults the optional parameters does not work. You can only do async.
+
+Multi-site Replication plans on MySQL v2.7.4 and above will not be compatible with TAS 2.5 or older. All other features adhere to the compatibility requirements defined on Pivnet.
+
+(MySQL 2.8 does not support TAS 2.5. MySQL 2.7 does support 2.5 tho)
 
 ##<a id='active-passive'></a> Active-Passive Topology
 
+To learn more
+
 ![Active-Passive](active-passive.png)
+
+app to leader - traffic
+app` to follower - Failover
+leader to follower - replication
+
 
 <a href="./images/active-passive.png" target="_blank">View a larger version of this diagram.</a>
 
 
 ##<a id='active-active'></a> Active-Active Topology
 
+To learn more
+
 ![Active-Active](active-active.png)
+
+App' to follower to leader and app to leader - app traffic
+leader to follower - replication
+app to leader to follower - failover
+
+
+Not exactly the industry norm. We are not enabling multi master, app can write to the leader and the follower. Both apps are both still writing to the leader in primary foundation.
+
+normally assumption is app to leader and app` to folllower
 
 <a href="./images/active-active.png" target="_blank">View a larger version of this diagram.</a>
 
@@ -53,14 +87,28 @@ Single cloud? Multi-cloud?
 
 ###<a id='capacity'></a> Capacity Planning
 
-<%# ###<a id='az'></a> Availability Zones %>
+When calculating IaaS usage, you must take into account that each leader-follower instance requires two VMs. Therefore, the resources used for <%= vars.single_leader_plan %> plan is twice the amount of single node plan. For more information, see Resource Usage Planning for On-Demand Plans.
+
+also def link out to persistent disk usage
 
 ###<a id='network'></a> Networking Rules
 
+For information about the standard networking rules,
+see [Required Networking Rules for Multi‑Site Replication](./about.html#multi-site-ports).
+
 ##<a id='enable'></a> Enabling and Using <%= vars.single_leader_plan %>
 
-<%# ##<a id='failover'></a> About Failover %>
+Link out to Preparing for Multi-Site Replication
 
-##<a id='disaster'></a> About Disaster Recovery
+Link out to Using MySQL for VMware Tanzu for Multi-Site Replication
+
+##<a id='failover'></a> About Failover and Switchover
+
+MySQL for VMware Tanzu focuses on data consistency rather than availability. Therefore, it does not trigger failover automatically, but relies on developers to trigger a failover.
+
+Link out to Triggering Multi-Site Replication Failover and Switchover
 
 ##<a id='limitations'></a> <%= vars.single_leader_plan %> Limitations
+
++ single flat network
++ There might be more latency when deployed across foundations because of hardware and geographical limitations
