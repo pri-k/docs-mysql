@@ -11,7 +11,7 @@ owner: MySQL
 The topic describes how to trigger a failover and switchover when using a <%= vars.single_leader_plan %> plan.
 
 
-<p class="note"><strong>Note:</strong> You can only do failovers and switchovers in
+<p class="note"><strong>Note:</strong> You can only trigger a failover and switchover in
   <%= vars.product_short %> v2.7.3 and later.
 </p>
 
@@ -21,15 +21,9 @@ You can do failover and do switchover in a <%= vars.single_leader_plan %> plan.
 In both cases, when you failover or switchover,
 the follower service instance is promoted to the leader.
 
-<p class="note"><strong>Note:</strong>
-  In a <%= vars.single_leader_plan_lc %> context,
-  the two <%= vars.single_leader_plan %> service instances are
-  referred to as a decoupled leader-follower service instance. <br> <br>
-  A decoupled leader-follower service instance deployed across multiple
-  foundations or data centers is different from the coupled leader-follower plan that
-  <%= vars.product_name %> offers.
-  For information about the coupled leader-follower plan,
-  see <a href="./about-leader-follower.html">About Leader-Follower</a>.
+<p class="note"><strong>Note:</strong> The <%= vars.single_leader_plan %>
+  uses the <%= vars.single_leader_plan %> plan.
+  This plan is different than the leader-follower service plan.
 </p>
 
 The table below describes when you should trigger a failover or switchover:
@@ -65,6 +59,46 @@ The table below describes when you should trigger a failover or switchover:
 
 </table>
 
+###<a id=active-passive></a> About Active-Passive Failover and Switchover
+
+In an active-passive topology, app traffic is directed to the primary foundation when healthy.
+If a developer triggers a failover or switchover, app traffic is directed to the secondary foundation.
+
+The following diagram describes what happens when you trigger a failover or switchover
+in an active-passive topology:
+
+![Active-Passive Failover and Switchover](active-passive-failover.png)
+
+<a href="./images/active-passive-failover.png" target="_blank">View a larger version of this diagram.</a>
+
+The above diagram shows what happens after a failover or switch over occurs:
+
++ The global DNS load balancer (GLB) directs traffic to the app in the secondary foundation.
+  This app writes to the leader service instance in the secondary foundation.
++ The leader service instance in the secondary foundation replicates data to the follower service
+instance in the primary foundation.
+
+
+
+###<a id=active-active></a> About Active-Active Failover and Switchover
+
+In an active-active topology, app traffic is directed to the primary and secondary foundation when healthy.
+If a developer triggers a failover or switchover, app traffic is directed to the service instance in the secondary foundation.
+
+The following diagram describes what happens when you trigger a failover or switchover
+in an active-active topology:
+
+![Active-Active Failover and Switchover](active-active-failover.png)
+
+<a href="./images/active-active-failover.png" target="_blank">View a larger version of this diagram.</a>
+
+The above diagram shows what happens after a failover or switch over occurs:
+
++ The app in the secondary foundation writes to the leader service instance in the same foundation.
+  The app in the primary foundation writes to the leader service instance
+  by directing traffic to the follower service instance in the same foundation, which then directs traffic to the leader.
++ The leader service instance in the secondary foundation replicates data to the follower service
+  instance in the primary foundation.
 
 ##<a id='failover'></a> Trigger a Failover
 
@@ -93,7 +127,7 @@ To trigger a failover:
 
 ### <a id='promote-failover'></a> Promote the Follower
 
-<p class="note"><strong>Note:</strong> If you try to promote a coupled leader-follower,
+<p class="note"><strong>Note:</strong> If you try to promote a leader-follower,
   highly available cluster, or single node service instance to leader
   or make it read-only you get an error message similar to the following: <br><br>
 <code>Updating service instance haDB as admin...
@@ -199,7 +233,7 @@ To trigger a switchover:
 
 ### <a id='promote-switchover'></a> Promote the Follower
 
-<p class="note"><strong>Note:</strong> If you try to promote a coupled leader-follower,
+<p class="note"><strong>Note:</strong> If you try to promote a leader-follower,
   highly available cluster, or single node service instance to leader
   or make it read-only you get an error message similar to the following: <br><br>
 <code>Updating service instance haDB as admin...
