@@ -286,7 +286,7 @@ your app to apply the changes to `VCAP_SERVICES`.
 
 You can manage service instances in the following ways:
 
-+ Move your data to a different plan. See [Update a Service Instance](#update), below.
++ Move your data to a different plan or upgrade an individual service instance. See [Update a Service Instance](#update), below.
 + Share service instances between orgs and spaces. See [Share Service Instances](#share), below.
 + Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
 + Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
@@ -301,35 +301,44 @@ You can update a service instance using `cf update-service` to do the following:
 You cannot update a service instance to a smaller plan.
 + Change the default parameters for an existing service instance.
 See [Change Default Parameters on an Existing Service Instance](./change-default.html# updating).
-
-
-
++ Upgrade an individual service instance to the latest version of <%= vars.product_short %>.
 <p class="note warning"><strong>Warning:</strong> You cannot use <code>cf update-service</code> to migrate data between a HA cluster plan and a plan of another topology.
 If you want to do this, you must use the <code>cf mysql-tools</code> plugin instead.
 For more information about migrating data, see <a href="./about-migrate.html">About Data Migration in <%= vars.product_full %></a>.
 </p>
-
 <p class="note warning"><strong>Warning:</strong> If you are using <%= vars.single_leader_plan_lc %>, you must not update <%= vars.single_leader_plan %> plan to a plan of another topology. If you do this, your replication breaks.
-
 </p>
 
-
-When you update a service instance, you do not need to rebind your app or service keys. However, while the data is being migrated to the new service instance,
+When you update a service instance, you do not need to rebind your app or service keys.
+However, while the data is being migrated to the new service instance,
 the database is unavailable for several minutes.
 
-To update a service instance:
 
-```
-cf update-service SERVICE-INSTANCE -p PLAN
-```
++ Update a service instance to another plan by running:
 
-Where `PLAN` is the plan you want to update the service instance to.
+    ```
+    cf update-service SERVICE-INSTANCE -p PLAN
+    ```
 
-For example:
+    Where `PLAN` is the plan you want to update the service instance to.
 
-<pre class="terminal">
-$ cf update-service my-instance -p db-large
-</pre>
+    For example:
+
+    <pre class="terminal">
+    $ cf update-service my-instance -p db-large
+    </pre>
+
++ Upgrade a service instance to the latest version of <%= vars.product_short %> by running:
+
+    ```
+    cf update-service SERVICE-INSTANCE --upgrade
+    ```
+    For example:
+
+    <pre class="terminal">
+    $ cf update-service my-instance --upgrade
+    </pre>
+
 
 For more information about using the `update-service` command,
 see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
