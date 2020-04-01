@@ -18,6 +18,9 @@ see [Run an Errand](#errand) below.
 
 + [find-deprecated-bindings](#find-deprecated-bindings)
 + [smoke-tests](#smoke-tests)
++ [configure-leader-follower](#configure-leader-follower)
++ [make-leader](#make-leader)
++ [make-read-only](#make-read-only)
 + [upgrade-all-service-instances](#upgrade-all-service-instances)
 + [register-broker](#register-broker)
 + [delete-all-service-instances-and-deregister-broker](#delete-all-service-instances-and-deregister-broker)
@@ -48,139 +51,61 @@ To run an errand:
 
     <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
 
-## <a id="find-deprecated-bindings"></a>find-deprecated-bindings
-
-The `find-deprecated-bindings` errand lists app bindings and service keys that are deprecated in
-<%= vars.product_short %> v<%= product_info['local_product_version'] %>.
-These bindings are deprecated because they do not require TLS.
-The errand exits whether or not a deprecated binding is found.
-
-Pivotal recommends that operators configure bindings to require TLS. For instructions about
-configuring TLS, see [Configure TLS](./install-config.html#security).
-
-### How to Run the Errand
-
-To run the errand:
-
-1. Run:
-
-    ```
-    bosh -d pivotal-mysql-GUID run-errand find-deprecated-bindings
-    ```
-
-    Where `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-    <br><br>
-    For example:
-
-    <pre class="terminal">
-    $ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings
-    Using environment '10.0.0.5' as client 'ops_manager'
-
-    Using deployment 'pivotal-mysql-e3ddd36247fe5b923caf'
-
-    Task 148
-
-    Task 148 | 02:42:08 | Preparing deployment: Preparing deployment (00:00:01)
-    Task 148 | 02:42:09 | Running errand: dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0) (00:00:03)
-    Task 148 | 02:42:12 | Fetching logs for dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb (0): Finding and packing log files (00:00:01)
-
-    Task 148 Started Tue Dec 18 02:42:08 UTC 2018
-    Task 148 Finished Tue Dec 18 02:42:13 UTC 2018
-    Task 148 Duration 00:00:05
-    Task 148 done
-
-    Instance   dedicated-mysql-broker/63f9ad1e-998e-451e-8c6e-f6211958f6fb
-    Exit Code  0
-    Stdout     +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-               |          SERVICE          |             SERVICE GUI             |          ORG           |          SPACE           | APP OR SERVICE KEY |       TYPE        |           REASON            |
-               +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-               | tlsDB                     | a999db0b-176e-4ac8-8342-d72b338d1f0c | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | user-cli           | ServiceKeyBinding | no tls                      |
-               | upgrade-outdated-instance | 34f26746-fb46-4f14-87bc-e1ddce26f340 | MYSQL-ORG-upgrade-test | MYSQL-SPACE-upgrade-test | cs-accept          | AppBinding        | no tls
-               +---------------------------+--------------------------------------+------------------------+--------------------------+--------------------+-------------------+-----------------------------+
-    </pre>
-
 
 ## <a id="available-errands"></a> Available Errands
 
 The following sections describe each service broker errand that
 you can run.
 
+### <a id="find-deprecated-bindings"></a> find-deprecated-bindings
+
+The `find-deprecated-bindings` errand does the following:
+
+* Lists app bindings and services keys that are deprecated in
+<%= vars.product_short %> v<%= product_info['local_product_version'] %>. 
+The bindings are deprecated because they do not require TLS.
+
+* Exits whether or not a deprecated binding is found.
+
+
+VMware recommends that operators configure bindings to require TLS. For more information, 
+see [Configure TLS](./install-config.html#security).
+
+
 
 ### <a id="smoke-tests"></a>smoke-tests
 
-This errand validates that the service broker has been installed and configured correctly.
-It can also create and remove service instances.
+The `smoke-tests` errand does the following:
 
+- Validates that the service broker has been installed and configured correctly. 
 If this errand runs successfully, <%= vars.product_short %> is installed successfully.
+- Creates or removes service instances.
 
-### How to Run the Errand
-
-To run the errand:
-
-1. Run:
-
-    ```
-    bosh -d DEPLOYMENT-NAME run-errand smoke-tests
-    ```
-
-    For example:
-    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand smoke-tests
-      run-errand find-deprecated-bindingsUsing deployment 'dedicated-mysql-broker'
-      Task 5192168
-      Task 5192168 | 15:24:19 | Preparing deployment: Preparing deployment (00:00:04)
-      Task 5192168 | 15:24:23 | Running errand: dedicated-mysql-broker/425c9a28-6a8e-4a39-8785-c1a26a8095d3 (1) (00:11:33)
-      Task 5192168 | 15:35:56 | Fetching logs for dedicated-mysql-broker/425c9a28-6a8e-4a39-8785-c1a26a8095d3 (1): Finding and packing log files (00:00:01)
-      Task 5192168 Started  Wed Jan  8 15:24:19 UTC 2020
-      Task 5192168 Finished Wed Jan  8 15:35:57 UTC 2020
-      Task 5192168 Duration 00:11:38
-      Task 5192168 done
-      Instance   dedicated-mysql-broker/425c9a28-6a8e-4a39-8785-c1a26a8095d3
-      Exit Code  0
-      Stdout     Running Errand with plan: db-small
-                 Running Errand in org: dedicated-mysql-smoketests
-                 /var/vcap/packages/smoke-tests/bin /var/vcap/bosh
-                 Running Suite: Smoke Tests Suite
-                 ================================
-                 Random Seed: 1578497063
-                 Will run 1 of 1 specs
-                 • [SLOW TEST:623.171 seconds]
-                 Lifecycle
-                 /var/vcap/data/compile/smoke-tests/src/specs/smoke_tests/lifecycle_test.go:13
-                   binds the service instance to an app, and writes to and reads from database
-                   /var/vcap/data/compile/smoke-tests/src/specs/smoke_tests/lifecycle_test.go:34
-                 ------------------------------
-                 Ran 1 of 1 Specs in 692.140 seconds
-                 SUCCESS! -- 1 Passed | 0 Failed | 0 Pending | 0 Skipped
-                 PASS
-                 /var/vcap/bosh
-      Stderr     -
-      1 errand(s)
-      Succeeded</pre>
-
-<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
 
 ### <a id="configure-leader-follower"></a> configure-leader-follower
 
 The `configure-leader-follower` errand does the following:
 
-* Configures replication on the follower and ensures the leader is writable
-* Runs after every create or update of a leader-follower instance
-* Fails and alerts operators, via BOSH errand output, if the service instance is in a bad state
+* Configures replication on the follower and ensures the leader is writable.
+* Runs after every create or update of a leader-follower instance.
+* If the service instance is in a bad state, fails and alerts operators with BOSH errand output.
 
-This errand is used to trigger a leader-follower failover. You can also use this errand to create custom failover scripts.
+This errand is used to trigger a leader-follower failover. 
+You can also use this errand to create custom failover scripts.
 For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
 
 ### <a id="make-leader"></a> make-leader
 
 The `make-leader` errand does the following:
 
-* Promotes a follower VM to a leader
+* Promotes a follower VM to a leader.
 * Removes replication configuration from the VM, waits for all transactions to be applied to the VM,
-  and sets the VM as writable
-* Fails if the original leader is still writeable to protect against data divergence
+  and sets the VM as writable.
+* Fails if the original leader is still writeable. This protects against data divergence.
 
-This errand is used to trigger a leader-follower failover. You can also use this errand to create custom failover scripts.
+This errand is used to trigger a leader-follower failover. 
+You can also use this errand to create custom failover scripts.
 For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
 
 
@@ -188,39 +113,37 @@ For more information, see [Triggering a Leader-Follower Failover](./leader-follo
 
 The `make-read-only` errand does the following:
 
-* Demotes a leader VM to a follower
-* Sets the VM to read-only, and guarantees that apps no longer write to this VM
-* Relays all in-flight transactions on this former leader VM to the follower VM, if it is accessible
+* Demotes a leader VM to a follower.
+* Sets the VM to read-only, and guarantees that apps no longer write to this VM.
+* If the follower VM is accessible, relays all in-flight transactions on the former 
+leader VM to the follower VM.
 
-This errand is used to trigger a leader-follower failover. You can also use this errand to create custom failover scripts.
+This errand is used to trigger a leader-follower failover. 
+You can also use this errand to create custom failover scripts.
 For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
 
-### <a id="upgrade-all-service-instances"></a>upgrade-all-service-instances
+### <a id="upgrade-all-service-instances"></a> upgrade-all-service-instances
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
 For more information, see [Upgrading <%= vars.product_short %>](upgrade.html#upgrade-instances).
 
 
-### <a id="register-broker"></a>register-broker
+### <a id="register-broker"></a> register-broker
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' %>
 
 
-### <a id="delete-all-service-instances-and-deregister-broker"></a>delete-all-service-instances-and-deregister-broker
+### <a id="delete-all-service-instances-and-deregister-broker"></a> delete-all-service-instances-and-deregister-broker
 
-
-<%= vars.ops_manager %> runs this errand only when deleting <%= vars.product_short %>.
-Running this errand removes all service instances and their data.
 
 <p class="note warning"><strong>Warning:</strong> This errand destroys all of the
   on-demand service instances and deregisters the broker from Cloud Controller.
   Use it with extreme caution.
 </p>
 
-#### What the Errand Does
 
-The `delete-all-service-instances-and-deregister-broker` errand:
+The `delete-all-service-instances-and-deregister-broker` errand does the following:
 
 1. Disables service access to the service offering for all orgs and spaces.
 The errand disables service
@@ -234,33 +157,23 @@ If new instances are detected, the errand returns an error.
 In this case, Pivotal recommends running the errand again.
 1. Deregisters the broker from Cloud Controller.
 
-#### How to Run the Errand
 
-To run the errand:
+<%= vars.ops_manager %> runs this errand only when deleting <%= vars.product_short %>.
+Running this errand removes all service instances and their data.
 
-1. Run:
 
-    ```
-    bosh -d DEPLOYMENT-NAME run-errand delete-all-service-instances-and-deregister-broker
-    ```
 
-### <a id="recreate-all-service-instance"></a>recreate-all-service-instances
 
-The `recreate-all-service-instances` errand re-creates all service instance VMs managed by an on-demand
+### <a id="recreate-all-service-instance"></a> recreate-all-service-instances
+
+The `recreate-all-service-instances` errand does the following 
+recreates all service instance VMs managed by an on-demand
 broker.
-You might want use this errand when, for example:
+
+You might want use this errand in the following cases:
 
 * Rotating the <%= vars.ops_manager %> root certificate authority (CA).
 For more information about rotating CAs, see
 [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
 * Performing a full restore of the platform during disaster recovery or migration.
 
-#### How to Run the Errand
-
-To run the errand:
-
-1. Run the command:
-
-    ```
-    bosh -d DEPLOYMENT-NAME run-errand recreate-all-service-instances
-    ```
