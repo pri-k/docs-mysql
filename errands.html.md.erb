@@ -2,19 +2,24 @@
 title: Running Errands
 owner: MySQL
 ---
+<style>
+  ol.about-broker li {
+    margin: 0 0 0.5em;
+  }
+</style>
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to use the BOSH CLI to run service broker
-errands.
+This topic describes each of the service broker errands and how 
+to run an errand using the BOSH CLI.
 
 ## <a id="overview"></a> Overview
 
 Errands can manage service brokers and run mass operations on service
-instances created by brokers. For instructions about running errands,
-see [Run an Errand](#errand) below.
+instances created by brokers.
 
-<%= vars.product_full %> supports the following errands:
+For all supported <%= vars.product_full %> errands, 
+see the full errand list:
 
 + [find-deprecated-bindings](#find-deprecated-bindings)
 + [smoke-tests](#smoke-tests)
@@ -26,46 +31,23 @@ see [Run an Errand](#errand) below.
 + [delete-all-service-instances-and-deregister-broker](#delete-all-service-instances-and-deregister-broker)
 + [recreate-all-service-instances](#recreate-all-service-instances)
 
-
-## <a id="errand"></a> Run an Errand
-
-To run an errand:
-
-1. View the BOSH deployment name for your MySQL service broker by running:
-
-    ```
-    bosh deployments
-    ```
-
-1. Run:
-
-    ```
-    bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
-    ```
-
-    Where:
-    + `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-    + `ERRAND-NAME` is the name of the errand you want to run.
-
-    For example:
-
-    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
+To run an errand, follow the [Run an Errand](#errand) procedure below.
 
 
 ## <a id="available-errands"></a> Available Errands
 
 The following sections describe each service broker errand that
-you can run.
+you can run. To run an errand, see [Run an Errand](#errand) below.
 
 ### <a id="find-deprecated-bindings"></a> find-deprecated-bindings
 
 The `find-deprecated-bindings` errand does the following:
 
-* Lists app bindings and services keys that are deprecated in
-<%= vars.product_short %> v<%= product_info['local_product_version'] %>. 
+- Lists app bindings and services keys 
+that are deprecated in <%= vars.product_short %> v<%= product_info['local_product_version'] %>. 
 The bindings are deprecated because they do not require TLS.
 
-* Exits whether or not a deprecated binding is found.
+- Exits whether or not a deprecated binding is found.
 
 
 VMware recommends that operators configure bindings to require TLS. For more information, 
@@ -77,9 +59,9 @@ see [Configure TLS](./install-config.html#security).
 
 The `smoke-tests` errand does the following:
 
-- Validates that the service broker has been installed and configured correctly. 
-If this errand runs successfully, <%= vars.product_short %> is installed successfully.
-- Creates or removes service instances.
+- Validates that the service broker has been installed and configured correctly. It can also 
+create and remove service instances.
+- If this errand runs successfully, <%= vars.product_short %> is installed successfully.
 
 
 
@@ -176,4 +158,29 @@ You might want use this errand in the following cases:
 For more information about rotating CAs, see
 [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
 * Performing a full restore of the platform during disaster recovery or migration.
+
+
+## <a id="errand"></a> Run an Errand
+
+To run an errand:
+
+1. View the BOSH deployment name for your MySQL service broker by running:
+
+    ```
+    bosh deployments
+    ```
+
+1. Run:
+
+    ```
+    bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
+    ```
+
+    Where:
+    + `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
+    + `ERRAND-NAME` is the name of the errand you want to run.
+
+    For example:
+
+    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
 
