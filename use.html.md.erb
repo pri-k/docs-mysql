@@ -11,7 +11,8 @@ This topic provides instructions for developers using the <%= vars.product_full 
 
 ## <a id='overview'></a>Overview
 
-<%= vars.product_short %> provides a relational database for apps and devices. To use <%= vars.product_short %> in an app:
+<%= vars.product_short %> provides a relational database for apps and devices.
+To use <%= vars.product_short %> in an app:
 
 1. Check the service availability in the Marketplace,
    and see if there is an existing instance of <%= vars.product_short %> in your space.
@@ -31,7 +32,8 @@ This topic provides instructions for developers using the <%= vars.product_full 
 
     See [Use the MySQL Service in Your App](#call), below.
 
-After you create a <%= vars.product_short %> service instance, you can manage it over the life cycle of your apps and data.
+After you create a <%= vars.product_short %> service instance,
+you can manage it over the life cycle of your apps and data.
 See [Manage Service Instances](#manage), below.
 
 The below procedures use the Cloud Foundry Command Line Interface (cf CLI). For more information,
@@ -44,14 +46,21 @@ For more information, see
 
 To use <%= vars.product_short %> with your <%= vars.app_runtime_abbr %> apps, you need:
 
-* Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster, and <%= vars.single_leader_plan %>.
-<%= vars.single_leader_plan %> is used to deploy a leader-follower service instance across multiple foundations or data centers. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
-* If you intend to use a <%= vars.single_leader_plan %> plan for deploying a leader-follower service instance across multiple foundations or data centers, review the limitations associated with this topology. See [<%= vars.single_leader_plan %> Limitations](./about-multi-site.html#limitations).
-* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html##limitations).
-* A <%= vars.ops_manager %> installation with [<%= vars.product_short %>](https://network.pivotal.io/products/p-mysql) installed and listed
-in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances).
+* Decide what type of plan you want from the following options: single node, leader-follower,
+highly available (HA) cluster, and <%= vars.single_leader_plan %>.
+<%= vars.single_leader_plan %> is used to deploy a leader-follower service instance across multiple foundations
+or data centers. Your marketplace might not offer all of these types.
+For about service plans information, see [Availability Options](availability-options.html).
+* If you intend to use a <%= vars.single_leader_plan %> plan for deploying a leader-follower service instance
+across multiple foundations or data centers, review the limitations associated with this topology.
+See [<%= vars.single_leader_plan %> Limitations](./about-multi-site.html#limitations).
+* If you intend to use an HA cluster plan, review the limitations associated with this plan type.
+See [Highly Available Cluster Limitations](./about-ha.html##limitations).
+* A <%= vars.ops_manager %> installation with [<%= vars.product_short %>](https://network.pivotal.io/products/p-mysql)
+installed and listed in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances).
 Download the product file from [<%= vars.product_network %>](https://network.pivotal.io/products/pivotal-mysql).
-* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the <%= vars.ops_manager %> installation.
+* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or
+  Admin account on the <%= vars.ops_manager %> installation.
 * A local machine with the following installed:
    - a browser
    - a shell
@@ -120,7 +129,8 @@ For example:
 On-demand services are created asynchronously, not immediately.
 The `watch` command shows you when your service instance is ready to bind and use.
 
-<p class="note"><strong>Note:</strong> If you are deploying a leader-follower service instance across multiple foundations or data centers,
+<p class="note"><strong>Note:</strong> If you are deploying a leader-follower service instance across
+  multiple foundations or data centers,
   called a decoupled leader-follower service,
 do the procedure in <a href="./use-multi-site.html#set-up-multi-dc">Set Up a Leader-Follower across Multiple Foundations</a>.
 </p>
@@ -162,7 +172,8 @@ your instance to show as `create succeeded`.
 
 ## <a id="bind"></a>Bind a Service Instance to Your App
 
-For an app to use a service, you must bind the app to a service instance.  You must do this after every time you run `cf push`.
+For an app to use a service, you must bind the app to a service instance.
+You must do this after every time you run `cf push`.
 
 To push and bind an app to a <%= vars.product_short %> instance run the following command:
 
@@ -205,7 +216,8 @@ To access the MySQL service from your app:
 1. Verify that your app code (or the MySQL client library that the app uses) retries in the case of DNS timeouts.
 
 1. Locate the connection strings listed in the
-`VCAP_SERVICES` > `credentials` object for your app. For information about `VCAP_SERVICES`, see [MySQL Environment Variables](#vcap) below.
+`VCAP_SERVICES` > `credentials` object for your app. For information about `VCAP_SERVICES`,
+see [MySQL Environment Variables](#vcap) below.
 
 1. In your app code, call the MySQL service using the connection strings.<br><br>
   See this example [Node.js code](./using-tls.html#call-service).
@@ -286,69 +298,137 @@ your app to apply the changes to `VCAP_SERVICES`.
 
 You can manage service instances in the following ways:
 
-+ Move your data to a different plan or upgrade an individual service instance. See [Update a Service Instance](#update), below.
-+ Share service instances between orgs and spaces. See [Share Service Instances](#share), below.
-+ Remove access to a service from an app that no longer needs it. See [Unbind an App from a Service Instance](#unbind), below.
-+ Delete a service instance that is not used. See [Delete a Service Instance](#delete), below.
++ Migrate your data to a different plan. See [Migrate Data to a Different Plan](#migrate) below.
++ Upgrade service instance individually to the latest version of <%= vars.product_short %>.
+See [Upgrade a Single Service Instance](#single) below.
++ Share service instances between orgs and spaces. See [Share Service Instances](#share) below.
++ Remove access to a service from an app that no longer needs it.
+See [Unbind an App from a Service Instance](#unbind) below.
++ Delete a service instance that is not used. See [Delete a Service Instance](#delete) below.
 
-### <a id="update"></a>Update a Service Instance
+### <a id="migrate"></a> Migrate Data to a Different Plan
 
-You can update a service instance using `cf update-service` to do the following:
-
-+ Migrate data from a single-node plan to a leader-follower plan.
-+ Migrate data from a leader-follower plan to a single-node plan.
-+ Migrate data to a larger plan of the same topology.
-You cannot update a service instance to a smaller plan.
-+ Change the default parameters for an existing service instance.
-See [Change Default Parameters on an Existing Service Instance](./change-default.html# updating).
-+ Upgrade an individual service instance to the latest version of <%= vars.product_short %>.
-<p class="note warning"><strong>Warning:</strong> You cannot use <code>cf update-service</code> to migrate data between a HA cluster plan and a plan of another topology.
-If you want to do this, you must use the <code>cf mysql-tools</code> plugin instead.
-For more information about migrating data, see <a href="./about-migrate.html">About Data Migration in <%= vars.product_full %></a>.
-</p>
-<p class="note warning"><strong>Warning:</strong> If you are using <%= vars.single_leader_plan_lc %>, you must not update <%= vars.single_leader_plan %> plan to a plan of another topology. If you do this, your replication breaks.
-</p>
-
+You can use the `cf update-service` command to migrate data to a different plan.
 When you update a service instance, you do not need to rebind your app or service keys.
-However, while the data is being migrated to the new service instance,
-the database is unavailable for several minutes.
+However, when you migrate data to a new service instance the database is unavailable for several minutes.
 
+For more information about using the `update-service` command,
+see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
 
-+ Update a service instance to another plan by running:
+The following table lists migration use cases that can be done with the `update-service` command:
+
+<table>
+  <tr>
+    <th>Use <code>update-service</code> for migrating from...</th>
+    <th>To...</th>
+  </tr>
+
+  <tr>
+    <td>Single Node</td>
+    <td>larger Single Node</td>
+  </tr>
+
+  <tr>
+    <td>Leader-Follower</td>
+    <td>larger Leader-Follower</td>
+  </tr>
+
+  <tr>
+    <td>Single Node</td>
+    <td>Leader-Follower of the same or larger size</td>
+  </tr>
+
+  <tr>
+    <td>Leader-Follower</td>
+      <td>Single Node of the same or larger size</td>
+  </tr>
+</table>
+
+<p class="note warning"><strong>Warning:</strong> You cannot use <code>cf update-service</code>
+  to migrate data between a HA cluster plan and a plan of another topology.
+If you want to do this, you must use the <code>cf mysql-tools</code> plugin instead.
+For more information about migrating data,
+see <a href="./about-migrate.html">About Data Migration in <%= vars.product_full %></a>.
+</p>
+<p class="note warning"><strong>Warning:</strong> If you are using <%= vars.single_leader_plan_lc %>,
+  you must not update <%= vars.single_leader_plan %> plan to a plan of another topology.
+  If you do this, your replication breaks.
+</p>
+
+To migrate a service instance to another plan:
+
+1. View the available service plans for <%= vars.product_short %> by running:
+
+    ```
+    cf marketplace
+    ```
+
+1. Migrate data to another plan by running:
 
     ```
     cf update-service SERVICE-INSTANCE -p PLAN
     ```
 
     Where `PLAN` is the plan you want to update the service instance to.
-
+    <br>
     For example:
 
     <pre class="terminal">
     $ cf update-service my-instance -p db-large
     </pre>
 
-+ Upgrade a service instance to the latest version of <%= vars.product_short %> by running:
+### <a id="single"></a> Upgrade a Single Service Instance
+
+You can use the `cf update-service` command to individually upgrade service instances to the latest
+version of <%= vars.product_short %>.
+When you upgrade a service instance, you do not need to rebind your app or service keys.
+However, when you upgrade a service instance the database is unavailable for several minutes.
+
+For more information about using the `update-service` command,
+see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
+
+#### <a id="single-preq"></a> Prerequisites
+
+Before you individually upgrade service instances you must have cf CLI v6.46.0 or later.
+
+#### <a id="run-update"></a> Run update-service Errand
+
+To upgrade a single service instance you must run the `update-service` errand with the `--upgrade`
+flag.
+
+To upgrade a single service instance:
+
+1. Confirm that an upgrade is available for the service instance by running:
+
+    ```
+    cf services
+    ```
+
+    The upgrade is available when the `upgrade available` column in the output says `yes`.
+    <br><br>
+    For example:
+
+    <pre class="terminal">$ cf services
+    Getting services in org system / space system as admin...
+
+    name         service    plan      bound apps    last operation    broker                    upgrade available
+    my-instance  p.mysql    db-small                create succeeded  dedicated-mysql-broker    yes</pre>
+
+1. Upgrade the service instance by running:
 
     ```
     cf update-service SERVICE-INSTANCE --upgrade
     ```
-    For example:
 
-    <pre class="terminal">
-    $ cf update-service my-instance --upgrade
-    </pre>
-
-
-For more information about using the `update-service` command,
-see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
+1. When prompted, confirm that you want to upgrade.
 
 ###<a id="share"></a> Share Service Instances
 
 In <%= vars.product_short %> you can share service instances between different orgs and spaces using `cf share-service`.
 Service instance sharing is enabled by default.
 
-For more information about service instance sharing, see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/devguide/services/sharing-instances.html).
+For more information about service instance sharing,
+see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/devguide/services/sharing-instances.html).
 
 To share a service instance:
 

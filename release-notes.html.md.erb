@@ -6,7 +6,8 @@ Owner: MySQL
 <strong><%= modified_date %></strong>
 
 VMware recommends that you upgrade to the latest version of your current minor line,
-then upgrade to the latest available version of the new minor line. For example, if you use an older v2.7.x
+then upgrade to the latest available version of the new minor line.
+For example, if you use an older v2.7.x
 version, upgrade to the latest v2.7.x version before upgrading to the latest v2.8.x version.
 
 <%= partial vars.path_to_partials + '/upgrade-planner' %>
@@ -19,8 +20,12 @@ version, upgrade to the latest v2.7.x version before upgrading to the latest v2.
 
 New features and changes in this release:
 
-+ You can upgrade individual on-demand service instances using the cf CLI. To enable this feature, see Enable Individual Service Instance Upgrades. For how to upgrade an individual service instance, see Upgrading an Individual Redis Service Instance.
-
++ Developers can upgrade <%= vars.product_short %> service instances individually using the
+Cloud Foundry Command Line Interface (cf CLI).
+For instructions for enabling this feature,
+see [Enable Individual Service Instance Upgrades](#individual-upgrades).
+For instructions for upgrading service instances individually,
+see [Upgrade a Single Service Instance](./use.html#single).
 
 ### Security Fix
 
