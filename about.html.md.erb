@@ -9,8 +9,12 @@ This topic describes networking for on-demand services, including MySQL for Pivo
 
 ## <a id="service-network"></a>Service Network Requirement
 
+<<<<<<< HEAD
 <%= partial vars.path_to_partials + '/services/service-networks-v3', :locals => {
   :platform_name => vars.platform_old} %>
+=======
+<%= partial vars.path_to_partials + '/services/service-networks-v3' %>
+>>>>>>> 139cb90... Update partial calls [#171778216]
 
 ## <a id='on-demand'></a>Default Network and Service Network
 
@@ -24,7 +28,6 @@ This topic describes networking for on-demand services, including MySQL for Pivo
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
 <%= partial vars.path_to_partials + '/services/service_networks_table', :locals => {
-  :platform_name => vars.platform_old,
 	:app_runtime_full => vars.app_runtime_full,
 	:product_short => "MySQL"} %>
 
