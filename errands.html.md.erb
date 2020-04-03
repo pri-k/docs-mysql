@@ -29,6 +29,33 @@ see the full errand list:
 To run an errand, see [Run an Errand](#errand) below.
 
 
+
+## <a id="errand"></a> Run an Errand
+
+To run an errand:
+
+1. View the BOSH deployment name for your MySQL service broker by running:
+
+    ```
+    bosh deployments
+    ```
+
+1. Run:
+
+    ```
+    bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
+    ```
+
+    Where:
+    + `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
+    + `ERRAND-NAME` is the name of the errand you want to run.
+
+    For example:
+
+    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand find-deprecated-bindings</pre>
+
+
+
 ## <a id="available-errands"></a> Available Errands
 
 The following sections describe each service broker errand that
@@ -68,8 +95,7 @@ see [Configure TLS](./install-config.html#security).
 The `smoke-tests` errand does the following:
 
 - Validates that the service broker has been installed and configured correctly.
-- To validate correct install, the errand creates a space and new service instance, does tests with the 
-new service instance, and then removes the space and service instance.
+- Creates and deletes a new space and service instance that conducts tests.
 - If this errand runs successfully, <%= vars.product_short %> is installed successfully.
 
 
@@ -80,7 +106,7 @@ The `configure-leader-follower` errand does the following:
 
 * Configures replication on the follower and ensures the leader is writable.
 * Runs after every create or update of a leader-follower instance.
-* If the service instance is in a unhealthy state, the errrand fails and alerts 
+* If the service instance is in a unhealthy state, the errand fails and alerts 
 operators with BOSH errand output.
 
 This errand is used to trigger a leader-follower failover. 
@@ -118,8 +144,6 @@ For more information, see [Triggering a Leader-Follower Failover](./leader-follo
 
 <%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
-For more information, see [Upgrading <%= vars.product_short %>](upgrade.html#upgrade-instances).
-
 
 ### <a id="register-broker"></a> register-broker
 
@@ -130,7 +154,7 @@ For more information, see [Upgrading <%= vars.product_short %>](upgrade.html#upg
 
 
 <p class="note warning"><strong>Warning:</strong> This errand destroys all of the
-  on-demand service instances and deregisters the broker from Cloud Controller.
+  on-demand service instances and deregisters the broker from the Cloud Controller.
   Use it with extreme caution.
 </p>
 
@@ -147,7 +171,7 @@ access to ensure that new instances cannot be provisioned during the lifetime of
 - Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
 In this case, VMware recommends running the errand again.
-- Deregisters the broker from Cloud Controller.
+- Deregisters the broker from the Cloud Controller.
 
 
 <%= vars.ops_manager %> runs this errand only when deleting <%= vars.product_short %>.
@@ -156,7 +180,7 @@ Running this errand removes all service instances and their data.
 
 
 
-### <a id="recreate-all-service-instance"></a> recreate-all-service-instances
+### <a id="recreate-all-service-instances"></a> recreate-all-service-instances
 
 The `recreate-all-service-instances` errand recreates all service instance 
 VMs managed by an on-demand broker.
@@ -167,29 +191,4 @@ You might want use this errand in the following cases:
 For more information about rotating CAs, see
 [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
 * Fully restoring the platform during disaster recovery or migration.
-
-
-## <a id="errand"></a> Run an Errand
-
-To run an errand:
-
-1. View the BOSH deployment name for your MySQL service broker by running:
-
-    ```
-    bosh deployments
-    ```
-
-1. Run:
-
-    ```
-    bosh -d pivotal-mysql-GUID run-errand ERRAND-NAME
-    ```
-
-    Where:
-    + `pivotal-mysql-GUID` is the BOSH deployment name for your MySQL service broker.
-    + `ERRAND-NAME` is the name of the errand you want to run.
-
-    For example:
-
-    <pre class="terminal">$ bosh -d pivotal-mysql-e3ddd36247fe5b923caf run-errand deregister-broker</pre>
 
