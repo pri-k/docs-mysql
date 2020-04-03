@@ -106,8 +106,7 @@ The `configure-leader-follower` errand does the following:
 
 * Configures replication on the follower and ensures the leader is writable.
 * Runs after every create or update of a leader-follower instance.
-* If the service instance is in a unhealthy state, the errand fails and alerts 
-operators with BOSH errand output.
+* Fails and alerts operators with BOSH errand output if the service instance is in a unhealthy state.
 
 This errand is used to trigger a leader-follower failover. 
 You can also use this errand to create custom failover scripts.
@@ -133,8 +132,8 @@ The `make-read-only` errand does the following:
 
 * Demotes a leader VM to a follower.
 * Sets the VM to read-only and guarantees that apps no longer write to this VM.
-* If the follower VM is accessible, the errand relays all in-flight transactions 
-on the former leader VM to the follower VM.
+* Relays all in-flight transactions on the former leader VM to the follower VM 
+if the follower VM is accessible.
 
 This errand is used to trigger a leader-follower failover. 
 You can also use this errand to create custom failover scripts.
