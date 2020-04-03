@@ -308,11 +308,11 @@ See [Unbind an App from a Service Instance](#unbind) below.
 
 ### <a id="migrate"></a> Migrate Data to a Different Plan
 
-You can use the `cf update-service` command to migrate data to a different plan.
+You can use `cf update-service` to migrate data to a different plan.
 When you update a service instance, you do not need to rebind your app or service keys.
 However, when you migrate data to a new service instance the database is unavailable for several minutes.
 
-For more information about using the `update-service` command,
+For more information about using `cf update-service`,
 see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
 
 The following table lists migration use cases that can be done with the `update-service` command:
@@ -379,22 +379,17 @@ To migrate a service instance to another plan:
 
 ### <a id="single"></a> Upgrade a Single Service Instance
 
-You can use the `cf update-service` command to individually upgrade service instances to the latest
+<p class="note"><strong>Note:</strong>
+  Before you individually upgrade service instances you must have cf CLI v6.46.0 or later.
+</p>
+
+You can use `cf update-service` with the `--upgrade` flag to individually upgrade service instances to the latest
 version of <%= vars.product_short %>.
 When you upgrade a service instance, you do not need to rebind your app or service keys.
 However, when you upgrade a service instance the database is unavailable for several minutes.
 
-For more information about using the `update-service` command,
+For more information about using `cf update-service`,
 see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
-
-#### <a id="single-preq"></a> Prerequisites
-
-Before you individually upgrade service instances you must have cf CLI v6.46.0 or later.
-
-#### <a id="run-update"></a> Run the update-service Errand
-
-To upgrade a single service instance you must run the `update-service` errand with the `--upgrade`
-flag.
 
 To upgrade a single service instance:
 

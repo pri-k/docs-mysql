@@ -394,8 +394,8 @@ To set MySQL defaults and enable developers to customize their instances:
             <code>lower\_case\_table\_names</code> to <code>1</code> on all <%= vars.product_short %> instances by default. <br>
             To permit developers to override this default, see the checkbox below. <br>
             For more information about <code>lower\_case\_table\_names</code> , see the <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names">MySQL documentation</a>.
-            <p class="note warning"><strong>Warning:</strong> Before you enable this feature, 
-ensure all tables have lowercase names. Tables with uppercase names are inaccessible 
+            <p class="note warning"><strong>Warning:</strong> Before you enable this feature,
+ensure all tables have lowercase names. Tables with uppercase names are inaccessible
 after enabling lowercase table names.</p>
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
@@ -598,6 +598,8 @@ To enable RFC 5424 system logging for the MySQL broker and service instance VMs:
 
 This section configures the `upgrade-all-service-instances` errand.
 <%= vars.product_short %> uses this errand to upgrade service instances.
+For more information about the `upgrade-all-service-instances` errand,
+see [upgrade-all-service-instances](./errands.html#upgrade-all-service-instances).
 
 To configure service instance upgrades.
 
@@ -655,7 +657,7 @@ problems when attempting to reinstall the tile or re-define plans. VMware recomm
 * **Pre-Delete Errands:** These errands run before you delete the <%= vars.product_short %> tile.
 
 <%= vars.product_short %> also uses errands to configure leader-follower service instances.
-For more information about leader-follower errands, see <a href="./leader-follower-failover.html#errands">Errands Used in Leader-Follower Failover</a>.
+For more information about leader-follower errands, see <a href="./errands.html">Errands</a>.
 
 You can use errands when troubleshooting the broker or service instances.
 For more information about using errands for troubleshooting, see [Run Service
@@ -696,7 +698,10 @@ To review errands:
 
     <tr>
       <td><strong>Upgrade all On-demand MySQL Service Instances</strong></td>
-      <td>Upgrades existing instances of a service to its latest installed version.</td>
+      <td>Upgrades existing instances of a service to its latest installed version.<br><br>
+      If you want to enable individual service instance upgrades, set this errand to <code>OFF</code>.
+    For more information about individual service instance upgrades,
+    see <a href="./upgrade.html#individual-upgrades">About Individual Service Instance Upgrades</a></td>
     </tr>
 
     <tr>

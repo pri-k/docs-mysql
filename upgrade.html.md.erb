@@ -16,16 +16,21 @@ failures at the process, VM, and IaaS level.
 To upgrade the <%= vars.product_short %> service, follow the <%= vars.ops_manager %> process that you
 use to install the service for the first time.
 Your configuration settings migrate to the new version automatically.
-To perform an upgrade:
+
+To upgrade <%= vars.product_short %>:
 
 1. Review the [Release Notes](./release-notes.html) for the version you are upgrading to.
 
-1. Download the Ubuntu Xenial stemcell from [<%= vars.product_network %>](https://network.pivotal.io/products/stemcells-ubuntu-xenial),
-and import it into the <%= vars.ops_manager %> Stemcell Library. For instructions, see [Verify Stemcell Version and Apply All Changes](./install-config.html#stemcell).
+1. Download the Ubuntu Xenial stemcell from
+[<%= vars.product_network %>](https://network.pivotal.io/products/stemcells-ubuntu-xenial),
+and import it into the <%= vars.ops_manager %> Stemcell Library.
+For instructions, see [Verify Stemcell Version and Apply All Changes](./install-config.html#stemcell).
 
-1. Download the desired version of the product from [<%= vars.product_network %>](https://network.pivotal.io/products/p-mysql).
+1. Download the desired version of the product from
+[<%= vars.product_network %>](https://network.pivotal.io/products/p-mysql).
 
-1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and click **Import a Product** to upload the product file.
+1. Navigate to the <%= vars.ops_manager %> Installation Dashboard and
+click **Import a Product** to upload the product file.
 
 1. Under the **Import a Product** button, click **+** next to **<%= vars.product_short %>**.
 This adds the tile to your staging area.
@@ -36,58 +41,43 @@ Click **Save** on any panes where you make changes.
       configure the <code>upgrade-all-service-instances</code> errand in the tile.
       For instructions about configuring this errand,
       see <a href="./install-config.html#service-instance-upgrades">Configure Service Instance Upgrades</a>.
+
     </p>
+
+1. (Optional) Enable developers to individually upgrade service instances by
+navigating to the **Errands** pane and selecting **Off** for **Upgrade all On-demand MySQL Service Instances**
+ in the **Errands** pane. <br><br>
+ When this feature is not enabled, the `upgrade-all-service-instances` errand runs by default
+ after each upgrade.
+For more information, see
+[About Individual Service Instance Upgrades](#individual-upgrades) below.
 
 1. Navigate to **<%= vars.ops_manager %> Dashboard** > **Review Pending Changes**.
 For more information about this <%= vars.ops_manager %> page,
 see [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).
-
+ß
 1. Click **Apply Changes**.
-
-1. (Optional) Enable developers to individually upgrade service instances. For instructions, see
-[Enable Individual Service Instance Upgrades](#individual-upgrades) below. <br>
-When this feature is not enabled, the `upgrade-all-service-instances` errand runs by default
-after each upgrade.
 
 Upgrading the <%= vars.product_short %> service and service instances can temporarily interrupt
 the service.
 For more information, see [Service Interruptions](#interruptions) below.
 
-### <a id="individual-upgrades"></a> Enable Individual Service Instance Upgrades
+### <a id="individual-upgrades"></a> About Individual Service Instance Upgrades
 
-In <%= vars.product_short %> v2.8 and later, to decrease upgrade time,
+<p class=note><strong>Note:</strong> Before you enable individual service instance upgrades you must
+  have <%= vars.app_runtime_full %> v2.7 or later.
+</p>
+
+In <%= vars.product_short %> v2.8 and later, to decrease runtime for service instance upgrade,
 you can enable individual upgrades for service instances.
 This enables developers to upgrade individual service instances after you upgrade the tile.
-
-After you upgrade <%= vars.product_short %>,
-existing service instances must be upgraded to use the latest version of the tile.
-Developers cannot create new bindings to a service instance that has not been upgraded.
 By default, <%= vars.product_short %> automatically upgrades all service instances
 when you upgrade the tile.
 However, this operation can take a long time.
 
-#### <a id="upgrades-preq"></a> Prerequisites
-
-Before you enable individual service instance upgrades you must have <%= vars.app_runtime_full %> v2.7 or later.
-
-#### <a id="disable-services"></a> Disable the upgrade-all-service-instances Errand
-
-To enable individual service instance upgrades, you must disable the `upgrade-all-service-instances`
-errand.
-
-To disable the errand:
-
-1. Ensure that all service instances have been upgraded to <%= vars.product_short %> v2.8.
-
-1. In <%= vars.product_short %> tile, navigate to the **Errands** page.
-
-1. Select **Off** for the **Upgrade all On-demand MySQL Service Instances** errand.
-
-1. Click **Save**.
-
-1. Navigate to  **<%= vars.ops_manager %> Dashboard** > **Review Pending Changes**.
-
-1. Click **Apply Changes**.
+After you upgrade <%= vars.product_short %>,
+existing service instances must be upgraded to use the latest version of the tile.
+Developers cannot create new bindings to a service instance that has not been upgraded.
 
 After you enable individual service instance upgrades, developers can upgrade individual
 service instances by following the procedure in
