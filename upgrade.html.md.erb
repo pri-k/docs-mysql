@@ -44,7 +44,7 @@ Click **Save** on any panes where you make changes.
 
     </p>
 
-1. (Optional)If you want developers to individually upgrade service instances, navigate
+1. (Optional) If you want developers to individually upgrade service instances, navigate
   to the **Errands** pane and select **Off** for **Upgrade all On-demand MySQL Service Instances**
  in the **Errands** pane. <br><br>
  By default, the `upgrade-all-service-instances` errand runs after each upgrade.
@@ -68,17 +68,17 @@ For more information, see [Service Interruptions](#interruptions) below.
 </p>
 
 In <%= vars.product_short %> v2.8 and later, to decrease runtime for service instance upgrade,
-developers can individually upgrade service instances after you upgrade the tile.
-By default, <%= vars.product_short %> automatically upgrades all service instances
-when you upgrade the tile.
+developers can individually upgrade service instances.
+Developer can only upgrade a service instance
+if you disable the `upgrade-all-service-instances` errand when upgrading the tile.
+By default, <%= vars.product_short %> runs this errand when you upgrade the tile.
 However, this operation can take a long time.
 
 After you upgrade <%= vars.product_short %>,
 existing service instances must be upgraded to use the latest version of the tile.
-Developers cannot create new bindings to service instances that has not been upgraded.
+Developers cannot create new bindings to service instances that have not been upgraded.
 
-After you enable individual service instance upgrades, developers can upgrade individual
-service instances by following the procedure in
+Developers can upgrade individual service instances by following the procedure in
 [Upgrade a Single Service Instance](./use.html#single).
 
 ## <a id="interruptions"></a>Service Interruptions
