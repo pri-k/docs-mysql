@@ -6,7 +6,7 @@ owner: MySQL
 
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
-This topic provides instructions for developers using the <%= vars.product_name %> for replication
+This topic provides instructions for developers using the <%= vars.product_full %> for replication
 across multiple foundations or data centers.
 
 <!-- LINK OUT TO DEF OF PXC SINGLE NODE, PRIMARY / SECONDARY ETC  -->
@@ -18,7 +18,7 @@ across multiple foundations or data centers.
 
 ## <a id="overview"></a>Overview
 
-In <%= vars.product_name %> v2.7 and later,
+In <%= vars.product_short %> v2.7 and later,
 you can configure replication between two <%= vars.single_leader_plan %> service instances
 across multiple foundations or data centers to create a leader-follower topology.
 
@@ -29,7 +29,7 @@ referred to as a decoupled leader-follower service instance.
 <p class="note"><strong>Note:</strong>
   A decoupled leader-follower service instance deployed across multiple
   foundations or data centers is different from the coupled leader-follower plan that
-  <%= vars.product_name %> offers.
+  <%= vars.product_short %> offers.
   For information about the coupled leader-follower plan,
   see <a href="./about-leader-follower.html">About Leader-Follower</a>.
 </p>
@@ -39,7 +39,7 @@ see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
 
 ## <a id="prereq"></a>Prerequisites
 
-Before you use <%= vars.product_name %> across multiple foundations or data centers, you must have:
+Before you use <%= vars.product_short %> across multiple foundations or data centers, you must have:
 
 + Access to the <%= vars.single_leader_plan %> plan
 + A multi-site architecture configured by a operator
@@ -48,12 +48,12 @@ see [Preparing for <%= vars.single_leader_plan %>](./prepare-multi-site.html).
 
 ## <a id='create-multi-dc'></a>Create a Multi-Site Leader-Follower Service Instance
 
-To set up a leader-follower service instance of <%= vars.product_name %> across multiple foundations
+To set up a leader-follower service instance of <%= vars.product_short %> across multiple foundations
 or data centers:
 
 1. Check the availability of the <%= vars.single_leader_plan %> service in the Marketplace in both your
 foundations.
-See [Confirm the <%= vars.product_name %> Service Availability](use.html#marketplace).
+See [Confirm the <%= vars.product_full %> Service Availability](use.html#marketplace).
 1. Create <%= vars.single_leader_plan %> service instances to configure a
 decoupled multi-site leader-follower service instance.
 See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
@@ -62,12 +62,12 @@ replication.
 See [Configure <%= vars.single_leader_plan %>](#create-service-key), below.
 1. Bind the  <%= vars.single_leader_plan %> service instances to your apps.
 See [Bind a Leader-Follower Service Instance to Your App](#bind), below.
-5. Modify your app to use the <%= vars.product_name %> service.
+5. Modify your app to use the <%= vars.product_short %> service.
 See [Use the MySQL Service in Your App](./use.html#call).
 
 After you create a leader-follower service instance across multiple foundations or data centers,
 you can manage it over the life cycle of your apps and data.
-For instructions on how to manage a <%= vars.product_name %> service instance,
+For instructions on how to manage a <%= vars.product_short %> service instance,
 see [Manage Service Instances](./use.html#manage).
 
 ### <a id='create-service-instance'></a>Create <%= vars.single_leader_plan %> Service Instances
@@ -76,7 +76,7 @@ To create a leader-follower service instance across multiple foundations or data
 must create a <%= vars.single_leader_plan %> service instance in two different
 foundations.
 
-Pivotal recommends that you create the leader <%= vars.single_leader_plan %> service instance
+VMware recommends that you create the leader <%= vars.single_leader_plan %> service instance
 in your primary foundation and the follower <%= vars.single_leader_plan %>
 service instance in your secondary foundation.
 
@@ -340,5 +340,5 @@ To bind an app to a leader-follower service instance:
 you must bind the same app to your secondary service instance in your secondary foundation.
 To do this, repeat the above steps and replace references to `primary` with `secondary`.
 
-1. Modify your app to use the <%= vars.product_name %> service by doing the procedure in
+1. Modify your app to use the <%= vars.product_short %> service by doing the procedure in
   [Use the MySQL Service in Your App](./use.html#call).
