@@ -44,11 +44,10 @@ Click **Save** on any panes where you make changes.
 
     </p>
 
-1. (Optional) Enable developers to individually upgrade service instances by
-navigating to the **Errands** pane and selecting **Off** for **Upgrade all On-demand MySQL Service Instances**
+1. (Optional)If you want developers to individually upgrade service instances, navigate
+  to the **Errands** pane and select **Off** for **Upgrade all On-demand MySQL Service Instances**
  in the **Errands** pane. <br><br>
- When this feature is not enabled, the `upgrade-all-service-instances` errand runs by default
- after each upgrade.
+ By default, the `upgrade-all-service-instances` errand runs after each upgrade.
 For more information, see
 [About Individual Service Instance Upgrades](#individual-upgrades) below.
 
@@ -64,20 +63,19 @@ For more information, see [Service Interruptions](#interruptions) below.
 
 ### <a id="individual-upgrades"></a> About Individual Service Instance Upgrades
 
-<p class=note><strong>Note:</strong> Before you enable individual service instance upgrades you must
-  have <%= vars.app_runtime_full %> v2.7 or later.
+<p class=note><strong>Note:</strong> Before developers can upgrade service instance you must
+  use <%= vars.app_runtime_full %> v2.7 or later.
 </p>
 
 In <%= vars.product_short %> v2.8 and later, to decrease runtime for service instance upgrade,
-you can enable individual upgrades for service instances.
-This enables developers to upgrade individual service instances after you upgrade the tile.
+developers can individually upgrade service instances after you upgrade the tile.
 By default, <%= vars.product_short %> automatically upgrades all service instances
 when you upgrade the tile.
 However, this operation can take a long time.
 
 After you upgrade <%= vars.product_short %>,
 existing service instances must be upgraded to use the latest version of the tile.
-Developers cannot create new bindings to a service instance that has not been upgraded.
+Developers cannot create new bindings to service instances that has not been upgraded.
 
 After you enable individual service instance upgrades, developers can upgrade individual
 service instances by following the procedure in
