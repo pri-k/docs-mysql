@@ -174,6 +174,12 @@ or highly available (HA) cluster plan:
 
 ### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
+You can only restore backup artifacts to a single node service instance.
+Ensure that the persistent disk in the single node plan is as
+least as large as the persistent disk of your largest leader-follower.
+For information about persistent disk sizing recommendations,
+see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
+
 To prepare a new service instance for restore:
 
 1. Create a new MySQL service instance by running:
@@ -195,18 +201,6 @@ To prepare a new service instance for restore:
       The persistent disk size of this single node plan must be three times larger than
       the maximum size of the data developers need.
       For more information, see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.</li>
-
-    To restore to a leader-follower plan, do one of the following:
-      <ul>
-        <li><b>Create a single-node instance to restore to</b>
-          then update the plan on this instance to leader-follower after you run the restore utility.
-          For how to update the plan,
-          see step 1 of <a href="#restage">Restage the Service Instance</a>.</li>
-        <li><b>Create a leader-follower instance to restore to</b> then scale the instances to one
-          before running the restore utility. For how to scale instances,
-          see step 6 of this procedure.</li>
-      </ul>
-
 
     For more information, see [Create a Service Instance](./use.html#create).
 
@@ -235,34 +229,17 @@ To prepare a new service instance for restore:
     bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
     </pre>
 
-1. If you created a leader-follower or HA cluster service instance to restore to:
-    1. Modify the deployment manifest to scale the instances to one. Do one of the following:
-      * To scale a leader-follower instance, set the `instances` property to `1` and the
-      `leader-follower` property to `false`.
-      Update the instance group  and properties for your new service instance as follows:
+1. If you created a HA cluster service instance to restore to,
+modify the deployment manifest to scale the instances to one:
+  1. Update the instance group for your new service instance as follows:
 
-            ```yaml
-            instance_groups:
-            - name: mysql
-              ...
-              instances: 1    # Scale instances to 1
-              ...
-            properties:
-              leader_follower:
-                enabled: false    # Set to false
-              ...
-            ```
-      * To scale an HA cluster instance, modify the deployment manifest
-      to set `instances` to `1`.
-      Update the instance group for your new service instance as follows:
-
-            ```yaml
-            instance_groups:
-            - name: mysql
-              ...
-              instances: 1    # Scale instances to 1
-              ...
-            ```
+        ```yaml
+        instance_groups:
+        - name: mysql
+          ...
+          instances: 1    # Scale instances to 1
+          ...
+        ```
   1. Redeploy the deployment manifest by running:
 
         ```
@@ -284,8 +261,6 @@ To prepare a new service instance for restore:
     - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
     - `DESTINATION-PATH` is where the backup file saves on the BOSH VM. For example, `/tmp/`.
 
-1. Use the BOSH CLI to SSH in to the newly created MySQL service instance.
-For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
 ### <a id="run-sn-leader-follower"></a> Restore a Single Node or Leader-Follower Instance
 
@@ -293,9 +268,6 @@ For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizi
   <strong>Warning:</strong> Restoring a service instance is destructive.
   VMware recommends that you only restore to a new and unused service instance.
 </p>
-
-Before you restore your service instance, follow the procedure in
-[Create and Prepare a New Service Instance for Restore](#prepare) above.
 
 You can restore a single node or leader-follower service instance using the restore utility.
 The restore utility is packaged with the <%= vars.product_old %> tile.
@@ -307,6 +279,9 @@ The restore utility does the following:
 * Restores the backup artifact into the MySQL data directory
 
 To restore a single node or leader-follower service instance:
+
+1. Use the BOSH CLI to SSH in to the newly created MySQL service instance.
+For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
 1. After securely logging in to MySQL, become root by running:
 
@@ -331,9 +306,6 @@ To restore a single node or leader-follower service instance:
   <strong>Warning:</strong> Restoring a service instance is destructive.
   VMware recommends that you only restore to a new and unused service instance.
 </p>
-
-Before you restore your service instance, follow the procedure in
-[Create and Prepare a New Service Instance for Restore](#prepare) above.
 
 To restore an HA cluster:
 
@@ -400,36 +372,17 @@ leader-follower plan, update the plan now:
     cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
     ```
 
-1. If you scaled instances to one in step 6 of *Create and Prepare a New Service
-Instance for Restore* above:
-    1. Scale your instance. Do one of the following:
-      + If you scaled a leader-follower instance, modify the deployment manifest
-      to edit the `instances` property to `2` and the `leader-follower` property to `true`.
-      Update the instance group and properties for your new service instance as follows:
+1. If you created a HA cluster service instance to restore to,
+    modify the deployment manifest to scale the instances to three:
+  1. Update the instance group for your new service instance as follows:
 
-            ```yaml
-            instance_groups:
-            - name: mysql
-              ...
-              instances: 2    # Scale instances to 2
-              ...
-            properties:
-              leader_follower:
-                enabled: true    # Set to true
-              ...
-
-             ```
-      + If you scaled an HA cluster instance, set the `instances` property to `3` by
-      modifying the deployment manifest.
-      Update the instance group for your new service instance as follows:
-
-            ```yaml
-            instance_groups:
-            - name: mysql
-              ...
-              instances: 3    # Scale instances to 3
-              ...
-             ```
+        ```yaml
+        instance_groups:
+        - name: mysql
+          ...
+          instances: 3    # Scale instances to 3
+          ...
+         ```
   1. Redeploy the deployment manifest by running:
 
         ```
