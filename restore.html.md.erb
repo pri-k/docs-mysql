@@ -176,7 +176,11 @@ To prepare a new service instance for restore:
     ```
 
     Where:
-    + `SINGLE-NODE-PLAN` is the name of the single node service plan for your new service instance.
+    + `NEW-PLAN` is the name of the service plan for your new service instance.
+        The plan you should choose depends on the service instance topology you are
+        restoring. If topology you are restoring is:
+          + **Single node or leader-follower:** Select a single node plan.
+          + **HA cluster:** Select a HA cluster plan.
     + `NEW-INSTANCE-NAME` is the name of the new service instance.
 
     For more information, see [Create a Service Instance](./use.html#create).
@@ -206,7 +210,7 @@ To prepare a new service instance for restore:
     bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
     </pre>
 
-1. If you created a  HA cluster service instance to restore to,
+1. If you created a HA cluster service instance to restore to,
 modify the deployment manifest to scale the instances to one:
   1. Update the instance group for your new service instance as follows:
 
@@ -285,14 +289,33 @@ you must restage your new service instance.
 
 To restage your service instance:
 
-1. If you restored to a service instance with a single-node plan but want a
-leader-follower or HA cluster plan, update the plan by running:
+1. If you are restoring a leader-follower service instance, update the plan by running:
 
     ```
-    cf update-service NEW-INSTANCE-NAME -p NEW-PLAN
+    cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
     ```
 
-    Where `NEW-PLAN` is the name of the leader-follower or HA cluster plan you restoring to.
+1. If you created a HA cluster service instance to restore to,
+modify the deployment manifest to scale the instances to three:
+  1. Update the instance group for your new service instance as follows:
+
+        ```yaml
+        instance_groups:
+        - name: mysql
+          ...
+          instances: 3    # Scale instances to 3
+          ...
+        ```
+  1. Redeploy the deployment manifest by running:
+
+        ```
+        bosh -e BOSH-ENVIRONMENT -d BOSH-DEPLOYMENT  deploy PATH-TO-MANIFEST.yml
+        ```
+        For example:
+
+        <pre class="terminal">
+        bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
+        </pre>
 
 1. Determine if the app is currently bound to a MySQL service instance:
 
