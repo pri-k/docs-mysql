@@ -317,7 +317,7 @@ However, when you migrate data to a new service instance the database is unavail
 For more information about using `cf update-service`,
 see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
 
-The following table lists migration use cases that can be done with the `update-service` command:
+The following table lists migration use cases for the `update-service` command:
 
 <table>
   <tr>
@@ -347,13 +347,13 @@ The following table lists migration use cases that can be done with the `update-
 </table>
 
 <p class="note warning"><strong>Warning:</strong> You cannot use <code>cf update-service</code>
-  to migrate data between a HA cluster plan and a plan of another topology.
+  to migrate data between an HA cluster plan and a plan of another topology.
 If you want to do this, you must use the <code>cf mysql-tools</code> plugin instead.
 For more information about migrating data,
 see <a href="./about-migrate.html">About Data Migration in <%= vars.product_full %></a>.
 </p>
 <p class="note warning"><strong>Warning:</strong> If you are using <%= vars.single_leader_plan_lc %>,
-  you must not update <%= vars.single_leader_plan %> plan to a plan of another topology.
+  you must not update the <%= vars.single_leader_plan %> plan to a plan of another topology.
   If you do this, your replication breaks.
 </p>
 
@@ -372,7 +372,7 @@ To migrate a service instance to another plan:
     ```
 
     Where `PLAN` is the plan you want to update the service instance to.
-    <br>
+    <br><br>
     For example:
 
     <pre class="terminal">
