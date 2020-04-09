@@ -44,29 +44,37 @@ For more information, see
 
 ## <a id="prereqs"></a>Prerequisites
 
-To use <%= vars.product_short %> with your <%= vars.app_runtime_abbr %> apps, you need:
+To use <%= vars.product_short %> with your <%= vars.app_runtime_abbr %> apps, you must:
 
 * Decide what type of plan you want from the following options: single node, leader-follower,
 highly available (HA) cluster, and <%= vars.single_leader_plan %>.
 <%= vars.single_leader_plan %> is used to deploy a leader-follower service instance across multiple foundations
 or data centers. Your marketplace might not offer all of these types.
 For about service plans information, see [Availability Options](availability-options.html).
+
 * If you intend to use a <%= vars.single_leader_plan %> plan for deploying a leader-follower service instance
 across multiple foundations or data centers, review the limitations associated with this topology.
 See [<%= vars.single_leader_plan %> Limitations](./about-multi-site.html#limitations).
+
 * If you intend to use an HA cluster plan, review the limitations associated with this plan type.
-See [Highly Available Cluster Limitations](./about-ha.html##limitations).
-* A <%= vars.ops_manager %> installation with [<%= vars.product_short %>](https://network.pivotal.io/products/p-mysql)
-installed and listed in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances).
-Download the product file from [<%= vars.product_network %>](https://network.pivotal.io/products/pivotal-mysql).
-* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or
-  Admin account on the <%= vars.ops_manager %> installation.
-* A local machine with the following installed:
+See [Highly Available Cluster Limitations](./about-ha.html#limitations).
+
+* Have an <%= vars.ops_manager %> installation with <%= vars.product_short %>
+installed and listed in the Marketplace.
+See [Check Service Availability in the Marketplace](#check-marketplace) below.
+You can download the product file from [<%= vars.product_network %>](https://network.pivotal.io/products/pivotal-mysql).
+
+* Have a Space Developer or Admin account on the <%= vars.ops_manager %> installation.
+For more information, see [User Roles](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles).
+
+* Have a local machine with the following installed:
    - a browser
    - a shell
    - the [Cloud Foundry Command-Line Interface](http://docs.pivotal.io/pivotalcf/cf-cli/install-go-cli.html) (cf CLI)
    - the Linux [watch](http://www.linfo.org/watch.html) command
-* To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app.
+
+* Log in to the org and space containing your app.
+For instructions, see [Log In With the CLI](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login)
 
 
 ## <a id='marketplace'></a>Confirm the <%= vars.product_short %> Service Availability
