@@ -273,7 +273,7 @@ optional parameters to change the character sets used in databases:
 
 </table>
 
-## <a id='synchronous-replication'></a>Synchronous Replication
+## <a id='synchronous-replication'></a>Synchronous Replication for Leader-Follower
 
 If you use a leader-follower service instance, MySQL for PCF supports synchronous replication in addition
 to the default asynchronous replication. In sync replication, data does not get committed to the
@@ -283,6 +283,9 @@ The guarantee of redundancy gives sync replication an advantage over asynchronou
 However, depending on latency, sync replication reduces the performance of write operations.
 
 The table below describes how to use the `replication_mode` optional parameter:
+
+<p class="note"><strong>Note: </strong> <code>replication_mode</code> does not work 
+for single node or HA cluster plans.</p>
 
 <table>
   <tr>
