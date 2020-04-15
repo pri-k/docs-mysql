@@ -20,7 +20,7 @@ see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
 Before <%= vars.single_leader_plan_lc %> can be configured for <%= vars.product_short %>, you must
 confirm that you have done the following:
 
-1. Created two <%= vars.app_runtime_full %> (<%= vars.app_runtime_short %>) foundations that support
+1. Created two <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) foundations that support
       <%= vars.product_short %> v2.7 and later.
 
 1. Deployed both foundations on a routable network. For example, the leader and follower service instances must be
@@ -31,13 +31,13 @@ You must ensure that the CIDR ranges for the leader and follower nodes do not ov
     For more information, see [About Active-Passive Topology](./about-multi-site.html#active-passive).
       and [About App-Layer Active-Active Topology](./about-multi-site.html#active-active).
 
-1. Configured a global DNS load balancer to point to the two <%= vars.app_runtime_short %> foundations
+1. Configured a global DNS load balancer to point to the two <%= vars.app_runtime_abbr %> foundations
 and their local load balancers.
 See [Configure Your GLB](https://docs.pivotal.io/pivotalcf/plan/global-dns-lb.html#configure-glb).
 
 ##<a id='enable'></a> Enable <%= vars.single_leader_plan %>
 
-After two <%= vars.app_runtime_short %> foundations are created, you can enable <%= vars.single_leader_plan_lc %> by
+After two <%= vars.app_runtime_abbr %> foundations are created, you can enable <%= vars.single_leader_plan_lc %> by
 doing the following:
 
 1. Configure networking rules.
