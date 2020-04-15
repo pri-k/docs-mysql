@@ -19,6 +19,9 @@ The <%= vars.single_leader_plan_lc %> topology in <%= vars.product_short %>
 is a disaster recovery solution that enables developers to provision a leader-follower
 instance across two foundations.
 
+These service instances are single node MySQL instances, and will be configured for replication in Configure Multi‑Site Replication, below.”
+
+
 Operators can configure two foundations to be in the same data center
 or spread across multiple data centers or geographical regions.
 
@@ -170,28 +173,26 @@ The table below describes when you should trigger a failover or switchover:
 <table>
   <tr>
     <th width="50%">Failover if...</th>
-    <th>Switchover if your instances are healthy and you are...</th>
+    <th>Switchover if...</th>
   </tr>
 
   <tr>
     <td>
       <ul>
-        <li>The leader service instance is unreachable</li>
-        <li>The leader service instance fails unexpectedly</li>
-        <li>The performance of the leader VM degrades</li>
-        <li>The availability zone where the leader VM is located goes offline unexpectedly</li>
-        <li>The leader is in read-only mode</li>
+        <li>The leader MySQL process has crashed,
+          or is unhealthy and is not automatically recovered by the platform (BOSH)</li>
+        <li>The leader VM is destroyed or unrecoverable.</li>
+        <li>The AZ on which the leader is deployed experiences an unexpected outage.</li>
+        <li>The data center on which the leader is deployed experiences an unexpected outage.</li>
       </ul>
     </td>
 
     <td>
       <ul>
-        <li>Doing data center maintenance</li>
-        <li>Upgrading your foundation. For example, upgrading stemcells.</li>
-        <li>Changing your hardware</li>
-        <li>Intentionally taking the data center offline</li>
-        <li>Reconfiguring replication roles.
-            That is, making the leader into the follower and vice versa.</li>
+        <li>Both the leader and the follower instance is healthy. </li>
+        <li>You plan to do an foundation-wide or data center-wide upgrade or maintenance on your primary site.
+          For example, upgrading stemcells or data center hardware upgrades.</li>
+        <li>Planned degraded performance on the primary site.</li>
       </ul>
     </td>
   </tr>
