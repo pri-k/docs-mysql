@@ -5,15 +5,15 @@ Owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-<%# The below uses the local product variable and math so we do not need this copy
+<%# The below uses the local product variable and math so we do not need to edit it
 with every release %>
-<% previous_version = (product_info["local_product_version"].to_f - 0.1).round(2) %>
+<% previous_version = (product_info['local_product_version'].to_f - 0.1).round(2) %>
 <% current_version = product_info['local_product_version'] %>
 
 VMware recommends that you upgrade to the latest version of your current minor line,
 then upgrade to the latest available version of the new minor line.
-For example, if you use an older v<%previous_version%>.x
-version, upgrade to the latest v<%previous_version%>.x version
+For example, if you use an older v<%= previous_version %>.x
+version, upgrade to the latest v<%= previous_version %>.x version
 before upgrading to the latest v<%= current_version %>.x version.
 
 <%= partial vars.path_to_partials + '/upgrade-planner' %>
@@ -26,14 +26,34 @@ before upgrading to the latest v<%= current_version %>.x version.
 
 New features and changes in this release:
 
-+ **Individual Service Instance Upgrades:** Developers can upgrade <%= vars.product_short %> service instances individually using the
++ **Open Beta for <%= vars.single_leader_plan %> Plans:**
+Developers can configure a follower service instance for <%= vars.single_leader_plan_lc %> across foundations.
+For more information,
+see [Using <%= vars.product_short %> for Multi-Site Replication](./p-mysql/2-n/use-multi-site.html).
++ **Backup and Restore <%= vars.single_leader_plan %> Service Instances:**
+Operators can configure automated backups for <%= vars.single_leader_plan %>.
+Operators can also use the `mysql-restore` utility to restore
+a <%= vars.single_leader_plan %> instance from a backup.
+For more information,
+see [Backing up <%= vars.product_short %>](./backup.html) and [Restoring <%= vars.product_short %>](./restore.html).
+
++ **<%= vars.single_leader_plan %> Metrics:** You can view metrics for <%= vars.single_leader_plan %>
+service instances in realtime using `cf tail`.
+
++ **CredHub Maestro Compatibility:** <%= vars.product_short %> is compatible with the <%= vars.ops_manager %> CredHub Maestro certificate rotation feature.
+Operators can enable this feature in <%= vars.ops_manager %> v2.8 and later.
+For more information,
+see [CredHub Maestro Rotates BOSH DNS Certificate Authorities](https://docs.pivotal.io/platform/2-8/release-notes/opsmanager-rn.html#maestro-rotate-ca)
+
++ **Individual Service Instance Upgrades:**
+Developers can upgrade <%= vars.product_short %> service instances individually using the
 Cloud Foundry Command Line Interface (cf CLI).
 For more information about this feature,
 see [About Individual Service Instance Upgrades](./upgrade.html#individual-upgrades).
 For instructions for individually upgrading service instances,
 see [Upgrade a Single Service Instance](./use.html#single).
 
-+ **Change HA Cluster Server Defaults:** Developers can set optional parameters
++ **Change Highly Available (HA) Cluster Server Defaults:** Developers can set optional parameters
 to change MySQL server defaults for HA cluster plans. For instructions for
 changing server defaults, see [Changing MySQL Server Defaults](./change-default.html).
 
@@ -41,51 +61,29 @@ changing server defaults, see [Changing MySQL Server Defaults](./change-default.
 utility to restore a HA cluster from a backup.
 For more information, see [Restoring <%= vars.product_short %>](./restore.html).
 
-+ **Backup and restore workflow supported for Multi-site Leader-follower plans:** Multi-site replication instances will now be 
-backed up on the schedule configured by Operators. And Operators can use the `mysql-restore` utility to restore 
-a multi-site instance from a backup.
-
-+ **Developer can now configure follower for replication from a non-empty multi-site instance in a different foundation.
-
-+ **Metrics for Multi-site Leader-follower plans:** Multi-site replication instances will now metrics which can be viewed in realtime
-using `cf tail`.
-
-+ An error message appears when developers bind apps to custom schemas with invalid names. The error message shows the valid 
-characters for custom schema names.
++ **Telemetry Data:** <%= vars.product_short %> sends Telemetry data when the Telemetry tile is enabled in your foundation.
+  For more information about the Telemetry tile,
+  see [Telemetry for Ops Manager](https://docs.pivotal.io/pivotal-telemetry/).
 
 + Operators can run the `recreate-all-service-instances` errand to re-create service instance VMs.
 
-+ Application and service key bindings can start a connection successfully to service instances of single node, HA cluster, 
-and multi-site leader-follower plans due to less stringent BOSH DNS hostname.
++ An error message appears when developers bind apps to custom schemas with invalid names.
+The error message shows the valid characters for custom schema names.
 
-+ MySQL tile is compliant with Maestro certificate rotation feature which is enabled in Ops Manager v2.8+.
-
-+ MySQL tile can now send Telemetry data and insights when the Telemetry tile is enabled in the foundation.
-
++ App and service key bindings can successfully connect to single node, HA cluster,
+and <%= vars.single_leader_plan %> service instances.
+This is because of less stringent BOSH DNS hostname.
+<%# (WAS THIS AN ISSUE BEFORE? WHAT DOES LESS STRINGENT MEAN? IS THIS MORE LIKE A RESOLVED
+ISSUE?) %>
 
 
 ### Security Fix
 
 This release includes the following security update:
 
-+ Expired and unused certificates pertaining to HA clusters no longer live on the service instances.
-
-
-
-### Resolved Issues
-
-This release includes the following fixes:
-
-+ An inaccurate generic message no longer appears when you use `cf update-service` to migrate data between a highly available 
-(HA) cluster plan and a plan of another topology. MySQL for Pivotal Platform now fails fast to indicate 
-that this is an unsupported workflow.
-
-+ The MySQL tile now configures the endpoint url for s3 backups, and does not always uses the default AWS endpoint.
-
-+ Operators can monitor Key Performance Indicators (KPIs) for persistent and ephemeral disk usage, and number of connections
-on the Healthwatch Indicator Protocol dashboard. For more information, see Use the Indicator Protocol Dashboard.
-
-
++ Expired and unused certificates for HA clusters no longer
+are stored on HA cluster service instances.
+<%# (THIS WAS PROBS A KNOWN ISSUE BEFORE YES?) %>
 
 ### Known Issue
 
