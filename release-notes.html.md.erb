@@ -41,9 +41,51 @@ changing server defaults, see [Changing MySQL Server Defaults](./change-default.
 utility to restore a HA cluster from a backup.
 For more information, see [Restoring <%= vars.product_short %>](./restore.html).
 
++ **Backup and restore workflow supported for Multi-site Leader-follower plans:** Multi-site replication instances will now be 
+backed up on the schedule configured by Operators. And Operators can use the `mysql-restore` utility to restore 
+a multi-site instance from a backup.
+
++ **Developer can now configure follower for replication from a non-empty multi-site instance in a different foundation.
+
++ **Metrics for Multi-site Leader-follower plans:** Multi-site replication instances will now metrics which can be viewed in realtime
+using `cf tail`.
+
++ An error message appears when developers bind apps to custom schemas with invalid names. The error message shows the valid 
+characters for custom schema names.
+
++ Operators can run the `recreate-all-service-instances` errand to re-create service instance VMs.
+
++ Application and service key bindings can start a connection successfully to service instances of single node, HA cluster, 
+and multi-site leader-follower plans due to less stringent BOSH DNS hostname.
+
++ MySQL tile is compliant with Maestro certificate rotation feature which is enabled in Ops Manager v2.8+.
+
++ MySQL tile can now send Telemetry data and insights when the Telemetry tile is enabled in the foundation.
+
+
+
 ### Security Fix
 
 This release includes the following security update:
+
++ Expired and unused certificates pertaining to HA clusters no longer live on the service instances.
+
+
+
+### Resolved Issues
+
+This release includes the following fixes:
+
++ An inaccurate generic message no longer appears when you use `cf update-service` to migrate data between a highly available 
+(HA) cluster plan and a plan of another topology. MySQL for Pivotal Platform now fails fast to indicate 
+that this is an unsupported workflow.
+
++ The MySQL tile now configures the endpoint url for s3 backups, and does not always uses the default AWS endpoint.
+
++ Operators can monitor Key Performance Indicators (KPIs) for persistent and ephemeral disk usage, and number of connections
+on the Healthwatch Indicator Protocol dashboard. For more information, see Use the Indicator Protocol Dashboard.
+
+
 
 ### Known Issue
 
