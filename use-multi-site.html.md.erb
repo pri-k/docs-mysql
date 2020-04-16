@@ -9,13 +9,6 @@ owner: MySQL
 This topic provides instructions for developers using the <%= vars.product_full %> for replication
 across multiple foundations or data centers.
 
-<!-- LINK OUT TO DEF OF PXC SINGLE NODE, PRIMARY / SECONDARY ETC  -->
-<!-- WHAT HAPPENS IF THEY MESS THIS UP - T-SHOOTING? -->
-<!-- ADD LINKS BACK TO NORMAL USING DOC? -->
-<!-- THERE WILL BE MORE PROCEDURES ON THIS PAGE -->
-<!-- IF YOU UPDATE PLAN TO SOMETHING TRHAT IS NOT PXC-SINGLE-NODE BAD STUFF HAPPENS -->
-<!-- UPDATE UPDATE-SERVICE COMMAND TO INCLUDE `replication-role:follower`? CHECK WHEN ACCEPTED #163158711 -->
-
 ## <a id="overview"></a>Overview
 
 In <%= vars.product_short %> v2.7.4 and later, you provision a leader-follower
@@ -345,8 +338,8 @@ If you want to use an active-active topology,
 you must additionally bind your app to the secondary service instance in your secondary foundation.
 
 For information about active-passive and app-layer active-active topologies,
-see see [About Active-Passive Topology](./about-multi-site#active-passive)
-and [About App-Layer Active-Active Topology](./about-multi-site#active-active).
+see see [About Active-Passive Topology](./about-multi-site.html#active-passive)
+and [About App-Layer Active-Active Topology](./about-multi-site.html#active-active).
 
 To bind an app to a leader-follower service instance:
 
