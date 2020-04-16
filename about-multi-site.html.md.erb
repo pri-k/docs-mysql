@@ -18,10 +18,8 @@ the <%= vars.single_leader_plan %> plan.
 The <%= vars.single_leader_plan_lc %> topology in <%= vars.product_short %>
 is a disaster recovery solution that enables developers to provision a leader-follower
 instance across two foundations.
-
-These service instances are single node MySQL instances, and will be configured for replication in Configure Multi‑Site Replication, below.”
-
-
+This leader-follower service instance is comprised of two single node instances
+that are configured for replication.
 Operators can configure two foundations to be in the same data center
 or spread across multiple data centers or geographical regions.
 
@@ -137,6 +135,118 @@ Therefore, the follower service instance is read-only.
 Apps can only write to the leader.
  </p>
 
+
+##<a id='failover-switchover'></a> About Failover and Switchover
+
+<%= vars.product_short %> prioritizes data consistency over availability.
+Therefore, <%= vars.product_short %> does not trigger failover or switchover automatically
+and developers must manually trigger a failover or switchover.
+For instructions about triggering failover or switchover, see
+see [Triggering <%= vars.single_leader_plan %> Failover and Switchover](./multi-site-trigger-failover.html).
+
+
+The table below describes when you should trigger a failover or switchover:
+
+<table>
+  <tr>
+    <th width="50%">Failover if...</th>
+    <th>Switchover if...</th>
+  </tr>
+
+  <tr>
+    <td>
+      <ul>
+        <li>The leader MySQL process has crashed
+          or is unhealthy and is not automatically recovered by BOSH.</li>
+        <li>The leader VM is destroyed or unrecoverable.</li>
+        <li>The availability zone for the leader VM experiences an unexpected outage.</li>
+        <li>The data center for the leader VM experiences an unexpected outage.</li>
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+        <li>Both the leader and the follower instance is healthy. </li>
+        <li>You plan to do foundation or data center upgrades or maintenance on your primary site.
+          For example, upgrading stemcells or data center hardware.</li>
+        <li>You plan to degrade performance on the primary site.</li>
+      </ul>
+    </td>
+  </tr>
+
+</table>
+
+For information about <%= vars.single_leader_plan_lc %> topologies
+in an healthy state, see [About Active-Passive Topology](#active-passive)
+and [About App-Layer Active-Active Topology](#active-active) above.
+
+###<a id='failover'></a> About Failover
+
+In both the active-passive and app-layer active-active topologies,
+if a developer triggers a failover,
+all app traffic is directed to the leader in the secondary foundation
+and the primary foundation receives no app traffic.
+
+The following diagram describes what happens when you trigger a failover
+for a <%= vars.single_leader_plan_lc %> topology:
+
+![Failover](multi-site-failover.png)
+
+<a href="./images/multi-site-failover.png" target="_blank">View a larger version of this diagram.</a>
+
+In the above diagram:
+
++ The GLB directs traffic to the app in the secondary foundation.
+  This app issues transactions to the leader service instance in the secondary foundation.
++ The leader service instance in the secondary foundation does not replicate data to another
+service instance.
+
+###<a id=active-passive-switchover></a> About Active-Passive Switchover
+
+In an active-passive topology, if a developer triggers a switchover,
+all app traffic is directed to leader in the secondary foundation and the primary foundation receives no app traffic.
+
+The following diagram describes what happens when you trigger a switchover
+in an active-passive topology:
+
+![Active-Passive Failover and Switchover](active-passive-switchover.png)
+
+<a href="./images/active-passive-switchover.png" target="_blank">View a larger version of this diagram.</a>
+
+In the above diagram:
+
++ The GLB directs traffic to the app in the secondary foundation.
+  This app issues transactions to the leader service instance in the secondary foundation.
++ The leader service instance in the secondary foundation replicates data to the follower service
+instance in the primary foundation.
+
+###<a id=active-active-switchover></a> About App-Layer Active-Active Switchover
+
+If a developer triggers a switchover,
+app traffic is still directed to both the primary and secondary foundation.
+However, the leader service instance is in secondary foundation.
+
+The following diagram describes what happens when you trigger a switchover
+in an active-active topology:
+
+![Active-Active Failover and Switchover](active-active-switchover.png)
+
+<a href="./images/active-active-switchover.png" target="_blank">View a larger version of this diagram.</a>
+
+In the above diagram:
+
++ The GLB directs traffic to the apps in the primary and
+  secondary foundations.
+  The apps in the primary and secondary foundation issues transactions to the leader service instance
+  in the secondary foundation. <br><br>
+  The app in the primary foundation issues transactions to the leader by:
+      1. Connecting to the follower service instance
+      1. Issuing transactions to the follower service instance
+      1. Having the follower service instance forward the transactions to the leader
+
++ The follower service instance in the primary foundation continuously
+replicates data from the leader service instance in the secondary foundation
+
 ##<a id='infrastructure'></a> Infrastructure Requirements for <%= vars.single_leader_plan %>
 
 Before using the <%= vars.single_leader_plan %> plan, consider the following requirements.
@@ -160,105 +270,6 @@ data centers that are geographically farther apart experience higher latencies.
 For information about the standard networking rules,
 see [Required Networking Rules for <%= vars.single_leader_plan %>](./about.html#multi-site-ports).
 
-##<a id='failover-switchover'></a> About Failover and Switchover
-
-<%= vars.product_short %> prioritizes data consistency over availability.
-Therefore, <%= vars.product_short %> does not trigger failover or switchover automatically
-and developers must manually trigger a failover or switchover. For instructions about triggering failover, see
-see [Triggering <%= vars.single_leader_plan %> Failover and Switchover](./multi-site-trigger-failover.html).
-
-
-The table below describes when you should trigger a failover or switchover:
-
-<table>
-  <tr>
-    <th width="50%">Failover if...</th>
-    <th>Switchover if...</th>
-  </tr>
-
-  <tr>
-    <td>
-      <ul>
-        <li>The leader MySQL process has crashed,
-          or is unhealthy and is not automatically recovered by the platform (BOSH)</li>
-        <li>The leader VM is destroyed or unrecoverable.</li>
-        <li>The AZ on which the leader is deployed experiences an unexpected outage.</li>
-        <li>The data center on which the leader is deployed experiences an unexpected outage.</li>
-      </ul>
-    </td>
-
-    <td>
-      <ul>
-        <li>Both the leader and the follower instance is healthy. </li>
-        <li>You plan to do an foundation-wide or data center-wide upgrade or maintenance on your primary site.
-          For example, upgrading stemcells or data center hardware upgrades.</li>
-        <li>Planned degraded performance on the primary site.</li>
-      </ul>
-    </td>
-  </tr>
-
-</table>
-
-For information about <%= vars.single_leader_plan_lc %> topologies
-in an healthy state, see [About Active-Passive Topology](#active-passive)
-and [About App-Layer Active-Active Topology](#active-active) above.
-
-###<a id='failover'></a> About Failover
-
-In both the active-passive and app-layer active-active topologies,
-if a developer triggers a failover,
-all app traffic is directed to the leader in the secondary foundation
-and the primary foundation receives no app traffic.
-
-The following diagram describes what happens when you trigger a failover
-for a <%= vars.single_leader_plan_lc %> topology:
-
-
-###<a id=active-passive-failover></a> About Active-Passive Switchover
-
-In an active-passive topology, if a developer triggers a switchover,
-all app traffic is directed to leader in the secondary foundation and the primary foundation receives no app traffic.
-
-The following diagram describes what happens when you trigger a switchover
-in an active-passive topology:
-
-![Active-Passive Failover and Switchover](active-passive-failover.png)
-
-<a href="./images/active-passive-failover.png" target="_blank">View a larger version of this diagram.</a>
-
-In the above diagram:
-
-+ The GLB directs traffic to the app in the secondary foundation.
-  This app issues transactions to the leader service instance in the secondary foundation.
-+ The leader service instance in the secondary foundation replicates data to the follower service
-instance in the primary foundation.
-
-###<a id=active-active-failover></a> About App-Layer Active-Active Switchover
-
-If a developer triggers a switchover,
-app traffic is still directed to both the primary and secondary foundation.
-However, the leader service instance is in secondary foundation.
-
-The following diagram describes what happens when you trigger a switchover
-in an active-active topology:
-
-![Active-Active Failover and Switchover](active-active-failover.png)
-
-<a href="./images/active-active-failover.png" target="_blank">View a larger version of this diagram.</a>
-
-In the above diagram:
-
-+ The GLB directs traffic to the apps in the primary and
-  secondary foundations.
-  The apps in the primary and secondary foundation issues transactions to the leader service instance
-  in the secondary foundation. <br><br>
-  The app in the primary foundation issues transactions to the leader by:
-      1. Connecting to the follower service instance
-      1. Issuing transactions to the follower service instance
-      1. Having the follower service instance forward the transactions to the leader
-
-+ The follower service instance in the primary foundation continuously
-replicates data from the leader service instance in the secondary foundation
 
 ##<a id='limitations'></a> <%= vars.single_leader_plan %> Limitations
 
