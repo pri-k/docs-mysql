@@ -18,16 +18,17 @@ across multiple foundations or data centers.
 
 ## <a id="overview"></a>Overview
 
-In <%= vars.product_short %> v2.7 and later,
-you can configure replication between two <%= vars.single_leader_plan %> service instances
-across multiple foundations or data centers to create a leader-follower topology.
+In <%= vars.product_short %> v2.7.4 and later, you provision a leader-follower
+service instance across two foundations using the <%= vars.single_leader_plan %> topology.
+This leader-follower service instance is comprised of two single node instances
+that are configured for replication.
 
 <p class="note"><strong>Note:</strong>
   The <%= vars.single_leader_plan %> plan type is configured separately
   from the leader-follower service plan.
 </p>
 
-For more information about multi-site architecture,
+For more information about the <%= vars.single_leader_plan %> topology,
 see [About <%= vars.single_leader_plan %>](./about-multi-site.html).
 
 ## <a id="prereq"></a>Prerequisites
@@ -36,29 +37,29 @@ Before you use <%= vars.product_short %> across multiple foundations,
 you must have:
 
 + Access to the <%= vars.single_leader_plan %> plan.
-Your operator will have configured and exposed a Multi-Site Replication plan to your org and space.
-+ Selected two foundations on which to deploy your multi-site leader and follower.
-  These foundations must be configured for multi-site replication by the operator.
-For more information configuring a multi-site architecture,
+Your operator configures this plan and enables access to it in your org and space.
++ Selected two foundations to deploy your <%= vars.single_leader_plan %> leader and follower VMs.
+  Your operators must configure these foundations for <%= vars.single_leader_plan_lc %>.
+For more information configuring a <%= vars.single_leader_plan %> topology,
 see [Preparing for <%= vars.single_leader_plan %>](./prepare-multi-site.html).
 
-## <a id='create-multi-dc'></a>Create a Multi-Site Leader-Follower Service Instance
+## <a id='create-multi-dc'></a>Create a <%= vars.single_leader_plan %> Leader-Follower Service Instance
 
-To set up a leader-follower service instance of <%= vars.product_short %> across multiple foundations:
+To create a leader-follower service across multiple foundations:
 
-1. Check the availability of the <%= vars.single_leader_plan %> service in the Marketplace in both your
+1. Check the availability of the <%= vars.single_leader_plan %> plan in the Marketplace in both your
 foundations.
 See [Confirm the <%= vars.product_full %> Service Availability](use.html#marketplace).
 1. Create one <%= vars.single_leader_plan %>  service instance on each foundation.
 See [Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), below.
 1. Enable replication between the <%= vars.single_leader_plan %> service instances.
 See [Configure <%= vars.single_leader_plan %>](#create-service-key), below.
-1. Bind the  <%= vars.single_leader_plan %> service instances to your apps.
-See [Bind a Leader-Follower Service Instance to Your App](#bind), below.
+1. Bind the <%= vars.single_leader_plan %> leader-follower service instance to your apps.
+See [Bind a <%= vars.single_leader_plan %> Leader-Follower Service Instance to Your App](#bind), below.
 5. Modify your app to use the <%= vars.product_short %> service.
 See [Use the MySQL Service in Your App](./use.html#call).
 
-After you create <%= vars.single_leader_plan %> service instance,
+After you create a <%= vars.single_leader_plan %> leader-follower service instance,
 you can manage it over the life cycle of your apps and data.
 For instructions on how to manage a <%= vars.product_short %> service instance,
 see [Manage Service Instances](./use.html#manage).
@@ -67,20 +68,13 @@ see [Manage Service Instances](./use.html#manage).
 
 To create a leader-follower service instance across two foundations, you
 must create one <%= vars.single_leader_plan %> service instance in each
-foundations.
-These service instances are single node MySQL instances,
-and will be configured for replication in Configure Multi‑Site Replication, below. PUT LINK
+foundation. You must configure the service instances in each foundation for replication.
 
-### VMware recommends that you create the leader <%= vars.single_leader_plan %> service instance
-in your primary foundation and the follower <%= vars.single_leader_plan %>
-service instance in your secondary foundation. ###
-
-The steps below will use “primary foundation” to refer to the foundation on
-which your Leader will be deployed.
-“Secondary foundation” will refer to the foundation on which your Follower will be deployed;
-this foundation is typically your disaster recovery site.
-For more information, see About Multi-Site Replication.”
-
+<p class="note"><strong>Note:</strong> In the below procedure, the primary foundation is
+the foundation that your leader VM is deployed to. The secondary foundation is
+the foundation that the follower VM is deployed to, and usually is your disaster recovery
+site.
+</p>
 
 To create a multi-site replication service instance in both foundations:
 
@@ -137,35 +131,33 @@ To create a multi-site replication service instance in both foundations:
 
 1. Create a <%= vars.single_leader_plan %> service instance in your secondary
 foundation by repeating step 1 and replacing references to `primary` with `secondary`.
-Ensure you login to  deployment for your secondary foundation.
+Ensure that you log in to deployment for your secondary foundation.
 
 ### <a id='create-service-key'></a>Configure <%= vars.single_leader_plan %>
 
 After you create the <%= vars.single_leader_plan %> service instance in primary and secondary foundations,
-configure replication to finish creating your multi-site leader follower instance.
+you must configure replication between the two service instances.
 
-###You do this by creating multi-site replication service keys with the `host-info` of the follower instance
-and the `credentials` of the leader instance.
-You only use these service keys for establishing replication between <%= vars.single_leader_plan %>
-service instances.###
+You configure replication using service keys to pass connection information
+between the leader and follower VMs.
+You must not use these service keys for any other use case besides establishing
+<%= vars.single_leader_plan_lc %>.
 
-This process is done via service keys and passing connection information between the
-leader and follower.
-Do not use these service keys for any other use case besides establishing replication”
-
-
-The following diagram describes the workflow for configuring multi-site replication:
+The following diagram describes the workflow for configuring <%= vars.single_leader_plan_lc %>:
 
 ![diagram summarizes the procedure below](configure-multi-site.png)
 
 <a href="./images/configure-multi-site.png" target="_blank">View a larger version of this diagram</a>
 
-The following steps assume that you have created the leader <%= vars.single_leader_plan %>
-service instance in the primary foundation and the follower <%= vars.single_leader_plan %>
-service instance in the secondary foundation. You created these service instances in
-[Create <%= vars.single_leader_plan %> Service Instances](#create-multi-dc), above.
 
-To configure replication for your Multi‑Site Replication Leader-Follower instance::
+<p class="note"><strong>Note:</strong> The below procedure assumes you created the leader service instance in
+the primary foundation and the follower service instance in the secondary foundation.
+You created these service instances in
+<a href="#create-multi-dc">Create <%= vars.single_leader_plan %> Service Instances</a> above.
+</p>
+
+
+To configure replication for your <%= vars.single_leader_plan %> leader-follower service instance:
 
 1. Create a host-info service key for the service instance in your secondary foundation by running:
 
@@ -240,7 +232,23 @@ To configure replication for your Multi‑Site Replication Leader-Follower insta
     }<br>
     Updating service instance primary-node as admin...
     OK</pre>
-1. watch cf service
+1. Watch the progress of the service instance by running:
+
+    ```
+    watch cf services
+    ```
+
+    Wait for the `last operation` for your instance to show as `update succeeded`.
+    <br><br>
+    For example:
+
+    <pre class="terminal">$ watch cf services<br>
+    Getting services in org my-org / space my-space as admin...
+    OK
+    name           service       plan        bound apps    last operation
+    primary-node   p.mysql       db-small                  update succeeded
+  </pre>
+    If you get an error, see [Troubleshooting Instances](./troubleshoot-instances.html).
 1.  Create a credentials service key for the service instance in your primary foundation by
     running:
 
@@ -326,18 +334,19 @@ To configure replication for your Multi‑Site Replication Leader-Follower insta
     Updating service instance primary-node as admin...
     OK</pre>
 
-    Add a paragraph after that says: “After completing the above steps, you
-    should have a fully configured Multi-Site Leader-Follower instance with replication enabled.”
+You should now have a <%= vars.single_leader_plan %> leader-follower
+service instance that is fully configured and has replication enabled.
 
-### <a id='bind'></a>Bind a Leader-Follower Service Instance to Your App
+### <a id='bind'></a>Bind a <%= vars.single_leader_plan %> Leader-Follower Service Instance to Your App
 
-For an app to use a multi-site leader-follower service instance, you must bind your app to
-your primary service instance in your primary foundation. If you want to use an active-active topology,
+For an app to use a <%= vars.single_leader_plan %> leader-follower service instance,
+you must bind your app to your primary service instance in your primary foundation.
+If you want to use an active-active topology,
 you must additionally bind your app to the secondary service instance in your secondary foundation.
 
-“For information about choosing between active-passive and app-layer active-active,
-see About Active-Passive Topology and About App-Layer Active-Active Topology.”
-
+For information about active-passive and app-layer active-active topologies,
+see see [About Active-Passive Topology](./about-multi-site#active-passive)
+and [About App-Layer Active-Active Topology](./about-multi-site#active-active).
 
 To bind an app to a leader-follower service instance:
 

@@ -8,7 +8,7 @@ owner: MySQL
 
 The topic describes how to trigger a failover and switchover when using a <%= vars.single_leader_plan %> plan.
 For information about when to trigger a failover or switchover,
-see [About Failover and Switchover](./about-multi-site.html#failover-switchover)
+see [About Failover and Switchover](./about-multi-site.html#failover-switchover).
 
 <p class="note"><strong>Note:</strong> You can only trigger a failover and switchover in
   <%= vars.product_short %> v2.7.3 and later.
@@ -18,23 +18,21 @@ see [About Failover and Switchover](./about-multi-site.html#failover-switchover)
 
 ##<a id='failover'></a> Trigger a Failover
 
-
-SEE OTHER PAGE TO FIGURE IT OUT
-
 <p class="note warning"><strong>Warning:</strong> You should only trigger failover
   if you do not need to recover the leader service instance.
-  You cannot recover the downed leader service instance.
-  Also, you cannot re-establish <%= vars.single_leader_plan_lc %> with the new leader service instance.
+  You cannot recover the downed leader service instance
+  or re-establish <%= vars.single_leader_plan_lc %> with the new leader service instance.
 </p>
-
-The following steps assume that you have created the leader
-service instance in the primary foundation and the follower
-service instance in the secondary foundation.
 
 To trigger a failover:
 
 1. [Promote the Follower](#promote-failover)
 1. [Delete the Former Leader](#clean-up)
+
+
+<p class="note"><strong>Note:</strong> The procedures in this section assume you created the leader service instance in
+the primary foundation and the follower service instance in the secondary foundation.
+</p>
 
 ### <a id='promote-failover'></a> Promote the Follower
 
@@ -122,19 +120,16 @@ To delete the former leader service instance:
 1. Delete the former leader service instance by doing the procedure in
     [Delete a Service Instance](./use.html#delete).
 
-
 ##<a id='switchover'></a> Trigger a Switchover
 
-SEE OTHER PAGE TO FIGURE IT OUT
-
-The following steps assume that you have created the leader
-service instance in the primary foundation and the follower
-service instance in the secondary foundation.
 To trigger a switchover:
 
 1. [Promote the Follower](#promote)
 1. [Reconfigure <%= vars.single_leader_plan %>](#configure)
 
+<p class="note"><strong>Note:</strong> The procedures in this section assume you created the leader service instance in
+the primary foundation and the follower service instance in the secondary foundation.
+</p>
 
 ### <a id='promote-switchover'></a> Promote the Follower
 
@@ -179,15 +174,6 @@ To make the leader read-only and promote the follower to leader in the secondary
     ```
 
     Wait for the `last operation` for your instance to show as `update succeeded`.
-    <br><br>
-    For example:
-
-    <pre class="terminal">$ watch cf services<br>
-    Getting services in org my-org / space my-space as admin...
-    OK
-    name             service       plan                      bound apps    last operation
-    primary-node     p.mysql       db-pxc-single-node-small                update succeeded
-  </pre>
 
 1. Log in to the deployment for your secondary foundation by running:
 
@@ -203,7 +189,7 @@ To make the leader read-only and promote the follower to leader in the secondary
       -c '{"initiate-failover":"promote-follower-to-leader"}'
     ```
 
-1. If the above command fails, do one of the following:
+    If the above command fails, do one of the following:
     + If you have unapplied local transactions on the follower service instance, wait for the transactions
     to be applied and then run the above command again. The error message looks like the following:
         <pre class=terminal>Updating service instance secondary-node as admin...
@@ -231,21 +217,20 @@ you must reconfigure replication. Reconfiguring replication is similar to the pr
 service instance in the primary foundation is the follower and the service instance
 in the secondary foundation is the leader.
 
+<p class='note warning'><strong>Warning:</strong>
+To successfully trigger a switchover the follower dataset must be a subset of the leader dataset.
+This means that no new data has been written to the follower.
+The follower must also be no more than 3 days behind the leader. <br><br>
+If your follower instance does not satisfy these requirements, you must
+create a new <%= vars.single_leader_plan %> service instance and reconfigure replication using this new,
+empty instance as the follower.
+</p>
+
 The following diagram describes the workflow for reconfiguring multi-site replication:
 
 ![diagram summarizes the procedure below](switchover.png)
 
 <a href="./images/switchover.png" target="_blank">View a larger version of this diagram</a>
-
-<p class='note warning'><strong>Warning:</strong>
-To ensure the switchover is successful, the follower dataset must be a subset of the leader dataset,
-in that no new data has been written to the follower.
-Additionally, the follower must be no more than 3 days behind the leader.
-If your follower instance does not satisfy these requirements,
-create a new multi-site service instance and reconfigure replication using this new,
-empty instance as the follower.
-</p>
-
 
 To reconfigure replication for the service instances:
 
@@ -429,25 +414,28 @@ To reconfigure replication for the service instances:
 
     Wait for the `last operation` for your instance to show as `update succeeded`. <br><br>
     You should now have a leader-follower service instance successfully configured,
-    where the leader is in your secondary foundation and your follower is in the primary foundation.
-
-    If the above command fails, you may get one of two errors:
-        + Your follower service instance is too far behind the leader, (more than 3 days behind). The error message looks like the following:
-          <pre class=terminal>→ cf update-service primary-node -c /tmp/credentials-key.json
-          Updating service instance primary-node as admin...
-          FAILED
-          Server error, status code: 502, error code: 10001, message: Service broker error: Establishing Replication Failed - follower is too far behind Leader to start replication
-          Leader GTIDs offering: "487e6056-6e93-11ea-8c96-42010a010806:5-9"
-          Follower GTIDs missed: "487e6056-6e93-11ea-8c96-42010a010806:1-9"
-          Try again with an empty instance or contact your operator to troubleshoot</pre>
-        + Your follower has a divergent dataset from the leader. The error message looks like the following:
-          <pre class="terminal">→ cf update-service primary-node -c /tmp/credentials-key.json
-          Updating service instance primary-node as admin...
-          FAILED
-          Server error, status code: 502, error code: 10001, message: Service broker error: Establishing Replication Failed - the follower has divergent data
-          Leader GTIDs applied: "bd2ff185-6947-11ea-80d8-42010a000808:1-20"
-          Follower GTIDs applied: "c1abd2a4-6947-11ea-8099-42010a010807:1-15"
-          Try again with an empty instance or contact your operator to troubleshoot</pre>
-      In either case, you must create a new multi-site service instance and reconfigure replication using this new, empty instance as the follower.
+    where the leader is in your secondary foundation and your follower is in the primary foundation. <br><br>
+    If the above command fails and you get one of the following errors,
+    you must create a new <%= vars.single_leader_plan %> service instance
+    and reconfigure replication using this new, empty instance as the follower.
+    + If your follower service instance is more than 3 days behind leader,
+    you get error message similar to  the following:
+      <pre class=terminal>→ cf update-service primary-node -c /tmp/credentials-key.json
+      Updating service instance primary-node as admin...
+      FAILED
+      Server error, status code: 502, error code: 10001, message: Service broker error: Establishing Replication Failed - follower is too far behind Leader to start replication
+      Leader GTIDs offering: "487e6056-6e93-11ea-8c96-42010a010806:5-9"
+      Follower GTIDs missed: "487e6056-6e93-11ea-8c96-42010a010806:1-9"
+      Try again with an empty instance or contact your operator to troubleshoot</pre>
+    + If your follower has a divergent dataset from the leader,
+    you get error message similar to  the following:
+      <pre class="terminal">→ cf update-service primary-node -c /tmp/credentials-key.json
+      Updating service instance primary-node as admin...
+      FAILED
+      Server error, status code: 502, error code: 10001, message: Service broker error: Establishing Replication Failed - the follower has divergent data
+      Leader GTIDs applied: "bd2ff185-6947-11ea-80d8-42010a000808:1-20"
+      Follower GTIDs applied: "c1abd2a4-6947-11ea-8099-42010a010807:1-15"
+      Try again with an empty instance or contact your operator to troubleshoot</pre>
+  In either case, you must create a new multi-site service instance and reconfigure replication using this new, empty instance as the follower.
 1. Reconfigure your global DNS load balancer to direct traffic to the correct foundations of your choice.
 See [Configure Your GLB](https://docs.pivotal.io/platform/plan/global-dns-lb.html#configure-glb).
