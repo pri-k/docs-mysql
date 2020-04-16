@@ -71,10 +71,12 @@ For more information, see [Restoring <%= vars.product_short %>](./restore.html).
 + An error message appears when developers bind apps to custom schemas with invalid names.
 The error message shows the valid characters for custom schema names.
 
-### Bug Fix
+### Resolved Issues:
 
-+ Previously, apps could experience timeout errors when connecting to MySQL service instances 
-due to latencies in resolving BOSH DNS hostnames. This has been resolved for app and service key
+This release has the following fix:
+
++ Apps no longer timeout when connecting to service instances because of latencies
+in BOSH DNS hostnames resolution. This issue has been resolved for app and service key
 bindings to single node, HA cluster, and <%= vars.single_leader_plan %> service instances.
 
 ### Security Fix
