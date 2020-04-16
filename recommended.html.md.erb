@@ -1,6 +1,31 @@
 ---
 title: MySQL for PCF Recommended Usage and Limitations
 owner: MySQL
+disk_plans:
+  - name: "Single Node or Leader-Follower"
+    id: "single-node"
+    modifiers: 3
+    innodb: "512 MB"
+    total_disk_size: "3N + 512 MB"
+    minimum_disk_size: "5 GB"
+  - name: "Multi-Site Replication"
+    id: "multi-site"
+    modifiers: 3
+    innodb: "2 GB"
+    total_disk_size: "3N + 2 GB"
+    minimum_disk_size: "5 GB"
+  - name: "HA Cluster Jumpbox"
+    id: "ha-cluster-jumpbox"
+    modifiers: 2
+    innodb: "2 GB"
+    total_disk_size: "N + 2 GB"
+    minimum_disk_size: "<em>n/a</em>"
+  - name: "HA Cluster Node"
+    id: "ha-cluster-node"
+    modifiers: "<em>n/a</em>"
+    innodb: "2 GB"
+    total_disk_size: "N + 2 GB"
+    minimum_disk_size: "5 GB"
 ---
 
 <strong><%= modified_date %></strong>
@@ -60,6 +85,18 @@ For more information about downtime in MySQL for PCF,
 see [RPOs and RTOs](.//availability-options.html#rpo-and-rto).
 ##<a id="persistent"></a> Persistent Disk Usage
 
+The following sections explain how MySQL backups work to store persistent disk space.
+The following sections also describe requirements for each service plan.
+
+For more information about each service plan:
+
+<% current_page.data.disk_plans.each do |plan| %>
+* See [<%= plan.name%>](#<%= plan.id %>) below
+<% end %>
+
+
+### <a name="about-disk"></a> About Persistent Disk Usage
+
 The persistent disk receives, temporarily stores and encrypts MySQL backups.
 This results in increased disk usage while backups are being processed.
 For single node and leader-follower service plans, backups are processed on the MySQL VM.
@@ -70,15 +107,7 @@ InnoDB redo logs use a static amount of disk size.
 If your app is write-heavy,
 increase your persistent disk to accommodate the binlogs.
 
-Use the following table to determine the amount of persistent disk space you need
-to set when you configure a service plan.
-For instructions for configuring service plans,
-see [Configure Service Plans](./install-config.html#active).
-
-<p class="note warning"><strong>Warning:</strong>
-  For all persistent disks except the HA cluster jumpbox disk,
-  your <strong>Total Disk Size</strong> must be greater than 5&nbsp;GB.
-</p>
+Use the following table to compare service plan disk usage.
 
 <table>
   <tr>
@@ -86,48 +115,56 @@ see [Configure Service Plans](./install-config.html#active).
     <th width=35%>Modifier for Copied Backups, Compression, and Encryption</th>
     <th>InnoDB Redo Logs</th>
     <th>Total Disk Size&#42;</th>
+    <th>Minimum Total Disk Size</th>
   </tr>
+  <% current_page.data.disk_plans.each do |plan| %>
   <tr>
-    <td><strong>Single Node</strong></td>
-    <td>3</td>
-    <td>512 MB</td>
-    <td>3N + 512 MB</td>
+    <td><strong><%= plan.name %></strong></td>
+    <td><%= plan.modifiers %></td>
+    <td><%= plan.innodb %></td>
+    <td><%= plan.total_disk_size %></td>
+    <td><%= plan.minimum_disk_size %></td>
   </tr>
-
-  <tr>
-    <td><strong>Leader-Follower</strong></td>
-    <td>3</td>
-    <td>512 MB</td>
-    <td>3N + 512 MB</td>
-  </tr>
-
-  <tr>
-    <td><strong>HA Cluster Jumpbox</strong></td>
-    <td>2</td>
-    <td>2 GB</td>
-    <td>2N + 2 GB</td>
-  </tr>
-
-  <tr>
-    <td><strong>HA Cluster Node</strong></td>
-    <td><i>n/a</i></td>
-    <td>2 GB</td>
-    <td>N + 2 GB</td>
-  </tr>
-
+  <% end %>
 </table>
 &#42; In the **Total Disk Size** formula, `N` is the maximum amount of app data that a developer needs.
 Remember to include binlogs in your size estimate for app data.
 
-The following diagram shows how persistent disk space is used in the single node and
-leader-follower topologies and in the HA cluster topology:
 
-<!-- Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing -->
 
-<a href="./images/disk-lf-ha.png" target="_blank">
-  <img alt="Persistent Disk diagram.
-  The information depicted in the diagram is in the persistent disk table
-  above" src="./images/disk-lf-ha.png"/>
-</a>
+<% current_page.data.disk_plans.each do |plan| %>
 
-<a href="./images/disk-lf-ha.png" aria-hidden="true" target="_blank">View a larger version of this diagram.</a>
+<h3> <a id="<%= plan.id%>"></a> <%= plan.name %></h3>
+
+When you configure a <%= plan.name %> plan, use the following list 
+to determine the amount of persistent disk space you need
+to set.
+For instructions for configuring service plans,
+see [Configure Service Plans](./install-config.html#active).
+
+- **Modifier for Copied Backups,<br> Compression, and Encryption**: <%= plan.modifiers %>
+
+- **InnoDB Redo Logs:** <%= plan.innodb %>
+
+- **Total Disk Size:** <%= plan.total_disk_size %>
+
+- **Minimum Total Disk Size:** <%= plan.minimum_disk_size %>
+
+In the **Total Disk Size** formula, `N` is the 
+maximum amount of app data that a developer needs.
+Remember to include binlogs in your size estimate for app data.</p>
+
+<% if plan.diagram_filename %>
+  The following diagram shows how persistent disk space is used:
+
+  <!-- Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing -->
+
+  <a href="./images/<%= plan.diagram_filename %>" target="_blank">
+    <img alt="Persistent Disk diagram.
+    The information depicted in the diagram is explained above" src="./images/disk-lf-ha.png"/>
+  </a>
+<% end %>
+
+<% end %>
+
+
