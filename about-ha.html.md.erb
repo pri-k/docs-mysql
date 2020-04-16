@@ -105,8 +105,9 @@ storage engine for new tables. Pre-existing tables that are not using InnoDB are
 at risk because they are not replicated within a cluster.
 
 - Large DDL statements can lock all schemas. This can be mitigated by using the
- Rolling Schema Upgrade (RSU) method. For more information about using RSU to apply
- DDL statements, see [Using Rolling Schema Upgrade](./rsu.html).
+ Rolling Schema Upgrade (RSU) method. For more information about using the RSU method, 
+see [Using a rolling schema upgrade (RSU) in MySQL for VMware Tanzu](https://community.pivotal.io/s/article/Using-Rolling-Schema-Upgrade)
+in the VMware Tanzu Support knowledge base.
 
 - Large transaction sizes can inhibit the performance of the cluster and apps using
 the cluster because they are buffered in memory.
