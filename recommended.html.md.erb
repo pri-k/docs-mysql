@@ -2,30 +2,34 @@
 title: MySQL for VMware Tanzu Recommended Usage and Limitations
 owner: MySQL
 disk_plans:
-  - name: "Single Node or Leader-Follower"
+  - name: "Single Node and Leader-Follower"
     id: "single-node"
     modifiers: 3
     innodb: "512 MB"
     total_disk_size: "3N + 512 MB"
     minimum_disk_size: "5 GB"
+    diagram_filename: "persistent-disk-single-node.png"
   - name: "Multi-Site Replication"
     id: "multi-site"
     modifiers: 3
     innodb: "2 GB"
     total_disk_size: "3N + 2 GB"
     minimum_disk_size: "5 GB"
+    diagram_filename: "persistent-disk-multi-site.png"
   - name: "HA Cluster Jumpbox"
     id: "ha-cluster-jumpbox"
     modifiers: 2
     innodb: "2 GB"
     total_disk_size: "N + 2 GB"
     minimum_disk_size: "<em>n/a</em>"
+    diagram_filename: "persistent-disk-ha-jumpbox.png"
   - name: "HA Cluster Node"
     id: "ha-cluster-node"
     modifiers: "<em>n/a</em>"
     innodb: "2 GB"
     total_disk_size: "N + 2 GB"
     minimum_disk_size: "5 GB"
+    diagram_filename: "persistent-disk-ha-node.png"
 ---
 
 <strong><%= modified_date %></strong>
@@ -87,7 +91,8 @@ see [RPOs and RTOs](.//availability-options.html#rpo-and-rto).
 ##<a id="persistent"></a> Persistent Disk Usage
 
 The following sections explain how MySQL backups work to store persistent disk space.
-The following sections also describe requirements for each service plan.
+The following sections also describe requirements for each service plan. For more 
+information about persistent disk usage, see [About Persistent Disk Usage](#about-disk) below.
 
 For more information about each service plan:
 
@@ -137,7 +142,7 @@ Remember to include binlogs in your size estimate for app data.
 
 <h3> <a id="<%= plan.id%>"></a> <%= plan.name %></h3>
 
-When you configure a <%= plan.name %> plan, use the following list 
+When you configure a <%= plan.name.downcase.gsub("ha ", "HA ").gsub(" and ", " or ")  %> plan, use the following list 
 to determine the amount of persistent disk space you need
 to set.
 For instructions for configuring service plans,
@@ -158,12 +163,11 @@ Remember to include binlogs in your size estimate for app data.</p>
 <% if plan.diagram_filename %>
   The following diagram shows how persistent disk space is used:
 
-  <!-- Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing -->
+  <%# Edit the below diagram here: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing %>
 
-  <a href="./images/<%= plan.diagram_filename %>" target="_blank">
-    <img alt="Persistent Disk diagram.
-    The information depicted in the diagram is explained above" src="./images/disk-lf-ha.png"/>
-  </a>
+  
+  <img alt="Persistent Disk diagram.
+    The information depicted in the diagram is explained above." width="280" src="./images/<%= plan.diagram_filename %>"/>
 <% end %>
 
 <% end %>
