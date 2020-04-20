@@ -78,9 +78,10 @@ The error message shows the valid characters for custom schema names.
 in BOSH DNS hostname resolution. This issue has been resolved for app and service key
 bindings to service instances of all plan types.
 
-+ Syslog configuration is now managed by Ops Manager, rather being a custom MySQL for VMware Tanzu configuration. 
-Configuration of the tile in Ops Manager remains the same, but those who configure their environments via the Ops Manager API 
-or use Platform Automation will need to modify their configuration. 
++ <%= vars.product_short %> syslog configuration is now managed by <%= vars.ops_manager %>.
+This improvement does not affect syslog configuration in the tile.
+However, if you use the <%= vars.ops_manager %> API or Platform Automation Toolkit, you must
+modify your syslog configuration to use `syslog-release`.
 
 ### Security Fix
 
