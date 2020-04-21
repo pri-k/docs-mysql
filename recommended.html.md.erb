@@ -90,18 +90,6 @@ see [RPOs and RTOs](.//availability-options.html#rpo-and-rto).
 
 ##<a id="persistent"></a> Persistent Disk Usage
 
-The following sections explain how MySQL backups work to store persistent disk space.
-The following sections also describe requirements for each service plan. For more 
-information about persistent disk usage, see [About Persistent Disk Usage](#about-disk) below.
-
-For more information about each service plan:
-
-<% current_page.data.disk_plans.each do |plan| %>
-* See [<%= plan.name%>](#<%= plan.id %>) below
-<% end %>
-
-
-### <a name="about-disk"></a> About Persistent Disk Usage
 
 The persistent disk receives, temporarily stores and encrypts MySQL backups.
 This results in increased disk usage while backups are being processed.
@@ -113,29 +101,15 @@ InnoDB redo logs use a static amount of disk size.
 If your app is write-heavy,
 increase your persistent disk to accommodate the binlogs.
 
-Use the following table to compare service plan disk usage.
+For more information about each service plan, see the below sections:
 
-<table>
-  <tr>
-    <th>Persistent Disk</th>
-    <th width=35%>Modifier for Copied Backups, Compression, and Encryption</th>
-    <th>InnoDB Redo Logs</th>
-    <th>Total Disk Size&#42;</th>
-    <th>Minimum Total Disk Size</th>
-  </tr>
-  <% current_page.data.disk_plans.each do |plan| %>
-  <tr>
-    <td><strong><%= plan.name %></strong></td>
-    <td><%= plan.modifiers %></td>
-    <td><%= plan.innodb %></td>
-    <td><%= plan.total_disk_size %></td>
-    <td><%= plan.minimum_disk_size %></td>
-  </tr>
-  <% end %>
-</table>
-&#42; In the **Total Disk Size** formula, `N` is the maximum amount of app data that a developer needs.
-Remember to include binlogs in your size estimate for app data.
 
+<%# Data for each plan is defined in topic 
+frontmatter at the top of this file. %>
+
+<% current_page.data.disk_plans.each do |plan| %>
+* [<%= plan.name%>](#<%= plan.id %>)
+<% end %>
 
 
 <% current_page.data.disk_plans.each do |plan| %>
@@ -148,13 +122,22 @@ to set.
 For instructions for configuring service plans,
 see [Configure Service Plans](./install-config.html#active).
 
-- **Modifier for Copied Backups,<br> Compression, and Encryption**: <%= plan.modifiers %>
-
-- **InnoDB Redo Logs:** <%= plan.innodb %>
-
-- **Total Disk Size:** <%= plan.total_disk_size %>
-
-- **Minimum Total Disk Size:** <%= plan.minimum_disk_size %>
+<table>
+  <tr>
+    <th>Persistent Disk</th>
+    <th width=35%>Modifier for Copied Backups, Compression, and Encryption</th>
+    <th>InnoDB Redo Logs</th>
+    <th>Total Disk Size&#42;</th>
+    <th>Minimum Total Disk Size</th>
+  </tr>
+  <tr>
+    <td><strong><%= plan.name %></strong></td>
+    <td><%= plan.modifiers %></td>
+    <td><%= plan.innodb %></td>
+    <td><%= plan.total_disk_size %></td>
+    <td><%= plan.minimum_disk_size %></td>
+  </tr>
+</table>
 
 In the **Total Disk Size** formula, `N` is the 
 maximum amount of app data that a developer needs.
