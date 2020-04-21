@@ -2,28 +2,32 @@
 title: MySQL for Pivotal Platform Recommended Usage and Limitations
 owner: MySQL
 disk_plans:
-  - name: "Single Node and Leader-Follower"
+  - header: "Single Node and Leader-Follower"
+    inline_name: "single node or leader-follower"
     id: "single-node"
     modifiers: 3
     innodb: "512 MB"
     total_disk_size: "3N + 512 MB"
     minimum_disk_size: "5 GB"
     diagram_filename: "persistent-disk-single-node.png"
-  - name: "Multi-Site Replication"
+  - header: "Multi-Site Replication"
+    inline_name: "Multi-Site Replication"
     id: "multi-site"
     modifiers: 3
     innodb: "2 GB"
     total_disk_size: "3N + 2 GB"
     minimum_disk_size: "5 GB"
     diagram_filename: "persistent-disk-multi-site.png"
-  - name: "HA Cluster Jumpbox"
+  - header: "HA Cluster Jumpbox"
+    inline_name: "HA cluster jumpbox"
     id: "ha-cluster-jumpbox"
     modifiers: 2
     innodb: "2 GB"
     total_disk_size: "N + 2 GB"
     minimum_disk_size: "10 GB"
     diagram_filename: "persistent-disk-ha-jumpbox.png"
-  - name: "HA Cluster Node"
+  - header: "HA Cluster Node"
+    inline_name: "HA cluster node"
     id: "ha-cluster-node"
     modifiers: "<em>n/a</em>"
     innodb: "2 GB"
@@ -101,37 +105,36 @@ InnoDB redo logs use a static amount of disk size.
 If your app is write-heavy,
 increase your persistent disk to accommodate the binlogs.
 
-For more information about each service plan, see the below sections:
+For more information about configuring each service plan, see the below sections:
 
 
-<%# Data for each plan is defined in topic 
-frontmatter at the top of this file. %>
+<%# The following sections loop through the `disk_plans` list defined in the frontmatter.
+
+To update the data for each plan, edit the frontmatter at the top of this file. %>
 
 <% current_page.data.disk_plans.each do |plan| %>
-* [<%= plan.name%>](#<%= plan.id %>)
+* [<%= plan.header %>](#<%= plan.id %>)
 <% end %>
 
 
 <% current_page.data.disk_plans.each do |plan| %>
 
-<h3> <a id="<%= plan.id%>"></a> <%= plan.name %></h3>
+<h3> <a id="<%= plan.id%>"></a> <%= plan.header %></h3>
 
-When you configure a <%= plan.name.downcase.gsub("ha ", "HA ").gsub(" and ", " or ")  %> plan, use the following table 
-to determine the amount of persistent disk space you need
-to set.
-For instructions for configuring service plans,
-see [Configure Service Plans](./install-config.html#active).
+You can configure the persistent disk size for <%= plan.inline_name %> VMs. For 
+instructions for configuring disk size, see [Configure Service Plans](./install-config.html#active).
+
+Use the following table to determine the amount of persistent disk space you need
+to set:
 
 <table>
   <tr>
-    <th>Persistent Disk</th>
-    <th width=35%>Modifier for Copied Backups, Compression, and Encryption</th>
+    <th>Modifier&#42;</th>
     <th>InnoDB Redo Logs</th>
-    <th>Total Disk Size&#42;</th>
+    <th>Total Disk Size&#42;&#42;</th>
     <th>Minimum Total Disk Size</th>
   </tr>
   <tr>
-    <td><strong><%= plan.name %></strong></td>
     <td><%= plan.modifiers %></td>
     <td><%= plan.innodb %></td>
     <td><%= plan.total_disk_size %></td>
@@ -139,9 +142,12 @@ see [Configure Service Plans](./install-config.html#active).
   </tr>
 </table>
 
-In the **Total Disk Size** formula, `N` is the 
+&#42; The **Modifier** is the modifier for copied backups, compression, and encryption.<br>
+&#42;&#42; In the **Total Disk Size** formula, `N` is the 
 maximum amount of app data that a developer needs.
 Remember to include binlogs in your size estimate for app data.</p>
+
+
 
 <% if plan.diagram_filename %>
   The following diagram shows how persistent disk space is used:
