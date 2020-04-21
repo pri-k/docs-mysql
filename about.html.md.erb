@@ -44,8 +44,9 @@ This topic describes networking for on-demand services, including <%= vars.produ
 
 <h2> <a id='mysql-ports'></a> Required Networking Rules for <%= vars.product_short %> </h2>
 
-Regardless of the specific network layout, the operator must ensure network rules are set up
-so that connections are open as described in the table below.
+Regardless of the specific network layout, the operator must ensure network rules are set up.
+
+To ensure that connections are open, see the table below:
 
 <table class="nice">
 	<th>Source Component</th>
@@ -117,7 +118,7 @@ so that connections are open as described in the table below.
 		<td><strong>Deployed apps on <%= vars.app_runtime_abbr %></strong></td>
 		<td><strong>Runtime CredHub</strong></td>
 		<td>8844</td>
-		<td>This port is needed if secure service instance credentials are enabled.
+		<td>This port is needed if secure service binding credentials are enabled.
         For information, see <a href="install-config.html#security">Configure Security</a>.
 		</td>
 	</tr>
@@ -132,8 +133,11 @@ so that connections are open as described in the table below.
 
 <h3> <a id='lf-ports'></a> Required Networking Rules for Leader-Follower Plans </h3>
 
-In addition to the networking rules required for <%= vars.product_short %>, if you are using a leader-follower
-service plan, the operator must ensure network rules are set up so that connections are open as described in the table below.
+If you are using a leader-follower
+service plan, the operator must ensure network rules are set up in addition to the
+networking rules required for <%= vars.product_short %>,.
+
+
 
 <table class="nice">
 	<th>Source VM</th>
@@ -155,8 +159,9 @@ service plan, the operator must ensure network rules are set up so that connecti
 <h3> <a id='hac-ports'></a> Required Networking Rules for Highly Available (HA) Cluster Plans </h3>
 
 In addition to the networking rules required for <%= vars.product_short %>, if you are using a highly available
-cluster service plan, the operator must ensure network rules are set up so that connections are open
-as described in the table below.
+cluster service plan.
+
+To ensure that connections are open, see the table below:
 
 <table class="nice">
 	<th>Source VM</th>
@@ -190,7 +195,7 @@ as described in the table below.
 		<td>This port is needed to maintain network connectivity between nodes in an HA cluster.
 			For more information,
 			see <a href="https://www.percona.com/doc/percona-xtradb-cluster/LATEST/security/secure-network.html#firewall-configuration">Firewall Configuration</a>
-			in the Percona XtraDB Cluster documentation.<br><br>
+			in the Percona documentation.<br><br>
 			The communication between these VMs is two-way.
 	</td>
 	</tr>
