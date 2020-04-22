@@ -34,7 +34,7 @@ which one is best for your developers.
 
 <table class="nice">
   <tr><th>Topology</th><th>VMs needed</th><th>Pros</th><th>Cons</th></tr>
-  <tr><td><strong>Single node</strong></td><td>one</td>
+  <tr><td><strong>Single node</strong></td><td>One</td>
       <td>
           <ul>
             <li>Simple</li>
@@ -51,7 +51,7 @@ which one is best for your developers.
           </ul>
        </td>
   </tr>
-  <tr><td><strong>Leader-follower</strong></td><td>two</td>
+  <tr><td><strong>Leader-follower</strong></td><td>Two</td>
       <td>
           <ul>
             <li>Two copies of the data</li>
@@ -66,7 +66,7 @@ which one is best for your developers.
           </ul>
        </td>
   </tr>
-  <tr><td><strong>Highly available cluster</strong></td><td>three and a jumpbox VM</td>
+  <tr><td><strong>Highly available cluster</strong></td><td>Three and a jumpbox VM</td>
       <td>
           <ul>
             <li>Tightest RPO and RTO for downtime, including downtime for upgrades.<br>
@@ -82,7 +82,7 @@ which one is best for your developers.
        </td>
   </tr>
 
-  <tr><td><strong><%= vars.single_leader_plan %></strong></td><td>two</td>
+  <tr><td><strong><%= vars.single_leader_plan %></strong></td><td>Two</td>
       <td>
           <ul>
             <li>Two copies of the data</li>
@@ -122,9 +122,9 @@ This table compares the recovery point objectives for the topologies.
   <tr><td><strong>Planned Maintenance</strong></td><td>Zero</td>
       <td>Zero</td><td>Zero</td><td>Zero</td></tr>
   <tr><td><strong>Unplanned Downtime</strong></td><td>Zero</td>
-      <td>Replica lag or 0 if in sync mode</td><td>Almost zero*</td><td>Replica lag</td></tr>
+      <td>Replica lag, or zero if in sync mode</td><td>Almost zero*</td><td>Replica lag</td></tr>
   <tr><td><strong>Data Recovery</strong></td><td>Time since last backup</td>
-      <td>The time to initialize the follower VM or 0 if in sync mode</td><td>Almost zero*</td><td>Replica lag</td></tr>
+      <td>The time to initialize the follower VM, or zero if in sync mode</td><td>Almost zero*</td><td>Replica lag</td></tr>
 </table>
 
  *Database clients are notified that incomplete transactions are not saved.
@@ -170,8 +170,8 @@ Highly available clusters have the highest risk.
 
 <table class="nice">
   <tr><th width=50%>Topology</th><th>Risk-level</th></tr>
-  <tr><td><strong>Single node</strong></td><td>low</td></tr>
-  <tr><td><strong>Leader-follower</strong></td><td>medium</td></tr>
-  <tr><td><strong>Highly available cluster</strong></td><td>high</td></tr>
-  <tr><td><strong><%= vars.single_leader_plan %></strong></td><td>medium-high</td></tr>
+  <tr><td><strong>Single node</strong></td><td>Low</td></tr>
+  <tr><td><strong>Leader-follower</strong></td><td>Medium</td></tr>
+  <tr><td><strong>Highly available cluster</strong></td><td>High</td></tr>
+  <tr><td><strong><%= vars.single_leader_plan %></strong></td><td>Medium-high</td></tr>
 </table>
