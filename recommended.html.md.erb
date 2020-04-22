@@ -15,7 +15,7 @@ disk_plans:
     id: "ha-cluster-jumpbox"
     modifiers: 2
     innodb: "2 GB"
-    total_disk_size: "N + 2 GB"
+    total_disk_size: "2N + 2 GB"
     minimum_disk_size: "10 GB"
     diagram_filename: "persistent-disk-ha-jumpbox.png"
   - header: "HA Cluster Node"
@@ -86,7 +86,7 @@ see [RPOs and RTOs](.//availability-options.html#rpo-and-rto).
 ##<a id="persistent"></a> Persistent Disk Usage
 
 
-The persistent disk receives, temporarily stores and encrypts MySQL backups.
+The persistent disk receives, temporarily stores, and encrypts MySQL backups.
 This results in increased disk usage while backups are being processed.
 For single node and leader-follower service plans, backups are processed on the MySQL VM.
 For highly available (HA) clusters, backups are processed on the jumpbox VM.
