@@ -45,7 +45,7 @@ This topic describes networking for on-demand services, including <%= vars.produ
 
 <h2> <a id='mysql-ports'></a> Required Networking Rules for <%= vars.product_short %> </h2>
 
-Regardless of the specific network layout, the operator must ensure network rules are set up.
+Regardless of the specific network layout, the operator must set network rules.
 
 To ensure that connections are open, see the table below:
 
@@ -135,9 +135,10 @@ To ensure that connections are open, see the table below:
 <h3> <a id='lf-ports'></a> Required Networking Rules for Leader-Follower Plans </h3>
 
 If you are using a leader-follower
-service plan, the operator must ensure network rules are set up in addition to the
-networking rules required for <%= vars.product_short %>,.
+service plan, the operator must set network rules in addition to the
+networking rules required for <%= vars.product_short %>.
 
+To ensure that connections are open, see the table below:
 
 
 <table class="nice">
@@ -159,8 +160,8 @@ networking rules required for <%= vars.product_short %>,.
 
 <h3> <a id='hac-ports'></a> Required Networking Rules for Highly Available (HA) Cluster Plans </h3>
 
-In addition to the networking rules required for <%= vars.product_short %>, if you are using a highly available
-cluster service plan.
+If you are using a HA cluster service plan, the operator must set network rules in addition 
+to the networking rules required for <%= vars.product_short %>.
 
 To ensure that connections are open, see the table below:
 
@@ -216,11 +217,10 @@ To ensure that connections are open, see the table below:
 
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
-If you are using <%= vars.single_leader_plan_lc %>, you must ensure the networking
-rules required for all <%= vars.product_short %> service instances are set up in
-both foundations.
+If you are using <%= vars.single_leader_plan_lc %>, the operator must set network rules for 
+both foundations in addition to the networking rules required for <%= vars.product_short %>.
 
-To set up network service instances in both foundations, see the table below:
+To ensure that connections are open in both foundations, see the table below:
 
 <table class="nice">
 	<th>Source VM</th>
