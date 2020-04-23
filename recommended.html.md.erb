@@ -8,7 +8,6 @@ disk_requirements:
     innodb: "512 MB"
     total_disk_size: "3N + 512 MB"
     minimum_disk_size: "5 GB"
-    modifier: 3
     n_is:
       - "Maximum app data. Remember to include binlogs in your size estimate for app data."
       - "Data for copied backups."
@@ -20,7 +19,6 @@ disk_requirements:
     innodb: "2 GB"
     total_disk_size: "2N + 2 GB"
     minimum_disk_size: "10 GB"
-    modifier: 2
     n_is:
       - "Data for copied backups."
       - "Data for compression and encryption."
@@ -31,8 +29,8 @@ disk_requirements:
     innodb: "2 GB"
     total_disk_size: "N + 2 GB"
     minimum_disk_size: "5 GB"
-    modifier: 1
-    n_is: "maximum app data. Remember to include binlogs in your size estimate for app data."
+    n_is:
+      - "maximum app data. Remember to include binlogs in your size estimate for app data."
     diagram_filename: "persistent-disk-ha-node.png"
 ---
 
@@ -139,9 +137,9 @@ Use the following table to determine the amount of persistent disk space you nee
 </table>
 
 
-<% if plan.modifier === 1 %>
+<% if plan.n_is.length === 1 %>
 
-In the **Total Disk Size** formula from the table above, `N` represents <%= plan.n_is %>
+In the **Total Disk Size** formula from the table above, `N` represents <%= plan.n_is[0] %>
 
 <% else %>
 
@@ -152,7 +150,7 @@ in equal value:
 - <%= n %>
 <% end %>
 
-Each `N` combined makes `<%= plan.modifier %>N`, as seen in the formula.
+Each `N` combined makes `<%= plan.n_is.length %>N`, as seen in the formula.
 
 <% end %>
 
