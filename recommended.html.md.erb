@@ -6,7 +6,6 @@ disk_requirements:
     inline_name: "single node or leader-follower"
     id: "single-node"
     innodb: "512 MB"
-    total_disk_size: "3N + 512 MB"
     minimum_disk_size: "5 GB"
     n_is:
       - "Maximum app data. Remember to include binlogs in your size estimate for app data."
@@ -17,7 +16,6 @@ disk_requirements:
     inline_name: "Multi-Site Replication"
     id: "multi-site"
     innodb: "2 GB"
-    total_disk_size: "3N + 2 GB"
     minimum_disk_size: "5 GB"
     n_is:
       - "Maximum app data."
@@ -28,7 +26,6 @@ disk_requirements:
     inline_name: "HA cluster jumpbox"
     id: "ha-cluster-jumpbox"
     innodb: "2 GB"
-    total_disk_size: "2N + 2 GB"
     minimum_disk_size: "10 GB"
     n_is:
       - "Data for copied backups."
@@ -38,7 +35,6 @@ disk_requirements:
     inline_name: "HA cluster node"
     id: "ha-cluster-node"
     innodb: "2 GB"
-    total_disk_size: "N + 2 GB"
     minimum_disk_size: "5 GB"
     n_is:
       - "maximum app data. Remember to include binlogs in your size estimate for app data."
@@ -143,7 +139,7 @@ Use the following table to determine the amount of persistent disk space you nee
   </tr>
   <tr>
     <td><%= plan.innodb %></td>
-    <td><%= plan.total_disk_size %></td>
+    <td><%= plan.n_is.length === 1 ? '' : plan.n_is.length %>N + <%= plan.innodb %></td>
     <td><%= plan.minimum_disk_size %></td>
   </tr>
 </table>
