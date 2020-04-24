@@ -75,9 +75,9 @@ To retrieve the backup encryption key:
     ```
     Where:
     * `CREDHUB-CLIENT-NAME` is the value you recorded for `BOSH_CLIENT` in
-		[Find the CredHub Credentials in step 1.
+		[Find the CredHub Credentials](./prepare-tls.html#credhub-creds) in step 1.
     * `CREDHUB-CLIENT-SECRET` is the value you recorded for `BOSH_CLIENT_SECRET` in
-		[Find the CredHub Credentials in step 1. <br>
+		[Find the CredHub Credentials](./prepare-tls.html#credhub-creds) in step 1. <br>
 
     For example:
     <pre class="terminal">$ credhub login \
@@ -177,8 +177,8 @@ To prepare a new service instance for restore:
 
     Where:
     + `NEW-PLAN` is the name of the service plan for your new service instance.
-        The plan you should choose depends on the service instance topology you are
-        restoring. If topology you are restoring is:
+        The plan you choose depends on the service instance topology you are
+        restoring. If the topology you are restoring is:
           + **Single node or leader-follower:** Select a single node plan.
           + **HA cluster:** Select a HA cluster plan.
           + **<%= vars.single_leader_plan %>:** Select a <%= vars.single_leader_plan %> plan.
