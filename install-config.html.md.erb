@@ -157,7 +157,7 @@ and networks for the broker and MySQL service instances:
 <%= vars.product_short %> enables you to configure as many as nine service plans.
 Each service plan has a corresponding section in the tile configuration, such as **Plan 1**, **Plan 2**, and so on.
 
-By default, plans 1–3 are active and plans 4–9 are inactive. The procedures below describe how to change these defaults.
+By default, plans 1 through 3 are active and plans 4 through 9 are inactive. The procedures below describe how to change these defaults.
 
 <p class="note warning"><strong>Warning:</strong>
   You must not set <strong>Plan 1</strong> to <strong>Inactive</strong>.
@@ -166,7 +166,7 @@ By default, plans 1–3 are active and plans 4–9 are inactive. The procedures 
 
 <p class="note warning"><strong>Warning:</strong> You must configure one of your service plans as
 a single node plan. This is because you can only restore to a single node plan. You cannot restore
-directly to a leader-follower plan. Ensure that the persistent disk in the single node plan is as
+directly to a leader-follower plan. Ensure that the persistent disk in the single node plan is at
 least as large as the persistent disk of your largest leader-follower plan.
 For more information about restoring services instances,
 see <a href="./restore.html#restoreinstance">Restore the Service Instance</a>.
@@ -386,8 +386,8 @@ To set MySQL defaults and enable developers to customize their instances:
             <code>lower\_case\_table\_names</code> to <code>1</code> on all <%= vars.product_short %> instances by default. <br>
             To permit developers to override this default, see the checkbox below. <br>
             For more information about <code>lower\_case\_table\_names</code> , see the <a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_lower_case_table_names">MySQL documentation</a>.
-            <p class="note warning"><strong>Warning:</strong> Before you enable this feature, 
-ensure all tables have lowercase names. Tables with uppercase names are inaccessible 
+            <p class="note warning"><strong>Warning:</strong> Before you enable this feature,
+ensure all tables have lowercase names. Tables with uppercase names are inaccessible
 after enabling lowercase table names.</p>
          </td></tr>
     <tr><td><strong>Allow Developers To Override Lower Case Table Names</strong></td>
