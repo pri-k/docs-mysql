@@ -32,7 +32,8 @@ To restore a <%= vars.product_old %> instance from an offsite backup:
 
 To retrieve the backup encryption key:
 
-1. Find and record your CredHub credentials by following the procedure in [Find the CredHub Credentials](./prepare-tls.html#credhub-creds).
+1. Find and record your CredHub credentials by following the procedure in
+[Find the CredHub Credentials](./prepare-tls.html#credhub-creds).
 
 1. Find the GUID for the service instance that you want to restore by running:
 
@@ -73,9 +74,9 @@ To retrieve the backup encryption key:
     ```
     Where:
     * `CREDHUB-CLIENT-NAME` is the value you recorded for `BOSH_CLIENT` in
-		[Find the CredHub Credentials in step 1.
+		[Find the CredHub Credentials](./prepare-tls.html#credhub-creds) in step 1.
     * `CREDHUB-CLIENT-SECRET` is the value you recorded for `BOSH_CLIENT_SECRET` in
-		[Find the CredHub Credentials in step 1. <br>
+		[Find the CredHub Credentials](./prepare-tls.html#credhub-creds) in step 1. <br>
 
     For example:
     <pre class="terminal">$ credhub login \
@@ -175,7 +176,7 @@ or highly available (HA) cluster plan:
 ### <a id="prepare"></a> Create and Prepare a New Service Instance for Restore
 
 You can only restore backup artifacts to a single node service instance.
-Ensure that the persistent disk in the single node plan is as
+Ensure that the persistent disk in the single node plan is at
 least as large as the persistent disk of your largest leader-follower.
 For information about persistent disk sizing recommendations,
 see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
