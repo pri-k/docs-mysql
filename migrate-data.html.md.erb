@@ -436,6 +436,8 @@ following sections of [Accessing Services with SSH](https://docs.pivotal.io/pivo
 
 To complete the migration, rebind and restage any apps that had been bound to the original MySQL for PCF service instance.
 
+<%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
+
 Do the following to rebind and restage your apps:
 
 1. Bind the app to the new service instance.

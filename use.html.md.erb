@@ -273,6 +273,8 @@ If you modify your service instance,
 you must `cf unbind-service`, `cf bind-service` and `cf restage`
 your app to apply the changes to `VCAP_SERVICES`.
 
+<%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
+
 ## <a id="manage"></a>Manage a Service Instance
 
 You can manage service instances in the following ways:
@@ -364,24 +366,26 @@ To share a service instance:
 
 ### <a id="unbind"></a>Unbind an App from a Service Instance
 
-To stop an app from using a service it no longer needs, run the following command to unbind the app from the service:
+If you want stop an app from using a service you must unbind the app from the service.
 
-```
-cf unbind-service APP SERVICE-INSTANCE
-```
+1. Unbind your app by running:
 
-Where:<br>
+    ```
+    cf unbind-service APP SERVICE-INSTANCE
+    ```
+    Where:
+    - `APP` is the app you want to stop using the MySQL service instance.
+    - `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
 
-- `APP` is the app you want to stop using the MySQL service instance. <br>
-- `SERVICE-INSTANCE` is the name you supplied when you ran `cf create-service`.
+    For example:
 
-For example:
+    <pre class="terminal">
+    $ cf unbind-service my-app my-instance<br>
+    Unbinding app my-app from service my-instance in org my-org / space my-space as user<span>@</span>example.com...
+    OK
+    </pre>
 
-<pre class="terminal">
-$ cf unbind-service my-app my-instance<br>
-Unbinding app my-app from service my-instance in org my-org / space my-space as user<span>@</span>example.com...
-OK
-</pre>
+<%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
 
 ### <a id="delete"></a>Delete a Service Instance
 
