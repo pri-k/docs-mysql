@@ -181,6 +181,7 @@ To prepare a new service instance for restore:
         restoring. If topology you are restoring is:
           + **Single node or leader-follower:** Select a single node plan.
           + **HA cluster:** Select a HA cluster plan.
+          + **<%= vars.single_leader_plan %>:** Select a <%= vars.single_leader_plan %> plan.
     + `NEW-INSTANCE-NAME` is the name of the new service instance.
 
     For more information, see [Create a Service Instance](./use.html#create).
@@ -190,14 +191,14 @@ To prepare a new service instance for restore:
     ```
     cf service NEW-INSTANCE-NAME
     ```
-    Where `NEW-INSTANCE-NAME` is the name of the new service instance. <br><br>
+    Where `NEW-INSTANCE-NAME` is the name of the new service instance.
 
 1. Locate and record the GUID associated with your new service instance by running:
 
     ```
     cf service NEW-INSTANCE-NAME --guid
     ```
-    Where `NEW-INSTANCE-NAME` is the name of the new service instance. <br><br>
+    Where `NEW-INSTANCE-NAME` is the name of the new service instance.
 
 1. From the <%= vars.ops_manager %> VM, find and record the new instance name and GUID from BOSH by
     running:
@@ -250,7 +251,7 @@ modify the deployment manifest to scale the instances to one:
   VMware recommends that you only restore to a new and unused service instance.
 </p>
 
-You can restore a single node, leader-follower, or HA cluster service instance
+You can restore a single node, leader-follower, HA cluster service, or <%= vars.single_leader_plan %> instance
 using the restore utility.
 The restore utility is packaged with the <%= vars.product_full %> tile.
 
@@ -284,8 +285,10 @@ For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizi
 
 ## <a id="restage"></a> Restage the Service Instance
 
-After you restore your single node, leader-follower, or HA cluster service instance,
-you must restage your new service instance.
+After you restore your single node, leader-follower, HA cluster service instance, or
+<%= vars.single_leader_plan %> you must restage your new service instance.
+For <%= vars.single_leader_plan %> plans, you must also re-establish replication between
+the leader and follower service instances.
 
 To restage your service instance:
 
@@ -316,7 +319,13 @@ modify the deployment manifest to scale the instances to three:
         <pre class="terminal">
         bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
         </pre>
-
+1. If you are restoring a <%= vars.single_leader_plan %> service instance,
+    you must re-establish replication:
+      1. Create a follower <%= vars.single_leader_plan %> service instance by following the procedure in
+      [Create <%= vars.single_leader_plan %> Service Instances](./use-multi-site.html#create-service-instance).
+        Ensure that you only create a follower service instance in the secondary foundation.
+      1. Configure replication between the leader service instance you restored and the follower instance by
+          following the procedure in [Configure <%= vars.single_leader_plan %>](./use-multi-site.html#create-service-key).
 1. Determine if the app is currently bound to a MySQL service instance:
 
     ```
@@ -329,13 +338,13 @@ modify the deployment manifest to scale the instances to three:
     cf unbind-service APP-NAME OLD-INSTANCE-NAME
     ```
 
-1. Update your CF app to bind to the new service instance:
+1. Update your app to bind to the new service instance:
 
     ```
     cf bind-service APP-NAME  NEW-INSTANCE-NAME
     ```
 
-1. Restage your CF app to make the changes take effect:
+1. Restage your app to make the changes take effect:
 
     ```
     cf restage APP-NAME
