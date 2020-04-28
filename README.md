@@ -12,7 +12,7 @@ Docs for MySQL for [VMware Tanzu](https://network.pivotal.io/products/pivotal-cf
 | master      | "edge" branch for 2.x, publishes to https://docs-pcf-staging.cfapps.io/p-mysql/2-n/|
 | 2.8         | v2.8.x |
 | 2.7         | v2.7.x |
-| 2.6         | v2.6.x |
+| 2.6         | DEPRECATED. DO NOT USE. |
 | 2.5         | DEPRECATED. DO NOT USE. |
 | 2.4         | DEPRECATED. DO NOT USE. |
 | 2.3         | DEPRECATED. DO NOT USE. |
