@@ -273,7 +273,7 @@ If you modify your service instance,
 you must `cf unbind-service`, `cf bind-service` and `cf restage`
 your app to apply the changes to `VCAP_SERVICES`.
 
-<%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
+<%= partial "./mysql/rebind-warning" %>
 
 ## <a id="manage"></a>Manage a Service Instance
 
@@ -385,7 +385,7 @@ If you want stop an app from using a service you must unbind the app from the se
     OK
     </pre>
 
-<%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
+<%= partial "./mysql/rebind-warning" %>
 
 ### <a id="delete"></a>Delete a Service Instance
 
