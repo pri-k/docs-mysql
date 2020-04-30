@@ -42,20 +42,9 @@ For more information, see
 
 ## <a id="prereqs"></a>Prerequisites
 
-To use <%= vars.product_short %> with your <%= vars.platform_name %> apps, you need:
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-* Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
-* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html#limitations).
-* A <%= vars.platform_name %> installation with [<%= vars.product_short %>](https://network.pivotal.io/products/p-mysql) installed and listed
-in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
-* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the <%= vars.platform_name %> installation
-* A local machine with the following installed:
-   - a browser
-   - a shell
-   - the [Cloud Foundry Command-Line Interface](http://docs.pivotal.io/pivotalcf/cf-cli/install-go-cli.html) (cf CLI)
-   - the Linux [watch](http://www.linfo.org/watch.html) command
-* To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
-
+<%= partial vars.path_to_partials + "/services/developer-prereqs" %>
 
 ## <a id='marketplace'></a>Confirm the <%= vars.product_short %> Service Availability
 
@@ -220,8 +209,8 @@ To access the MySQL service from your app:
     Where:
     - `APP` is the app you want to use the custom schema.
     - `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
-    - `CUSTOM-SCHEMA` is the name of your custom schema. Valid characters include uppercase and lowercase 
-    letters, digits, `$`, and `_`. 
+    - `CUSTOM-SCHEMA` is the name of your custom schema. Valid characters include uppercase and lowercase
+    letters, digits, `$`, and `_`.
 
   1. Restart your app by running the following command:
 
