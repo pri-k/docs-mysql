@@ -41,20 +41,9 @@ For more information, see
 
 ## <a id="prereqs"></a>Prerequisites
 
-To use MySQL for PCF with your PCF apps, you need:
+<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-* Decide what type of plan you want from the following options: single node, leader-follower, highly available (HA) cluster. Your marketplace might not offer all of these types. For about service plans information, see [Availability Options](availability-options.html).
-* If you intend to use an HA cluster plan, review the limitations associated with this plan type. See [Highly Available Cluster Limitations](./about-ha.html#limitations).
-* A PCF installation with [MySQL for PCF](https://network.pivotal.io/products/p-mysql) installed and listed
-in the [Marketplace](http://docs.pivotal.io/devguide/services/#instances)
-* A [Space Developer](http://docs.pivotal.io/pivotalcf/concepts/roles.html#roles) or Admin account on the PCF installation
-* A local machine with the following installed:
-   - a browser
-   - a shell
-   - the [Cloud Foundry Command-Line Interface](http://docs.pivotal.io/pivotalcf/cf-cli/install-go-cli.html) (cf CLI)
-   - the Linux [watch](http://www.linfo.org/watch.html) command
-* To [log in to](http://docs.pivotal.io/pivotalcf/cf-cli/getting-started.html#login) the org and space containing your app
-
+<%= "/services/developer-prereqs" %>
 
 ## <a id='marketplace'></a>Confirm the MySQL for PCF Service Availability
 
@@ -209,21 +198,21 @@ To access the MySQL service from your app:
   By default, service bindings use the default schema `service_instance_db`.
 
   To use custom schemas in your apps:
-    
+
   1. Bind your app to the custom schema by running the following command:
-      
+
       ```
       cf bind-service APP SERVICE-INSTANCE -c '{"schema":"CUSTOM-SCHEMA"}'
       ```
-      
+
     Where:
     - `APP` is the app you want to use the custom schema.
     - `SERVICE-INSTANCE` is the name of your MySQL for PCF service instance.
-    - `CUSTOM-SCHEMA` is the name of your custom schema. Valid characters include uppercase and lowercase 
-    letters, digits, `$`, and `_`. 
+    - `CUSTOM-SCHEMA` is the name of your custom schema. Valid characters include uppercase and lowercase
+    letters, digits, `$`, and `_`.
 
   1. Restart your app by running the following command:
-    
+
     ```
     cf restart APP
     ```
@@ -331,23 +320,23 @@ For more information about service instance sharing, see [Sharing Service Instan
 To share a service instance:
 
 1. Target the source org and space for the service instance you want to share by running:
-  
+
     ```
     cf target -o SOURCE-ORG -s SOURCE-SPACE
     ```
-    
+
     Where:
     + `SOURCE-ORG` is the source org for your service instance.
-    + `SOURCE-SPACE` is the source space for your service instance. 
-    
+    + `SOURCE-SPACE` is the source space for your service instance.
+
 2. Share your service instance to the destination org and space by running:
 
     ```
     cf share-service SERVICE-INSTANCE -o DESTINATION-ORG -s DESTINATION-SPACE
     ```
-    
+
     Where:
-    + `SERVICE-INSTANCE` is the service instance you want to share. 
+    + `SERVICE-INSTANCE` is the service instance you want to share.
     + `DESTINATION-ORG` is the destination org for the service instance.
     + `DESTINATION-SPACE` is the destination space for the service instance.
 1. Target the destination org and space by running:
@@ -355,14 +344,14 @@ To share a service instance:
     ```
     cf target -o DESTINATION-ORG -s DESTINATION-SPACE
     ```
-  
-1. Confirm the service instance was shared by running: 
+
+1. Confirm the service instance was shared by running:
 
     ```
     cf service SERVICE-INSTANCE
     ```
-    
-    Where `SERVICE-INSTANCE` is the service instance you shared. 
+
+    Where `SERVICE-INSTANCE` is the service instance you shared.
 
 ### <a id="unbind"></a>Unbind an App from a Service Instance
 
