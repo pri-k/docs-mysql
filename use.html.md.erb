@@ -273,6 +273,15 @@ If you modify your service instance,
 you must `cf unbind-service`, `cf bind-service` and `cf restage`
 your app to apply the changes to `VCAP_SERVICES`.
 
+<p class = "note"><strong>Note:</strong>
+  If you use MySQL Connector/J 8.0.13 or later with <%= vars.product_short %>,
+  you must modify the JDBC URL in <code>VCAP_SERVICES</code> to include <code>sslMode=VERIFY_IDENTITY</code>
+  and <code>verifyServerCertificate=true</code>.
+  MySQL Connector/J 8.0.13 and later does not verify TLS connections.
+  For more information about JDBC URL syntax, see the
+  <a href="https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference-jdbc-url-format.html">MySQL documentation</a>.
+</p>
+
 <%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
 
 ## <a id="manage"></a>Manage a Service Instance
