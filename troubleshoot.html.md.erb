@@ -28,28 +28,28 @@ The following errors occur in multiple services:
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-install-fail" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-install-fail' %>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-cannot-create-delete" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-cannot-create-delete' %>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-timeouts" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-timeouts' %>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-instance-not-exist" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-instance-not-exist' %>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-other-errors" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-other-errors' %>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-cannot-connect" %>
- 
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-cannot-connect' %>
+
 <p class="note"><strong>Note:</strong>
   Service instances can also become temporarily inaccessible during upgrades and VM or network failures.
   See <a href="./upgrade.html#interruptions">Service Interruptions</a> for more information.
@@ -57,11 +57,11 @@ The following errors occur in multiple services:
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-upgrade-all-fails" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-upgrade-all-fails' %>
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-err-missing-logs" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-err-missing-logs' %>
 
 
 ### <a id="l-f-errors"></a> Leader-Follower Service Instance Errors
@@ -72,7 +72,7 @@ This section provides solutions for the following errands:
 + [Both Leader and Follower Instances Are Writable](#both-writable)
 + [Both Leader and Follower Instances Are Read-Only](#both-read-only)
 
-<%= partial "./troubleshoot-template", locals: {
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "unable-to-determine",
     description: "Unable to Determine Leader and Follower",
     symptom: <<~DESC,
@@ -151,7 +151,7 @@ This section provides solutions for the following errands:
 
 } %>
 
-<%= partial "./troubleshoot-template", locals: {
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "both-writable",
 
     description: "Both Leader and Follower Instances Are Writable",
@@ -274,7 +274,7 @@ This section provides solutions for the following errands:
     '
 } %>
 
-<%= partial "./troubleshoot-template", locals: {
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "both-read-only",
     description: "Both Leader and Follower Instances Are Read-Only",
     symptom: "Developers report that apps cannot write to the database. In a leader-follower topology, the leader VM is writable and the follower VM is read-only.
@@ -341,7 +341,7 @@ This section provides a solution for the following errors:
 + [Persistent Disk is Full](#persistent-disk)
 + [Cannot Access Database Table](#access-table)
 
-<%= partial "./troubleshoot-template", locals: {
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "persistent-disk",
     description: "Persistent Disk is Full",
     symptom: 'Developers report that read, write, and cf CLI operations do not work.
@@ -364,7 +364,7 @@ This section provides a solution for the following errors:
       </p>'
 } %>
 
-<%= partial "./troubleshoot-template", locals: {
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "access-table",
     description: "Cannot Access Database Table",
     symptom: "When you query an existing table, you see an error similar to
@@ -420,7 +420,7 @@ This section provides solutions for the following errands:
 + [Unresponsive Node in a Highly Available Cluster](#unresponsive)
 + [Many Replication Errors in Logs for Highly Available Clusters](#replication-errors)
 
-<%= partial "./troubleshoot-template", locals: {
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "unresponsive",
     description: "Unresponsive Node in a Highly Available Cluster",
     symptom:'
@@ -490,7 +490,7 @@ This section provides solutions for the following errands:
     DESC
 } %>
 
-<%= partial "./troubleshoot-template", locals: {
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
     id: "replication-errors",
     description: "Many Replication Errors in Logs for Highly Available Clusters",
     symptom: <<~DESC,
@@ -550,7 +550,7 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-large-queue" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-large-queue' %>
 
 
 ### <a id="bosh-config"></a> Configuration
@@ -559,7 +559,7 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-bosh-instance-fail" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-bosh-instance-fail' %>
 
 
 ###  <a id="auth"></a>  Authentication
@@ -568,7 +568,7 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-uaa-change" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-uaa-change' %>
 
 
 ###  <a id="network"></a>  Networking
@@ -576,7 +576,7 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-network" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-network' %>
 
 
 ####  <a id="broker-to-instances"></a>  Validate Service Broker Connectivity to Service Instances
@@ -584,7 +584,7 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-broker-to-instances" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-broker-to-instances' %>
 
 
 ####  <a id="app-to-instances"></a>  Validate App Access to Service Instance
@@ -592,7 +592,7 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-app-to-instances" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-app-to-instances' %>
 
 
 ###  <a id="quotas"></a>  Quotas
@@ -601,21 +601,21 @@ This section provides guidance on checking for and fixing issues in on-demand se
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-plan-quotas" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-plan-quotas' %>
 
 
 ####  <a id="global-quotas"></a>  Global Quota Issues
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-global-quotas" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-global-quotas' %>
 
 
 ###  <a id="failing-jobs"></a>  Failing Jobs and Unhealthy Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-comp-failing-jobs" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-comp-failing-jobs' %>
 
 A failing process or failing VM might come back automatically after a temporary service outage. See
 <a href="./interruptions.html#process-fail">VM Process Failure</a>
@@ -636,7 +636,7 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-parse-error" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-parse-error' %>
 
 
 ###  <a id="bosh-cf-access"></a>  Access Broker and Instance Logs and VMs
@@ -644,7 +644,7 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-bosh-cf-access" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-bosh-cf-access' %>
 
 
 ####  <a id="access-broker"></a>  Access Broker Logs and VMs
@@ -652,7 +652,7 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-access-broker" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-access-broker' %>
 
 
 ####  <a id="access-instance"></a>  Access Service Instance Logs and VMs
@@ -660,47 +660,47 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-access-instance" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-access-instance' %>
 
 ### <a id="broker-errands"></a> Run Service Broker Errands to Manage Brokers and Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-broker-errands" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-broker-errands' %>
 
 #### <a id="register-broker"></a> Register Broker
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-register-broker" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-register-broker' %>
 
 #### <a id="deregister-broker"></a> Deregister Broker
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-deregister-broker" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-deregister-broker' %>
 
 #### <a id="upgrade-all"></a> Upgrade All Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-upgrade-all" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-upgrade-all' %>
 
 #### <a id="delete-all"></a> Delete All Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-delete-all" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-delete-all' %>
 
 ### <a id="detect-orphans"></a> Detect Orphaned Service Instances
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-detect-orphans" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-detect-orphans' %>
 
 ### <a id="instance-creds"></a> Retrieve Admin and Read-Only Admin Credentials for a Service Instance
 
-<%= partial "./services-tshoot/tshoot-tech-instance-creds" %>
+<%= partial vars.path_to_partials + "/services-tshoot/tshoot-tech-instance-creds" %>
 
 ###  <a id="reinstall"></a>  Reinstall a Tile
 
@@ -712,7 +712,7 @@ in the Pivotal Support knowledge base.
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-view-resources" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-view-resources' %>
 
 
 ###  <a id="id-instance-owner"></a> Identify Apps using a Service Instance
@@ -720,7 +720,7 @@ in the Pivotal Support knowledge base.
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-id-instance-owner" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-id-instance-owner' %>
 
 
 ###  <a id="monitor-quota"></a>  Monitor Quota Saturation and Service Instance Count
@@ -728,7 +728,7 @@ in the Pivotal Support knowledge base.
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-tech-monitor-quota" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-tech-monitor-quota' %>
 
 
 ###  <a id="trouble-ha"></a>Techniques for Troubleshooting Highly Available Clusters
@@ -1021,9 +1021,6 @@ To check the replication status, do the following:
 </ol>
 
 
-
-
-
 ##  <a id="tools"></a>  Tools for Troubleshooting
 
 The troubleshooting techniques described above use the following tools.
@@ -1080,9 +1077,6 @@ including `BOSH_DEPLOYMENT` for the deployment name.
     The script saves a compressed file of logs combined from all MySQL for PCF VMs.
     The filename has the form `TIMESTAMP-mysql-logs.tar.gz.gpg`.
 
-
-    
-
 ###  <a id="mysql-diag"></a> mysql-diag
 
 The `mysql-diag` tools outputs the current status of a highly available (HA) MySQL for PCF cluster
@@ -1094,7 +1088,7 @@ For more information, see [Running mysql-diag](./mysql-diag.html).
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-kb" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-kb' %>
 
 
 ##  <a id="support"></a>  File a Support Ticket
@@ -1102,4 +1096,4 @@ For more information, see [Running mysql-diag](./mysql-diag.html).
 
 <!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
 
-<%= partial "./services-tshoot/tshoot-support" %>
+<%= partial '../../p-mysql/partials/services-tshoot/tshoot-support' %>

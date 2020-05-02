@@ -14,7 +14,7 @@ owner: MySQL
   <li>
     <a href="#workflow">Workflow</a>
   </li>
-  <%= partial "./certs/rotating-certs-toc" %>
+  <%= partial vars.path_to_partials + "/certs/rotating-certs-toc.html.erb" %>
   <li>
     <a href="#internal">Rotate Internal Certificates</a>
   </li>
@@ -159,7 +159,7 @@ To rotate your certificates:
   * **If your internal certificates for single node or leader-follower service instances are about to expire or have expired:** Do the procedure in [Rotate Internal Certificates](#internal) below.<br><br>
   * **If only your internal certificates for HA clusters are about to expire or have expired:** Upgrade to MySQL for PCF v2.7.
   See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-7/upgrade.html).
-<%= partial "./certs/rotating-certs", :locals => { :local_product_name => "MySQL for PCF" } %>
+<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => "MySQL for PCF" } %>
 
 
 ## <a id="internal"></a> Rotate Internal Certificates
