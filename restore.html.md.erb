@@ -93,14 +93,14 @@ To retrieve the backup encryption key:
     <pre class="terminal">$ credhub get \
     -n /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/backup_encryption_key</pre>
 
-1. Copy the backup encryption key under <code>value</code> in the output.
+1. Copy the backup encryption key next to <code>value</code> in the output.
     You use this key when you restore the backup.
 
     For example:
     <pre class="terminal">id: d6e5bd10-3b60-4a1a-9e01-c76da688b847
     name: /p-bosh/service-instance_70d30bb6-7f30-441a-a87c-05a5e4afff26/backup_encryption_key
     type: password
-    value: UMF2DXsqNPPlCNWMdVMcNv7RC3Wi10
+    value: UMexamplePPlCNWMdVMcNv7RC3Wi10
     version_created_at: 2018-04-02T23:16:09Z</pre>
 
 
@@ -326,25 +326,26 @@ modify the deployment manifest to scale the instances to three:
         Ensure that you only create a follower service instance in the secondary foundation.
       1. Configure replication between the leader service instance you restored and the follower instance by
           following the procedure in [Configure <%= vars.single_leader_plan %>](./use-multi-site.html#create-service-key).
-1. Determine if the app is currently bound to a MySQL service instance:
+
+1. Determine if the app is currently bound to a MySQL service instance by running:
 
     ```
     cf services
     ```
 
-1. If the previous step shows that the app is currently bound to a MySQL instance, unbind it:
+1. If the previous step shows that the app is currently bound to a MySQL instance, unbind it by running:
 
     ```
     cf unbind-service APP-NAME OLD-INSTANCE-NAME
     ```
 
-1. Update your app to bind to the new service instance:
+1. Update your app to bind to the new service instance by running:
 
     ```
     cf bind-service APP-NAME  NEW-INSTANCE-NAME
     ```
 
-1. Restage your app to make the changes take effect:
+1. Restage your app to make the changes take effect by running:
 
     ```
     cf restage APP-NAME
