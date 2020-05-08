@@ -263,8 +263,8 @@ The restore utility does the following:
 
 To restore a service instance:
 
-1. Use the BOSH CLI to SSH in to the newly created MySQL service instance.
-For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
+1. Use the BOSH CLI to SSH in to the newly created MySQL service instance by following the procedure
+in [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
 1. After securely logging in to MySQL, become root by running:
 
@@ -272,7 +272,7 @@ For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizi
     sudo su
     ```
 
-1. Run the restore utility to restore the backup artifact into the data directory.
+1. Restore the backup artifact into the data directory by running:
 
     ```
     mysql-restore --encryption-key ENCRYPTION-KEY --restore-file RESTORE-FILE-PATH
