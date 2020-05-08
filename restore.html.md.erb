@@ -282,8 +282,8 @@ The restore utility does the following:
 
 To restore a single node or leader-follower service instance:
 
-1. Use the BOSH CLI to SSH in to the newly created MySQL service instance.
-For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
+1. Use the BOSH CLI to SSH in to the newly created MySQL service instance by following the procedure
+in [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#bosh-ssh).
 
 1. After securely logging in to MySQL, become root by running:
 
@@ -291,7 +291,7 @@ For more information, see [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizi
     sudo su
     ```
 
-1. Run the restore utility to restore the backup artifact into the data directory.
+1. Restore the backup artifact into the data directory by running:
 
     ```
     mysql-restore --encryption-key ENCRYPTION-KEY --restore-file RESTORE-FILE-PATH
@@ -353,7 +353,7 @@ To restore an HA cluster:
     monit start all
     ```
 
-1. Watch the summary until all jobs are listed as `running` by running::
+1. Watch the summary until all jobs are listed as `running` by running:
 
     ```
     watch monit summary
@@ -368,7 +368,7 @@ you must restage your new service instance.
 To restage your service instance:
 
 1. If you restored to a service instance with a single-node plan but want a
-leader-follower plan, update the plan now:
+leader-follower plan, update the plan by running:
 
     ```
     cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
