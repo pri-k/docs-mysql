@@ -4,9 +4,12 @@ owner: MySQL
 ---
 <strong><%= modified_date %></strong>
 
-<!-- The below partial is in https://github.com/pivotal-cf/docs-partials -->
-
 The topic describes how to trigger a failover and switchover when using a <%= vars.single_leader_plan %> plan.
+
+<%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
+
+##<a id='overview'></a> Overview
+
 For information about when to trigger a failover or switchover,
 see [About Failover and Switchover](./about-multi-site.html#failover-switchover).
 
@@ -14,7 +17,27 @@ see [About Failover and Switchover](./about-multi-site.html#failover-switchover)
   <%= vars.product_short %> v2.7.3 and later.
 </p>
 
-<%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
+<p class="note"><strong>Note:</strong> The procedures in this topic assume you created the leader service instance in
+the primary foundation and the follower service instance in the secondary foundation.
+</p>
+
+1. Verify Follower Health
+1. Trigger a Failover or Trigger a Switchover
+
+##<a id='verify'></a> Verify Follower Health
+
+Before you trigger a failover or switchover,
+you must verify that the follower service instance is healthy.
+If your follower service instance is unhealthy, <a href="https://pivotal.io/support">Support</a>.
+
+To verify the service instance:
+
+1. Log in to the secondary foundation, target space and org.
+1. Retrieve and record GUID
+1. Get creds to BOSH SSH
+1. BOSH SSH
+1. Run: bosh -d service-instance_GUID instance
+1. Ensure the follower says running in the output
 
 ##<a id='failover'></a> Trigger a Failover
 
@@ -29,10 +52,6 @@ To trigger a failover:
 1. [Promote the Follower](#promote-failover)
 1. [Delete the Former Leader](#clean-up)
 
-
-<p class="note"><strong>Note:</strong> The procedures in this section assume you created the leader service instance in
-the primary foundation and the follower service instance in the secondary foundation.
-</p>
 
 ### <a id='promote-failover'></a> Promote the Follower
 
@@ -126,10 +145,6 @@ To trigger a switchover:
 
 1. [Promote the Follower](#promote)
 1. [Reconfigure <%= vars.single_leader_plan %>](#configure)
-
-<p class="note"><strong>Note:</strong> The procedures in this section assume you created the leader service instance in
-the primary foundation and the follower service instance in the secondary foundation.
-</p>
 
 ### <a id='promote-switchover'></a> Promote the Follower
 
