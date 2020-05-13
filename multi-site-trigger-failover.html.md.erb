@@ -4,40 +4,88 @@ owner: MySQL
 ---
 <strong><%= modified_date %></strong>
 
-The topic describes how to trigger a failover and switchover when using a <%= vars.single_leader_plan %> plan.
+The topic describes how to trigger a failover and switchover
+ when using a <%= vars.single_leader_plan %> plan.
 
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
 ##<a id='overview'></a> Overview
 
+
+You can trigger a failover or switchover to change the
+<%= vars.single_leader_plan %> service instance that <%= vars.product_short %> directs traffic to.
+You can only trigger a failover and switchover in <%= vars.product_short %> v2.7.3 and later.
+
 For information about when to trigger a failover or switchover,
 see [About Failover and Switchover](./about-multi-site.html#failover-switchover).
 
-<p class="note"><strong>Note:</strong> You can only trigger a failover and switchover in
-  <%= vars.product_short %> v2.7.3 and later.
-</p>
+Before you trigger a failover or switchover, you must verify that the follower service instance
+is healthy. See [Verify Follower Health](#verify) below.
 
 <p class="note"><strong>Note:</strong> The procedures in this topic assume you created the leader service instance in
 the primary foundation and the follower service instance in the secondary foundation.
 </p>
 
-1. Verify Follower Health
-1. Trigger a Failover or Trigger a Switchover
 
 ##<a id='verify'></a> Verify Follower Health
 
 Before you trigger a failover or switchover,
 you must verify that the follower service instance is healthy.
-If your follower service instance is unhealthy, <a href="https://pivotal.io/support">Support</a>.
+If your follower service instance is unhealthy, contact <a href="https://pivotal.io/support">Support</a>.
 
 To verify the service instance:
 
-1. Log in to the secondary foundation, target space and org.
-1. Retrieve and record GUID
-1. Get creds to BOSH SSH
-1. BOSH SSH
-1. Run: bosh -d service-instance_GUID instance
-1. Ensure the follower says running in the output
+1. Log in to the deployment for your secondary foundation by running:
+
+    ```
+    cf login SECONDARY-API-URL
+    ```
+    Where `SECONDARY-API-URL` is the API endpoint for your secondary foundation.
+
+1. Record the GUID of the follower service instance by running:
+
+    ```
+    cf service SERVICE-INSTANCE-NAME --guid
+    ```
+
+    Where `SERVICE-INSTANCE-NAME ` is the name of the follower service instance.
+    <br><br>
+    For example:
+    <pre class="terminal">$ cf service my-follower --guid
+    82ddc607-710a-404e-b1b8-a7e3ea7ec063
+    </pre>
+1. Record the information needed to SSH onto the <%= vars.ops_manager %> VM by following the
+  procedure in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather).
+1. SSH onto the <%= vars.ops_manager %> VM by following the procedures in
+[SSH into <%= vars.ops_manager %>](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
+
+1. From the <%= vars.ops_manager %> VM, log in to your BOSH Director by following the procedure in
+[Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
+
+1. View the health of the service instance by running:
+
+    ```
+    bosh -d service-instance_GUID instance
+    ```
+
+    For example:
+
+    <pre class="terminal">$ bosh -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instance
+        Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
+
+        Task 21409. Done
+
+        Deployment 'service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063'
+
+        Instance                                    Process State  AZ  IPs
+        mysql/1373022d-4eab-46d3-8fd1-a12067edf597  running        z2  10.0.17.14
+
+        1 instances
+
+        Succeeded</pre>
+
+1. Ensure that the service instance is `running`.
+If the service instance is `failing`, contact <a href="https://pivotal.io/support">Support</a>.
 
 ##<a id='failover'></a> Trigger a Failover
 
@@ -91,7 +139,7 @@ To promote the follower service instance to leader:
         <pre class=terminal>Updating service instance secondary-node as admin...
         FAILED
         Server error, status code: 502, error code: 10001, message: Service broker error: Promotion of follower failed - has 1 transactions still unapplied</pre>
-    + If the leader service instance is still reachable and in read-write mode, do the procedure in
+    + If the leader service instance is still reachable and in read-write mode, follow the procedure in
         [Trigger a Switchover](#switchover) below instead. The error message looks like the following:
           <pre class=terminal>
         Updating service instance secondary-node as admin...
@@ -150,7 +198,7 @@ To trigger a switchover:
 
 <p class="note"><strong>Note:</strong> If you try to promote a leader-follower,
   highly available cluster, or single node service instance to leader
-  or make it read-only you get an error message similar to the following: <br><br>
+  or make it read-only you get an error message similar to the following:<br><br>
 <code>Updating service instance haDB as admin...
   FAILED
   Server error, status code: 502, error code: 10001, message: Service broker error: 1 error occurred:
@@ -210,7 +258,7 @@ To make the leader read-only and promote the follower to leader in the secondary
         <pre class=terminal>Updating service instance secondary-node as admin...
         FAILED
         Server error, status code: 502, error code: 10001, message: Service broker error: Promotion of follower failed - has 1 transactions still unapplied</pre>
-    + If the leader service instance is still reachable and in read-write mode, do the procedure in
+    + If the leader service instance is still reachable and in read-write mode, follow the procedure in
         [Trigger a Switchover](#switchover) below instead. The error message looks like the following:
           <pre class=terminal>
         Updating service instance secondary-node as admin...
@@ -234,7 +282,7 @@ in the secondary foundation is the leader.
 
 <p class='note warning'><strong>Warning:</strong>
 To successfully trigger a switchover the follower dataset must be a subset of the leader dataset.
-This means that no new data has been written to the follower.
+This means that <% vars.product_short %> has not written new data to the follower.
 The follower must also be no more than 3 days behind the leader. <br><br>
 If your follower instance does not satisfy these requirements, you must
 create a new <%= vars.single_leader_plan %> service instance and reconfigure replication using this new,
@@ -307,7 +355,7 @@ To reconfigure replication for the service instances:
     ```
 
 1. Update your leader service instance in the secondary foundation with the host-info service key
-   by running the following command:
+   by running:
 
     ```
     cf update-service SECONDARY-INSTANCE -c HOST-INFO
@@ -443,7 +491,7 @@ To reconfigure replication for the service instances:
       Follower GTIDs missed: "487e6056-6e93-11ea-8c96-42010a010806:1-9"
       Try again with an empty instance or contact your operator to troubleshoot</pre>
     + If your follower has a divergent dataset from the leader,
-    you get error message similar to  the following:
+    you get error message similar to the following:
       <pre class="terminal">$ cf update-service primary-node -c /tmp/credentials-key.json
       Updating service instance primary-node as admin...
       FAILED
