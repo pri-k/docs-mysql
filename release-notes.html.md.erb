@@ -12,6 +12,45 @@ Pivotal recommends that you upgrade to the latest version of your current minor 
 then upgrade to the latest available version of the new minor line.
 <%= partial vars.path_to_partials + '/upgrade-planner' %>
 
+## <a id="2-7-8"></a> v2.7.8
+
+**Release Date: May 15, 2020**
+
+### Features
+
+This release has the following improvements:
+
++ Backup filename now contains `instance uuid` so that operators can differentiate between multiple backup artifacts of a multi-node deployment.
+
+
+### Resolved Issues
+
+This release has the following fixes:
+
++ Smoke tests look for `java_offline_buildpack` specifically so that they do not time out when environment has many buildpacks.
+
++ When binding to an leader-follower service instance  of v2.6.x with the MySQL tile of v2.7.x, all broker requests are successful.
+
++ When operator enables `lower_case_table_names` in the tile's global settings, it should only apply to new service instances and 
+existing service instances should not automatically enable it when previously disabled.
+
++ When the operator has checked `Allow Developers To Override Lower Case Table Names` in MySQL tile configuration, then developers can
+turn on/off `lower_case_table_names` using an arbitrary parameter.
+
++ Two backup artifacts are uploaded in the blob store for each of leader and follower nodes for leader-follower service instances.
+
+### Known Issues
+
+This release has the following issues:
+
+<%= partial vars.path_to_partials + "/mysql/smoke-test-ki" %>
+<%= partial vars.path_to_partials + "/mysql/ki-multi-site-not-supported" %>
+<%= partial vars.path_to_partials + "/mysql/lf-backups-ki" %>
+<%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
+<%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+
+
 ## <a id="2-7-7"></a> v2.7.7
 
 **Release Date: April 8, 2020**
