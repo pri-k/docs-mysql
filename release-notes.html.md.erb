@@ -14,38 +14,49 @@ then upgrade to the latest available version of the new minor line.
 
 ## <a id="2-7-8"></a> v2.7.8
 
-**Release Date: May 15, 2020**
+**Release Date: May XX, 2020**
 
 ### Features
 
-This release has the following improvements:
+New features and changes in this release:
 
-+ Backup filename now contains `instance uuid` so that operators can differentiate between multiple backup artifacts of a multi-node deployment.
++ **Filenames for backup artifacts include an instance UUID:**
+Operators can use this UUID to differentiate between backup artifacts
+for leader-follower and HA cluster service instances.
+
++ **Developers can enable lowercase table names when they update service instances:**
+If an operator selects **Allow Developers To Override Lower Case Table Names** in the tile,
+developers can enable and disable this feature when they update a service instance.
+Previously, they could only enable this feature when they created a service instance.
 
 
 ### Resolved Issues
 
 This release has the following fixes:
 
-+ Smoke tests look for `java_offline_buildpack` specifically so that they do not time out when environment has many buildpacks.
++ **Smoke tests no longer fail with a timeout:**
+  Previously, if you had many buildpacks in your environment, smoke tests sometimes failed.
 
-+ When binding to an leader-follower service instance  of v2.6.x with the MySQL tile of v2.7.x, all broker requests are successful.
++ **Broker requests no longer fail:** Previously, if a developer bound a
+<%= vars.product_short %> v2.6 service instance using <%= vars.product_short %> v2.7,
+broker requests failed.
 
-+ When operator enables `lower_case_table_names` in the tile's global settings, it should only apply to new service instances and 
-existing service instances should not automatically enable it when previously disabled.
++ **Enable Lower Case Table Names no longer
+enables the feature on existing service instances:**
+Previously, if a developer selected **Enable Lower Case Table Names** in the tile,
+the feature was enabled on all services instances.
+Now, if the feature is enabled in the tile,
+**Enable Lower Case Table Names** is only applied to new service instances.
 
-+ When the operator has checked `Allow Developers To Override Lower Case Table Names` in MySQL tile configuration, then developers can
-turn on/off `lower_case_table_names` using an arbitrary parameter.
-
-+ Two backup artifacts are uploaded in the blob store for each of leader and follower nodes for leader-follower service instances.
++ **Leader-follower backups are no longer overwritten:**
+Previously, <%= vars.product_short %> sometimes only stored one backup file from a random node.
+Now, <%= vars.product_short %> uploads both the leader and follower backup artifacts to the blobstore.
 
 ### Known Issues
 
 This release has the following issues:
 
-<%= partial vars.path_to_partials + "/mysql/smoke-test-ki" %>
 <%= partial vars.path_to_partials + "/mysql/ki-multi-site-not-supported" %>
-<%= partial vars.path_to_partials + "/mysql/lf-backups-ki" %>
 <%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
@@ -59,7 +70,7 @@ This release has the following issues:
 
 This release has the following fixes:
 
-+ <%= vars.product_short %> now configures the endpoint url for s3 backups and
++ <%= vars.product_short %> now configures the endpoint url<%# "URL" is preferred. %> for s3 backups and
  does not always uses the default AWS endpoint.
 
 ### Known Issues
@@ -71,6 +82,8 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/lf-backups-ki" %>
 <%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-requests-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 ## <a id="2-7-6"></a> v2.7.6
@@ -82,8 +95,8 @@ This release has the following issues:
 New features and changes in this release:
 
 * Operators can monitor Key Performance Indicators (KPIs) for
-persistent and ephemeral disk usage, and number of connections
-on the Healthwatch Indicator Protocol dashboard.
+persistent and ephemeral disk<%# There are two kinds of disk: ephemeral and persistent. You do not need to modify "disk" with "ephemeral" unless there is discussion of persistent disks in the same topic. Always define persistent disks as persistent. %> usage, and number of connections
+on the Healthwatch<%# Use <%= vars.product_short %> Indicator Protocol dashboard.
 For more information, see
 [Use the Indicator Protocol Dashboard](./monitor.html#indicator).
 
@@ -114,6 +127,8 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/lf-backups-ki" %>
 <%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-requests-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 
@@ -146,6 +161,8 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/scp-backups" %>
 <%= partial vars.path_to_partials + "/mysql/migrate-ha" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-requests-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 ## <a id="2-7-4"></a> v2.7.4
@@ -158,7 +175,7 @@ New features and changes in this release:
 
 * <%= vars.single_leader_plan %> plans support failover to a follower service instance in a different data center.
   <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
-* Operators can monitor MySQL metrics on the Healthwatch Indicator Protocol dashboard.
+* Operators can monitor MySQL metrics on the Healthwatch<%# Use <%= vars.product_short %> Indicator Protocol dashboard.
 For more information, see [Use the Indicator Protocol Dashboard](./monitor.html#indicator).
 * Highly available (HA) cluster plans only retain three days of binary logs.
 This reduces persistent disk usage.
@@ -198,6 +215,8 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/broker-ki" %>
 <%= partial vars.path_to_partials + "/mysql/migrate-ha" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-requests-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 ## <a id="2-7-2"></a> v2.7.2
@@ -216,7 +235,7 @@ following features:
     <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 * Highly available (HA) cluster plans are now in general availability (GA).
 * Updates Percona Server to v5.7.26-29.
-* Updates pxc-release to 0.20.0.
+* Updates pxc-release to 0.20.0<%# Version numbers are written as "v1.11.11" %>.
 * Updates Envoy to v1.11.1.
 
 ### Security Fix
@@ -231,7 +250,7 @@ This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-20
 This release has the following fixes:
 
 * Smoke tests no longer fail when TLS is not configured.
-* You can now share MySQL for Pivotal Platform service instances across orgs and spaces using `cf share-service`.
+* You can now share MySQL for Pivotal Platform<%# Use <%= vars.product_full %> service instances across orgs<%# "organizations" is preferred unless referring to the Cloud Foundry orgs concept. %> and spaces using `cf share-service`.
 For more information, see [Share Service Instances](./use.html#share).
 * Certificate rotation now works reliably with BOSH.
 
@@ -248,6 +267,8 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/metrics-ki" %>
 <%= partial vars.path_to_partials + "/mysql/audit-logs-ki" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-requests-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 ## <a id="2-7-1"></a> v2.7.1 - Withdrawn
@@ -268,7 +289,7 @@ following features:
     <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 * Highly available (HA) cluster plans are now in general availability (GA).
 * Updates Percona Server to v5.7.26-29.
-* Updates pxc-release to 0.20.0.
+* Updates pxc-release to 0.20.0<%# Version numbers are written as "v1.11.11" %>.
 * Updates Envoy to v1.11.1.
 
 ### Security Fix
@@ -282,7 +303,7 @@ This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-20
 
 This release has the following fixes:
 
-* You can now share MySQL for Pivotal Platform service instances across orgs and spaces using `cf share-service`.
+* You can now share MySQL for Pivotal Platform<%# Use <%= vars.product_full %> service instances across orgs<%# "organizations" is preferred unless referring to the Cloud Foundry orgs concept. %> and spaces using `cf share-service`.
 For more information, see [Share Service Instances](./use.html#share).
 * Certificate rotation now works reliably with BOSH.
 
@@ -299,6 +320,8 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/metrics-ki" %>
 <%= partial vars.path_to_partials + "/mysql/audit-logs-ki" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-requests-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 * Smoke tests fail when TLS is not configured.
 
@@ -316,7 +339,7 @@ New features and changes in this release:
   see [Managing Certificates](./rotating-ca.html).
 
 * Automatic backups are now compatible with the AWS CLI v1.16.189,
-  which defaults to Amazon S3 Signature Version 4 for S3 buckets when no other configuration is provided.
+  which defaults to Amazon S3 Signature Version 4 <%# "v#" is the preferred style. %> for S3 buckets when no other configuration is provided.
 
 
 ### Security Fix
@@ -339,6 +362,8 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/metrics-ki" %>
 <%= partial vars.path_to_partials + "/mysql/audit-logs-ki" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/broker-requests-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 ## <a id="view"></a> View Release Notes for Another Version
