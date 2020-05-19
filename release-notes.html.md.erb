@@ -70,7 +70,7 @@ This release has the following issues:
 
 This release has the following fixes:
 
-+ <%= vars.product_short %> now configures the endpoint url<%# "URL" is preferred. %> for s3 backups and
++ <%= vars.product_short %> now configures the endpoint URL for s3 backups and
  does not always uses the default AWS endpoint.
 
 ### Known Issues
@@ -95,8 +95,8 @@ This release has the following issues:
 New features and changes in this release:
 
 * Operators can monitor Key Performance Indicators (KPIs) for
-persistent and ephemeral disk<%# There are two kinds of disk: ephemeral and persistent. You do not need to modify "disk" with "ephemeral" unless there is discussion of persistent disks in the same topic. Always define persistent disks as persistent. %> usage, and number of connections
-on the Healthwatch<%# Use <%= vars.product_short %> Indicator Protocol dashboard.
+persistent and ephemeral disk usage, and number of connections
+on the Healthwatch Indicator Protocol dashboard.
 For more information, see
 [Use the Indicator Protocol Dashboard](./monitor.html#indicator).
 
@@ -175,7 +175,7 @@ New features and changes in this release:
 
 * <%= vars.single_leader_plan %> plans support failover to a follower service instance in a different data center.
   <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
-* Operators can monitor MySQL metrics on the Healthwatch<%# Use <%= vars.product_short %> Indicator Protocol dashboard.
+* Operators can monitor MySQL metrics on the Healthwatch Indicator Protocol dashboard.
 For more information, see [Use the Indicator Protocol Dashboard](./monitor.html#indicator).
 * Highly available (HA) cluster plans only retain three days of binary logs.
 This reduces persistent disk usage.
@@ -235,7 +235,7 @@ following features:
     <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 * Highly available (HA) cluster plans are now in general availability (GA).
 * Updates Percona Server to v5.7.26-29.
-* Updates pxc-release to 0.20.0<%# Version numbers are written as "v1.11.11" %>.
+* Updates pxc-release to v0.20.0.
 * Updates Envoy to v1.11.1.
 
 ### Security Fix
@@ -250,7 +250,7 @@ This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-20
 This release has the following fixes:
 
 * Smoke tests no longer fail when TLS is not configured.
-* You can now share MySQL for Pivotal Platform<%# Use <%= vars.product_full %> service instances across orgs<%# "organizations" is preferred unless referring to the Cloud Foundry orgs concept. %> and spaces using `cf share-service`.
+* You can now share <%= vars.product_short %> service instances across orgs and spaces using `cf share-service`.
 For more information, see [Share Service Instances](./use.html#share).
 * Certificate rotation now works reliably with BOSH.
 
@@ -289,7 +289,7 @@ following features:
     <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 * Highly available (HA) cluster plans are now in general availability (GA).
 * Updates Percona Server to v5.7.26-29.
-* Updates pxc-release to 0.20.0<%# Version numbers are written as "v1.11.11" %>.
+* Updates pxc-release to v0.20.0.
 * Updates Envoy to v1.11.1.
 
 ### Security Fix
@@ -303,7 +303,7 @@ This update fixes Medium [CVE-2019-9893](https://nvd.nist.gov/vuln/detail/CVE-20
 
 This release has the following fixes:
 
-* You can now share MySQL for Pivotal Platform<%# Use <%= vars.product_full %> service instances across orgs<%# "organizations" is preferred unless referring to the Cloud Foundry orgs concept. %> and spaces using `cf share-service`.
+* You can now share <%= vars.product_short %> service instances across orgs and spaces using `cf share-service`.
 For more information, see [Share Service Instances](./use.html#share).
 * Certificate rotation now works reliably with BOSH.
 
@@ -339,7 +339,7 @@ New features and changes in this release:
   see [Managing Certificates](./rotating-ca.html).
 
 * Automatic backups are now compatible with the AWS CLI v1.16.189,
-  which defaults to Amazon S3 Signature Version 4 <%# "v#" is the preferred style. %> for S3 buckets when no other configuration is provided.
+  which defaults to Amazon S3 Signature Version 4 for S3 buckets when no other configuration is provided.
 
 
 ### Security Fix
