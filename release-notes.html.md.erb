@@ -21,14 +21,12 @@ then upgrade to the latest available version of the new minor line.
 New features and changes in this release:
 
 + **Filenames for backup artifacts include an instance UUID:**
-Operators can use this UUID to differentiate between backup artifacts
-for leader-follower and HA cluster service instances.
+Operators can use this UUID to differentiate between the leader and follower backup artifacts.
 
 + **Developers can enable lowercase table names when they update service instances:**
 If an operator selects **Allow Developers To Override Lower Case Table Names** in the tile,
-developers can enable and disable this feature when they update a service instance.
+developers can enable and disable the `lower_case_table_names` property when they update a service instance.
 Previously, they could only enable this feature when they created a service instance.
-
 
 ### Resolved Issues
 
