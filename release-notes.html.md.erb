@@ -25,26 +25,39 @@ before upgrading to the latest v<%= current_version %>.x version.
 ### Features
 New features and changes in this release:
 
-+ Filenames for backup artifacts include an instance UUID: Operators can use this UUIDto differentiate between backup
-artifacts for leader and follower backups.
++ **Filenames for backup artifacts include an instance UUID:**
+Operators can use this UUID to differentiate between the leader and follower backup artifacts.
 
-+ Developers can enable lowercase table names when they update service instances: If an operator selects Allow Developers 
-To Override Lower Case Table Names in the tile, developers can enable and disable this feature when they update a service instance. Previously, they could only enable this feature when they 
-created a service instance.
++ **Developers can enable lowercase table names when they update service instances:**
+If an operator selects **Allow Developers To Override Lower Case Table Names** in the tile,
+developers can enable and disable the `lower_case_table_names` property when they update a service instance.
+Previously, they could only enable this feature when they created a service instance.
 
 ### Resolved Issues
 This release has the following fixes:
 
-+ Smoke tests no longer fail with a timeout: Previously, if you had many buildpacks in your environment, 
-smoke tests sometimes failed.
++ **Smoke tests no longer fail with a timeout:**
+  Previously, if you had many buildpacks in your environment, smoke tests sometimes failed.
 
-+ Enable Lower Case Table Names no longer enables the feature on existing service instances: Previously, if a developer selected 
-Enable Lower Case Table Names in the tile, existing tables with uppercase names were orphaned. Now, if the feature is enabled in 
-the tile, Enable Lower Case Table Names is only applied to new service instances.
++ **Enable Lower Case Table Names no longer
+enables the feature on existing service instances:**
+Previously, if a developer selected **Enable Lower Case Table Names** in the tile,
+existing tables with uppercase names were orphaned.
+Now, if the feature is enabled in the tile,
+**Enable Lower Case Table Names** is only applied to new service instances.
 
-+ Leader-follower backups are no longer overwritten: Previously, MySQL for Pivotal Platform sometimes only stored one backup 
-file from a random node. Now, MySQL for Pivotal Platform uploads both the leader and follower backup artifacts to the blobstore.
++ **Leader-follower backups are no longer overwritten:**
+Previously, <%= vars.product_short %> sometimes only stored one backup file from a random node.
+Now, <%= vars.product_short %> uploads both the leader and follower backup artifacts to the blobstore.
 
+### Known Issues
+
+This release has the following issues:
+
+<%= partial vars.path_to_partials + "/mysql/ki-multi-site-not-supported" %>
+<%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
+<%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 ## <a id="2-8-X"></a> v2.8.0
 
@@ -127,6 +140,7 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/lf-backups-ki" %>
 <%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
+<%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
 ## <a id="view"></a> View Release Notes for Another Version
