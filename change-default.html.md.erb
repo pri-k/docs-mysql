@@ -190,7 +190,7 @@ The table below describes how to use the `enable_lower_case_table_names` optiona
   <tr>
     <th><strong>Description</strong></th>
     <td>The operator can set a default for this parameter and permit developers to override the default.
-      If enabled in the tile, you can only set the parameter when you create a service instance. <br><br>
+      <br><br>
       If you set this to <code>true</code>, table names are stored in lowercase.
       See <a href="#lowercase">About Lowercase Table Names</a> below.
       <p class="note warning"><strong>Warning:</strong> Before you enable this feature,
@@ -200,7 +200,7 @@ after enabling lowercase table names.</p></td>
 
   <tr>
     <th><strong>Usage</strong></th>
-    <td><code>create-service</code></td>
+    <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
 
 </table>
@@ -282,7 +282,7 @@ However, depending on latency, sync replication reduces the performance of write
 
 The table below describes how to use the `replication_mode` optional parameter:
 
-<p class="note"><strong>Note: </strong> <code>replication_mode</code> does not work 
+<p class="note"><strong>Note: </strong> <code>replication_mode</code> does not work
 for single node, HA cluster, or multi-site replication plans.</p>
 
 <table>
