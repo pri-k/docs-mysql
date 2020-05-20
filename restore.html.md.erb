@@ -333,7 +333,7 @@ To restore an HA cluster:
     ```
     rm -rf /var/vcap/store/mysql/*
     ```
-1. Delete MySQL users and service bindings by running:
+1. Delete MySQL users and service bindings from the database by running:
 
     ```
     DELETE FROM mysql.user WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
