@@ -11,9 +11,7 @@ The topic describes how to trigger a failover and switchover
 
 ##<a id='overview'></a> Overview
 
-
-You can trigger a failover or switchover to change the
-<%= vars.single_leader_plan %> service instance that <%= vars.product_short %> directs traffic to.
+You can trigger a failover or switchover to redirect traffic to a secondary foundation.
 You can only trigger a failover and switchover in <%= vars.product_short %> v2.7.3 and later.
 
 For information about when to trigger a failover or switchover,
@@ -25,7 +23,6 @@ is healthy. See [Verify Follower Health](#verify) below.
 <p class="note"><strong>Note:</strong> The procedures in this topic assume you created the leader service instance in
 the primary foundation and the follower service instance in the secondary foundation.
 </p>
-
 
 ##<a id='verify'></a> Verify Follower Health
 
@@ -52,11 +49,11 @@ To verify the service instance:
     <br><br>
     For example:
     <pre class="terminal">$ cf service my-follower --guid
-    82ddc607-710a-404e-b1b8-a7e3ea7ec063
+      12345678-90ab-cdef-1234-567890abcdef
     </pre>
-1. Record the information needed to SSH onto the <%= vars.ops_manager %> VM by following the
+1. Obtain the credentials and IP address needed to SSH into the <%= vars.ops_manager %> VM by following the
   procedure in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather).
-1. SSH onto the <%= vars.ops_manager %> VM by following the procedures in
+1. SSH into the <%= vars.ops_manager %> VM by following the procedures in
 [SSH into <%= vars.ops_manager %>](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
 
 1. From the <%= vars.ops_manager %> VM, log in to your BOSH Director by following the procedure in
