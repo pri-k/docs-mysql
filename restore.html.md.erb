@@ -333,29 +333,6 @@ To restore an HA cluster:
     ```
     rm -rf /var/vcap/store/mysql/*
     ```
-1. Delete MySQL users and service bindings from the database by running:
-
-    ```
-    DELETE FROM mysql.user WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
-
-    DELETE FROM mysql.db WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
-
-    DELETE FROM mysql.procs_priv WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
-
-    DELETE FROM mysql.columns_priv WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
-
-    DELETE FROM mysql.proxies_priv WHERE User NOT IN ('mysql.session', 'mysql.sys');
-
-    DELETE FROM mysql.tables_priv WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
-
-    DROP TABLE IF EXISTS cf_metadata.bindings;
-    ```
-
-    <p class="note"><strong>Note:</strong>
-      If you do not delete users and service bindings from the database before restaging your app,
-      the backup artifact includes users and bindings from the previous service instance.
-      These users and bindings are not valid for the new service instance.
-      </p>
 
 1. Move the compressed backup file to the node using `scp`.
 1. Decrypt and expand the file and send the output to TAR by running:
@@ -382,6 +359,40 @@ To restore an HA cluster:
     watch monit summary
     ```
 
+1. Delete MySQL users and service bindings from the database by running:
+
+    ```
+    DELETE FROM mysql.user WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
+
+    DELETE FROM mysql.db WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
+
+    DELETE FROM mysql.procs_priv WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
+
+    DELETE FROM mysql.columns_priv WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
+
+    DELETE FROM mysql.proxies_priv WHERE User NOT IN ('mysql.session', 'mysql.sys');
+
+    DELETE FROM mysql.tables_priv WHERE User NOT IN ('mysql.session', 'mysql.sys'); 
+
+    DROP TABLE IF EXISTS cf_metadata.bindings;
+    ```
+
+    <p class="note"><strong>Note:</strong>
+      If you do not delete users and service bindings from the database before restaging your app,
+      the backup artifact includes users and bindings from the previous service instance.
+      These users and bindings are not valid for the new service instance.
+      </p>
+1. Recreate your users and service bindings for your new service instance by running:
+
+    ```
+    monit start all
+    ```
+
+1. Watch the summary until all jobs are listed as `running` by running:
+
+    ```
+    watch monit summary
+    ```
 
 ## <a id="restage"></a> Restage the Service Instance
 
