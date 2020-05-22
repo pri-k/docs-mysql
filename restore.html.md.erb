@@ -317,12 +317,12 @@ To restore an HA cluster:
     sudo su
     ```
 
-1. Pause the local database server by running:
+1. Pause the `galera-init` job by running:
 
     ```
     monit stop galera-init
     ```
-1. Confirm that all jobs are listed as `not monitored` by running:
+1. Confirm that the `galera-init` job is listed as `not monitored` by running:
 
     ```
     watch monit summary
@@ -347,13 +347,13 @@ To restore an HA cluster:
      ```
 
      MySQL expects the data directory to be owned by a particular user.
-1. Start all services with `monit` by running:
+1. Start the `galera-init` job by running:
 
     ```
     monit start galera-init
     ```
 
-1. Watch the summary until all jobs are listed as `running` by running:
+1.1. Confirm that the `galera-init` job is listed as `running` by running:
 
     ```
     watch monit summary
@@ -388,7 +388,7 @@ To restore an HA cluster:
     monit start galera-init
     ```
 
-1. Watch the summary until all jobs are listed as `running` by running:
+1. Confirm that the `galera-init` job is listed as `not monitored` by running:
 
     ```
     watch monit summary
