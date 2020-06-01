@@ -27,10 +27,11 @@ See [Restore from an Off-Platform Logical Backup](#external).
 In most cases, if you want to copy a <%= vars.product_short %> database you should use the `migrate` command.
 For information about using the `migrate` command, see [About Data Migration in <%= vars.product_short %>](./about-migrate.html).
 
-The operator configures automated physical backups of your MySQL database.
-Developers do not have access to physical backups.
+You can create a physical backup by following the procedure in [Backing up and Restoring <%= vars.product_full %> ](./backup-restore.html#backup).
+
+Additionally, operators can configure automated physical backups of your MySQL database.
 For information about automated backups configured by operators,
-see [Backing Up <%= vars.product_full %>](./backup.html).
+see [Configuring Automated Backups](./automated-backup.html).
 
 <p class="note"><strong>Note:</strong> When you take a logical backup, <%= vars.product_short %>
 does not send an email notification. You only receive notifications for automated backups. </p>
