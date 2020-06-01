@@ -26,6 +26,12 @@ before upgrading to the latest v<%= current_version %>.x version.
 
 New features and changes in this release:
 
++ **Improved backup and restore workflow:**
+Operators and developers can use the Cloud Foundry Command Line Interface (cf CLI) to back up and
+restore service instances.
+For more information,
+see [Backing up and Restoring <%= vars.product_full %>](./backup-restore.html).
+
 ### Security Fix
 
 This release includes the following security update:
@@ -33,6 +39,7 @@ This release includes the following security update:
 ### Known Issues
 
 This release has the following issues:
+
 <%= partial vars.path_to_partials + "/mysql/ki-multi-site-not-supported" %>
 <%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
