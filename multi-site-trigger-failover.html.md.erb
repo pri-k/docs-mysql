@@ -12,7 +12,7 @@ The topic describes how to trigger a failover and switchover
 ##<a id='overview'></a> Overview
 
 You can trigger a failover or switchover to redirect traffic to a secondary foundation.
-You can only trigger a failover and switchover in <%= vars.product_short %> v2.7.3 and later.
+You can only trigger a failover or switchover in <%= vars.product_short %> v2.7.3 and later.
 
 For information about when to trigger a failover or switchover,
 see [About Failover and Switchover](./about-multi-site.html#failover-switchover).
@@ -20,7 +20,7 @@ see [About Failover and Switchover](./about-multi-site.html#failover-switchover)
 Before you trigger a failover or switchover, you must verify that the follower service instance
 is healthy. See [Verify Follower Health](#verify) below.
 
-<p class="note"><strong>Note:</strong> The procedures in this topic assume you created the leader service instance in
+<p class="note"><strong>Note:</strong> The procedures in this topic assume that you created the leader service instance in
 the primary foundation and the follower service instance in the secondary foundation.
 </p>
 
@@ -53,11 +53,11 @@ To verify the service instance:
     </pre>
 1. Obtain the credentials and IP address needed to SSH into the <%= vars.ops_manager %> VM by following the
   procedure in [Gather Credential and IP Address Information](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#gather).
-1. SSH into the <%= vars.ops_manager %> VM by following the procedures in
-[SSH into <%= vars.ops_manager %>](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
+1. SSH into the <%= vars.ops_manager %> VM by following the procedure in
+[Log in to the <%= vars.ops_manager %> VM with SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#ssh).
 
 1. From the <%= vars.ops_manager %> VM, log in to your BOSH Director by following the procedure in
-[Log in to the BOSH Director](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
+[Authenticate with the BOSH Director VM](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#log-in).
 
 1. View the health of the service instance by running:
 
@@ -67,12 +67,12 @@ To verify the service instance:
 
     For example:
 
-    <pre class="terminal">$ bosh -d service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063 instance
+    <pre class="terminal">$ bosh -d service-instance_12345678-90ab-cdef-1234-567890abcdef instance
         Using environment 'https<span>:</span>//10.0.0.6:25555' as client 'admin'
 
         Task 21409. Done
 
-        Deployment 'service-instance_82ddc607-710a-404e-b1b8-a7e3ea7ec063'
+        Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef'
 
         Instance                                    Process State  AZ  IPs
         mysql/1373022d-4eab-46d3-8fd1-a12067edf597  running        z2  10.0.17.14
