@@ -6,8 +6,9 @@ owner: MySQL
 <strong><%= modified_date %></strong>
 
 This topic describes how to back up and restore a <%= vars.product_full %> service instance.
+Both operators and developers can use the procedures in this topic.
 
-An operator can configure automated backups by following the procedures in
+Operators can configure automated backups by following the procedures in
 [Configuring Automated Backups](./automated-backup.html).
 
 Additionally, developers can create logical backups using `mysqldump`.
@@ -19,18 +20,16 @@ You can back up and restore a <%= vars.product_short %> service instance using t
 Cloud Foundry Command Line Interface (cf CLI).
 The backup artifacts you create in this topic are physical backups.
 The following procedures do not create logical backup artifacts.
-Restoring a physical backup is faster than restoring a logical backup.
+Restoring a physical backup is faster than restoring a logical backup and
+has less downtime. 
 
-You might want to create a physical backup in the following use cases:
+You might want to backup a service instance in the following use cases:
 
-+
-
-Restoring <%= vars.product_short %> from backup is a manual process primarily intended for
-disaster recovery.
-
-dev-enabled troubleshooting and testing - restore to a dif foundation
-before potentially destructive operations (scary) (schema changes)
-dev-enabled disaster recovery unplanned stuff
++ Disaster recovery
++ Troubleshooting
++ Testing
++ Preparation for potentially destructive operations (schema changes)
++ All nodes for l-f and HA are down ?
 
 <p class="note"><strong>Note:</strong> VMware recommends
   that you always configure a single instance plan to streamline the backup and
