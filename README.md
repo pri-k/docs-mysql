@@ -27,7 +27,7 @@ Docs for MySQL for [VMware Tanzu](https://network.pivotal.io/products/pivotal-cf
 
 ## Where is the book repository?
 
-The book repo associated with this content repo is **docs-book-mysql** (https://github.com/pivotal-cf/docs-book-mysql).
+The book repo associated with this content repo is [**docs-book-mysql**](https://github.com/pivotal-cf/docs-book-mysql).
 
 ## Partials
 
