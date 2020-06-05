@@ -414,16 +414,18 @@ after enabling lowercase table names.</p>
 
 ###<a id="backups"></a> Configure Backups
 
-To configure automated backups:
+To learn how backups work, see [About Backups](./automated-backup.html#overview).
 
-<p class="note"><strong>Note:</strong> You must configure automated backups. Automated backups can no longer be disabled.</p>
+To configure backups:
+
+<p class="note"><strong>Note:</strong> You must configure backups.
+  You cannot disable this feature.
+</p>
 
 1. Click **Backups**.
 
     <%= image_tag("backups.png", :alt => "The radio buttons for backup configuration are
         Ceph or Amazon S3, SCP, GCS, and Azure.", :width => "200") %>
-
-1. To learn how automated backups work, see [About Automated Backups](./automated-backup.html#overview).
 
 1. Select a **Backup configuration** and do the procedure for your storage solution in _Backing Up and Restoring_:
   * **Ceph or Amazon S3:** <%= vars.product_short %> runs an [Amazon S3](https://aws.amazon.com/documentation/s3/) client

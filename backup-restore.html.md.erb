@@ -8,8 +8,8 @@ owner: MySQL
 This topic describes how to back up and restore a <%= vars.product_full %> service instance.
 Both operators and developers can use the procedures in this topic.
 
-Operators can configure automated backups by following the procedures in
-[Configuring Automated Backups](./automated-backup.html).
+Operators can configure backups in the <%= vars.product_short %> tile by following the procedures in
+[Configuring Backups](./automated-backup.html).
 
 Additionally, developers can create logical backups using `mysqldump`.
 For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldump.html).
@@ -21,15 +21,14 @@ Cloud Foundry Command Line Interface (cf CLI).
 The backup artifacts you create in this topic are physical backups.
 The following procedures do not create logical backup artifacts.
 Restoring a physical backup is faster than restoring a logical backup and
-has less downtime. 
+has less downtime.
 
-You might want to backup a service instance in the following use cases:
+You might want to backup and restore a service instance in the following use cases:
 
 + Disaster recovery
 + Troubleshooting
 + Testing
-+ Preparation for potentially destructive operations (schema changes)
-+ All nodes for l-f and HA are down ?
++ Preparation for potentially destructive operations such as schema changes
 
 <p class="note"><strong>Note:</strong> VMware recommends
   that you always configure a single instance plan to streamline the backup and
@@ -66,6 +65,12 @@ least as large as the persistent disk of your largest leader-follower.
 
 For information about persistent disk sizing recommendations,
 see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
+
+<p class="note"> <strong>Note:</strong> You cannot use the procedure in this section to restore a backup that was created with
+<%= vars.product_short %> v2.8 and earlier.
+To restore an older backup, follow the procedures in
+<a href="http://docs-pcf-staging.cfapps.io/p-mysql/2-8/restore.html">Restoring MySQL for VMware Tanzu</a>.
+</p>
 
 To restore a service instance:
 

@@ -5,9 +5,9 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to configure automated backups for <%= vars.product_full %>.
+This topic describes how to configure backups for <%= vars.product_full %>.
 
-You can restore an automated backup by following the procedures in
+You can restore a backup by following the procedures in
 [Restore a Service Instance](./backup-restore.html#restore).
 
 Additionally, developers can create logical backups using `mysqldump`.
@@ -26,7 +26,8 @@ including the calendar time of the backup.
 Unencrypted data is never transferred outside the <%= vars.product_short %> deployment.
 
 <p class="note"><strong>Note:</strong>
-  You must configure automated backups. Automated backups cannot be disabled.
+  You must configure backups in the <%= vars.product_short %> tile.
+  You cannot be disable this feature.
 </p>
 
 ### <a id="understanding-metadata"></a> Backup Files and Metadata
@@ -87,7 +88,7 @@ You configure this schedule with a cron expression.
 For information about cron expressions, see
 [CRON expression](https://en.wikipedia.org/wiki/Cron#CRON_expression) on Wikipedia.
 
-To configure automated backups, follow the procedure for your external storage solution:
+To configure backups, follow the procedure for your external storage solution:
 
 + [Back up Using SCP](#scp)
 + [Back up to Amazon S3 or Ceph](#ceph-or-s3)
@@ -99,7 +100,7 @@ To configure automated backups, follow the procedure for your external storage s
 Secure copy protocol (SCP) enables operators to use any storage solution
 on the destination VM. This is the fastest method for backing up your database.
 
-When you configure automated backups with SCP,
+When you configure backups with SCP,
 <%= vars.product_short %> runs an SCP command that securely copies backups to a VM
 or physical machine operating outside of your deployment.
 The operator provisions the backup machine separately from their installation.
@@ -233,7 +234,7 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
 
 ## <a id="ceph-or-s3"></a> Back up to Amazon S3 or Ceph
 
-When you configure automated backups for Amazon S3 or Ceph,
+When you configure backups for Amazon S3 or Ceph,
 <%= vars.product_short %> runs an Amazon S3 client that saves the backups to one of the following:
 
 + an Amazon S3 bucket
@@ -409,7 +410,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 acco
 
 ## <a id="gcs"></a> Back up to GCS
 
-When you configure automated backups for a Google Cloud Storage (GCS) bucket,
+When you configure backups for a Google Cloud Storage (GCS) bucket,
 <%= vars.product_short %> runs a GCS SDK that saves backups to a GCS bucket.
 
   For information about GCS buckets,
@@ -519,7 +520,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your GCS acc
 
 ## <a id="azure"></a> Back up to Azure Storage
 
-When you configure automated backups for Azure Storage,
+When you configure backups for Azure Storage,
 <%= vars.product_short %> runs an Azure SDK that saves backups to an Azure storage account.
 
 For information about Azure Storage,
