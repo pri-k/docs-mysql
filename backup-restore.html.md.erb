@@ -23,7 +23,7 @@ The following procedures do not create logical backup artifacts.
 Restoring a physical backup is faster than restoring a logical backup and
 has less downtime.
 
-You might want to backup and restore a service instance in the following use cases:
+You might want to backup or restore a service instance in the following use cases:
 
 + Disaster recovery
 + Troubleshooting
@@ -117,7 +117,7 @@ To restore a service instance:
 
     <pre class="terminal">$ watch cf adbr get-status myTargetDB
       Getting status of service instance myTargetDB in org my-org / space my-space as user...
-      [Mon May 18 18:08:25 UTC 2020] Status: </pre>
+      [Fri Jun 5 22:29:24 UTC 2020] Status: Restore was successful </pre>
 
 1. If you are restoring a leader-follower or HA cluster service instance,
     update the plan by running:
