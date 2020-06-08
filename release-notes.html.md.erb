@@ -22,27 +22,6 @@ before upgrading to the latest v<%= current_version %>.x version.
 
 **Release Date: May 21, 2020**
 
-v2.8.1 uses the following component versions:
-
-<table border="1" class="nice">
-  <thead>
-  <tr>
-    <th>Component</th>
-    <th>Version</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr><td>Stemcell</td><td>621.74*</td></tr>
-  <tr><td>Percona Server</td><td>5.7.28-31</td></tr>
-  <tr><td>Percona XtraDB Cluster</td><td>5.7.28-31.41</td></tr>
-  <tr><td>Percona XtraBackup</td><td>2.4.20*</td></tr>
-  <tr><td>mysql-backup-release</td><td>2.14.0*</td></tr>
-  <tr><td>mysql-monitoring-release</td><td>9.13.0*</td></tr>
-  <tr><td>pxc-release</td><td>0.26.0*</td></tr>
-    <td colspan="2"><em>* Components marked with an asterisk have been updated.</em></td>
-  </tbody>
-</table>
-
 ### Features
 New features and changes in this release:
 
@@ -80,30 +59,30 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
 
-## <a id="2-8-0"></a> v2.8.0
 
-**Release Date: April 16, 2020**
+### Compatibility
 
-v2.8.0 uses the following component versions:
+The following components are compatible with this release:
 
 <table border="1" class="nice">
-  <thead>
   <tr>
     <th>Component</th>
     <th>Version</th>
   </tr>
-  </thead>
-  <tbody>
-  <tr><td>Stemcell</td><td>621.61</td></tr>
+  <tr><td>Stemcell</td><td>621.74*</td></tr>
   <tr><td>Percona Server</td><td>5.7.28-31</td></tr>
   <tr><td>Percona XtraDB Cluster</td><td>5.7.28-31.41</td></tr>
-  <tr><td>Percona XtraBackup</td><td>2.4.18 and 2.4.15</td></tr>
-  <tr><td>mysql-backup-release</td><td>2.13.0</td></tr>
-  <tr><td>mysql-monitoring-release</td><td>9.11.0</td></tr>
-  <tr><td>pxc-release</td><td>0.24.0</td></tr>
-    <td colspan="2"><em>* Components marked with an asterisk have been updated.</em></td>
-  </tbody>
+  <tr><td>Percona XtraBackup</td><td>2.4.20*</td></tr>
+  <tr><td>mysql-backup-release</td><td>2.14.0*</td></tr>
+  <tr><td>mysql-monitoring-release</td><td>9.13.0*</td></tr>
+  <tr><td>pxc-release</td><td>0.26.0*</td></tr>
 </table>
+
+&#42; _Components marked with an asterisk have been updated_
+
+## <a id="2-8-0"></a> v2.8.0
+
+**Release Date: April 16, 2020**
 
 ### Features
 
@@ -188,6 +167,26 @@ This release has the following issues:
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
 <%= partial vars.path_to_partials + "/mysql/enable-lowercase" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+
+### Compatibility
+
+The following components are compatible with this release:
+
+<table border="1" class="nice">
+  <tr>
+    <th>Component</th>
+    <th>Version</th>
+  </tr>
+  <tr><td>Stemcell</td><td>621.61</td></tr>
+  <tr><td>Percona Server</td><td>5.7.28-31</td></tr>
+  <tr><td>Percona XtraDB Cluster</td><td>5.7.28-31.41</td></tr>
+  <tr><td>Percona XtraBackup</td><td>2.4.18 and 2.4.15</td></tr>
+  <tr><td>mysql-backup-release</td><td>2.13.0</td></tr>
+  <tr><td>mysql-monitoring-release</td><td>9.11.0</td></tr>
+  <tr><td>pxc-release</td><td>0.24.0</td></tr>
+</table>
+
+&#42; _Components marked with an asterisk have been updated_
 
 ## <a id="view"></a> View Release Notes for Another Version
 
