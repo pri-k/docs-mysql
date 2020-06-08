@@ -29,6 +29,14 @@ Unencrypted data is never transferred outside the <%= vars.product_short %> depl
   You must configure automated backups. Automated backups cannot be disabled.
 </p>
 
+<p class="note warning"><strong>Warning:</strong>
+  If <%= vars.product_short %> fails to upload a backup, the backup artifact remains on the persistent disk.
+  This can cause the persistent disk to fill up faster.
+  If the persistent disk is full, apps become inoperable.
+  For instructions on how to troubleshoot persistent disk errors,
+  see <a href="./troubleshoot.html#persistent-disk">Persistent Disk is Full</a>.
+</p>
+
 ### <a id="understanding-metadata"></a> Backup Files and Metadata
 
 When <%= vars.product_short %> runs a backup,
@@ -233,7 +241,7 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
 
 ## <a id="ceph-or-s3"></a> Back up to Amazon S3 or Ceph
 
-<p class="warning note"><strong>Warning:</strong> For <%= vars.product_short %> v2.7.5 and v2.7.6, 
+<p class="warning note"><strong>Warning:</strong> For <%= vars.product_short %> v2.7.5 and v2.7.6,
 backups do not upload to s3 external storage. Configure a different external storage option.</p>
 
 When you configure automatic backups for Amazon S3 or Ceph,
