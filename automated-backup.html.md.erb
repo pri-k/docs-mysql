@@ -1,5 +1,5 @@
 ---
-title: Configuring Automated Backups
+title: Configuring Backups
 owner: MySQL
 ---
 
@@ -13,16 +13,16 @@ You can restore a backup by following the procedures in
 Additionally, developers can create logical backups using `mysqldump`.
 For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldump.html).
 
-## <a id="overview"></a>About Automated Backups
+## <a id="overview"></a>About Backups
 
-Automated backups do the following:
+When you configure backups, <%= vars.product_full %>:
 
-- Periodically create and upload backups for restoring all of the databases used
+- Periodically creates and uploads backups for restoring all of the databases used
 by a service instance.
-- Operate without locking apps out of the database. There is no downtime.
-- Include a metadata file that contains the critical details for the backup,
+- Operates without locking apps out of the database. There is no downtime.
+- Includes a metadata file that contains the critical details for the backup,
 including the calendar time of the backup.
-- Encrypt backups within the <%= vars.product_short %> VM.
+- Encrypts backups within the <%= vars.product_short %> VM.
 Unencrypted data is never transferred outside the <%= vars.product_short %> deployment.
 
 <p class="note"><strong>Note:</strong>
@@ -78,7 +78,7 @@ However backups only reflect transactions that are completed before the `start_t
   This is a known issue.
 </p>
 
-### <a id="enable-backups"></a> About Configuring Automated Backups
+### <a id="enable-backups"></a> About Configuring Backups
 
 You can configure <%= vars.product_short %> to automatically back up databases to external storage.
 <%= vars.product_short %> backs up the entire data directory for each service instance.
