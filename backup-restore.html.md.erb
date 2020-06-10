@@ -42,12 +42,12 @@ To back up a service instance:
 1. Back up your service instance by running:
 
     ```
-    cf adbr backup SERVICE-INSTANCE
+    cf adbr backup SOURCE-INSTANCE
     ```
 1. View the status of the backup process by running:
 
     ```
-    watch cf adbr get-status SERVICE-INSTANCE
+    watch cf adbr get-status SOURCE-INSTANCE
     ```
 
     For example:
@@ -85,7 +85,7 @@ To restore a service instance:
 1. View the available backup artifacts for your service instance by running:
 
     ```
-    cf adbr list-backups SERVICE-INSTANCE
+    cf adbr list-backups SOURCE-INSTANCE
     ```
 
     For example:
@@ -145,10 +145,10 @@ To restore a service instance:
 1. If an app is currently bound to a service instance, unbind it by running:
 
     ```
-    cf unbind-service APP-NAME OLD-INSTANCE-NAME
+    cf unbind-service APP-NAME SOURCE-INSTANCE
     ```
 
-    Where `OLD-INSTANCE-NAME` is the instance you backed up in
+    Where `SOURCE-INSTANCE` is the instance you backed up in
     [Back up a Service Instance](#backup) above.
 
     <%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
