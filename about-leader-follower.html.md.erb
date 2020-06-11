@@ -5,16 +5,46 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how the leader-follower topology works in <%= vars.product_full %>.
+This topic describes how the leader-follower topology works in <%= vars.product_full %>
 and contains information to help users decide whether to enable or use leader-follower.
 
-## <a id='about-lf'></a> About Leader-Follower
+## <a id='overview'></a> Overview
 
 The leader-follower topology increases the availability of a MySQL database by
 deploying two MySQL VMs in two separate availability zones (AZs).
 When a developer creates a leader-follower service instance, the on-demand broker
 deploys a leader VM in one AZ,
 and a follower VM in another AZ.
+
+A leader-follower topology enables operators to initiate a
+failover and send app traffic to the follower if the leader fails.
+This ensures that the app bound to the MySQL database continues to function normally.
+
+The follower VM is only for increasing availability
+and is not exposed to developers to increase read throughput.
+Developers who want increased read throughput can configure `workload` profiles.
+For more information, see [About Workload Types](./change-default.html#workload).
+
+The following diagram shows a leader-follower service instance in two availability
+zones (AZs):
+
+<!-- Edit in Google Slides: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing-->
+
+![Leader-Follower Topology](l-f.png)
+
+<a href="./images/l-f.png" target="_blank">View a larger version of this diagram</a>
+
+## <a id="failover"></a>About Failover
+
+<%= vars.product_short %> focuses on data consistency rather than availability.
+Therefore, it does not trigger failover automatically,
+but relies on operators to trigger a failover.
+When an operator triggers a failover, the follower is promoted to the leader and
+app traffic is sent to the follower.
+
+For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
+
+## <a id='about-sync'></a> About Synchronous Replication
 
 By default, any data that is written to the leader is asynchronously replicated to
 the follower.
@@ -26,32 +56,20 @@ By default, the timeout for sync replication is set to approximately 292 million
 This means that the leader always waits for the follower to confirm receipt of the
 transaction.
 
-For more information about sync replication,
-see [About Synchronous Replication](./change-default.html#synchronous-replication).
+For information about enabling sync replication,
+see [Synchronous Replication for Leader-Follower](./change-default.html#synchronous-replication).
 
-A leader-follower topology enables operators to initiate a
-failover and send app traffic to the follower if the leader fails.
-This ensures that the app bound to the MySQL database continues to function normally.
+## <a id="errands"></a>About Leader-Follower Errands
 
-The follower VM is only for increasing availability
-and is not exposed to developers to increase read throughput.
-Developers who want increased read throughput can configure `workload` profiles.
-For more information, see [About Workload Types](./change-default.html#workload).
+<%= vars.product_short %> automates orchestrating the standard lifecycle of creating, updating,
+and deleting leader-follower service instances.
 
-For high-level information on the leader-follower process,
-see [Leader-Follower Setup and Failover Process](./maintain-leader-follower.html#process).
+In addition, <%= vars.product_short %> provides three leader-follower errands.
+An operator can use them to control the lifecycle of a leader-follower service instance
+and manually intervene, when necessary, without being an expert at MySQL.
 
-<p class="note"><strong>Note</strong>: The term leader-follower is analogous to master-slave.</p>
-
-The following diagram shows a leader-follower service instance in two availability
-zones (AZs):
-
-<!-- Edit in Google Slides: https://docs.google.com/presentation/d/1G-4BYAt0TI7XIXlS8ahHWzgnAZX6-8Ux9B9y73JV9u4/edit?usp=sharing-->
-
-![Leader-Follower Topology](l-f.png)
-
-<a href="./images/l-f.png" target="_blank">View a larger version of this diagram</a>
-
+For more information,
+see [Errands Used in Leader-Follower Failover](./leader-follower-failover.html#errands).
 
 ## <a id="iaas"></a> Infrastructure Requirements for Leader-Follower Deployments
 
@@ -83,30 +101,3 @@ the operator must ensure leader-follower-specific network rules are also set up 
 
 For information about the standard networking rules,
 see [Required Networking Rules for On-Demand Services](./about.html#rules).
-
-## <a id='enable-use-lf'></a>Enabling and Using Leader-Follower
-
-For information on enabling and using leader-follower,
-see [Using Leader-Follower Topology For Availability](./maintain-leader-follower.html).
-
-
-## <a id="failover"></a>About Failover
-
-<%= vars.product_short %> focuses on data consistency rather than availability.
-Therefore, it does not trigger failover automatically,
-but relies on operators to trigger a failover.
-When an operator triggers a failover, app traffic is sent to the follower.
-
-For more information, see [Triggering a Leader-Follower Failover](./leader-follower-failover.html).
-
-## <a id="errands"></a>About Leader-Follower Errands
-
-<%= vars.product_short %> automates orchestrating the standard lifecycle of creating, updating,
-and deleting leader-follower service instances.
-
-In addition, <%= vars.product_short %> provides three leader-follower errands.
-An operator can use them to control the lifecycle of a leader-follower service instance
-and manually intervene, when necessary, without being an expert at MySQL.
-
-For more information,
-see [Errands Used in Leader-Follower Failover](./leader-follower-failover.html#errands).
