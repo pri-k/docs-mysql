@@ -153,14 +153,14 @@ To ensure that connections are open, see the table below:
 				8081
 		</td>
 		<td>This port is needed if leader-follower is enabled.
-				For more information, see <a href="maintain-leader-follower.html#config-plan">Configure a Leader-Follower Service Plan</a>.<br><br>
+				For more information, see <a href="about-leader-follower.html#networking">Networking Rules</a>.<br><br>
 				The communication between these VMs is two-way.</td>
 	</tr>
 </table>
 
 <h3> <a id='hac-ports'></a> Required Networking Rules for Highly Available (HA) Cluster Plans </h3>
 
-If you are using a HA cluster service plan, the operator must set network rules in addition 
+If you are using a HA cluster service plan, the operator must set network rules in addition
 to the networking rules required for <%= vars.product_short %>.
 
 To ensure that connections are open, see the table below:
@@ -217,7 +217,7 @@ To ensure that connections are open, see the table below:
 
 <%= partial '../../p-mysql/partials/mysql/multi_site_beta' %>
 
-If you are using <%= vars.single_leader_plan_lc %>, the operator must set network rules for 
+If you are using <%= vars.single_leader_plan_lc %>, the operator must set network rules for
 both foundations in addition to the networking rules required for <%= vars.product_short %>.
 
 To ensure that connections are open in both foundations, see the table below:
