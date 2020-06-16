@@ -189,7 +189,7 @@ To prepare a new service instance for restore:
 1. Monitor the status of the service instance creation by running:
 
     ```
-    cf service NEW-INSTANCE-NAME
+    watch cf service NEW-INSTANCE-NAME
     ```
     Where `NEW-INSTANCE-NAME` is the name of the new service instance.
 
@@ -198,21 +198,22 @@ To prepare a new service instance for restore:
     ```
     cf service NEW-INSTANCE-NAME --guid
     ```
-    Where `NEW-INSTANCE-NAME` is the name of the new service instance.
 
-1. From the <%= vars.ops_manager %> VM, find and record the new instance name and GUID from BOSH by
-    running:
-
-    ```
-    bosh -e BOSH-ENVIRONMENT  -d BOSH-DEPLOYMENT instances
-    ```
-    For example:
-    <pre class="terminal">
-    bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
-    </pre>
+1. Log in to the <%= vars.ops_manager %> VM by following the procedure in
+[Log in to the <%= vars.ops_manager %> VM with SSH](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh).
 
 1. If you created a HA cluster service instance to restore to,
 modify the deployment manifest to scale the instances to one:
+  1. Download the manifest file by running:
+
+        ```
+        bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
+         manifest > PATH-TO-MANIFEST.yml
+        ```
+        Where `GUID` is the service instance GUID you recorded in the above step.
+        For example:
+        <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
+           manifest > ./manifest.yml</pre>
   1. Update the instance group for your new service instance as follows:
 
         ```yaml
@@ -225,24 +226,43 @@ modify the deployment manifest to scale the instances to one:
   1. Redeploy the deployment manifest by running:
 
         ```
-        bosh -e BOSH-ENVIRONMENT -d BOSH-DEPLOYMENT  deploy PATH-TO-MANIFEST.yml
+        bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
+         deploy PATH-TO-MANIFEST.yml
         ```
         For example:
 
-        <pre class="terminal">
-        bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
-        </pre>
+        <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
+          deploy ./manifest.yml</pre>
+1. Find and record the BOSH instance GUID for your service instance by running :
 
+      ```
+  bosh -e BOSH-ENVIRONMENT -d service-instance_GUID instances
+      ```
+      Where `GUID` is the service instance GUID you recorded in the above step.
+      <br><br>
+      For example:
+      <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef instances
+     Deployment 'service-instance_12345678-90ab-cdef-1234-567890abcdef' <br>
+     Instance                                    Process State  AZ             IPs
+     mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c  running        us-central1-a  10.0.8.10
+     1 instances</pre>
+
+     The BOSH instance GUID is the value after `mysql/`.
 1. Copy the downloaded backup to the new service instance by running:
 
     ```
-    bosh -e BOSH-ENVIRONMENT   \
-    -d BOSH-DEPLOYMENT scp mysql-backup-TIMESTAMP.tar.gpg BOSH-INSTANCE:DESTINATION-PATH
+    bosh -e BOSH-ENVIRONMENT  -d service-instance_GUID \
+      scp mysql-backup-TIMESTAMP.tar.gpg \
+      mysql/BOSH-INSTANCE-GUID:DESTINATION-PATH
     ```
-    Where:<br>
-    - `BOSH-INSTANCE` is `mysql/INSTANCE-GUID`. For example, `mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c`.
-    - `DESTINATION-PATH` is where the backup file saves on the BOSH VM. For example, `/tmp/`.
+    Where:
+    -  `BOSH-INSTANCE-GUID` is the BOSH instance GUID you recorded in the previous step.
+    - `DESTINATION-PATH` is where the backup file saves on the BOSH VM.
 
+    For example:
+    <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
+        scp mysql-backup-TIMESTAMP.tar.gpg \
+        mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c:/tmp/</pre>
 
 ## <a id="restore-instance"></a> Restore the Service Instance
 
