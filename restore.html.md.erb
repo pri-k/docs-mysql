@@ -114,18 +114,18 @@ see the documentation for your backup provider to download the backup.
 </p>
 
 To download the backup artifact from an Amazon S3 bucket using the command line interface (CLI):
+1. From the <%= vars.ops_manager %> VM, download the deployment manifest file by running:
 
-1. From the <%= vars.ops_manager %> VM,
-download the manifest for the service instance deployment by specifying the deployment name
-as `service-instance_GUID` and a filename for the manifest.
-For example:
-  <pre class="terminal">
-   $ bosh -e my-env \
-   -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
-   manifest > ./manifest.yml
-  </pre>
+      ```
+      bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
+       manifest > PATH-TO-MANIFEST.yml
+      ```
+      Where `GUID` is the service instance GUID you recorded in the above step.
+      For example:
+      <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
+         manifest > ./manifest.yml</pre>
 
-4. Record the following properties from the download manifest:
+4. Record the following properties from the deployment manifest:
   * `properties.service-backup.destinations[0].config.bucket_name`:
   This is the bucket where the backups are uploaded.
   * `properties.service-backup.destinations[0].config.bucket_path`:
@@ -219,12 +219,9 @@ To prepare a new service instance for restore:
     cf service NEW-INSTANCE-NAME --guid
     ```
 
-1. Log in to the <%= vars.ops_manager %> VM by following the procedure in
-[Log in to the <%= vars.ops_manager %> VM with SSH](https://docs.pivotal.io/pivotalcf/2-4/customizing/trouble-advanced.html#ssh).
-
 1. If you created a HA cluster service instance to restore to,
 modify the deployment manifest to scale the instances to one:
-  1. Download the manifest file by running:
+  1. From the <%= vars.ops_manager %> VM, download the deployment manifest file by running:
 
         ```
         bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
@@ -253,7 +250,7 @@ modify the deployment manifest to scale the instances to one:
 
         <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
           deploy ./manifest.yml</pre>
-1. Find and record the BOSH instance GUID for your service instance by running :
+1. From the <%= vars.ops_manager %> VM, find and record the BOSH instance GUID for your service instance by running :
 
       ```
   bosh -e BOSH-ENVIRONMENT -d service-instance_GUID instances
@@ -442,7 +439,7 @@ leader-follower plan, update the plan by running:
   1. Redeploy the deployment manifest by running:
 
         ```
-        bosh -e BOSH-ENVIRONMENT  -d BOSH-DEPLOYMENT  deploy PATH-TO-MANIFEST.yml
+        bosh -e BOSH-ENVIRONMENT -d service-instance_GUID  deploy PATH-TO-MANIFEST.yml
         ```
 
         For example:
