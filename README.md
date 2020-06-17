@@ -1,7 +1,7 @@
 docs-mysql
 ==========
 
-Docs for MySQL for [Pivotal Platform](https://network.pivotal.io/products/pivotal-cf)
+Docs for MySQL for Pivotal Platform
 
 ## Which branch to use?
 
