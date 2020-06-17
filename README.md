@@ -1,7 +1,7 @@
 docs-mysql
 ==========
 
-Docs for MySQL for [VMware Tanzu](https://network.pivotal.io/products/pivotal-cf)
+Docs for MySQL for VMware Tanzu
 
 ## Which branch to use?
 
