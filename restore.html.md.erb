@@ -114,11 +114,12 @@ see the documentation for your backup provider to download the backup.
 </p>
 
 To download the backup artifact from an Amazon S3 bucket using the command line interface (CLI):
+
 1. From the <%= vars.ops_manager %> VM, download the deployment manifest file by running:
 
       ```
-      bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
-       manifest > PATH-TO-MANIFEST.yml
+    bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
+     manifest > PATH-TO-MANIFEST.yml
       ```
       Where `GUID` is the service instance GUID you recorded in the above step.
       For example:
@@ -435,8 +436,8 @@ leader-follower plan, update the plan by running:
           ...
           instances: 3    # Scale instances to 3
           ...
-         ```
-  1. Redeploy the deployment manifest by running:
+        ```
+  1. From the <%= vars.ops_manager %> VM, redeploy the deployment manifest by running:
 
         ```
         bosh -e BOSH-ENVIRONMENT -d service-instance_GUID  deploy PATH-TO-MANIFEST.yml
