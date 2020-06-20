@@ -84,6 +84,9 @@ To restore a service instance:
     cf adbr list-backups SOURCE-INSTANCE
     ```
 
+    Where `SOURCE-INSTANCE` is an instance you backed up in
+    [Back up a Service Instance](#backup) above.
+
     For example:
     <pre class="terminal">$ cf adbr list-backups myDB
       Getting backups of service instance myDB in org my-org / space my-space as user...
@@ -143,9 +146,6 @@ To restore a service instance:
     ```
     cf unbind-service APP-NAME SOURCE-INSTANCE
     ```
-
-    Where `SOURCE-INSTANCE` is the instance you backed up in
-    [Back up a Service Instance](#backup) above.
 
     <%= partial vars.path_to_partials + "/mysql/rebind-warning" %>
 
