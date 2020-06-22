@@ -23,7 +23,7 @@ Docs for MySQL for VMware Tanzu
 | 1.10        | DEPRECATED. DO NOT USE. |
 | 1.9         | v1.9.x — PDFed: https://docs.pivotal.io/archives/mysql-docs-1.9.pdf |
 
-**Note**: Branches v1.9 through v1.4, v2.0 and v2.1 are no longer published as live documentation. However, documentation for those versions of PDFs is available as PDFs.
+**Note**: Branches v1.9 through v1.4, v2.0, v2.1 and v2.2 are no longer published as live documentation. However, documentation for those versions of PDFs is available as PDFs.
 
 ## Where is the book repository?
 
