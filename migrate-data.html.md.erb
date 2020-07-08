@@ -155,7 +155,6 @@ These values usually include:
   - `name`: the name of source database.
   - `username` and `password`: the database account credentials.
   - `port`: The port number for the database. This number is usually `3306`.
-  - `uri`: The query string for database access.
 
     If your off-platform database is a <%= vars.product_short %> service instance, these values are in your
     `VCAP_SERVICES` environment variable credentials hash. For more information,
@@ -167,12 +166,11 @@ These values usually include:
     ```
    Where:
    * `CF-DB-INSTANCE` is the name that you want to give to the new database service instance that you are migrating to.
-   * `CREDS-STRUCT` is a JSON structure that contains the off-platform database access values  you recorded in the above step.
+   * `CREDS-STRUCT` is a JSON structure that contains the off-platform database access values you recorded in the above step.
    <br><br>
    For example:
    <pre class="terminal noselect">$ cf cups migrating-db -p '{"hostname": "34.192.88.212", "name": "my\_db", \
-   "username": "root", "password": "P455w0rD", "port": "3306", \
-   "uri": "mysql<span>:</span>//root:P455w0rD<span>@</span>34.192.88.212:3306/my_db",}' <br>
+   "username": "root", "password": "P455w0rD", "port": 3306}' <br>
    Creating user provided service migrating-db in org my-org / space my-space as admin...
    OK
    </pre>
