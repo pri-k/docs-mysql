@@ -323,17 +323,17 @@ To create a user-provided service instance to access the off-platform database, 
     ```
     cf cups CF-DB-INSTANCE -p CREDS-STRUCT
     ```
-   Where:
-   * `CF-DB-INSTANCE` is the name that you want to give to the new database service instance that you are migrating to.
-   * `CREDS-STRUCT` is a JSON structure that contains the off-platform database access values above.
-   <br><br>
-   For example:
-   <pre class="terminal noselect">
-   $ cf cups migrating-db -p '{"hostname": "34.192.88.212", "name": "my_db", \
-   "username": "root", "password": "P455w0rD", "port": 3306}'
-   Creating user provided service migrating-db in org my-org / space my-space as admin...
-   OK
-   </pre>
+    Where:
+    * `CF-DB-INSTANCE` is the name that you want to give to the new database service instance that you are migrating to.
+    * `CREDS-STRUCT` is a JSON structure that contains the off-platform database access values above.
+
+    For example:
+    <pre class="terminal noselect">
+    $ cf cups migrating-db -p '{"hostname": "34.192.88.212", "name": "my_db", \
+    "username": "root", "password": "P455w0rD", "port": 3306}'
+    Creating user provided service migrating-db in org my-org / space my-space as admin...
+    OK
+    </pre>
 
     <p class="note"><strong>Note</strong>:
       <code>cf cups</code> is a shortcut for the <code>cf create-user-provided-service</code> command.
@@ -368,7 +368,7 @@ that use it:
               cf stop APP
               ```
 
-              Where `APP` is the name of your app.
+              Where `APP` is the name of your app.<br><br>
 
               For example:
               <pre class="terminal">
@@ -444,11 +444,11 @@ Run the following command:
     ```
     cf bind-service APP V2-INSTANCE
     ```
-    <br>
+
     Where:
     * `APP` is the name of your app.
     * `V2-INSTANCE` is the name of your MySQL for PCF v2.x service instance.
-    <br><br>
+
     For example:
     <pre class="terminal">
     $ cf bind-service my-app my-v2-instance
@@ -475,7 +475,6 @@ If your source database is deployed on PCF, perform the deletion by running the 
   ```
   cf delete-service SOURCE-INSTANCE
   ```
-  <br>
   Where `SOURCE-INSTANCE` is the name of your old database instance.
 
   For example:
