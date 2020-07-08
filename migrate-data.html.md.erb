@@ -317,7 +317,6 @@ To create a user-provided service instance to access the off-platform database, 
   - `name`: Name of source database
   - `username` and `password`: Database account credentials
   - `port`: Typically `3306`
-  - `uri`: Query string for database access
 
 1. Create a Cloud Foundry user-provided service instance that accesses the off-platform database:
 
@@ -331,8 +330,7 @@ To create a user-provided service instance to access the off-platform database, 
    For example:
    <pre class="terminal noselect">
    $ cf cups migrating-db -p '{"hostname": "34.192.88.212", "name": "my_db", \
-   "username": "root", "password": "P455w0rD", "port": "3306", \
-   "uri": "mysql<span>:</span>//root:P455w0rD<span>@</span>34.192.88.212:3306/my_db",}'
+   "username": "root", "password": "P455w0rD", "port": 3306}'
    Creating user provided service migrating-db in org my-org / space my-space as admin...
    OK
    </pre>
