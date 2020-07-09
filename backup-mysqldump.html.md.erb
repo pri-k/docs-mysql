@@ -37,26 +37,6 @@ see [Configuring Backups](./automated-backup.html).
 <p class="note"><strong>Note:</strong> When you take a logical backup, <%= vars.product_short %>
 does not send an email notification.</p>
 
-## <a id="about-automated-backup"></a>About Automated Backups
-
-Automated backups do the following:
-
-- Periodically create and upload backups for restoring all of the databases used
-by a service instance.
-- Operate without locking apps out of the database. There is no downtime.
-- Include a metadata file that contains the critical details for the backup,
-including the calendar time of the backup.
-- Encrypt backups within the <%= vars.product_short %> VM.
-Unencrypted data is never transferred outside the <%= vars.product_short %> deployment.
-- A developer can change the backup schedule for an individual service instance using 
-an arbitrary parameter. For more information, see [Backup Schedule](./change-default.html#backup-schedule).
-
-
-<p class="note"><strong>Note:</strong>
-  You must configure automated backups. Automated backups cannot be disabled.
-</p>
-
-
 
 ## <a id="manual-backup"></a> Back Up and Restore a <%= vars.product_short %> Logical Backup
 
