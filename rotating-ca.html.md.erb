@@ -3,23 +3,6 @@ title: Rotating Certificates
 owner: MySQL
 ---
 
-<div class="quick-links">
-<ul>
-  <li>
-    <a href="#overview">Types of Certificates</a>
-  </li>
-  <li>
-    <a href="#mysql-certs">Certificates Used by <%= vars.product_short %></a>
-  </li>
-  <li>
-    <a href="#workflow">Workflow</a>
-  </li>
-  <%= partial vars.path_to_partials + "/certs/rotating-certs-toc.html.erb" %>
-  <li>
-    <a href="#internal">Rotate Internal Certificates</a>
-  </li>
-</ul>
-</div>
 
 <strong><%= modified_date %></strong>
 
@@ -135,7 +118,7 @@ To rotate your certificates:
     This rotates both the TLS certificates and the internal certificates.
   * **If only your internal certificates are about to expire or have expired:** Do the procedure in [Rotate Internal Certificates ](#internal) below.
 
-<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => vars.product_short } %>
+<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :maestro_incompatible => true } %>
 
 
 ## <a id="internal"></a> Rotate Internal Certificates
