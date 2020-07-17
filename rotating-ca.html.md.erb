@@ -3,24 +3,6 @@ title: Rotating Certificates
 owner: MySQL
 ---
 
-<div class="quick-links">
-<ul>
-  <li>
-    <a href="#overview">Types of Certificates</a>
-  </li>
-  <li>
-    <a href="#mysql-certs">Certificates Used by <%= vars.product_short %></a>
-  </li>
-  <li>
-    <a href="#workflow">Workflow</a>
-  </li>
-  <%= partial vars.path_to_partials + "/certs/rotating-certs-toc.html.erb" %>
-  <li>
-    <a href="#internal">Rotate Internal Certificates</a>
-  </li>
-</ul>
-</div>
-
 <strong><%= modified_date %></strong>
 
 This topic describes how to check expiration dates and rotate certificates used by MySQL for PCF.
@@ -54,7 +36,7 @@ The following table lists the certificates used by MySQL for PCF:
 
 <table>
   <tr>
-    <th width="75%"">Certificate</th>
+    <th width="75%">Certificate</th>
     <th>Rotated by MySQL for PCF?</th>
   </tr>
 
@@ -159,7 +141,7 @@ To rotate your certificates:
   * **If your internal certificates for single node or leader-follower service instances are about to expire or have expired:** Do the procedure in [Rotate Internal Certificates](#internal) below.<br><br>
   * **If only your internal certificates for HA clusters are about to expire or have expired:** Upgrade to MySQL for PCF v2.7.
   See [Upgrading MySQL for PCF](https://docs.pivotal.io/p-mysql/2-7/upgrade.html).
-<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => "MySQL for PCF" } %>
+<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :maestro_incompatible => true, :compatible_om_versions => ["2.7", "2.8"] } %>
 
 
 ## <a id="internal"></a> Rotate Internal Certificates
