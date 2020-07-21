@@ -14,7 +14,6 @@ owner: MySQL
   <li>
     <a href="#workflow">Workflow</a>
   </li>
-  <%= partial vars.path_to_partials + "/certs/rotating-certs-toc.html.erb" %>
   <li>
     <a href="#internal">Rotate Internal Certificates</a>
   </li>
@@ -130,9 +129,11 @@ To rotate your certificates:
 1. Determine which of your certificates are expiring. See [Check Expiration Dates](#check) below.
 1.  If any of your certificates are about to expire or have expired, do one of the following:
   * **If your TLS certificates are about to expire or have expired:**
-    Do the procedures in [Rotate CA Certificates Manually](#tls) below.
+    Do the procedures in [Rotate Services TLS Certificate Authority](#tls) below.
     This rotates both the TLS certificates and the internal certificates.
   * **If only your internal certificates are about to expire or have expired:** Do the procedure in [Rotate Internal Certificates ](#internal) below.
+
+## <a id="tls"></a> Rotate Services TLS Certificate Authority
 
 <%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => vars.product_short } %>
 
