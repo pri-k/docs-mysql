@@ -3,6 +3,25 @@ title: Rotating Certificates
 owner: MySQL
 ---
 
+<<<<<<< HEAD
+=======
+<div class="quick-links">
+<ul>
+  <li>
+    <a href="#overview">Types of Certificates</a>
+  </li>
+  <li>
+    <a href="#mysql-certs">Certificates Used by <%= vars.product_short %></a>
+  </li>
+  <li>
+    <a href="#workflow">Workflow</a>
+  </li>
+  <li>
+    <a href="#internal">Rotate Internal Certificates</a>
+  </li>
+</ul>
+</div>
+>>>>>>> 748cf32... Add header for new cert rotation [#173803270]
 
 <strong><%= modified_date %></strong>
 
@@ -114,11 +133,15 @@ To rotate your certificates:
 1. Determine which of your certificates are expiring. See [Check Expiration Dates](#check) below.
 1.  If any of your certificates are about to expire or have expired, do one of the following:
   * **If your TLS certificates are about to expire or have expired:**
-    Do the procedures in [Rotate CA Certificates Manually](#tls) below.
+    Do the procedures in [Rotate Services TLS Certificate Authority](#tls) below.
     This rotates both the TLS certificates and the internal certificates.
   * **If only your internal certificates are about to expire or have expired:** Do the procedure in [Rotate Internal Certificates ](#internal) below.
 
+
+## <a id="tls"></a> Rotate Services TLS Certificate Authority
+
 <%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :maestro_incompatible => true } %>
+
 
 
 ## <a id="internal"></a> Rotate Internal Certificates
