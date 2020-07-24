@@ -5,7 +5,7 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to configure backups for <%= vars.product_full %>.
+This topic describes how to configure automated backups for <%= vars.product_full %>.
 
 You can restore a backup by following the procedures in
 [Restore a Service Instance](./backup-restore.html#restore).
@@ -16,7 +16,7 @@ For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldum
 
 ## <a id="overview"></a>About Backups
 
-When you configure backups, <%= vars.product_full %>:
+Automated backups do the following:
 
 - Periodically create and upload backups for restoring all of the databases used
 by a service instance.
@@ -25,7 +25,8 @@ by a service instance.
 including the calendar time of the backup.
 - Encrypt backups within the <%= vars.product_short %> VM.
 Unencrypted data is never transferred outside the <%= vars.product_short %> deployment.
-- A developer can change the backup schedule for an individual service instance using 
+- Run at scheduled time. Operators configure the default schedule in <%= vars.ops_manager %>.
+Developers can change the backup schedule for an individual service instance using
 an arbitrary parameter. For more information, see [Backup Schedule](./change-default.html#backup-schedule).
 
 <p class="note"><strong>Note:</strong>
@@ -94,7 +95,7 @@ However backups only reflect transactions that are completed before the `start_t
 You can configure <%= vars.product_short %> to automatically back up databases to external storage.
 <%= vars.product_short %> backs up the entire data directory for each service instance.
 
-<%= vars.product_short %> back ups your database on a schedule.
+<%= vars.product_short %> backs up your database on a schedule.
 You configure this schedule with a cron expression.
 For information about cron expressions, see
 [CRON expression](https://en.wikipedia.org/wiki/Cron#CRON_expression) on Wikipedia.
