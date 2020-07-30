@@ -8,9 +8,10 @@ owner: MySQL
 
 This topic describes how to check expiration dates and rotate certificates used by <%= vars.product_full %>.
 
+
 ## <a id="tls"></a> Rotate Services TLS Certificate Authority
 
-<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => vars.product_short } %>
+<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :maestro_incompatible => true } %>
 
 
 ## <a id="mysql-certs"></a> Certificates Used by <%= vars.product_short %>
