@@ -9,87 +9,73 @@ owner: MySQL
 This topic describes how to check expiration dates and rotate certificates used by MySQL for PCF.
 
 
+## <a id="tls"></a> Rotate Services TLS Certificate Authority
+
+<%= partial vars.path_to_partials + "/certs/rotating-certs", :locals => { :local_product_name => vars.product_short } %>
+
+
 ## <a id="mysql-certs"></a> Certificates Used by <%= vars.product_short %>
 
+
+This section describes each certificate used by <%= product.short %>.
+]
+
+The following table lists the certificates used by <%= vars.product_short %>:
 
 <table>
   <tr>
     <th width="75%">Certificate</th>
     <th>Rotated by MySQL for PCF?</th>
   </tr>
-
-  <tr>
-    <th colspan="2">TLS Certificates</th>
-  </tr>
-
   <tr>
     <td><code>/services/tls_ca</code></td>
     <td>No</td>
   </tr>
-
   <tr>
     <td><code>/p-bosh/service-instance_GUID/mysql_tls</code></td>
     <td>No</td>
   </tr>
-
-  <tr>
-    <th colspan="2">Internal HA Certificates</th>
-  </tr>
-
   <tr>
     <td><code>/p-bosh/service-instance_GUID/pxc_tls_ca</code></td>
+    <td><code>/p-bosh/service-instance_GUID/agent_client_tls</code></td>
     <td>No</td>
   </tr>
-
   <tr>
     <td><code>/p-bosh/service-instance_GUID/pxc_tls_server</code></td>
     <td>No</td>
   </tr>
-
   <tr>
     <td><code>/p-bosh/service-instance_GUID/pxc_internal_ca</code></td>
     <td>No</td>
   </tr>
-
-  <tr>
-    <th colspan="2">Internal Single Node and Leader Follower Certificates</th>
-  </tr>
-
   <tr>
     <td><code>/p-bosh/pivotal-mysql_GUID/agent_ca_2_6_x</code></td>
-      <td>Yes</td>
+      <td>No</td>
   </tr>
-
   <tr>
     <td><code>/p-bosh/pivotal-mysql_GUID/agent_client_ssl_2_6_x</code></td>
-    <td>Yes</td>
+    <td>No</td>
   </tr>
-
   <tr>
     <td><code>/p-bosh/pivotal-mysql_GUID/agent_server_ssl_2_6_x</code></td>
-    <td>Yes</td>
+    <td>No</td>
   </tr>
-
     <tr>
       <td><code>/p-bosh/service-instance_GUID/agent_ca</code></td>
-      <td>Yes</td>
+      <td>No</td>
     </tr>
-
     <tr>
       <td><code>/p-bosh/service-instance_GUID/agent_client_tls</code></td>
-      <td>Yes</td>
+      <td>No</td>
     </tr>
-
     <tr>
       <td><code>/p-bosh/service-instance_GUID/agent_server_tls</code></td>
-      <td>Yes</td>
+      <td>No</td>
     </tr>
-
       <tr>
         <td><code>/p-bosh/service-instance_GUID/streaming_backup_ca</code></td>
         <td>Yes</td>
       </tr>
-
       <tr>
         <td><code>/p-bosh/service-instance_GUID/streaming_backup_server_cert</code></td>
         <td>Yes</td>
@@ -99,3 +85,6 @@ This topic describes how to check expiration dates and rotate certificates used 
 In the above table, `GUID` is the GUID for the service instance. To find the GUID
 of your service instance, do the procedure in
 [Find Information about Your Service Instance](./troubleshoot-instances.html#instance).
+
+If you are using PXC-type database, <%= vars.product_short %> rotates the Galera certificate by renaming it.
+
