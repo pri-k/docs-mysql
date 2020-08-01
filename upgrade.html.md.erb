@@ -55,6 +55,8 @@ For more information, see
 For more information about this <%= vars.ops_manager %> page,
 see [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).
 
+1. For the <%= vars.product_short %> tile, enable the **Register On-demand MySQL Broker** errand if the errand is not already enabled.
+
 1. Click **Apply Changes**.
 
 Upgrading the <%= vars.product_short %> service and service instances can temporarily interrupt
@@ -80,6 +82,8 @@ Developers cannot create new bindings to service instances that have not been up
 
 Developers can upgrade individual service instances by following the procedure in
 [Upgrade a Single Service Instance](./use.html#single).
+
+You must ensure that the `register-broker` is run during upgrades. For more information about the `register-broker` errand, see [register-broker](.//errands.html#register-broker).
 
 ## <a id="interruptions"></a>Service Interruptions
 
