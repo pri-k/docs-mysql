@@ -371,43 +371,8 @@ To migrate a service instance to another plan:
 
 ### <a id="single"></a> Upgrade a Single Service Instance
 
-<p class="note"><strong>Note:</strong>
-  Before you individually upgrade service instances you must have cf CLI v6.46.0 or later.
-</p>
+<%= partial vars.path_to_partials + '/services/devs-can-upgrade-one-si' %>
 
-You can use `cf update-service` with the `--upgrade` flag to individually upgrade service instances to the latest
-version of <%= vars.product_short %>.
-When you upgrade a service instance, you do not need to rebind your app or service keys.
-However, when you upgrade a service instance the database is unavailable for several minutes.
-
-For more information about using `cf update-service`,
-see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
-
-To upgrade a single service instance:
-
-1. Confirm that an upgrade is available for the service instance by running:
-
-    ```
-    cf services
-    ```
-
-    The upgrade is available when the `upgrade available` column in the output says `yes`.
-    <br><br>
-    For example:
-
-    <pre class="terminal">$ cf services
-    Getting services in org system / space system as admin...
-
-    name         service    plan      bound apps    last operation    broker                    upgrade available
-    my-instance  p.mysql    db-small                create succeeded  dedicated-mysql-broker    yes</pre>
-
-1. Upgrade the service instance by running:
-
-    ```
-    cf update-service SERVICE-INSTANCE --upgrade
-    ```
-
-1. When prompted, confirm that you want to upgrade.
 
 ###<a id="share"></a> Share Service Instances
 
