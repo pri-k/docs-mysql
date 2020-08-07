@@ -63,18 +63,9 @@ Upgrading the <%= vars.product_short %> service and service instances can tempor
 the service.
 For more information, see [Service Interruptions](#interruptions) below.
 
-### <a id="individual-upgrades"></a> Upgrade an Individual Service Instance
-
-<p class=note><strong>Note:</strong> Before developers can upgrade an individual service instance you
-  must use <%= vars.app_runtime_full %> v2.7 or later.
-</p>
+### <a id="individual-upgrades"></a> About Individual Service Instance Upgrades
 
 <%= partial vars.path_to_partials + '/services/devs-can-upgrade-one-si' %>
-
-Developers can upgrade individual service instances by following the procedure in
-[Upgrade a Single Service Instance](./use.html#single).
-
-You must ensure that the `register-broker` is run during upgrades. For more information about the `register-broker` errand, see [register-broker](.//errands.html#register-broker).
 
 ## <a id="interruptions"></a>Service Interruptions
 

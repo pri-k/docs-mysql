@@ -25,8 +25,6 @@ before upgrading to the latest v<%= current_version %>.x version.
 ### Features
 New features and changes in this release:
 
-<%= partial vars.path_to_partials + '/services/you-can-upgrade-one-si' %>
-
 + **Filenames for backup artifacts include an instance UUID:**
 Operators can use this UUID to differentiate between the leader and follower backup artifacts.
 
@@ -107,13 +105,8 @@ see [Backing up <%= vars.product_short %>](./backup.html) and [Restoring <%= var
 service instances in realtime using `cf tail`.
 
 #### Additional New Features
-+ **Individual Service Instance Upgrades:**
-Developers can upgrade <%= vars.product_short %> service instances individually using the
-Cloud Foundry Command Line Interface (cf CLI).
-For more information about this feature,
-see [About Individual Service Instance Upgrades](./upgrade.html#individual-upgrades).
-For instructions for individually upgrading service instances,
-see [Upgrade a Single Service Instance](./use.html#single).
+
+<%= partial vars.path_to_partials + '/services/you-can-upgrade-one-si' %>
 
 + **Telemetry Data:** <%= vars.product_short %> sends Telemetry data when the Telemetry tile is enabled in your foundation.
   For more information about the Telemetry tile,
