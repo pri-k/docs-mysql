@@ -3,7 +3,6 @@ title: Rotating Certificates
 owner: MySQL
 ---
 
-
 <strong><%= modified_date %></strong>
 
 This topic describes how to check expiration dates and rotate certificates used by MySQL for PCF.
@@ -15,8 +14,6 @@ This topic describes how to check expiration dates and rotate certificates used 
 
 
 ## <a id="mysql-certs"></a> Certificates Used by <%= vars.product_short %>
-
-This section describes each certificate used by <%= vars.product_short %>.
 
 The following table lists the certificates used by <%= vars.product_short %>:
 
@@ -80,7 +77,7 @@ The following table lists the certificates used by <%= vars.product_short %>:
 </table>
 
 In the above table, `GUID` is the GUID for the service instance. To find the GUID
-of your service instance, do the procedure in
+for your service instance, follow the procedure in
 [Find Information about Your Service Instance](./troubleshoot-instances.html#instance).
 
-If you are using PXC-type database, <%= vars.product_short %> rotates the Galera certificate by renaming it.
+If you are using a PXC-type database, <%= vars.product_short %> rotates the Galera certificate by renaming it.
