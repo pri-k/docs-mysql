@@ -387,15 +387,20 @@ The table below describes how to use the `backup-schedule` optional parameter:
 
   <tr>
     <th><strong>Description</strong></th>
-    <td>Enter a cron expression using standard syntax. The cron expression sets the backup schedule for your service instance. For example, entering a cron expression of <code>0 15 10 ? * *</code> triggers a backup 
-    10:15 AM every day. For more information about how to configure cron expressions, 
-    see <a href="https://docs.oracle.com/cd/E12058_01/doc/doc.1014/e12030/cron_expressions.htm">Oracle documentation</a>.
-  </td>
+    <td>
+      Enter a cron expression using standard syntax.
+      The cron expression sets the backup schedule for your service instance.
+      For example, entering a cron expression of <code>0 15 10 ? * *</code> triggers a backup 10:15 AM every day.
+      For information about cron expressions, see
+      <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">Wikipedia</a>.
+      <p class="note">
+        <strong>Note:</strong>Configuring a cron expression overrides the default schedule for your service instance.
+      </p>
+    </td>
   </tr>
 
   <tr>
     <th><strong>Usage</strong></th>
     <td><code>create-service</code> or <code>update-service</code></td>
   </tr>
-
 </table>
