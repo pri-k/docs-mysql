@@ -41,6 +41,8 @@ This is a word list for terminology and word usage specific to the VMware Tanzu 
 
 | Word | Explanation |
 |------|-------------|
+| adbr plugin | This is the short form of the ApplicationDataBackupRestore plugin. Use the short form in headings and after the first use in body text. |
+| ApplicationDataBackupRestore (adbr) plugin | First use in body text for the adbr plugin. |
 | CA certificate | A primary(?) certificate that is signed by a certificate authority. |
 | certificate | generic word, there are TLS certificates, internal certificates, CA certificates |
 | highly available cluster | No need to capitalize. Don't mix with "high availability cluster" or Galera. Galera happens to be the technology right now, but highly available cluster is the topology. You can abbreviate to HA cluster after spelling out on first use. Don't use "HAC". |
