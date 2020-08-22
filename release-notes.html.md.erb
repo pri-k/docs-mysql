@@ -41,6 +41,11 @@ For more information, see [Backup Schedule](./change-default.html#backup-schedul
 + When Secure copy protocol (SCP) is configured as the external storage to upload backups,
 it now relies on SSH File Transfer Protocol (SFTP).
 
++ All service instances are provisioned with a DNS alias to be used as the hostname
+in new service keys and the common name for the MySQL server certificate.
+
++ Legacy workflow to enable TLS on a service instance has been removed. All MySQL connectors should
+be able to use the DNS alias to connect to the service instance over TLS.
 
 ### Known Issues
 
