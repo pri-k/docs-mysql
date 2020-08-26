@@ -31,12 +31,11 @@ Restoring a <%= vars.product_short %> service instance replaces all of its data 
 
 To restore a <%= vars.product_short %> instance from a backup:
 
-1. [If Restoring a Backup from a Deleted Service Instance](#lost-instance)
 1. [Identify and Download the Backup Artifact](#download)
-1. [Retrieve Backup Encryption Key](#retrieve-key)
-1. [Create and Prepare a New Service Instance for Restore](#prepare)
-1. [Restore the Service Instance](#restore-instance)
-1. [Restage the Service Instance](#restage)
+2. [Retrieve Backup Encryption Key](#retrieve-key)
+3. [Create and Prepare a New Service Instance for Restore](#prepare)
+4. [Restore the Service Instance](#restore-instance)
+5. [Restage the Service Instance](#restage)
 
 ##<a id="download"></a> Identify and Download the Backup Artifact
 
@@ -76,7 +75,7 @@ and then download the backup artifact.
 3. Record the backup ID, which is the name of the TAR file without the `.tar` extension.
    In the example, the backup ID is `6c1db434-29ef-47c4-9f22-59fe53676b07_1598049440`. 
 
-4. Untar the backup artifact. Keep the file with the `tar.gpg` extension. 
+4. Untar the backup artifact. Keep the backup file with the `tar.gpg` extension.
 
     The file with the `.txt` extension is not needed.
 
@@ -128,7 +127,7 @@ and a timestamp for the backup.
    Your backup storage system is whatever you configured in [Configuring Backups](automated-backup.html).
    For example, it might be an S3 bucket or a file system on a backup host (SCP).
 
-4. Untar the backup artifact. Keep the file with the `tar.gpg` extension. 
+4. Untar the backup artifact. Keep the backup file with the `tar.gpg` extension.
 
     The file with the `.txt` extension is not needed.
 
@@ -138,7 +137,11 @@ Each backup artifact has its own encryption key, stored in <%= vars.app_runtime_
 
 To retrieve the backup encryption key:
 
-1. Find the GUID for the MySQL broker VM. HOW?
+1. To find the GUID for the MySQL service broker VM, run:
+
+    ```
+    bosh deployments
+    ```
 
 1. To SSH onto the broker VM, run:
 
@@ -152,7 +155,8 @@ To retrieve the backup encryption key:
 
     <pre class="terminal">$ bosh -d pivotal-mysql-f7f3ce3767943537c36a ssh</pre> 
 
-2. Set the path for the CredHub CLI and run the post-start script to log in to the <%= vars.runtime %> CredHub:
+2. Set the path for the CredHub CLI and run the post-start script to log in
+   to the <%= vars.runtime %> CredHub:
 
     ```
     export PATH=/var/vcap/packages/credhub-cli/bin:$PATH
@@ -162,8 +166,6 @@ To retrieve the backup encryption key:
     For example:
     <pre class="terminal">$ export PATH=/var/vcap/packages/credhub-cli/bin:$PATH
     $ /var/vcap/jobs/adbr-api/bin/post-start</pre>
-
-    [TK: Provide some additional output from this script]
 
 3. To obtain the encryption key for the backup, run:
 
@@ -212,8 +214,8 @@ To prepare a new service instance for restore:
         The plan you choose depends on the service instance topology you are
         restoring. If the topology you are restoring is:
           + **Single node or leader-follower:** Select a single node plan.
-          + **HA cluster:** Select a HA cluster plan.
-          + **<%= vars.single_leader_plan %>:** Select a <%= vars.single_leader_plan %> plan.
+          + **<%= vars.single_leader_plan %> or HA cluster:**
+              Select a <%= vars.single_leader_plan %> plan.
     + `NEW-INSTANCE-NAME` is the name of the new service instance.
 
     For more information, see [Create a Service Instance](./use.html#create).
@@ -231,37 +233,6 @@ To prepare a new service instance for restore:
     cf service NEW-INSTANCE-NAME --guid
     ```
 
-1. If you created a HA cluster service instance to restore to,
-modify the deployment manifest to scale the instances to one:
-  1. From the <%= vars.ops_manager %> VM, download the deployment manifest file by running:
-
-        ```
-        bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
-         manifest > PATH-TO-MANIFEST.yml
-        ```
-        Where `GUID` is the service instance GUID you recorded in the above step.
-        For example:
-        <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
-           manifest > ./manifest.yml</pre>
-  1. Update the instance group for your new service instance as follows:
-
-        ```yaml
-        instance_groups:
-        - name: mysql
-          ...
-          instances: 1    # Scale instances to 1
-          ...
-        ```
-  1. Redeploy the deployment manifest by running:
-
-        ```
-        bosh -e BOSH-ENVIRONMENT -d service-instance_GUID \
-         deploy PATH-TO-MANIFEST.yml
-        ```
-        For example:
-
-        <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
-          deploy ./manifest.yml</pre>
 1. From the <%= vars.ops_manager %> VM, find and record the BOSH instance GUID for your service instance by running:
 
       ```
@@ -281,19 +252,20 @@ modify the deployment manifest to scale the instances to one:
 
     ```
     bosh -e BOSH-ENVIRONMENT  -d service-instance_GUID \
-      scp mysql-backup-TIMESTAMP.tar.gpg \
+      scp mysql-backup-ID.tar.gpg \
       mysql/BOSH-INSTANCE-GUID:DESTINATION-PATH
     ```
-    [TK: Do the tar.gpg files have different names now? This is what we saw in S3] 
-    ![Sample backup from S3](DeleteMeBackupName.png)
+
     Where:
     - `GUID` is the service instance GUID.
+    - `mysql-backup-ID.tar.gpg` is the backup file you downloaded
+       in [Identify and Download the Backup Artifact](#download) above.
     - `BOSH-INSTANCE-GUID` is the BOSH instance GUID you recorded in the previous step.
     - `DESTINATION-PATH` is where the backup file saves on the BOSH VM.
 
     For example:
     <pre class="terminal">$ bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef \
-        scp mysql-backup-TIMESTAMP.tar.gpg \
+        scp mysql-backup-1595910545-b42f275a-c355-49c3-9e33-bda6fcf2ffd0.tar.gpg \
         mysql/d7ff8d46-c3e8-449f-aea7-5a05b0a1929c:/tmp/</pre>
 
 ## <a id="restore-instance"></a> Restore the Service Instance
@@ -333,15 +305,11 @@ in [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.htm
     Where:
     + `ENCRYPTION-KEY` is the backup encryption key you recorded in
         [Retrieve Backup Encryption Key](#retrieve-key) above.
-    + `RESTORE-FILE-PATH` is the full path on the MySQL VM where the backup artifact exists.
+    + `RESTORE-FILE-PATH` is the full path on the BOSH VM where the backup artifact exists.
     
-      [TK: is the above the "MySQL VM" or is it the "BOSH VM" mentioned in step 6 above?]
-
     For example:
 
-    <pre class="terminal">$ mysql-restore --encryption-key NWjbvbB3pjOC --restore-file RESTORE-FILE-PATH </pre>
-      [TK: Is this how the encryption key would look? and what would be the sample path,
-       can you infer it from the example in the previous procedure?]
+    <pre class="terminal">$ mysql-restore --encryption-key NWjbvbB3pjOC --restore-file /tmp/mysql-backup-mysql-backup-1595910545-b42f275a-c355-49c3-9e33-bda6fcf2ffd0.tar.gpg</pre>
 
 ## <a id="restage"></a> Restage the Service Instance
 
@@ -358,27 +326,12 @@ To restage your service instance:
     cf update-service NEW-INSTANCE-NAME -p LEADER-FOLLOWER-PLAN
     ```
 
-1. If you created a HA cluster service instance to restore to,
-    modify the downloaded deployment manifest to scale the instances to three:
-  1. Update the instance group for your new service instance as follows:
+1. If you are restoring a HA cluster service instance, update the plan by running:
 
-        ```yaml
-        instance_groups:
-        - name: mysql
-          ...
-          instances: 3    # Scale instances to 3
-          ...
-        ```
-  1. From the <%= vars.ops_manager %> VM, redeploy the deployment manifest by running:
+    ```
+    cf update-service NEW-INSTANCE-NAME -p HA-CLUSTER-PLAN
+    ```
 
-        ```
-        bosh -e BOSH-ENVIRONMENT -d service-instance_GUID  deploy PATH-TO-MANIFEST.yml
-        ```
-        For example:
-
-        <pre class="terminal">
-        bosh -e my-env -d service-instance_12345678-90ab-cdef-1234-567890abcdef deploy ./manifest.yml
-        </pre>
 1. If you are restoring a <%= vars.single_leader_plan %> service instance,
     you must re-establish replication:
       1. Create a follower <%= vars.single_leader_plan %> service instance by following the procedure in
