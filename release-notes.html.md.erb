@@ -30,13 +30,16 @@ New features and changes in this release:
 Operators and developers can use the ApplicationDataBackupRestore (adbr) plugin
 with the Cloud Foundry Command Line Interface (cf CLI) to back up and
 restore service instances.
-For more information, see [Backing up and Restoring <%= vars.product_full %>](./backup-restore.html).
+For more information, see [Backing up and Restoring <%= vars.product_full %>](./backup-restore.html)
+and [Manually Restoring from Backup](restore.html).
 
 + **A developer can change the backup schedule for an individual service instance using
 an arbitrary parameter:**
 For more information, see [Backup Schedule](./change-default.html#backup-schedule).
 
 + Each backup of any MySQL service instance now uses a unique encryption key.
+  For more information,
+  see [Retrieve Backup Encryption Key](restore.html#retrieve-key) in _Manually Restoring from Backup_.
 
 + When Secure copy protocol (SCP) is configured as the external storage to upload backups,
 it now relies on SSH File Transfer Protocol (SFTP).
