@@ -30,7 +30,8 @@ Restoring a <%= vars.product_short %> service instance replaces all of its data 
 
 
 To restore a <%= vars.product_short %> instance from a backup:
-[If Restoring a Backup from a Deleted Service Instance](#lost-instance)
+
+1. [If Restoring a Backup from a Deleted Service Instance](#lost-instance)
 1. [Identify and Download the Backup Artifact](#download)
 1. [Retrieve Backup Encryption Key](#retrieve-key)
 1. [Create and Prepare a New Service Instance for Restore](#prepare)
@@ -40,10 +41,12 @@ To restore a <%= vars.product_short %> instance from a backup:
 ##<a id="download"></a> Identify and Download the Backup Artifact
 
 The procedure you need to follow to find and download the backup artifact depends on whether
-or not the service instance has been deleted.
+or not the service instance was deleted.
 
-See [If Restoring a Backup from a Deleted Service Instance](#lost-instance)
-or [If Restoring to a Different Foundation](#different-foundation) as appropriate.
+Follow the procedure for your situation:
+
++ [If Restoring a Backup from a Deleted Service Instance](#lost-instance)
++ [If Restoring to a Different Foundation](#different-foundation)
 
 ### <a id="lost-instance"></a>If Restoring a Backup from a Deleted Service Instance
 
@@ -149,7 +152,7 @@ To retrieve the backup encryption key:
 
     <pre class="terminal">$ bosh -d pivotal-mysql-f7f3ce3767943537c36a ssh</pre> 
 
-2. Set the path for the CredHub CLI and run the post-start script to log into the <%= vars.runtime %> CredHub:
+2. Set the path for the CredHub CLI and run the post-start script to log in to the <%= vars.runtime %> CredHub:
 
     ```
     export PATH=/var/vcap/packages/credhub-cli/bin:$PATH
