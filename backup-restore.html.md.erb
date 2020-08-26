@@ -75,11 +75,27 @@ least as large as the persistent disk of the largest leader-follower plan.
 For information about persistent disk sizing recommendations,
 see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
 
-<p class="note"> <strong>Note:</strong> You cannot use the procedure in this section to restore a backup that was created with
-<%= vars.product_short %> v2.8 and earlier.
-To restore an older backup, follow the procedures in
-<a href="http://docs-pcf-staging.cfapps.io/p-mysql/2-8/restore.html">Restoring <%= vars.product_short %></a>.
-</p>
+There are some cases where you cannot use the procedure in this section.
+
+<table class="nice">
+<col width="50%">
+<col width="50%">
+	<th>Do not use the procedure in this section to restore a backup…</th>
+	<th>Instead, see…</th>
+	<tr>
+          <td>created with <%= vars.product_short %> v2.8 or earlier</td>
+          <td><a href="http://docs-pcf-staging.cfapps.io/p-mysql/2-8/restore.html">
+           Restoring <%= vars.product_short %></a>.</td>
+	</tr>
+	<tr>
+          <td>from a deleted service instance</td>
+          <td><a href="restore.html">Manually Restoring from Backup</a>.</td>
+	</tr>
+	<tr>
+          <td>to a different foundation</td>
+          <td><a href="restore.html">Manually Restoring from Backup</a>.</td>
+	</tr>
+</table>
 
 To restore a service instance:
 
