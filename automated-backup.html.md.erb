@@ -337,6 +337,9 @@ the previous step.
 
 Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 account.
 
+**Prerequisite:** Before beginning this procedure,
+you must have an S3 bucket in which to store the backups.
+
 1. In <%= vars.ops_manager %>, open the <%= vars.product_short %> tile **Backups** pane.
 
 1. Select **Ceph or Amazon S3**.
@@ -376,8 +379,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your S3 acco
                 <strong>Region</strong>
             </td>
             <td>
-                Enter the region where your bucket is located or the region where
-                you want a bucket to be created.
+                Enter the region where your bucket is located.
             </td>
         </tr>
         <tr>
