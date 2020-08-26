@@ -34,6 +34,10 @@ an arbitrary parameter. For more information, see [Backup Schedule](./change-def
   You cannot be disable this feature.
 </p>
 
+<p class="note"><strong>Note:</strong>
+  As of v2.9, only the leader node is backed up for a leader-follower deployment.
+</p>
+
 <p class="note warning"><strong>Warning:</strong>
   If <%= vars.product_short %> fails to upload a backup, the backup artifact remains on the persistent disk.
   This can cause the persistent disk to fill up faster.
