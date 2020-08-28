@@ -77,7 +77,8 @@ and then download the backup artifact.
 
 4. Untar the backup artifact. Keep the backup file with the `tar.gpg` extension.
 
-    The file with the `.txt` extension is not needed.
+    The file with the `.txt` extension  contains metadata to help identify the backup,
+    but this text file is not needed for the restore procedure.
 
 
 ### <a id="different-foundation"></a>If Restoring to a Different Foundation
@@ -129,7 +130,8 @@ and a timestamp for the backup.
 
 4. Untar the backup artifact. Keep the backup file with the `tar.gpg` extension.
 
-    The file with the `.txt` extension is not needed.
+    The file with the `.txt` extension  contains metadata to help identify the backup,
+    but this text file is not needed for the restore procedure.
 
 ##<a id="retrieve-key"></a> Retrieve Backup Encryption Key
 
@@ -252,13 +254,13 @@ To prepare a new service instance for restore:
 
     ```
     bosh -e BOSH-ENVIRONMENT  -d service-instance_GUID \
-      scp mysql-backup-ID.tar.gpg \
+      scp mysql-backup-STRING.tar.gpg \
       mysql/BOSH-INSTANCE-GUID:DESTINATION-PATH
     ```
 
     Where:
     - `GUID` is the service instance GUID.
-    - `mysql-backup-ID.tar.gpg` is the backup file you downloaded
+    - `mysql-backup-STRING.tar.gpg` is the backup file you downloaded
        in [Identify and Download the Backup Artifact](#download) above.
     - `BOSH-INSTANCE-GUID` is the BOSH instance GUID you recorded in the previous step.
     - `DESTINATION-PATH` is where the backup file saves on the BOSH VM.
@@ -309,7 +311,7 @@ in [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.htm
     
     For example:
 
-    <pre class="terminal">$ mysql-restore --encryption-key NWjbvbB3pjOC --restore-file /tmp/mysql-backup-mysql-backup-1595910545-b42f275a-c355-49c3-9e33-bda6fcf2ffd0.tar.gpg</pre>
+    <pre class="terminal">$ mysql-restore --encryption-key NWjbvbB3pjOC --restore-file /tmp/mysql-backup-1595910545-b42f275a-c355-49c3-9e33-bda6fcf2ffd0.tar.gpg</pre>
 
 ## <a id="restage"></a> Restage the Service Instance
 
