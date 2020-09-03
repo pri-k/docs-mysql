@@ -44,11 +44,11 @@ it now relies on SSH File Transfer Protocol (SFTP).
 
 + **All service instances are provisioned with a DNS alias:**
   This DNS alias is used as the hostname in new service keys.
-  Old services keys, which use the DNS address for the hostname, continue to work.
+  Old service keys, which use the DNS address for the hostname, continue to work.
 
 + **The legacy workflow to enable TLS on a service instance has been removed:**
   In the legacy workflow, which  was deprecated after MySQL for PCF v2.4,
-  developers had to run cf update-service to enable TLS on each service instance.
+  developers had to run `cf update-service` to enable TLS on each service instance.
   This workflow is no longer needed because MySQL connectors can use the DNS alias to connect
   to the service instance over TLS.
 
