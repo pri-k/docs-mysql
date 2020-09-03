@@ -37,10 +37,12 @@ and [Manually Restoring from Backup](restore.html).
 an arbitrary parameter:**
 For more information, see [Backup Schedule](./change-default.html#backup-schedule).
 
-+ Each backup of any MySQL service instance now uses a unique encryption key.
++ **Each backup artifact has a unique encryption key:**
+  Each backup of any MySQL service instance now uses a unique encryption key.
 
-+ When Secure copy protocol (SCP) is configured as the external storage to upload backups,
-it now relies on SSH File Transfer Protocol (SFTP).
++ **SCP backups use SFTP:**
+  When Secure copy protocol (SCP) is configured as the external storage to upload backups,
+  it now relies on SSH File Transfer Protocol (SFTP).
 
 + **All service instances are provisioned with a DNS alias:**
   This DNS alias is used as the hostname in new service keys.
@@ -58,9 +60,9 @@ This release has the following issues:
 
 <%= partial vars.path_to_partials + "/mysql/multi-site-network-name-ki" %>
 <%= partial vars.path_to_partials + "/mysql/ki-multi-site-not-supported" %>
-<%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
 <%= partial vars.path_to_partials + "/mysql/disable-plan-ki" %>
+<%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 
 
 ### Compatibility
