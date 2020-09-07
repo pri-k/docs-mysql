@@ -26,9 +26,6 @@ Restoring <%= vars.product_short %> from backup is a manual process primarily in
 disaster recovery or migrating data to a different foundation.
 Restoring a <%= vars.product_short %> service instance replaces all of its data and running state.
 
-
-
-
 To restore a <%= vars.product_short %> instance from a backup:
 
 1. [Identify and Download the Backup Artifact](#download)
@@ -51,7 +48,7 @@ Follow the procedure for your situation:
 
 If you are restoring a backup from a lost or deleted instance,
 you cannot follow the instructions in [Backing up and Restoring <%= vars.product_full %>](backup-restore.html)
-because you do not have the GUID for the service instance nor the timestamp for the backup. 
+because you do not have the GUID for the service instance nor the timestamp for the backup.
 
 The instructions on this section decribe how to find these things
 and then download the backup artifact.
@@ -59,8 +56,8 @@ and then download the backup artifact.
 1. Find the GUID of the service instance by searching the broker logs.
    For example, try searching the broker log for entries about deleted deployments:
 
-    <pre class="terminal">Description: delete deployment service_instance_<font color="red">6c1db434-29ef-47c4-9f22-59fe53676b07</font></pre> 
- 
+    <pre class="terminal">Description: delete deployment service_instance_<font color="red">6c1db434-29ef-47c4-9f22-59fe53676b07</font></pre>
+
     For information about broker logs,
     see [Access Broker and Instance Logs and VMs](troubleshoot.html#bosh-cf-access).
 
@@ -73,7 +70,7 @@ and then download the backup artifact.
    For example, `6c1db434-29ef-47c4-9f22-59fe53676b07_1598049440.tar`.
 
 3. Record the backup ID, which is the name of the TAR file without the `.tar` extension.
-   In the example, the backup ID is `6c1db434-29ef-47c4-9f22-59fe53676b07_1598049440`. 
+   In the example, the backup ID is `6c1db434-29ef-47c4-9f22-59fe53676b07_1598049440`.
 
 4. Untar the backup artifact. Keep the backup file with the `tar.gpg` extension.
 
@@ -105,7 +102,7 @@ and a timestamp for the backup.
 
     <pre class="terminal">$ cf service my-instance --guid
     6c1db434-29ef-47c4-9f22-59fe53676b07
-    </pre> 
+    </pre>
 
 2. List the backups available and determine the one you want to download:
 
@@ -121,7 +118,7 @@ and a timestamp for the backup.
     Getting backups of service instance <strong>my-instance</strong> in org…
     <strong>Backup ID                                         Time of Backup</strong>
     6c1db434-29ef-47c4-9f22-59fe53676b07_1598049440   Fri Aug 21 22:37:20 UTC 2020
-    </pre> 
+    </pre>
 
 3. If the service instance is running, download the backup tarfile.
    Your backup storage system is whatever you configured in [Configuring Backups](automated-backup.html).
@@ -154,7 +151,7 @@ To retrieve the backup encryption key:
 
     For example:
 
-    <pre class="terminal">$ bosh -d pivotal-mysql-f7f3ce3767943537c36a ssh</pre> 
+    <pre class="terminal">$ bosh -d pivotal-mysql-f7f3ce3767943537c36a ssh</pre>
 
 2. Set the path for the CredHub CLI and run the post-start script to log in
    to the <%= vars.runtime %> CredHub:
@@ -187,7 +184,7 @@ To retrieve the backup encryption key:
   version_created_at: "2020-08-21T22:37:20Z"
     </pre>
 
-4. Record the value of the password type.
+4. Record the value of the password.
    This is the backup encryption key that need when you restore the backup.
 
     In this example, it is `NWjbvbB3pjOC`.
@@ -307,7 +304,7 @@ in [BOSH SSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.htm
     + `ENCRYPTION-KEY` is the backup encryption key you recorded in
         [Retrieve Backup Encryption Key](#retrieve-key) above.
     + `RESTORE-FILE-PATH` is the full path on the BOSH VM where the backup artifact exists.
-    
+
     For example:
 
     <pre class="terminal">$ mysql-restore --encryption-key NWjbvbB3pjOC --restore-file /tmp/mysql-backup-1595910545-b42f275a-c355-49c3-9e33-bda6fcf2ffd0.tar.gpg</pre>
