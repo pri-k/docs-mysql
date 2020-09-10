@@ -1,5 +1,5 @@
 ---
-title: Backing up and Restoring VMware Tanzu SQL &#91;MySQL for VMs&#93;
+title: Backing Up and Restoring VMware Tanzu SQL &#91;MySQL for VMs&#93;
 owner: MySQL
 ---
 
@@ -67,15 +67,21 @@ To manually trigger a backup outside of the configured schedule:
 
 ## <a id="restore"></a> Restore a Service Instance
 
-You can only restore single node, leader-follower, and HA cluster backup artifacts
-to a single node service instance.
-Operators must ensure that the persistent disk in the single node plan is at
-least as large as the persistent disk of the largest leader-follower plan.
+You can only restore to a single node or a <%= vars.single_leader_plan %> service instance.
 
+If you want Leader-Follower topology,
+you upgrade the single node service instance to a Leader-Follower plan after you restore the backup.
+If you want HA cluster topology,
+you upgrade the <%= vars.single_leader_plan %> service instance to an HA cluster plan after you restore the backup.
+
+Operators must ensure that the persistent disk in the single node plan is at least as large
+as the persistent disk of the largest leader-follower plan. 
+Similarly, they must ensure that the persistent disk in the <%= vars.single_leader_plan %> plan
+is at least as large as the persistent disk of the largest HA cluster plan.
 For information about persistent disk sizing recommendations,
 see <a href="recommended.html#persistent"> Persistent Disk Usage</a>.
 
-There are some cases where you cannot use the procedure in this section.
+There are some cases where you cannot use the procedure below:
 
 <table class="nice">
 <col width="50%">
@@ -99,13 +105,23 @@ There are some cases where you cannot use the procedure in this section.
 
 To restore a service instance:
 
-1. Create a new service instance to restore to by running:
+1. Create a new MySQL service instance to restore to by running:
 
     ```
-    cf create-service p.mysql SINGLE-NODE-PLAN DESTINATION-INSTANCE
+    cf create-service p.mysql NEW-PLAN DESTINATION-INSTANCE
     ```
-    Where `DESTINATION-INSTANCE` is a name you choose to identify the service instance.
+
+    Where:
+    + `NEW-PLAN` is the name of the service plan for your new service instance.
+        The plan you choose depends on the service instance topology that you are
+        restoring. If the topology that you are restoring is:
+          + **Single node or leader-follower:** Select a single node plan.
+          + **<%= vars.single_leader_plan %> or HA cluster:**
+              Select a <%= vars.single_leader_plan %> plan.
+    + `DESTINATION-INSTANCE` is a name that you choose to identify the service instance.
+
     You restore the backup artifact to this service instance.
+    For more information, see [Create a Service Instance](./use.html#create).
 
 1. View the available backup artifacts for your service instance by running:
 
@@ -153,7 +169,7 @@ To restore a service instance:
     ```
     cf update-service DESTINATION-INSTANCE -p PLAN
     ```
-    Where `PLAN` is the plan for the topology you want to restore.
+    Where `PLAN` is the plan for the topology that you want to restore.
 
 1. Determine if your app is bound to a service instance by running:
 

@@ -7,7 +7,7 @@ owner: MySQL
 
 If you are restoring a service instance to the same foundation and you still have the original
 service instance, then follow the instructions
-in [Backing up and Restoring <%= vars.product_full %>](backup-restore.html).
+in [Backing Up and Restoring <%= vars.product_full %>](backup-restore.html).
 
 This topic describes how to manually restore a
 <%= vars.product_full %> service instance from a backup in the following cases:
@@ -47,7 +47,7 @@ Follow the procedure for your situation:
 ### <a id="lost-instance"></a>If Restoring a Backup from a Deleted Service Instance
 
 If you are restoring a backup from a lost or deleted instance,
-you cannot follow the instructions in [Backing up and Restoring <%= vars.product_full %>](backup-restore.html)
+you cannot follow the instructions in [Backing Up and Restoring <%= vars.product_full %>](backup-restore.html)
 because you do not have the GUID for the service instance nor the timestamp for the backup.
 
 The instructions on this section decribe how to find these things
@@ -82,7 +82,7 @@ and then download the backup artifact.
 
 If you have a backup of a service instance taken from one foundation,
 and you want to restore the backup to a different foundation,
-you cannot follow the instructions in [Backing up and Restoring <%= vars.product_full %>](backup-restore.html).
+you cannot follow the instructions in [Backing Up and Restoring <%= vars.product_full %>](backup-restore.html).
 
 Instead, follow these instructions to identify and download the backup artifact.
 These instructions are more straightforward
@@ -209,8 +209,8 @@ To prepare a new service instance for restore:
 
     Where:
     + `NEW-PLAN` is the name of the service plan for your new service instance.
-        The plan you choose depends on the service instance topology you are
-        restoring. If the topology you are restoring is:
+        The plan you choose depends on the service instance topology that you are
+        restoring. If the topology that you are restoring is:
           + **Single node or leader-follower:** Select a single node plan.
           + **<%= vars.single_leader_plan %> or HA cluster:**
               Select a <%= vars.single_leader_plan %> plan.
