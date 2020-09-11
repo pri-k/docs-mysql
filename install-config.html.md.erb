@@ -166,13 +166,37 @@ The procedures below describe how to change these defaults.
   If you deactivate <strong>Plan 1</strong>, your installation fails when you apply changes.
 </p>
 
-<p class="note warning"><strong>Warning:</strong> You must configure one of your service plans as
-a single node plan. This is because you can only restore a leader-follower service instance to a single node plan.
-Ensure that the persistent disk in the single node plan is at
-least as large as the persistent disk of your largest leader-follower plan.
-For more information about restoring services instances,
-see <a href="./backup-restore.html">Backing Up and Restoring <%= vars.product_short %></a>.
-</p>
+####<a name="one-node-plans"></a> About Creating One-Node Plans for Restoring Multi-Node Service Instances
+
+If you offer leader-follower or highly available (HA) cluster plans,
+then you must configure one-node plans that can be used
+to restore a multi-node plan from backup.
+
+<table class="nice">
+<col width="33%">
+<col width="33%">
+	<tr>
+		<th>If you offer service plans of type…</th>
+		<th>Then configure a service plan of type…</th>
+		<th>That is as large as the largest…</th>
+	</tr>
+	<tr>
+		<td>leader-follower</td>
+		<td>single node</td>
+		<td>leader-follower plan offered.</td>
+	</tr>
+	<tr>
+		<td>HA cluster</td>
+		<td><%= vars.single_leader_plan %></td>
+		<td>HA cluster plan offered.</td>
+	</tr>
+</table>
+
+For information about how multi-node service instances are restored,
+see <a href="./backup-restore.html#restore">Restore a Service Instance</a>
+in <em>Backing Up and Restoring <%= vars.product_full %></em>.
+
+#### Procedure for Configuring Service Plans
 
 For each plan that you want to use in your deployment:
 
