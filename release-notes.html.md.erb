@@ -33,10 +33,10 @@ restore service instances.
 For more information, see [Backing Up and Restoring <%= vars.product_full %>](./backup-restore.html)
 and [Manually Restoring from Backup](restore.html).
 
-+ **[Action required] Because of changes to the restore workflow,
-  if operators offer an HA cluster plan, they must also offer a large <%= vars.single_leader_plan %> plan.**
-  This is because a <%= vars.single_leader_plan %> service instance is required to restore
-  an HA cluster service instance from backup.
++ **VMware strongly recommends that if operators offer an HA cluster plan,
+  they also offer a <%= vars.single_leader_plan %> plan.**
+  To restore an HA cluster service instance from backup, developers need access
+  to a <%= vars.single_leader_plan %> plan.
   For more information,
   see [Restore a Service Instance](./backup-restore.html#restore) in _Backing Up and Restoring <%= vars.product_full %>_
   and [Configure Service Plans](./install-config.html#active).

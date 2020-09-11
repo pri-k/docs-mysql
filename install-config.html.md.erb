@@ -166,29 +166,27 @@ The procedures below describe how to change these defaults.
   If you deactivate <strong>Plan 1</strong>, your installation fails when you apply changes.
 </p>
 
-####<a name="one-node-plans"></a> About Creating One-Node Plans for Restoring Multi-Node Service Instances
+####<a name="one-node-plans"></a> About Creating Plans for Restoring Multi-Node Service Instances
 
 If you offer leader-follower or highly available (HA) cluster plans,
-then you must configure one-node plans that can be used
+then you must configure single-node or <%= vars.single_leader_plan %> plans that can be used
 to restore a multi-node plan from backup.
 
 <table class="nice">
 <col width="33%">
-<col width="33%">
 	<tr>
 		<th>If you offer service plans of type…</th>
 		<th>Then configure a service plan of type…</th>
-		<th>That is as large as the largest…</th>
 	</tr>
 	<tr>
 		<td>leader-follower</td>
-		<td>single node</td>
-		<td>leader-follower plan offered.</td>
+		<td>single node, with the persistent disk as large
+                    as the largest leader-follower plan offered.</td>
 	</tr>
 	<tr>
 		<td>HA cluster</td>
-		<td><%= vars.single_leader_plan %></td>
-		<td>HA cluster plan offered.</td>
+		<td><%= vars.single_leader_plan %>, with the persistent disk as large
+                    as the largest HA cluster plan offered.</td>
 	</tr>
 </table>
 
