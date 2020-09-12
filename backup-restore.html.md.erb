@@ -42,7 +42,7 @@ cf install-plugin -r CF-Community "ApplicationDataBackupRestore"
 ```
 
 
-## <a id="backup"></a> Manually Back up a Service Instance
+## <a id="backup"></a> Manually Back Up a Service Instance
 
 To manually trigger a backup outside of the configured schedule:
 
@@ -219,3 +219,61 @@ To restore a service instance:
     ```
     cf restage APP-NAME
     ```
+
+##<a id="monitor-backups"></a> Monitor Automatic Backups
+
+It is important to verify that automatic backups are being taken according to schedule.
+
+Automatic backups can fail for these reasons:
+
++ Reason 1 (bad cron expression?)
++ Reason 2 (storage too full?)
++ 
+
+Two ways to check that backups are being made:
+
++ [Use the  adbr Plugin](#use-adbr)
++ [Use Healthwatch or Other Monitoring Tool](#use-healthwatch)
+
+### <a id="use-adbr"></a> Use the adbr Plugin
+
+The `adbr` plugin is a quick way to list backups for a single instance.
+
+Q: HOW many get listed? 
+
++ List recent backups for an instance using the `adbr` plugin by running:
+
+    ```
+    cf adbr list-backups SOURCE-INSTANCE
+    ```
+
+    Where `SOURCE-INSTANCE` is an instance you backed up in
+    [Back up a Service Instance](#backup) above.<br>
+
+    For example:
+    <pre class="terminal">$ cf adbr list-backups myDB
+      Getting backups of service instance myDB in org my-org / space my-space as user...
+      Backup ID                                         Time of Backup
+      a41bf723-2538-4020-9d16-50cccb7b7c8d_1589825284   Mon May 18 18:08:04 UTC 2020
+      ADD A FEW MORE HERE</pre>
+
+### <a id="use-healthwatch"></a> Use Healthwatch or Other Monitoring Tool
+
+For each backup of each instance in the foundation, <%= vars.product_short %> emits a metric
+called `last_successful_backup`.
+Collecting and alerting on this metric is a good way to monitor backups for many instances.
+
++ Monitor the `last_successful_backup` metric through Healthwatch or similar monitoring app.
+
+    For details about the metric,
+    see [Hours Since Last Successful Backup](./monitor.html#last-successful-backup)
+    in _Monitoring and KPIs for <%= vars.product_full %>_.<br><br>
+
+    A healthy backup metric shows as a saw-tooth plot.
+    The dotted red line represents the scheduled time between backups.
+    After the scheduled time has elapsed, the backup is taken and the metric is set back to zero.
+
+    <%= image_tag("metric-since-last-backup-healthy.png", :alt => "A plot of the last successful backup metric. When the metric increases linearly until the backup is made. The metric falls back to zero and then increases again.", :width => "720") %>
+
+    <a href="./images/metric-since-last-backup-healthy.png" target="_blank" aria-hidden="true">View a larger version of this image</a>
+
