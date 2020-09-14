@@ -18,7 +18,7 @@ before upgrading to the latest v<%= current_version %>.x version.
 
 <%= partial vars.path_to_partials + '/upgrade-planner' %>
 
-## <a id="2-9-X"></a> v2.9.0
+## <a id="2-10-X"></a> v2.10.0
 
 **Release Date: XXX X, 20XX**
 
@@ -26,41 +26,9 @@ before upgrading to the latest v<%= current_version %>.x version.
 
 New features and changes in this release:
 
-+ **Improved backup and restore workflow:**
-Operators and developers can use the ApplicationDataBackupRestore (adbr) plugin
-with the Cloud Foundry Command Line Interface (cf CLI) to back up and
-restore service instances.
-For more information, see [Backing Up and Restoring <%= vars.product_full %>](./backup-restore.html)
-and [Manually Restoring from Backup](restore.html).
++ 
 
-+ **VMware strongly recommends that if operators offer an HA cluster plan,
-  they also offer a <%= vars.single_leader_plan %> plan.**
-  To restore an HA cluster service instance from backup, developers need access
-  to a <%= vars.single_leader_plan %> plan.
-  For more information,
-  see [Restore a Service Instance](./backup-restore.html#restore) in _Backing Up and Restoring <%= vars.product_full %>_
-  and [Configure Service Plans](./install-config.html#active).
-
-+ **A developer can change the backup schedule for an individual service instance using
-an arbitrary parameter:**
-For more information, see [Backup Schedule](./change-default.html#backup-schedule).
-
-+ **Each backup artifact has a unique encryption key:**
-  Each backup of any MySQL service instance now uses a unique encryption key.
-
-+ **SCP backups use SFTP:**
-  When Secure copy protocol (SCP) is configured as the external storage to upload backups,
-  it now relies on SSH File Transfer Protocol (SFTP).
-
-+ **All service instances are provisioned with a DNS alias:**
-  This DNS alias is used as the hostname in new service keys.
-  Old service keys, which use the DNS address for the hostname, continue to work.
-
-+ **The legacy workflow to enable TLS on a service instance has been removed:**
-  In the legacy workflow, which  was deprecated after MySQL for PCF v2.4,
-  developers had to run `cf update-service` to enable TLS on each service instance.
-  This workflow is no longer needed because MySQL connectors can use the DNS alias to connect
-  to the service instance over TLS.
++
 
 ### Known Issues
 
