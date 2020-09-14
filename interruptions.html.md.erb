@@ -45,7 +45,8 @@ A <%= vars.product_short %> VM fails and goes offline due to either a virtualiza
 - <strong>Required Actions:</strong>
   - If the VM is part of a leader-follower pair, when the VM comes back, it is read-only.
   Therefore, run the **configure-leader-follower** errand to ensure the leader VM is writable.
-  For more information, see [Leader-Follower Errands](./leader-follower-failover.html#errands).
+  For more information, see [configure-leader-follower](./errands.html#configure-leader-follower)
+  in _Running Errands_.
   - If the VM is not part of a leader-follower pair, when the VM comes back, no further action is required for the app developer to continue operations.
 
 ## <a id='az-fail'></a>AZ Failure
