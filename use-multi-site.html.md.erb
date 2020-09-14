@@ -156,7 +156,7 @@ To configure replication for your <%= vars.single_leader_plan %> leader-follower
 
     ```
     cf create-service-key SECONDARY-INSTANCE SERVICE-KEY \
-      -c '{"replication-request": "host-info"}
+      -c '{"replication-request": "host-info"}'
     ```
     Where:
     + `SECONDARY-INSTANCE` is the name of the secondary service instance you created in
@@ -213,7 +213,7 @@ To configure replication for your <%= vars.single_leader_plan %> leader-follower
     + `HOST-INFO` is the output you recorded in step 3, above.
 
     For example:
-    <pre class="terminal">$ cf update-service primary-node -c {"replication":{ \
+    <pre class="terminal">$ cf update-service primary-node -c '{"replication":{ \
       "peer-info":{ \
           "hostname": "secondary.bosh", \
           "ip": "10.0.18.12", \
@@ -222,7 +222,7 @@ To configure replication for your <%= vars.single_leader_plan %> leader-follower
         },\
       "role": "leader" \
       } \
-    }<br>
+    }'<br>
     Updating service instance primary-node as admin...
     OK</pre>
 1. Watch the progress of the service instance by running:
@@ -247,7 +247,7 @@ To configure replication for your <%= vars.single_leader_plan %> leader-follower
 
     ```
     cf create-service-key PRIMARY-INSTANCE SERVICE-KEY-NAME \
-      -c '{"replication-request": "credentials"}
+      -c '{"replication-request": "credentials"}'
     ```
     Where:
     + `PRIMARY-INSTANCE` is the name of the primary service instance you created in
@@ -310,7 +310,7 @@ To configure replication for your <%= vars.single_leader_plan %> leader-follower
     + `CREDENTIALS` is the output you recorded in step 8, above.
 
     For example:
-    <pre class="terminal">$ cf update-service secondary-node -c {"replication": { \
+    <pre class="terminal">$ cf update-service secondary-node -c '{"replication": { \
         "credentials": { \
           "password": "a22aaa2a2a2aaaaa", \
           "username": "6bf07ae455a14064a9073cec8696366c" \
@@ -323,7 +323,7 @@ To configure replication for your <%= vars.single_leader_plan %> leader-follower
         }, \
         "role": "follower" \
       } \
-    }<br>
+    }'<br>
     Updating service instance primary-node as admin...
     OK</pre>
 

@@ -55,6 +55,8 @@ For more information, see
 For more information about this <%= vars.ops_manager %> page,
 see [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).
 
+1. For the <%= vars.product_short %> tile, enable the **Register On-demand MySQL Broker** errand if the errand is not already enabled.
+
 1. Click **Apply Changes**.
 
 Upgrading the <%= vars.product_short %> service and service instances can temporarily interrupt
@@ -63,23 +65,7 @@ For more information, see [Service Interruptions](#interruptions) below.
 
 ### <a id="individual-upgrades"></a> About Individual Service Instance Upgrades
 
-<p class=note><strong>Note:</strong> Before developers can upgrade service instance you must
-  use <%= vars.app_runtime_full %> v2.7 or later.
-</p>
-
-In <%= vars.product_short %> v2.8 and later, to decrease runtime for service instance upgrades,
-developers can individually upgrade service instances.
-Developers can only upgrade a service instance
-if you disable the `upgrade-all-service-instances` errand when upgrading the tile.
-By default, <%= vars.product_short %> runs this errand when you upgrade the tile.
-However, this operation can take a long time.
-
-After you upgrade the <%= vars.product_short %> tile,
-existing service instances must be upgraded to use the latest version of the tile.
-Developers cannot create new bindings to service instances that have not been upgraded.
-
-Developers can upgrade individual service instances by following the procedure in
-[Upgrade a Single Service Instance](./use.html#single).
+<%= partial vars.path_to_partials + '/services/devs-can-upgrade-one-si' %>
 
 ## <a id="interruptions"></a>Service Interruptions
 

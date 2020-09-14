@@ -94,6 +94,8 @@ Now, <%= vars.product_short %> uploads both the leader and follower backup artif
 
 This release has the following issues:
 
+<%= partial vars.path_to_partials + "/mysql/multi-site-network-name-ki" %>
+<%= partial vars.path_to_partials + "/mysql/multi-site-incompatibility" %>
 <%= partial vars.path_to_partials + "/mysql/ki-multi-site-not-supported" %>
 <%= partial vars.path_to_partials + "/mysql/scp-backups-2-6" %>
 <%= partial vars.path_to_partials + "/mysql/connector-ki" %>
@@ -129,45 +131,40 @@ The following components are compatible with this release:
 New features and changes in this release:
 
 #### <%= vars.single_leader_plan %>
-+ **Open Beta for <%= vars.single_leader_plan %> Plans:**
++ **Open beta for <%= vars.single_leader_plan %> plans:**
 Developers can configure a follower service instance for <%= vars.single_leader_plan_lc %> across foundations.
 For more information,
 see [Using <%= vars.product_short %> for Multi-Site Replication](./use-multi-site.html).
-+ **Backup and Restore <%= vars.single_leader_plan %> Service Instances:**
++ **Backup and restore <%= vars.single_leader_plan %> service instances:**
 Operators can configure automated backups for <%= vars.single_leader_plan %> service instances.
 Operators can also use the `mysql-restore` utility to restore
 a <%= vars.single_leader_plan %> instance from a backup.
 For more information,
 see [Backing up <%= vars.product_short %>](./backup.html) and [Restoring <%= vars.product_short %>](./restore.html).
 
-+ **<%= vars.single_leader_plan %> Metrics:** You can view metrics for <%= vars.single_leader_plan %>
++ **<%= vars.single_leader_plan %> metrics:** You can view metrics for <%= vars.single_leader_plan %>
 service instances in realtime using `cf tail`.
 
 #### Additional New Features
-+ **Individual Service Instance Upgrades:**
-Developers can upgrade <%= vars.product_short %> service instances individually using the
-Cloud Foundry Command Line Interface (cf CLI).
-For more information about this feature,
-see [About Individual Service Instance Upgrades](./upgrade.html#individual-upgrades).
-For instructions for individually upgrading service instances,
-see [Upgrade a Single Service Instance](./use.html#single).
 
-+ **Telemetry Data:** <%= vars.product_short %> sends Telemetry data when the Telemetry tile is enabled in your foundation.
+<%= partial vars.path_to_partials + '/services/you-can-upgrade-one-si' %>
+
++ **Telemetry data:** <%= vars.product_short %> sends Telemetry data when the Telemetry tile is enabled in your foundation.
   For more information about the Telemetry tile,
   see [Telemetry for Ops Manager](https://docs.pivotal.io/pivotal-telemetry/).
 
 + Operators can run the `recreate-all-service-instances` errand to re-create service instance VMs.
 
 #### Feature Improvements
-+ **Improved Certificate Rotation Workflow:** <%= vars.product_short %> is compatible with the
++ **Improved certificate rotation workflow:** <%= vars.product_short %> is compatible with the
 <%= vars.ops_manager %> CredHub Maestro certificate rotation feature.
 Operators can enable this feature in <%= vars.ops_manager %> v2.8 and later.
 For more information,
 see [CredHub Maestro Rotates BOSH DNS Certificate Authorities](https://docs.pivotal.io/platform/2-8/release-notes/opsmanager-rn.html#maestro-rotate-ca).
 
-+ **Change Highly Available (HA) Cluster Server Defaults:** Developers can set optional parameters
++ **Change Highly Available (HA) cluster server defaults:** Developers can set optional parameters
 to change MySQL server defaults for HA cluster plans. For instructions for
-changing server defaults, see [Changing MySQL Server Defaults](./change-default.html).
+changing server defaults, see [Changing Defaults Using Arbitrary Parameters](./change-default.html).
 
 + **Restore HA Clusters with mysql-restore Utility:** Operators can use the `mysql-restore`
 utility to restore an HA cluster from a backup.
@@ -194,6 +191,9 @@ are stored on HA cluster service instances.
 ### Known Issues
 
 This release has the following issues:
+
+<%= partial vars.path_to_partials + "/mysql/multi-site-network-name-ki" %>
+<%= partial vars.path_to_partials + "/mysql/multi-site-incompatibility" %>
 <%= partial vars.path_to_partials + "/mysql/smoke-test-ki" %>
 <%= partial vars.path_to_partials + "/mysql/ki-multi-site-not-supported" %>
 <%= partial vars.path_to_partials + "/mysql/lf-backups-ki" %>

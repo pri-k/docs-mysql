@@ -290,7 +290,7 @@ You can manage service instances in the following ways:
 
 + Migrate your data to a different plan. See [Migrate Data to a Different Plan](#migrate) below.
 + Upgrade service instance individually to the latest version of <%= vars.product_short %>.
-See [Upgrade a Single Service Instance](#single) below.
+See [Upgrade an Individual Service Instance](#single) below.
 + Change the default parameters for an existing service instance.
 See [Change Default Parameters on an Existing Service Instance](./change-default.html# updating).
 + Share service instances between orgs and spaces. See [Share Service Instances](#share) below.
@@ -369,45 +369,10 @@ To migrate a service instance to another plan:
     $ cf update-service my-instance -p db-large
     </pre>
 
-### <a id="single"></a> Upgrade a Single Service Instance
+### <a id="single"></a> Upgrade an Individual Service Instance
 
-<p class="note"><strong>Note:</strong>
-  Before you individually upgrade service instances you must have cf CLI v6.46.0 or later.
-</p>
+<%= partial vars.path_to_partials + '/services/upgrade-one-si' %>
 
-You can use `cf update-service` with the `--upgrade` flag to individually upgrade service instances to the latest
-version of <%= vars.product_short %>.
-When you upgrade a service instance, you do not need to rebind your app or service keys.
-However, when you upgrade a service instance the database is unavailable for several minutes.
-
-For more information about using `cf update-service`,
-see the [Cloud Foundry CLI Reference Guide](https://cli.cloudfoundry.org/en-US/cf/update-service.html).
-
-To upgrade a single service instance:
-
-1. Confirm that an upgrade is available for the service instance by running:
-
-    ```
-    cf services
-    ```
-
-    The upgrade is available when the `upgrade available` column in the output says `yes`.
-    <br><br>
-    For example:
-
-    <pre class="terminal">$ cf services
-    Getting services in org system / space system as admin...
-
-    name         service    plan      bound apps    last operation    broker                    upgrade available
-    my-instance  p.mysql    db-small                create succeeded  dedicated-mysql-broker    yes</pre>
-
-1. Upgrade the service instance by running:
-
-    ```
-    cf update-service SERVICE-INSTANCE --upgrade
-    ```
-
-1. When prompted, confirm that you want to upgrade.
 
 ###<a id="share"></a> Share Service Instances
 
@@ -415,7 +380,7 @@ In <%= vars.product_short %> you can share service instances between different o
 Service instance sharing is enabled by default.
 
 For more information about service instance sharing,
-see [Sharing Service Instances](https://docs.pivotal.io/platform/application-service/devguide/services/sharing-instances.html).
+see [Sharing Service Instances](https://docs.pivotal.io/application-service/devguide/services/sharing-instances.html).
 
 To share a service instance:
 
