@@ -1,5 +1,5 @@
 ---
-title: Configuring Backups
+title: Configuring Automated Backups
 owner: MySQL
 ---
 
@@ -98,7 +98,7 @@ However backups only reflect transactions that are completed before the `start_t
   This is a known issue.
 </p>
 
-### <a id="enable-backups"></a> About Configuring Backups
+### <a id="enable-backups"></a> About Configuring Automated Backups
 
 You can configure <%= vars.product_short %> to automatically back up databases to external storage.
 <%= vars.product_short %> backs up the entire data directory for each service instance.
@@ -117,12 +117,12 @@ For more information about cron expressions, see
 
 To configure backups, follow the procedure for your external storage solution:
 
-+ [Back up Using SCP](#scp)
-+ [Back up to Amazon S3 or Ceph](#ceph-or-s3)
-+ [Back up to GCS](#gcs)
-+ [Back up to Azure Storage](#azure)
++ [Back Up Using SCP](#scp)
++ [Back Up to Amazon S3 or Ceph](#ceph-or-s3)
++ [Back Up to GCS](#gcs)
++ [Back Up to Azure Storage](#azure)
 
-## <a id="scp"></a> Back up Using SCP
+## <a id="scp"></a> Back Up Using SCP
 
 Secure copy protocol (SCP) enables operators to use any storage solution
 on the destination VM. This is the fastest method for backing up your database.
@@ -157,7 +157,7 @@ on the destination VM.
 
 ### <a id="configure-scp"></a> Configure Backups in <%= vars.ops_manager %>
 
-Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup using SCP.
+Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to back up using SCP.
 
 1. In <%= vars.ops_manager %>, open the <%= vars.product_short %> tile **Backups** pane.
 
@@ -262,7 +262,7 @@ Use <%= vars.ops_manager %> to configure <%= vars.product_short %> to backup usi
         </tr>
       </table>
 
-## <a id="ceph-or-s3"></a> Back up to Amazon S3 or Ceph
+## <a id="ceph-or-s3"></a> Back Up to Amazon S3 or Ceph
 
 When you configure backups for Amazon S3 or Ceph,
 <%= vars.product_short %> runs an Amazon S3 client that saves the backups to one of the following:
@@ -444,7 +444,7 @@ you must have an S3 bucket in which to store the backups.
         </tr>
       </table>
 
-## <a id="gcs"></a> Back up to GCS
+## <a id="gcs"></a> Back Up to GCS
 
 When you configure backups for a Google Cloud Storage (GCS) bucket,
 <%= vars.product_short %> runs a GCS SDK that saves backups to a GCS bucket.
@@ -557,7 +557,7 @@ Use <%= vars.ops_manager %> to connect <%= vars.product_short %> to your GCS acc
         </tr>
       </table>
 
-## <a id="azure"></a> Back up to Azure Storage
+## <a id="azure"></a> Back Up to Azure Storage
 
 When you configure backups for Azure Storage,
 <%= vars.product_short %> runs an Azure SDK that saves backups to an Azure storage account.
