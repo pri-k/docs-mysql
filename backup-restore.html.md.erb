@@ -5,14 +5,16 @@ owner: MySQL
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to back up and restore a <%= vars.product_full %> service instance.
+This topic describes how to back up and restore a physical backup
+to a <%= vars.product_full %> service instance.
 Both operators and developers can use the procedures in this topic.
 
-Operators can configure backups in the <%= vars.product_short %> tile by following the procedures in
-[Configuring Backups](./automated-backup.html).
+Operators can configure automated backups in the <%= vars.product_short %> tile by following the procedures in
+[Configuring Automated Backups](./automated-backup.html).
 
-Additionally, developers can create logical backups using `mysqldump`.
-For information, see [Backing Up and Restoring with mysqldump](./backup-mysqldump.html).
+Developers can take manually take physical backups by following the procedure in this topic.
+Developers can also create logical backups using `mysqldump`.
+For information logical backups, see [Backing Up and Restoring with mysqldump](./backup-mysqldump.html).
 
 ## <a id="overview"></a> Overview
 
@@ -23,7 +25,7 @@ The following procedures do not create logical backup artifacts.
 Restoring a physical backup is faster than restoring a logical backup and
 has less downtime.
 
-You might want to backup or restore a service instance in the following use cases:
+You might want to back up or restore a service instance in the following use cases:
 
 + Disaster recovery
 + Troubleshooting
@@ -219,17 +221,17 @@ To restore a service instance:
     cf restage APP-NAME
     ```
 
-##<a id="monitor-backups"></a> Monitor Automated Backups
+##<a id="monitor-backups"></a> Monitor Backups
 
-It is important to verify that automated backups are being taken according to schedule.
+It is particularly important to verify that automated backups are being taken according to schedule.
 A common cause of failure for automated backups is the persistent disk filling up.
 
 Two ways to check that backups are being made:
 
-+ [Use the  adbr Plugin](#use-adbr)
++ [Use the adbr Plugin to List Backups](#use-adbr)
 + [Use Healthwatch](#use-healthwatch)
 
-### <a id="use-adbr"></a> Use the adbr Plugin
+### <a id="use-adbr"></a> Use the adbr Plugin to List Backups
 
 The `adbr` plugin is a quick way to list backups for a service instance.
 The plugin lists the last five backups for a service instance.
@@ -254,7 +256,12 @@ The list includes both automated and manual backups.
     f4df63d3-ece1-4b53-99a4-4b55ad10af2f_1596674700   Thu Aug  6 00:45:00 UTC 2020
     </pre>
 
-### <a id="use-healthwatch"></a> Use Healthwatch
+### <a id="use-healthwatch"></a> Use Healthwatch to Confirm Automated Backups
+
+You can use Healthwatch to confirm that automated backups are being taken
+on the schedule configured by the operator.
+For information about configuring the schedule for automated backups,
+see [Configuring Automated Backups](./automated-backup.html).
 
 For each backup of every service instance,
 <%= vars.product_short %> emits a metric
