@@ -52,13 +52,18 @@ To create and find read-only credentials for an existing service instance:
     <pre class="terminal">$ cf service-key mydb mykey1
 
     {
-     "hostname": "99.99.99.9",
-     "jdbcUrl": "jdbc:mysql://99.99.99.9:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?user=abcdefghijklm\u0026password=123456789",
-     "name": "cf_e2d148a8_1baa_4961_b314_2431f57037e5",
-     "password": "123456789",
+     "hostname": "a7113e41-7254-4f5a-a0cf-a88b052c8b10.mysql.service.internal",
+     "jdbcUrl": "jdbc:mysql://a7113e41-7254-4f5a-a0cf-a88b052c8b10.mysql.service.internal:3306/service_instance_db?user=973eb219bd554dfc9794bc29a301bcb1\u0026password=zr3aqa847tzm6cls\u0026sslMode=VERIFY_IDENTITY\u0026useSSL=true\u0026requireSSL=true\u0026serverSslCert=/etc/ssl/certs/ca-certificates.crt",
+     "name": "service_instance_db",
+     "password": "zr3aqa847tzm6cls",
      "port": 3306,
-     "uri": "mysql://abcdefghijklm:123456789<span>@</span>99.99.99.9:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?reconnect=true",
-     "username": "abcdefghijklm"
+     "tls": {
+      "cert": {
+       "ca": "-----BEGIN CERTIFICATE-----\nMIIDDzCCAfegAwIBAgIUW0tF3p3wubz+0GMH/850aVUIPnUwDQYJKoZIhvcNAQEL\nBQAwFzEVMBMGA1UEAxMMVG9vbHNtaXRoc0NBMB4XDTIwMDkyMTA2MjcxMFoXDTIx\nMDkyMTA2MjcxMFowFzEVMBMGA1UEAxMMVG9vbHNtaXRoc0NBMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv5lmGmSCIkV2w1axS/vGk7GjQHnTtjhme4cO\nvT1Nbv6oWqt0Tlm+2gzGb8W7A6SsIEN33ltq4LTWEFK8t0htphDe1xkAf1Eq7jWM\nnS9aFnXyEuqw5fzWAjQMMqd3JvvZ2Z85o9NaHdi+XOlQAv9UHlWkjaSAvFoRyaC7\npI0GNF8/QpvHORdPxpyGey/LtE8FxSKb8EL1y430LT7N/PxmVmFnySItlMbBiXcA\nTkosY+9IswMwrVyYBwN65UoC7sKomjrloVNHhErm5pZv1hlEvEK116wiNY//9Wav\nAmUneQ4LpjMPYXDGhHL04mMc2ySsrFW0lI8zcYzbEQBUQN5ovwIDAQABo1MwUTAd\nBgNVHQ4EFgQUyCp0znZlP1d+vQ9U4tpzs1g/hrAwHwYDVR0jBBgwFoAUyCp0znZl\nP1d+vQ9U4tpzs1g/hrAwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC\nAQEAfh26fULdpurmRdE9KKcRGVY56fFk2SbxITTIoHULtQY5pzau9KVOKGl2+czM\n875QC1YviBoonQZE8LSA1A1gaj9s+XT5/fCGRagU/ODZX/sBDJMQJjaN+/QFRhom\nXKHZ+1nCPJqSiGGDJOANtZT1Xlfz+cKreuDfPysAA+s5row17CUIcYcC0WTNgVE9\nGdkjzF9ZDakLHekkQ9F2nMmEhwRTwxwneqJzcTFqDgWiIZpzkF6Ck90Ay43mpc7N\nU/osEYJlW10NJy8+wq11yZ50T3Z8EFkkbzo9QipnfW1byY+JstVeR0uLmUzNmkyy\nNBUf8fcYBdCLr2lDvOiUGhRw6w==\n-----END CERTIFICATE-----\n\n"
+      }
+     },
+     "uri": "mysql://973eb219bd554dfc9794bc29a301bcb1:zr3aqa847tzm6cls@a7113e41-7254-4f5a-a0cf-a88b052c8b10.mysql.service.internal:3306/service_instance_db?reconnect=true",
+     "username": "973eb219bd554dfc9794bc29a301bcb1"
     }</pre>
 
 ## <a id="username"></a> Create Custom Username Credentials
@@ -79,7 +84,7 @@ To create and find custom username credentials for an existing service instance:
 
     For example:
 
-    <pre class="terminal">$ cf create-service-key mydb mykey2  -c '{ "username": myuser }'
+    <pre class="terminal">$ cf create-service-key mydb mykey2  -c '{ "username": "myuser" }'
 
     Creating service key mykey2 for service instance mydb as admin...
     OK</pre>
@@ -95,11 +100,16 @@ To create and find custom username credentials for an existing service instance:
     <pre class="terminal">$ cf service-key mydb mykey2</br>
 
     {
-     "hostname": "10.10.10.5",
-     "jdbcUrl": "jdbc:mysql://10.10.10.5:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?user=my_unique_name\u0026password=123456789",
-     "name": "cf_e2d148a8_1baa_4961_b314_2431f57037e5",
-     "password": "123456789",
+     "hostname": "a7113e41-7254-4f5a-a0cf-a88b052c8b10.mysql.service.internal",
+     "jdbcUrl": "jdbc:mysql://a7113e41-7254-4f5a-a0cf-a88b052c8b10.mysql.service.internal:3306/service_instance_db?user=myuser\u0026password=bdjq5o19ax4suzmg\u0026sslMode=VERIFY_IDENTITY\u0026useSSL=true\u0026requireSSL=true\u0026serverSslCert=/etc/ssl/certs/ca-certificates.crt",
+     "name": "service_instance_db",
+     "password": "bdjq5o19ax4suzmg",
      "port": 3306,
-     "uri": "mysql://my_unique_name:123456789<span>@</span>10.10.10.5:3306/cf_e2d148a8_1baa_4961_b314_2431f57037e5?reconnect=true",
+     "tls": {
+      "cert": {
+       "ca": "-----BEGIN CERTIFICATE-----\nMIIDDzCCAfegAwIBAgIUW0tF3p3wubz+0GMH/850aVUIPnUwDQYJKoZIhvcNAQEL\nBQAwFzEVMBMGA1UEAxMMVG9vbHNtaXRoc0NBMB4XDTIwMDkyMTA2MjcxMFoXDTIx\nMDkyMTA2MjcxMFowFzEVMBMGA1UEAxMMVG9vbHNtaXRoc0NBMIIBIjANBgkqhkiG\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv5lmGmSCIkV2w1axS/vGk7GjQHnTtjhme4cO\nvT1Nbv6oWqt0Tlm+2gzGb8W7A6SsIEN33ltq4LTWEFK8t0htphDe1xkAf1Eq7jWM\nnS9aFnXyEuqw5fzWAjQMMqd3JvvZ2Z85o9NaHdi+XOlQAv9UHlWkjaSAvFoRyaC7\npI0GNF8/QpvHORdPxpyGey/LtE8FxSKb8EL1y430LT7N/PxmVmFnySItlMbBiXcA\nTkosY+9IswMwrVyYBwN65UoC7sKomjrloVNHhErm5pZv1hlEvEK116wiNY//9Wav\nAmUneQ4LpjMPYXDGhHL04mMc2ySsrFW0lI8zcYzbEQBUQN5ovwIDAQABo1MwUTAd\nBgNVHQ4EFgQUyCp0znZlP1d+vQ9U4tpzs1g/hrAwHwYDVR0jBBgwFoAUyCp0znZl\nP1d+vQ9U4tpzs1g/hrAwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC\nAQEAfh26fULdpurmRdE9KKcRGVY56fFk2SbxITTIoHULtQY5pzau9KVOKGl2+czM\n875QC1YviBoonQZE8LSA1A1gaj9s+XT5/fCGRagU/ODZX/sBDJMQJjaN+/QFRhom\nXKHZ+1nCPJqSiGGDJOANtZT1Xlfz+cKreuDfPysAA+s5row17CUIcYcC0WTNgVE9\nGdkjzF9ZDakLHekkQ9F2nMmEhwRTwxwneqJzcTFqDgWiIZpzkF6Ck90Ay43mpc7N\nU/osEYJlW10NJy8+wq11yZ50T3Z8EFkkbzo9QipnfW1byY+JstVeR0uLmUzNmkyy\nNBUf8fcYBdCLr2lDvOiUGhRw6w==\n-----END CERTIFICATE-----\n\n"
+      }
+     },
+     "uri": "mysql://myuser:bdjq5o19ax4suzmg@a7113e41-7254-4f5a-a0cf-a88b052c8b10.mysql.service.internal:3306/service_instance_db?reconnect=true",
      "username": "myuser"
     }</pre>
