@@ -20,6 +20,7 @@ before upgrading to the latest v<%= current_version %>.x version.
 
 ## <a id="2-8-3"></a> v2.8.3
 
+<<<<<<< HEAD
 **Release Date: MMM XX, 2020**
 
 ### Resolved Issues
@@ -29,6 +30,16 @@ This release has the following fix:
 + **Uppercase letters in the Service Network no longer prevent configuration of Multi-Site Replication:**
   Previously, if you configured the Services Network name with uppercase letters in your environment,
   multi-site replication setup failed.
+=======
+**Release Date: September 21, 2020**
+
+### Resolved Issues
+This release has the following fixes:
+
++ **Uppercase letters in the Service Network no longer prevents configuration of Multi-Site Replication:**
+  Previously, if you had configured the Services Network name with upper case letters in your environment, 
+multi-site replication could not be configured successfully.
+>>>>>>> parent of d3957ff1... Revert "release notes 2.8.3"
 
 ### Known Issues
 
@@ -48,6 +59,7 @@ The following components are compatible with this release:
     <th>Component</th>
     <th>Version</th>
   </tr>
+<<<<<<< HEAD
   <tr><td>Stemcell</td><td>621.77</td></tr>
   <tr><td>Percona Server</td><td>5.7.30-33</td></tr>
   <tr><td>Percona XtraDB Cluster</td><td>5.7.30-31.43</td></tr>
@@ -55,6 +67,15 @@ The following components are compatible with this release:
   <tr><td>mysql-backup-release</td><td>2.15.0</td></tr>
   <tr><td>mysql-monitoring-release</td><td>9.15.0</td></tr>
   <tr><td>pxc-release</td><td>0.28.0</td></tr>
+=======
+  <tr><td>Stemcell</td><td>621.77*</td></tr>
+  <tr><td>Percona Server</td><td>5.7.30-33*</td></tr>
+  <tr><td>Percona XtraDB Cluster</td><td>5.7.30-31.43*</td></tr>
+  <tr><td>Percona XtraBackup</td><td>2.4.20</td></tr>
+  <tr><td>mysql-backup-release</td><td>2.15.0*</td></tr>
+  <tr><td>mysql-monitoring-release</td><td>9.15.0*</td></tr>
+  <tr><td>pxc-release</td><td>0.28.0*</td></tr>
+>>>>>>> parent of d3957ff1... Revert "release notes 2.8.3"
 </table>
 
 ## <a id="2-8-2"></a> v2.8.2
