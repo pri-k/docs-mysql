@@ -62,6 +62,21 @@ For more information, see [Backup Schedule](./change-default.html#backup-schedul
   This workflow is no longer needed because MySQL connectors can use the DNS alias to connect
   to the service instance over TLS.
 
+
+### <a id="2-9-0-breaking-changes"></a> Breaking Changes
+
++ **Location of backup artifact**
+  Backups are no longer stored in a sub-directory in the storage destination but instead they are stored at the root-level.
+
++ **Removed fields from tile configuration**
+  The following properties have been removed from the tile configuration. They should be removed from automation that may configure the tile.
+  + `.properties.backups_selector.s3.enable_email_alerts`
+  + `.properties.backups_selector.scp.enable_email_alerts`
+  + `.properties.backups_selector.gcs.enable_email_alerts`
+  + `.properties.backups_selector.azure.enable_email_alerts`
+  + `.properties.backups_selector.s3.path`
+  + `.properties.backups_selector.azure.path`
+
 ### Known Issues
 
 This release has the following issues:
